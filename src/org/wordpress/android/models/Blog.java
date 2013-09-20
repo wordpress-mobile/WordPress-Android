@@ -2,7 +2,12 @@
 
 package org.wordpress.android.models;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.wordpress.android.WordPress;
 
@@ -322,5 +327,27 @@ public class Blog {
 
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public String getAdminUrl() {
+        String adminUrl = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
+            if (homeURLMap != null)
+                adminUrl = homeURLMap.get("value").toString();
+        }
+        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if (adminUrl == null) {
+            if (this.getUrl().lastIndexOf("/") != -1) {
+                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/"))
+                        + "/wp-admin";
+            } else {
+                adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
+            }
+        }
+        return adminUrl;
     }
 }

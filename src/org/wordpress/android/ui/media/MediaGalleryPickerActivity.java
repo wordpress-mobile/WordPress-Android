@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.ActionMode;
@@ -16,19 +18,22 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
+import org.xmlrpc.android.ApiHelper;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user 
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback {
+public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback, MediaGridAdapter.MediaGridAdapterCallback {
 
     private MultiSelectGridView mGridView;
-    private MediaGridAdapter mAdapter;
+    private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
 
     private ArrayList<String> mFilteredItems;
     private boolean mIsSelectOneItem;
+    private boolean mIsRefreshing;
+    private boolean mHasRetrievedAllMedia;
     
     private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
@@ -39,6 +44,8 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
+
+    private int mOldMediaSyncOffset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +59,23 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem =  savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
-        
+
+        mActionMode = getSherlock().startActionMode(this);
+
         setContentView(R.layout.media_gallery_picker_layout);
         mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiSelectListener(this);
         if (mIsSelectOneItem) {
+            mActionMode.setTitle("Select an image");
             mGridView.setHighlightSelectModeEnabled(true);
             mGridView.setMultiSelectModeEnabled(false);
         } else {
+            mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
-        mAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
-        mGridView.setAdapter(mAdapter);
-        
-        mActionMode = getSherlock().startActionMode(this);
-        mActionMode.setTitle(checkedItems.size() + " selected");
+        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
+        mGridAdapter.setCallback(this);
+        mGridView.setAdapter(mGridAdapter);
     }
     
     @Override
@@ -78,7 +87,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mAdapter.getCheckedItems());
+        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getCheckedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
@@ -87,10 +96,15 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         if (WordPress.getCurrentBlog() == null)
             return;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
         Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
-        mAdapter.swapCursor(cursor);
+        if (cursor.getCount() == 0) {
+            refreshMediaFromServer(0);
+        } else {
+            mGridAdapter.swapCursor(cursor);
+        }
+
     }
 
     @Override
@@ -120,9 +134,99 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mAdapter.getCheckedItems());
+        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
         setResult(RESULT_OK, intent);
         finish();
     }
-    
+
+    @Override
+    public void fetchMoreData(int offset) {
+        if (!mHasRetrievedAllMedia)
+            refreshMediaFromServer(offset);
+    }
+
+    @Override
+    public void onRetryUpload(String mediaId) {
+
+    }
+
+    @Override
+    public boolean isInMultiSelect() {
+        return false;
+    }
+
+    public void refreshMediaFromServer(int offset) {
+
+        if(offset == 0 || !mIsRefreshing) {
+
+            if (offset == mOldMediaSyncOffset) {
+                // we're pulling the same data again for some reason. Pull from the beginning.
+                offset = 0;
+            }
+            mOldMediaSyncOffset = offset;
+
+            mIsRefreshing = true;
+            mGridAdapter.setRefreshing(true);
+
+            List<Object> apiArgs = new ArrayList<Object>();
+            apiArgs.add(WordPress.getCurrentBlog());
+
+            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
+
+                // refersh db from server. If returned count is 0, we've retrieved all the media.
+                // stop retrieving until the user manually refreshes
+
+                @Override
+                public void onSuccess(int count) {
+                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                    mHasRetrievedAllMedia = (count == 0);
+                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+
+                    mIsRefreshing = false;
+
+                    // the activity may be gone by the time this finishes, so check for it
+                    if (!isFinishing()) {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                //mListener.onMediaItemListDownloaded();
+                                mGridAdapter.setRefreshing(false);
+                                String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                                Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
+                                mGridAdapter.swapCursor(cursor);
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(int errorCode) {
+
+                    if (errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP) {
+                        Toast.makeText(MediaGalleryPickerActivity.this, "You do not have permission to view the media library", Toast.LENGTH_SHORT).show();
+                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                        mHasRetrievedAllMedia = true;
+                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    }
+
+                    // the activity may be cone by the time we get this, so check for it
+                    if (!isFinishing()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mIsRefreshing = false;
+                                mGridAdapter.setRefreshing(false);
+                            }
+                        });
+                    }
+
+                }
+            };
+
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, MediaGridFragment.Filter.ALL, callback);
+            getMediaTask.execute(apiArgs);
+        }
+    }
 }
