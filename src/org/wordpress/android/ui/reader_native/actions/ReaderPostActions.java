@@ -27,13 +27,15 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by nbradbury on 8/13/13.
  */
 public class ReaderPostActions {
 
-    public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW, REBLOG}
+    public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -133,6 +135,55 @@ public class ReaderPostActions {
         WordPress.restClient.post(path, listener, errorListener);
 
         return true;
+    }
+
+    /*
+     * reblogs the passed post to the passed destination with optional comment
+     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/reblogs/new/
+     */
+    public static void reblogPost(final ReaderPost post,
+                                  long destinationBlogId,
+                                  final String optionalComment,
+                                  final ReaderActions.ActionListener actionListener) {
+        if (post==null) {
+            if (actionListener!=null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("destination_site_id", Long.toString(destinationBlogId));
+        if (!TextUtils.isEmpty(optionalComment))
+            params.put("note", optionalComment);
+
+        StringBuilder sb = new StringBuilder("/sites/")
+                .append(post.blogId)
+                .append("/posts/")
+                .append(post.postId)
+                .append("/reblogs/new");
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                boolean isReblogged = (jsonObject!=null ? JSONUtil.getBool(jsonObject, "is_reblogged") : false);
+                //boolean success = (jsonObject!=null ? JSONUtil.getBool(jsonObject, "success") : false);
+                if (isReblogged)
+                    ReaderPostTable.setPostReblogged(post, true);
+                if (actionListener != null)
+                    actionListener.onActionResult(isReblogged);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.e(volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+
+            }
+        };
+
+        WordPress.restClient.post(sb.toString(), params, null, listener, errorListener);
     }
 
     /*

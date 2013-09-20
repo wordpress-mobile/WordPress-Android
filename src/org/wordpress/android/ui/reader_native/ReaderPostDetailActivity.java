@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -155,7 +156,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     }
 
     /*
-     * triggered when user chooses to like, reblog, etc.
+     * triggered when user chooses to like or follow
      */
     public void doPostAction(View btnAction, ReaderPostActions.PostAction action, ReaderPost post) {
         boolean isSelected = btnAction.isSelected();
@@ -181,6 +182,19 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 refreshFollowed();
                 break;
         }
+    }
+
+    /*
+     * triggered when user chooses to reblog the post
+     */
+    private void doPostReblog(View btnReblog, ReaderPost post) {
+        if (post.isRebloggedByCurrentUser) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_already_reblogged);
+            return;
+        }
+        btnReblog.setSelected(true);
+        ReaderAniUtils.zoomAction(btnReblog);
+        ReaderActivityLauncher.showReaderReblogForResult(this, post);
     }
 
     @Override
@@ -291,6 +305,24 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        boolean isResultOK = (resultCode== Activity.RESULT_OK);
+
+        switch (requestCode) {
+            case Constants.INTENT_READER_REBLOG :
+                // user just returned from reblog activity - if post was successfully reblogged,
+                // then update the local post and select the reblog button
+                if (isResultOK) {
+                    mPost.isRebloggedByCurrentUser = true;
+                    TextView btnReblog = (TextView) findViewById(R.id.btn_reblog);
+                    btnReblog.setSelected(true);
+                }
         }
     }
 
@@ -624,7 +656,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                     editComment.setText(commentText);
                     showAddCommentBox(replyToCommentId);
                     getCommentAdapter().removeComment(fakeCommentId);
-                    ToastUtils.showToast(ReaderPostDetailActivity.this, R.string.reader_toast_comment_failed, ToastUtils.Duration.LONG);
+                    ToastUtils.showToast(ReaderPostDetailActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }
             }
         };
@@ -939,12 +971,15 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
             // enable reblogging wp posts
             btnReblog.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            btnReblog.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    doPostAction(btnReblog, ReaderPostActions.PostAction.REBLOG, mPost);
-                }
-            });
+            btnReblog.setSelected(mPost.isRebloggedByCurrentUser);
+            if (mPost.isWP()) {
+                btnReblog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        doPostReblog(btnReblog, mPost);
+                    }
+                });
+            }
 
             // enable adding a comment if comments are open on this post
             if (mPost.isWP() && mPost.isCommentsOpen) {

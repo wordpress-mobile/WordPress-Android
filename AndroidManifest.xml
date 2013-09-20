@@ -168,6 +168,11 @@
             android:theme="@style/ReaderTheme.Popup"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".ui.reader_native.ReaderReblogActivity"
+            android:theme="@style/ReaderTheme.Popup"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".ui.reader_native.ReaderPhotoViewerActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
