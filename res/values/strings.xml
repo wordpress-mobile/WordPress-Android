@@ -193,6 +193,8 @@
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local Draft</string>
     <string name="local_drafts">Local Drafts</string>
+    <string name="posts_empty_list">No Posts Yet. Why not create one?</string>
+    <string name="empty_list_default">This list is empty</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>

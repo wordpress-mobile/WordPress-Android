@@ -1,13 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,17 +24,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class PostsListFragment extends ListFragment {
     /** Called when the activity is first created. */
@@ -82,8 +80,16 @@ public class PostsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
+        setEmptyText(getText(R.string.posts_empty_list));
         createSwitcher();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
+        parent.addView(v, 0);
+        return parent;
     }
 
     public void onAttach(Activity activity) {
