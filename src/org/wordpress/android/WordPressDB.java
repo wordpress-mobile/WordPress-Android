@@ -1,20 +1,5 @@
 package org.wordpress.android;
 
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -25,18 +10,35 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-
+import android.util.Log;
 import org.json.JSONArray;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Vector;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -123,6 +125,11 @@ public class WordPressDB {
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
 
+    // create table to store notifications
+    private static final String NOTES_TABLE = "notes";
+    private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, " +
+            "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = Config.DB_SECRET;
@@ -147,6 +154,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
+        db.execSQL(CREATE_TABLE_NOTES);
 
         // Update tables for new installs and app updates
         try {
@@ -209,6 +217,10 @@ public class WordPressDB {
                     db.execSQL(ADD_MEDIA_BLOG_ID);
                     db.execSQL(ADD_MEDIA_DATE_GMT);
                     db.execSQL(ADD_MEDIA_UPLOAD_STATE);
+                    currentVersion++;
+                case 19:
+                    // revision 20: create table "notes"
+                    currentVersion++;
             }
             db.setVersion(DATABASE_VERSION);
         } catch (SQLException e) {
@@ -1823,12 +1835,12 @@ public class WordPressDB {
     }
     
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
+        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"});
         
     }
     
     public Theme getTheme(String blogId, String themeId) {
-        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium, features FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[] { blogId, themeId });
+        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium, features FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[]{blogId, themeId});
         if (cursor.moveToFirst()) {
             String name = cursor.getString(0);
             String description = cursor.getString(1);
@@ -1857,4 +1869,84 @@ public class WordPressDB {
         
     }
 
+    public ArrayList<Note> loadNotes() {
+        return loadNotes(20);
+    }
+
+    public ArrayList<Note> loadNotes(int limit) {
+        Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data"},
+                null, null, null, null, "timestamp DESC", "" + limit);
+        ArrayList<Note> notes = new ArrayList<Note>();
+        while (cursor.moveToNext()) {
+            String note_id = cursor.getString(0);
+            String raw_note_data = cursor.getString(1);
+            try {
+                notes.add(new Note(new JSONObject(raw_note_data)));
+            } catch (JSONException e) {
+                Log.e(WordPress.TAG, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
+            }
+        }
+        cursor.close();
+        return notes;
+    }
+
+    public void removePlaceholderNotes() {
+        db.delete(NOTES_TABLE, "placeholder=1", null);
+    }
+
+    public void addNote(Note note, boolean placeholder) {
+        ContentValues values = new ContentValues();
+        values.put("note_id", note.getId());
+        values.put("type", note.getType());
+        values.put("timestamp", note.getTimestamp());
+        values.put("placeholder", placeholder);
+        values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
+
+        if (!note.getId().equals("0")) {
+            values.put("id", note.getId());
+            // Try to update
+            int result = db.update(NOTES_TABLE, values, "id=" + note.getId(), null);
+            // If update failed, insert
+            if (result == 0) {
+                db.insert(NOTES_TABLE, null, values);
+            }
+        } else {
+            int hashid = generateIdFor(note);
+            values.put("id", hashid);
+            values.put("note_id", "0");
+            int result = db.update(NOTES_TABLE, values, "id=" + hashid, null);
+            // If update failed, insert
+            if (result == 0) {
+                db.insert(NOTES_TABLE, null, values);
+            }
+        }
+    }
+
+    public static int generateIdFor(Note note) {
+        return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
+    }
+
+    public void saveNotes(List<Note> notes) {
+        for (Note note: notes) {
+            addNote(note, false);
+        }
+    }
+
+    public Note getNoteById(int id) {
+        Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},
+                null, null, null, "id=" + id, null, null);
+        cursor.moveToFirst();
+
+        try {
+            JSONObject jsonNote = new JSONObject(cursor.getString(0));
+            return new Note(jsonNote);
+        } catch (JSONException e) {
+            Log.e(WordPress.TAG, "Can't parse JSON Note: " + e);
+            return null;
+        }
+    }
+
+    public void clearNotes() {
+        db.delete(NOTES_TABLE, null, null);
+    }
 }

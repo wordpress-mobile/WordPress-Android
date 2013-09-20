@@ -1,15 +1,5 @@
 package org.wordpress.android;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,7 +10,6 @@ import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,23 +23,22 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
-import com.wordpress.rest.RestRequest;
-
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.WPComXMLRPCApi;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WordPress extends Application {
-
-    public static final String NOTES_CACHE="notifications.json";
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
     public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
@@ -70,7 +58,6 @@ public class WordPress extends Application {
     public static WPRestClient restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static JSONObject latestNotes;
     public static BitmapLruCache localImageCache;
 
     private static Context mContext;
@@ -106,7 +93,6 @@ public class WordPress extends Application {
         //Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
 
-        loadNotifications(this);
         super.onCreate();
     }
     
@@ -246,108 +232,6 @@ public class WordPress extends Application {
         }
 
         return currentBlog;
-    }
-    /**
-     * Restores notifications from cached file
-     */
-    public static void loadNotifications(Context context){
-        File file = new File(context.getCacheDir(), NOTES_CACHE);
-        BufferedReader buf = null;
-        StringBuilder json = null;
-        try {
-            buf = new BufferedReader(new FileReader(file));
-            json = new StringBuilder();
-            String line;
-            do {
-                line = buf.readLine();
-                json.append(line);
-            } while(line == null);
-        } catch (java.io.FileNotFoundException e) {
-            json = null;
-            Log.e(TAG, "No cached notes", e);
-        } catch (IOException e) {
-            json = null;
-            Log.e(TAG, "Could not read cached notes", e);
-        } finally {
-            try {
-                if (buf != null) {
-                    buf.close();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Couldn't close file buffer", e);
-            }
-        }
-        if (json == null) {
-            Log.d(TAG, "Could not find cached notes");
-            return;
-        }
-        try {
-            latestNotes = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            latestNotes = null;
-            Log.e(TAG, "Failed to parse note json", e);
-            return;
-        }
-        Log.d(TAG, "Restored notes");
-    }
-    /**
-     * Refreshes latest notes and stores a copy of the response to disk.
-     */
-    public static void refreshNotifications(final Context context,
-                                            final RestRequest.Listener listener,
-                                            final RestRequest.ErrorListener errorListener){
-        restClient.getNotifications(
-            new RestRequest.Listener(){
-                @Override
-                public void onResponse(JSONObject response){
-                    latestNotes = response;
-                    File file = new File(context.getCacheDir(), NOTES_CACHE);
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                    FileWriter writer = null;
-                    try {
-                        String json = response.toString();
-                        writer = new FileWriter(file);
-                        writer.write(json, 0, json.length());
-                        writer.close();
-                        Log.d(TAG, String.format("Wrote notes json to %s", file));
-                    } catch (IOException e) {
-                        Log.d(TAG, String.format("Failed to cache notifications to %s", file));
-                    } finally {
-                        try {
-                            if (writer != null) {
-                                writer.close();                                    
-                            }
-                        } catch (IOException e) {
-                            writer = null;
-                        }
-                    }
-                    Log.d(TAG, String.format("Store file here %s", file));
-                    if (listener != null) {
-                        listener.onResponse(response);                        
-                    }
-                }
-            },
-            new RestRequest.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error){
-                    if (errorListener != null) {
-                        errorListener.onErrorResponse(error)                      ;
-                    }
-                }
-            }
-        );
-    }
-    /**
-     * Delete cached notifications, usually due to account logout
-     */
-    public static void deleteCachedNotifications(Context context){
-        File file = new File(context.getCacheDir(), NOTES_CACHE);
-        if (file.exists()) {
-            file.delete();
-        }
-        latestNotes = null;
     }
     
     /**

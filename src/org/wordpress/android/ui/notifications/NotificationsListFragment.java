@@ -1,13 +1,8 @@
 package org.wordpress.android.ui.notifications;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -16,12 +11,15 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class NotificationsListFragment extends ListFragment {
     private static final int LOAD_MORE_WITHIN_X_ROWS=5;
@@ -132,11 +130,13 @@ public class NotificationsListFragment extends ListFragment {
             
             return view;
         }
+
         public Note getLastNote(){
             return getItem(getCount()-1);
         }
-        public void addAll(List<Note> notes){
 
+        public void addAll(List<Note> notes) {
+            Collections.sort(notes, new Note.TimeStampComparator());
             if (notes.size() == 0) {
                 // No more notes available
                 mAllNotesLoaded = true;
@@ -144,7 +144,7 @@ public class NotificationsListFragment extends ListFragment {
                     mProgressFooterView.setVisibility(View.GONE);
             } else {
                 Iterator<Note> noteIterator = notes.iterator();
-                while(noteIterator.hasNext()){
+                while (noteIterator.hasNext()) {
                     add(noteIterator.next());
                 }
             }
