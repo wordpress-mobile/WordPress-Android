@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui;
 
 import java.io.UnsupportedEncodingException;
@@ -171,7 +170,8 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
         
         int itemID = item.getItemId();
         if (itemID == R.id.menu_refresh) {
-            mWebView.reload();
+            loadAuthenticatedUrl(mWebView.getUrl()); 
+            //mWebView.reload();
             return true;
         } else if (itemID == R.id.menu_share) {
             Intent share = new Intent(Intent.ACTION_SEND);
