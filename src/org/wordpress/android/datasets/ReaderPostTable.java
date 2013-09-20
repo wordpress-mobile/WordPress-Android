@@ -409,6 +409,16 @@ public class ReaderPostTable {
         }
     }
 
+    public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
+        if (post==null)
+            return;
+
+        String sql = "UPDATE tbl_posts SET is_reblogged=" + SqlUtils.boolToSql(isReblogged)
+                  + " WHERE blog_id=? AND post_id=?";
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
     private static int COL_POST_ID;
     private static int COL_BLOG_ID;
     private static int COL_PSEUDO_ID;

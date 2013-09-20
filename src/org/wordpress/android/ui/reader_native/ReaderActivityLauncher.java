@@ -53,6 +53,14 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderReblogForResult(Activity activity, ReaderPost post) {
+        if (post==null)
+            return;
+        Intent intent = new Intent(activity, ReaderReblogActivity.class);
+        intent.putExtra(ReaderReblogActivity.ARG_BLOG_ID, post.blogId);
+        intent.putExtra(ReaderReblogActivity.ARG_POST_ID, post.postId);
+        activity.startActivityForResult(intent, Constants.INTENT_READER_REBLOG);
+    }
 
     public static void openUrl(Context context, String url) {
         if (TextUtils.isEmpty(url))

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        style="@style/ReaderTextView.DialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_title_reblog" />
+
+    <View
+        android:id="@+id/divider_title"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_title"
+        android:layout_marginBottom="@dimen/reader_margin_medium"
+        android:layout_marginTop="@dimen/reader_margin_small"
+        android:background="@color/reader_divider_blue" />
+
+    <RelativeLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_title"
+        android:padding="@dimen/reader_margin_large">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_reblog_label"
+            style="@style/ReaderTextView.Label.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_label_reblog_to" />
+
+        <Spinner
+            android:id="@+id/spinner_reblog"
+            style="@style/ReaderSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_reblog_label" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_comment_label"
+            style="@style/ReaderTextView.Label.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner_reblog"
+            android:layout_marginTop="@dimen/reader_margin_large"
+            android:text="@string/reader_hint_reblog_comment" />
+
+        <EditText
+            android:id="@+id/edit_comment"
+            style="@style/ReaderEditText.Comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_comment_label"
+            android:layout_marginBottom="@dimen/reader_margin_large"
+            android:layout_marginTop="@dimen/reader_margin_small"
+            android:background="@drawable/reader_edittext_frame"
+            android:gravity="top"
+            android:padding="@dimen/reader_margin_medium" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/btn_reblog"
+            style="@style/ReaderTextView.ActionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_comment"
+            android:text="@string/reader_btn_reblog" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/ReaderProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_comment"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

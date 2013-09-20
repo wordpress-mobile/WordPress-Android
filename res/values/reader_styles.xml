@@ -27,7 +27,7 @@
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
-        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
     </style>
     <style name="ReaderTextView.Source" parent="ReaderTextView">
         <item name="android:textColor">@color/grey_medium</item>
@@ -238,4 +238,16 @@
     <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
     <style name="ReaderProgressBar.Small" parent="@android:style/Widget.ProgressBar.Small" />
     <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal" />
+
+    <!-- spinners -->
+    <style name="ReaderSpinner" parent="@android:style/Widget.Spinner" />
+    <style name="ReaderTextView.SpinnerItem" parebt="?android:attr/spinnerItemStyle">
+        <item name="android:textColor">@color/grey_extra_dark</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+    <style name="ReaderTextView.SpinnerDropdownItem" parebt="?android:attr/spinnerDropDownItemStyle">
+        <item name="android:padding">@dimen/reader_margin_large</item>
+        <item name="android:textColor">@color/grey_extra_dark</item>
+        <item name="android:background">@color/grey_extra_light</item>
+    </style>
 </resources>

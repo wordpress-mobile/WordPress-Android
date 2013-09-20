@@ -17,6 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.DisplayUtils;
@@ -50,20 +51,24 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
 
+    private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderPostAdapter(Context context,
                              boolean isGridView,
+                             ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
         mContext = context.getApplicationContext();
-
         mInflater = LayoutInflater.from(context);
+
+        mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
+
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
         mIsGridView = isGridView;
 
@@ -246,7 +251,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgAvatar.setVisibility(View.GONE);
         }
 
-        // likes & comments
+        // likes, comments & reblogging
         if (post.isWP()) {
             final int pos = position;
             showLikeStatus(holder.txtLikeButton, post.isLikedByCurrentUser);
@@ -258,11 +263,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
 
             showReblogStatus(holder.txtReblogButton, post.isRebloggedByCurrentUser);
-            if (!post.isRebloggedByCurrentUser) {
+            if (!post.isRebloggedByCurrentUser && post.isWP()) {
                 holder.txtReblogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reblogPost(holder.txtReblogButton, pos, post);
+                        if (mReblogListener!=null)
+                            mReblogListener.onRequestReblog(post);
                     }
                 });
             }
@@ -383,21 +389,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             txtLikeButton.setText(isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
             txtLikeButton.setSelected(isLikedByCurrentUser);
         }
-    }
-
-    public void reblogPost(TextView txtReblogButton, int position, ReaderPost post) {
-        if (post.isRebloggedByCurrentUser)
-            return;
-
-        showReblogStatus(txtReblogButton, true);
-        ReaderAniUtils.zoomAction(txtReblogButton);
-
-        if (!ReaderPostActions.performPostAction(txtReblogButton.getContext(), ReaderPostActions.PostAction.REBLOG, post, null)) {
-            showReblogStatus(txtReblogButton, false);
-            return;
-        }
-
-        mPosts.set(position, ReaderPostTable.getPost(post.blogId, post.postId));
     }
 
     private void showReblogStatus(TextView txtReblogButton, boolean isRebloggedByCurrentUser) {

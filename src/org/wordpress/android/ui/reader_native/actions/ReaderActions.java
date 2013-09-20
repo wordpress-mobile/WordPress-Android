@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader_native.actions;
 
 import org.wordpress.android.models.ReaderComment;
+import org.wordpress.android.models.ReaderPost;
 
 /**
  * Created by nbradbury on 7/17/13.
@@ -58,5 +59,12 @@ public class ReaderActions {
     public static enum RequestDataAction {LOAD_NEWER, LOAD_OLDER}
     public interface DataRequestedListener {
         public void onRequestData(RequestDataAction action);
+    }
+
+    /*
+     * used by post list & post list adapter when user asks to reblog a post
+     */
+    public interface RequestReblogListener {
+        public void onRequestReblog(ReaderPost post);
     }
 }

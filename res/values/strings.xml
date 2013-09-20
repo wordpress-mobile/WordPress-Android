@@ -638,6 +638,7 @@
     <string name="reader_title_userlist_default">People</string>
     <string name="reader_title_followed_topics">Followed Topics</string>
     <string name="reader_title_popular_topics">Popular Topics</string>
+    <string name="reader_title_reblog">Reblog</string>
     <string name="reader_title_err_unable_to_load_post">Unable to load post</string>
 
     <!-- menu text-->
@@ -663,6 +664,7 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_topic">Add a topic</string>
+    <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
     <string name="label_toggle_show">SHOW</string>
@@ -671,6 +673,7 @@
     <string name="reader_label_new_posts_multi">%d new articles</string>
     <string name="reader_label_added_topic">Added %s</string>
     <string name="reader_label_removed_topic">Removed %s</string>
+    <string name="reader_label_reblog_to">Reblog this post to</string>
 
     <!-- like/comment counts in post list -->
     <string name="reader_label_like_count_singular">1 like</string>
@@ -688,9 +691,13 @@
     <string name="reader_likes_you_and_multi_long">You and %d others like this</string>
 
     <!-- toast messages -->
-    <string name="reader_toast_comment_failed">Failed to post comment</string>
-    <string name="reader_toast_topic_exists">You already follow this topic</string>
-    <string name="reader_toast_topic_invalid">Sorry, this isn\'t a valid topic</string>
+    <string name="reader_toast_reblog_success">Post has been reblogged</string>
+    <string name="reader_toast_err_comment_failed">Couldn\'t post that comment</string>
+    <string name="reader_toast_err_reblog_failed">Couldn\'t reblog that post</string>
+    <string name="reader_toast_err_already_reblogged">You have already reblogged this post</string>
+    <string name="reader_toast_err_reblog_requires_blog">Please select a blog</string>
+    <string name="reader_toast_err_topic_exists">You already follow this topic</string>
+    <string name="reader_toast_err_topic_invalid">That isn\'t a valid topic</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>

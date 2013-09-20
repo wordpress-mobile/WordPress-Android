@@ -129,14 +129,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // this is just a hack to get the posts to load on pre-ICS devices
-        if (!hasActionBar())
-            setCurrentTopic(mCurrentTopic);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         scheduleAutoUpdate();
@@ -302,9 +294,24 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         }
     };
 
+    /*
+     * called by post adapter when user requests to reblog a post
+     */
+    ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
+        @Override
+        public void onRequestReblog(ReaderPost post) {
+            if (hasActivity())
+                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+        }
+    };
+
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter==null)
-            mPostAdapter = new ReaderPostAdapter(getActivity(), useGridView(), mDataLoadedListener, mDataRequestedListener);
+            mPostAdapter = new ReaderPostAdapter(getActivity(),
+                                                 useGridView(),
+                                                 mReblogListener,
+                                                 mDataLoadedListener,
+                                                 mDataRequestedListener);
         return mPostAdapter;
     }
 

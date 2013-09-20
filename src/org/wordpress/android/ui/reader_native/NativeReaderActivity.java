@@ -20,7 +20,6 @@ import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.ReaderLog;
-import org.wordpress.android.util.SysUtils;
 
 public class NativeReaderActivity extends WPActionBarActivity {
     private static String TAG_FRAGMENT_POST_LIST = "reader_post_list";
@@ -142,6 +141,16 @@ public class NativeReaderActivity extends WPActionBarActivity {
                 if (isResultOK && readerFragment!=null && data!=null) {
                     long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
+                    readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                }
+                break;
+
+            // user just returned from reblogging activity, reload the displayed post if reblogging
+            // succeeded
+            case Constants.INTENT_READER_REBLOG:
+                if (isResultOK && readerFragment!=null && data!=null) {
+                    long blogId = data.getLongExtra(ReaderReblogActivity.ARG_BLOG_ID, 0);
+                    long postId = data.getLongExtra(ReaderReblogActivity.ARG_POST_ID, 0);
                     readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
                 }
                 break;

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
     post for PostDetailActivity, inserted as ListView header
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

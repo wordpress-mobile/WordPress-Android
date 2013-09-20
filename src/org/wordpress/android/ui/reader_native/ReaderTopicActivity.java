@@ -183,12 +183,12 @@ public class ReaderTopicActivity extends FragmentActivity implements ReaderTopic
             return;
 
         if (ReaderTopicTable.topicExists(topicName)) {
-            ToastUtils.showToast(this, R.string.reader_toast_topic_exists, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, R.string.reader_toast_err_topic_exists, ToastUtils.Duration.LONG);
             return;
         }
 
         if (!ReaderTopic.isValidTopicName(topicName)) {
-            ToastUtils.showToast(this, R.string.reader_toast_topic_invalid, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, R.string.reader_toast_err_topic_invalid, ToastUtils.Duration.LONG);
             return;
         }
 
