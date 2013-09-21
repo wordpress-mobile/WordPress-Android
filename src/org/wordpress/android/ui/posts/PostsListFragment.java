@@ -78,18 +78,22 @@ public class PostsListFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-        setEmptyText(getText(R.string.posts_empty_list));
-        createSwitcher();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
         parent.addView(v, 0);
         return parent;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        if (isPage) {
+            setEmptyText(getText(R.string.pages_empty_list));
+        } else {
+            setEmptyText(getText(R.string.posts_empty_list));
+        }
+        createSwitcher();
     }
 
     public void onAttach(Activity activity) {

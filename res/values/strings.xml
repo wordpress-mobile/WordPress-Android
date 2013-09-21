@@ -188,6 +188,8 @@
     <string name="title">Title</string>
     <string name="content">Tap to add text and media</string>
     <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
+    <string name="pages_empty_list">No Pages Yet. Why not create one?</string>
+    <string name="page_id">Page</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -209,9 +211,6 @@
     <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading Image</string>
-
-    <!-- page view -->
-    <string name="page_id">Page</string>
 
     <!-- add comment view -->
     <string name="add_comment_enter">Enter comment:</string>
@@ -242,6 +241,7 @@
     <string name="reply_added">Reply Added Successfully</string>
     <string name="view_comment_from">Comment from</string>
     <string name="edit_comment">Edit Comment</string>
+    <string name="comments_empty_list">No comments.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Name</string>
@@ -524,6 +524,7 @@
     <string name="retry_reply">Reply failed. Tap to retry.</string>
     <string name="reply_failed">Reply failed.</string>
     <string name="tap_retry">Tap to retry.</string>
+    <string name="notifications_empty_list">No Notifications.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
