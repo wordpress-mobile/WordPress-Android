@@ -1,17 +1,14 @@
 
 package org.wordpress.android.ui;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -20,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -29,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -58,8 +57,14 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsActivityTablet;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.Utils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
@@ -227,7 +232,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
         return menuDrawer;
     }
-    
+
+    /*
+     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
+     * API 11 since hasFeature() requires API 11
+     */
+    @SuppressLint("NewApi")
+    private boolean hasActionBarOverlay() {
+        if (getWindow()!=null && Build.VERSION.SDK_INT >= 11) {
+            return getWindow().hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        } else {
+            return false;
+        }
+    }
     /**
      * Create menu drawer ListView and listeners
      */
@@ -237,6 +254,17 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mListView.setDivider(null);
         mListView.setDividerHeight(0);
         mListView.setCacheColorHint(android.R.color.transparent);
+
+        // if the ActionBar overlays window content, we must insert a view which is the same
+        // height as the ActionBar as the first header in the ListView - without this the
+        // ActionBar will cover the first item
+        if (hasActionBarOverlay()) {
+            final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
+            RelativeLayout header = new RelativeLayout(this);
+            header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
+            mListView.addHeaderView(header, null, false);
+        }
+
         mAdapter = new MenuAdapter(this);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {

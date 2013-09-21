@@ -135,8 +135,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">@dimen/reader_margin_large</item>
-        <item name="android:paddingBottom">@dimen/reader_margin_large</item>
+        <item name="android:paddingTop">@dimen/reader_margin_medium</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_medium</item>
         <item name="android:background">@color/reader_message_bar_blue</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
