@@ -3,6 +3,7 @@ package org.wordpress.android.ui.notifications;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -51,6 +52,22 @@ public class NotificationsListFragment extends ListFragment {
         mNotesAdapter = new NotesAdapter();
     }
 
+/*
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
+        parent.addView(v, 0);
+        return parent;
+    }
+*/
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
+        return v;
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -62,6 +79,12 @@ public class NotificationsListFragment extends ListFragment {
         listView.setDividerHeight(1);
         listView.addFooterView(mProgressFooterView, null, false);
         setListAdapter(mNotesAdapter);
+
+        // Set empty text if no notifications
+        TextView textview = (TextView) listView.getEmptyView();
+        if (textview != null) {
+            textview.setText(getText(R.string.notifications_empty_list));
+        }
     }
 
     @Override
@@ -130,7 +153,8 @@ public class NotificationsListFragment extends ListFragment {
             avatarView.setDefaultImageResId(R.drawable.placeholder);
             avatarView.setImageUrl(note.getIconURL(), WordPress.imageLoader);
 
-            int imageID = getResources().getIdentifier("note_icon_" + note.getType(), "drawable", getActivity().getPackageName());
+            int imageID = getResources().getIdentifier("note_icon_" + note.getType(), "drawable",
+                    getActivity().getPackageName());
             if (imageID > 0) {
                 final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
                 iconView.setImageResource(imageID);
