@@ -694,7 +694,7 @@
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
     <string name="reader_toast_err_comment_failed">Couldn\'t post that comment</string>
     <string name="reader_toast_err_reblog_failed">Couldn\'t reblog that post</string>
-    <string name="reader_toast_err_already_reblogged">You have already reblogged this post</string>
+    <string name="reader_toast_err_already_reblogged">You already reblogged this post</string>
     <string name="reader_toast_err_reblog_requires_blog">Please select a blog</string>
     <string name="reader_toast_err_topic_exists">You already follow this topic</string>
     <string name="reader_toast_err_topic_invalid">That isn\'t a valid topic</string>

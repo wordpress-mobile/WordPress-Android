@@ -53,21 +53,18 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     private String mCurrentTopic;
     private boolean mIsUpdating = false;
     private boolean mAlreadyUpdatedTopicList = false;
-    private boolean mIsTranslucentActionBarEnabled = false;
 
     private static final String KEY_TOPIC_LIST_UPDATED = "topics_updated";
     private static final String KEY_TOPIC_NAME = "topic_name";
-    private static final String KEY_TRANSLUCENT_ACTION_BAR = "translucent_actionbar";
+
+    protected interface OnFirstVisibleItemChangeListener {
+        void onFirstVisibleItemChanged(int firstVisibleItem);
+    }
+
+    private OnFirstVisibleItemChangeListener mFirstVisibleItemChangeListener;
 
     protected static ReaderPostListFragment newInstance(Context context) {
         ReaderLog.d("post list newInstance");
-
-        final boolean isTranslucentActionBarEnabled;
-        if (context instanceof NativeReaderActivity) {
-            isTranslucentActionBarEnabled = ((NativeReaderActivity)context).isTranslucentActionBarEnabled();
-        } else {
-            isTranslucentActionBarEnabled = false;
-        }
 
         // restore the previously-chosen topic, revert to default if not set or doesn't exist
         String topicName = ReaderPrefs.getReaderTopic();
@@ -76,10 +73,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         Bundle args = new Bundle();
         args.putString(KEY_TOPIC_NAME, topicName);
-        args.putBoolean(KEY_TRANSLUCENT_ACTION_BAR, isTranslucentActionBarEnabled);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -92,7 +89,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (args!=null) {
             if (args.containsKey(KEY_TOPIC_NAME))
                 mCurrentTopic = args.getString(KEY_TOPIC_NAME);
-            mIsTranslucentActionBarEnabled = args.getBoolean(KEY_TRANSLUCENT_ACTION_BAR);
         }
     }
 
@@ -103,7 +99,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (savedInstanceState!=null) {
             mAlreadyUpdatedTopicList = savedInstanceState.getBoolean(KEY_TOPIC_LIST_UPDATED);
             mCurrentTopic = savedInstanceState.getString(KEY_TOPIC_NAME);
-            mIsTranslucentActionBarEnabled = savedInstanceState.getBoolean(KEY_TRANSLUCENT_ACTION_BAR);
         }
 
         // get list of topics from server if it hasn't already been done this session
@@ -117,13 +112,19 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        // activity is assumed to implement OnFirstVisibleItemChangeListener
+        try {
+            mFirstVisibleItemChangeListener = (OnFirstVisibleItemChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnFirstVisibleItemChangeListener");
+        }
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TOPIC_LIST_UPDATED, mAlreadyUpdatedTopicList);
-        outState.putBoolean(KEY_TRANSLUCENT_ACTION_BAR, mIsTranslucentActionBarEnabled);
         if (hasCurrentTopic())
             outState.putString(KEY_TOPIC_NAME, mCurrentTopic);
     }
@@ -166,8 +167,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final boolean useGridView = useGridView();
-        final int actionbarHeight = getResources().getDimensionPixelSize(R.dimen.reader_actionbar_height);
         final Context context = container.getContext();
+        final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
+        final boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
         final View view;
 
         // use two-column grid layout for landscape/tablet, list layout otherwise
@@ -189,7 +191,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         });
 
         // move the "new posts" bar down when the translucent ActionBar is enabled
-        if (mIsTranslucentActionBarEnabled) {
+        if (isTranslucentActionBarEnabled) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
             params.setMargins(0, actionbarHeight, 0, 0);
         }
@@ -201,11 +203,15 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
             gridView.setOnTouchListener(this);
 
-            if (mIsTranslucentActionBarEnabled) {
+            if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 header.setMinimumHeight(actionbarHeight - (gridView.getItemMargin() * 2));
                 gridView.setHeaderView(header);
+                // we can't fade the ActionBar while items are scrolled because StaggeredGridView
+                // doesn't have a scroll listener, so just use a default alpha
+                if (hasActivity() && getActivity() instanceof NativeReaderActivity)
+                    ((NativeReaderActivity)getActivity()).setActionBarAlpha(200);
             }
 
             mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, gridView, false);
@@ -233,7 +239,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, listView, false);
             listView.addFooterView(mFooterProgress);
 
-            if (mIsTranslucentActionBarEnabled) {
+            if (isTranslucentActionBarEnabled) {
                 // add a transparent header to the listView - must be done before setting adapter
                 int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_margin_medium);
                 RelativeLayout header = new RelativeLayout(context);
@@ -663,8 +669,16 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         }
     }
 
+    private int mPrevFirstVisibleItem = -1;
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        // nop
+        if (visibleItemCount==0 || !hasActivity())
+            return;
+        if (firstVisibleItem != mPrevFirstVisibleItem && mFirstVisibleItemChangeListener != null) {
+            // this tells NativeReaderActivity to make the ActionBar more translucent as the user
+            // scrolls through the list
+            mFirstVisibleItemChangeListener.onFirstVisibleItemChanged(firstVisibleItem);
+            mPrevFirstVisibleItem = firstVisibleItem;
+        }
     }
 }

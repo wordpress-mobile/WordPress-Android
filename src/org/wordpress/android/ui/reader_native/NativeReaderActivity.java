@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.reader_native;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -10,6 +11,8 @@ import android.view.Window;
 
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import net.simonvt.menudrawer.MenuDrawer;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -20,39 +23,64 @@ import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.SysUtils;
 
-public class NativeReaderActivity extends WPActionBarActivity {
-    private static String TAG_FRAGMENT_POST_LIST = "reader_post_list";
+public class NativeReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnFirstVisibleItemChangeListener {
+    private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
+    private static final String KEY_INITIAL_UPDATE = "initial_update";
     private MenuItem mRefreshMenuItem;
+    private int mCurrentActionBarAlpha = 0;
+    private int mPrevActionBarAlpha = 0;
     private boolean mPerformedInitialUpdate = false;
 
     /*
      * enable translucent ActionBar on ICS+
      */
-    protected boolean isTranslucentActionBarEnabled() {
-        // TODO: translucent ActionBar is still possible but need to update icons
-        return false; //(SysUtils.isGteAndroid4());
+    protected static boolean isTranslucentActionBarEnabled() {
+        return (SysUtils.isGteAndroid4());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (isTranslucentActionBarEnabled()) {
+        if (isTranslucentActionBarEnabled())
             getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-            setContentView(R.layout.activity_reader_main);
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.reader_actionbar_translucent));
-        } else {
-            setContentView(R.layout.activity_reader_main);
-        }
+
+        setContentView(R.layout.activity_reader_main);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportProgressBarVisibility(false);
 
         createMenuDrawer(R.layout.activity_reader_main);
 
-        if (savedInstanceState==null)
+        if (isTranslucentActionBarEnabled() && super.mMenuDrawer!=null) {
+            // disable ActionBar translucency when drawer is opening, restore it when closing
+            super.mMenuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
+                @Override
+                public void onDrawerStateChange(int oldState, int newState) {
+                    switch (newState) {
+                        case MenuDrawer.STATE_OPENING :
+                            mPrevActionBarAlpha = mCurrentActionBarAlpha;
+                            setActionBarAlpha(0);
+                            break;
+                        case MenuDrawer.STATE_CLOSING:
+                            setActionBarAlpha(mPrevActionBarAlpha);
+                            break;
+                    }
+                }
+                @Override
+                public void onDrawerSlide(float openRatio, int offsetPixels) {
+                    // nop
+                }
+            });
+        }
+
+        if (savedInstanceState==null) {
             showPostListFragment();
+        } else {
+            mPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+        }
     }
 
     @Override
@@ -80,23 +108,9 @@ public class NativeReaderActivity extends WPActionBarActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    private static final String KEY_INITIAL_UPDATE = "initial_update";
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_INITIAL_UPDATE, mPerformedInitialUpdate);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState!=null)
-            mPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
     }
 
     @Override
@@ -157,7 +171,6 @@ public class NativeReaderActivity extends WPActionBarActivity {
         }
     }
 
-    @SuppressLint("NewApi")
     protected void setIsUpdating(boolean isUpdating) {
         if (mRefreshMenuItem==null)
             return;
@@ -233,4 +246,32 @@ public class NativeReaderActivity extends WPActionBarActivity {
         return ((ReaderPostListFragment) fragment);
     }
 
+    /*
+     * called from post list - makes the ActionBar increasingly translucent as user scrolls
+     * through the first few posts in the list
+     */
+    @Override
+    public void onFirstVisibleItemChanged(int firstVisibleItem) {
+        if (firstVisibleItem==0) {
+            setActionBarAlpha(0);
+        } else if (1 <= firstVisibleItem && firstVisibleItem <= 7) {
+            setActionBarAlpha(250 - ((firstVisibleItem + 1) * 10));
+        } else {
+            setActionBarAlpha(160);
+        }
+    }
+
+    protected void setActionBarAlpha(int alpha) {
+        if (alpha==mCurrentActionBarAlpha || !isTranslucentActionBarEnabled())
+            return;
+
+        // solid background if no alpha (this is the first item in the list), otherwise create color
+        // drawable with alpha applied (source color is based on ab_stacked_solid_wordpress.9.png)
+         if (alpha==0) {
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
+        } else {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));
+        }
+        mCurrentActionBarAlpha = alpha;
+    }
 }

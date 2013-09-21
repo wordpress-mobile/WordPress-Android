@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by nbradbury on 6/21/13.
- * simple wrapper for Android log calls
+ * simple wrapper for Android log calls, currently used only by the native reader
  * enables recording & displaying log
  */
 public class ReaderLog {

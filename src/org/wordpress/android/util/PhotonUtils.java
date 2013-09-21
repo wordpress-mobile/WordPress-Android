@@ -73,8 +73,10 @@ public class PhotonUtils {
         }
 
         // return passed url+query if it's already a photon url
-        if (imageUrl.contains("i0.wp.com"))
-            return imageUrl + query;
+        if (imageUrl.contains(".wp.com")) {
+            if (imageUrl.contains("i0.wp.com") || imageUrl.contains("i1.wp.com") || imageUrl.contains("i2.wp.com"))
+                return imageUrl + query;
+        }
 
         // must use https for https image urls
         if (UrlUtils.isHttps(imageUrl)) {

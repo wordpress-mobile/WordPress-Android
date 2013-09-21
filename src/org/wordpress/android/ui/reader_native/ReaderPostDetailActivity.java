@@ -840,7 +840,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         sbHtml.append("<style type='text/css'>")
                 .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
-                .append("  body, p, div { font-size: 1em; line-height: 1.5em; }");
+                .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
         // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin: ").append(marginMedium).append("px auto !important; }");
@@ -859,7 +859,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         sbHtml.append("  img { display: block; overflow: hidden; height: auto; margin: 10px 0px !important; max-width: 100% !important; }");
 
         // ...but make sure wp emoticons are inline...
-        sbHtml.append("  img.wp-smiley { display: inline; margin: auto; }");
+        sbHtml.append("  img.wp-smiley { display: inline; margin: auto !important; }");
 
         // show large wp images full-width (unnecessary in most cases since they'll already be at least
         // as wide as the display, except maybe when viewed on a large landscape tablet)

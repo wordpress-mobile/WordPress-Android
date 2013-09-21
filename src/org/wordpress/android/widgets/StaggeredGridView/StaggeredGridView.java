@@ -15,10 +15,9 @@
  */
 
 /*
- * adapted for use in WP Reader by nbradbury - code is based on these with some fixes:
+ * adapted for use in the native Reader by nbradbury - code is based on these with some fixes:
  *    https://github.com/maurycyw/StaggeredGridView
  *    https://github.com/bulletnoid/StaggeredGridView
- * (search code for nbradbury to see fixes)
  *
  * StaggeredGridView original code is from Google which was supposed to be included in
  * their latest support library but was pulled due to problems - Google source here:

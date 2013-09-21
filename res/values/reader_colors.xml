@@ -6,8 +6,6 @@
     <color name="reader_divider_blue">@color/blue_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
 
-    <color name="reader_actionbar_light_translucent">#c0ffffff</color>
-    <color name="reader_actionbar_dark_translucent">#c0dddddd</color>
     <color name="reader_actionbar_text">@color/grey_extra_light</color>
 
     <color name="reader_message_bar_blue">#cc1e8cbe</color>    <!-- blue_medium with alpha -->
