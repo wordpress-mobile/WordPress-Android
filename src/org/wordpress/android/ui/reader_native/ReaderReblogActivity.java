@@ -54,7 +54,7 @@ public class ReaderReblogActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_reader_reblog);
+        setContentView(R.layout.reader_activity_reblog);
 
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);

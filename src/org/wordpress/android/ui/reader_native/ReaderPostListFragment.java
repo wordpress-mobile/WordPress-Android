@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -164,6 +165,14 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         return (displayMetrics.densityDpi >= DisplayMetrics.DENSITY_HIGH);
     }
 
+    @SuppressLint("NewApi")
+    private void initListViewOverscroll(ListView listView) {
+        // setOverScrollMode requires API 9
+        if (listView==null || Build.VERSION.SDK_INT < 9)
+            return;
+        listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final boolean useGridView = useGridView();
@@ -174,9 +183,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         // use two-column grid layout for landscape/tablet, list layout otherwise
         if (useGridView) {
-            view = inflater.inflate(R.layout.fragment_reader_post_grid, container, false);
+            view = inflater.inflate(R.layout.reader_fragment_post_grid, container, false);
         } else {
-            view = inflater.inflate(R.layout.fragment_reader_post_list, container, false);
+            view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         }
 
         // bar that appears at top when new posts are downloaded
@@ -211,7 +220,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                 // we can't fade the ActionBar while items are scrolled because StaggeredGridView
                 // doesn't have a scroll listener, so just use a default alpha
                 if (hasActivity() && getActivity() instanceof NativeReaderActivity)
-                    ((NativeReaderActivity)getActivity()).setActionBarAlpha(200);
+                    ((NativeReaderActivity)getActivity()).setActionBarAlpha(NativeReaderActivity.ALPHA_LEVEL_3);
             }
 
             mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, gridView, false);
@@ -241,10 +250,11 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
             if (isTranslucentActionBarEnabled) {
                 // add a transparent header to the listView - must be done before setting adapter
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_margin_medium);
+                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
                 listView.addHeaderView(header, null, false);
+                initListViewOverscroll(listView);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

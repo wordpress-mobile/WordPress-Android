@@ -22,7 +22,7 @@ public class ReaderLogViewerActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reader_logviewer);
+        setContentView(R.layout.reader_activity_logviewer);
 
         mTxtLogViewer = (TextView) findViewById(R.id.text_log);
         mTxtLogViewer.setText(Html.fromHtml(ReaderLog.toHtml()));

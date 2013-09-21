@@ -28,9 +28,19 @@ import org.wordpress.android.util.SysUtils;
 public class NativeReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnFirstVisibleItemChangeListener {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
-    private MenuItem mRefreshMenuItem;
+
+    // ActionBar alpha
+    protected static final int ALPHA_NONE = 0;
+    protected static final int ALPHA_LEVEL_1 = 230;
+    protected static final int ALPHA_LEVEL_2 = 210;
+    protected static final int ALPHA_LEVEL_3 = 190;
+    protected static final int ALPHA_LEVEL_4 = 170;
+    protected static final int ALPHA_LEVEL_5 = 150;
+
     private int mCurrentActionBarAlpha = 0;
     private int mPrevActionBarAlpha = 0;
+
+    private MenuItem mRefreshMenuItem;
     private boolean mPerformedInitialUpdate = false;
 
     /*
@@ -47,12 +57,12 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         if (isTranslucentActionBarEnabled())
             getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-        setContentView(R.layout.activity_reader_main);
+        setContentView(R.layout.reader_activity_main);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportProgressBarVisibility(false);
 
-        createMenuDrawer(R.layout.activity_reader_main);
+        createMenuDrawer(R.layout.reader_activity_main);
 
         if (isTranslucentActionBarEnabled() && super.mMenuDrawer!=null) {
             // disable ActionBar translucency when drawer is opening, restore it when closing
@@ -62,7 +72,7 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                     switch (newState) {
                         case MenuDrawer.STATE_OPENING :
                             mPrevActionBarAlpha = mCurrentActionBarAlpha;
-                            setActionBarAlpha(0);
+                            setActionBarAlpha(ALPHA_NONE);
                             break;
                         case MenuDrawer.STATE_CLOSING:
                             setActionBarAlpha(mPrevActionBarAlpha);
@@ -252,12 +262,22 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
      */
     @Override
     public void onFirstVisibleItemChanged(int firstVisibleItem) {
-        if (firstVisibleItem==0) {
-            setActionBarAlpha(0);
-        } else if (1 <= firstVisibleItem && firstVisibleItem <= 7) {
-            setActionBarAlpha(250 - ((firstVisibleItem + 1) * 10));
-        } else {
-            setActionBarAlpha(160);
+        switch (firstVisibleItem) {
+            case 0:
+                setActionBarAlpha(ALPHA_LEVEL_1);
+                break;
+            case 1:
+                setActionBarAlpha(ALPHA_LEVEL_2);
+                break;
+            case 2 :
+                setActionBarAlpha(ALPHA_LEVEL_3);
+                break;
+            case 3 :
+                setActionBarAlpha(ALPHA_LEVEL_4);
+                break;
+            default:
+                setActionBarAlpha(ALPHA_LEVEL_5);
+                break;
         }
     }
 
@@ -265,9 +285,9 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         if (alpha==mCurrentActionBarAlpha || !isTranslucentActionBarEnabled())
             return;
 
-        // solid background if no alpha (this is the first item in the list), otherwise create color
-        // drawable with alpha applied (source color is based on ab_stacked_solid_wordpress.9.png)
-         if (alpha==0) {
+        // solid background if no alpha, otherwise create color drawable with alpha applied
+        // (source color is based on ab_stacked_solid_wordpress.9.png)
+         if (alpha==ALPHA_NONE) {
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
         } else {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));

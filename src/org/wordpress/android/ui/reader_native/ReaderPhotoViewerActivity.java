@@ -29,7 +29,7 @@ public class ReaderPhotoViewerActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_reader_photo_viewer);
+        setContentView(R.layout.reader_activity_photo_viewer);
 
         final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
         mProgress = (ProgressBar) findViewById(R.id.progress);

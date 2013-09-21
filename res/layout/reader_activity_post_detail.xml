@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/layout_likes"
-        layout="@layout/include_reader_post_detail_likes"
+        layout="@layout/reader_include_post_detail_likes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -29,7 +29,7 @@
 
         <include
             android:id="@+id/layout_actions"
-            layout="@layout/include_reader_post_detail_actions"
+            layout="@layout/reader_include_post_detail_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/reader_margin_small"
@@ -39,7 +39,7 @@
 
         <include
             android:id="@+id/layout_comment_box"
-            layout="@layout/include_reader_comment_box"
+            layout="@layout/reader_include_comment_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

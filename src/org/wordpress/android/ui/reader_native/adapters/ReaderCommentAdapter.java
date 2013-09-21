@@ -103,7 +103,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         final ReaderComment comment = mComments.get(position);
         CommentViewHolder holder;
         if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.listitem_reader_comment, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
             holder = new CommentViewHolder();
             holder.txtTitle = (TextView) convertView.findViewById(R.id.text_comment_title);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);

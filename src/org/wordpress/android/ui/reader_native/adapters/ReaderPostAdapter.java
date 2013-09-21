@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.DisplayUtils;
@@ -187,7 +186,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         final PostViewHolder holder;
         if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.listitem_reader_post_excerpt, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
             holder = new PostViewHolder();
 
             holder.txtTitle = (TextView) convertView.findViewById(R.id.text_title);

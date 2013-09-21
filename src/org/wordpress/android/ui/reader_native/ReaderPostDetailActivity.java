@@ -204,7 +204,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         mInflater = getLayoutInflater();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_reader_post_detail);
+        setContentView(R.layout.reader_activity_post_detail);
 
         // remove window background since background color is set in layout (prevents overdraw)
         getWindow().setBackgroundDrawable(null);
@@ -213,7 +213,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
 
         // add post detail as header to listView - must be done before setting adapter
-        ViewGroup header = (ViewGroup) mInflater.inflate(R.layout.listitem_reader_post_detail, getListView(), false);
+        ViewGroup header = (ViewGroup) mInflater.inflate(R.layout.reader_listitem_post_detail, getListView(), false);
         getListView().addHeaderView(header, null, false);
 
         // add listView footer containing progress bar - footer appears whenever there are comments,

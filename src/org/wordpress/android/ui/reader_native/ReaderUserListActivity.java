@@ -43,7 +43,7 @@ public class ReaderUserListActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_reader_userlist);
+        setContentView(R.layout.reader_activity_userlist);
 
         // hide title until text set by updateTitle()
         mTxtTitle = (TextView) findViewById(R.id.text_title);

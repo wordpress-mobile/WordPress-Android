@@ -124,7 +124,7 @@ public class ReaderTopicAdapter extends BaseAdapter {
         final ReaderTopic topic = (ReaderTopic) getItem(position);
         TopicViewHolder holder;
         if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.listitem_reader_topic, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_listitem_topic, parent, false);
             holder = new TopicViewHolder();
             holder.txtTopic = (TextView) convertView.findViewById(R.id.text_topic);
             holder.btnAddRemove = (ImageButton) convertView.findViewById(R.id.btn_add_remove);

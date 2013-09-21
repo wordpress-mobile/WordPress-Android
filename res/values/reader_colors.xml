@@ -8,7 +8,7 @@
 
     <color name="reader_actionbar_text">@color/grey_extra_light</color>
 
-    <color name="reader_message_bar_blue">#cc1e8cbe</color>    <!-- blue_medium with alpha -->
+    <color name="reader_message_bar_blue">#ee1e8cbe</color>    <!-- blue_medium with alpha -->
     <color name="reader_message_bar_orange">#ccf1831e</color>  <!-- orange_medium with alpha -->
 
 </resources>

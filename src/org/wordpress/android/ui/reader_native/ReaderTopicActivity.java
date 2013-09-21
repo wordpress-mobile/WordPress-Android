@@ -65,7 +65,7 @@ public class ReaderTopicActivity extends FragmentActivity implements ReaderTopic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_reader_topics);
+        setContentView(R.layout.reader_activity_topics);
 
         if (savedInstanceState!=null) {
             mTopicsChanged = savedInstanceState.getBoolean(KEY_TOPICS_CHANGED);

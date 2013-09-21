@@ -85,7 +85,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         final UserViewHolder holder;
 
         if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.listitem_reader_user, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_listitem_user, parent, false);
             holder = new UserViewHolder();
             holder.txtName = (TextView) convertView.findViewById(R.id.text_name);
             holder.txtUrl = (TextView) convertView.findViewById(R.id.text_url);
