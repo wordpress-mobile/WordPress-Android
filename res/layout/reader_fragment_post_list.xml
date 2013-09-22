@@ -8,7 +8,7 @@
     <ListView
         android:id="@android:id/list"
         style="@style/ReaderListView.Posts"
-        tools:listitem="@layout/listitem_reader_post_excerpt" />
+        tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"
@@ -18,7 +18,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
-        style="@style/ReaderTextView.Label.Large"
+        style="@style/ReaderTextView.Label.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

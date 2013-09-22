@@ -9,7 +9,7 @@ import org.wordpress.android.util.SqlUtils;
 
 /**
  * Created by nbradbury on 8/20/13.
- * stores thumbnail urls for videos
+ * stores thumbnail urls for videos embedded in Reader posts
  */
 public class ReaderThumbnailTable {
     protected static void createTables(SQLiteDatabase db) {

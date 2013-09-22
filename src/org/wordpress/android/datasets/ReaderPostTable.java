@@ -44,8 +44,8 @@ public class ReaderPostTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
-                + "	post_id		        INTEGER,"   // post_id for WP blogs, feed_item_id for non-WP blogs
-                + " blog_id             INTEGER,"   // blog_id for WP blogs, feed_id for non-WP blogs
+                + "	post_id		        INTEGER,"       // post_id for WP blogs, feed_item_id for non-WP blogs
+                + " blog_id             INTEGER,"       // blog_id for WP blogs, feed_id for non-WP blogs
                 + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
                 + "	title	            TEXT,"
@@ -159,11 +159,13 @@ public class ReaderPostTable {
             return posts.size();
 
         // build sql that tells us which posts *do* exist in the database
+        // TODO: may be able to simplify by using pseudo_id here
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT COUNT(*) FROM tbl_post_topics")
           .append(" WHERE topic_name=?")
           .append(" AND (CAST(post_id AS TEXT) || '-' || CAST(blog_id AS TEXT))") // concatenated string, post_id-blog_id
           .append(" IN (");
+
         boolean isFirst = true;
         for (ReaderPost post: posts) {
             if (isFirst) {
@@ -177,25 +179,6 @@ public class ReaderPostTable {
 
         int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), new String[]{topicName});
         return posts.size() - numExisting;
-
-        /*int numNew = 0;
-        SQLiteStatement stmt = ReaderDatabase.getReadableDb().compileStatement("SELECT 1 FROM tbl_post_topics WHERE blog_id=?1 AND post_id=?2 AND topic_name=?3");
-        try {
-            for (ReaderPost post: posts) {
-                stmt.clearBindings();
-                stmt.bindLong  (1, post.blogId);
-                stmt.bindLong  (2, post.postId);
-                stmt.bindString(3, topicName);
-                try {
-                    stmt.simpleQueryForLong();
-                } catch (SQLiteDoneException e) {
-                    numNew++;
-                }
-            }
-            return numNew;
-        } finally {
-            SqlUtils.closeStatement(stmt);
-        }*/
     }
 
     /*

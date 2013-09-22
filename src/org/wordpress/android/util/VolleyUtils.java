@@ -1,6 +1,9 @@
 package org.wordpress.android.util;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +31,7 @@ public class VolleyUtils {
     }
 
     /*
-     * attempts to return JSON from a volleyError - useful for REST API failures, which often
+     * attempts to return JSON from a volleyError - useful for WP REST API failures, which often
      * contain JSON in the response
      */
     private static JSONObject volleyErrorToJSON(VolleyError volleyError) {
@@ -51,5 +54,37 @@ public class VolleyUtils {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    /*
+     * cancel all Volley requests that aren't for images
+     */
+    public static void cancelAllNonImageRequests(RequestQueue requestQueue) {
+        if (requestQueue==null)
+            return;
+        RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                if (request instanceof ImageRequest)
+                    return false;
+                return true;
+            }
+        };
+        requestQueue.cancelAll(filter);
+    }
+
+    /*
+     * cancel all Volley requests
+     */
+    public static void cancelAllRequests(RequestQueue requestQueue) {
+        if (requestQueue==null)
+            return;
+        RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        };
+        requestQueue.cancelAll(filter);
     }
 }

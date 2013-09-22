@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class ReaderBlogTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_blog_urls ("
-                + "	blog_url        TEXT PRIMARY KEY,"
+                + "	blog_url        TEXT COLLATE NOCASE PRIMARY KEY,"
                 + " is_followed     INTEGER DEFAULT 0)");
     }
 

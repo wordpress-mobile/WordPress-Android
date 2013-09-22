@@ -13,7 +13,7 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 58;
+    private static final int DB_VERSION = 59;
 
     /*
 	 *  database singleton
@@ -76,7 +76,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // for now just reset the db when upgrading, future versions will want to avoid this
+        // for now just reset the db when upgrading, future versions may want to avoid this
         // and modify table structures, etc., on upgrade while preserving data
         ReaderLog.i("Upgrading database from version " + oldVersion + " to version " + newVersion);
         reset(db);

@@ -76,22 +76,18 @@ public class ReaderBlogActions {
      * get the latest server info on blogs the current user is following
      */
     public static void updateFollowedBlogs() {
-        final ReaderUser localUser = ReaderUserTable.getCurrentUser();
-
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 handleFollowedBlogsResponse(jsonObject);
             }
         };
-
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 ReaderLog.e(volleyError);
             }
         };
-
         WordPress.restClient.get("/read/following/mine", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject) {

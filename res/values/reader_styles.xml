@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    styles used by the native reader - all margins, padding and font sizes use dimensions
+    defined in reader_dimens.xml for consistency
+-->
 <resources>
     <!-- activity themes -->
     <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
@@ -25,6 +29,9 @@
     <style name="ReaderTextView.Label" parent="ReaderTextView">
         <item name="android:textColor">@color/grey_medium</item>
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
+    </style>
+    <style name="ReaderTextView.Label.Medium" parent="ReaderTextView.Label">
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
@@ -135,8 +142,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">@dimen/reader_margin_medium</item>
-        <item name="android:paddingBottom">@dimen/reader_margin_medium</item>
+        <item name="android:paddingTop">@dimen/reader_margin_large</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_large</item>
         <item name="android:background">@color/reader_message_bar_blue</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/reader_text_sz_large</item>

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTopicTable;
 import org.wordpress.android.models.ReaderPost;
@@ -38,10 +39,12 @@ import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
 /**
  * Created by nbradbury on 6/30/13.
+ * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific topic
  */
 public class ReaderPostListFragment extends Fragment implements View.OnTouchListener, AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
@@ -87,10 +90,8 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         // note that setCurrentTopic() should NOT be called here since it's automatically
         // called from the actionbar navigation handler
-        if (args!=null) {
-            if (args.containsKey(KEY_TOPIC_NAME))
-                mCurrentTopic = args.getString(KEY_TOPIC_NAME);
-        }
+        if (args!=null && args.containsKey(KEY_TOPIC_NAME))
+            mCurrentTopic = args.getString(KEY_TOPIC_NAME);
     }
 
     @Override
@@ -411,9 +412,11 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (TextUtils.isEmpty(topicName))
             return;
 
-        // skip if we're already updating
-        if (isUpdating())
-            return;
+        // cancel existing requests if we're already updating
+        if (isUpdating()) {
+            VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
+            ReaderLog.i("canceling existing update");
+        }
 
         unscheduleAutoUpdate();
         setIsUpdating(true, updateAction);

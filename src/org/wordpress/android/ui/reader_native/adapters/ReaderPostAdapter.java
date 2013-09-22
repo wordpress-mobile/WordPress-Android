@@ -44,7 +44,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final int mRowAnimationDuration;
     private int mPreviousGetViewPosition = -1;
     private boolean mCanRequestMorePosts = false;
-    private boolean mIsGridView = false;
 
     private Context mContext;
     private final LayoutInflater mInflater;
@@ -69,7 +68,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         mDataRequestedListener = dataRequestedListener;
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
-        mIsGridView = isGridView;
 
         // negative top offset for avatar when both an avatar and featured image exist
         mNegativeOffset = -(mAvatarSz / 2);
@@ -82,7 +80,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         // determine size to use when requesting images via photon - full width unless we're using
         // a grid, in which case half-width since the grid shows two columns
-        mPhotonWidth = (mIsGridView ? displayWidth / 2 : displayWidth);
+        mPhotonWidth = (isGridView ? displayWidth / 2 : displayWidth);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // when animating rows in, start from this y-position near the bottom using medium animation duration

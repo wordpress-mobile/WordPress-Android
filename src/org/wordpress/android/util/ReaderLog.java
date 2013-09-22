@@ -15,10 +15,18 @@ import java.util.NoSuchElementException;
  */
 public class ReaderLog {
 
-    public static final String TAG = "WPReader";
+    public static final String TAG = "WordPress.Reader";
+    private static boolean mEnableRecording = false;
 
     private ReaderLog() {
         throw new AssertionError();
+    }
+
+    /*
+     * defaults to false, pass true to capture log so it can be displayed by ReaderLogViewerActivity
+     */
+    public static void enableRecording(boolean enable) {
+        mEnableRecording = enable;
     }
 
     public static void d(String message) {
@@ -107,6 +115,9 @@ public class ReaderLog {
     private static LogEntryList mLogEntries = new LogEntryList();
 
     private static void addEntry(LogLevel level, String text) {
+        // skip if recording is disabled (default)
+        if (!mEnableRecording)
+            return;
         LogEntry entry = new LogEntry();
         entry.logLevel = level;
         entry.logText = text;
@@ -114,7 +125,7 @@ public class ReaderLog {
     }
 
     /*
-     * returns entire log as html for display
+     * returns entire log as html for display (see ReaderLogViewerActivity)
      */
     public static String toHtml() {
         StringBuilder sb = new StringBuilder();
