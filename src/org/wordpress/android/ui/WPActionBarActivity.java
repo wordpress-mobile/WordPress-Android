@@ -172,7 +172,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getId()) {
-                    mBlogSpinner.setSelection(i);
+                    if (mBlogSpinner != null) {
+                        mBlogSpinner.setSelection(i);
+                    }
                 }
             }
         }
