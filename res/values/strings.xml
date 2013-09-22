@@ -692,8 +692,8 @@
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
-    <string name="reader_toast_err_comment_failed">Couldn\'t post that comment</string>
-    <string name="reader_toast_err_reblog_failed">Couldn\'t reblog that post</string>
+    <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
+    <string name="reader_toast_err_reblog_failed">Couldn\'t reblog this post</string>
     <string name="reader_toast_err_already_reblogged">You already reblogged this post</string>
     <string name="reader_toast_err_reblog_requires_blog">Please select a blog</string>
     <string name="reader_toast_err_topic_exists">You already follow this topic</string>
@@ -712,5 +712,5 @@
     <string name="reader_empty_posts_in_topic">No articles in this topic</string>
     <string name="reader_empty_posts_in_topic_never_updated">No articles in this topic yet</string>
     <string name="reader_empty_followed_topics">You don\'t follow any topics</string>
-    <string name="reader_empty_popular_topics">Sorry, no popular topics</string>
+    <string name="reader_empty_popular_topics">No popular topics</string>
 </resources>

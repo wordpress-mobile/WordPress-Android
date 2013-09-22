@@ -16,6 +16,7 @@ import net.simonvt.menudrawer.MenuDrawer;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
@@ -28,6 +29,7 @@ import org.wordpress.android.util.SysUtils;
 public class NativeReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnFirstVisibleItemChangeListener {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
+    private static final String KEY_HAS_PURGED = "has_purged";
 
     // ActionBar alpha
     protected static final int ALPHA_NONE = 0;
@@ -41,7 +43,8 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     private int mPrevActionBarAlpha = 0;
 
     private MenuItem mRefreshMenuItem;
-    private boolean mPerformedInitialUpdate = false;
+    private boolean mHasPerformedInitialUpdate = false;
+    private boolean mHasPerformedPurge = false;
 
     /*
      * enable translucent ActionBar on ICS+
@@ -89,7 +92,8 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         if (savedInstanceState==null) {
             showPostListFragment();
         } else {
-            mPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+            mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
     }
 
@@ -97,17 +101,18 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     protected void onStart() {
         super.onStart();
 
-        if (!mPerformedInitialUpdate) {
-            mPerformedInitialUpdate = true;
+        // purge the database of older data at startup
+        if (!mHasPerformedPurge) {
+            mHasPerformedPurge = true;
+            ReaderDatabase.purgeAsync();
+        }
+
+        if (!mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
             // update the current user the first time this is shown - ensures we have their user_id
             // as well as their latest info (in case they changed their avatar, name, etc. since last time)
             ReaderLog.i("updating current user");
-            ReaderUserActions.updateCurrentUser(new ReaderActions.UpdateResultListener() {
-                @Override
-                public void onUpdateResult(ReaderActions.UpdateResult result) {
-                    // nop
-                }
-            });
+            ReaderUserActions.updateCurrentUser(null);
             // also update cookies so that we can show authenticated images in WebViews
             ReaderLog.i("updating cookies");
             ReaderAuthActions.updateCookies(this);
@@ -120,7 +125,8 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_INITIAL_UPDATE, mPerformedInitialUpdate);
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
+        outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
     }
 
     @Override

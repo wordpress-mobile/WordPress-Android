@@ -20,7 +20,8 @@ import java.util.Date;
 /**
  *  Created by nbradbury on 6/23/13.
  *  tbl_topics stores the list of topics the user subscribed to or has by default
- *  tbl_topics_updates stored the iso8601 dates each topic was updated by the app as follows:
+ *  tbl_recommended_topics stores the list of recommended topics returned by the api
+ *  tbl_topics_updates stores the iso8601 dates each topic was updated by the app as follows:
  *      date_updated is the date the topic was last updated
  *      date_newest is used when retrieving new posts - only get posts newer than date_newest
  *      date_oldest is used when retrieving old posts - only get posts older than date_oldest

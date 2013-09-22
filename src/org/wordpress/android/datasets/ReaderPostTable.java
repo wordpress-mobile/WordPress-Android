@@ -5,10 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -48,7 +46,7 @@ public class ReaderPostTable {
         db.execSQL("CREATE TABLE tbl_posts ("
                 + "	post_id		        INTEGER,"   // post_id for WP blogs, feed_item_id for non-WP blogs
                 + " blog_id             INTEGER,"   // blog_id for WP blogs, feed_id for non-WP blogs
-                + " pseudo_id           TEXT,"
+                + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
                 + "	title	            TEXT,"
                 + "	text                TEXT,"
@@ -75,6 +73,7 @@ public class ReaderPostTable {
         db.execSQL("CREATE TABLE tbl_post_topics ("
                 + "   post_id     INTEGER NOT NULL,"
                 + "   blog_id     INTEGER NOT NULL,"
+                + "   pseudo_id   TEXT NOT NULL,"
                 + "   topic_name  TEXT NOT NULL COLLATE NOCASE,"
                 + "   PRIMARY KEY (post_id, blog_id, topic_name)"
                 + ")");
@@ -91,68 +90,15 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge table of older posts - no need to wrap this in a transaction since this
+     * purge table of unattached posts - no need to wrap this in a transaction since this
      * is only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
-        int numDeleted = 0;
+        // delete posts in tbl_post_topics attached to topics that no longer exist
+        int numDeleted = db.delete("tbl_post_topics", "topic_name NOT IN (SELECT DISTINCT topic_name FROM tbl_topics)", null);
 
-        // purge per-topic
-        Cursor c = db.rawQuery("SELECT DISTINCT topic_name FROM tbl_post_topics", null);
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    numDeleted += purgeTopic(db, c.getString(0));
-                } while (c.moveToNext());
-            }
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-
-        // don't bother purging other data unless posts were purged
-        if (numDeleted > 0) {
-            // delete posts in tbl_post_topics attached to topics that no longer exist
-            numDeleted += db.delete("tbl_post_topics", "topic_name NOT IN (SELECT DISTINCT topic_name FROM tbl_topics)", null);
-            // delete posts in tbl_posts that no longer exist in tbl_post_topics
-            numDeleted += db.delete("tbl_posts", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_post_topics)", null);
-        }
-
-        return numDeleted;
-    }
-
-    /*
-     * purge posts in the passed topic
-     */
-    private static int purgeTopic(SQLiteDatabase db, String topicName) {
-        if (TextUtils.isEmpty(topicName))
-            return 0;
-
-        // determine how many to purge based on the max we retain per-topic
-        int numToPurge = getNumPostsInTopic(topicName) - Constants.READER_MAX_POSTS_PER_TOPIC;
-        if (numToPurge <= 0)
-            return 0;
-
-        ReaderLog.d(String.format("Purging %d posts in topic %s", numToPurge, topicName));
-
-        // select the post_id/blog_id of posts in this topic that should be purged (based on their timestamp)
-        String[] args = {topicName, Integer.toString(numToPurge)};
-        String sql = "SELECT tbl_posts.post_id, tbl_posts.blog_id FROM tbl_posts, tbl_post_topics"
-                   + " WHERE tbl_posts.post_id = tbl_post_topics.post_id AND tbl_posts.blog_id = tbl_post_topics.blog_id"
-                   + " AND tbl_post_topics.topic_name=?1 ORDER BY timestamp LIMIT ?2";
-
-        int numDeleted = 0;
-        Cursor c = db.rawQuery(sql, args);
-        try {
-            if (!c.moveToFirst())
-                return 0;
-            do {
-                long postId = c.getLong(0);
-                long blogId = c.getLong(1);
-                numDeleted += db.delete("tbl_posts", "post_id=?1 AND blog_id=?2", new String[]{Long.toString(postId), Long.toString(blogId)});
-            } while (c.moveToNext());
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
+        // delete posts in tbl_posts that no longer exist in tbl_post_topics
+        numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_topics)", null);
 
         return numDeleted;
     }
@@ -310,8 +256,8 @@ public class ReaderPostTable {
             return "";
 
         String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_topics"
-                + " WHERE tbl_posts.post_id = tbl_post_topics.post_id AND tbl_posts.blog_id = tbl_post_topics.blog_id"
-                + " AND tbl_post_topics.topic_name=? ORDER BY published DESC LIMIT 1";
+                   + " WHERE tbl_posts.post_id = tbl_post_topics.post_id AND tbl_posts.blog_id = tbl_post_topics.blog_id"
+                   + " AND tbl_post_topics.topic_name=? ORDER BY published DESC LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{topicName});
     }
 
@@ -326,7 +272,7 @@ public class ReaderPostTable {
                                                         + COLUMN_NAMES
                                                         + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)");
 
-        SQLiteStatement stmtTopics = db.compileStatement("INSERT OR REPLACE INTO tbl_post_topics (post_id, blog_id, topic_name) VALUES (?1,?2,?3)");
+        SQLiteStatement stmtTopics = db.compileStatement("INSERT OR REPLACE INTO tbl_post_topics (post_id, blog_id, pseudo_id, topic_name) VALUES (?1,?2,?3,?4)");
 
         try {
             // first insert into tbl_posts
@@ -364,7 +310,8 @@ public class ReaderPostTable {
                 for (ReaderPost post: posts) {
                     stmtTopics.bindLong  (1, post.postId);
                     stmtTopics.bindLong  (2, post.blogId);
-                    stmtTopics.bindString(3, topicName);
+                    stmtTopics.bindString(3, post.getPseudoId());
+                    stmtTopics.bindString(4, topicName);
                     stmtTopics.execute();
                     stmtTopics.clearBindings();
                 }

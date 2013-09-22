@@ -422,7 +422,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (ReaderPostTable.getNumPostsInTopic(mCurrentTopic) < Constants.READER_MAX_POSTS_PER_TOPIC);
+            mCanRequestMorePosts = (ReaderPostTable.getNumPostsInTopic(mCurrentTopic) < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
             // pre-load avatars, featured images and pubDates in each post - these values are all
             // cached by the post after the first time they're computed, so calling these getters

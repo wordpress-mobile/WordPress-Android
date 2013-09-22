@@ -13,7 +13,7 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 56;
+    private static final int DB_VERSION = 58;
 
     /*
 	 *  database singleton
@@ -27,8 +27,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                     mReaderDb = new ReaderDatabase(WordPress.getContext());
                     // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
-                    // purge older data
-                    mReaderDb.purgeAsync();
                 }
             }
         }
@@ -43,19 +41,32 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
 
     /*
-     * called when database is created - uses external storage when debug const is set (so database can be accessed via ddms)
+     * used during development to copy database to SD card so we can access it via DDMS
+     * MUST be commented out in release
      */
-    private static String getDatabaseName(Context context) {
-        /*if (ReaderConst.DEBUG_EXTERNAL_STORAGE_DB) {
-            File dir = context.getExternalFilesDir(null);
-            if (dir!=null)
-                return dir.getAbsolutePath() + "/" + DB_NAME;
-        }*/
-        return DB_NAME;
-    }
+    /*public static void copyDatabase() {
+        String copyFrom = getReadableDb().getPath();
+        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DB_NAME;
+
+        try {
+            InputStream input = new FileInputStream(copyFrom);
+            OutputStream output = new FileOutputStream(copyTo);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0)
+                output.write(buffer, 0, length);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            ReaderLog.e(e);
+        }
+    }*/
 
     public ReaderDatabase(Context context) {
-        super(context, getDatabaseName(context), null, DB_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
@@ -74,14 +85,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        /*if (ReaderConst.DEBUG_RESET_DB_AT_START) {
-            reset(db);
-        } else if (ReaderConst.DEBUG_RESET_POSTS_AT_START) {
-            ReaderTopicTable.resetTopicUpdates(db);
-            ReaderPostTable.reset(db);
-            ReaderCommentTable.reset(db);
-            ReaderLikeTable.reset(db);
-        }*/
     }
 
     private void createAllTables(SQLiteDatabase db) {
@@ -113,33 +116,37 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
 
     /*
-     * purge older/unattached data
+     * purge older/unattached data - use purgeAsync() to do this in the background
      */
-    public void purge() {
-        SQLiteDatabase db = getWritableDatabase();
+    private static void purge() {
+        SQLiteDatabase db = getWritableDb();
         db.beginTransaction();
         try {
             int numPostsDeleted = ReaderPostTable.purge(db);
 
             // don't bother purging other data unless posts were purged
             if (numPostsDeleted > 0) {
-                ReaderLog.i(numPostsDeleted + " posts purged");
+                ReaderLog.i(String.format("%d total posts purged", numPostsDeleted));
 
+                // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
                 if (numCommentsDeleted > 0)
-                    ReaderLog.i(numCommentsDeleted + " comments purged");
+                    ReaderLog.i(String.format("%d comments purged", numCommentsDeleted));
 
+                // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0)
-                    ReaderLog.i(numLikesDeleted + " likes purged");
+                    ReaderLog.i(String.format("%d likes purged", numLikesDeleted));
 
+                // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
                 if (numThumbsPurged > 0)
-                    ReaderLog.i(numThumbsPurged + " thumbnails purged");
+                    ReaderLog.i(String.format("%d thumbnails purged", numThumbsPurged));
 
+                // purge unattached topics
                 int numTopicsPurged = ReaderTopicTable.purge(db);
                 if (numTopicsPurged > 0)
-                    ReaderLog.i(numTopicsPurged + " topics purged");
+                    ReaderLog.i(String.format("%d topics purged", numTopicsPurged));
             }
             db.setTransactionSuccessful();
         } finally {
@@ -150,7 +157,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     /*
      * async purge
      */
-    public void purgeAsync() {
+    public static void purgeAsync() {
         new Thread() {
             @Override
             public void run() {
