@@ -13,7 +13,7 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 59;
+    private static final int DB_VERSION = 61;
 
     /*
 	 *  database singleton

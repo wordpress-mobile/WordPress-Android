@@ -98,6 +98,44 @@ public class StringUtils {
     }
 
     /*
+     * nbradbury - adapted from Html.escapeHtml(), which was added in API Level 16
+     * TODO: not thoroughly tested yet, so marked as private - not sure I like the way
+     * this replaces two spaces with "&nbsp;"
+     */
+    private static String escapeHtml(final String text) {
+        if (text==null)
+            return "";
+
+        StringBuilder out = new StringBuilder();
+        int length = text.length();
+
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+
+            if (c == '<') {
+                out.append("&lt;");
+            } else if (c == '>') {
+                out.append("&gt;");
+            } else if (c == '&') {
+                out.append("&amp;");
+            } else if (c > 0x7E || c < ' ') {
+                out.append("&#").append((int) c).append(";");
+            } else if (c == ' ') {
+                while (i + 1 < length && text.charAt(i + 1) == ' ') {
+                    out.append("&nbsp;");
+                    i++;
+                }
+
+                out.append(' ');
+            } else {
+                out.append(c);
+            }
+        }
+
+        return out.toString();
+    }
+
+    /*
      * returns empty string if passed string is null, otherwise returns passed string
      */
     public static String notNullStr(String s) {

@@ -401,6 +401,8 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
+//Debug.startMethodTracing("WPReader");
+
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 final boolean responseHasPosts = (serverPosts.size() > 0);
 
@@ -449,7 +451,7 @@ public class ReaderPostActions {
 
                 // save the posts even if none are new in order to update comment counts, likes, etc., on existing posts
                 ReaderPostTable.addOrUpdatePosts(topicName, serverPosts);
-
+//Debug.stopMethodTracing();
                 if (resultListener!=null) {
                     handler.post(new Runnable() {
                         public void run() {

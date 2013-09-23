@@ -174,10 +174,7 @@ public class JSONUtil {
      */
     public static String getStringDecoded(JSONObject json, String name) {
         String value = getString(json, name);
-        // return the value if it doesn't contain an ampersand, otherwise return the value with entities converted
-        if (!value.contains("&"))
-            return value;
-        return StringUtils.unescapeHTML(value);
+        return HtmlUtils.fastUnescapeHtml(value);
     }
 
     /*

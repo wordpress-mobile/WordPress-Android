@@ -15,7 +15,6 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
             throw new IllegalArgumentException("null json post list");
 
         ReaderPostList posts = new ReaderPostList();
-
         JSONArray jsonPosts = json.optJSONArray("posts");
         if (jsonPosts!=null) {
             for (int i=0; i < jsonPosts.length(); i++)
