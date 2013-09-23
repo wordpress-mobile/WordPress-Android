@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -19,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,14 +32,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.apache.http.conn.HttpHostConnectException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -55,6 +40,20 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AccountSetupActivity extends Activity implements OnClickListener {
 
@@ -88,7 +87,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
         mUrlEdit = (EditText) findViewById(R.id.url);
         mUsernameEdit = (EditText) findViewById(R.id.username);
         mPasswordEdit = (EditText) findViewById(R.id.password);
-        
+
         ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.account_details).toUpperCase());
 
         mSystemService = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -115,8 +114,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             if (!mAuthOnly && WordPress.hasValidWPComCredentials(this)) {
                 setupBlogs();
             }
-        }
-        else {
+        } else {
             if (mAuthOnly) {
                 Blog currentBlog = WordPress.getCurrentBlog();
                 if (currentBlog != null) {
@@ -216,7 +214,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             mProgressDialog.dismiss();
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
         } else {
-            
+
             //Valide the URL found before calling the client. Prevent a crash that can occur during the setup of self-hosted sites.
             try {
                 URI.create(mXmlrpcURL);
@@ -225,7 +223,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                 AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
                 return;
             }
-            
+
             // verify settings
             mClient = new XMLRPCClient(mXmlrpcURL, mHttpuser, mHttppassword);
 
@@ -260,7 +258,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         finish();
                         return;
                     }
-                    
+
                     Arrays.sort(result, Utils.BlogNameComparator);
 
                     final String[] blogNames = new String[result.length];
@@ -519,19 +517,38 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         } else {
                             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountSetupActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
+                            boolean twostepError = false;
                             if (message.contains("404")) {
                                 message = getString(R.string.xmlrpc_error);
-                            } else if (message.contains("425") && mIsWpcom) {//2steps authentication enabled on this .com account
+                            } else if (message.contains("425") && mIsWpcom) {
+                                // 2steps authentication enabled on this .com account
+                                twostepError = true;
                                 dialogBuilder.setTitle(getString(R.string.info));
                                 message = getString(R.string.account_two_step_auth_enabled);
                             }
-                            
+
                             dialogBuilder.setMessage(message);
-                            dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    dialog.dismiss();
-                                }
-                            });
+                            if (twostepError) {
+                                dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                dialogBuilder.setPositiveButton(getString(R.string.visit_security_settings),
+                                        new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse("https://wordpress.com/settings/security/?ssl=forced"));
+                                        startActivity(browserIntent);
+                                    }
+                                });
+                            } else {
+                                dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                             dialogBuilder.setCancelable(true);
                             dialogBuilder.create().show();
                         }
