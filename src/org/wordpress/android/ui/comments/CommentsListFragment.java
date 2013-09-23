@@ -201,9 +201,7 @@ public class CommentsListFragment extends ListFragment {
                 }.start();
             }
         });
-        ViewGroup v2 = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
-        v2.addView(v);
-        return v2;
+        return v;
     }
 
     @SuppressWarnings("unchecked")
@@ -358,8 +356,7 @@ public class CommentsListFragment extends ListFragment {
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
-        List<Map<String, Object>> loadedComments = WordPress.wpDB
-                .loadComments(WordPress.currentBlog.getId());
+        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
         if (loadedComments != null) {
             numRecords = loadedComments.size();
             if (refreshOnly) {

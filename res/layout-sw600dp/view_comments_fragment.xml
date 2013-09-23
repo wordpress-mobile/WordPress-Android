@@ -5,6 +5,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <TextView android:id="@id/android:empty"
+              android:text="@string/empty_list_default"
+              style="@style/EmptyListText"/>
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
