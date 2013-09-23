@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
-import java.util.*;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,21 +15,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import org.wordpress.android.models.CategoryNode;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.StringUtils;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
     private XMLRPCClient client;
@@ -228,9 +229,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
      * @return
      * @description Adds a new category
      */
-    public String addCategory(String category_name, String category_slug, String category_desc, int parent_id) {
+    public String addCategory(final String category_name, String category_slug, String category_desc, int parent_id) {
         // Return string
-        String returnString = "";
+        String returnString = "addCategory_failed";
 
         // Save selected categories
         updateSelectedCategoryList();
@@ -254,18 +255,34 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             e.printStackTrace();
         }
 
-        if (result == null) {
-            returnString = "addCategory_failed";
-        } else {
+        if (result != null) {
             // Category successfully created. "result" is the ID of the new category
             // Initialize the category database
             // Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
+
+            // Fetch canonical name, can't to do this asynchronously because the new category_name is needed for
+            // insertCategory
+            final String new_category_name = getCanonicalCategoryName(category_id);
+            if (new_category_name == null) {
+                return returnString;
+            }
+            final Activity that = this;
+            if (!new_category_name.equals(category_name)) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(that, String.format(String.valueOf(getText(R.string.category_automatically_renamed)),
+                                category_name, new_category_name), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
+            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
-            mSelectedCategories.add(category_name);
+            mSelectedCategories.add(new_category_name);
         }
 
         return returnString;
@@ -334,6 +351,24 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getCanonicalCategoryName(int category_id) {
+        String new_category_name = null;
+        Map<?, ?> result = null;
+        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        try {
+            result = (Map<?, ?>) client.call("wp.getTerm", params);
+        } catch (XMLRPCException e) {
+            e.printStackTrace();
+        }
+
+        if (result != null) {
+            if (result.containsKey("name")) {
+                new_category_name = result.get("name").toString();
+            }
+        }
+        return new_category_name;
     }
 
     private void refreshCategories() {
