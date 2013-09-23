@@ -6,19 +6,48 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <include
-        android:id="@+id/layout_likes"
-        layout="@layout/reader_include_post_detail_likes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <ListView
         android:id="@id/android:list"
         style="@style/ReaderListView.NoDivider"
         android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/layout_likes"
-        tools:listheader="@layout/listitem_reader_post_detail"
-        tools:listitem="@layout/listitem_reader_comment" />
+        tools:listheader="@layout/reader_listitem_post_detail"
+        tools:listitem="@layout/reader_listitem_comment" />
+
+    <RelativeLayout
+        android:id="@+id/layout_fake_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#c0eeeeee">
+
+        <ImageView
+            android:id="@+id/image_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/reader_margin_small"
+            android:paddingRight="@dimen/reader_margin_medium"
+            android:src="@drawable/ic_navigate_previous" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/reader_divider_grey" />
+
+        <!-- liking avatars are inserted into this LinearLayout at runtime -->
+        <LinearLayout
+            android:id="@+id/layout_liking_avatars"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/reader_avatar_sz_like"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/reader_margin_large"
+            android:gravity="right"
+            android:visibility="gone"
+            android:orientation="horizontal" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layout_bottom"

@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     private ReaderPost mPost;
 
     private LayoutInflater mInflater;
-    private ViewGroup mLayoutLikes;
+    private ViewGroup mLayoutLikingAvatars;
     private ViewGroup mLayoutActions;
     private ListView mListView;
     private ViewGroup mCommentFooter;
@@ -176,7 +175,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         // so refresh to show those changes
         switch (action) {
             case TOGGLE_LIKE:
-                refreshLikes();
+                refreshLikes(true);
                 break;
             case TOGGLE_FOLLOW:
                 refreshFollowed();
@@ -198,7 +197,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mInflater = getLayoutInflater();
@@ -208,6 +207,10 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         // remove window background since background color is set in layout (prevents overdraw)
         getWindow().setBackgroundDrawable(null);
+
+        // set the "fake" ActionBar height to that of a real one
+        final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
+        layoutFakeActionBar.setMinimumHeight(DisplayUtils.getActionBarHeight(this));
 
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
@@ -225,8 +228,16 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         mProgressFooter.setVisibility(View.INVISIBLE);
         getListView().addFooterView(mCommentFooter);
 
-        mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
+        mLayoutLikingAvatars = (ViewGroup) findViewById(R.id.layout_liking_avatars);
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
+
+        ImageView imgBack = (ImageView) findViewById(R.id.image_back);
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         // hide listView until post is loaded
         getListView().setVisibility(View.INVISIBLE);
@@ -293,18 +304,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 setResult(RESULT_CANCELED, data);
             }
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // user tapped Home on ActionBar
-            case android.R.id.home :
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -418,7 +417,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 if (result== ReaderActions.UpdateResult.CHANGED) {
                     // get post again since likes have been updated
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshLikes();
+                    refreshLikes(false);
 
                 }
             }
@@ -434,32 +433,37 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     }
 
     /*
-     * show latest likes for this post
+     * show latest likes for this post - pass true to force reloading avatars (used when user clicks
+     * the like button, to ensure the current user's avatar appears)
      */
-    private void refreshLikes() {
+    private void refreshLikes(final boolean forceReload) {
         if (mPost==null || !mPost.isWP())
             return;
 
         new Thread() {
             @Override
             public void run() {
-                final TextView txtLikes = (TextView) findViewById(R.id.text_likes);
-                final TextView btnLike = (TextView) findViewById(R.id.btn_like);
-                final ViewGroup layoutLikingUsers = (ViewGroup) findViewById(R.id.layout_liking_users);
-                final ReaderUserIdList likingIds = ReaderLikeTable.getLikesForPost(mPost);
+                final int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
+                final int marginMedium = getResources().getDimensionPixelSize(R.dimen.reader_margin_medium);
+                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
 
-                // best guess on how many avatars will fit
+                final TextView btnLike = (TextView) findViewById(R.id.btn_like);
                 final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_like);
+                final int likeAvatarSizeWithMargin = likeAvatarSize + marginSmall;
+
+                // determine how many avatars will fit the space
                 final int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderPostDetailActivity.this);
-                final int maxAvatars = (displayWidth / 2) / likeAvatarSize;
+                final int spaceForAvatars = (displayWidth - likeAvatarSize - marginSmall - marginMedium - marginLarge);
+                final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatars of liking users up to the max
+                final ReaderUserIdList likingIds = ReaderLikeTable.getLikesForPost(mPost);
                 final ReaderUrlList avatars = ReaderUserTable.getAvatarsUrls(likingIds, maxAvatars);
 
                 mHandler.post(new Runnable() {
                     public void run() {
                         // set the like text
-                        if (mPost.isLikedByCurrentUser) {
+                        /*if (mPost.isLikedByCurrentUser) {
                             if (mPost.numLikes==1) {
                                 txtLikes.setText(R.string.reader_likes_only_you);
                             } else {
@@ -467,7 +471,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                             }
                         } else {
                             txtLikes.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
-                        }
+                        }*/
 
                         btnLike.setText(mPost.isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
                         btnLike.setSelected(mPost.isLikedByCurrentUser);
@@ -480,7 +484,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
                         // nothing more to do if no likes
                         if (avatars.size()==0 && mPost.numLikes==0) {
-                            mLayoutLikes.setVisibility(View.GONE);
+                            mLayoutLikingAvatars.setVisibility(View.GONE);
                             return;
                         }
 
@@ -490,7 +494,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                             // clicking likes view shows activity displaying all liking users - this is only set
                             // if we know there are liking avatars, otherwise tapping the likes view would show
                             // the liking users with "0 people like this"
-                            mLayoutLikes.setOnClickListener(new View.OnClickListener() {
+                            mLayoutLikingAvatars.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
@@ -499,26 +503,27 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
                             // skip adding liking avatars if the view's child count indicates that we've already
                             // added the max on a previous call to this routine
-                            if (layoutLikingUsers.getChildCount() < maxAvatars) {
-                                layoutLikingUsers.removeAllViews();
+                            if (forceReload || mLayoutLikingAvatars.getChildCount() < maxAvatars) {
+                                mLayoutLikingAvatars.removeAllViews();
                                 for (String url: avatars) {
-                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, layoutLikingUsers, false);
-                                    layoutLikingUsers.addView(imgAvatar);
+                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, mLayoutLikingAvatars, false);
+                                    mLayoutLikingAvatars.addView(imgAvatar);
                                     imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                                 }
                             }
                         }
 
-                        // animate in the layout if it's not already showing
-                        if (mLayoutLikes.getVisibility()!=View.VISIBLE) {
-                            ReaderAniUtils.startAnimation(mLayoutLikes, R.anim.reader_top_bar_in);
-                            mLayoutLikes.setVisibility(View.VISIBLE);
+                        // show the liking layout if it's not already showing
+                        if (mLayoutLikingAvatars.getVisibility()!=View.VISIBLE) {
+                            //ReaderAniUtils.startAnimation(mLayoutLikingAvatars, R.anim.reader_top_bar_in);
+                            mLayoutLikingAvatars.setVisibility(View.VISIBLE);
                         }
                     }
                 });
             }
         }.start();
     }
+
 
     /*
      * show the view enabling adding a comment - triggered when user hits comment icon/count in header
@@ -941,8 +946,8 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             // likes appears above the webView so force the like layout to take up space before loading
             // them in refreshLikes() - this way the webView won't appear and then be pushed down the
             // page once likes are loaded
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility()==View.GONE)
-                mLayoutLikes.setVisibility(View.INVISIBLE);
+            //if (mPost.numLikes > 0 && mLayoutLikes.getVisibility()==View.GONE)
+            //    mLayoutLikes.setVisibility(View.INVISIBLE);
 
             if (mPost.hasTitle()) {
                 txtTitle.setText(mPost.getTitle());
@@ -1077,7 +1082,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 getListView().setAdapter(getCommentAdapter());
 
             refreshFollowed();
-            refreshLikes();
+            refreshLikes(false);
             refreshComments();
 
             // get the latest info for this post if we haven't updated it already

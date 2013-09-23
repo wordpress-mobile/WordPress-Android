@@ -5,6 +5,7 @@
 -->
 <resources>
     <!-- activity themes -->
+    <style name="ReaderTheme" />
     <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
         <item name="android:windowAnimationStyle">@style/Animation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>

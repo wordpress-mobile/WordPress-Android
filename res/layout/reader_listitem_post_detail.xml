@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/reader_margin_medium"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_large"
-        android:layout_marginTop="@dimen/reader_margin_large"
+        android:layout_marginTop="58dp"
         android:background="@drawable/reader_button_transparent_selector">
 
         <org.wordpress.android.widgets.WPNetworkImageView

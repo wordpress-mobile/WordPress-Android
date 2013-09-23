@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTopicTable;
 import org.wordpress.android.models.ReaderPost;
@@ -39,7 +38,6 @@ import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
 /**
@@ -413,10 +411,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             return;
 
         // cancel existing requests if we're already updating
-        if (isUpdating()) {
+        /*if (isUpdating()) {
             VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
             ReaderLog.i("canceling existing update");
-        }
+        }*/
 
         unscheduleAutoUpdate();
         setIsUpdating(true, updateAction);
