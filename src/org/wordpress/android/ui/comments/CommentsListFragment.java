@@ -201,7 +201,9 @@ public class CommentsListFragment extends ListFragment {
                 }.start();
             }
         });
-        return v;
+        ViewGroup v2 = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
+        v2.addView(v);
+        return v2;
     }
 
     @SuppressWarnings("unchecked")

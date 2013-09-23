@@ -6,11 +6,8 @@
     android:orientation="vertical" >
 
     <TextView android:id="@id/android:empty"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
               android:text="@string/empty_list_default"
-              android:paddingTop="8dp"
-              android:gravity="center_horizontal"/>
+              style="@style/EmptyListText"/>
 
     <ListView
         android:id="@android:id/list"

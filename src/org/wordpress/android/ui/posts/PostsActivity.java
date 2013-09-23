@@ -116,7 +116,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         postList = (PostsListFragment) fm.findFragmentById(R.id.postList);
-        postList.setListShown(true);
 
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
