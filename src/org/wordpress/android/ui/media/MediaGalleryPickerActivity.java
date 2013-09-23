@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -20,11 +19,14 @@ import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.xmlrpc.android.ApiHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An activity where the user can add new images to their media gallery or where the user 
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback, MediaGridAdapter.MediaGridAdapterCallback {
+public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback, MediaGridAdapter.MediaGridAdapterCallback, AdapterView.OnItemClickListener {
 
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
@@ -57,19 +59,20 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         if (savedInstanceState != null) {
             checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
-            mIsSelectOneItem =  savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
-
-        mActionMode = getSherlock().startActionMode(this);
 
         setContentView(R.layout.media_gallery_picker_layout);
         mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiSelectListener(this);
         if (mIsSelectOneItem) {
-            mActionMode.setTitle("Select an image");
-            mGridView.setHighlightSelectModeEnabled(true);
+            mGridView.setOnItemClickListener(this);
+            setTitle(R.string.select_from_media_library);
+            mGridView.setHighlightSelectModeEnabled(false);
             mGridView.setMultiSelectModeEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
+            mActionMode = getSherlock().startActionMode(this);
             mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
@@ -104,16 +107,31 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         } else {
             mGridAdapter.swapCursor(cursor);
         }
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            setResult(RESULT_CANCELED, new Intent());
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onMultiSelectChange(int count) {
         mActionMode.setTitle(count + " selected");
-        
         // stay always in multi-select mode, even when count reaches 0
         if (count == 0 && !mIsSelectOneItem)
             mGridView.setMultiSelectModeActive(true);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // Single select, just finish the activity once an item is selected
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
