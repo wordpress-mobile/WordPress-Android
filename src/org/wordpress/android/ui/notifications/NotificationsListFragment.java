@@ -52,19 +52,9 @@ public class NotificationsListFragment extends ListFragment {
         mNotesAdapter = new NotesAdapter();
     }
 
-/*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-        ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
-        parent.addView(v, 0);
-        return parent;
-    }
-*/
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = (ViewGroup) inflater.inflate(R.layout.empty_listview, container, false);
+        View v = inflater.inflate(R.layout.empty_listview, container, false);
         return v;
     }
 
