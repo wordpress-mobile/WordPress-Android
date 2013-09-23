@@ -75,6 +75,9 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
+        // Load notes
+        notes = WordPress.wpDB.loadNotes();
+
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
@@ -85,15 +88,15 @@ public class NotificationsActivity extends WPActionBarActivity {
                 return null;
             }
         });
-        fragmentDetectors.add(new FragmentDetector(){
-           @Override
-           public Fragment getFragment(Note note){
-               if (note.isSingleLineListTemplate()) {
-                   Fragment fragment = new SingleLineListFragment();
-                   return fragment;
-               }
-               return null;
-           } 
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
+                if (note.isSingleLineListTemplate()) {
+                    Fragment fragment = new SingleLineListFragment();
+                    return fragment;
+                }
+                return null;
+            }
         });
         fragmentDetectors.add(new FragmentDetector(){
             @Override
@@ -112,8 +115,6 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (savedInstanceState == null)
             launchWithNoteId();
 
-        // Load notes
-        notes = WordPress.wpDB.loadNotes();
         refreshNotificationsListFragment(notes);
 
         if (savedInstanceState != null)
@@ -160,7 +161,6 @@ public class NotificationsActivity extends WPActionBarActivity {
                 openNote(note);
             }
         } else if (intent.hasExtra(NOTE_ID_EXTRA)) {
-            // FIXME: check if in DB and not placeholder...
             // find it/load it etc
             Map<String, String> params = new HashMap<String, String>();
             params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
@@ -176,9 +176,20 @@ public class NotificationsActivity extends WPActionBarActivity {
             };
             restClient.getNotifications(params, handler, handler);
         } else {
+            // on a tablet: open first note if none selected
+            String fragmentTag = mNotesList.getTag();
+            if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
+                if (notes != null && notes.size() > 0) {
+                    Note note = notes.get(0);
+                    if (note != null) {
+                        openNote(note);
+                    }
+                }
+            }
             refreshNotes();
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.equals(mRefreshMenuItem)) {
