@@ -3,12 +3,15 @@
 package org.wordpress.android.models;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
 public class Blog {
@@ -349,5 +352,37 @@ public class Blog {
             }
         }
         return adminUrl;
+    }
+
+    public boolean isPrivate() {
+        try {
+            Gson gson = new Gson();
+            Type type = new TypeToken<Map<String, Object>>() {
+            }.getType();
+            Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
+            StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
+            String blogPublicOptionValue = blogPublicOption.get("value").toString();
+            if (blogPublicOptionValue.equals("-1")) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isJetpackPowered() {
+        try {
+            JSONObject options = new JSONObject(getBlogOptions());
+            if (options.has("jetpack_client_id"))
+                return true;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isPhotonCapable() {
+        return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
     }
 }
