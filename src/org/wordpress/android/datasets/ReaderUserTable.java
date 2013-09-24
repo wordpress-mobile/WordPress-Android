@@ -12,6 +12,8 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.ArrayList;
+
 /**
  * Created by nbradbury on 6/22/13.
  * stores info about the current user and liking users
@@ -73,16 +75,16 @@ public class ReaderUserTable {
     /*
      * returns avatar urls for the passed user ids - used by post detail to show avatars for liking users
      */
-    public static ReaderUrlList getAvatarsUrls(ReaderUserIdList userIds, int max) {
-        ReaderUrlList avatars = new ReaderUrlList();
+    public static ArrayList<String> getAvatarUrls(ReaderUserIdList userIds, int max) {
+        ArrayList<String> avatars = new ArrayList<String>();
         if (userIds==null || userIds.size()==0)
             return avatars;
 
-        StringBuilder sb = new StringBuilder("SELECT avatar_url FROM tbl_users WHERE user_id IN (");
+        StringBuilder sb = new StringBuilder("SELECT user_id, avatar_url FROM tbl_users WHERE user_id IN (");
 
         // make sure current user's avatar is returned if the passed list contains them - this is
         // important since it may not otherwise be returned when a "max" is passed, and we want
-        // the current user to appear in post detail when they like a post
+        // the current user to appear first in post detail when they like a post
         long currentUserId = ReaderPrefs.getCurrentUserId();
         boolean containsCurrentUser = userIds.contains(currentUserId);
         if (containsCurrentUser)
@@ -106,7 +108,13 @@ public class ReaderUserTable {
         try {
             if (c.moveToFirst()) {
                 do {
-                    avatars.add(c.getString(0));
+                    long userId = c.getLong(0);
+                    // add current user to the top
+                    if (userId==currentUserId) {
+                        avatars.add(0, c.getString(1));
+                    } else {
+                        avatars.add(c.getString(1));
+                    }
                 } while (c.moveToNext());
             }
             return avatars;

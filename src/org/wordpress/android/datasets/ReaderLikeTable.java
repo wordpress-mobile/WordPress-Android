@@ -43,13 +43,13 @@ public class ReaderLikeTable {
      * returns userIds of users who like the passed post
      */
     public static ReaderUserIdList getLikesForPost(ReaderPost post) {
+        ReaderUserIdList userIds = new ReaderUserIdList();
         if (post==null)
-            return new ReaderUserIdList();
+            return userIds;
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
         try {
-            ReaderUserIdList userIds = new ReaderUserIdList();
             if (c.moveToFirst()) {
                 do {
                     userIds.add(c.getLong(0));

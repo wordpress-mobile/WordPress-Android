@@ -21,11 +21,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.Constants;
@@ -38,7 +40,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
-import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -53,6 +54,8 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.util.ArrayList;
 
 /**
  * Created by nbradbury on 7/8/13.
@@ -98,7 +101,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     // id will be the id of the tapped comment - note that it will be -1 when the
                     // post detail header is long clicked, which we want to ignore
-                    if (id != 0 && id != -1) {
+                    if (id > 0) {
                         showAddCommentBox(id);
                         return true;
                     } else {
@@ -209,15 +212,23 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         getWindow().setBackgroundDrawable(null);
 
         // set the "fake" ActionBar height to that of a real one
+        int actionbarHeight = DisplayUtils.getActionBarHeight(this);
         final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
-        layoutFakeActionBar.setMinimumHeight(DisplayUtils.getActionBarHeight(this));
+        layoutFakeActionBar.setMinimumHeight(actionbarHeight);
+
+        // add a header to the listView that's the same height as the "fake" ActionBar - this moves
+        // the actual content of the listView below the ActionBar, but enables it to scroll under
+        // the translucent ActionBar layout
+        RelativeLayout headerFake = new RelativeLayout(this);
+        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
+        getListView().addHeaderView(headerFake, null, false);
 
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
 
         // add post detail as header to listView - must be done before setting adapter
-        ViewGroup header = (ViewGroup) mInflater.inflate(R.layout.reader_listitem_post_detail, getListView(), false);
-        getListView().addHeaderView(header, null, false);
+        ViewGroup headerDetail = (ViewGroup) mInflater.inflate(R.layout.reader_listitem_post_detail, getListView(), false);
+        getListView().addHeaderView(headerDetail, null, false);
 
         // add listView footer containing progress bar - footer appears whenever there are comments,
         // progress bar appears when loading new comments
@@ -457,8 +468,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatars of liking users up to the max
-                final ReaderUserIdList likingIds = ReaderLikeTable.getLikesForPost(mPost);
-                final ReaderUrlList avatars = ReaderUserTable.getAvatarsUrls(likingIds, maxAvatars);
+                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(ReaderLikeTable.getLikesForPost(mPost), maxAvatars);
 
                 mHandler.post(new Runnable() {
                     public void run() {

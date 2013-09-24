@@ -17,7 +17,7 @@
         android:id="@+id/layout_fake_actionbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="#c0eeeeee">
+        android:background="#a0ffffff">
 
         <ImageView
             android:id="@+id/image_back"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/reader_divider_grey" />
+            android:background="@color/reader_divider_blue" />
 
         <!-- liking avatars are inserted into this LinearLayout at runtime -->
         <LinearLayout
