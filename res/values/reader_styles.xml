@@ -7,14 +7,14 @@
     <!-- activity themes -->
     <style name="ReaderTheme" />
     <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
-        <item name="android:windowAnimationStyle">@style/Animation.ReaderPopup</item>
+        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <!-- window animations -->
-    <style name="Animation" />
-    <style name="Animation.ReaderPopup">
+    <style name="ReaderAnimation" />
+    <style name="ReaderAnimation.ReaderPopup">
         <item name="android:windowEnterAnimation">@anim/reader_flyin</item>
         <item name="android:windowExitAnimation">@anim/reader_flyout</item>
     </style>

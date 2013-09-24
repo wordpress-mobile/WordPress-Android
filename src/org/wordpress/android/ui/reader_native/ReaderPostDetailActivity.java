@@ -470,6 +470,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
      * show latest likes for this post - pass true to force reloading avatars (used when user clicks
      * the like button, to ensure the current user's avatar appears)
      */
+    private static final int NUM_ACTIONBAR_ICONS = 2;
     private void refreshLikes(final boolean forceReload) {
         if (mPost==null || !mPost.isWP())
             return;
@@ -487,7 +488,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
                 // determine how many avatars will fit the space (takes the two ActionBar icons into account)
                 final int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderPostDetailActivity.this);
-                final int spaceForAvatars = displayWidth - (actionBarIconSz * 2) - (marginLarge * 2);
+                final int spaceForAvatars = displayWidth - (actionBarIconSz * NUM_ACTIONBAR_ICONS) - (marginLarge * NUM_ACTIONBAR_ICONS);
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatars of liking users up to the max
