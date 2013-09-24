@@ -22,7 +22,7 @@
         android:id="@+id/layout_fake_actionbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="#c0ffffff">
+        android:background="@color/reader_translucent_actionbar_light">
 
         <ImageView
             android:id="@+id/image_back"

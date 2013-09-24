@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
@@ -204,8 +203,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         mInflater = getLayoutInflater();
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_post_detail);
 
         // remove window background since background color is set in layout (prevents overdraw)
@@ -383,11 +380,26 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                         break;
                 }
 
-                // determine whether we need to update likes/comments
-                if (mPost.numLikes!=ReaderLikeTable.getNumLikesForPost(mPost))
-                    updateLikes();
-                if (mPost.numReplies!=ReaderCommentTable.getNumCommentsForPost(mPost))
-                    updateComments();
+                // determine whether we need to update likes/comments - done regardless of
+                // whether the post has changed since local likes/comments could still be
+                // different than what we already have for the post
+                new Thread() {
+                    @Override
+                    public void run() {
+                        final boolean isLikesChanged = mPost.numLikes!=ReaderLikeTable.getNumLikesForPost(mPost);
+                        final boolean isCommentsChanged = mPost.numReplies!=ReaderCommentTable.getNumCommentsForPost(mPost);
+                        if (isLikesChanged || isCommentsChanged) {
+                            mHandler.post(new Runnable() {
+                                public void run() {
+                                    if (isLikesChanged)
+                                        updateLikes();
+                                    if (isCommentsChanged)
+                                        updateComments();
+                                }
+                            });
+                        }
+                    }
+                }.start();
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);

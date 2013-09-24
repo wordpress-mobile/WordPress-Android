@@ -156,6 +156,7 @@
             android:label="@string/reader_title_main"/>
         <activity
             android:name=".ui.reader_native.ReaderPostDetailActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader_native.ReaderLogViewerActivity"
