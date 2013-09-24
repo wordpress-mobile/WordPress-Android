@@ -46,6 +46,5 @@ public class ReaderLogViewerActivity extends FragmentActivity {
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(this, R.string.reader_toast_err_share_intent);
         }
-
     }
 }

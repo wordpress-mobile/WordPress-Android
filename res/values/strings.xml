@@ -643,6 +643,12 @@
     <string name="reader_title_reblog">Reblog</string>
     <string name="reader_title_err_unable_to_load_post">Unable to load post</string>
 
+    <!-- share dialog title when sharing a reader url -->
+    <string name="reader_share_link">Share Link</string>
+
+    <!-- subject line when sharing a reader url -->
+    <string name="reader_share_subject">Shared from %s</string>
+
     <!-- menu text-->
     <string name="reader_menu_topics">Topics</string>
     <string name="reader_menu_log">View Log</string>

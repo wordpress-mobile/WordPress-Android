@@ -78,6 +78,9 @@ public class DisplayUtils {
         } else if (context.getTheme().resolveAttribute(com.actionbarsherlock.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
-        return 0;
+
+        // if we get this far, it's because the device doesn't support an ActionBar or the app
+        // doesn't use ActionBarSherlock - so return the standard ActionBar height (48dp)
+        return dpToPx(context, 48);
     }
 }

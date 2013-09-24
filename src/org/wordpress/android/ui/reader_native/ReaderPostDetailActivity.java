@@ -212,7 +212,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         getWindow().setBackgroundDrawable(null);
 
         // set the "fake" ActionBar height to that of a real one
-        int actionbarHeight = DisplayUtils.getActionBarHeight(this);
+        final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
         final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
         layoutFakeActionBar.setMinimumHeight(actionbarHeight);
 
@@ -247,6 +247,14 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        ImageView imgShare = (ImageView) findViewById(R.id.image_share);
+        imgShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharePage();
             }
         });
 
@@ -336,6 +344,21 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         }
     }
 
+    /*
+     * pass current web page url to chosen sharing activity
+     */
+    private void sharePage() {
+        String subject = getString(R.string.reader_share_subject, getString(R.string.app_name));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_share_intent);
+        }
+    }
     /*
      * get the latest version of this post
      */
@@ -454,17 +477,17 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         new Thread() {
             @Override
             public void run() {
-                final int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
-                final int marginMedium = getResources().getDimensionPixelSize(R.dimen.reader_margin_medium);
-                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-
                 final TextView btnLike = (TextView) findViewById(R.id.btn_like);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_like);
-                final int likeAvatarSizeWithMargin = likeAvatarSize + marginSmall;
 
-                // determine how many avatars will fit the space
+                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
+                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
+                final int actionBarIconSz = DisplayUtils.getActionBarHeight(ReaderPostDetailActivity.this); // <-- fudging it here, but it works
+                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_like);
+                final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
+
+                // determine how many avatars will fit the space (takes the two ActionBar icons into account)
                 final int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderPostDetailActivity.this);
-                final int spaceForAvatars = (displayWidth - likeAvatarSize - marginSmall - marginMedium - marginLarge);
+                final int spaceForAvatars = displayWidth - (actionBarIconSz * 2) - (marginLarge * 2);
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatars of liking users up to the max
