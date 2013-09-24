@@ -44,6 +44,7 @@ public class NUXDialogFragment extends SherlockDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
         View v = inflater.inflate(R.layout.nux_dialog_fragment, container, false);
 
         mImageView = (ImageView)v.findViewById(R.id.nux_dialog_image);
