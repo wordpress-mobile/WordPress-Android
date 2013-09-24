@@ -4,8 +4,6 @@
     <string name="app_name">WordPress</string>
 
     <!-- account setup -->
-    <string name="required_fields">Required Fields</string>
-    <string name="required_field">Required Field</string>
     <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
     <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_blogs_found">No Blogs Found</string>
@@ -99,6 +97,7 @@
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
     <string name="wpcom">WordPress.com</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_in_capital">Sign In</string>
     <string name="sign_out">Sign out</string>
     <string name="all">All</string>
     <string name="images">Images</string>
@@ -367,7 +366,6 @@
 
     <!-- stats -->
     <string name="stats">Stats</string>
-    <string name="username_password_required">Username and Password are required fields.</string>
     <string name="help_stats">Need help?</string>
     <string name="stats_username">Username</string>
     <string name="stats_password">Password</string>
@@ -721,4 +719,93 @@
     <string name="reader_empty_posts_in_topic_never_updated">No articles in this topic yet</string>
     <string name="reader_empty_followed_topics">You don\'t follow any topics</string>
     <string name="reader_empty_popular_topics">No popular topics</string>
+
+    <!-- NUX strings -->
+    <string name="create_account_wpcom">Create an account on WordPress.com</string>
+    <string name="create_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="review_your_information">Review your information</string>
+    <string name="validating_user_data">Validating User Data</string>
+    <string name="validating_site_data">Validating Site Data</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="title_template_step">Step %s</string>
+    <string name="required_fields">Required Fields</string>
+    <string name="required_field">Required Field</string>
+    <string name="username_password_required">Please fill in all of the fields before submitting.</string>
+    <string name="invalid_email_title">Invalid email</string>
+    <string name="invalid_email_message">Your email address is not valid.</string>
+    <string name="invalid_password_title">Invalid password</string>
+    <string name="invalid_password_message">Password must contain at least 4 characters.</string>
+    <string name="passwords_do_not_match_message">Passwords don\'t match.</string>
+    <string name="invalid_username_title">Invalid username</string>
+    <string name="invalid_username_length">Username must be shorter than 61 characters.</string>
+    <string name="email_hint">Email Address</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="blog_address_required">Blog address is required.</string>
+    <string name="signup_label">Sign Up</string>
+    <string name="signin_label">Sign In</string>
+    <string name="signing_up">Signing up...</string>
+    <string name="signing_in">Signing in...</string>
+    <string name="dont_yet_have_an_account">Do not have an account yet?</string>
+    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="agree_terms_of_service">You agree to the fascinating <u>Terms of Service</u> by pressing the next button.</string>
+    <string name="username_email">Username / Email</string>
+    <string name="site_address">Site address (URL)</string>
+    <string name="dont_have_account">Don\'t have an account? <u>Create one!</u></string>
+    <string name="connecting_wpcom">Connecting to WordPress.com</string>
+    <string name="username_only_lowercase_letters_and_numbers">Sorry, usernames can only contain lowercase letters (a-z) and numbers.</string>
+    <string name="username_required">Please enter a username.</string>
+    <string name="username_not_allowed">That username is not allowed.</string>
+    <string name="email_cant_be_used_to_signup">You cannot use that email address to signup. We are having problems with them blocking some of our email. Please use another email provider.</string>
+    <string name="username_must_be_at_least_four_characters">Username must be at least 4 characters.</string>
+    <string name="username_contains_invalid_characters">Sorry, usernames may not contain the character &#8220;_&#8221;!</string>
+    <string name="username_must_include_letters">Sorry, usernames must have letters (a-z) too!</string>
+    <string name="email_invalid">Please enter a valid email address.</string>
+    <string name="email_not_allowed">Sorry, that email address is not allowed!</string>
+    <string name="username_exists">Sorry, that username already exists!</string>
+    <string name="email_exists">Sorry, that email address is already being used!</string>
+    <string name="username_reserved_but_may_be_available">That username is currently reserved but may be available in a couple of days.</string>
+    <string name="email_reserved">That email address has already been used. Please check your inbox for an activation email. If you don\'t activate you can try again in a few days.</string>
+    <string name="blog_name_required">Please enter a site address.</string>
+    <string name="blog_name_not_allowed">That site address is not allowed.</string>
+    <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters.</string>
+    <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters.</string>
+    <string name="blog_name_contains_invalid_characters">Sorry, site addresses may not contain the character &#8220;_&#8221;!</string>
+    <string name="blog_name_cant_be_used">Sorry, you may not use that site address.</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">Sorry, site addresses can only contain lowercase letters (a-z) and numbers.</string>
+    <string name="blog_name_must_include_letters">Sorry, site addresses must have letters too!</string>
+    <string name="blog_name_exists">Sorry, that site already exists!</string>
+    <string name="blog_name_reserved">Sorry, that site is reserved!</string>
+    <string name="blog_name_reserved_but_may_be_available">hat site is currently reserved but may be available in a couple days.</string>
+    <string name="password_invalid">Your password is invalid because it does not meet our security guidelines. Please try a more complex password.</string>
+    <string name="blog_name_invalid">Invalid Site Address</string>
+    <string name="blog_title_invalid">Invalid Site Title</string>
+    <string name="username_invalid">Invalid username</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
+    <string name="update_credentials">Please update your credentials and try again.</string>
+    <string name="nux_tap_continue">TAP TO CONTINUE</string>
+    <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
+    <string name="nux_welcome">Welcome to WordPress</string>
+    <string name="nux_welcome_description">Hold the web in the palm of your hand. Full publishing power in a pint-sized package.</string>
+    <string name="nux_welcome_publish_title">Publish whenever inspiration strikes</string>
+    <string name="nux_welcome_publish_description">Brilliant insight? Hilarious link? Perfect pic? Capture genius as it happens and post in real time.</string>
+    <string name="nux_tutorial_stats_title">Track your site\'s statistics</string>
+    <string name="nux_tutorial_stats_description">Learn what your visitors respond to so you can give them more of it.</string>
+    <string name="nux_tutorial_reader_title">Explore the WordPress.com Reader</string>
+    <string name="nux_tutorial_reader_description">Browse the entire WordPress ecosystem. Thousands of topics at the flick of a finger.</string>
+    <string name="nux_tutorial_notifications_title">Get real-time comment notifications</string>
+    <string name="nux_tutorial_notifications_description">Keep the conversation going with notifications on the go. No need for a desktop to nurture the dialogue.</string>
+    <string name="nux_tutorial_get_started_title">Get started!</string>
+    <string name="nux_welcome_create_account">Create Account</string>
+    <string name="nux_swipe_to_continue">SWIPE TO CONTINUE</string>
+    <string name="nux_tutorial_tap_to_start">Tap to start using WordPress</string>
+
+    <string-array name="privacy_array">
+         <item>Public</item>
+         <item>Hidden</item>
+         <item>Private</item>
+    </string-array>
 </resources>

@@ -13,9 +13,8 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.AccountSetupActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.PreferencesActivity;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {
@@ -87,7 +86,7 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent authIntent = new Intent(getActivity(), AccountSetupActivity.class);
+                        Intent authIntent = new Intent(getActivity(), WelcomeActivity.class);
                         authIntent.putExtra("wpcom", true);
                         authIntent.putExtra("auth-only", true);
                         getActivity().startActivity(authIntent);

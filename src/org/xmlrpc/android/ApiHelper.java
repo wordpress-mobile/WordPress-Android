@@ -16,6 +16,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.Xml;
 
 import com.google.gson.Gson;
 
@@ -27,6 +28,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
+import org.xmlpull.v1.XmlPullParser;
 
 public class ApiHelper {
     /** Called when the activity is first created. */
@@ -83,10 +85,10 @@ public class ApiHelper {
                     String formattedDate = d.toString();
                     try {
                         int flags = 0;
-                        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+                        flags |= DateUtils.FORMAT_SHOW_DATE;
+                        flags |= DateUtils.FORMAT_ABBREV_MONTH;
+                        flags |= DateUtils.FORMAT_SHOW_YEAR;
+                        flags |= DateUtils.FORMAT_SHOW_TIME;
                         formattedDate = DateUtils.formatDateTime(ctx,
                                 d.getTime(), flags);
                     } catch (Exception e) {
@@ -245,7 +247,7 @@ public class ApiHelper {
                 List<Object> args = new Vector<Object>();
                 args.add(mBlog);
                 args.add(mContext);
-                new ApiHelper.getPostFormatsTask().execute(args);
+                new getPostFormatsTask().execute(args);
             }
 
             // Check if user is an admin
@@ -338,10 +340,10 @@ public class ApiHelper {
             String formattedDate = d.toString();
             try {
                 int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+                flags |= DateUtils.FORMAT_SHOW_DATE;
+                flags |= DateUtils.FORMAT_ABBREV_MONTH;
+                flags |= DateUtils.FORMAT_SHOW_YEAR;
+                flags |= DateUtils.FORMAT_SHOW_TIME;
                 formattedDate = DateUtils.formatDateTime(ctx,
                         d.getTime(), flags);
             } catch (Exception e) {
@@ -911,5 +913,83 @@ public class ApiHelper {
         } catch (HttpRequestException e) {
             return null;
         }
+    }
+    
+    /**
+     * Regex pattern for matching the RSD link found in most WordPress sites.
+     */
+    private static final Pattern rsdLink = Pattern.compile(
+            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
+            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    
+    /**
+     * Returns RSD URL based on regex match
+     * @param urlString
+     * @return String RSD url
+     */
+    public static String getRSDMetaTagHrefRegEx(String urlString) {
+        String html = ApiHelper.getResponse(urlString);
+        if (html != null) {
+            Matcher matcher = rsdLink.matcher(html);
+            if (matcher.find()) {
+                String href = matcher.group(1);
+                return href;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns RSD URL based on html tag search
+     * @param urlString
+     * @return String RSD url
+     */
+    public static String getRSDMetaTagHref(String urlString) {
+        // get the html code
+        InputStream in = ApiHelper.getResponseStream(urlString);
+
+        // parse the html and get the attribute for xmlrpc endpoint
+        if (in != null) {
+            XmlPullParser parser = Xml.newPullParser();
+            try {
+                // auto-detect the encoding from the stream
+                parser.setInput(in, null);
+                int eventType = parser.getEventType();
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    String name = null;
+                    String rel = "";
+                    String type = "";
+                    String href = "";
+                    switch (eventType) {
+                    case XmlPullParser.START_TAG:
+                        name = parser.getName();
+                        if (name.equalsIgnoreCase("link")) {
+                            for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                String attrName = parser.getAttributeName(i);
+                                String attrValue = parser.getAttributeValue(i);
+                                if (attrName.equals("rel")) {
+                                    rel = attrValue;
+                                } else if (attrName.equals("type"))
+                                    type = attrValue;
+                                else if (attrName.equals("href"))
+                                    href = attrValue;
+                            }
+
+                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
+                                return href;
+                            }
+                            // currentMessage.setLink(parser.nextText());
+                        }
+                        break;
+                    }
+                    eventType = parser.next();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+        return null; // never found the rsd tag
     }
 }
