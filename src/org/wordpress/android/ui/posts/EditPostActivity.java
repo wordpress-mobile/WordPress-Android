@@ -794,6 +794,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         }
 
+
+
                         featuredCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -829,7 +831,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
                         alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
 
-                        seekBar.setMax(span.getWidth() / 10);
+                        final int maxWidth = getMinimumImageWitdh(span.getImageSource());
+                        seekBar.setMax(maxWidth / 10);
                         if (span.getWidth() != 0)
                             seekBar.setProgress(span.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -862,7 +865,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         imageWidthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                             @Override
                             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                int width = getEditTextIntegerClamped(imageWidthText, 10, span.getWidth());
+                                int width = getEditTextIntegerClamped(imageWidthText, 10, maxWidth);
                                 seekBar.setProgress(width / 10);
                                 imageWidthText.setSelection((String.valueOf(width).length()));
 
@@ -881,7 +884,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                                         span.setTitle(titleText.getText().toString());
                                         // span.setDescription(descText.getText().toString());
                                         span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, span.getWidth()));
+                                        span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
                                         span.setCaption(caption.getText().toString());
                                         span.setFeatured(featuredCheckBox.isChecked());
                                         if (featuredCheckBox.isChecked()) {
@@ -2156,8 +2159,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }
     }
 
-    //Calculate the minimun width between the blog setting and picture real width
-    private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
+    // Calculate the minimun width between the blog setting and picture real width
+    private int getMinimumImageWitdh(Uri curStream) {
         String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
 
@@ -2173,10 +2176,15 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
 
         if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
+            //Default value in case of errors reading the picture size and the blog settings is set to Original size
+            return 1024;
         } else {
-            is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
+            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
         }
+    }
+
+    private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
+        is.setWidth(getMinimumImageWitdh(curStream));
     }
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
