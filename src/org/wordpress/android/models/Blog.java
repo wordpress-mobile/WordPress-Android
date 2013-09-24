@@ -37,9 +37,16 @@ public class Blog {
     private String blogOptions;
     private boolean isAdmin;
 
+    public Blog(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.id = -1;
+    }
+
     public Blog(int blog_id) throws Exception{
-        //instantiate a new blog
-        List<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
+        // Instantiate an existing blog
+        List<Object> blogVals = WordPress.wpDB.getBlog(blog_id);
 
         if (blogVals != null) {
             this.id = blog_id;
@@ -271,9 +278,13 @@ public class Blog {
         this.httppassword = httppassword;
     }
 
-    public void save(String originalUsername) {
-        //save blog to db
-        WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions, this.isAdmin() );
+    public boolean save(String originalUsername) {
+        // Insert new blog to db
+        if (this.id == -1) {
+            return WordPress.wpDB.addBlog(this);
+        } else {
+            return WordPress.wpDB.saveBlog(this);
+        }
     }
 
     public String getPostFormats() {

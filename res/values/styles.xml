@@ -238,4 +238,56 @@
         <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:textColor">@color/grey_medium</item>
     </style>
+
+    <!-- NUX Styles -->
+    <style name="WordPress.NUXPrimaryButton">
+        <item name="android:textColor">@color/nux_primary_button</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowColor">@color/nux_primary_button_shadow</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:background">@drawable/nux_primary_button_selector</item>
+    </style>
+
+    <style name="WordPress.NUXSecondaryButton">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowColor">@color/nux_secondary_button_shadow</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:background">@drawable/nux_secondary_button_selector</item>
+    </style>
+
+    <style name="WordPress.NUXEditText">
+        <item name="android:padding">8dp</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#444444</item>
+    </style>
+
+    <style name="WordPress.NUXTos">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:shadowColor">@color/nux_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nux_tos</item>
+    </style>
+
+    <style name="WordPress.NUXReviewRow">
+        <item name="android:shadowColor">@color/nux_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nux_review</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
 </resources>

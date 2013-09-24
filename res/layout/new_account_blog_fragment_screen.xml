@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+	     
+		 <ImageView
+            android:layout_width="50dp"
+            android:layout_height="52dp"
+            android:src="@drawable/nux_icon_wp"
+            android:layout_marginBottom="16dp" />
+	   	
+	   	<org.wordpress.android.widgets.WPTextView
+	   	    android:id="@+id/create_blog_wpcom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+	          android:text="@string/create_blog_wpcom"
+            android:textColor="#FFFFFF"
+            android:textSize="38sp"
+            android:shadowColor="@color/nux_shadow"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            app:fontVariation="light" />
+        
+        <EditText
+            android:id="@+id/site_title"
+            style="@style/WordPress.NUXEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/site_url"
+            style="@style/WordPress.NUXEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_account_blog_url"
+            android:inputType="textUri"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+		    android:id="@+id/langs_spinner"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" />
+        
+        <Spinner
+		    android:id="@+id/privacy_spinner"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:visibility="gone"
+		    />
+        
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
+            
+            <org.wordpress.android.widgets.WPTextView
+	            android:id="@+id/prev_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="4dp"
+	            android:text="@string/action_previous"
+	            style="@style/WordPress.NUXPrimaryButton" />
+                    
+         	<org.wordpress.android.widgets.WPTextView
+	            android:id="@+id/next_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="4dp"
+	            android:text="@string/action_next"
+	            android:enabled="false"
+	            style="@style/WordPress.NUXPrimaryButton" />
+         	
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/l_agree_terms_of_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agree_terms_of_service"
+            style="@style/WordPress.NUXTos"/>
+</LinearLayout>
+</ScrollView>

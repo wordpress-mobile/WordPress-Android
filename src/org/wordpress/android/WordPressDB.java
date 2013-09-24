@@ -14,6 +14,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
@@ -303,31 +304,25 @@ public class WordPressDB {
         }
     }
 
-    public long addAccount(String url, String homeURL, String blogName, String username,
-            String password, String httpuser, String httppassword,
-            String imagePlacement, boolean centerThumbnail,
-            boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
-            boolean runService, int blogId, boolean wpcom, String wpVersion, boolean isAdmin) {
-
+    public boolean addBlog(Blog blog) {
         ContentValues values = new ContentValues();
-        values.put("url", url);
-        values.put("homeURL", homeURL);
-        values.put("blogName", blogName);
-        values.put("username", username);
-        values.put("password", encryptPassword(password));
-        values.put("httpuser", httpuser);
-        values.put("httppassword", encryptPassword(httppassword));
-        values.put("imagePlacement", imagePlacement);
-        values.put("centerThumbnail", centerThumbnail);
-        values.put("fullSizeImage", fullSizeImage);
-        values.put("maxImageWidth", maxImageWidth);
-        values.put("maxImageWidthId", maxImageWidthId);
-        values.put("runService", runService);
-        values.put("blogId", blogId);
-        values.put("dotcomFlag", wpcom);
-        values.put("wpVersion", wpVersion);
-        values.put("isAdmin", isAdmin);
-        return db.insert(SETTINGS_TABLE, null, values);
+        values.put("url", blog.getUrl());
+        values.put("homeURL", blog.getHomeURL());
+        values.put("blogName", blog.getBlogName());
+        values.put("username", blog.getUsername());
+        values.put("password", encryptPassword(blog.getPassword()));
+        values.put("httpuser", blog.getHttpuser());
+        values.put("httppassword", encryptPassword(blog.getHttppassword()));
+        values.put("imagePlacement", blog.getImagePlacement());
+        values.put("centerThumbnail", false);
+        values.put("fullSizeImage", false);
+        values.put("maxImageWidth", blog.getMaxImageWidth());
+        values.put("maxImageWidthId", blog.getMaxImageWidthId());
+        values.put("runService", false);
+        values.put("blogId", blog.getBlogId());
+        values.put("dotcomFlag", blog.isDotcomFlag());
+        values.put("wpVersion", blog.getWpVersion());
+        return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
     public boolean deactivateAccounts() {
@@ -379,10 +374,10 @@ public class WordPressDB {
     }
     
 
-    public long checkMatch(String blogName, String blogURL, String username, String password) {
+    public boolean checkForExistingBlog(String blogName, String blogURL, String username, String password) {
 
         if (blogName == null || blogURL == null || username == null || password == null)
-            return -1;
+            return false;
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
                 "blogName='" + addSlashes(blogName) + "' AND url='"
@@ -397,11 +392,11 @@ public class WordPressDB {
             ContentValues values = new ContentValues();
             values.put("password", encryptPassword(password));
             db.update(SETTINGS_TABLE, values, "id=" + blogID, null);
-            return blogID;
+            return true;
         }
 
         c.close();
-        return -1;
+        return false;
     }
 
     public static String addSlashes(String text) {
@@ -433,41 +428,34 @@ public class WordPressDB {
         return sb.toString();
     }
 
-    public boolean saveSettings(String id, String url, String homeURL, String username,
-            String password, String httpuser, String httppassword,
-            String imagePlacement, boolean isFeaturedImageCapable,
-            boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
-            boolean location, boolean isWPCom, String originalUsername,
-            String postFormats, String dotcomUsername, String dotcomPassword,
-            String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth, String blogOptions, boolean isAdmin) {
+    public boolean saveBlog(Blog blog) {
 
         ContentValues values = new ContentValues();
-        values.put("url", url);
-        values.put("homeURL", homeURL);
-        values.put("username", username);
-        values.put("password", encryptPassword(password));
-        values.put("httpuser", httpuser);
-        values.put("httppassword", encryptPassword(httppassword));
-        values.put("imagePlacement", imagePlacement);
-        values.put("centerThumbnail", isFeaturedImageCapable);
-        values.put("fullSizeImage", fullSizeImage);
-        values.put("maxImageWidth", maxImageWidth);
-        values.put("maxImageWidthId", maxImageWidthId);
-        values.put("location", location);
-        values.put("postFormats", postFormats);
-        values.put("dotcom_username", dotcomUsername);
-        values.put("dotcom_password", encryptPassword(dotcomPassword));
-        values.put("api_blogid", apiBlogID);
-        values.put("api_key", apiKey);
-        values.put("isScaledImage", isScaledImage);
-        values.put("scaledImgWidth", scaledImgWidth);
-        values.put("blog_options", blogOptions);
-        values.put("isAdmin", isAdmin);
+        values.put("url", blog.getUrl());
+        values.put("homeURL", blog.getHomeURL());
+        values.put("username", blog.getUsername());
+        values.put("password", encryptPassword(blog.getPassword()));
+        values.put("httpuser", blog.getHttpuser());
+        values.put("httppassword", encryptPassword(blog.getHttppassword()));
+        values.put("imagePlacement", blog.getImagePlacement());
+        values.put("centerThumbnail", blog.isFeaturedImageCapable());
+        values.put("fullSizeImage", blog.isFullSizeImage());
+        values.put("maxImageWidth", blog.getMaxImageWidth());
+        values.put("maxImageWidthId", blog.getMaxImageWidthId());
+        values.put("location", blog.isLocation());
+        values.put("postFormats", blog.getPostFormats());
+        values.put("dotcom_username", blog.getDotcom_username());
+        values.put("dotcom_password", encryptPassword(blog.getDotcom_password()));
+        values.put("api_blogid", blog.getApi_blogid());
+        values.put("api_key", blog.getApi_key());
+        values.put("isScaledImage", blog.isScaledImage());
+        values.put("scaledImgWidth", blog.getScaledImageWidth());
+        values.put("blog_options", blog.getBlogOptions());
 
-        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
+        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;
-        if (isWPCom) {
-            returnValue = updateWPComCredentials(username, password);
+        if (blog.isDotcomFlag()) {
+            returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
         }
 
         return (returnValue);
@@ -524,7 +512,7 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public List<Object> loadSettings(int id) {
+    public List<Object> getBlog(int id) {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
                 "username", "password", "httpuser", "httppassword",
@@ -973,13 +961,13 @@ public class WordPressDB {
                     new String[] { "id", "blogID", "postid", "title",
                             "date_created_gmt", "dateCreated", "post_status" },
                     "blogID=" + blogID + " AND localDraft != 1 AND isPage=1",
-                    null, null, null, "date_created_gmt DESC");
+                    null, null, null, null);
         else
             c = db.query(POSTS_TABLE,
                     new String[] { "id", "blogID", "postid", "title",
                             "date_created_gmt", "dateCreated", "post_status" },
                     "blogID=" + blogID + " AND localDraft != 1 AND isPage=0",
-                    null, null, null, "date_created_gmt DESC");
+                    null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();

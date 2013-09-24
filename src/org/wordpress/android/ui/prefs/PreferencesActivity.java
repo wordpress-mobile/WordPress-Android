@@ -47,7 +47,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.DeviceUtils;
 
@@ -512,7 +511,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(PreferencesActivity.this, AccountSetupActivity.class);
+            Intent i = new Intent(PreferencesActivity.this, NewAccountActivity.class);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);

@@ -44,6 +44,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.TutorialActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -478,7 +480,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (currentBlog == null || getBlogNames().length == 0) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
-            Intent i = new Intent(this, NewAccountActivity.class);
+            Intent i = new Intent(this, WelcomeActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
         }
@@ -498,6 +500,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     initMenuDrawer();
                     mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
+
+                    // Show the tutorial if user hasn't seen it yet
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                    boolean hasViewedTutorial = settings.getBoolean(TutorialActivity.VIEWED_TUTORIAL, false);
+                    if (!hasViewedTutorial) {
+                        Intent tutorialIntent = new Intent(this, TutorialActivity.class);
+                        startActivity(tutorialIntent);
+                    }
                 } else {
                     finish();
                 }
