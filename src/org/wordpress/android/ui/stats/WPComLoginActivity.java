@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.gcm.GCMRegistrar;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -92,6 +97,19 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
             try {
                 client.call("wp.getUsersBlogs", signInParams);
+                if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
+                    // Sign out current user from all services
+                    new WPComXMLRPCApi().unregisterWPComToken(
+                            WPComLoginActivity.this,
+                            GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
+                    try {
+                        GCMRegistrar.checkDevice(WPComLoginActivity.this);
+                        GCMRegistrar.unregister(WPComLoginActivity.this);
+                    } catch (Exception e) {
+                        Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                    }
+                }
+                WordPress.restClient.clearAccessToken();
                 WordPress.currentBlog.setDotcom_username(mUsername);
                 WordPress.currentBlog.setDotcom_password(mPassword);
                 WordPress.currentBlog.save(WordPress.currentBlog.getUsername());
@@ -108,9 +126,14 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
         @Override
         protected void onPostExecute(Boolean isSignedIn) {
-            if (isSignedIn) {
-                WPComLoginActivity.this.setResult(RESULT_OK);
-                finish();
+            if (isSignedIn && !isFinishing()) {
+                WordPress.restClient.get("me", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        WPComLoginActivity.this.setResult(RESULT_OK);
+                        finish();
+                    }
+                }, null);
             } else {
                 Toast.makeText(getBaseContext(), getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
                 mSignInButon.setEnabled(true);

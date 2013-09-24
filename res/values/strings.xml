@@ -615,5 +615,9 @@
     <string name="passcode_preference_title">PIN lock</string>
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
+    <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
+    <string name="jetpack_not_found">Jetpack plugin not found</string>
+    <string name="jetpack_stats_unauthorized">Can\'t Access Stats</string>
+    <string name="jetpack_stats_switch_user">This WordPress.com account does not have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
 </resources>
