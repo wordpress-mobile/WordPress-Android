@@ -1,29 +1,12 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -55,6 +38,7 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -65,6 +49,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -81,7 +66,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
@@ -90,14 +74,10 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -119,6 +99,26 @@ import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.ApiHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 
 public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -780,7 +780,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                     if (!span.isVideo()) {
                         LayoutInflater factory = LayoutInflater.from(EditPostActivity.this);
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
-                        final TextView imageWidthText = (TextView) alertView.findViewById(R.id.imageWidthText);
+                        final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
                         // final EditText descText = (EditText)
                         // alertView.findViewById(R.id.description);
@@ -850,6 +850,30 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                             }
                         });
 
+                        imageWidthText.setOnFocusChangeListener(new OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View v, boolean hasFocus) {
+                                if (hasFocus) {
+                                    imageWidthText.setText("");
+                                }
+                            }
+                        });
+
+                        imageWidthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                            @Override
+                            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                int width = getEditTextIntegerClamped(imageWidthText, 10, span.getWidth());
+                                seekBar.setProgress(width / 10);
+                                imageWidthText.setSelection((String.valueOf(width).length()));
+
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(imageWidthText.getWindowToken(),
+                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
+                                return true;
+                            }
+                        });
+
                         AlertDialog ad = new AlertDialog.Builder(EditPostActivity.this).setTitle(getString(R.string.image_settings))
                                 .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -857,7 +881,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                                         span.setTitle(titleText.getText().toString());
                                         // span.setDescription(descText.getText().toString());
                                         span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        span.setWidth(seekBar.getProgress() * 10);
+                                        span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, span.getWidth()));
                                         span.setCaption(caption.getText().toString());
                                         span.setFeatured(featuredCheckBox.isChecked());
                                         if (featuredCheckBox.isChecked()) {
@@ -905,6 +929,16 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             mScrollDetected = false;
         }
         return false;
+    }
+
+    private int getEditTextIntegerClamped(EditText editText, int min, int max) {
+        int width = 10;
+        try {
+            width = Integer.parseInt(editText.getText().toString().replace("px", ""));
+        } catch (NumberFormatException e) {
+        }
+        width = Math.min(max, Math.max(width, min));
+        return width;
     }
 
     @Override
