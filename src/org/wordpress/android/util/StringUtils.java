@@ -162,4 +162,13 @@ public class StringUtils {
                 .append(str.substring(1))
                 .toString();
     }
+
+    /*
+     * Wrap an image URL in a photon URL
+     * Check out http://developer.wordpress.com/docs/photon/
+     */
+    public static String getPhotonUrl(String imageUrl, int size) {
+        imageUrl = imageUrl.replace("http://", "").replace("https://", "");
+        return "http://i0.wp.com/" + imageUrl + "?w=" + size;
+    }
 }

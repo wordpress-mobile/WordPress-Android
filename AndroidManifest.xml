@@ -182,7 +182,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
         <!-- Other activities -->
-        
+
         <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/FloatingActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -208,6 +208,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.AuthenticatedWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

@@ -34,6 +34,8 @@ import org.wordpress.android.models.Blog;
  */
 public class AuthenticatedWebViewActivity extends WebViewActivity {
 
+    public static final String LOAD_AUTHENTICATED_URL = "loadAuthenticatedUrl";
+
     /**
      * Blog for which this activity is loading content.
      */
@@ -54,6 +56,12 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey(LOAD_AUTHENTICATED_URL)) {
+            String authUrl = extras.getString(LOAD_AUTHENTICATED_URL);
+            loadAuthenticatedUrl(authUrl);
+        }
     }
 
     /**

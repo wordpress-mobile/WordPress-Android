@@ -1,5 +1,23 @@
 package org.wordpress.android.ui.posts;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -11,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -125,11 +142,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
-    // Handled by MediaUtils
-//    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
-//    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
-//    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
-//    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
@@ -1476,12 +1488,16 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
         final String mediaId = imageSpan.getMediaId();
-        final String thumbnailUrl = imageSpan.getThumbnailURL();
-        
-        if (thumbnailUrl == null || mediaId == null)
+        String imageUrl = imageSpan.getThumbnailURL();
+        if (imageUrl == null || mediaId == null)
             return;
 
-        WordPress.imageLoader.get(thumbnailUrl, new ImageListener() {
+        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
+            String photonUrl = imageSpan.getImageSource().toString();
+            imageUrl = StringUtils.getPhotonUrl(photonUrl, 400);
+        }
+
+        WordPress.imageLoader.get(imageUrl, new ImageListener() {
             
             @Override
             public void onErrorResponse(VolleyError arg0) {
@@ -1494,6 +1510,13 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
                     Bitmap bitmap = container.getBitmap();
 
+                    ImageHelper ih = new ImageHelper();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] bitmapByteArray = stream.toByteArray();
+                    Bitmap resizedBitmap = ih.getResizedImageThumbnail(EditPostActivity.this, bitmapByteArray, null);
+                    if (resizedBitmap == null)
+                        return;
                     Editable s = mContentEditText.getText();
                     WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
                     if (spans.length != 0) {
@@ -1503,7 +1526,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                                 // replace the existing span with a new one with the correct image, re-add it to the same position.
                                 int spanStart = s.getSpanStart(is);
                                 int spanEnd = s.getSpanEnd(is);
-                                WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, bitmap, is.getImageSource());
+                                WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, resizedBitmap, is.getImageSource());
                                 imageSpan.setCaption(is.getCaption());
                                 imageSpan.setDescription(is.getDescription());
                                 imageSpan.setFeatured(is.isFeatured());
@@ -2199,14 +2222,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             return false;
         }
 
-        Bitmap resizedBitmap = null;
         ImageHelper ih = new ImageHelper();
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        if (width > height)
-            width = height;
-
         Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), EditPostActivity.this);
 
         if (mediaData == null) {
@@ -2214,25 +2230,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             return false;
         }
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        byte[] bytes = (byte[]) mediaData.get("bytes");
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-        float conversionFactor = 0.25f;
-
-        if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.40f;
-
-        byte[] finalBytes = ih.createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
-                (String) mediaData.get("orientation"), true);
-
-        if (finalBytes == null) {
-            //Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
+        Bitmap resizedBitmap = ih.getResizedImageThumbnail(this, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+        if (resizedBitmap == null)
             return false;
-        }
-
-        resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
         if (ssb != null) {
             WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);

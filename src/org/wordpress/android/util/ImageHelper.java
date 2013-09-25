@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,6 +26,7 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.util.FloatMath;
 import android.util.Log;
+import android.view.Display;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -465,6 +467,32 @@ public class ImageHelper {
                 callback.onBitmapReady(path, imageView, bitmap);
             
         }
+    }
+
+    public Bitmap getResizedImageThumbnail(Context ctx, byte[] bytes, String orientation) {
+        Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        if (width > height)
+            width = height;
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+
+        float conversionFactor = 0.25f;
+
+        if (opts.outWidth > opts.outHeight)
+            conversionFactor = 0.40f;
+
+        byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
+                orientation, true);
+
+        if (finalBytes == null) {
+            return null;
+        }
+
+        return BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
     }
 
 }

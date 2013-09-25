@@ -49,7 +49,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/dotcomPassword"
         android:background="@drawable/wp_button_small"
-        android:text="@string/save"
+        android:text="@string/sign_in"
         android:textColor="#464646" />
 
     <TextView
