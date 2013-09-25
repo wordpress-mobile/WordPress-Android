@@ -54,7 +54,7 @@ public class JSONUtil {
         String nextQuery = query.substring(endQuery);
         String key = query.substring(0, endQuery);
         try {
-            if (source == null || source.getJSONObject(key) == null) {
+            if (source == null) {
                 return defaultObject;
             }
             if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
