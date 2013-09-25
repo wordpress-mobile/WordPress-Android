@@ -57,7 +57,8 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (isTranslucentActionBarEnabled())
+        boolean isTranslucentActionBarEnabled = isTranslucentActionBarEnabled();
+        if (isTranslucentActionBarEnabled)
             getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
         setContentView(R.layout.reader_activity_main);
@@ -67,7 +68,7 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
 
         createMenuDrawer(R.layout.reader_activity_main);
 
-        if (isTranslucentActionBarEnabled() && super.mMenuDrawer!=null) {
+        if (isTranslucentActionBarEnabled && super.mMenuDrawer!=null) {
             // disable ActionBar translucency when drawer is opening, restore it when closing
             super.mMenuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
                 @Override

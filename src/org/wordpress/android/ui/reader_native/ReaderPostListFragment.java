@@ -249,7 +249,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
             if (isTranslucentActionBarEnabled) {
                 // add a transparent header to the listView - must be done before setting adapter
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
+                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
                 listView.addHeaderView(header, null, false);
