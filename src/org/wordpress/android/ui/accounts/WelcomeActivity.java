@@ -24,6 +24,9 @@ import org.wordpress.android.util.WPViewPager;
 
 
 public class WelcomeActivity extends SherlockFragmentActivity {
+
+    public static final String SKIP_WELCOME = "skipWelcome";
+
     /**
      * The number of pages (wizard steps)
      */
@@ -116,6 +119,9 @@ public class WelcomeActivity extends SherlockFragmentActivity {
                 }
              }
         });
+
+        if (getIntent().getBooleanExtra(SKIP_WELCOME, false))
+            mPager.setCurrentItem(2);
     }
     
     public void showNextItem() {
