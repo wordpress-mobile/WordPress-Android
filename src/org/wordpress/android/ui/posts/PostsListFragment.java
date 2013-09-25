@@ -93,6 +93,12 @@ public class PostsListFragment extends ListFragment {
             } else {
                 textview.setText(getText(R.string.posts_empty_list));
             }
+            textview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mParentActivity.newPost();
+                }
+            });
         }
         createSwitcher();
     }

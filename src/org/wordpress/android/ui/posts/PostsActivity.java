@@ -300,6 +300,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         return true;
     }
 
+    public void newPost() {
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra("id", WordPress.currentBlog.getId());
+        i.putExtra("isNew", true);
+        if (isPage)
+            i.putExtra("isPage", true);
+        startActivityForResult(i, ACTIVITY_EDIT_POST);
+    }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
@@ -308,12 +317,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
-            Intent i = new Intent(this, EditPostActivity.class);
-            i.putExtra("id", WordPress.currentBlog.getId());
-            i.putExtra("isNew", true);
-            if (isPage)
-                i.putExtra("isPage", true);
-            startActivityForResult(i, ACTIVITY_EDIT_POST);
+            newPost();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
