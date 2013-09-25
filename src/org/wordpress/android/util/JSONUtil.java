@@ -54,11 +54,14 @@ public class JSONUtil {
         String nextQuery = query.substring(endQuery);
         String key = query.substring(0, endQuery);
         try {
+            if (source == null || source.getJSONObject(key) == null) {
+                return defaultObject;
+            }
             if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
                 return queryJSON(source.getJSONObject(key), nextQuery.substring(1), defaultObject);
-            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0){
+            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
                 return queryJSON(source.getJSONArray(key), nextQuery, defaultObject);
-            } else if (!nextQuery.equals("")){
+            } else if (!nextQuery.equals("")) {
                 return defaultObject;
             }
             Object result = source.get(key);
