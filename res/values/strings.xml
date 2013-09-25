@@ -753,7 +753,7 @@
     <string name="signing_in">Signing in...</string>
     <string name="dont_yet_have_an_account">Do not have an account yet?</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
-    <string name="agree_terms_of_service">You agree to the fascinating <u>Terms of Service</u> by pressing the next button.</string>
+    <string name="agree_terms_of_service">You agree to the fascinating <u>Terms of Service</u> by pressing the \'Next\' button.</string>
     <string name="username_email">Username / Email</string>
     <string name="site_address">Site address (URL)</string>
     <string name="dont_have_account">Don\'t have an account? <u>Create one!</u></string>
