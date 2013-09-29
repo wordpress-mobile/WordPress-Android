@@ -43,7 +43,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.TutorialActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -540,7 +539,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             case AUTHENTICATE_REQUEST:
                 if (resultCode == RESULT_CANCELED) {
                     mReauthCanceled = true;
-                    Intent i = new Intent(this, NewAccountActivity.class);
+                    Intent i = new Intent(this, WelcomeActivity.class);
                     startActivityForResult(i, ADD_ACCOUNT_REQUEST);
                 } else {
                     WordPress.registerForCloudMessaging(this);
@@ -844,9 +843,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
             
             Intent intent;
-            if (!WordPress.currentBlog.isDotcomFlag()) // redirect to old stats activity as jetpack credentials currently don't work with new stats apis
-                intent = new Intent(WPActionBarActivity.this, OldStatsActivity.class);
-            else if (Utils.isTablet()) 
+            if (Utils.isTablet())
                 intent = new Intent(WPActionBarActivity.this, StatsActivityTablet.class);
             else 
                 intent = new Intent(WPActionBarActivity.this, StatsActivity.class);

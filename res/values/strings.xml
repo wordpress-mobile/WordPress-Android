@@ -108,10 +108,10 @@
     <string name="info">Info</string>
 
     <!-- Media Gallery Action Bar -->
-    <string name="media_add_popup_title">Add to Media Library</string>
+    <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
-    <string name="media_add_new_media_gallery">New Media Gallery</string>
+    <string name="media_add_new_media_gallery">Create gallery</string>
 
     <!-- Media Gallery -->
     <string name="media_gallery_settings_title">Gallery Settings</string>
@@ -316,7 +316,7 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="media_remove_from_queue">Remove from queue</string>
-    <string name="select_from_media_library">Select from Media Library</string>
+    <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -572,7 +572,6 @@
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="automattic_url"><u>www.automattic.com</u></string>
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local Changes</string>
@@ -619,6 +618,10 @@
     <string name="passcode_preference_title">PIN lock</string>
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
+    <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
+    <string name="jetpack_not_found">Jetpack plugin not found</string>
+    <string name="jetpack_stats_unauthorized">Can\'t Access Stats</string>
+    <string name="jetpack_stats_switch_user">This WordPress.com account does not have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
     <!--
        ****
@@ -750,7 +753,7 @@
     <string name="signing_in">Signing in...</string>
     <string name="dont_yet_have_an_account">Do not have an account yet?</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
-    <string name="agree_terms_of_service">You agree to the fascinating <u>Terms of Service</u> by pressing the next button.</string>
+    <string name="agree_terms_of_service">You agree to the fascinating <u>Terms of Service</u> by pressing the \'Next\' button.</string>
     <string name="username_email">Username / Email</string>
     <string name="site_address">Site address (URL)</string>
     <string name="dont_have_account">Don\'t have an account? <u>Create one!</u></string>

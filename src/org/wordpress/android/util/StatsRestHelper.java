@@ -906,7 +906,7 @@ public class StatsRestHelper {
             }
             
             @Override
-            public void onFailire() {
+            public void onFailure(VolleyError error) {
                 updateRefreshMap(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, -1);
             }
         });
@@ -921,7 +921,7 @@ public class StatsRestHelper {
             }
             
             @Override
-            public void onFailire() {
+            public void onFailure(VolleyError error) {
                 updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
             }
         });
@@ -931,12 +931,12 @@ public class StatsRestHelper {
         getStatsSummary(blogId, null);
     }
     
-    private static interface StatsSummaryInterface {
+    public static interface StatsSummaryInterface {
         void onSuccess();
-        void onFailire();
+        void onFailure(VolleyError error);
     }
     
-    private static void getStatsSummary(final String blogId, final StatsSummaryInterface callback) {
+    public static void getStatsSummary(final String blogId, final StatsSummaryInterface callback) {
         WordPress.restClient.getStatsSummary(blogId, 
                 new Listener() {
                     
@@ -964,7 +964,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null)
-                            callback.onFailire();
+                            callback.onFailure(error);
                         Log.e(TAG, "Stats: Failed to get summary");
                     }
                 });

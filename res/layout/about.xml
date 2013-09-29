@@ -82,7 +82,7 @@
             android:layout_marginTop="30dp"
             android:clickable="true"
             android:onClick="onClick"
-            android:text="@string/automattic_url"
+            android:text="automattic.com"
             android:textSize="18sp" />
     </LinearLayout>
 

@@ -21,7 +21,7 @@ import com.actionbarsherlock.internal.widget.IcsSpinner;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
@@ -111,7 +111,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         } else {
             // no account, load main view to load new account view
             Toast.makeText(this, getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, NewAccountActivity.class));
+            startActivity(new Intent(this, WelcomeActivity.class));
             finish();
             return null;
         }

@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -210,7 +211,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         Preference addBlogPreference = new Preference(this);
         addBlogPreference.setTitle(R.string.add_account);
-        Intent intent = new Intent(this, NewAccountActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        intent.putExtra(WelcomeActivity.SKIP_WELCOME, true);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
@@ -511,7 +513,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(PreferencesActivity.this, NewAccountActivity.class);
+            Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
+            i.putExtra(WelcomeActivity.SKIP_WELCOME, true);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);

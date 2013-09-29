@@ -46,28 +46,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         final String email = emailTextField.getText().toString().trim();
         final String password = passwordTextField.getText().toString().trim();
         final String username = usernameTextField.getText().toString().trim();
-        
-        if (email.equals("") || password.equals("")) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert = NUXDialogFragment
-                    .newInstance(getString(R.string.required_fields), getString(R.string.username_password_required), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-            nuxAlert.show(ft, "alert");
-            return false;
-        }
 
-        if (password.length() < 4) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert = NUXDialogFragment
-                    .newInstance(getString(R.string.invalid_password_title), getString(R.string.invalid_password_message), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-            nuxAlert.show(ft, "alert");
-            return false;
-        }
-        
-        if (username.length() > 60) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert = NUXDialogFragment
-                    .newInstance(getString(R.string.invalid_username_title), getString(R.string.invalid_username_length), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-            nuxAlert.show(ft, "alert");
+        if (email.equals("")) {
+            emailTextField.setError(getString(R.string.required_field));
+            emailTextField.requestFocus();
             return false;
         }
 
@@ -76,10 +58,32 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
                 Pattern.DOTALL);
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert = NUXDialogFragment
-                    .newInstance(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-            nuxAlert.show(ft, "alert");
+            emailTextField.setError(getString(R.string.invalid_email_message));
+            emailTextField.requestFocus();
+            return false;
+        }
+
+        if (username.equals("")) {
+            usernameTextField.setError(getString(R.string.required_field));
+            usernameTextField.requestFocus();
+            return false;
+        }
+
+        if (username.length() > 60) {
+            usernameTextField.setError(getString(R.string.invalid_username_length));
+            usernameTextField.requestFocus();
+            return false;
+        }
+
+        if (password.equals("")) {
+            passwordTextField.setError(getString(R.string.required_field));
+            passwordTextField.requestFocus();
+            return false;
+        }
+
+        if (password.length() < 4) {
+            passwordTextField.setError(getString(R.string.invalid_password_message));
+            passwordTextField.requestFocus();
             return false;
         }
 

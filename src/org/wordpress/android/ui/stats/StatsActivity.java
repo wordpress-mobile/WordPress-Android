@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -17,15 +20,18 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
+import org.xmlrpc.android.ApiHelper;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -38,11 +44,13 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
+    private static final int REQUEST_JETPACK = 7000;
     
     private StatsAbsViewFragment mStatsViewFragment;
     private View mActionbarNav;
     private TextView mActionbarNavText;
     private DialogFragment mNavFragment;
+    private Dialog mSignInDialog;
     private int mNavPosition = 0;
 
     private MenuItem mRefreshMenuItem;
@@ -130,6 +138,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         // for self-hosted sites; launch the user into an activity where they can provide their credentials 
         if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
+            return;
         }
         
         if (!mIsRestoredFromState)
@@ -179,7 +188,40 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 refreshStats();
         }
     }
-    
+
+    private void verifyJetpackSettings() {
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.RefreshBlogContentTask.Callback() {
+            @Override
+            public void onSuccess() {
+                if (getBlogIdFromJetpack() == null) {
+                    // Blog has not returned a jetpack_client_id
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
+                    builder.setMessage(getString(R.string.jetpack_message))
+                            .setTitle(getString(R.string.jetpack_not_found));
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent jetpackIntent = new Intent(StatsActivity.this, AuthenticatedWebViewActivity.class);
+                            jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
+                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
+                            startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    builder.create().show();
+                }
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        }).execute(false);
+    }
+
     protected void showViews() {
         FragmentManager fm = getSupportFragmentManager();
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
@@ -267,10 +309,44 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         
         if (WordPress.getCurrentBlog().isDotcomFlag())
             blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        else  
-            blogId = getBlogIdFromJetPack();
-        
-        StatsRestHelper.getStatsSummary(blogId);
+        else  {
+            blogId = getBlogIdFromJetpack();
+            if (blogId == null) {
+                verifyJetpackSettings();
+            }
+        }
+
+        StatsRestHelper.getStatsSummary(blogId, new StatsRestHelper.StatsSummaryInterface() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure(VolleyError error) {
+                if (mSignInDialog != null && mSignInDialog.isShowing())
+                    return;
+
+                if (!isFinishing() && WordPress.getCurrentBlog().isJetpackPowered() &&
+                        error.networkResponse != null && error.networkResponse.statusCode == 403) {
+                    // This Jetpack site has the wrong WP.com credentials
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
+                    builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
+                            .setMessage(getString(R.string.jetpack_stats_switch_user));
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivityForResult(new Intent(StatsActivity.this, WPComLoginActivity.class), WPComLoginActivity.REQUEST_CODE);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    mSignInDialog = builder.create();
+                    mSignInDialog.show();
+                }
+            }
+        });
         
         if (mStatsViewFragment != null) {
             StatsViewType viewType = mStatsViewFragment.getViewType();
@@ -278,7 +354,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         }
     }
 
-    private String getBlogIdFromJetPack() {
+    private String getBlogIdFromJetpack() {
         // for self-hosted blogs
         try {
             JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());

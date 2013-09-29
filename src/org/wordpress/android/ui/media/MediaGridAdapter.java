@@ -29,10 +29,12 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 /**
@@ -45,6 +47,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
+    private int mGridItemWidth;
     private Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private Handler mHandler;
     
@@ -248,7 +251,15 @@ public class MediaGridAdapter extends CursorAdapter {
     
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
-        
+
+        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
+        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
+            String imageURL = cursor.getString(cursor.getColumnIndex("fileURL"));
+            if (imageURL != null) {
+                thumbnailURL = StringUtils.getPhotonUrl(imageURL, mGridItemWidth);
+            }
+        }
+
         if (thumbnailURL != null) {
             Uri uri = Uri.parse(thumbnailURL);
             String filepath = uri.getLastPathSegment();
@@ -406,17 +417,12 @@ public class MediaGridAdapter extends CursorAdapter {
     /** Updates the width of a cell to max out the space available, for phones **/
     private void updateGridWidth(Context context, View view) {
 
-        int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
+        setGridItemWidth();
         int columnCount = getColumnCount(context);
         
         if (columnCount > 1) {
-
-            // use 8 dp as padding on the left, right and in between columns
-            int dp8 = (int) Utils.dpToPx(8);
-            int padding = (columnCount + 1) * dp8;
-            int width = (maxWidth - padding) / columnCount;
             
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
             int margins = (int) Utils.dpToPx(8);
             params.setMargins(0, margins, 0, margins);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
@@ -482,5 +488,15 @@ public class MediaGridAdapter extends CursorAdapter {
     
     public int getDataCount() {
         return mCursorDataCount;
+    }
+
+    private void setGridItemWidth() {
+        int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+        int columnCount = getColumnCount(mContext);
+        if (columnCount > 0) {
+            int dp8 = (int) Utils.dpToPx(8);
+            int padding = (columnCount + 1) * dp8;
+            mGridItemWidth = (maxWidth - padding) / columnCount;
+        }
     }
 }

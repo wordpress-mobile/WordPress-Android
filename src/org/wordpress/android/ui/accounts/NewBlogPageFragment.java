@@ -155,7 +155,7 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
         prevButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                WelcomeActivity act = (WelcomeActivity)getActivity();
+                NewAccountActivity act = (NewAccountActivity)getActivity();
                 act.showPrevItem();
             }
         });
