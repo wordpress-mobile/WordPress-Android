@@ -1893,7 +1893,7 @@ public class WordPressDB {
         values.put("placeholder", placeholder);
         values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
 
-        if (!note.getId().equals("0")) {
+        if (!(note.getId().equals("0") || note.getId().equals(""))) {
             values.put("id", note.getId());
             // Try to update
             int result = db.update(NOTES_TABLE, values, "id=" + note.getId(), null);
