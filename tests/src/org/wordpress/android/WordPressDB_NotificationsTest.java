@@ -25,8 +25,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
 
     // This test reproduces #134 (crash when not fixed)
     public void testAddNote_issue134() {
-        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
-                "empty_tables.sql");
+        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
         WordPressDB wpdb = new WordPressDB(targetContext);
 
         Bundle b = new Bundle();
@@ -36,11 +35,10 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
         b.putString("icon", "");
         b.putString("noticon", "");
         b.putString("msg", "");
-        b.putString("note_id", "");
-
+        b.putString("note_id", ""); // empty string note_id makes addNote() crash
         Note note = new Note(b);
         wpdb.addNote(note, true);
-        // assertTrue((node.getChildren().size() != 0));
+
         db.close();
     }
 

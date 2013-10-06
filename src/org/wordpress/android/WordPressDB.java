@@ -1854,7 +1854,6 @@ public class WordPressDB {
         } else {
             return null;    
         }
-        
     }
 
     public ArrayList<Note> loadNotes() {

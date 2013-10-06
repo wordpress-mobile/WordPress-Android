@@ -1,16 +1,14 @@
 package org.wordpress.android.ui.notifications;
 
-import android.view.View;
-import android.view.KeyEvent;
-import android.text.Editable;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.EditText;
 import android.content.Context;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import org.wordpress.android.R;
 
 public class ReplyField extends LinearLayout {
@@ -43,6 +41,9 @@ public class ReplyField extends LinearLayout {
         return mTextField;
     }
     public Editable getText(){
+        if (mTextField == null) {
+            return null;
+        }
         return mTextField.getText();
     }
     public void setText(CharSequence text){
