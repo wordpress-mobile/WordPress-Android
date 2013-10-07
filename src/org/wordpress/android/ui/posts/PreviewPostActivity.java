@@ -29,10 +29,10 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
         
         boolean isPage = getIntent().getBooleanExtra("isPage", false);
         if (isPage) {
-            this.setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName())
+            this.setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName())
                     + " - " + getResources().getText(R.string.preview_page));
         } else {
-            this.setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName())
+            this.setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName())
                     + " - " + getResources().getText(R.string.preview_post));
         }
 
@@ -67,24 +67,9 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
     private void loadPostPreview(Post post) {
         if (post != null) {
             String url = post.getPermaLink();
-            boolean isPrivate = false;
-            try {
-                Gson gson = new Gson();
-                Type type = new TypeToken<Map<String, Object>>() {
-                }.getType();
-                Map<String, Object> blogOptions = gson.fromJson(
-                        mBlog.getBlogOptions(), type);
-                StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
-                String blogPublicOptionValue = blogPublicOption.get("value").toString();
-                if (blogPublicOptionValue.equals("-1")) {
-                    isPrivate = true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             
             Date d = new Date();           
-            if ( isPrivate //blog private 
+            if ( WordPress.getCurrentBlog().isPrivate() //blog private
                     || post.isLocalDraft() 
                     || post.isLocalChange()
                     || post.getDate_created_gmt() > d.getTime() //Scheduled

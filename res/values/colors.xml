@@ -86,9 +86,9 @@
     <color name="nux_secondary_button_shadow">#7F000000</color>
     <color name="nux_primary_button_shadow">#19000000</color>
     <color name="nux_primary_button_disabled">#99FFFFFF</color>
-    <color name="nux_tos">#4CFFFFFF</color>
+    <color name="nux_tos">#77FFFFFF</color>
     <color name="nux_review">#BCDDEC</color>
-    <color name="nux_alert_bg">#DD000000</color>
+    <color name="nux_alert_bg">#EE000000</color>
 
     <color name="page_indicator_selected_color">#2EA2CC</color>
     <color name="page_indicator_unselected_color">#0F80B0</color>

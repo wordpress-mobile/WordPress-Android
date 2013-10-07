@@ -4,17 +4,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.android.volley.VolleyError;
+import com.google.android.gcm.GCMRegistrar;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONObject;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.xmlrpc.android.WPComXMLRPCApi;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
@@ -23,6 +34,9 @@ import org.wordpress.android.WordPress;
 public class WPComLoginActivity extends SherlockFragmentActivity {
 
     public static final int REQUEST_CODE = 5000;
+    private String mUsername;
+    private String mPassword;
+    private Button mSignInButon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,32 +44,21 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         setContentView(R.layout.wp_dot_com_login_activity);
         getSupportActionBar().hide();
 
-        Button saveStatsLogin = (Button) findViewById(R.id.saveDotcom);
-        saveStatsLogin.setOnClickListener(new Button.OnClickListener() {
+        mSignInButon = (Button) findViewById(R.id.saveDotcom);
+        mSignInButon.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
                 EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
                 EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
 
-                String dcUsername = dotcomUsername.getText().toString();
-                String dcPassword = dotcomPassword.getText().toString();
+                mUsername = dotcomUsername.getText().toString();
+                mPassword = dotcomPassword.getText().toString();
 
-                if (dcUsername.equals("") || dcPassword.equals("")) {
+                if (mUsername.equals("") || mPassword.equals("")) {
                     dotcomUsername.setError(getString(R.string.username_password_required));
                     dotcomPassword.setError(getString(R.string.username_password_required));
                 } else {
-
-                    WordPress.currentBlog.setDotcom_username(dcUsername);
-                    WordPress.currentBlog.setDotcom_password(dcPassword);
-                    WordPress.currentBlog.save(WordPress.currentBlog.getUsername());
-                    
-                    Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
-                    settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, dcUsername);
-                    settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, dcPassword);
-                    settings.commit();
-                    
-                    WPComLoginActivity.this.setResult(RESULT_OK);
-                    finish();
+                    new SignInTask().execute();
                 }
             }
         });
@@ -65,7 +68,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://jetpack.me/about"));
+                intent.setData(Uri.parse("http://android.wordpress.org/faq"));
                 startActivity(intent);
 
             }
@@ -77,5 +80,81 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         super.onBackPressed();
         setResult(Activity.RESULT_CANCELED);
     }
-    
+
+    private class SignInTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            mSignInButon.setText(getString(R.string.attempting_configure));
+            mSignInButon.setEnabled(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
+            Object[] signInParams = { mUsername, mPassword };
+
+            try {
+                client.call("wp.getUsersBlogs", signInParams);
+                if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
+                    // Sign out current user from all services
+                    new WPComXMLRPCApi().unregisterWPComToken(
+                            WPComLoginActivity.this,
+                            GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
+                    try {
+                        GCMRegistrar.checkDevice(WPComLoginActivity.this);
+                        GCMRegistrar.unregister(WPComLoginActivity.this);
+                    } catch (Exception e) {
+                        Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                    }
+                }
+                WordPress.restClient.clearAccessToken();
+                WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
+
+                // Update Jetpack credentials
+                if (!WordPress.getCurrentBlog().isDotcomFlag()) {
+                    // dotcom_username and password is still used in OldStatsActivity
+                    WordPress.getCurrentBlog().setDotcom_username(mUsername);
+                    WordPress.getCurrentBlog().setDotcom_password(mPassword);
+                    WordPress.getCurrentBlog().save(WordPress.currentBlog.getUsername());
+                }
+
+                // Update currentBlog reference
+                WordPress.setCurrentBlog(WordPress.getCurrentBlog().getId());
+
+                Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
+                settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
+                settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+                settings.commit();
+                return true;
+            } catch (XMLRPCException e) {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSignedIn) {
+            if (isSignedIn && !isFinishing()) {
+                WordPress.restClient.get("me", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        WPComLoginActivity.this.setResult(RESULT_OK);
+                        finish();
+                    }
+                }, new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                Toast.makeText(getBaseContext(), getString(R.string.error_generic), Toast.LENGTH_SHORT).show();
+                                mSignInButon.setEnabled(true);
+                                mSignInButon.setText(R.string.sign_in);
+                            }
+                        });
+            } else {
+                Toast.makeText(getBaseContext(), getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
+                mSignInButon.setEnabled(true);
+                mSignInButon.setText(R.string.sign_in);
+            }
+        }
+    }
 }

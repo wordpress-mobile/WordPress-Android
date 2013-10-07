@@ -36,6 +36,7 @@ public class Note {
     private static final String NOTE_ACTION_REPLY="replyto-comment";
     private static final String REPLY_CONTENT_PARAM_KEY="content";
 
+    // FIXME: add other types
     private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
         put("c", "comment");
     }};
@@ -63,7 +64,7 @@ public class Note {
         JSONObject tmpNoteJSON = new JSONObject();
         String type = extras.getString("type");
         String finalType = UNKNOWN_TYPE;
-        if (pnType2type.containsKey(type)) {
+        if (type != null && pnType2type.containsKey(type)) {
             finalType = pnType2type.get(type);
         }
         JSONObject subject = new JSONObject();

@@ -101,24 +101,7 @@ public class DashboardActivity extends SherlockActivity {
 
     
     private void loadDashboard() {
-        String dashboardUrl = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
-        Map<?, ?> blogOptions = gson.fromJson(mBlog.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
-            if (homeURLMap != null)
-                dashboardUrl = homeURLMap.get("value").toString();
-        }
-        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6 
-        if (dashboardUrl == null) {
-            if (mBlog.getUrl().lastIndexOf("/") != -1) {
-                dashboardUrl = mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
-                + "/wp-admin";
-            } else {
-                dashboardUrl = mBlog.getUrl().replace("xmlrpc.php", "wp-admin");
-            }
-        }
+        String dashboardUrl = mBlog.getAdminUrl();
         loadAuthenticatedUrl(dashboardUrl);
     }
     
@@ -220,8 +203,6 @@ public class DashboardActivity extends SherlockActivity {
                                               HttpAuthHandler handler, String host, String realm) {
             handler.proceed(blog.getHttpuser(), blog.getHttppassword());
         }
-
-
     }
 
     @Override

@@ -2,8 +2,16 @@
 
 package org.wordpress.android.models;
 
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
 public class Blog {
@@ -333,5 +341,59 @@ public class Blog {
 
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public String getAdminUrl() {
+        String adminUrl = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
+            if (homeURLMap != null)
+                adminUrl = homeURLMap.get("value").toString();
+        }
+        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if (adminUrl == null) {
+            if (this.getUrl().lastIndexOf("/") != -1) {
+                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/"))
+                        + "/wp-admin";
+            } else {
+                adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
+            }
+        }
+        return adminUrl;
+    }
+
+    public boolean isPrivate() {
+        try {
+            Gson gson = new Gson();
+            Type type = new TypeToken<Map<String, Object>>() {
+            }.getType();
+            Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
+            StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
+            String blogPublicOptionValue = blogPublicOption.get("value").toString();
+            if (blogPublicOptionValue.equals("-1")) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isJetpackPowered() {
+        try {
+            JSONObject options = new JSONObject(getBlogOptions());
+            if (options.has("jetpack_client_id"))
+                return true;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isPhotonCapable() {
+        return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
     }
 }
