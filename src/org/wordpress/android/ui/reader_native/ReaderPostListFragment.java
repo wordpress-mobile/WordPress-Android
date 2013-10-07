@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -20,6 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -248,7 +250,8 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             listView.addFooterView(mFooterProgress);
 
             if (isTranslucentActionBarEnabled) {
-                // add a transparent header to the listView - must be done before setting adapter
+                // add a transparent header to the listView that matches the size of the ActionBar,
+                // taking the size of the listView divider into account
                 int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
@@ -523,19 +526,24 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         mAutoUpdateHandler.removeCallbacks(mAutoUpdateTask);
     }
 
+    private ActionBar getActionBar() {
+        if (hasActivity() && (getActivity() instanceof SherlockFragmentActivity)) {
+            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
     /*
      * make sure the passed topic is the one selected in the actionbar
      */
     @SuppressLint("NewApi")
     private void selectTopicInActionBar(String topicName) {
-        if (!SysUtils.isGteAndroid4())
-            return;
         if (!hasActivity())
             return;
         if (topicName==null)
             return;
 
-        ActionBar actionBar = getActivity().getActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar==null)
             return;
 
@@ -549,21 +557,8 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     @SuppressLint("NewApi")
-    private boolean hasActionBar() {
-        if (!SysUtils.isGteAndroid4())
-            return false;
-        if (!hasActivity())
-            return false;
-        ActionBar actionBar = getActivity().getActionBar();
-        return (actionBar!=null);
-    }
-
-    @SuppressLint("NewApi")
     private void setupActionBar() {
-        if (!SysUtils.isGteAndroid4())
-            return;
-
-        ActionBar actionBar = getActivity().getActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar==null)
             return;
 
