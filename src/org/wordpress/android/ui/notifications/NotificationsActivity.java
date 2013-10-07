@@ -76,7 +76,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         // Load notes
-        notes = WordPress.wpDB.loadNotes();
+        notes = WordPress.wpDB.getLatestNotes();
 
         fragmentDetectors.add(new FragmentDetector(){
             @Override
@@ -127,7 +127,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                notes = WordPress.wpDB.loadNotes();
+                notes = WordPress.wpDB.getLatestNotes();
                 refreshNotificationsListFragment(notes);
             }
         };

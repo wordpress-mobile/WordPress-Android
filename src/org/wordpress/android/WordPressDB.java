@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -1856,11 +1857,11 @@ public class WordPressDB {
         }
     }
 
-    public ArrayList<Note> loadNotes() {
-        return loadNotes(20);
+    public ArrayList<Note> getLatestNotes() {
+        return getLatestNotes(20);
     }
 
-    public ArrayList<Note> loadNotes(int limit) {
+    public ArrayList<Note> getLatestNotes(int limit) {
         Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data", "placeholder"},
                 null, null, null, null, "timestamp DESC", "" + limit);
         ArrayList<Note> notes = new ArrayList<Note>();
@@ -1913,6 +1914,9 @@ public class WordPressDB {
     }
 
     public static int generateIdFor(Note note) {
+        if (note == null) {
+            return 0;
+        }
         return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
     }
 
@@ -1923,8 +1927,7 @@ public class WordPressDB {
     }
 
     public Note getNoteById(int id) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},
-                null, null, null, "id=" + id, null, null);
+        Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},  "id=" + id, null, null, null, null);
         cursor.moveToFirst();
 
         try {
@@ -1932,6 +1935,9 @@ public class WordPressDB {
             return new Note(jsonNote);
         } catch (JSONException e) {
             Log.e(WordPress.TAG, "Can't parse JSON Note: " + e);
+            return null;
+        } catch (CursorIndexOutOfBoundsException e) {
+            Log.v(WordPress.TAG, "No Note with this id: " + e);
             return null;
         }
     }

@@ -15,7 +15,7 @@ public class ReplyField extends LinearLayout {
     interface OnReplyListener {
         public void onReply(ReplyField field, Editable replyText);
     }
-        
+
     EditText mTextField;
     ImageButton mReplyButton;
     OnReplyListener mOnReplyListener;
@@ -25,7 +25,7 @@ public class ReplyField extends LinearLayout {
     public ReplyField(Context context, AttributeSet attributes){
         super(context, attributes);
     }
-	public ReplyField(Context context, AttributeSet attributes, int defStyle){
+    public ReplyField(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
     public void clearFocus(){
