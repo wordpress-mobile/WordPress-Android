@@ -27,10 +27,10 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Created by nbradbury on 6/27/13.
- * adapter for list of posts in a specific topic
+ * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
-    private String mCurrentTopic;
+    private String mCurrentTag;
 
     private int mPhotonWidth;
     private int mPhotonHeight;
@@ -97,8 +97,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void setTopic(String topicName) {
-        mCurrentTopic = topicName;
+    public void setTag(String tagName) {
+        mCurrentTag = tagName;
         reload();
     }
 
@@ -414,13 +414,13 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTopic, Constants.READER_MAX_POSTS_TO_DISPLAY);
+            tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, Constants.READER_MAX_POSTS_TO_DISPLAY);
             if (mPosts.isSameList(tmpPosts))
                 return false;
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTopic) < Constants.READER_MAX_POSTS_TO_DISPLAY);
+            mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
             // pre-load avatars, featured images and pubDates in each post - these values are all
             // cached by the post after the first time they're computed, so calling these getters

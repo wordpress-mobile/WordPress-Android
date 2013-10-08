@@ -143,11 +143,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                 if (isResultOK && readerFragment!=null && data!=null) {
                     // refresh topics if they were changed
                     if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false))
-                        readerFragment.refreshTopics();
+                        readerFragment.refreshTags();
                     // set the last topic added as the current topic
                     String lastAddedTopic = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
                     if (!TextUtils.isEmpty(lastAddedTopic))
-                        readerFragment.setCurrentTopic(lastAddedTopic);
+                        readerFragment.setCurrentTag(lastAddedTopic);
                 }
                 break;
 
@@ -155,8 +155,8 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             /*case ReaderConst.INTENT_LOGIN :
                 if (isResultOK) {
                     if (readerFragment!=null) {
-                        readerFragment.updateTopicList();
-                        readerFragment.updatePostsInCurrentTopic(ReaderActions.RequestDataAction.LOAD_NEWER);
+                        readerFragment.updateTagList();
+                        readerFragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
                     } else {
                         showPostListFragment();
                     }
@@ -214,13 +214,13 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_topics :
+            case R.id.menu_tags :
                 ReaderActivityLauncher.showReaderTagsForResult(this);
                 return true;
             case R.id.menu_refresh :
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment!=null) {
-                    fragment.updatePostsInCurrentTopic(ReaderActions.RequestDataAction.LOAD_NEWER);
+                    fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
                     return true;
                 }
                 break;

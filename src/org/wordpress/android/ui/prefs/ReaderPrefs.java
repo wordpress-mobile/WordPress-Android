@@ -10,8 +10,8 @@ import org.wordpress.android.WordPress;
  * Created by nbradbury on 6/21/13.
  */
 public class ReaderPrefs {
-    private static final String PREFKEY_USER_ID      = "wp_userid";       // id of the current user
-    private static final String PREFKEY_READER_TOPIC = "reader_topic";    // last selected topic in the reader
+    private static final String PREFKEY_USER_ID    = "wp_userid";       // id of the current user
+    private static final String PREFKEY_READER_TAG = "reader_tag";    // last selected tag in the reader
 
     private static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -57,10 +57,10 @@ public class ReaderPrefs {
         remove(PREFKEY_USER_ID);
     }
 
-    public static String getReaderTopic() {
-        return getString(PREFKEY_READER_TOPIC);
+    public static String getReaderTag() {
+        return getString(PREFKEY_READER_TAG);
     }
-    public static void setReaderTopic(String topicName) {
-        setString(PREFKEY_READER_TOPIC, topicName);
+    public static void setReaderTag(String tagName) {
+        setString(PREFKEY_READER_TAG, tagName);
     }
 }

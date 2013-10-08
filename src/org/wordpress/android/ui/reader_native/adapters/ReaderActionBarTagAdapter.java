@@ -19,49 +19,49 @@ import org.wordpress.android.util.SysUtils;
 
 /**
  * Created by nbradbury on 7/10/13.
- * populates ActionBar dropdown with reader topics
+ * populates ActionBar dropdown with reader tags
  */
 public class ReaderActionBarTagAdapter extends BaseAdapter {
-    private ReaderTagList mTopics = new ReaderTagList();
+    private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
 
     public ReaderActionBarTagAdapter(Context context, ReaderActions.DataLoadedListener dataListener) {
         mDataListener = dataListener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        refreshTopics();
+        refreshTags();
     }
 
-    public int getIndexOfTopicName(String topicName) {
-        if (topicName==null)
+    public int getIndexOfTagName(String tagName) {
+        if (tagName==null)
             return -1;
-        for (int i=0; i < mTopics.size(); i++) {
-            if (topicName.equalsIgnoreCase(mTopics.get(i).getTagName()))
+        for (int i=0; i < mTags.size(); i++) {
+            if (tagName.equalsIgnoreCase(mTags.get(i).getTagName()))
                 return i;
         }
         return -1;
     }
 
     @SuppressLint("NewApi")
-    public void refreshTopics() {
+    public void refreshTags() {
         if (mIsTaskRunning)
-            ReaderLog.w("Load topics task already running");
+            ReaderLog.w("Load tags task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadTopicsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            new LoadTopicsTask().execute();
+            new LoadTagsTask().execute();
         }
     }
 
     @Override
     public int getCount() {
-        return (mTopics!=null ? mTopics.size() : 0);
+        return (mTags !=null ? mTags.size() : 0);
     }
 
     @Override
     public Object getItem(int index) {
-        return mTopics.get(index);
+        return mTags.get(index);
     }
 
     @Override
@@ -71,25 +71,25 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        ReaderTag topic = mTopics.get(position);
+        ReaderTag tag = mTags.get(position);
         view = mInflater.inflate(R.layout.reader_actionbar_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(topic.getCapitalizedTagName());
+        txtName.setText(tag.getCapitalizedTagName());
         return view;
     }
 
     @Override
     public View getDropDownView(int position, View view, ViewGroup parent) {
-        ReaderTag topic = mTopics.get(position);
+        ReaderTag tag = mTags.get(position);
         view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(topic.getCapitalizedTagName());
+        txtName.setText(tag.getCapitalizedTagName());
         return view;
     }
 
     private boolean mIsTaskRunning = false;
-    private class LoadTopicsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderTagList tmpTopics = new ReaderTagList();
+    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
+        private ReaderTagList tmpTags = new ReaderTagList();
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -100,19 +100,19 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... voids) {
-            tmpTopics.addAll(ReaderTagTable.getDefaultTags());
-            tmpTopics.addAll(ReaderTagTable.getSubscribedTags());
-            if (mTopics.isSameList(tmpTopics))
+            tmpTags.addAll(ReaderTagTable.getDefaultTags());
+            tmpTags.addAll(ReaderTagTable.getSubscribedTags());
+            if (mTags.isSameList(tmpTags))
                 return false;
             return true;
         }
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mTopics = (ReaderTagList) tmpTopics.clone();
+                mTags = (ReaderTagList) tmpTags.clone();
                 notifyDataSetChanged();
                 if (mDataListener!=null)
-                    mDataListener.onDataLoaded(mTopics.isEmpty());
+                    mDataListener.onDataLoaded(mTags.isEmpty());
             }
             mIsTaskRunning = false;
         }

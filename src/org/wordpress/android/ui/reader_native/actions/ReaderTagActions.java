@@ -139,13 +139,13 @@ public class ReaderTagActions {
     }
 
     /**
-     * update list of reader topics from the server
+     * update list of reader tags from the server
      **/
-    public static void updateTopics(final ReaderActions.UpdateResultListener resultListener) {
+    public static void updateTags(final ReaderActions.UpdateResultListener resultListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateTopicsResponse(jsonObject, resultListener);
+                handleUpdateTagsResponse(jsonObject, resultListener);
             }
         };
 
@@ -157,10 +157,10 @@ public class ReaderTagActions {
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
-        ReaderLog.d("updating reader topics");
+        ReaderLog.d("updating reader tags");
         WordPress.restClient.get("read/menu", null, null, listener, errorListener);
     }
-    private static void handleUpdateTopicsResponse(final JSONObject jsonObject, final ReaderActions.UpdateResultListener resultListener) {
+    private static void handleUpdateTagsResponse(final JSONObject jsonObject, final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject==null) {
             if (resultListener!=null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
@@ -175,8 +175,8 @@ public class ReaderTagActions {
             public void run() {
                 // get server topics, both default & subscribed
                 ReaderTagList serverTopics = new ReaderTagList();
-                serverTopics.addAll(parseTopics(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTopics(jsonObject, "subscribed", ReaderTag.ReaderTagType.SUBSCRIBED));
+                serverTopics.addAll(parseTags(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.SUBSCRIBED));
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -187,13 +187,13 @@ public class ReaderTagActions {
                 if (hasChanges) {
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
-                    deleteTopics(localTopics.getDeletions(serverTopics));
+                    deleteTags(localTopics.getDeletions(serverTopics));
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
                 }
 
                 // save changes to recommended topics
-                ReaderTagList serverRecommended = parseTopics(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
+                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
                 ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
                     ReaderLog.d("recommended topics changed");
@@ -215,7 +215,7 @@ public class ReaderTagActions {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTopics(JSONObject jsonObject, String name, ReaderTag.ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTag.ReaderTagType topicType) {
         ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject==null)
@@ -241,7 +241,7 @@ public class ReaderTagActions {
         return topics;
     }
 
-    private static void deleteTopics(ReaderTagList topics) {
+    private static void deleteTags(ReaderTagList topics) {
         if (topics==null || topics.size()==0)
             return;
         ReaderDatabase.getWritableDb().beginTransaction();

@@ -44,7 +44,7 @@ import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
 /**
  * Created by nbradbury on 6/30/13.
- * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific topic
+ * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific tag
  */
 public class ReaderPostListFragment extends Fragment implements View.OnTouchListener, AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
@@ -54,12 +54,12 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     private TextView mEmptyMessage;
     private View mFooterProgress;
 
-    private String mCurrentTopic;
+    private String mCurrentTag;
     private boolean mIsUpdating = false;
-    private boolean mAlreadyUpdatedTopicList = false;
+    private boolean mAlreadyUpdatedTagList = false;
 
-    private static final String KEY_TOPIC_LIST_UPDATED = "topics_updated";
-    private static final String KEY_TOPIC_NAME = "topic_name";
+    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
+    private static final String KEY_TAG_NAME = "tag_name";
 
     protected interface OnFirstVisibleItemChangeListener {
         void onFirstVisibleItemChanged(int firstVisibleItem);
@@ -70,13 +70,13 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     protected static ReaderPostListFragment newInstance(Context context) {
         ReaderLog.d("post list newInstance");
 
-        // restore the previously-chosen topic, revert to default if not set or doesn't exist
-        String topicName = ReaderPrefs.getReaderTopic();
-        if (TextUtils.isEmpty(topicName) || !ReaderTagTable.tagExists(topicName))
-            topicName = context.getString(R.string.reader_default_tag_name);
+        // restore the previously-chosen tag, revert to default if not set or doesn't exist
+        String tagName = ReaderPrefs.getReaderTag();
+        if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+            tagName = context.getString(R.string.reader_default_tag_name);
 
         Bundle args = new Bundle();
-        args.putString(KEY_TOPIC_NAME, topicName);
+        args.putString(KEY_TAG_NAME, tagName);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -88,10 +88,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        // note that setCurrentTopic() should NOT be called here since it's automatically
+        // note that setCurrentTag() should NOT be called here since it's automatically
         // called from the actionbar navigation handler
-        if (args!=null && args.containsKey(KEY_TOPIC_NAME))
-            mCurrentTopic = args.getString(KEY_TOPIC_NAME);
+        if (args!=null && args.containsKey(KEY_TAG_NAME))
+            mCurrentTag = args.getString(KEY_TAG_NAME);
     }
 
     @Override
@@ -99,13 +99,13 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState!=null) {
-            mAlreadyUpdatedTopicList = savedInstanceState.getBoolean(KEY_TOPIC_LIST_UPDATED);
-            mCurrentTopic = savedInstanceState.getString(KEY_TOPIC_NAME);
+            mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
+            mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
         }
 
-        // get list of topics from server if it hasn't already been done this session
-        if (!mAlreadyUpdatedTopicList)
-            updateTopicList();
+        // get list of tags from server if it hasn't already been done this session
+        if (!mAlreadyUpdatedTagList)
+            updateTagList();
 
         setupActionBar();
     }
@@ -126,9 +126,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_TOPIC_LIST_UPDATED, mAlreadyUpdatedTopicList);
-        if (hasCurrentTopic())
-            outState.putString(KEY_TOPIC_NAME, mCurrentTopic);
+        outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
+        if (hasCurrentTag())
+            outState.putString(KEY_TAG_NAME, mCurrentTag);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     public void onPause() {
         super.onPause();
         // turn off row animation - this prevents the list from animating when the keyboard is
-        // shown/hidden in the topic editor (or any other activity)
+        // shown/hidden in the tag editor (or any other activity)
         if (hasPostAdapter())
             getPostAdapter().enableRowAnimation(false);
         unscheduleAutoUpdate();
@@ -206,7 +206,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             params.setMargins(0, actionbarHeight, 0, 0);
         }
 
-        // textView that appears when current topic has no posts
+        // textView that appears when current tag has no posts
         mEmptyMessage = (TextView) view.findViewById(R.id.text_empty);
 
         if (useGridView) {
@@ -285,9 +285,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                // different empty text depending on whether this topic has ever been updated
-                boolean hasTopicEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTopic);
-                mEmptyMessage.setText(hasTopicEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
+                // different empty text depending on whether this tag has ever been updated
+                boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
+                mEmptyMessage.setText(hasTagEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
                 mEmptyMessage.setVisibility(View.VISIBLE);
             } else {
                 mEmptyMessage.setVisibility(View.GONE);
@@ -305,10 +305,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             if (isUpdating())
                 return;
             // skip if we already have the max # of posts
-            if (ReaderPostTable.getNumPostsWithTag(mCurrentTopic) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
                 return;
             // request older posts
-            updatePostsInCurrentTopic(ReaderActions.RequestDataAction.LOAD_OLDER);
+            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER);
         }
     };
 
@@ -340,38 +340,38 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         return (mPostAdapter==null || mPostAdapter.isEmpty());
     }
 
-    private boolean isCurrentTopicName(String topicName) {
-        if (!hasCurrentTopic())
+    private boolean isCurrentTagName(String tagName) {
+        if (!hasCurrentTag())
             return false;
-        if (topicName==null || mCurrentTopic==null)
+        if (tagName==null || mCurrentTag ==null)
             return false;
-        return (mCurrentTopic.equalsIgnoreCase(topicName));
+        return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    protected String getCurrentTopicName() {
-        if (!hasCurrentTopic())
+    protected String getCurrentTagName() {
+        if (!hasCurrentTag())
             return "";
-        return StringUtils.notNullStr(mCurrentTopic);
+        return StringUtils.notNullStr(mCurrentTag);
     }
 
-    private boolean hasCurrentTopic() {
-        return mCurrentTopic!=null;
+    private boolean hasCurrentTag() {
+        return mCurrentTag !=null;
     }
 
-    protected void setCurrentTopic(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    protected void setCurrentTag(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return;
 
-        mCurrentTopic = topicName;
-        ReaderPrefs.setReaderTopic(topicName);
+        mCurrentTag = tagName;
+        ReaderPrefs.setReaderTag(tagName);
 
-        getPostAdapter().setTopic(topicName);
+        getPostAdapter().setTag(tagName);
         hideNewPostsBar();
         hideLoadingProgress();
 
-        // update posts in this topic if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(topicName))
-            updatePostsInTopic(topicName, ReaderActions.RequestDataAction.LOAD_NEWER);
+        // update posts in this tag if it's time to do so
+        if (ReaderTagTable.shouldAutoUpdateTag(tagName))
+            updatePostsWithTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER);
     }
 
     /*
@@ -392,7 +392,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     /*
-     * reload current topic
+     * reload current tag
      */
     private void reloadPosts() {
         getPostAdapter().reload();
@@ -403,14 +403,14 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     /*
-     * get latest posts for this topic from the server
+     * get latest posts for this tag from the server
      */
-    protected void updatePostsInCurrentTopic(ReaderActions.RequestDataAction updateAction) {
-        if (hasCurrentTopic())
-            updatePostsInTopic(mCurrentTopic, updateAction);
+    protected void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction) {
+        if (hasCurrentTag())
+            updatePostsWithTag(mCurrentTag, updateAction);
     }
-    private void updatePostsInTopic(final String topicName, final ReaderActions.RequestDataAction updateAction) {
-        if (TextUtils.isEmpty(topicName))
+    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction) {
+        if (TextUtils.isEmpty(tagName))
             return;
 
         // cancel existing requests if we're already updating
@@ -422,7 +422,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         unscheduleAutoUpdate();
         setIsUpdating(true, updateAction);
 
-        ReaderPostActions.updatePostsInTopic(topicName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
+        ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
@@ -430,7 +430,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     return;
                 }
                 setIsUpdating(false, updateAction);
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTopicName(topicName)) {
+                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTagName(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
                     if (!isPostAdapterEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
@@ -439,7 +439,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                         refreshPosts();
                     }
                 }
-                // schedule the next update in this topic
+                // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
                     scheduleAutoUpdate();
             }
@@ -507,18 +507,18 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     private Handler mAutoUpdateHandler = new Handler();
     private Runnable mAutoUpdateTask = new Runnable() {
         public void run() {
-            if (hasCurrentTopic()) {
+            if (hasCurrentTag()) {
                 ReaderLog.d("performing automatic update");
-                updatePostsInCurrentTopic(ReaderActions.RequestDataAction.LOAD_NEWER);
+                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
             }
         }
     };
 
     public final void scheduleAutoUpdate() {
-        if (!hasCurrentTopic())
+        if (!hasCurrentTag())
             return;
 
-        ReaderLog.d("scheduling topic auto-update");
+        ReaderLog.d("scheduling tag auto-update");
         mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
@@ -534,20 +534,20 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         }
     }
     /*
-     * make sure the passed topic is the one selected in the actionbar
+     * make sure the passed tag is the one selected in the actionbar
      */
     @SuppressLint("NewApi")
-    private void selectTopicInActionBar(String topicName) {
+    private void selectTagInActionBar(String tagName) {
         if (!hasActivity())
             return;
-        if (topicName==null)
+        if (tagName==null)
             return;
 
         ActionBar actionBar = getActionBar();
         if (actionBar==null)
             return;
 
-        int position = getActionBarAdapter().getIndexOfTopicName(topicName);
+        int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1)
             return;
         if (position == actionBar.getSelectedNavigationIndex())
@@ -568,10 +568,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         ActionBar.OnNavigationListener navigationListener = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                ReaderTag topic = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
-                if (topic!=null) {
-                    setCurrentTopic(topic.getTagName());
-                    ReaderLog.d("topic chosen from actionbar: " + topic.getTagName());
+                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
+                if (tag!=null) {
+                    setCurrentTag(tag.getTagName());
+                    ReaderLog.d("tag chosen from actionbar: " + tag.getTagName());
                 }
                 return true;
             }
@@ -585,7 +585,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    selectTopicInActionBar(mCurrentTopic);
+                    selectTagInActionBar(mCurrentTag);
                 }
             };
             mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), dataListener);
@@ -594,23 +594,23 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     /*
-     * refresh the list of topics shown in the ActionBar
+     * refresh the list of tags shown in the ActionBar
      */
-    protected void refreshTopics() {
+    protected void refreshTags() {
         if (!hasActivity())
             return;
 
-        // make sure current topic still exists, reset to default if it doesn't
-        if (hasCurrentTopic() && !ReaderTagTable.tagExists(getCurrentTopicName())) {
-            mCurrentTopic = getActivity().getString(R.string.reader_default_tag_name);
+        // make sure current tag still exists, reset to default if it doesn't
+        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName())) {
+            mCurrentTag = getActivity().getString(R.string.reader_default_tag_name);
         }
-        getActionBarAdapter().refreshTopics();
+        getActionBarAdapter().refreshTags();
     }
 
     /*
-     * request list of topics from the server
+     * request list of tags from the server
      */
-    protected void updateTopicList() {
+    protected void updateTagList() {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -619,13 +619,13 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     return;
                 }
                 if (result!= ReaderActions.UpdateResult.FAILED)
-                    mAlreadyUpdatedTopicList = true;
-                // refresh topics if they've changed
-                if (result== ReaderActions.UpdateResult.CHANGED)
-                    refreshTopics();
+                    mAlreadyUpdatedTagList = true;
+                // refresh tags if they've changed
+                if (result==ReaderActions.UpdateResult.CHANGED)
+                    refreshTags();
             }
         };
-        ReaderTagActions.updateTopics(listener);
+        ReaderTagActions.updateTags(listener);
     }
 
     /*

@@ -322,7 +322,7 @@ public class ReaderPostActions {
      * get the latest posts in the passed topic - note that this uses an UpdateResultAndCountListener
      * so the caller can be told how many new posts were added
      */
-    public static void updatePostsInTopic(final String tagName,
+    public static void updatePostsWithTag(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
         final ReaderTag topic = ReaderTagTable.getTag(tagName);
@@ -373,7 +373,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsInTopicResponse(tagName, updateAction, jsonObject, resultListener);
+                handleUpdatePostsWithTagResponse(tagName, updateAction, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -387,7 +387,7 @@ public class ReaderPostActions {
 
         WordPress.restClient.get(endpoint, null, null, listener, errorListener);
     }
-    private static void handleUpdatePostsInTopicResponse(final String tagName,
+    private static void handleUpdatePostsWithTagResponse(final String tagName,
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
                                                          final ReaderActions.UpdateResultAndCountListener resultListener) {

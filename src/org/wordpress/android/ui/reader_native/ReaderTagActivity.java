@@ -252,7 +252,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
                 }
             }
         };
-        ReaderTagActions.updateTopics(listener);
+        ReaderTagActions.updateTags(listener);
     }
 
     /*
