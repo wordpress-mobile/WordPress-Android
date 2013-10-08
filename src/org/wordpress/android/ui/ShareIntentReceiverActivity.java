@@ -153,6 +153,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if (intent != null) {
             intent.setAction(action);
             intent.setType(getIntent().getType());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
