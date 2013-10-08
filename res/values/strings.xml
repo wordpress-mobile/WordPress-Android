@@ -430,7 +430,7 @@
     <string name="stats_totals_followers_shares_header_content">Content</string>
     <string name="stats_totals_followers_shares_header_followers">Followers</string>
     <string name="stats_totals_followers_shares_header_includes_publicize"
-            comment="part of the full string: _123 Followers (includes <a href=..>Publicize</a>)_ the %s replaced by <a href=...>">includes %sPublicize</string>
+            comment="part of the full string: _123 Followers (includes &lt;a href=..&gt;Publicize&lt;a&gt;)_ the %s replaced by &lt;a href=...&gt;">includes %sPublicize</string>
     <string name="stats_totals_followers_shares_header_shares">Shares</string>
     <string name="stats_totals_followers_shares_label_posts">Posts</string>
     <string name="stats_totals_followers_shares_label_categories">Categories</string>
