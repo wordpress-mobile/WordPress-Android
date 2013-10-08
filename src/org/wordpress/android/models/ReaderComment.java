@@ -31,7 +31,7 @@ public class ReaderComment {
     private String published;
 
     // not stored in db - denotes the indentation level when displaying this comment
-    public int level = 0;
+    public transient int level = 0;
 
     public static ReaderComment fromJson(JSONObject json, long blogId) {
         if (json==null)
@@ -42,7 +42,7 @@ public class ReaderComment {
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
         comment.status = JSONUtil.getString(json, "status");
-        comment.text = makePlainText(JSONUtil.getString(json, "content"));
+        comment.text = JSONUtil.getString(json, "content"); // note that this may contain html, adapter needs to handle it
 
         comment.published = JSONUtil.getString(json, "date");
         comment.timestamp = DateTimeUtils.iso8601ToTimestamp(comment.published);
@@ -64,34 +64,6 @@ public class ReaderComment {
             comment.parentId = jsonParent.optLong("ID");
 
         return comment;
-    }
-
-    /*
-     * strips html from comment text and replaces emoticons with emoji
-     */
-    private static String makePlainText(final String text) {
-        if (text==null)
-            return "";
-
-        final String plainText;
-
-        // replace emoticons with emoji and strip html
-        if (text.contains("icon_")) {
-            SpannableStringBuilder spannable = (SpannableStringBuilder) Html.fromHtml(text);
-            Emoticons.replaceEmoticonsWithEmoji(spannable);
-            plainText = spannable.toString().trim();
-        } else {
-            plainText = HtmlUtils.fastStripHtml(text);
-        }
-
-        // some comments have a CDATA section that's preceded by <!--//-->, and stripping HTML
-        // above doesn't appear to remove this - so handle this by removing everything
-        // after <!--//--> (the actual comment appears before that)
-        int pos = plainText.indexOf("<!--//-->");
-        if (pos > 0)
-            return plainText.substring(0, pos-1);
-
-        return plainText;
     }
 
     public String getAuthorName() {
