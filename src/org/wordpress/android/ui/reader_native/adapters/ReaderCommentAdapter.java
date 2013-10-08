@@ -3,6 +3,9 @@ package org.wordpress.android.ui.reader_native.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
@@ -117,7 +121,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(comment.getAuthorName());
-        holder.txtText.setText(comment.getText());
+        //holder.txtText.setText(comment.getText());
+        holder.txtText.setText(prepareComment(comment.getText()));
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -166,6 +171,35 @@ public class ReaderCommentAdapter extends BaseAdapter {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_NEWER);
 
         return convertView;
+    }
+
+    /*
+     * prepares comment text for display as html
+     * TODO: handle images
+     */
+    private CharSequence prepareComment(String content) {
+        if (content==null)
+            return null;
+
+        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content);
+
+        // convert emoticons
+        if (content.contains("icon_"))
+            Emoticons.replaceEmoticonsWithEmoji(html);
+
+        // remove extra \n\n added by Html.convert()
+        CharSequence source = html;
+        int start = 0;
+        int end = source.length();
+
+        while (start < end && Character.isWhitespace(source.charAt(start))) {
+            start++;
+        }
+        while (end > start && Character.isWhitespace(source.charAt(end - 1))) {
+            end--;
+        }
+
+        return source.subSequence(start, end);
     }
 
     private static class CommentViewHolder {
