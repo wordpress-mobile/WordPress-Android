@@ -26,9 +26,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTopicTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderTopic;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -72,7 +72,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         // restore the previously-chosen topic, revert to default if not set or doesn't exist
         String topicName = ReaderPrefs.getReaderTopic();
-        if (TextUtils.isEmpty(topicName) || !ReaderTopicTable.topicExists(topicName))
+        if (TextUtils.isEmpty(topicName) || !ReaderTagTable.tagExists(topicName))
             topicName = context.getString(R.string.reader_default_tag_name);
 
         Bundle args = new Bundle();
@@ -286,7 +286,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
                 // different empty text depending on whether this topic has ever been updated
-                boolean hasTopicEverUpdated = ReaderTopicTable.hasEverUpdatedTopic(mCurrentTopic);
+                boolean hasTopicEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTopic);
                 mEmptyMessage.setText(hasTopicEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
                 mEmptyMessage.setVisibility(View.VISIBLE);
             } else {
@@ -305,7 +305,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             if (isUpdating())
                 return;
             // skip if we already have the max # of posts
-            if (ReaderPostTable.getNumPostsInTopic(mCurrentTopic) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+            if (ReaderPostTable.getNumPostsWithTag(mCurrentTopic) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
                 return;
             // request older posts
             updatePostsInCurrentTopic(ReaderActions.RequestDataAction.LOAD_OLDER);
@@ -370,7 +370,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         hideLoadingProgress();
 
         // update posts in this topic if it's time to do so
-        if (ReaderTopicTable.shouldAutoUpdateTopic(topicName))
+        if (ReaderTagTable.shouldAutoUpdateTag(topicName))
             updatePostsInTopic(topicName, ReaderActions.RequestDataAction.LOAD_NEWER);
     }
 
@@ -568,10 +568,10 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         ActionBar.OnNavigationListener navigationListener = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                ReaderTopic topic = (ReaderTopic) getActionBarAdapter().getItem(itemPosition);
+                ReaderTag topic = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
                 if (topic!=null) {
-                    setCurrentTopic(topic.getTopicName());
-                    ReaderLog.d("topic chosen from actionbar: " + topic.getTopicName());
+                    setCurrentTopic(topic.getTagName());
+                    ReaderLog.d("topic chosen from actionbar: " + topic.getTagName());
                 }
                 return true;
             }
@@ -601,7 +601,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             return;
 
         // make sure current topic still exists, reset to default if it doesn't
-        if (hasCurrentTopic() && !ReaderTopicTable.topicExists(getCurrentTopicName())) {
+        if (hasCurrentTopic() && !ReaderTagTable.tagExists(getCurrentTopicName())) {
             mCurrentTopic = getActivity().getString(R.string.reader_default_tag_name);
         }
         getActionBarAdapter().refreshTopics();

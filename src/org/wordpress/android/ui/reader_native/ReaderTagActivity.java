@@ -16,9 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderTopicTable;
-import org.wordpress.android.models.ReaderTopic;
-import org.wordpress.android.models.ReaderTopic.ReaderTopicType;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderTagAdapter;
@@ -55,7 +54,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     }
 
     private ReaderTagAdapter mAdapter;
-    private ReaderTagAdapter getTopicAdapter() {
+    private ReaderTagAdapter getTagAdapter() {
         if (mAdapter==null)
             mAdapter = new ReaderTagAdapter(this, this);
         return mAdapter;
@@ -105,12 +104,12 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
 
         updateTitle();
 
-        getListView().setAdapter(getTopicAdapter());
-        getTopicAdapter().setTopicType(mIsShowingFollowedTags ? ReaderTopicType.SUBSCRIBED : ReaderTopicType.RECOMMENDED);
+        getListView().setAdapter(getTagAdapter());
+        getTagAdapter().setTopicType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
 
-        // update list of topics from the server
+        // update list of tags from the server
         if (!mAlreadyUpdatedTagList) {
-            updateTopicList();
+            updateTagList();
             mAlreadyUpdatedTagList = true;
         }
     }
@@ -150,7 +149,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         if (mTagsChanged) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(KEY_TAGS_CHANGED, true);
-            if (mLastAddedTag !=null && ReaderTopicTable.topicExists(mLastAddedTag))
+            if (mLastAddedTag !=null && ReaderTagTable.tagExists(mLastAddedTag))
                 bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
             Intent intent = new Intent();
             intent.putExtras(bundle);
@@ -170,7 +169,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         updateTitle();
         mLayoutAddTag.setVisibility(mIsShowingFollowedTags ? View.VISIBLE : View.GONE);
 
-        mAdapter.setTopicType(mIsShowingFollowedTags ? ReaderTopicType.SUBSCRIBED : ReaderTopicType.RECOMMENDED);
+        mAdapter.setTopicType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
         getListView().setAdapter(mAdapter);
     }
 
@@ -182,12 +181,12 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         if (TextUtils.isEmpty(topicName))
             return;
 
-        if (ReaderTopicTable.topicExists(topicName)) {
+        if (ReaderTagTable.tagExists(topicName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
         }
 
-        if (!ReaderTopic.isValidTopicName(topicName)) {
+        if (!ReaderTag.isValidTagName(topicName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid, ToastUtils.Duration.LONG);
             return;
         }
@@ -217,13 +216,13 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
                         public void onDataLoaded(boolean isEmpty) {
                             // make sure the added topic is scrolled into view if showing followed topics
                             if (mIsShowingFollowedTags) {
-                                int index = getTopicAdapter().indexOfTopicName(topicName);
+                                int index = getTagAdapter().indexOfTopicName(topicName);
                                 if (index > -1)
                                     getListView().smoothScrollToPosition(index);
                             }
                         }
                     };
-                    getTopicAdapter().refreshTopics(dataListener);
+                    getTagAdapter().refreshTopics(dataListener);
                     mTagsChanged = true;
                     mLastAddedTag = topicName;
                 }
@@ -231,7 +230,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
 
             case DELETE:
                 if (ReaderTagActions.performTagAction(ReaderTagActions.TagAction.DELETE, topicName, null)) {
-                    getTopicAdapter().refreshTopics();
+                    getTagAdapter().refreshTopics();
                     if (mLastAddedTag !=null && mLastAddedTag.equals(topicName))
                         mLastAddedTag = null;
                     mTagsChanged = true;
@@ -241,15 +240,15 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     }
 
     /*
-     * request latest list of topics from the server
+     * request latest list of tags from the server
      */
-    protected void updateTopicList() {
+    protected void updateTagList() {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result==ReaderActions.UpdateResult.CHANGED) {
                     mTagsChanged = true;
-                    getTopicAdapter().refreshTopics();
+                    getTagAdapter().refreshTopics();
                 }
             }
         };

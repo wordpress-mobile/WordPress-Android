@@ -13,10 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderTopicTable;
-import org.wordpress.android.models.ReaderTopic;
-import org.wordpress.android.models.ReaderTopic.ReaderTopicType;
-import org.wordpress.android.models.ReaderTopicList;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.util.ReaderLog;
@@ -31,9 +30,9 @@ public class ReaderTagAdapter extends BaseAdapter {
     }
 
     private LayoutInflater mInflater;
-    private ReaderTopicList mTopics = new ReaderTopicList();
+    private ReaderTagList mTopics = new ReaderTagList();
     private TopicActionListener mTopicListener;
-    private ReaderTopic.ReaderTopicType mTopicType;
+    private ReaderTag.ReaderTagType mTopicType;
     private ReaderActions.DataLoadedListener mDataLoadadListener;
     private Drawable mDrawableAdd;
     private Drawable mDrawableRemove;
@@ -63,19 +62,19 @@ public class ReaderTagAdapter extends BaseAdapter {
         refreshTopics(null);
     }
 
-    public ReaderTopic.ReaderTopicType getTopicType() {
+    public ReaderTag.ReaderTagType getTopicType() {
         return mTopicType;
     }
 
-    public void setTopicType(ReaderTopicType topicType) {
-        mTopicType = (topicType!=null ? topicType : ReaderTopicType.DEFAULT);
+    public void setTopicType(ReaderTag.ReaderTagType topicType) {
+        mTopicType = (topicType!=null ? topicType : ReaderTag.ReaderTagType.DEFAULT);
         refreshTopics();
     }
 
     public int indexOfTopicName(String topicName) {
         if (TextUtils.isEmpty(topicName))
             return -1;
-        return mTopics.indexOfTopic(topicName);
+        return mTopics.indexOfTag(topicName);
     }
 
     /*
@@ -85,7 +84,7 @@ public class ReaderTagAdapter extends BaseAdapter {
         if (listView==null || topicName==null)
             return false;
 
-        final int position = mTopics.indexOfTopic(topicName);
+        final int position = mTopics.indexOfTag(topicName);
         if (position==-1)
             return false;
 
@@ -121,7 +120,7 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ReaderTopic topic = (ReaderTopic) getItem(position);
+        final ReaderTag topic = (ReaderTag) getItem(position);
         TopicViewHolder holder;
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_tag, parent, false);
@@ -133,9 +132,9 @@ public class ReaderTagAdapter extends BaseAdapter {
             holder = (TopicViewHolder) convertView.getTag();
         }
 
-        holder.txtTopic.setText(topic.getCapitalizedTopicName());
+        holder.txtTopic.setText(topic.getCapitalizedTagName());
 
-        switch (topic.topicType) {
+        switch (topic.tagType) {
             case SUBSCRIBED:
                 // only subscribed topics can be deleted
                 holder.btnAddRemove.setImageDrawable(mDrawableRemove);
@@ -144,7 +143,7 @@ public class ReaderTagAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         // tell activity that user wishes to delete this topic
                         if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.DELETE, topic.getTopicName());
+                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.DELETE, topic.getTagName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);
@@ -158,7 +157,7 @@ public class ReaderTagAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         // tell activity that user wishes to add this topic
                         if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.ADD, topic.getTopicName());
+                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.ADD, topic.getTagName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);
@@ -183,7 +182,7 @@ public class ReaderTagAdapter extends BaseAdapter {
      */
     private boolean mIsTaskRunning = false;
     private class LoadTopicsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderTopicList tmpTopics;
+        ReaderTagList tmpTopics;
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -196,13 +195,13 @@ public class ReaderTagAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... params) {
             switch (mTopicType) {
                 case RECOMMENDED:
-                    tmpTopics = ReaderTopicTable.getRecommendedTopics(true);
+                    tmpTopics = ReaderTagTable.getRecommendedTags(true);
                     break;
                 case SUBSCRIBED:
-                    tmpTopics = ReaderTopicTable.getSubscribedTopics();
+                    tmpTopics = ReaderTagTable.getSubscribedTags();
                     break;
                 default :
-                    tmpTopics = ReaderTopicTable.getDefaultTopics();
+                    tmpTopics = ReaderTagTable.getDefaultTags();
                     break;
             }
 
@@ -217,7 +216,7 @@ public class ReaderTagAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mTopics = (ReaderTopicList)(tmpTopics.clone());
+                mTopics = (ReaderTagList)(tmpTopics.clone());
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;

@@ -10,10 +10,9 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTopicTable;
-import org.wordpress.android.models.ReaderTopic;
-import org.wordpress.android.models.ReaderTopic.ReaderTopicType;
-import org.wordpress.android.models.ReaderTopicList;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.VolleyUtils;
@@ -40,28 +39,28 @@ public class ReaderTagActions {
         if (TextUtils.isEmpty(tagName))
             return false;
 
-        final ReaderTopic originalTopic;
+        final ReaderTag originalTopic;
         final String path;
         final String tagNameForApi = sanitizeTitle(tagName);
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTopicTable.getTopic(tagName);
+                originalTopic = ReaderTagTable.getTag(tagName);
                 if (originalTopic==null)
                     return false;
                 // delete tag & all related posts
-                ReaderTopicTable.deleteTopic(tagName);
-                ReaderPostTable.deletePostsInTopic(tagName);
+                ReaderTagTable.deleteTag(tagName);
+                ReaderPostTable.deletePostsWithTag(tagName);
                 path = "read/tags/" + tagNameForApi + "/mine/delete";
                 break;
 
             case ADD :
                 originalTopic = null; // prevent compiler warning
-                ReaderTopic newTopic = new ReaderTopic();
-                newTopic.setTopicName(tagName);
-                newTopic.topicType = ReaderTopicType.SUBSCRIBED;
+                ReaderTag newTopic = new ReaderTag();
+                newTopic.setTagName(tagName);
+                newTopic.tagType = ReaderTag.ReaderTagType.SUBSCRIBED;
                 newTopic.setEndpoint("/read/tags/" + tagNameForApi + "/posts");
-                ReaderTopicTable.addOrUpdateTopic(newTopic);
+                ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
 
@@ -101,11 +100,11 @@ public class ReaderTagActions {
                 switch (action) {
                     case DELETE:
                         // add back original topic
-                        ReaderTopicTable.addOrUpdateTopic(originalTopic);
+                        ReaderTagTable.addOrUpdateTag(originalTopic);
                         break;
                     case ADD:
                         // remove new topic
-                        ReaderTopicTable.deleteTopic(tagName);
+                        ReaderTagTable.deleteTag(tagName);
                         break;
                 }
 
@@ -175,14 +174,14 @@ public class ReaderTagActions {
             @Override
             public void run() {
                 // get server topics, both default & subscribed
-                ReaderTopicList serverTopics = new ReaderTopicList();
-                serverTopics.addAll(parseTopics(jsonObject, "default", ReaderTopicType.DEFAULT));
-                serverTopics.addAll(parseTopics(jsonObject, "subscribed", ReaderTopicType.SUBSCRIBED));
+                ReaderTagList serverTopics = new ReaderTagList();
+                serverTopics.addAll(parseTopics(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
+                serverTopics.addAll(parseTopics(jsonObject, "subscribed", ReaderTag.ReaderTagType.SUBSCRIBED));
 
                 // parse topics from the response, detect whether they're different from local
-                ReaderTopicList localTopics = new ReaderTopicList();
-                localTopics.addAll(ReaderTopicTable.getDefaultTopics());
-                localTopics.addAll(ReaderTopicTable.getSubscribedTopics());
+                ReaderTagList localTopics = new ReaderTagList();
+                localTopics.addAll(ReaderTagTable.getDefaultTags());
+                localTopics.addAll(ReaderTagTable.getSubscribedTags());
                 final boolean hasChanges = !localTopics.isSameList(serverTopics);
 
                 if (hasChanges) {
@@ -190,15 +189,15 @@ public class ReaderTagActions {
                     // them locally (including their posts)
                     deleteTopics(localTopics.getDeletions(serverTopics));
                     // now replace local topics with the server topics
-                    ReaderTopicTable.replaceTopics(serverTopics);
+                    ReaderTagTable.replaceTags(serverTopics);
                 }
 
                 // save changes to recommended topics
-                ReaderTopicList serverRecommended = parseTopics(jsonObject, "recommended", ReaderTopicType.RECOMMENDED);
-                ReaderTopicList localRecommended = ReaderTopicTable.getRecommendedTopics(false);
+                ReaderTagList serverRecommended = parseTopics(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
+                ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
                     ReaderLog.d("recommended topics changed");
-                    ReaderTopicTable.setRecommendedTopics(serverRecommended);
+                    ReaderTagTable.setRecommendedTags(serverRecommended);
                 }
 
                 // listener must run on the main thread
@@ -216,8 +215,8 @@ public class ReaderTagActions {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTopicList parseTopics(JSONObject jsonObject, String name, ReaderTopicType topicType) {
-        ReaderTopicList topics = new ReaderTopicList();
+    private static ReaderTagList parseTopics(JSONObject jsonObject, String name, ReaderTag.ReaderTagType topicType) {
+        ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject==null)
             return topics;
@@ -231,9 +230,9 @@ public class ReaderTagActions {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic!=null) {
-                ReaderTopic topic = new ReaderTopic();
-                topic.topicType = topicType;
-                topic.setTopicName(JSONUtil.getStringDecoded(jsonTopic, "title"));
+                ReaderTag topic = new ReaderTag();
+                topic.tagType = topicType;
+                topic.setTagName(JSONUtil.getStringDecoded(jsonTopic, "title"));
                 topic.setEndpoint(JSONUtil.getString(jsonTopic, "URL"));
                 topics.add(topic);
             }
@@ -242,14 +241,14 @@ public class ReaderTagActions {
         return topics;
     }
 
-    private static void deleteTopics(ReaderTopicList topics) {
+    private static void deleteTopics(ReaderTagList topics) {
         if (topics==null || topics.size()==0)
             return;
         ReaderDatabase.getWritableDb().beginTransaction();
         try {
-            for (ReaderTopic topic: topics) {
-                ReaderTopicTable.deleteTopic(topic.getTopicName());
-                ReaderPostTable.deletePostsInTopic(topic.getTopicName());
+            for (ReaderTag topic: topics) {
+                ReaderTagTable.deleteTag(topic.getTagName());
+                ReaderPostTable.deletePostsWithTag(topic.getTagName());
             }
             ReaderDatabase.getWritableDb().setTransactionSuccessful();
         } finally {

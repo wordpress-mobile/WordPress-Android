@@ -9,15 +9,15 @@ import java.util.regex.Pattern;
 /**
  * Created by nbradbury on 6/23/13.
  */
-public class ReaderTopic {
+public class ReaderTag {
     private static final int INT_DEFAULT = 0;
     private static final int INT_SUBSCRIBED = 1;
     private static final int INT_RECOMMENDED = 2;
 
-    public static enum ReaderTopicType {SUBSCRIBED,
-                                        DEFAULT,
-                                        RECOMMENDED;
-        public static ReaderTopicType fromInt(int value) {
+    public static enum ReaderTagType {SUBSCRIBED,
+                                      DEFAULT,
+                                      RECOMMENDED;
+        public static ReaderTagType fromInt(int value) {
             switch (value) {
                 case INT_RECOMMENDED :
                     return RECOMMENDED;
@@ -39,9 +39,9 @@ public class ReaderTopic {
         }
     }
 
-    private String topicName;
+    private String tagName;
     private String endpoint;
-    public ReaderTopicType topicType;
+    public ReaderTagType tagType;
 
     public String getEndpoint() {
         return StringUtils.notNullStr(endpoint);
@@ -50,29 +50,29 @@ public class ReaderTopic {
         this.endpoint = StringUtils.notNullStr(endpoint);
     }
 
-    public String getTopicName() {
-        return StringUtils.notNullStr(topicName);
+    public String getTagName() {
+        return StringUtils.notNullStr(tagName);
     }
-    public void setTopicName(String name) {
-        this.topicName = StringUtils.notNullStr(name);
+    public void setTagName(String name) {
+        this.tagName = StringUtils.notNullStr(name);
     }
-    public String getCapitalizedTopicName() {
-        if (topicName==null)
+    public String getCapitalizedTagName() {
+        if (tagName ==null)
             return "";
         // HACK to allow iPhone, iPad, iEverything else
-        if (topicName.startsWith("iP"))
-            return topicName;
-        return StringUtils.capitalize(topicName);
+        if (tagName.startsWith("iP"))
+            return tagName;
+        return StringUtils.capitalize(tagName);
     }
 
     /*
-     * used to ensure a topic name is valid before adding it
+     * used to ensure a tag name is valid before adding it
      */
     private static final Pattern INVALID_CHARS = Pattern.compile("^.*[~#@*+%{}<>\\[\\]|\"\\_].*$");
-    public static boolean isValidTopicName(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public static boolean isValidTagName(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return false;
-        if (INVALID_CHARS.matcher(topicName).matches())
+        if (INVALID_CHARS.matcher(tagName).matches())
             return false;
         return true;
     }

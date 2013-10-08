@@ -12,7 +12,7 @@ import org.wordpress.android.util.SqlUtils;
 /**
  * Created by nbradbury on 6/27/13.
  * tbl_posts contains all reader posts
- * tbl_post_topics stores the association between posts and topics (posts can exist in more than one topic)
+ * tbl_post_tags stores the association between posts and tags (posts can exist in more than one tag)
  *
  */
 public class ReaderPostTable {
@@ -70,18 +70,18 @@ public class ReaderPostTable {
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
-        db.execSQL("CREATE TABLE tbl_post_topics ("
+        db.execSQL("CREATE TABLE tbl_post_tags ("
                 + "   post_id     INTEGER NOT NULL,"
                 + "   blog_id     INTEGER NOT NULL,"
                 + "   pseudo_id   TEXT NOT NULL,"
-                + "   topic_name  TEXT NOT NULL COLLATE NOCASE,"
-                + "   PRIMARY KEY (post_id, blog_id, topic_name)"
+                + "   tag_name  TEXT NOT NULL COLLATE NOCASE,"
+                + "   PRIMARY KEY (post_id, blog_id, tag_name)"
                 + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_posts");
-        db.execSQL("DROP TABLE IF EXISTS tbl_post_topics");
+        db.execSQL("DROP TABLE IF EXISTS tbl_post_tags");
     }
 
     protected static void reset(SQLiteDatabase db) {
@@ -94,11 +94,11 @@ public class ReaderPostTable {
      * is only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
-        // delete posts in tbl_post_topics attached to topics that no longer exist
-        int numDeleted = db.delete("tbl_post_topics", "topic_name NOT IN (SELECT DISTINCT topic_name FROM tbl_topics)", null);
+        // delete posts in tbl_post_tags attached to tags that no longer exist
+        int numDeleted = db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
 
-        // delete posts in tbl_posts that no longer exist in tbl_post_topics
-        numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_topics)", null);
+        // delete posts in tbl_posts that no longer exist in tbl_post_tags
+        numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
         return numDeleted;
     }
@@ -112,16 +112,16 @@ public class ReaderPostTable {
         return (int)count;
     }
 
-    public static int getNumPostsInTopic(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public static int getNumPostsWithTag(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return 0;
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_topics WHERE topic_name=?", new String[]{topicName});
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_tags WHERE tag_name=?", new String[]{tagName});
     }
 
-    public static boolean hasPostsInTopic(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public static boolean hasPostsWithTag(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return false;
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_post_topics WHERE topic_name=? LIMIT 1", new String[]{topicName});
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_post_tags WHERE tag_name=? LIMIT 1", new String[]{tagName});
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
@@ -146,23 +146,23 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns a count of which posts in the passed list don't already exist in the db for the passed topic
+     * returns a count of which posts in the passed list don't already exist in the db for the passed tag
      */
-    public static int getNumNewPostsInTopic(String topicName, ReaderPostList posts) {
+    public static int getNumNewPostsWithTag(String tagName, ReaderPostList posts) {
         if (posts==null || posts.size()==0)
             return 0;
-        if (TextUtils.isEmpty(topicName))
+        if (TextUtils.isEmpty(tagName))
             return 0;
 
-        // if there aren't any posts in this topic, then all passed posts are new
-        if (getNumPostsInTopic(topicName)==0)
+        // if there aren't any posts in this tag, then all passed posts are new
+        if (getNumPostsWithTag(tagName)==0)
             return posts.size();
 
         // build sql that tells us which posts *do* exist in the database
         // TODO: may be able to simplify by using pseudo_id here
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT COUNT(*) FROM tbl_post_topics")
-          .append(" WHERE topic_name=?")
+        sb.append("SELECT COUNT(*) FROM tbl_post_tags")
+          .append(" WHERE tag_name=?")
           .append(" AND (CAST(post_id AS TEXT) || '-' || CAST(blog_id AS TEXT))") // concatenated string, post_id-blog_id
           .append(" IN (");
 
@@ -177,7 +177,7 @@ public class ReaderPostTable {
         }
         sb.append(")");
 
-        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), new String[]{topicName});
+        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), new String[]{tagName});
         return posts.size() - numExisting;
     }
 
@@ -206,14 +206,14 @@ public class ReaderPostTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT is_followed FROM tbl_posts WHERE blog_id=? AND post_id=?", args);
     }
 
-    public static int deletePostsInTopic(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public static int deletePostsWithTag(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return 0;
 
-        // first delete posts from tbl_post_topics, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_topics
-        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_topics", "topic_name=?", new String[]{topicName});
+        // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
+        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", "tag_name=?", new String[]{tagName});
         if (numDeleted > 0)
-            ReaderDatabase.getWritableDb().delete("tbl_posts", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_post_topics)", null);
+            ReaderDatabase.getWritableDb().delete("tbl_posts", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_post_tags)", null);
 
         return numDeleted;
     }
@@ -221,30 +221,30 @@ public class ReaderPostTable {
     /*
      * returns the iso8601 published date of the oldest post
      */
-    public static String getOldestPubDateInTopic(final String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public static String getOldestPubDateWithTag(final String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return "";
 
-        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_topics"
-                   + " WHERE tbl_posts.post_id = tbl_post_topics.post_id AND tbl_posts.blog_id = tbl_post_topics.blog_id"
-                   + " AND tbl_post_topics.topic_name=? ORDER BY published LIMIT 1";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{topicName});
+        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
+                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                   + " AND tbl_post_tags.tag_name=? ORDER BY published LIMIT 1";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }
 
     /*
      * returns the iso8601 published date of the newest post
      */
-    public static String getNewestPubDateInTopic(final String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    /*public static String getNewestPubDateWithTag(final String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return "";
 
-        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_topics"
-                   + " WHERE tbl_posts.post_id = tbl_post_topics.post_id AND tbl_posts.blog_id = tbl_post_topics.blog_id"
-                   + " AND tbl_post_topics.topic_name=? ORDER BY published DESC LIMIT 1";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{topicName});
-    }
+        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
+                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                   + " AND tbl_post_tags.tag_name=? ORDER BY published DESC LIMIT 1";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
+    }*/
 
-    public static void addOrUpdatePosts(final String topicName, ReaderPostList posts) {
+    public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
         if (posts==null || posts.size()==0)
             return;
 
@@ -255,7 +255,7 @@ public class ReaderPostTable {
                                                         + COLUMN_NAMES
                                                         + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)");
 
-        SQLiteStatement stmtTopics = db.compileStatement("INSERT OR REPLACE INTO tbl_post_topics (post_id, blog_id, pseudo_id, topic_name) VALUES (?1,?2,?3,?4)");
+        SQLiteStatement stmtTags = db.compileStatement("INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
         try {
             // first insert into tbl_posts
@@ -287,16 +287,16 @@ public class ReaderPostTable {
                 stmtPosts.clearBindings();
             }
 
-            // now add to tbl_post_topics - note that topicName will be null when updating a single
+            // now add to tbl_post_tags - note that tagName will be null when updating a single
             // post, in which case we skip it here
-            if (!TextUtils.isEmpty(topicName)) {
+            if (!TextUtils.isEmpty(tagName)) {
                 for (ReaderPost post: posts) {
-                    stmtTopics.bindLong  (1, post.postId);
-                    stmtTopics.bindLong  (2, post.blogId);
-                    stmtTopics.bindString(3, post.getPseudoId());
-                    stmtTopics.bindString(4, topicName);
-                    stmtTopics.execute();
-                    stmtTopics.clearBindings();
+                    stmtTags.bindLong  (1, post.postId);
+                    stmtTags.bindLong  (2, post.blogId);
+                    stmtTags.bindString(3, post.getPseudoId());
+                    stmtTags.bindString(4, tagName);
+                    stmtTags.execute();
+                    stmtTags.clearBindings();
                 }
             }
 
@@ -305,24 +305,24 @@ public class ReaderPostTable {
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmtPosts);
-            SqlUtils.closeStatement(stmtTopics);
+            SqlUtils.closeStatement(stmtTags);
         }
     }
 
-    public static ReaderPostList getPostsInTopic(String topicName, int maxPosts) {
-        if (TextUtils.isEmpty(topicName))
-            throw new IllegalArgumentException("empty topic not allowed");
+    public static ReaderPostList getPostsWithTag(String tagName, int maxPosts) {
+        if (TextUtils.isEmpty(tagName))
+            return new ReaderPostList();
 
-        String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_topics"
-                   + " WHERE tbl_posts.post_id = tbl_post_topics.post_id"
-                   + " AND tbl_posts.blog_id = tbl_post_topics.blog_id"
-                   + " AND tbl_post_topics.topic_name=?"
+        String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_tags"
+                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
+                   + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                   + " AND tbl_post_tags.tag_name=?"
                    + " ORDER BY tbl_posts.timestamp DESC";
 
         if (maxPosts > 0)
             sql += " LIMIT " + Integer.toString(maxPosts);
 
-        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{topicName});
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{tagName});
         try {
             ReaderPostList posts = new ReaderPostList();
             if (cursor==null || !cursor.moveToFirst())

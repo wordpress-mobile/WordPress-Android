@@ -10,9 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderTopicTable;
-import org.wordpress.android.models.ReaderTopic;
-import org.wordpress.android.models.ReaderTopicList;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
@@ -22,7 +22,7 @@ import org.wordpress.android.util.SysUtils;
  * populates ActionBar dropdown with reader topics
  */
 public class ReaderActionBarTagAdapter extends BaseAdapter {
-    private ReaderTopicList mTopics = new ReaderTopicList();
+    private ReaderTagList mTopics = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
 
@@ -36,7 +36,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         if (topicName==null)
             return -1;
         for (int i=0; i < mTopics.size(); i++) {
-            if (topicName.equalsIgnoreCase(mTopics.get(i).getTopicName()))
+            if (topicName.equalsIgnoreCase(mTopics.get(i).getTagName()))
                 return i;
         }
         return -1;
@@ -71,25 +71,25 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        ReaderTopic topic = mTopics.get(position);
+        ReaderTag topic = mTopics.get(position);
         view = mInflater.inflate(R.layout.reader_actionbar_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(topic.getCapitalizedTopicName());
+        txtName.setText(topic.getCapitalizedTagName());
         return view;
     }
 
     @Override
     public View getDropDownView(int position, View view, ViewGroup parent) {
-        ReaderTopic topic = mTopics.get(position);
+        ReaderTag topic = mTopics.get(position);
         view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(topic.getCapitalizedTopicName());
+        txtName.setText(topic.getCapitalizedTagName());
         return view;
     }
 
     private boolean mIsTaskRunning = false;
     private class LoadTopicsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderTopicList tmpTopics = new ReaderTopicList();
+        private ReaderTagList tmpTopics = new ReaderTagList();
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -100,8 +100,8 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... voids) {
-            tmpTopics.addAll(ReaderTopicTable.getDefaultTopics());
-            tmpTopics.addAll(ReaderTopicTable.getSubscribedTopics());
+            tmpTopics.addAll(ReaderTagTable.getDefaultTags());
+            tmpTopics.addAll(ReaderTagTable.getSubscribedTags());
             if (mTopics.isSameList(tmpTopics))
                 return false;
             return true;
@@ -109,7 +109,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mTopics = (ReaderTopicList) tmpTopics.clone();
+                mTopics = (ReaderTagList) tmpTopics.clone();
                 notifyDataSetChanged();
                 if (mDataListener!=null)
                     mDataListener.onDataLoaded(mTopics.isEmpty());

@@ -13,7 +13,7 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 61;
+    private static final int DB_VERSION = 62;
 
     /*
 	 *  database singleton
@@ -91,7 +91,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderCommentTable.createTables(db);
         ReaderLikeTable.createTables(db);
         ReaderPostTable.createTables(db);
-        ReaderTopicTable.createTables(db);
+        ReaderTagTable.createTables(db);
         ReaderUserTable.createTables(db);
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
@@ -101,7 +101,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderCommentTable.dropTables(db);
         ReaderLikeTable.dropTables(db);
         ReaderPostTable.dropTables(db);
-        ReaderTopicTable.dropTables(db);
+        ReaderTagTable.dropTables(db);
         ReaderUserTable.dropTables(db);
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
@@ -143,10 +143,10 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 if (numThumbsPurged > 0)
                     ReaderLog.i(String.format("%d thumbnails purged", numThumbsPurged));
 
-                // purge unattached topics
-                int numTopicsPurged = ReaderTopicTable.purge(db);
-                if (numTopicsPurged > 0)
-                    ReaderLog.i(String.format("%d topics purged", numTopicsPurged));
+                // purge unattached tags
+                int numTagsPurged = ReaderTagTable.purge(db);
+                if (numTagsPurged > 0)
+                    ReaderLog.i(String.format("%d tags purged", numTagsPurged));
             }
             db.setTransactionSuccessful();
         } finally {

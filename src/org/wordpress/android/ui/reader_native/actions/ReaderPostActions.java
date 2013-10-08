@@ -13,11 +13,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTopicTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderTopic;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.util.DateTimeUtils;
@@ -325,7 +325,7 @@ public class ReaderPostActions {
     public static void updatePostsInTopic(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
-        final ReaderTopic topic = ReaderTopicTable.getTopic(tagName);
+        final ReaderTag topic = ReaderTagTable.getTag(tagName);
         if (topic==null) {
             if (resultListener!=null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
@@ -342,10 +342,10 @@ public class ReaderPostActions {
 
         // apply the after/before to limit results based on previous update, but only if there are
         // existing posts in this topic
-        if (ReaderPostTable.hasPostsInTopic(tagName)) {
+        if (ReaderPostTable.hasPostsWithTag(tagName)) {
             switch (updateAction) {
                 case LOAD_NEWER:
-                    String dateNewest = ReaderTopicTable.getTopicNewestDate(tagName);
+                    String dateNewest = ReaderTagTable.getTagNewestDate(tagName);
                     if (!TextUtils.isEmpty(dateNewest)) {
                         sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
                         ReaderLog.d(String.format("requesting newer posts in topic %s (%s)", tagName, dateNewest));
@@ -353,11 +353,11 @@ public class ReaderPostActions {
                     break;
 
                 case LOAD_OLDER:
-                    String dateOldest = ReaderTopicTable.getTopicOldestDate(tagName);
+                    String dateOldest = ReaderTagTable.getTagOldestDate(tagName);
                     // if oldest date isn't stored, it means we haven't requested older posts until
                     // now, so use the date of the oldest stored post
                     if (TextUtils.isEmpty(dateOldest))
-                        dateOldest = ReaderPostTable.getOldestPubDateInTopic(tagName);
+                        dateOldest = ReaderPostTable.getOldestPubDateWithTag(tagName);
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
                         ReaderLog.d(String.format("requesting older posts in topic %s (%s)", tagName, dateOldest));
@@ -409,7 +409,7 @@ public class ReaderPostActions {
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
                 if (updateAction==ReaderActions.RequestDataAction.LOAD_NEWER)
-                    ReaderTopicTable.setTopicLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
+                    ReaderTagTable.setTagLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
 
                 // json "date_range" tells the the range of dates in the response, which we want to
                 // store for use the next time we request newer/older if this response contained any
@@ -422,12 +422,12 @@ public class ReaderPostActions {
                         case LOAD_NEWER:
                             String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
                             if (!TextUtils.isEmpty(newest))
-                                ReaderTopicTable.setTopicNewestDate(tagName, newest);
+                                ReaderTagTable.setTagNewestDate(tagName, newest);
                             break;
                         case LOAD_OLDER:
                             String oldest = jsonDateRange.has("after") ? JSONUtil.getString(jsonDateRange, "after") : JSONUtil.getString(jsonDateRange, "oldest");
                             if (!TextUtils.isEmpty(oldest))
-                                ReaderTopicTable.setTopicOldestDate(tagName, oldest);
+                                ReaderTagTable.setTagOldestDate(tagName, oldest);
                             break;
                     }
                 }
@@ -445,7 +445,7 @@ public class ReaderPostActions {
 
                 // determine how many of the downloaded posts are new (response will contain both
                 // new posts and posts updated since the last call)
-                final int numNewPosts = ReaderPostTable.getNumNewPostsInTopic(tagName, serverPosts);
+                final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
 
                 ReaderLog.d(String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
 
