@@ -23,46 +23,46 @@ import java.util.Iterator;
 /**
  * Created by nbradbury on 8/13/13.
  */
-public class ReaderTopicActions {
+public class ReaderTagActions {
 
-    public enum TopicAction {ADD, DELETE}
+    public enum TagAction {ADD, DELETE}
 
-    private ReaderTopicActions() {
+    private ReaderTagActions() {
         throw new AssertionError();
     }
 
     /**
-     * perform the passed action on the passed topic - this is optimistic (returns before API call completes)
+     * perform the passed action on the passed tag - this is optimistic (returns before API call completes)
      **/
-    public static boolean performTopicAction(final TopicAction action,
-                                             final String topicName,
-                                             final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(topicName))
+    public static boolean performTagAction(final TagAction action,
+                                           final String tagName,
+                                           final ReaderActions.ActionListener actionListener) {
+        if (TextUtils.isEmpty(tagName))
             return false;
 
         final ReaderTopic originalTopic;
         final String path;
-        final String topicNameForApi = sanitizeTitle(topicName);
+        final String tagNameForApi = sanitizeTitle(tagName);
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTopicTable.getTopic(topicName);
+                originalTopic = ReaderTopicTable.getTopic(tagName);
                 if (originalTopic==null)
                     return false;
-                // delete topic & all posts in this topic
-                ReaderTopicTable.deleteTopic(topicName);
-                ReaderPostTable.deletePostsInTopic(topicName);
-                path = "read/topics/" + topicNameForApi + "/mine/delete";
+                // delete tag & all related posts
+                ReaderTopicTable.deleteTopic(tagName);
+                ReaderPostTable.deletePostsInTopic(tagName);
+                path = "read/tags/" + tagNameForApi + "/mine/delete";
                 break;
 
             case ADD :
                 originalTopic = null; // prevent compiler warning
                 ReaderTopic newTopic = new ReaderTopic();
-                newTopic.setTopicName(topicName);
+                newTopic.setTopicName(tagName);
                 newTopic.topicType = ReaderTopicType.SUBSCRIBED;
-                newTopic.setEndpoint("/read/topics/" + topicNameForApi + "/posts");
+                newTopic.setEndpoint("/read/tags/" + tagNameForApi + "/posts");
                 ReaderTopicTable.addOrUpdateTopic(newTopic);
-                path = "read/topics/" + topicNameForApi + "/mine/new";
+                path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
 
             default :
@@ -72,7 +72,7 @@ public class ReaderTopicActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderLog.i("topic action " + action.name() + " succeeded");
+                ReaderLog.i("tag action " + action.name() + " succeeded");
                 if (actionListener!=null)
                     actionListener.onActionResult(true);
             }
@@ -85,16 +85,16 @@ public class ReaderTopicActions {
                 // following it, treat it as a success - this can happen if the user edits
                 // topics in the web reader while this app is running
                 String error = VolleyUtils.errStringFromVolleyError(volleyError);
-                boolean isSuccess = (action== TopicAction.ADD    && error.equals("already_subscribed"))
-                                 || (action== TopicAction.DELETE && error.equals("not_subscribed"));
+                boolean isSuccess = (action== TagAction.ADD    && error.equals("already_subscribed"))
+                                 || (action== TagAction.DELETE && error.equals("not_subscribed"));
                 if (isSuccess) {
-                    ReaderLog.w("topic action " + action.name() + " succeeded with error " + error);
+                    ReaderLog.w("tag action " + action.name() + " succeeded with error " + error);
                     if (actionListener!=null)
                         actionListener.onActionResult(true);
                     return;
                 }
 
-                ReaderLog.w("topic action " + action.name() + " failed");
+                ReaderLog.w("tag action " + action.name() + " failed");
                 ReaderLog.e(volleyError);
 
                 // revert on failure
@@ -105,7 +105,7 @@ public class ReaderTopicActions {
                         break;
                     case ADD:
                         // remove new topic
-                        ReaderTopicTable.deleteTopic(topicName);
+                        ReaderTopicTable.deleteTopic(tagName);
                         break;
                 }
 
@@ -120,17 +120,17 @@ public class ReaderTopicActions {
 
 
     /*
-     * returns the passed topicName formatted for use with our API
+     * returns the passed tagName formatted for use with our API
      * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
      */
-    private static String sanitizeTitle(final String topicName) {
-        if (topicName==null)
+    private static String sanitizeTitle(final String tagName) {
+        if (tagName==null)
             return "";
 
         // remove ampersands, replace spaces & periods with dashes
-        String sanitized = topicName.replace("&", "")
-                                    .replace(" ", "-")
-                                    .replace(".", "-");
+        String sanitized = tagName.replace("&", "")
+                                  .replace(" ", "-")
+                                  .replace(".", "-");
 
         // replace double dashes with single dash (may have been added above)
         while (sanitized.contains("--"))

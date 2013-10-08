@@ -5,7 +5,7 @@
         android:id="@+id/menu_topics"
         android:icon="@drawable/ic_add_topic_light"
         android:showAsAction="always"
-        android:title="@string/reader_menu_topics" />
+        android:title="@string/reader_menu_tags" />
 
     <item
         android:id="@+id/menu_refresh"

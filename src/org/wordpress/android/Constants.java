@@ -41,7 +41,7 @@ public class Constants {
 
     // Reader intent IDs
     public static final int INTENT_READER_POST_DETAIL = 1000;
-    public static final int INTENT_READER_TOPICS      = 1001;
+    public static final int INTENT_READER_TAGS        = 1001;
     public static final int INTENT_READER_REBLOG      = 1002;
 
 }

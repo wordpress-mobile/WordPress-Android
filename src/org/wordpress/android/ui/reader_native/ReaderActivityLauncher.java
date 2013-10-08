@@ -40,9 +40,9 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderTopicsForResult(Activity activity) {
-        Intent intent = new Intent(activity, ReaderTopicActivity.class);
-        activity.startActivityForResult(intent, Constants.INTENT_READER_TOPICS);
+    public static void showReaderTagsForResult(Activity activity) {
+        Intent intent = new Intent(activity, ReaderTagActivity.class);
+        activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 
     public static void showReaderPhotoViewer(Context context, String imageUrl) {

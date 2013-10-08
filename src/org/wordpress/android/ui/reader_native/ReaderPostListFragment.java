@@ -32,8 +32,8 @@ import org.wordpress.android.models.ReaderTopic;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTopicActions;
-import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTopicAdapter;
+import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderAniUtils;
@@ -48,7 +48,7 @@ import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
  */
 public class ReaderPostListFragment extends Fragment implements View.OnTouchListener, AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
-    private ReaderActionBarTopicAdapter mActionBarAdapter;
+    private ReaderActionBarTagAdapter mActionBarAdapter;
 
     private TextView mNewPostsBar;
     private TextView mEmptyMessage;
@@ -73,7 +73,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         // restore the previously-chosen topic, revert to default if not set or doesn't exist
         String topicName = ReaderPrefs.getReaderTopic();
         if (TextUtils.isEmpty(topicName) || !ReaderTopicTable.topicExists(topicName))
-            topicName = context.getString(R.string.reader_default_topic_name);
+            topicName = context.getString(R.string.reader_default_tag_name);
 
         Bundle args = new Bundle();
         args.putString(KEY_TOPIC_NAME, topicName);
@@ -287,7 +287,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             if (isEmpty) {
                 // different empty text depending on whether this topic has ever been updated
                 boolean hasTopicEverUpdated = ReaderTopicTable.hasEverUpdatedTopic(mCurrentTopic);
-                mEmptyMessage.setText(hasTopicEverUpdated ? R.string.reader_empty_posts_in_topic : R.string.reader_empty_posts_in_topic_never_updated);
+                mEmptyMessage.setText(hasTopicEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
                 mEmptyMessage.setVisibility(View.VISIBLE);
             } else {
                 mEmptyMessage.setVisibility(View.GONE);
@@ -580,7 +580,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         actionBar.setListNavigationCallbacks(getActionBarAdapter(), navigationListener);
     }
 
-    private ReaderActionBarTopicAdapter getActionBarAdapter() {
+    private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter==null) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -588,7 +588,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     selectTopicInActionBar(mCurrentTopic);
                 }
             };
-            mActionBarAdapter = new ReaderActionBarTopicAdapter(getActivity(), dataListener);
+            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), dataListener);
         }
         return mActionBarAdapter;
     }
@@ -602,7 +602,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         // make sure current topic still exists, reset to default if it doesn't
         if (hasCurrentTopic() && !ReaderTopicTable.topicExists(getCurrentTopicName())) {
-            mCurrentTopic = getActivity().getString(R.string.reader_default_topic_name);
+            mCurrentTopic = getActivity().getString(R.string.reader_default_tag_name);
         }
         getActionBarAdapter().refreshTopics();
     }
@@ -625,7 +625,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     refreshTopics();
             }
         };
-        ReaderTopicActions.updateTopics(listener);
+        ReaderTagActions.updateTopics(listener);
     }
 
     /*

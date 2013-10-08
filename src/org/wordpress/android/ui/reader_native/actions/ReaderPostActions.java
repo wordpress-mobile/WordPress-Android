@@ -322,10 +322,10 @@ public class ReaderPostActions {
      * get the latest posts in the passed topic - note that this uses an UpdateResultAndCountListener
      * so the caller can be told how many new posts were added
      */
-    public static void updatePostsInTopic(final String topicName,
+    public static void updatePostsInTopic(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
-        final ReaderTopic topic = ReaderTopicTable.getTopic(topicName);
+        final ReaderTopic topic = ReaderTopicTable.getTopic(tagName);
         if (topic==null) {
             if (resultListener!=null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
@@ -342,30 +342,30 @@ public class ReaderPostActions {
 
         // apply the after/before to limit results based on previous update, but only if there are
         // existing posts in this topic
-        if (ReaderPostTable.hasPostsInTopic(topicName)) {
+        if (ReaderPostTable.hasPostsInTopic(tagName)) {
             switch (updateAction) {
                 case LOAD_NEWER:
-                    String dateNewest = ReaderTopicTable.getTopicNewestDate(topicName);
+                    String dateNewest = ReaderTopicTable.getTopicNewestDate(tagName);
                     if (!TextUtils.isEmpty(dateNewest)) {
                         sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                        ReaderLog.d(String.format("requesting newer posts in topic %s (%s)", topicName, dateNewest));
+                        ReaderLog.d(String.format("requesting newer posts in topic %s (%s)", tagName, dateNewest));
                     }
                     break;
 
                 case LOAD_OLDER:
-                    String dateOldest = ReaderTopicTable.getTopicOldestDate(topicName);
+                    String dateOldest = ReaderTopicTable.getTopicOldestDate(tagName);
                     // if oldest date isn't stored, it means we haven't requested older posts until
                     // now, so use the date of the oldest stored post
                     if (TextUtils.isEmpty(dateOldest))
-                        dateOldest = ReaderPostTable.getOldestPubDateInTopic(topicName);
+                        dateOldest = ReaderPostTable.getOldestPubDateInTopic(tagName);
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                        ReaderLog.d(String.format("requesting older posts in topic %s (%s)", topicName, dateOldest));
+                        ReaderLog.d(String.format("requesting older posts in topic %s (%s)", tagName, dateOldest));
                     }
                     break;
             }
         } else {
-            ReaderLog.d(String.format("requesting posts in empty topic %s", topicName));
+            ReaderLog.d(String.format("requesting posts in empty topic %s", tagName));
         }
 
         String endpoint = sb.toString();
@@ -373,7 +373,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsInTopicResponse(topicName, updateAction, jsonObject, resultListener);
+                handleUpdatePostsInTopicResponse(tagName, updateAction, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -387,7 +387,7 @@ public class ReaderPostActions {
 
         WordPress.restClient.get(endpoint, null, null, listener, errorListener);
     }
-    private static void handleUpdatePostsInTopicResponse(final String topicName,
+    private static void handleUpdatePostsInTopicResponse(final String tagName,
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
                                                          final ReaderActions.UpdateResultAndCountListener resultListener) {
@@ -409,7 +409,7 @@ public class ReaderPostActions {
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
                 if (updateAction==ReaderActions.RequestDataAction.LOAD_NEWER)
-                    ReaderTopicTable.setTopicLastUpdated(topicName, DateTimeUtils.javaDateToIso8601(new Date()));
+                    ReaderTopicTable.setTopicLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
 
                 // json "date_range" tells the the range of dates in the response, which we want to
                 // store for use the next time we request newer/older if this response contained any
@@ -422,12 +422,12 @@ public class ReaderPostActions {
                         case LOAD_NEWER:
                             String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
                             if (!TextUtils.isEmpty(newest))
-                                ReaderTopicTable.setTopicNewestDate(topicName, newest);
+                                ReaderTopicTable.setTopicNewestDate(tagName, newest);
                             break;
                         case LOAD_OLDER:
                             String oldest = jsonDateRange.has("after") ? JSONUtil.getString(jsonDateRange, "after") : JSONUtil.getString(jsonDateRange, "oldest");
                             if (!TextUtils.isEmpty(oldest))
-                                ReaderTopicTable.setTopicOldestDate(topicName, oldest);
+                                ReaderTopicTable.setTopicOldestDate(tagName, oldest);
                             break;
                     }
                 }
@@ -445,12 +445,12 @@ public class ReaderPostActions {
 
                 // determine how many of the downloaded posts are new (response will contain both
                 // new posts and posts updated since the last call)
-                final int numNewPosts = ReaderPostTable.getNumNewPostsInTopic(topicName, serverPosts);
+                final int numNewPosts = ReaderPostTable.getNumNewPostsInTopic(tagName, serverPosts);
 
-                ReaderLog.d(String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, topicName));
+                ReaderLog.d(String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
 
                 // save the posts even if none are new in order to update comment counts, likes, etc., on existing posts
-                ReaderPostTable.addOrUpdatePosts(topicName, serverPosts);
+                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
 //Debug.stopMethodTracing();
                 if (resultListener!=null) {
                     handler.post(new Runnable() {

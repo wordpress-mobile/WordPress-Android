@@ -21,12 +21,12 @@ import org.wordpress.android.util.SysUtils;
  * Created by nbradbury on 7/10/13.
  * populates ActionBar dropdown with reader topics
  */
-public class ReaderActionBarTopicAdapter extends BaseAdapter {
+public class ReaderActionBarTagAdapter extends BaseAdapter {
     private ReaderTopicList mTopics = new ReaderTopicList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
 
-    public ReaderActionBarTopicAdapter(Context context, ReaderActions.DataLoadedListener dataListener) {
+    public ReaderActionBarTagAdapter(Context context, ReaderActions.DataLoadedListener dataListener) {
         mDataListener = dataListener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         refreshTopics();

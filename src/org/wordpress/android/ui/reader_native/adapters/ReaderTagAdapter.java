@@ -18,16 +18,16 @@ import org.wordpress.android.models.ReaderTopic;
 import org.wordpress.android.models.ReaderTopic.ReaderTopicType;
 import org.wordpress.android.models.ReaderTopicList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTopicActions;
+import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
 /**
  * Created by nbradbury on 6/27/13.
  */
-public class ReaderTopicAdapter extends BaseAdapter {
+public class ReaderTagAdapter extends BaseAdapter {
     public interface TopicActionListener {
-        public void onTopicAction(ReaderTopicActions.TopicAction action, String topicName);
+        public void onTopicAction(ReaderTagActions.TagAction action, String topicName);
     }
 
     private LayoutInflater mInflater;
@@ -38,7 +38,7 @@ public class ReaderTopicAdapter extends BaseAdapter {
     private Drawable mDrawableAdd;
     private Drawable mDrawableRemove;
 
-    public ReaderTopicAdapter(Context context, TopicActionListener topicListener) {
+    public ReaderTagAdapter(Context context, TopicActionListener topicListener) {
         super();
 
         mInflater = LayoutInflater.from(context);
@@ -124,7 +124,7 @@ public class ReaderTopicAdapter extends BaseAdapter {
         final ReaderTopic topic = (ReaderTopic) getItem(position);
         TopicViewHolder holder;
         if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_topic, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_listitem_tag, parent, false);
             holder = new TopicViewHolder();
             holder.txtTopic = (TextView) convertView.findViewById(R.id.text_topic);
             holder.btnAddRemove = (ImageButton) convertView.findViewById(R.id.btn_add_remove);
@@ -144,7 +144,7 @@ public class ReaderTopicAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         // tell activity that user wishes to delete this topic
                         if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTopicActions.TopicAction.DELETE, topic.getTopicName());
+                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.DELETE, topic.getTopicName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);
@@ -158,7 +158,7 @@ public class ReaderTopicAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         // tell activity that user wishes to add this topic
                         if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTopicActions.TopicAction.ADD, topic.getTopicName());
+                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.ADD, topic.getTopicName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);

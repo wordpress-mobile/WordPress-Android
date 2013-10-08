@@ -138,14 +138,14 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         ReaderPostListFragment readerFragment = getPostListFragment();
 
         switch (requestCode) {
-            // user just returned from the topic editor
-            case Constants.INTENT_READER_TOPICS :
+            // user just returned from the tag editor
+            case Constants.INTENT_READER_TAGS :
                 if (isResultOK && readerFragment!=null && data!=null) {
                     // refresh topics if they were changed
-                    if (data.getBooleanExtra(ReaderTopicActivity.KEY_TOPICS_CHANGED, false))
+                    if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false))
                         readerFragment.refreshTopics();
                     // set the last topic added as the current topic
-                    String lastAddedTopic = data.getStringExtra(ReaderTopicActivity.KEY_LAST_ADDED_TOPIC);
+                    String lastAddedTopic = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
                     if (!TextUtils.isEmpty(lastAddedTopic))
                         readerFragment.setCurrentTopic(lastAddedTopic);
                 }
@@ -215,7 +215,7 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_topics :
-                ReaderActivityLauncher.showReaderTopicsForResult(this);
+                ReaderActivityLauncher.showReaderTagsForResult(this);
                 return true;
             case R.id.menu_refresh :
                 ReaderPostListFragment fragment = getPostListFragment();
