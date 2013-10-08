@@ -64,12 +64,9 @@
             android:name=".ui.accounts.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.accounts.AdditionalSettingsActivity" />
         <activity android:name=".ui.accounts.NewAccountActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock" />
-        <activity
-            android:name=".ui.accounts.SignupActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.accounts.TutorialActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
