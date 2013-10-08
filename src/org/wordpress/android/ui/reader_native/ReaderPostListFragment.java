@@ -200,14 +200,15 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             }
         });
 
-        // move the "new posts" bar down when the translucent ActionBar is enabled
+        // textView that appears when current tag has no posts
+        mEmptyMessage = (TextView) view.findViewById(R.id.text_empty);
+
+        // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
         if (isTranslucentActionBarEnabled) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
             params.setMargins(0, actionbarHeight, 0, 0);
+            mEmptyMessage.setPadding(0, actionbarHeight, 0, 0);
         }
-
-        // textView that appears when current tag has no posts
-        mEmptyMessage = (TextView) view.findViewById(R.id.text_empty);
 
         if (useGridView) {
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
