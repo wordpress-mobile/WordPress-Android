@@ -42,8 +42,8 @@ public class ReaderTagAdapter extends BaseAdapter {
 
         mInflater = LayoutInflater.from(context);
         mTopicListener = topicListener;
-        mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_add_topic_dark);
-        mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_remove_topic);
+        mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_content_new);
+        mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_content_remove);
     }
 
     @SuppressLint("NewApi")

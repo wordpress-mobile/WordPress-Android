@@ -36,7 +36,7 @@
         style="@style/ReaderListView.Topics"
         android:layout_above="@+id/divider_list"
         android:layout_below="@+id/divider_title"
-        tools:listitem="@layout/listitem_reader_topic" />
+        tools:listitem="@layout/reader_listitem_tag" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_message_bar"
@@ -79,7 +79,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/reader_button_transparent_selector"
-            android:src="@drawable/ic_add_topic_dark" />
+            android:src="@drawable/ic_content_new" />
 
     </RelativeLayout>
 
