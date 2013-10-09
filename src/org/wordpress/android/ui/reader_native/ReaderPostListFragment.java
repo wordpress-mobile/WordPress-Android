@@ -42,8 +42,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
-import java.io.Reader;
-
 /**
  * Created by nbradbury on 6/30/13.
  * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific tag
