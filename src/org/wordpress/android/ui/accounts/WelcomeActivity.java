@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.accounts;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -14,13 +12,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.RelativeLayout;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
-import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.android.util.WPViewPager;
+import org.wordpress.android.widgets.WPTextView;
 
 
 public class WelcomeActivity extends SherlockFragmentActivity {
@@ -69,7 +65,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
 
             @Override
             public void onClick(View v) {
-                mPager.setCurrentItem(2);     
+                mPager.setCurrentItem(2);
             }
             
         });
@@ -129,11 +125,21 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     }
     
     public void showPrevItem() {
-        if ( mPager.getCurrentItem() == 0 )
+        if (mPager.getCurrentItem() == 0)
             return;
         mPager.setCurrentItem(mPager.getCurrentItem() - 1);
     }
-    
+
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0)
+            super.onBackPressed();
+        if (mPager.getPreviousPage() < mPager.getCurrentItem())
+            mPager.setCurrentItem(mPager.getPreviousPage());
+        else
+            showPrevItem();
+    }
+
     private class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
        
         public NewAccountPagerAdapter(FragmentManager fm) {

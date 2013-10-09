@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 public class WPViewPager extends ViewPager {
 
     private boolean enabled;
+    private int mPreviousPage;
 
     public WPViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.enabled = false;
+        mPreviousPage = 0;
     }
 
     @Override
@@ -34,5 +36,15 @@ public class WPViewPager extends ViewPager {
 
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public void setCurrentItem(int currentItem) {
+        mPreviousPage = getCurrentItem();
+        super.setCurrentItem(currentItem);
+    }
+
+    public int getPreviousPage() {
+        return mPreviousPage;
     }
 }

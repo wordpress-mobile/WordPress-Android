@@ -1,23 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -54,7 +36,6 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -91,6 +72,7 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -119,6 +101,7 @@ import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -341,7 +324,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         String key = entry.getKey();
                         String val = entry.getValue();
                         mPostFormats[i] = key;
-                        mPostFormatTitles[i] = val;
+                        mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
                         i++;
                     }
                 } catch (Exception e) {
