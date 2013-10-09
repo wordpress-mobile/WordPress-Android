@@ -1,19 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,18 +21,30 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PostUploadService extends Service {
 
@@ -301,21 +299,24 @@ public class PostUploadService extends Service {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 String tagline = "";
 
-                    if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
-                        tagline = prefs.getString("wp_pref_post_signature", "");
-                        if (tagline != null) {
-                            String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
-                            if (moreContent == "")
-                                descriptionContent += tag;
-                            else
-                                moreContent += tag;
-                        }
+                if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
+                    tagline = prefs.getString("wp_pref_post_signature", "");
+                    if (tagline != null) {
+                        String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
+                        if (moreContent == "")
+                            descriptionContent += tag;
+                        else
+                            moreContent += tag;
                     }
+                }
+            }
 
-                // post format
+            // post format
+            if (!post.isPage()) {
                 if (!post.getWP_post_format().equals("")) {
-                    if (!post.getWP_post_format().equals("standard"))
+                    if (!post.getWP_post_format().equals("standard")) {
                         contentStruct.put("wp_post_format", post.getWP_post_format());
+                    }
                 }
             }
 
