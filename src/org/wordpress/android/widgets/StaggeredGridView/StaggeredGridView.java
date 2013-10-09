@@ -419,6 +419,16 @@ public class StaggeredGridView extends ViewGroup {
         return mFirstPosition;
     }
 
+    /*
+     * added by nbradbury 9-Oct-2013
+     */
+    public void setSelection(int position) {
+        if (position < 0 || position >= mItemCount || position==mFirstPosition)
+            return;
+        mFirstPosition = position;
+        requestLayout();
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         mVelocityTracker.addMovement(ev);

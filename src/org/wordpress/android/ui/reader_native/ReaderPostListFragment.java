@@ -42,6 +42,8 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
+import java.io.Reader;
+
 /**
  * Created by nbradbury on 6/30/13.
  * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific tag
@@ -57,9 +59,11 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     private String mCurrentTag;
     private boolean mIsUpdating = false;
     private boolean mAlreadyUpdatedTagList = false;
+    private int mScrollToIndex = 0;
 
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
+    private static final String KEY_TOP_INDEX = "top_index";
 
     protected interface OnFirstVisibleItemChangeListener {
         void onFirstVisibleItemChanged(int firstVisibleItem);
@@ -101,6 +105,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (savedInstanceState!=null) {
             mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
+            mScrollToIndex = savedInstanceState.getInt(KEY_TOP_INDEX);
+        } else {
+            mScrollToIndex = 0;
         }
 
         // get list of tags from server if it hasn't already been done this session
@@ -129,6 +136,20 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
+        // retain index of top-most post
+        if (hasActivity()) {
+            final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
+            final StaggeredGridView gridView = (StaggeredGridView) getActivity().findViewById(R.id.grid);
+            final int topIndex;
+            if (listView!=null) {
+                topIndex = listView.getFirstVisiblePosition();
+            } else if (gridView != null) {
+                topIndex = gridView.getFirstPosition();
+            } else {
+                topIndex = 0;
+            }
+            outState.putInt(KEY_TOP_INDEX, topIndex);
+        }
     }
 
     @Override
@@ -169,9 +190,8 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     @SuppressLint("NewApi")
     private void initListViewOverscroll(ListView listView) {
         // setOverScrollMode requires API 9
-        if (listView==null || Build.VERSION.SDK_INT < 9)
-            return;
-        listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        if (listView!=null && Build.VERSION.SDK_INT >= 9)
+            listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
     }
 
     @Override
@@ -292,6 +312,17 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                 mEmptyMessage.setVisibility(View.VISIBLE);
             } else {
                 mEmptyMessage.setVisibility(View.GONE);
+                // restore previous scroll position
+                if (mScrollToIndex > 0) {
+                    final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
+                    final StaggeredGridView gridView = (StaggeredGridView) getActivity().findViewById(R.id.grid);
+                    if (listView != null) {
+                        listView.setSelection(mScrollToIndex);
+                    } else if (gridView != null) {
+                        gridView.setSelection(mScrollToIndex);
+                    }
+                    mScrollToIndex = 0;
+                }
             }
         }
     };
