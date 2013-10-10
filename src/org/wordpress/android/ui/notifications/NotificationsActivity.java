@@ -14,12 +14,14 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
@@ -411,11 +413,11 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
         );
     }
-    public void requestNotesBefore(Note note){
+    public void requestNotesBefore(final Note note){
         Map<String, String> params = new HashMap<String, String>();
         Log.d(TAG, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
         params.put("before", note.queryJSON("timestamp", ""));
-        NotesResponseHandler handler = new NotesResponseHandler(){
+        NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(List<Note> notes){
                 // API returns 'on or before' timestamp, so remove first item
@@ -426,7 +428,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.notifyDataSetChanged();
             }
         };
-        restClient.getNotifications(params, handler, handler);
+        restClient.getNotifications(params, notesHandler, notesHandler);
     }
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
@@ -484,12 +486,12 @@ public class NotificationsActivity extends WPActionBarActivity {
             Log.d(TAG, String.format("Error retrieving notes: %s", error));
         }
 
-        public void showError(String errorMessage){
+        public void showError(final String errorMessage){
             Toast.makeText(NotificationsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
         }
         
         public void showError(){
-            Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+            showError(getString(R.string.error_generic));
         }
     }
     

@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +25,6 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +34,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
@@ -1886,7 +1888,7 @@ public class WordPressDB {
     }
 
     public void addNote(Note note, boolean placeholder) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put("note_id", note.getId());
         values.put("type", note.getType());
         values.put("timestamp", note.getTimestamp());
@@ -1910,7 +1912,23 @@ public class WordPressDB {
             if (result == 0) {
                 db.insert(NOTES_TABLE, null, values);
             }
+        }*/
+
+        ContentValues values = new ContentValues();
+        values.put("type", note.getType());
+        values.put("timestamp", note.getTimestamp());
+        values.put("placeholder", placeholder);
+        values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
+
+        if (note.getId().equals("0") || note.getId().equals("")) {
+            values.put("id", generateIdFor(note));
+            values.put("note_id", "0");
+        } else {
+            values.put("id", note.getId());
+            values.put("note_id", note.getId());
         }
+
+        db.insertWithOnConflict(NOTES_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public static int generateIdFor(Note note) {
@@ -1921,8 +1939,14 @@ public class WordPressDB {
     }
 
     public void saveNotes(List<Note> notes) {
-        for (Note note: notes) {
-            addNote(note, false);
+        db.beginTransaction();
+        try {
+            for (Note note: notes) {
+                addNote(note, false);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
     }
 

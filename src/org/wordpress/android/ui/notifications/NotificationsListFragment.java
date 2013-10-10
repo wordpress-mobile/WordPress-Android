@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -13,13 +14,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -115,6 +120,9 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     class NotesAdapter extends ArrayAdapter<Note> {
+        NoteIcons mNoteIcons = new NoteIcons();
+        int mAvatarSz;
+
         NotesAdapter() {
             this(getActivity());
         }
@@ -125,48 +133,41 @@ public class NotificationsListFragment extends ListFragment {
 
         NotesAdapter(Context context, List<Note> notes) {
             super(context, R.layout.note_list_item, R.id.note_label, notes);
+            mAvatarSz = DisplayUtils.dpToPx(context, 48);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
             final Note note = getItem(position);
-            TextView detailText = (TextView) view.findViewById(R.id.note_detail);
-            ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+
+            final TextView detailText = (TextView) view.findViewById(R.id.note_detail);
+            final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+            final NetworkImageView avatarView = (NetworkImageView) view.findViewById(R.id.note_avatar);
+            final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
+            final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+
             if (note.isCommentType()) {
                 detailText.setText(note.getCommentPreview());
                 detailText.setVisibility(View.VISIBLE);
             } else {
                 detailText.setVisibility(View.GONE);
             }
-            final NetworkImageView avatarView = (NetworkImageView) view.findViewById(R.id.note_avatar);
+
+            // gravatars default to having s=256 which is considerably larger than we need here, so
+            // change the s= param to the actual size used here
+            String avatarUrl = note.getIconURL();
+            if (avatarUrl!=null && avatarUrl.contains("s=256"))
+                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
+            avatarView.setImageUrl(avatarUrl, WordPress.imageLoader);
             avatarView.setDefaultImageResId(R.drawable.placeholder);
-            avatarView.setImageUrl(note.getIconURL(), WordPress.imageLoader);
 
-            int imageID = getResources().getIdentifier("note_icon_" + note.getType(), "drawable",
-                    getActivity().getPackageName());
-            if (imageID > 0) {
-                final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
-                iconView.setImageResource(imageID);
-            }
+            iconView.setImageDrawable(mNoteIcons.getDrawableForType(note.getType()));
 
-            final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
-            if (note.isUnread()) {
-                unreadIndicator.setVisibility(View.VISIBLE);
-            } else {
-                unreadIndicator.setVisibility(View.GONE);
-            }
-            if (note.isPlaceholder()) {
-                placeholderLoading.setVisibility(View.VISIBLE);
-            } else {
-                placeholderLoading.setVisibility(View.GONE);
-            }
+            unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.GONE);
+            placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
             return view;
-        }
-
-        public Note getLastNote() {
-            return getItem(getCount() - 1);
         }
 
         public void addAll(List<Note> notes) {
@@ -189,6 +190,31 @@ public class NotificationsListFragment extends ListFragment {
             super.notifyDataSetChanged();
             if (mProgressFooterView != null)
                 mProgressFooterView.setVisibility(View.GONE);
+        }
+    }
+
+    /*
+     * HashMap of drawables for note types - used by NoteAdapter
+     */
+    private class NoteIcons extends HashMap<String, Drawable> {
+        Drawable getDrawableForType(String noteType) {
+            if (noteType==null)
+                return null;
+
+            Drawable icon = get(noteType);
+            if (icon != null)
+                return icon;
+
+            int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
+            if (imageId==0)
+                return null;
+
+            icon = getResources().getDrawable(imageId);
+            if (icon==null)
+                return null;
+
+            put(noteType, icon);
+            return icon;
         }
     }
 

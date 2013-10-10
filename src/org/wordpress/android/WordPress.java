@@ -1,5 +1,6 @@
 package org.wordpress.android;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,6 +26,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
+
 import org.apache.http.HttpResponse;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -98,6 +102,34 @@ public class WordPress extends Application {
     
     public static Context getContext(){
         return mContext;
+    }
+
+    /*
+     * enables "strict mode" for testing - should NEVER be used in release builds
+     */
+    @SuppressLint("NewApi")
+    private static void enableStrictMode() {
+        // strict mode requires API level 9 or later
+        if (Build.VERSION.SDK_INT < 9)
+            return;
+
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .penaltyFlashScreen()
+                .build());
+
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectActivityLeaks()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .detectLeakedRegistrationObjects()
+                .penaltyLog()
+                .build());
+
+        Log.w("WORDPRESS", "Strict mode enabled");
     }
     
     public static void registerForCloudMessaging(Context ctx) {
