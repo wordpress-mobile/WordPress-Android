@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/image_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="@drawable/reader_button_transparent_selector"
             android:paddingLeft="@dimen/reader_margin_small"
@@ -49,7 +49,7 @@
         <ImageView
             android:id="@+id/image_share"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/reader_button_transparent_selector"
