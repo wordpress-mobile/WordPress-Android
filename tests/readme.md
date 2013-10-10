@@ -2,7 +2,7 @@
 
 ## Run tests ##
 
-    $ ant debug && ant installd && ant test
+    $ ./gradlew cIT
 
 ## Dump a test database ##
 

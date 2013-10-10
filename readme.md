@@ -17,6 +17,15 @@ WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/
 
 ## Build Instructions ##
 
+### Android Studio ###
+
+This project now supports the Android Studio IDE. To get started import the
+project as a Gradle project.
+
+All dependencies should be installed automatically.
+
+### Eclipse ###
+
 The full build instructions (including instructions for using Eclipse) can be
 found on the [Tutorials &amp; Guides][] page of the mobile developer handbook.
 Instructions for building on the command line with ant can be found below.
@@ -49,5 +58,4 @@ Line][command-line].
 
 ## Run Unittests ##
 
-    cd tests
-    ant debug && ant installd && ant test
+    $ ./gradlew cIT
