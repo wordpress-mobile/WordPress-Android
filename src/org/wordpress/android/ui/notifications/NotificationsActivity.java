@@ -371,14 +371,25 @@ public class NotificationsActivity extends WPActionBarActivity {
         mFirstLoadComplete = false;
         shouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(mRefreshMenuItem);
-        NotesResponseHandler handler = new NotesResponseHandler(){
+        NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
-            public void onNotes(List<Note> notes) {
+            public void onNotes(final List<Note> notes) {
                 mFirstLoadComplete = true;
-                WordPress.wpDB.clearNotes();
-                WordPress.wpDB.saveNotes(notes);
-                refreshNotificationsListFragment(notes);
-                stopAnimatingRefreshButton(mRefreshMenuItem);
+                // nbradbury - saving notes can be slow, so do it in the background
+                new Thread() {
+                    @Override
+                    public void run() {
+                        WordPress.wpDB.clearNotes();
+                        WordPress.wpDB.saveNotes(notes);
+                        NotificationsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshNotificationsListFragment(notes);
+                                stopAnimatingRefreshButton(mRefreshMenuItem);
+                            }
+                        });
+                    }
+                }.start();
             }
             @Override
             public void onErrorResponse(VolleyError error){
@@ -393,7 +404,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 shouldAnimateRefreshButton = false;
             }
         };
-        NotificationUtils.refreshNotifications(handler, handler);
+        NotificationUtils.refreshNotifications(notesHandler, notesHandler);
     }
 
     protected void updateLastSeen(String timestamp){

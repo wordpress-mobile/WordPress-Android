@@ -2,6 +2,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -178,9 +179,14 @@ public class NotificationsListFragment extends ListFragment {
                 if (mProgressFooterView != null)
                     mProgressFooterView.setVisibility(View.GONE);
             } else {
-                Iterator<Note> noteIterator = notes.iterator();
-                while (noteIterator.hasNext()) {
-                    add(noteIterator.next());
+                // ArrayAdapter.addAll() was added in SDK 11
+                if (Build.VERSION.SDK_INT >= 11) {
+                    super.addAll(notes);
+                } else {
+                    Iterator<Note> noteIterator = notes.iterator();
+                    while (noteIterator.hasNext()) {
+                        add(noteIterator.next());
+                    }
                 }
             }
         }
