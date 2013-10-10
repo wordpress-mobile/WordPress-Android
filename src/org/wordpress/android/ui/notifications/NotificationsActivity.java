@@ -123,6 +123,9 @@ public class NotificationsActivity extends WPActionBarActivity {
             popNoteDetail();
         if (mBroadcastReceiver == null)
             createBroadcastReceiver();
+
+        // remove window background since background color is set in fragment (reduces overdraw)
+        getWindow().setBackgroundDrawable(null);
     }
 
     private void createBroadcastReceiver() {
