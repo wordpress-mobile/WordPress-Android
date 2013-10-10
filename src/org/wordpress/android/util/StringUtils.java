@@ -1,14 +1,14 @@
 package org.wordpress.android.util;
 
+import android.text.Html;
+import android.util.Log;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import android.text.Html;
-import android.util.Log;
 
 public class StringUtils {
 
@@ -56,18 +56,23 @@ public class StringUtils {
 
     public static String addPTags(String source) {
         String[] asploded = source.split("\n\n");
-        String wrappedHTML = "";
+
         if (asploded.length > 0) {
+            StringBuilder wrappedHTML = new StringBuilder();
             for (int i = 0; i < asploded.length; i++) {
-                if (asploded[i].trim().length() > 0)
-                    wrappedHTML += "<p>" + asploded[i].trim() + "</p>";
+                String trimmed = asploded[i].trim();
+                if (trimmed.length() > 0) {
+                    trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>")
+                            .replace("<br>\n", "<br>").replace("\n", "<br>");
+                    wrappedHTML.append("<p>");
+                    wrappedHTML.append(trimmed);
+                    wrappedHTML.append("</p>");
+                }
             }
+            return wrappedHTML.toString();
         } else {
-            wrappedHTML = source;
+            return source;
         }
-        wrappedHTML = wrappedHTML.replace("<br />", "<br>").replace("<br/>", "<br>");
-        wrappedHTML = wrappedHTML.replace("<br>\n", "<br>").replace("\n", "<br>");
-        return wrappedHTML;
     }
 
     public static BigInteger getMd5IntHash(String input) {
