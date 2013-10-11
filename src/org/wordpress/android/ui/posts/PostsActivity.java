@@ -353,15 +353,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     private void attemptToSelectPost() {
-
         FragmentManager fm = getSupportFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm
-                .findFragmentById(R.id.postDetail);
-
+        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
             postList.shouldSelectAfterLoad = true;
         }
-
     }
 
     @Override
