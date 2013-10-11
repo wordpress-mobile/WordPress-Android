@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,15 +11,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -32,17 +24,23 @@ import org.wordpress.android.ui.comments.CommentFragment.OnCommentStatusChangeLi
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnContextCommentStatusChangeListener;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommentsActivity extends WPActionBarActivity implements
         OnCommentSelectedListener, OnCommentStatusChangeListener,
         OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
+    public static final int ID_DIALOG_MODERATING = 1;
+    public static final int ID_DIALOG_REPLYING = 2;
+    public static final int ID_DIALOG_DELETING = 3;
+    public ProgressDialog pd;
 
     protected int id;
-    public int ID_DIALOG_MODERATING = 1;
-    public int ID_DIALOG_REPLYING = 2;
-    public int ID_DIALOG_DELETING = 3;
+
     private XMLRPCClient client;
-    public ProgressDialog pd;
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;

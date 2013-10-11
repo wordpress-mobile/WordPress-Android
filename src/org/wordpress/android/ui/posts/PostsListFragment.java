@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -54,10 +55,8 @@ public class PostsListFragment extends ListFragment {
     private OnRefreshListener mOnRefreshListener;
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
-    private int mSelectedPosition;
-    private int mListViewScrollStateIndex;
-    private int mListViewScrollStateOffset;
-    
+    private ListScrollPositionManager mListScrollPositionManager;
+
     public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
@@ -73,7 +72,6 @@ public class PostsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
@@ -84,26 +82,6 @@ public class PostsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.empty_listview, container, false);
         return v;
-    }
-
-    private void saveScrollOffset() {
-        mListViewScrollStateIndex = getListView().getFirstVisiblePosition();
-        View view = getListView().getChildAt(0);
-        mListViewScrollStateOffset = 0;
-        if (view != null) {
-            mListViewScrollStateOffset = view.getTop();
-        }
-        mSelectedPosition = getListView().getCheckedItemPosition();
-    }
-
-    private void restoreScrollOffset() {
-        if (mSelectedID != -1) {
-            getListView().setSelectionFromTop(mListViewScrollStateIndex, mListViewScrollStateOffset);
-            getListView().setItemChecked(mSelectedPosition, true);
-            if (mSelectedPosition < mPostIDs.length) {
-                showPost(Integer.valueOf(mPostIDs[mSelectedPosition]));
-            }
-        }
     }
 
     @Override
@@ -124,6 +102,7 @@ public class PostsListFragment extends ListFragment {
             });
         }
         createSwitcher();
+        mListScrollPositionManager = new ListScrollPositionManager(getListView(), true);
     }
 
     public void onAttach(Activity activity) {
@@ -183,7 +162,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void refreshPosts(final boolean loadMore) {
-        saveScrollOffset();
+        mListScrollPositionManager.saveScrollOffset();
         if (!loadMore) {
             mOnRefreshListener.onRefresh(true);
             numRecords = 20;
@@ -390,7 +369,7 @@ public class PostsListFragment extends ListFragment {
             if (loadedPosts == null) {
                 refreshPosts(false);
             }
-            restoreScrollOffset();
+            mListScrollPositionManager.restoreScrollOffset();
             return true;
         } else {
 
@@ -399,7 +378,7 @@ public class PostsListFragment extends ListFragment {
                 if (!isPage)
                     new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
             }
-            restoreScrollOffset();
+            mListScrollPositionManager.restoreScrollOffset();
             return false;
         }
     }
@@ -410,9 +389,7 @@ public class PostsListFragment extends ListFragment {
         flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        String formattedDate = DateUtils
-                .formatDateTime(getActivity().getApplicationContext(),
-                        localTime, flags);
+        String formattedDate = DateUtils.formatDateTime(getActivity().getApplicationContext(), localTime, flags);
         return formattedDate;
     }
 

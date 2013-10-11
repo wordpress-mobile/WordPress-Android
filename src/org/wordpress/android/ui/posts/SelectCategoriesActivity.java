@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -41,7 +41,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
-    private int mListViewScrollStateOffset, mListViewScrollStateIndex;
+    private ListScrollPositionManager mListScrollPositionManager;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
@@ -59,6 +59,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mListView = getListView();
+        mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
 
@@ -68,7 +69,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (getCheckedItemCount(mListView) > 1) {
                     boolean uncategorizedNeedToBeSelected = false;
                     for (int i = 0; i < mCategoryLevels.size(); i++) {
-                        if ( mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized") ) {
+                        if (mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized")) {
                             mListView.setItemChecked(i, uncategorizedNeedToBeSelected);
                         }
                     }
@@ -113,7 +114,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 }
             }
         }
-        restoreScrollOffset();
+        mListScrollPositionManager.restoreScrollOffset();
     }
 
 
@@ -235,7 +236,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         // Save selected categories
         updateSelectedCategoryList();
-        saveScrollOffset();
+        mListScrollPositionManager.saveScrollOffset();
 
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
@@ -372,7 +373,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     }
 
     private void refreshCategories() {
-        saveScrollOffset();
+        mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
                 getResources().getText(R.string.attempting_categories_refresh), true, true);
@@ -397,19 +398,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         super.onBackPressed();
     }
 
-    private void saveScrollOffset() {
-        mListViewScrollStateIndex = mListView.getFirstVisiblePosition();
-        View view = mListView.getChildAt(0);
-        mListViewScrollStateOffset = 0;
-        if (view != null) {
-            mListViewScrollStateOffset = view.getTop();
-        }
-    }
-
-    private void restoreScrollOffset() {
-        mListView.setSelectionFromTop(mListViewScrollStateIndex, mListViewScrollStateOffset);
-    }
-
     private void updateSelectedCategoryList() {
         SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
@@ -432,11 +420,10 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         finish();
     }
 
-    private int getCheckedItemCount(ListView listView)
-    {
-        if (Build.VERSION.SDK_INT >= 11) return listView.getCheckedItemCount();
-        else
-        {
+    private int getCheckedItemCount(ListView listView) {
+        if (Build.VERSION.SDK_INT >= 11) {
+            return listView.getCheckedItemCount();
+        } else {
             int count = 0;
             for (int i = listView.getCount() - 1; i >= 0; i--)
                 if (listView.isItemChecked(i)) count++;
