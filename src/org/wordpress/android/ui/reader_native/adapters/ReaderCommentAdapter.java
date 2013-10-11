@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -121,8 +121,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(comment.getAuthorName());
-        //holder.txtText.setText(comment.getText());
-        holder.txtText.setText(prepareComment(comment.getText()));
+        displayComment(comment.getText(), holder.txtText);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -174,24 +173,27 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     /*
-     * prepares comment text for display as html
-     * TODO: handle images
+     * prepares comment text for display as html, including retrieving images
      */
-    private CharSequence prepareComment(String content) {
-        if (content==null)
-            return null;
+    private void displayComment(String content, TextView textView) {
+        if (content==null || textView==null)
+            return;
 
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content);
+        // convert emoticons first (otherwise they'll be downloaded)
+        if (content.contains("icon_")) {
+            SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content);
+            content = Emoticons.replaceEmoticonsWithEmoji(html).toString().trim();
+        }
 
-        // convert emoticons
-        if (content.contains("icon_"))
-            Emoticons.replaceEmoticonsWithEmoji(html);
+        // now convert to HTML with an image getter that enforces a max image size
+        Context context = textView.getContext();
+        int maxImageSize = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
+        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(context, textView, maxImageSize), null);
 
         // remove extra \n\n added by Html.convert()
         CharSequence source = html;
         int start = 0;
         int end = source.length();
-
         while (start < end && Character.isWhitespace(source.charAt(start))) {
             start++;
         }
@@ -199,7 +201,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             end--;
         }
 
-        return source.subSequence(start, end);
+        textView.setText(source.subSequence(start, end));
     }
 
     private static class CommentViewHolder {
@@ -311,6 +313,4 @@ public class ReaderCommentAdapter extends BaseAdapter {
             mIsTaskRunning = false;
         }
     }
-
-
 }
