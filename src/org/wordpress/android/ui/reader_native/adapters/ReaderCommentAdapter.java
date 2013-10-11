@@ -40,6 +40,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private static final int MAX_INDENT_LEVEL = 2;
     private int mIndentPerLevel;
     private int mAvatarSz;
+    private int mMaxImageSz;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
@@ -62,6 +63,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+        mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
@@ -180,15 +182,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
             return;
 
         // convert emoticons first (otherwise they'll be downloaded)
-        if (content.contains("icon_")) {
-            SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content);
-            content = Emoticons.replaceEmoticonsWithEmoji(html).toString().trim();
-        }
+        if (content.contains("icon_"))
+            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
 
         // now convert to HTML with an image getter that enforces a max image size
-        Context context = textView.getContext();
-        int maxImageSize = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(context, textView, maxImageSize), null);
+        final SpannableStringBuilder html;
+        if (content.contains("<img")) {
+            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
+        } else {
+            html = (SpannableStringBuilder) Html.fromHtml(content);
+        }
 
         // remove extra \n\n added by Html.convert()
         CharSequence source = html;
