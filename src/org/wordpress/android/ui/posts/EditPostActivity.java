@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -45,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -161,12 +163,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private Handler mAutoSaveHandler;
     private ArrayList<String> mCategories;
 
-    private boolean mIsPage = false;
-    private boolean mIsNew = false;
-    private boolean mLocalDraft = false;
-    private boolean mIsCustomPubDate = false;
-    private boolean mIsBackspace = false;
-    private boolean mScrollDetected = false;
+    private boolean mIsPage;
+    private boolean mIsNew;
+    private boolean mLocalDraft;
+    private boolean mIsCustomPubDate;
+    private boolean mIsBackspace;
+    private boolean mScrollDetected;
+    private boolean mKeyboardShown;
+    private boolean mEditContentHasFocus;
 
     private String mAccountName = "";
     private int mQuickMediaType = -1;
@@ -488,6 +492,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         mStrikeToggleButton.setOnClickListener(this);
         mBquoteToggleButton.setOnClickListener(this);
         mMoreButton.setOnClickListener(this);
+        softKeyboardHook();
     }
 
     private void prepareMediaGallery() {
@@ -618,10 +623,12 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE)
+        mEditContentHasFocus = hasFocus;
+        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE) {
             showFormatBar();
-        else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
+        } else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE) {
             hideFormatBar();
+        }
     }
 
     @Override
@@ -631,10 +638,12 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
 
     private void showFormatBar() {
-        mFormatBar.setVisibility(View.VISIBLE);
-        AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-        fadeInAnimation.setDuration(500);
-        mFormatBar.startAnimation(fadeInAnimation);
+        if (mKeyboardShown && mEditContentHasFocus) {
+            mFormatBar.setVisibility(View.VISIBLE);
+            AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+            fadeInAnimation.setDuration(500);
+            mFormatBar.startAnimation(fadeInAnimation);
+        }
     }
 
     private void hideFormatBar() {
@@ -642,6 +651,25 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         fadeOutAnimation.setDuration(500);
         mFormatBar.startAnimation(fadeOutAnimation);
         mFormatBar.setVisibility(View.GONE);
+    }
+
+    private void softKeyboardHook() {
+        final View scrollView = findViewById(R.id.scrollView);
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                scrollView.getWindowVisibleDisplayFrame(r);
+                int heightDiff = scrollView.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
+                    mKeyboardShown = true;
+                    showFormatBar();
+                } else {
+                    mKeyboardShown = false;
+                    hideFormatBar();
+                }
+            }
+        });
     }
 
     @Override
@@ -739,9 +767,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
-        if (mFormatBar.getVisibility() != View.VISIBLE)
+        if (mFormatBar.getVisibility() != View.VISIBLE) {
             showFormatBar();
+        }
 
         float pos = event.getY();
 
@@ -788,8 +816,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                             featuredCheckBox.setVisibility(View.VISIBLE);
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         }
-
-
 
                         featuredCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                             @Override
@@ -945,7 +971,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
 
     private void showCancelAlert(final boolean isUpPress) {
-
         // Empty post? Let's not prompt then.
         if (mIsNew && mContentEditText.getText().toString().equals("") && mTitleEditText.getText().toString().equals("")) {
             finish();
@@ -2417,7 +2442,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         if ((count - after == 1) || (s.length() == 0))
             mIsBackspace = true;
         else
