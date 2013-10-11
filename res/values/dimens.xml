@@ -58,6 +58,9 @@
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">@dimen/reader_avatar_sz_small</dimen>
 
+    <!-- max size for images in Reader comments -->
+    <dimen name="reader_comment_max_image_size">96dp</dimen>
+
     <dimen name="page_indicator_line_width">12dp</dimen>
     <dimen name="page_indicator_gap_width">4dp</dimen>
     <dimen name="page_indicator_stroke_width">4dp</dimen>
