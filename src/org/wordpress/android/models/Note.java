@@ -48,13 +48,16 @@ public class Note {
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
     private boolean mPlaceholder = false;
 
+    private transient String mCommentPreview = null;
+    private transient String mSubject = null;
+    private transient String mIconUrl = null;
+
     /**
      * Create a note using JSON from REST API
      */
     public Note(JSONObject noteJSON){
         mNoteJSON = noteJSON;
-        // get the comment ready if it's a comment type
-        cleanupComment();
+        preloadContent();
     }
 
     /**
@@ -86,8 +89,8 @@ public class Note {
             body.put("items", items);
 
             // fake timestamp to put it in top of the list
-            String timestamp = extras.getString("note_timestamp", "");
-            if (timestamp.equals("")) {
+            String timestamp = extras.getString("note_timestamp");
+            if (timestamp==null || timestamp.equals("")) {
                 timestamp = "" + (System.currentTimeMillis() / 1000);
             }
             tmpNoteJSON.put("timestamp", timestamp);
@@ -132,20 +135,27 @@ public class Note {
         return isType(COMMENT_TYPE);
     }
     public String getSubject(){
-        String text = queryJSON("subject.text", "").trim();
-        if (text.equals("")) {
-            text = queryJSON("subject.html", "");
+        if (mSubject==null) {
+            String text = queryJSON("subject.text", "").trim();
+            if (text.equals("")) {
+                text = queryJSON("subject.html", "");
+            }
+            mSubject = Html.fromHtml(text).toString();
         }
-        return Html.fromHtml(text).toString();
+        return mSubject;
     }
     public String getIconURL(){
-        return queryJSON("subject.icon", "");
+        if (mIconUrl==null)
+            mIconUrl = queryJSON("subject.icon", "");
+        return mIconUrl;
     }
     /**
      * Removes HTML and cleans up newlines and whitespace
      */
     public String getCommentPreview(){
-        return getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
+        if (mCommentPreview==null)
+            mCommentPreview = getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
+        return mCommentPreview;
     }
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
@@ -175,7 +185,7 @@ public class Note {
         return getUnreadCount().equals("0");
     }
     /**
-     * For some reason the unread count is a string in the JSON API but is truly representd
+     * For some reason the unread count is a string in the JSON API but is truly represented
      * by an Integer. We can handle a simple string.
      */
     public String getUnreadCount(){
@@ -236,15 +246,23 @@ public class Note {
         return mActions;
     }
     /**
-     * Prepares the comment HTML for being displayed. Cleans up emoticons.
+     * pre-loads commonly-accessed fields - avoids performance hit of loading these
+     * fields inside an adapter's getView()
      * 
      * TODO: Caching comment images
      */
-    protected void cleanupComment(){
+    protected void preloadContent(){
         if (isCommentType()) {
+            // pre-load the comment HTML for being displayed. Cleans up emoticons.
             mComment = Note.prepareHtml(getCommentText());
+            // pre-load the preview text
+            getCommentPreview();
         }
+        // pre-load the subject and avatar url
+        getSubject();
+        getIconURL();
     }
+
     protected Object queryJSON(String query){
         Object defaultObject = "";
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);

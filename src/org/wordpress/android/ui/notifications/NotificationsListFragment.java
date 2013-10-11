@@ -120,7 +120,6 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     class NotesAdapter extends ArrayAdapter<Note> {
-        NoteIcons mNoteIcons = new NoteIcons();
         int mAvatarSz;
 
         NotesAdapter() {
@@ -162,7 +161,7 @@ public class NotificationsListFragment extends ListFragment {
             avatarView.setImageUrl(avatarUrl, WordPress.imageLoader);
             avatarView.setDefaultImageResId(R.drawable.placeholder);
 
-            iconView.setImageDrawable(mNoteIcons.getDrawableForType(note.getType()));
+            iconView.setImageDrawable(getDrawableForType(note.getType()));
 
             unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.GONE);
             placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
@@ -178,9 +177,15 @@ public class NotificationsListFragment extends ListFragment {
                 if (mProgressFooterView != null)
                     mProgressFooterView.setVisibility(View.GONE);
             } else {
-                Iterator<Note> noteIterator = notes.iterator();
-                while (noteIterator.hasNext()) {
-                    add(noteIterator.next());
+                // disable notifyOnChange while adding notes - otherwise every call to add() will
+                // trigger a call to notifyDataSetChanged()
+                setNotifyOnChange(false);
+                try {
+                    Iterator<Note> noteIterator = notes.iterator();
+                    while (noteIterator.hasNext())
+                        add(noteIterator.next());
+                } finally {
+                    notifyDataSetChanged(); // this will reset notifyOnChange to True
                 }
             }
         }
@@ -191,17 +196,14 @@ public class NotificationsListFragment extends ListFragment {
             if (mProgressFooterView != null)
                 mProgressFooterView.setVisibility(View.GONE);
         }
-    }
 
-    /*
-     * HashMap of drawables for note types - used by NoteAdapter
-     */
-    private class NoteIcons extends HashMap<String, Drawable> {
-        Drawable getDrawableForType(String noteType) {
+        // HashMap of drawables for note types
+        private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
+        private Drawable getDrawableForType(String noteType) {
             if (noteType==null)
                 return null;
 
-            Drawable icon = get(noteType);
+            Drawable icon = mNoteIcons.get(noteType);
             if (icon != null)
                 return icon;
 
@@ -213,7 +215,7 @@ public class NotificationsListFragment extends ListFragment {
             if (icon==null)
                 return null;
 
-            put(noteType, icon);
+            mNoteIcons.put(noteType, icon);
             return icon;
         }
     }
