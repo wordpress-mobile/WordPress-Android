@@ -245,12 +245,11 @@ public class Note {
         }
         return mActions;
     }
+
     /**
      * pre-loads commonly-accessed fields - avoids performance hit of loading these
      * fields inside an adapter's getView()
-     * 
-     * TODO: Caching comment images
-     */
+     **/
     protected void preloadContent(){
         if (isCommentType()) {
             // pre-load the comment HTML for being displayed. Cleans up emoticons.

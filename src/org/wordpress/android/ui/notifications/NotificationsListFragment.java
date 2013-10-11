@@ -155,10 +155,10 @@ public class NotificationsListFragment extends ListFragment {
 
             // gravatars default to having s=256 which is considerably larger than we need here, so
             // change the s= param to the actual size used here
-            String avatarUrl = note.getIconURL();
-            if (avatarUrl!=null && avatarUrl.contains("s=256"))
-                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
-            avatarView.setImageUrl(avatarUrl, WordPress.imageLoader);
+            String iconUrl = note.getIconURL();
+            if (iconUrl!=null && iconUrl.contains("s=256"))
+                iconUrl = iconUrl.replace("s=256", "s=" + mAvatarSz);
+            avatarView.setImageUrl(iconUrl, WordPress.imageLoader);
             avatarView.setDefaultImageResId(R.drawable.placeholder);
 
             iconView.setImageDrawable(getDrawableForType(note.getType()));
@@ -185,7 +185,7 @@ public class NotificationsListFragment extends ListFragment {
                     while (noteIterator.hasNext())
                         add(noteIterator.next());
                 } finally {
-                    notifyDataSetChanged(); // this will reset notifyOnChange to True
+                    setNotifyOnChange(true);
                 }
             }
         }

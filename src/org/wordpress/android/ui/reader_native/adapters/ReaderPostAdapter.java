@@ -219,7 +219,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         // blog name / author name / date
         holder.txtSource.setText(post.getSource());
 
-        // featured image (or video)
+        // featured image or video
         final boolean isFeaturedImageVisible;
         if (post.hasFeaturedImage()) {
             holder.imgFeatured.setImageUrl(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), WPNetworkImageView.ImageType.PHOTO);

@@ -39,7 +39,8 @@ public class ReaderPostTable {
           + "is_comments_open,"     // 20
           + "is_reblogged,"         // 21
           + "is_external,"          // 22
-          + "is_private";           // 23
+          + "is_private,"           // 23
+          + "is_videopress";        // 24
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -67,6 +68,7 @@ public class ReaderPostTable {
                 + " is_reblogged        INTEGER DEFAULT 0,"
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
+                + " is_videopress       INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
@@ -253,7 +255,7 @@ public class ReaderPostTable {
 
         SQLiteStatement stmtPosts = db.compileStatement("INSERT OR REPLACE INTO tbl_posts ("
                                                         + COLUMN_NAMES
-                                                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)");
+                                                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)");
 
         SQLiteStatement stmtTags = db.compileStatement("INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
@@ -283,6 +285,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
                 stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isVideoPress));
                 stmtPosts.execute();
                 stmtPosts.clearBindings();
             }
@@ -372,6 +375,7 @@ public class ReaderPostTable {
     private static int COL_IS_REBLOGGED;
     private static int COL_IS_EXTERNAL;
     private static int COL_IS_PRIVATE;
+    private static int COL_IS_VIDEOPRESS;
 
     /*
      * should be called whenever a cursor is returned above so that column indexes are known - this avoids
@@ -401,6 +405,7 @@ public class ReaderPostTable {
         COL_IS_REBLOGGED = c.getColumnIndex("is_reblogged");
         COL_IS_EXTERNAL = c.getColumnIndex("is_external");
         COL_IS_PRIVATE = c.getColumnIndex("is_private");
+        COL_IS_VIDEOPRESS = c.getColumnIndex("is_videopress");
     }
 
     /*
@@ -440,6 +445,7 @@ public class ReaderPostTable {
         post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(COL_IS_REBLOGGED));
         post.isExternal = SqlUtils.sqlToBool(c.getInt(COL_IS_EXTERNAL));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(COL_IS_PRIVATE));
+        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(COL_IS_VIDEOPRESS));
 
         return post;
     }

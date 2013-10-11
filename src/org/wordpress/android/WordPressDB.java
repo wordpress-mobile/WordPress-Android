@@ -1888,32 +1888,6 @@ public class WordPressDB {
     }
 
     public void addNote(Note note, boolean placeholder) {
-        /*ContentValues values = new ContentValues();
-        values.put("note_id", note.getId());
-        values.put("type", note.getType());
-        values.put("timestamp", note.getTimestamp());
-        values.put("placeholder", placeholder);
-        values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
-
-        if (!(note.getId().equals("0") || note.getId().equals(""))) {
-            values.put("id", note.getId());
-            // Try to update
-            int result = db.update(NOTES_TABLE, values, "id=" + note.getId(), null);
-            // If update failed, insert
-            if (result == 0) {
-                db.insert(NOTES_TABLE, null, values);
-            }
-        } else {
-            int hashid = generateIdFor(note);
-            values.put("id", hashid);
-            values.put("note_id", "0");
-            int result = db.update(NOTES_TABLE, values, "id=" + hashid, null);
-            // If update failed, insert
-            if (result == 0) {
-                db.insert(NOTES_TABLE, null, values);
-            }
-        }*/
-
         ContentValues values = new ContentValues();
         values.put("type", note.getType());
         values.put("timestamp", note.getTimestamp());
@@ -1941,9 +1915,8 @@ public class WordPressDB {
     public void saveNotes(List<Note> notes) {
         db.beginTransaction();
         try {
-            for (Note note: notes) {
+            for (Note note: notes)
                 addNote(note, false);
-            }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

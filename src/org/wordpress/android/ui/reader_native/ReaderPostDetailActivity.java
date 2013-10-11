@@ -773,12 +773,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         // hack to determine whether html uses single-quoted attributes
         boolean usesSingleQuotes = text.contains("src='");
 
-        final int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
-        final int thumbWidth = getMaxImageWidth();
-        final int thumbHeight = (int)(thumbWidth * 0.65f);
-        final int overlayLeft = (thumbWidth / 2) - (overlaySz / 2);
-        final int overlayTop = (thumbHeight / 2) - (overlaySz / 2);
-
         while (iFrameStart > -1) {
             int iFrameEnd = text.indexOf(">", iFrameStart);
             if (iFrameEnd == -1)
@@ -798,35 +792,51 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                             || src.contains("video")
                             || src.contains("vimeo"));
 
-            final String link;
+            final String videoDiv;
             if (isVideo) {
                 // use generic video player overlay if we don't have the thumbnail for this video, otherwise
                 // show the thumbnail with the player overlay on top of it - note there's a good chance we
                 // have the thumbnail since it was likely already downloaded by the post list
                 String thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(src);
-                if (TextUtils.isEmpty(thumbnailUrl)) {
-                    link = String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", src, overlaySz, overlaySz, OVERLAY_IMG);
-                } else {
-                    // insert a div with contains the video thumbnail with the player overlay centered on top of it
-                    link = "<div style='position:relative'>"
-                           + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx;' class='wpreader-video-thumb' /></a>", src, thumbnailUrl, thumbWidth, thumbHeight)
-                           + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx; left:%dpx; top:%dpx; position:absolute;' /></a>", src, OVERLAY_IMG, overlaySz, overlaySz, overlayLeft, overlayTop)
-                           + "</div>";
-                    // keep track of thumbnail urls so we know when they're clicked
+                videoDiv = makeVideoDiv(src, thumbnailUrl);
+                // keep track of thumbnail urls so we know when they're clicked
+                if (!TextUtils.isEmpty(thumbnailUrl))
                     mVideoThumbnailUrls.add(thumbnailUrl);
-                }
-                // insert the link/image before the iframe - note that the iframe will be hidden by the CSS used
+                // insert the video div before the iframe - note that the iframe will be hidden by the CSS used
                 // in the AsyncTask below
-                text = text.substring(0, iFrameStart) + link + text.substring(iFrameStart);
+                text = text.substring(0, iFrameStart) + videoDiv + text.substring(iFrameStart);
             } else {
                 // if we get here it means we're not sure the iframe is a video, in which case don't show anything
-                link = "";
+                videoDiv = "";
             }
 
-            iFrameStart = text.indexOf("<iframe", iFrameEnd + link.length());
+            iFrameStart = text.indexOf("<iframe", iFrameEnd + videoDiv.length());
         }
 
         return text;
+    }
+
+    /*
+     * creates formatted div for passed video with passed (optional) thumbnail
+     */
+    private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
+        if (TextUtils.isEmpty(videoUrl))
+            return "";
+
+        final int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
+        final int thumbWidth = getMaxImageWidth();
+        final int thumbHeight = (int)(thumbWidth * 0.65f);
+        final int overlayLeft = (thumbWidth / 2) - (overlaySz / 2);
+        final int overlayTop = (thumbHeight / 2) - (overlaySz / 2);
+
+        if (TextUtils.isEmpty(thumbnailUrl)) {
+            return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
+        } else {
+            return "<div style='position:relative'>"
+                    + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx;' class='wpreader-video-thumb' /></a>", videoUrl, thumbnailUrl, thumbWidth, thumbHeight)
+                    + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx; left:%dpx; top:%dpx; position:absolute;' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz, overlayLeft, overlayTop)
+                    + "</div>";
+        }
     }
 
     /*
@@ -863,9 +873,12 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (post==null)
             return "";
 
-        final String content;
+        String content;
         if (post.hasText()) {
             content = post.getText();
+            // insert video div before content if this is a VideoPress post (video otherwise won't appear)
+            if (post.isVideoPress)
+                content = makeVideoDiv(post.getFeaturedVideo(), post.getFeaturedImage()) + content;
         } else if (post.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content

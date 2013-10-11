@@ -47,6 +47,7 @@ public class ReaderPost {
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
+    public boolean isVideoPress;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json==null)
@@ -150,8 +151,10 @@ public class ReaderPost {
                     JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
                     if (jsonVideoPress != null) {
                         JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
-                        if (jsonStdVideo != null)
+                        if (jsonStdVideo != null) {
                             post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
+                            post.isVideoPress = true;
+                        }
                     }
                 }
             }
