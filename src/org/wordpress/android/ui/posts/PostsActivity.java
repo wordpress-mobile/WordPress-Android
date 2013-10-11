@@ -458,6 +458,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                                         : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
+                post.delete();
+                attemptToSelectPost();
+                postList.loadPosts(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
