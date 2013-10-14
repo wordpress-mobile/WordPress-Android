@@ -494,8 +494,8 @@
     <string name="httpuser">HTTP username</string>
     <string name="httppassword">HTTP password</string>
     <string name="settings">Settings</string>
-    <string name="optional_settings">Optional Settings</string>
     <string name="http_credentials">HTTP Credentials (optional)</string>
+    <string name="http_authorization_required">Authorization Required</string>
 
     <!-- post scheduling and password -->
     <string name="publish_date">Publish</string>

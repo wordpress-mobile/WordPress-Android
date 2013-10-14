@@ -56,6 +56,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mSignInButton;
     private List mUsersBlogsList;
     private static final String DEFAULT_IMAGE_SIZE = "2000";
+    private boolean mHttpAuthRequired;
+    private String mHttpUsername = "";
+    private String mHttpPassword = "";
 
     public WelcomeFragmentSignIn() {
 
@@ -164,7 +167,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
             
             if (mXmlrpcUrl == null) {
-                mErrorMsg = getString(R.string.no_site_error);
+                if (!mHttpAuthRequired)
+                    mErrorMsg = getString(R.string.no_site_error);
                 return null;
             }
             
@@ -179,7 +183,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mUsername = mUsernameEditText.getText().toString().trim();
             mPassword = mPasswordEditText.getText().toString().trim();
             
-            XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, "", "");
+            XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, mHttpUsername, mHttpPassword);
             Object[] params = { mUsername, mPassword };
             try {
                 Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
@@ -201,6 +205,36 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         protected void onPostExecute(List<Object> usersBlogsList) {
             mProgressDialog.dismiss();
+
+            if (mHttpAuthRequired) {
+                // Prompt for http credentials
+                mHttpAuthRequired = false;
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setTitle(R.string.http_authorization_required);
+
+                View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
+                final EditText usernameEditText = (EditText)httpAuth.findViewById(R.id.http_username);
+                final EditText passwordEditText = (EditText)httpAuth.findViewById(R.id.http_password);
+                alert.setView(httpAuth);
+
+                alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mHttpUsername = usernameEditText.getText().toString();
+                        mHttpPassword = passwordEditText.getText().toString();
+                        new SetupBlogTask().execute();
+                    }
+                });
+
+                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+                alert.show();
+                return;
+            }
+
             if (usersBlogsList == null && mErrorMsg != null) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment
@@ -223,6 +257,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             
             if (usersBlogsList != null) {
                 mUsersBlogsList = usersBlogsList;
+
+                if (mUsersBlogsList.size() == 1) {
+                    // Just add the one blog and finish up
+                    SparseBooleanArray oneBlogArray = new SparseBooleanArray();
+                    oneBlogArray.put(0, true);
+                    addBlogs(oneBlogArray);
+                    return;
+                }
+
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
                 lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -313,19 +356,25 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 // Try the user entered path
                 try {
-                    XMLRPCClient client = new XMLRPCClient(url, "", "");
+                    XMLRPCClient client = new XMLRPCClient(url, mHttpUsername, mHttpPassword);
                     try {
                         client.call("system.listMethods");
                         xmlrpcUrl = url;
                         mIsCustomUrl = true;
                     } catch (XMLRPCException e) {
+
+                        if (e.getMessage().contains("401")) {
+                            mHttpAuthRequired = true;
+                            return null;
+                        }
+
                         // Guess the xmlrpc path
                         String guessURL = url;
                         if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
                             guessURL = guessURL.substring(0, guessURL.length() - 1);
                         }
                         guessURL += "/xmlrpc.php";
-                        client = new XMLRPCClient(guessURL, "", "");
+                        client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
                         try {
                             client.call("system.listMethods");
                             xmlrpcUrl = guessURL;
@@ -353,6 +402,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         // The blog isn't in the app, so let's create it
                         Blog blog = new Blog(xmlrpcUrl, mUsername, mPassword);
                         blog.setHomeURL(blogMap.get("url").toString());
+                        blog.setHttpuser(mHttpUsername);
+                        blog.setHttppassword(mHttpPassword);
                         blog.setBlogName(blogName);
                         blog.setImagePlacement(""); //deprecated
                         blog.setFullSizeImage(false);
