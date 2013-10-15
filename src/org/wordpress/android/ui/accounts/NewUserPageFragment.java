@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,8 +164,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.new_account_user_fragment_screen, container, false);
-        
-        rootView.findViewById(R.id.l_agree_terms_of_service).setOnClickListener(
+
+        WPTextView termsOfServiceTextView = (WPTextView)rootView.findViewById(R.id.l_agree_terms_of_service);
+        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service, "<u>", "</u>"))));
+        termsOfServiceTextView.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,7 +175,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));
                     }
                 }
-                );
+        );
         
         WPTextView signupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(signupClickListener);

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -72,6 +73,8 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         mCreateAccountButton = (WPTextView) findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
         mSignInTextView = (WPTextView) findViewById(R.id.nux_sign_in);
+        mSignInTextView.setText(Html.fromHtml(String.format(getString(R.string.dont_have_account, "<u>", "</u>"))));
+
         mSignInTextView.setOnClickListener(mCreateAccountListener);
         
         // Instantiate a ViewPager and a PagerAdapter.

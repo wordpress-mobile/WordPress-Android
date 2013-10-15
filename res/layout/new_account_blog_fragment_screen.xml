@@ -87,7 +87,7 @@
 
             </LinearLayout>
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_agree_terms_of_service"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

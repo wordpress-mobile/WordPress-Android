@@ -15,6 +15,7 @@ import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -189,9 +190,10 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         privacySpinner.setAdapter(adapter);
-        
-        
-        rootView.findViewById(R.id.l_agree_terms_of_service).setOnClickListener(
+
+        WPTextView termsOfServiceTextView = (WPTextView)rootView.findViewById(R.id.l_agree_terms_of_service);
+        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service, "<u>", "</u>"))));
+        termsOfServiceTextView.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {

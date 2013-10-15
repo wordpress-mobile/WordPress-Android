@@ -29,7 +29,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/create_account_label"
-                android:text="Create an account on WordPress.com"
+                android:text="@string/create_account_wpcom"
                 style="@style/WordPress.NUXTitle"
                 app:fontVariation="light" />
 
