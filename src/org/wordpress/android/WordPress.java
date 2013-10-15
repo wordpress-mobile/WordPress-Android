@@ -105,7 +105,8 @@ public class WordPress extends Application {
         
         //Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
-        AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities( new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"} );
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled())
+            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities( new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"} );
 
         loadNotifications(this);
         super.onCreate();
