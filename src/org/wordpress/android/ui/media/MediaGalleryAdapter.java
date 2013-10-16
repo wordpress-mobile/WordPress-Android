@@ -99,16 +99,16 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
-        
+        if (thumbnailURL == null)
+            return;
+
         Uri uri = Uri.parse(thumbnailURL);
-        
-        if (thumbnailURL != null && MediaUtils.isValidImage(uri.getLastPathSegment())) { 
+        if (uri != null && MediaUtils.isValidImage(uri.getLastPathSegment())) {
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
         } else {
             imageView.setImageUrl(null, null);
         }
-        
     }
 
 }
