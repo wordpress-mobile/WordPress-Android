@@ -1,5 +1,24 @@
 package org.wordpress.android;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.preference.PreferenceManager;
+import android.util.Base64;
+
+import org.json.JSONArray;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.Utils;
+
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,25 +33,6 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
-
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.preference.PreferenceManager;
-import android.util.Base64;
-
-import org.json.JSONArray;
-
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
 
@@ -1794,7 +1794,7 @@ public class WordPressDB {
         return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
     }
     
-    public Cursor getThemesPremium(String blogId) {
+    /*public Cursor getThemesPremium(String blogId) {
         return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND price > 0 ORDER BY name ASC", new String[] { blogId });
     }
     
@@ -1804,8 +1804,12 @@ public class WordPressDB {
     
     public Cursor getCurrentTheme(String blogId) {
         return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrentTheme='true'", new String[] { blogId });
+    }*/
+
+    public String getCurrentThemeId(String blogId) {
+        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
     }
-    
+
     public void setCurrentTheme(String blogId, String themeId) {
         
         // update any old themes that are set to true to false

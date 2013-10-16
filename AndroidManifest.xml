@@ -149,7 +149,7 @@
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
         </activity>
-                
+
         <!-- Other activities -->
 
         <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/FloatingActivityTheme">

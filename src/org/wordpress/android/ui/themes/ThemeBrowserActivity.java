@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.themes;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +27,6 @@ import com.wordpress.rest.RestRequest.Listener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
@@ -44,6 +40,9 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * The theme browser. Accessible via side menu drawer. 
@@ -64,6 +63,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private boolean mIsRunning;
     private MenuItem refreshMenuItem;
     private ProgressBar mProgressBar;
+
+    private boolean mIsActivatingTheme = false;
+    private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
         mDetailsFragment = (ThemeDetailsFragment) fm.findFragmentByTag(ThemeDetailsFragment.TAG);
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
-
     }
 
     private boolean areThemesAccessible() {
@@ -435,9 +436,15 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (Utils.isXLarge(ThemeBrowserActivity.this) && mDetailsFragment != null) {
             mDetailsFragment.dismiss();
         }
-
         super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_ACTIVATING_THEME, mIsActivatingTheme);
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getBoolean(KEY_IS_ACTIVATING_THEME) && mDetailsFragment!=null)
+            mDetailsFragment.setIsActivatingTheme(true);
     }
 
     @Override
@@ -447,22 +454,23 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             themeId = mPreviewFragment.getThemeId();
         }
 
-        final String currentThemeId = themeId;
+        final String newThemeId = themeId;
         final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
+        mIsActivatingTheme = true;
+
         WordPress.restClient.setTheme(siteId, themeId,
                 new Listener() {
 
                     @Override
                     public void onResponse(JSONObject arg0) {
+                        mIsActivatingTheme = false;
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
 
-                        
-                        WordPress.wpDB.setCurrentTheme(siteId, currentThemeId);
+                        WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
                         if (mDetailsFragment != null) {
                             mDetailsFragment.onThemeActivated(true);
                         }
                         refreshViewPager();
-
                         
                         if (ref.get() != null && mIsRunning && fragment instanceof ThemePreviewFragment) {
                             FragmentManager fm = ref.get().getSupportFragmentManager();
@@ -479,11 +487,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
-
-                        if (mDetailsFragment.isVisible())
+                        mIsActivatingTheme = false;
+                        if (mDetailsFragment != null && mDetailsFragment.isVisible())
                             mDetailsFragment.onThemeActivated(false);
-
-                        Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
+                        if (ref.get() != null)
+                            Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
                     }
                 });
 
