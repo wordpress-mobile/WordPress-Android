@@ -99,8 +99,10 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
-        if (thumbnailURL == null)
+        if (thumbnailURL == null) {
+            imageView.setImageUrl(null, null);
             return;
+        }
 
         Uri uri = Uri.parse(thumbnailURL);
         if (uri != null && MediaUtils.isValidImage(uri.getLastPathSegment())) {
