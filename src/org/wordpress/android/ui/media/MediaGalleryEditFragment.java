@@ -72,9 +72,10 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
         
-        if (cursor == null)
+        if (cursor == null) {
+            mGridAdapter.changeCursor(null);
             return;
-        
+        }
         
         SparseIntArray positions = mapIdsToCursorPositions(cursor);
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
@@ -103,7 +104,10 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         if (mIds == null) {
             mIds = ids;
         } else {
-            mIds.addAll(ids);
+            for (String currentID : ids) {
+                if ( ! mIds.contains(currentID))
+                    mIds.add(currentID);
+            }
         }
         refreshGridView();
     }

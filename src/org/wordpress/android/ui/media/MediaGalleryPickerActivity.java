@@ -44,6 +44,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
+    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
@@ -56,6 +57,11 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         ArrayList<String> checkedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
+        
+        ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
+        if( prevSelectedItems != null ) 
+            checkedItems.addAll(prevSelectedItems);
+        
         if (savedInstanceState != null) {
             checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
