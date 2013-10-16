@@ -1812,6 +1812,21 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
                         if (wpIS.getMediaId() != null) {
                             updateMediaFileOnServer(wpIS);
+                        } else {
+                            MediaFile mf = new MediaFile();
+                            mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
+                            mf.setPostID(mPost.getId());
+                            mf.setTitle(wpIS.getTitle());
+                            mf.setCaption(wpIS.getCaption());
+                            // mf.setDescription(wpIS.getDescription());
+                            mf.setFeatured(wpIS.isFeatured());
+                            mf.setFeaturedInPost(wpIS.isFeaturedInPost());
+                            mf.setFileName(wpIS.getImageSource().toString());
+                            mf.setFilePath(wpIS.getImageSource().toString());
+                            mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+                            mf.setWidth(wpIS.getWidth());
+                            mf.setVideo(wpIS.isVideo());
+                            mf.save();
                         }
 
                         int tagStart = s.getSpanStart(wpIS);
