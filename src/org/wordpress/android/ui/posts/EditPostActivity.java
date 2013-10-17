@@ -1400,12 +1400,17 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     private WPImageSpan prepareWPImageSpan(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-        if (cursor == null || !cursor.moveToFirst())
+        if (cursor == null || !cursor.moveToFirst()){
+            if (cursor != null)
+                cursor.close();
             return null; 
+        }
 
         String url = cursor.getString(cursor.getColumnIndex("fileURL"));
-        if (url == null)
+        if (url == null) {
+            cursor.close();            
             return null;
+        }
         
         Uri uri = Uri.parse(url);
         WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);

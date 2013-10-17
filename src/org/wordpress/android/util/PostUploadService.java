@@ -131,6 +131,7 @@ public class PostUploadService extends Service {
             if (postUploadedSuccessfully) {
                 WordPress.postUploaded();
                 nm.cancel(notificationID);
+                WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
@@ -196,95 +197,55 @@ public class PostUploadService extends Service {
             Pattern pattern = Pattern.compile(imgTags);
 
             for (int x = 0; x < moreCount; x++) {
-                if (post.isLocalDraft()) {
-                    if (x == 0)
-                        s = (Spannable) WPHtml.fromHtml(post.getDescription(), context, post);
-                    else
-                        s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(), context, post);
-                    WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
 
-                    if (click_spans.length != 0) {
-
-                        for (int i = 0; i < click_spans.length; i++) {
-                            String prompt = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(i + 1);
-                            n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, prompt,
-                                    n.contentIntent);
-                            nm.notify(notificationID, n);
-                            WPImageSpan wpIS = click_spans[i];
-                            int start = s.getSpanStart(wpIS);
-                            int end = s.getSpanEnd(wpIS);
-                            MediaFile mf = new MediaFile();
-                            mf.setPostID(post.getId());
-                            mf.setTitle(wpIS.getTitle());
-                            mf.setCaption(wpIS.getCaption());
-                            mf.setDescription(wpIS.getDescription());
-                            mf.setFeatured(wpIS.isFeatured());
-                            mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                            mf.setFileName(wpIS.getImageSource().toString());
-                            mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                            mf.setWidth(wpIS.getWidth());
-
-                            String imgHTML = uploadMediaFile(mf);
-                            if (imgHTML != null) {
-                                SpannableString ss = new SpannableString(imgHTML);
-                                s.setSpan(ss, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                s.removeSpan(wpIS);
-                            } else {
-                                s.removeSpan(wpIS);
-                                mediaError = true;
-                            }
-                        }
-                    }
-
-                    if (x == 0)
-                        descriptionContent = WPHtml.toHtml(s);
-                    else
-                        moreContent = WPHtml.toHtml(s);
+                if (x == 0)
+                    descriptionContent = post.getDescription();
+                else
+                    moreContent = post.getMt_text_more();
+                
+                Matcher matcher;
+                
+                if (x == 0) {
+                    matcher = pattern.matcher(descriptionContent);
                 } else {
-                    Matcher matcher;
-                    if (x == 0) {
-                        descriptionContent = post.getDescription();
-                        matcher = pattern.matcher(descriptionContent);
-                    } else {
-                        moreContent = post.getMt_text_more();
-                        matcher = pattern.matcher(moreContent);
-                    }
+                    matcher = pattern.matcher(moreContent);
+                }                    
 
-                    List<String> imageTags = new ArrayList<String>();
-                    while (matcher.find()) {
-                        imageTags.add(matcher.group());
-                    }
+                List<String> imageTags = new ArrayList<String>();
+                while (matcher.find()) {
+                    imageTags.add(matcher.group());
+                }
 
-                    for (String tag : imageTags) {
+                for (String tag : imageTags) {
 
-                        Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
-                        Matcher m = p.matcher(tag);
-                        String imgPath = "";
-                        if (m.find()) {
-                            imgPath = m.group(1);
-                            if (!imgPath.equals("")) {
-                                MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
+                    Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
+                    Matcher m = p.matcher(tag);
+                    String imgPath = "";
+                    if (m.find()) {
+                        imgPath = m.group(1);
+                        if (!imgPath.equals("")) {
+                            MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
-                                if (mf != null) {
-                                    String imgHTML = uploadMediaFile(mf);
-                                    if (imgHTML != null) {
-                                        if (x == 0) {
-                                            descriptionContent = descriptionContent.replace(tag, imgHTML);
-                                        } else {
-                                            moreContent = moreContent.replace(tag, imgHTML);
-                                        }
+                            if (mf != null) {
+                                String imgHTML = uploadMediaFile(mf);
+                                if (imgHTML != null) {
+                                    if (x == 0) {
+                                        descriptionContent = descriptionContent.replace(tag, imgHTML);
                                     } else {
-                                        if (x == 0)
-                                            descriptionContent = descriptionContent.replace(tag, "");
-                                        else
-                                            moreContent = moreContent.replace(tag, "");
-                                        mediaError = true;
+                                        moreContent = moreContent.replace(tag, imgHTML);
                                     }
+                                } else {
+                                    if (x == 0)
+                                        descriptionContent = descriptionContent.replace(tag, "");
+                                    else
+                                        moreContent = moreContent.replace(tag, "");
+                                    mediaError = true;
                                 }
                             }
                         }
                     }
                 }
+                
             }
 
             // If media file upload failed, let's stop here and prompt the user

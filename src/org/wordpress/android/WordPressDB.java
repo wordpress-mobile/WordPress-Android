@@ -1577,7 +1577,7 @@ public class WordPressDB {
         int numRows = c.getCount();
         c.moveToFirst();
         MediaFile mf = new MediaFile();
-        if (numRows == 1) {
+        if (numRows >= 1) {
             mf.setPostID(c.getInt(1));
             mf.setFilePath(c.getString(2));
             mf.setFileName(c.getString(3));
@@ -1856,6 +1856,7 @@ public class WordPressDB {
             
             return theme;
         } else {
+            cursor.close();
             return null;    
         }
         
