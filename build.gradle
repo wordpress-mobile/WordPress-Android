@@ -34,6 +34,8 @@ dependencies {
     compile 'org.wordpress:commons-lang:2.6'
 }
 
+project.archivesBaseName="WordPress-Android"
+
 android {
 
     compileSdkVersion 18
