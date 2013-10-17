@@ -41,6 +41,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -282,6 +283,12 @@ public class PostsListFragment extends ListFragment {
                             mSelectedID = v.getId();
                             Post post = new Post(WordPress.currentBlog
                                     .getId(), mSelectedID, isPage);
+                            
+                            if( PostUploadService.isUploading(post) ) {
+                                Toast.makeText(mParentActivity, R.string.please_wait_uploading_done, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            
                             if (post.getId() >= 0) {
                                 WordPress.currentPost = post;
                                 mOnPostSelectedListener.onPostSelected(post);
@@ -341,6 +348,10 @@ public class PostsListFragment extends ListFragment {
                                 .getId(), mSelectedID, isPage);
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
+                        }
+                        
+                        if( PostUploadService.isUploading(post) ) {
+                            return;
                         }
                         
                         mRowID = info.position;

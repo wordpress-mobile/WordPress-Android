@@ -53,6 +53,7 @@ public class PostUploadService extends Service {
     private static Context context;
     private static ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
+    private static Post currentUploadingPost = null;
     private UploadPostTask currentTask = null;
         
     public static void addPostToUpload(Post currentPost) {
@@ -85,11 +86,12 @@ public class PostUploadService extends Service {
 
     private void uploadNextPost(){
         synchronized (listOfPosts) {
-            if( currentTask == null ){ //make sure nothing is running
+            if( currentTask == null ) { //make sure nothing is running
+                currentUploadingPost = null;
                 if ( listOfPosts.size() > 0 ) {
-                    Post currentPost = listOfPosts.remove(0);
+                    currentUploadingPost = listOfPosts.remove(0);
                     currentTask = new UploadPostTask();
-                    currentTask.execute(currentPost);
+                    currentTask.execute(currentUploadingPost);
                 } else {
                     this.stopSelf();
                 }
@@ -100,10 +102,18 @@ public class PostUploadService extends Service {
     private void postUploaded() {
         synchronized (listOfPosts) {
             currentTask = null;
+            currentUploadingPost = null;
         }
         uploadNextPost();
     }
     
+    public static boolean isUploading(Post post) {
+        if ( currentUploadingPost != null && currentUploadingPost.equals(post) )
+            return true;
+        if( listOfPosts != null && listOfPosts.size() > 0 && listOfPosts.contains(post))
+            return true;
+        return false;
+    }
     
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
 

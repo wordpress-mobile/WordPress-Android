@@ -105,6 +105,7 @@
     <string name="custom_date">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="please_wait_refresh_done">Please wait, loading items.</string>
+    <string name="please_wait_uploading_done">Please wait, uploading item.</string>
     <string name="info">Info</string>
 
     <!-- Media Gallery Action Bar -->
