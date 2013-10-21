@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,7 +24,6 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
@@ -245,33 +245,12 @@ public class StatsActivityTablet extends WPActionBarActivity {
     }
     
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (WordPress.hasValidWPComCredentials(this))
-            menu.findItem(R.id.menu_view_stats_login).setVisible(false);
-        else
-            menu.findItem(R.id.menu_view_stats_login).setVisible(true);
-        
-        // TODO what if credentials are incorrect?
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
-    
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             refreshStats();
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            Intent intent = new Intent(this, OldStatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
-            intent.putExtra("isNew", true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-            finish();
-            overridePendingTransition(0, 0);
-            return true;
-        } else if (item.getItemId() == R.id.menu_view_stats_login) {
-            startWPComLoginActivity();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -27,10 +28,8 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.xmlrpc.android.ApiHelper;
@@ -246,21 +245,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // if the user doesn't have wordpress.com credentials, e.g. self-hosted blog,
-        // show the option to let them login
-        
-        if (WordPress.hasValidWPComCredentials(this))
-            menu.findItem(R.id.menu_view_stats_login).setVisible(false);
-        else
-            menu.findItem(R.id.menu_view_stats_login).setVisible(true);
-        
-        // TODO what if credentials are incorrect?
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -268,16 +252,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             refreshStats();
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            Intent intent = new Intent(this, OldStatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
-            intent.putExtra("isNew", true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-            finish();
-            overridePendingTransition(0, 0);
-            return true;
-        } else if (item.getItemId() == R.id.menu_view_stats_login) {
-            startWPComLoginActivity();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -374,8 +349,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                     currentBlog.setApi_blogid(jetpackBlogId);
                     currentBlog.save("");
                 }
-
-                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(jetpackBlogId);
 
                 return jetpackBlogId;
             } else {

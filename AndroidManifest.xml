@@ -186,9 +186,6 @@
         <activity
             android:name=".ui.reader.ReaderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.OldStatsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
