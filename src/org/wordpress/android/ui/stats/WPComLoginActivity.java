@@ -125,7 +125,6 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
                     settings.commit();
-                    WordPress.restClient.clearAccessToken();
                 }
                 return true;
             } catch (XMLRPCException e) {

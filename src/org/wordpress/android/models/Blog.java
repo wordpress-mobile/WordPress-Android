@@ -286,6 +286,10 @@ public class Blog {
         WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions, this.isAdmin() );
     }
 
+    public void save(){
+        this.save("");
+    }
+
     public String getPostFormats() {
         return postFormats;
     }

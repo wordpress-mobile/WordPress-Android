@@ -52,28 +52,17 @@ public class WPRestClient {
     public static final float REST_BACKOFF_MULT = 2f;
     
     
-    public WPRestClient(RequestQueue queue, Authenticator authenticator, String accessToken){
+    public WPRestClient(RequestQueue queue, Authenticator authenticator){
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = new RestClient(queue, accessToken);
+        mRestClient = new RestClient(queue);
         if (DeviceUtils.getInstance().isBlackBerry()) {
             mRestClient.setUserAgent(DeviceUtils.getBlackBerryUserAgent());
         } else {
             mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
         }
     }
-    /**
-     * Remove the current access token
-     */
-    public void clearAccessToken(){
-        mRestClient.setAccessToken(null);
-    }
-    /**
-     * Sets the access token for all future requests
-     */
-    public void setAccessToken(String token){
-        mRestClient.setAccessToken(token);
-    }
+
     /**
      * Reply to a comment using a Note.Reply object.
      * 
@@ -430,37 +419,58 @@ public class WPRestClient {
     public interface Authenticator {
         void authenticate(Request request);
     }
+
     /**
      * Encapsulates the behaviour for asking the Authenticator for an access token. This
      * allows the request maker to disregard the authentication state when making requests.
      */
     public class Request {
+
+        static public final String SITE_PREFIX = "https://public-api.wordpress.com/rest/v1/sites/";
         RestRequest mRequest;
         RestRequest.ErrorListener mListener;
+
         protected Request(RestRequest request, ErrorListener listener){
             mRequest = request;
             mListener = listener;
         }
+
+        public String getSiteId() {
+            // parse out the site id from the url
+            String url = mRequest.getUrl();
+
+            if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
+                android.util.Log.d("WordPress", String.format("Parse the site id %s", url));
+                int marker = SITE_PREFIX.length();
+                return url.substring(marker, url.indexOf("/", marker));
+            }
+            // not a sites/$siteId request
+            return null;
+        }
+
         /**
          * Attempt to send the request, checks to see if we have an access token and if not
          * asks the Authenticator to authenticate the request.
          * 
          * If no Authenticator is provided the request is always sent.
          */
-        public void send(){
-            if (mRestClient.isAuthenticated() || mAuthenticator == null) {
-                makeRequest();
+        protected void send(){
+            if (mAuthenticator == null) {
+                mRestClient.send(mRequest);
             } else {
                 mAuthenticator.authenticate(this);
             }
         }
-        /**
-         * Method to set the acces token for current and future requests
-         */
-        public void setAccessToken(Oauth.Token token){
-            mRestClient.setAccessToken(token.toString());
+
+        public void sendWithAccessToken(String token){
             mRequest.setAccessToken(token.toString());
+            mRestClient.send(mRequest);
         }
+
+        public void sendWithAccessToken(Oauth.Token token){
+            sendWithAccessToken(token.toString());
+        }
+
         /**
          * If an access token cannot be obtained the request can be aborted and the
          * handler's onFailure method is called
@@ -470,12 +480,7 @@ public class WPRestClient {
                 mListener.onErrorResponse(error);
             }
         }
-        /**
-         * Implement this method to perform the request that should be authenticated
-         */
-        public void makeRequest(){
-            mRestClient.send(mRequest);
-        }
+
     }
 
 }

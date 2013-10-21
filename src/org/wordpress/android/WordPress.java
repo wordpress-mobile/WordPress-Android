@@ -100,7 +100,7 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new WPRestClient(requestQueue, new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+        restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
         
         //Uncomment this line if you want to test the app locking feature
@@ -376,45 +376,104 @@ public class WordPress extends Application {
     public static String getWPComAuthToken(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+
     }
     
     class OauthAuthenticator implements WPRestClient.Authenticator {
-        private final RequestQueue mQueue = Volley.newRequestQueue(WordPress.this);
+
         @Override
-        public void authenticate(WPRestClient.Request request){
-            // set the access token if we have one
-            if (!hasValidWPComCredentials(WordPress.this)) {
-                request.abort(new VolleyError("Missing WordPress.com Account"));
+        public void authenticate(WPRestClient.Request request) {
+
+            android.util.Log.d(TAG, "Add an access token to this request if you want, nbd");
+
+            String siteId = request.getSiteId();
+            String token = null;
+            Blog blog = null;
+
+            if (siteId == null) {
+                // Use the global access token
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
             } else {
-                requestAccessToken(request);
+                android.util.Log.d(TAG, String.format("Site id! %s", siteId));
+                blog = wpDB.getBlogForDotComBlogId(siteId);
+
+                if (blog != null)
+                    token = blog.getApi_key();
             }
+
+            if (token != null) {
+                // we have an access token, set the request and send it
+                android.util.Log.d(TAG, String.format("Sending with existing token %s", token));
+                request.sendWithAccessToken(token);
+            } else {
+                android.util.Log.d(TAG, String.format("We need a token"));
+                // we don't have an access token, let's request one
+                requestAccessToken(request, blog);
+            }
+
         }
-        public void requestAccessToken(final WPRestClient.Request request){
-            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-            String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-            String password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
+
+        public void requestAccessToken(final WPRestClient.Request request, final Blog blog) {
+
             Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
+
             // make oauth volley request
+            android.util.Log.d(TAG, String.format("Requesting an access token for blog %s", blog));
+
+            String username = null, password = null;
+            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+
+            if (blog == null) {
+                // We weren't give a specific blog, so we're going to user the username/password
+                // from the "global" dotcom user account
+                username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+                password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
+            } else {
+                // use the requested blog's username password, if it's a dotcom blog, use the
+                // username and password for the blog. If it's a jetpack blog (not isDotcomFlag)
+                // then use the getDotcom_* methods for username/password
+                if (blog.isDotcomFlag()) {
+                    username = blog.getUsername();
+                    password = blog.getPassword();
+                } else {
+                    username = blog.getDotcom_username();
+                    password = blog.getDotcom_password();
+                }
+            }
+
             Request oauthRequest = oauth.makeRequest(username, password,
+
                 new Oauth.Listener(){
+
                     @Override
                     public void onResponse(Oauth.Token token){
-                        settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString())
-                            .commit();
-                        request.setAccessToken(token);
-                        request.send();
+                        android.util.Log.d(TAG, String.format("Got a token? %s", token));
+                        if (blog == null) {
+                            settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
+                                commit();
+                        } else {
+                            blog.setApi_key(token.toString());
+                            blog.save();
+                        }
+                        request.sendWithAccessToken(token);
                     }
+
                 },
+
                 new Oauth.ErrorListener(){
+
                     @Override
                     public void onErrorResponse(VolleyError error){
                         request.abort(error);
                     }
+
                 }
             );
-            mQueue.add(oauthRequest);
+
             // add oauth request to the request queue
-            
+            requestQueue.add(oauthRequest);
+
         }
     }
 
@@ -441,7 +500,6 @@ public class WordPress extends Application {
         wpDB.deactivateAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
-        restClient.clearAccessToken();
     }
     
     public static String getLoginUrl(Blog blog) {
