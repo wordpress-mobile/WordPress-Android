@@ -87,7 +87,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
+        requestQueue = Volley.newRequestQueue(this);
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
@@ -384,8 +384,6 @@ public class WordPress extends Application {
         @Override
         public void authenticate(WPRestClient.Request request) {
 
-            android.util.Log.d(TAG, "Add an access token to this request if you want, nbd");
-
             String siteId = request.getSiteId();
             String token = null;
             Blog blog = null;
@@ -395,19 +393,25 @@ public class WordPress extends Application {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
                 token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
             } else {
-                android.util.Log.d(TAG, String.format("Site id! %s", siteId));
                 blog = wpDB.getBlogForDotComBlogId(siteId);
 
-                if (blog != null)
+                if (blog != null){
+                    // get the access token from api key field
                     token = blog.getApi_key();
+
+                    // if there is no access token, but this is the dotcom flag
+                    if (token == null && blog.isDotcomFlag()){
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+                        token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                    }
+                }
+
             }
 
             if (token != null) {
                 // we have an access token, set the request and send it
-                android.util.Log.d(TAG, String.format("Sending with existing token %s", token));
                 request.sendWithAccessToken(token);
             } else {
-                android.util.Log.d(TAG, String.format("We need a token"));
                 // we don't have an access token, let's request one
                 requestAccessToken(request, blog);
             }
@@ -419,7 +423,6 @@ public class WordPress extends Application {
             Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
 
             // make oauth volley request
-            android.util.Log.d(TAG, String.format("Requesting an access token for blog %s", blog));
 
             String username = null, password = null;
             final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
@@ -448,7 +451,6 @@ public class WordPress extends Application {
 
                     @Override
                     public void onResponse(Oauth.Token token){
-                        android.util.Log.d(TAG, String.format("Got a token? %s", token));
                         if (blog == null) {
                             settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
                                 commit();
@@ -533,10 +535,10 @@ public class WordPress extends Application {
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError { 
 
-                    HashMap<String, String> authParams = new HashMap<String, String>();
-                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
-                    
-                    headers.putAll(authParams);
+                   HashMap<String, String> authParams = new HashMap<String, String>();
+                   authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+
+                   headers.putAll(authParams);
 
                     return super.performRequest(request, headers);
                 }
@@ -550,10 +552,10 @@ public class WordPress extends Application {
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError {
                     
-                    HashMap<String, String> authParams = new HashMap<String, String>();
-                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
-                    
-                    headers.putAll(authParams);
+                   HashMap<String, String> authParams = new HashMap<String, String>();
+                   authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+
+                   headers.putAll(authParams);
 
                     return super.performRequest(request, headers);
                 }

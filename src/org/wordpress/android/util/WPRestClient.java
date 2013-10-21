@@ -440,7 +440,6 @@ public class WPRestClient {
             String url = mRequest.getUrl();
 
             if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
-                android.util.Log.d("WordPress", String.format("Parse the site id %s", url));
                 int marker = SITE_PREFIX.length();
                 return url.substring(marker, url.indexOf("/", marker));
             }

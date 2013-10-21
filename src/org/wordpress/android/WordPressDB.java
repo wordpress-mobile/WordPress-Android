@@ -576,7 +576,7 @@ public class WordPressDB {
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" }, "api_blogid=? OR (blogId=? AND dotcomFlag=true)", new String[] {dotComBlogId, dotComBlogId}, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" }, "api_blogid=? OR (blogId=? AND dotcomFlag=1)", new String[] {dotComBlogId, dotComBlogId}, null, null, null);
 
         int id = -1;
         int numRows = c.getCount();
