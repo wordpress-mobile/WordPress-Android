@@ -33,6 +33,12 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -186,9 +192,39 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             
             mResultCode = resultCode;
-            
-            if (resultCode == RESULT_OK)
-                refreshStats();
+            if (resultCode == RESULT_OK) {
+                if (getBlogIdFromJetpack() == null) {
+                    final Blog currentBlog = WordPress.getCurrentBlog();
+                    // Attempt to get the Jetpack blog ID
+                    XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
+                    Map<String, String> args = new HashMap<String, String>();
+                    args.put("jetpack_client_id", "jetpack_client_id");
+                    Object[] params = {
+                            currentBlog.getBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
+                    };
+                    xmlrpcClient.callAsync(new XMLRPCCallback() {
+                        @Override
+                        public void onSuccess(long id, Object result) {
+                            Map<?, ?> blogOptions = (HashMap<?, ?>) result;
+                            if (blogOptions != null && blogOptions.containsKey("jetpack_client_id")) {
+                                String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
+                                if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
+                                    currentBlog.setApi_blogid(apiBlogId);
+                                    currentBlog.save("");
+                                    if (!isFinishing())
+                                        refreshStats();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(long id, XMLRPCException error) {
+                        }
+                    }, "wp.getOptions", params);
+                }
+
+            refreshStats();
+            }
         }
     }
 
