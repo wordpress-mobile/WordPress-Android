@@ -137,7 +137,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
         
         // for self-hosted sites; launch the user into an activity where they can provide their credentials 
-        if (!WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
+        if (!WordPress.getCurrentBlog().isDotcomFlag() && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
             return;
         }
