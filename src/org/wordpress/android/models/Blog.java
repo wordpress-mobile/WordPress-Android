@@ -2,6 +2,8 @@
 
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
@@ -384,5 +386,9 @@ public class Blog {
 
     public boolean isPhotonCapable() {
         return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
+    }
+
+    public boolean hasValidJetpackCredentials() {
+        return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
     }
 }

@@ -38,6 +38,14 @@ android {
     compileSdkVersion 18
     buildToolsVersion "18.0.1"
 
+    defaultConfig {
+        packageName "org.wordpress.android"
+        versionName project.version
+        versionCode 77
+        minSdkVersion 9
+        targetSdkVersion 18
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

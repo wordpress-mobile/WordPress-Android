@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 
 import org.json.JSONArray;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
@@ -572,6 +573,25 @@ public class WordPressDB {
         c.close();
 
         return returnVector;
+    }
+
+    public Blog getBlogForDotComBlogId(String dotComBlogId) {
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" }, "api_blogid=" + dotComBlogId, null, null, null, null);
+
+        int id = -1;
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        if (numRows > 0) {
+            id = c.getInt(0);
+        }
+
+        c.close();
+        try {
+            return new Blog(id);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<String> loadStatsLogin(int id) {

@@ -27,6 +27,8 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -136,7 +138,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
         
         // for self-hosted sites; launch the user into an activity where they can provide their credentials 
-        if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
+        if (!WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
             return;
         }
@@ -147,7 +149,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
-        startActivityForResult(new Intent(this, WPComLoginActivity.class), WPComLoginActivity.REQUEST_CODE);
+        Intent loginIntent = new Intent(this, WPComLoginActivity.class);
+        loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
+        startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
     }
     
     @Override
@@ -357,8 +361,26 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private String getBlogIdFromJetpack() {
         // for self-hosted blogs
         try {
-            JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
-            return options.getJSONObject("jetpack_client_id").getString("value");
+            Blog currentBlog = WordPress.getCurrentBlog();
+            String jetpackBlogId = currentBlog.getApi_blogid();
+            if (jetpackBlogId == null) {
+                JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
+                jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+
+                if (jetpackBlogId == null)
+                    return null;
+
+                if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
+                    currentBlog.setApi_blogid(jetpackBlogId);
+                    currentBlog.save("");
+                }
+
+                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(jetpackBlogId);
+
+                return jetpackBlogId;
+            } else {
+                return jetpackBlogId;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
