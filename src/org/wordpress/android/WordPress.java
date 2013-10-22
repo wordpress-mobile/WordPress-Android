@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -39,6 +40,7 @@ import com.wordpress.rest.RestRequest;
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
@@ -50,13 +52,13 @@ import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
 
-    public static final String NOTES_CACHE="notifications.json";
-    public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
-    public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
-    public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
-    private static final String APP_ID_PROPERTY="oauth.app_id";
-    private static final String APP_SECRET_PROPERTY="oauth.app_secret";
-    private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
+    public static final String NOTES_CACHE = "notifications.json";
+    public static final String ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+    public static final String WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
+    public static final String WPCOM_PASSWORD_PREFERENCE = "wp_pref_wpcom_password";
+    private static final String APP_ID_PROPERTY = "oauth.app_id";
+    private static final String APP_SECRET_PROPERTY = "oauth.app_secret";
+    private static final String APP_REDIRECT_PROPERTY = "oauth.redirect_uri";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -74,20 +76,20 @@ public class WordPress extends Application {
     public static BitmapLruCache localImageCache;
 
     private static Context mContext;
-    
-    public static final String TAG="WordPress";
+
+    public static final String TAG = "WordPress";
 
     @Override
     public void onCreate() {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
-        
+
         wpStatsDB = new WordPressStatsDB(this);
-        
+
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this);
+        requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
@@ -95,29 +97,29 @@ public class WordPress extends Application {
 
         // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
         localImageCache = new BitmapLruCache(cacheSize / 2);
-        
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
-        
+
         //Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities( new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"} );
+            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
         loadNotifications(this);
         super.onCreate();
     }
-    
-    public static Context getContext(){
+
+    public static Context getContext() {
         return mContext;
     }
-    
+
     public static void registerForCloudMessaging(Context ctx) {
-        
+
         if (WordPress.hasValidWPComCredentials(ctx)) {
             String token = null;
             try {
@@ -138,12 +140,13 @@ public class WordPress extends Application {
             }
         }
     }
-        
+
     /**
      * Get versionName from Manifest.xml
+     *
      * @return versionName
      */
-    private String getVersionName(){
+    private String getVersionName() {
         PackageManager pm = getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
@@ -176,7 +179,7 @@ public class WordPress extends Application {
 
     /**
      * Get the currently active blog.
-     * <p>
+     * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
      * time the application was used. If we're not able to determine the last active blog, just
      * select the first one.
@@ -215,7 +218,7 @@ public class WordPress extends Application {
 
     /**
      * Set the last active blog as the current blog.
-     * 
+     *
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
@@ -236,7 +239,7 @@ public class WordPress extends Application {
 
     /**
      * Set the blog with the specified id as the current blog.
-     * 
+     *
      * @param id id of the blog to set as current
      * @return the current blog
      */
@@ -249,10 +252,11 @@ public class WordPress extends Application {
 
         return currentBlog;
     }
+
     /**
      * Restores notifications from cached file
      */
-    public static void loadNotifications(Context context){
+    public static void loadNotifications(Context context) {
         File file = new File(context.getCacheDir(), NOTES_CACHE);
         BufferedReader buf = null;
         StringBuilder json = null;
@@ -263,7 +267,7 @@ public class WordPress extends Application {
             do {
                 line = buf.readLine();
                 json.append(line);
-            } while(line == null);
+            } while (line == null);
         } catch (java.io.FileNotFoundException e) {
             json = null;
             Log.e(TAG, "No cached notes", e);
@@ -292,85 +296,87 @@ public class WordPress extends Application {
         }
         Log.d(TAG, "Restored notes");
     }
+
     /**
      * Refreshes latest notes and stores a copy of the response to disk.
      */
     public static void refreshNotifications(final Context context,
                                             final RestRequest.Listener listener,
-                                            final RestRequest.ErrorListener errorListener){
+                                            final RestRequest.ErrorListener errorListener) {
         restClient.getNotifications(
-            new RestRequest.Listener(){
-                @Override
-                public void onResponse(JSONObject response){
-                    latestNotes = response;
-                    File file = new File(context.getCacheDir(), NOTES_CACHE);
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                    FileWriter writer = null;
-                    try {
-                        String json = response.toString();
-                        writer = new FileWriter(file);
-                        writer.write(json, 0, json.length());
-                        writer.close();
-                        Log.d(TAG, String.format("Wrote notes json to %s", file));
-                    } catch (IOException e) {
-                        Log.d(TAG, String.format("Failed to cache notifications to %s", file));
-                    } finally {
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        latestNotes = response;
+                        File file = new File(context.getCacheDir(), NOTES_CACHE);
+                        if (file.exists()) {
+                            file.delete();
+                        }
+                        FileWriter writer = null;
                         try {
-                            if (writer != null) {
-                                writer.close();                                    
-                            }
+                            String json = response.toString();
+                            writer = new FileWriter(file);
+                            writer.write(json, 0, json.length());
+                            writer.close();
+                            Log.d(TAG, String.format("Wrote notes json to %s", file));
                         } catch (IOException e) {
-                            writer = null;
+                            Log.d(TAG, String.format("Failed to cache notifications to %s", file));
+                        } finally {
+                            try {
+                                if (writer != null) {
+                                    writer.close();
+                                }
+                            } catch (IOException e) {
+                                writer = null;
+                            }
+                        }
+                        Log.d(TAG, String.format("Store file here %s", file));
+                        if (listener != null) {
+                            listener.onResponse(response);
                         }
                     }
-                    Log.d(TAG, String.format("Store file here %s", file));
-                    if (listener != null) {
-                        listener.onResponse(response);                        
+                },
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (errorListener != null) {
+                            errorListener.onErrorResponse(error);
+                        }
                     }
                 }
-            },
-            new RestRequest.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error){
-                    if (errorListener != null) {
-                        errorListener.onErrorResponse(error)                      ;
-                    }
-                }
-            }
         );
     }
+
     /**
      * Delete cached notifications, usually due to account logout
      */
-    public static void deleteCachedNotifications(Context context){
+    public static void deleteCachedNotifications(Context context) {
         File file = new File(context.getCacheDir(), NOTES_CACHE);
         if (file.exists()) {
             file.delete();
         }
         latestNotes = null;
     }
-    
+
     /**
      * Checks for WordPress.com credentials
-     * 
+     *
      * @return true if we have credentials or false if not
      */
     public static boolean hasValidWPComCredentials(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
         String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
-        
+
         if (username != null && password != null)
             return true;
-        else 
+        else
             return false;
     }
-    
+
     /**
      * Returns WordPress.com Auth Token
-     * 
+     *
      * @return String - The wpcom Auth token, or null if not authenticated.
      */
     public static String getWPComAuthToken(Context context) {
@@ -378,7 +384,7 @@ public class WordPress extends Application {
         return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
 
     }
-    
+
     class OauthAuthenticator implements WPRestClient.Authenticator {
 
         @Override
@@ -395,12 +401,12 @@ public class WordPress extends Application {
             } else {
                 blog = wpDB.getBlogForDotComBlogId(siteId);
 
-                if (blog != null){
+                if (blog != null) {
                     // get the access token from api key field
                     token = blog.getApi_key();
 
                     // if there is no access token, but this is the dotcom flag
-                    if (token == null && blog.isDotcomFlag()){
+                    if (token == null && blog.isDotcomFlag()) {
                         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
                         token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
                     }
@@ -447,30 +453,30 @@ public class WordPress extends Application {
 
             Request oauthRequest = oauth.makeRequest(username, password,
 
-                new Oauth.Listener(){
+                    new Oauth.Listener() {
 
-                    @Override
-                    public void onResponse(Oauth.Token token){
-                        if (blog == null) {
-                            settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
-                                commit();
-                        } else {
-                            blog.setApi_key(token.toString());
-                            blog.save();
+                        @Override
+                        public void onResponse(Oauth.Token token) {
+                            if (blog == null) {
+                                settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
+                                        commit();
+                            } else {
+                                blog.setApi_key(token.toString());
+                                blog.save();
+                            }
+                            request.sendWithAccessToken(token);
                         }
-                        request.sendWithAccessToken(token);
+
+                    },
+
+                    new Oauth.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            request.abort(error);
+                        }
+
                     }
-
-                },
-
-                new Oauth.ErrorListener(){
-
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        request.abort(error);
-                    }
-
-                }
             );
 
             // add oauth request to the request queue
@@ -503,11 +509,12 @@ public class WordPress extends Application {
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
     }
-    
+
     public static String getLoginUrl(Blog blog) {
         String loginURL = null;
         Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Type type = new TypeToken<Map<?, ?>>() {
+        }.getType();
         Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
         if (blogOptions != null) {
             Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
@@ -515,7 +522,7 @@ public class WordPress extends Application {
                 loginURL = homeURLMap.get("value").toString();
         }
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
-        if( loginURL == null ) {
+        if (loginURL == null) {
             if (blog.getUrl().lastIndexOf("/") != -1) {
                 return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
                         + "/wp-login.php";
@@ -523,22 +530,24 @@ public class WordPress extends Application {
                 return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
             }
         }
-        
+
         return loginURL;
     }
-    
+
     public static HttpStack getHttpClientStack() {
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             HurlStack stack = new HurlStack() {
                 @Override
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                    throws IOException, AuthFailureError { 
+                        throws IOException, AuthFailureError {
 
-                   HashMap<String, String> authParams = new HashMap<String, String>();
-                   authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
-
-                   headers.putAll(authParams);
+                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                        headers.putAll(authParams);
+                    }
 
                     return super.performRequest(request, headers);
                 }
@@ -550,12 +559,14 @@ public class WordPress extends Application {
             HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
                 @Override
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                    throws IOException, AuthFailureError {
-                    
-                   HashMap<String, String> authParams = new HashMap<String, String>();
-                   authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                        throws IOException, AuthFailureError {
 
-                   headers.putAll(authParams);
+                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                        headers.putAll(authParams);
+                    }
 
                     return super.performRequest(request, headers);
                 }
@@ -564,5 +575,4 @@ public class WordPress extends Application {
             return stack;
         }
     }
-    
 }
