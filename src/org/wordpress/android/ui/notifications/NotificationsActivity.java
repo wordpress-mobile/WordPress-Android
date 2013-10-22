@@ -336,25 +336,19 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (isFinishing())
             return;
 
-        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+        // TODO: position will be -1 for notes displayed from push notification, even though the note exists
+        int position = mNotesList.getNotesAdapter().updateNote(originalNote, updatedNote);
 
-        // TODO: position will be -1 for notes displayed from push notification, even though the note
-        // exists in the adapter
-        int position = mNotesList.getNotesAdapter().getPosition(originalNote);
-        if (position >= 0) {
-            mNotesList.getNotesAdapter().remove(originalNote);
-            mNotesList.getNotesAdapter().insert(updatedNote, position);
-            mNotesList.getNotesAdapter().notifyDataSetChanged();
-            // Update comment detail fragment if we're still viewing the same note
-            if ( f != null && position == mNotesList.getListView().getCheckedItemPosition()) {
+        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+        if (f != null) {
+            // if this is the active note, update it in the fragment
+            if (position >= 0 && position == mNotesList.getListView().getCheckedItemPosition()) {
                 f.setNote(updatedNote);
                 f.onStart();
             }
-        }
-
-        // stop animating the moderation
-        if (f != null)
+            // stop animating the moderation
             f.animateModeration(false);
+        }
     }
 
     public void refreshNotes(){

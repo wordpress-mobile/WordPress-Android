@@ -156,6 +156,23 @@ public class NotificationsListFragment extends ListFragment {
                 }
             }
         }
+        /*
+         * replaces an existing note with an updated one, returns the index of the note
+         * or -1 if it doesn't exist
+         */
+        public int updateNote(final Note originalNote, final Note updatedNote) {
+            if (originalNote==null || updatedNote==null)
+                return -1;
+
+            int position = getPosition(originalNote);
+            if (position >= 0) {
+                remove(originalNote);
+                insert(updatedNote, position);
+                notifyDataSetChanged();
+            }
+
+            return position;
+        }
 
         @Override
         public void notifyDataSetChanged() {
