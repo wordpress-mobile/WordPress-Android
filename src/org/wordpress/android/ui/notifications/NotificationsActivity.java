@@ -305,7 +305,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                         // there should only be one note!
                         if (!notes.isEmpty()) {
                             Note updatedNote = notes.get(0);
-                            updateNote(originalNote, updatedNote);
+                            updateModeratedNote(originalNote, updatedNote);
                         }
                     }
                 };
@@ -328,26 +328,33 @@ public class NotificationsActivity extends WPActionBarActivity {
         };
         WordPress.restClient.moderateComment(siteId, commentId, status, success, failure);
     }
-    
-    public void updateNote(Note originalNote, Note updatedNote) {
+
+    /*
+     * passed note has just been moderated, update it in the list adapter and note fragment
+     */
+    public void updateModeratedNote(Note originalNote, Note updatedNote) {
         if (isFinishing())
             return;
+
+        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+
+        // TODO: position will be -1 for notes displayed from push notification, even though the note
+        // exists in the adapter
         int position = mNotesList.getNotesAdapter().getPosition(originalNote);
         if (position >= 0) {
             mNotesList.getNotesAdapter().remove(originalNote);
             mNotesList.getNotesAdapter().insert(updatedNote, position);
             mNotesList.getNotesAdapter().notifyDataSetChanged();
             // Update comment detail fragment if we're still viewing the same note
-            if (position == mNotesList.getListView().getCheckedItemPosition()) {
-                FragmentManager fm = getSupportFragmentManager();
-                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
-                if (f != null) {
-                    f.setNote(updatedNote);
-                    f.onStart();
-                    f.animateModeration(false);
-                }
+            if ( f != null && position == mNotesList.getListView().getCheckedItemPosition()) {
+                f.setNote(updatedNote);
+                f.onStart();
             }
         }
+
+        // stop animating the moderation
+        if (f != null)
+            f.animateModeration(false);
     }
 
     public void refreshNotes(){
@@ -362,7 +369,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.clear();
                 adapter.addAll(notes);
                 adapter.notifyDataSetChanged();
-                // mark last seen timestampe
+                // mark last seen timestamp
                 if (!notes.isEmpty()) {
                     updateLastSeen(notes.get(0).getTimestamp());                    
                 }
