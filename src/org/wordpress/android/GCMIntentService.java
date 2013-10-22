@@ -78,7 +78,7 @@ public class GCMIntentService extends GCMBaseIntentService {
          * notifications being shown due to the device being registered multiple times (which still
          * needs to be addressed on the backend as of 21-Oct-13).
          *
-         * this also handles the (rare) case where the user receives rapid-fire sub-second notifications
+         * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
          * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
          * which we also want to avoid since it would drain the battery and annoy the user
          *

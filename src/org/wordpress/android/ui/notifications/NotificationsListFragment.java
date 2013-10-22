@@ -143,9 +143,16 @@ public class NotificationsListFragment extends ListFragment {
                 if(mProgressFooterView != null)
                     mProgressFooterView.setVisibility(View.GONE);
             } else {
-                Iterator<Note> noteIterator = notes.iterator();
-                while(noteIterator.hasNext()){
-                    add(noteIterator.next());
+                // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
+                // will be triggered for each added note
+                setNotifyOnChange(false);
+                try {
+                    Iterator<Note> noteIterator = notes.iterator();
+                    while(noteIterator.hasNext()){
+                        add(noteIterator.next());
+                    }
+                } finally {
+                    setNotifyOnChange(true);
                 }
             }
         }

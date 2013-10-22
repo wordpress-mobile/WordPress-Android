@@ -1,45 +1,43 @@
 package org.wordpress.android.ui.notifications;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.IntentCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.content.Intent;
-import android.support.v4.content.IntentCompat;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.models.Note;
-import static org.wordpress.android.WordPress.*;
+import org.wordpress.android.ui.WPActionBarActivity;
 
-import com.wordpress.rest.RestRequest;
-
-import com.android.volley.VolleyError;
-
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.wordpress.android.WordPress.restClient;
 
 public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
@@ -74,13 +72,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        try {
-            if(WordPress.latestNotes != null){
-                mNotesList.getNotesAdapter().addAll(parseNotes(WordPress.latestNotes));                
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "No cached notes");
-        }
+        loadNotes();
 
         fragmentDetectors.add(new FragmentDetector(){
             @Override
@@ -123,6 +115,38 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (savedInstanceState != null)
             popNoteDetail();
     }
+
+    private void loadNotes() {
+        new LoadNotesTask().execute();
+    }
+
+    /*
+     * parsing notes is expensive, so do it in the background
+     */
+    private class LoadNotesTask extends AsyncTask<Void, Void, Boolean> {
+        List<Note> tmpNotes;
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            if (WordPress.latestNotes == null)
+                return false;
+            try {
+                tmpNotes = parseNotes(WordPress.latestNotes);
+                return (tmpNotes != null);
+            } catch (JSONException e) {
+                Log.e(TAG, "No cached notes");
+                return false;
+            }
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mNotesList.getNotesAdapter().addAll(tmpNotes);
+                mNotesList.getNotesAdapter().notifyDataSetChanged();
+            }
+        }
+    }
+
+
     
     @Override
     protected void onNewIntent(Intent intent) {
