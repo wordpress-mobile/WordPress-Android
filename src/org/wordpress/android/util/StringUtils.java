@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class StringUtils {
@@ -99,5 +100,21 @@ public class StringUtils {
     public static String getPhotonUrl(String imageUrl, int size) {
         imageUrl = imageUrl.replace("http://", "").replace("https://", "");
         return "http://i0.wp.com/" + imageUrl + "?w=" + size;
+    }
+
+    public static String getHost(String url) {
+        if (TextUtils.isEmpty(url))
+            return "";
+
+        int doubleslash = url.indexOf("//");
+        if (doubleslash == -1)
+            doubleslash = 0;
+        else
+            doubleslash += 2;
+
+        int end = url.indexOf('/', doubleslash);
+        end = (end >= 0) ? end : url.length();
+
+        return url.substring(doubleslash, end);
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -27,11 +28,17 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -136,7 +143,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
         
         // for self-hosted sites; launch the user into an activity where they can provide their credentials 
-        if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
+        if (!WordPress.getCurrentBlog().isDotcomFlag() && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
             return;
         }
@@ -147,7 +154,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
-        startActivityForResult(new Intent(this, WPComLoginActivity.class), WPComLoginActivity.REQUEST_CODE);
+        Intent loginIntent = new Intent(this, WPComLoginActivity.class);
+        loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
+        startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
     }
     
     @Override
@@ -183,9 +192,39 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             
             mResultCode = resultCode;
-            
-            if (resultCode == RESULT_OK)
-                refreshStats();
+            if (resultCode == RESULT_OK) {
+                if (getBlogIdFromJetpack() == null) {
+                    final Blog currentBlog = WordPress.getCurrentBlog();
+                    // Attempt to get the Jetpack blog ID
+                    XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
+                    Map<String, String> args = new HashMap<String, String>();
+                    args.put("jetpack_client_id", "jetpack_client_id");
+                    Object[] params = {
+                            currentBlog.getBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
+                    };
+                    xmlrpcClient.callAsync(new XMLRPCCallback() {
+                        @Override
+                        public void onSuccess(long id, Object result) {
+                            Map<?, ?> blogOptions = (HashMap<?, ?>) result;
+                            if (blogOptions != null && blogOptions.containsKey("jetpack_client_id")) {
+                                String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
+                                if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
+                                    currentBlog.setApi_blogid(apiBlogId);
+                                    currentBlog.save("");
+                                    if (!isFinishing())
+                                        refreshStats();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(long id, XMLRPCException error) {
+                        }
+                    }, "wp.getOptions", params);
+                }
+
+            refreshStats();
+            }
         }
     }
 
@@ -242,21 +281,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // if the user doesn't have wordpress.com credentials, e.g. self-hosted blog,
-        // show the option to let them login
-        
-        if (WordPress.hasValidWPComCredentials(this))
-            menu.findItem(R.id.menu_view_stats_login).setVisible(false);
-        else
-            menu.findItem(R.id.menu_view_stats_login).setVisible(true);
-        
-        // TODO what if credentials are incorrect?
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -264,16 +288,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             refreshStats();
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            Intent intent = new Intent(this, OldStatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
-            intent.putExtra("isNew", true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-            finish();
-            overridePendingTransition(0, 0);
-            return true;
-        } else if (item.getItemId() == R.id.menu_view_stats_login) {
-            startWPComLoginActivity();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -357,8 +372,24 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private String getBlogIdFromJetpack() {
         // for self-hosted blogs
         try {
-            JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
-            return options.getJSONObject("jetpack_client_id").getString("value");
+            Blog currentBlog = WordPress.getCurrentBlog();
+            String jetpackBlogId = currentBlog.getApi_blogid();
+            if (jetpackBlogId == null) {
+                JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
+                jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+
+                if (jetpackBlogId == null)
+                    return null;
+
+                if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
+                    currentBlog.setApi_blogid(jetpackBlogId);
+                    currentBlog.save("");
+                }
+
+                return jetpackBlogId;
+            } else {
+                return jetpackBlogId;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

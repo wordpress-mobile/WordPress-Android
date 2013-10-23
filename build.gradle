@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 
@@ -37,6 +37,14 @@ android {
 
     compileSdkVersion 18
     buildToolsVersion "18.0.1"
+
+    defaultConfig {
+        packageName "org.wordpress.android"
+        versionName project.version
+        versionCode 77
+        minSdkVersion 9
+        targetSdkVersion 18
+    }
 
     sourceSets {
         main {

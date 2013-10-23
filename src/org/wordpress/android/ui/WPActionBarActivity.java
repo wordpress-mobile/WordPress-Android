@@ -786,7 +786,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet || WPActionBarActivity.this instanceof OldStatsActivity;
+            return WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet;
         }
         @Override
         public void onSelectItem(){

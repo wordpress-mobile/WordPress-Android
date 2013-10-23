@@ -6,7 +6,7 @@
     android:versionName="2.4.5" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="18" />
 
     <supports-screens
@@ -185,9 +185,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.OldStatsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >

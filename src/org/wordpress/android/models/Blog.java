@@ -2,6 +2,8 @@
 
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
@@ -284,6 +286,10 @@ public class Blog {
         WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions, this.isAdmin() );
     }
 
+    public void save(){
+        this.save("");
+    }
+
     public String getPostFormats() {
         return postFormats;
     }
@@ -384,5 +390,9 @@ public class Blog {
 
     public boolean isPhotonCapable() {
         return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
+    }
+
+    public boolean hasValidJetpackCredentials() {
+        return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
     }
 }

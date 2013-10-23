@@ -34,15 +34,20 @@ import org.xmlrpc.android.XMLRPCException;
 public class WPComLoginActivity extends SherlockFragmentActivity {
 
     public static final int REQUEST_CODE = 5000;
+    public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private String mUsername;
     private String mPassword;
     private Button mSignInButon;
+    private boolean mIsJetpackAuthRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
         getSupportActionBar().hide();
+
+        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
+            mIsJetpackAuthRequest = true;
 
         mSignInButon = (Button) findViewById(R.id.saveDotcom);
         mSignInButon.setOnClickListener(new Button.OnClickListener() {
@@ -97,27 +102,30 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
             try {
                 client.call("wp.getUsersBlogs", signInParams);
-                if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
-                    // Sign out current user from all services
-                    new WPComXMLRPCApi().unregisterWPComToken(
-                            WPComLoginActivity.this,
-                            GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
-                    try {
-                        GCMRegistrar.checkDevice(WPComLoginActivity.this);
-                        GCMRegistrar.unregister(WPComLoginActivity.this);
-                    } catch (Exception e) {
-                        Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
-                    }
-                }
-                WordPress.restClient.clearAccessToken();
                 WordPress.currentBlog.setDotcom_username(mUsername);
                 WordPress.currentBlog.setDotcom_password(mPassword);
                 WordPress.currentBlog.save(WordPress.currentBlog.getUsername());
 
-                Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
-                settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
-                settings.commit();
+                // Don't change global WP.com settings if this is Jetpack auth request from stats
+                if (!mIsJetpackAuthRequest) {
+                    if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
+                        // Sign out current user from all services
+                        new WPComXMLRPCApi().unregisterWPComToken(
+                                WPComLoginActivity.this,
+                                GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
+                        try {
+                            GCMRegistrar.checkDevice(WPComLoginActivity.this);
+                            GCMRegistrar.unregister(WPComLoginActivity.this);
+                        } catch (Exception e) {
+                            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                        }
+                    }
+
+                    Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
+                    settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
+                    settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+                    settings.commit();
+                }
                 return true;
             } catch (XMLRPCException e) {
                 return false;
@@ -127,13 +135,18 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         @Override
         protected void onPostExecute(Boolean isSignedIn) {
             if (isSignedIn && !isFinishing()) {
-                WordPress.restClient.get("me", new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        WPComLoginActivity.this.setResult(RESULT_OK);
-                        finish();
-                    }
-                }, null);
+                if (!mIsJetpackAuthRequest) {
+                    WordPress.restClient.get("me", new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            WPComLoginActivity.this.setResult(RESULT_OK);
+                            finish();
+                        }
+                    }, null);
+                } else {
+                    WPComLoginActivity.this.setResult(RESULT_OK);
+                    finish();
+                }
             } else {
                 Toast.makeText(getBaseContext(), getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
                 mSignInButon.setEnabled(true);
