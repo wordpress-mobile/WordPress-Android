@@ -47,6 +47,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
@@ -547,7 +548,15 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-
+                    
+                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
+                    if (DeviceUtils.getInstance().isBlackBerry()) {
+                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
+                    } else {
+                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
+                    }
+                    headers.putAll(defaultHeaders);
+                    
                     return super.performRequest(request, headers);
                 }
             };
@@ -566,6 +575,14 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
+                    
+                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
+                    if (DeviceUtils.getInstance().isBlackBerry()) {
+                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
+                    } else {
+                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
+                    }
+                    headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
                 }
