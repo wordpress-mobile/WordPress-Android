@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.preference.PreferenceManager;
