@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -228,8 +229,9 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 @Override
                 public void onFailure(int errorCode) {
 
-                    if (errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP) {
-                        Toast.makeText(MediaGalleryPickerActivity.this, "You do not have permission to view the media library", Toast.LENGTH_SHORT).show();
+                    if ( errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP || errorCode == SyncMediaLibraryTask.UNKNOWN_ERROR ) {
+                        String errorMessage = errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP ? "You do not have permission to view the media library" : "Something went wrong while refreshing the media library. Try again later.";
+                        Toast.makeText(MediaGalleryPickerActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
                         adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
