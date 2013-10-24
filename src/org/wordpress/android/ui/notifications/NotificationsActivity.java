@@ -72,8 +72,6 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        loadNotes();
-
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
@@ -108,21 +106,22 @@ public class NotificationsActivity extends WPActionBarActivity {
         
         GCMIntentService.activeNotificationsMap.clear();
 
+        loadNotes();
+
         if (savedInstanceState == null)
             launchWithNoteId();
-        refreshNotes();
 
         if (savedInstanceState != null)
             popNoteDetail();
     }
 
+    /*
+     * loads notes from local cache (parsing notes is expensive so it's done in the background)
+     * then requests the latest notes from the server
+     */
     private void loadNotes() {
         new LoadNotesTask().execute();
     }
-
-    /*
-     * parsing notes is expensive, so do it in the background
-     */
     private class LoadNotesTask extends AsyncTask<Void, Void, Boolean> {
         List<Note> tmpNotes;
         @Override
@@ -143,6 +142,9 @@ public class NotificationsActivity extends WPActionBarActivity {
                 mNotesList.getNotesAdapter().addAll(tmpNotes);
                 mNotesList.getNotesAdapter().notifyDataSetChanged();
             }
+
+            // get latest notes from server regardless of whether local notes were loaded
+            refreshNotes();
         }
     }
 
