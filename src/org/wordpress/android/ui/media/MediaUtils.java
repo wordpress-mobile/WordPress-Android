@@ -21,6 +21,8 @@ import android.support.v4.content.CursorLoader;
 import org.wordpress.passcodelock.AppLockManager;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.Version;
 
 public class MediaUtils {
 
@@ -233,6 +235,32 @@ public class MediaUtils {
         Uri uri = Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
         
         return uri;
+    }
+    
+    /**
+     * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties within the app.
+     * See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
+     * @return
+     */
+    public static boolean isWordPressVersionWithMediaEditingCapabilities() {
+        
+        if( WordPress.currentBlog.isDotcomFlag())
+            return true;
+        
+        Version minVersion;
+        Version currentVersion;
+        try {
+            minVersion = new Version("3.5.2");
+            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
+            
+            if( currentVersion.compareTo(minVersion) == -1 )
+                return false;
+            
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+       
+        return true;
     }
     
 }
