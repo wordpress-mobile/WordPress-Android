@@ -343,16 +343,7 @@ public class WPHtml {
                     out.append("\">");
                 }
                 if (style[j] instanceof MediaGalleryImageSpan) {
-                    MediaGallery gallery = ((MediaGalleryImageSpan) style[j]).getMediaGallery();
-                    out.append("[gallery ");
-                    if (gallery.isRandom())
-                        out.append(" orderby=\"rand\"");
-                    if (gallery.getType().equals(""))
-                        out.append(" columns=\"" + gallery.getNumColumns() + "\"");
-                    else 
-                        out.append(" type=\"" + gallery.getType() + "\"");
-                    out.append(" ids=\"" + gallery.getIdsStr() + "\"");
-                    out.append("]");
+                    out.append(getGalleryShortcode((MediaGalleryImageSpan) style[j]));
                 } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaId() != null) {
                     out.append(getContent((WPImageSpan) style[j]));
                 } else if (style[j] instanceof ImageSpan) {
@@ -442,6 +433,22 @@ public class WPHtml {
         }
     }
 
+    /** Get gallery shortcode for a MediaGalleryImageSpan */
+    public static String getGalleryShortcode(MediaGalleryImageSpan gallerySpan) {
+        String shortcode = "";
+        MediaGallery gallery = gallerySpan.getMediaGallery();
+        shortcode += "[gallery ";
+        if (gallery.isRandom())
+            shortcode += " orderby=\"rand\"";
+        if (gallery.getType().equals(""))
+            shortcode += " columns=\"" + gallery.getNumColumns() + "\"";
+        else
+            shortcode += " type=\"" + gallery.getType() + "\"";
+        shortcode += " ids=\"" + gallery.getIdsStr() + "\"";
+        shortcode += "]";
+
+        return shortcode;
+    }
 
     /** Retrieve an image span content for a media file that exists on the server **/
     public static String getContent(WPImageSpan imageSpan) {
