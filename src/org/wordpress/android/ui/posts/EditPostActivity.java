@@ -461,7 +461,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 Double longitude = mPost.getLongitude();
 
                 if (latitude != 0.0) {
-                    new getAddressTask().execute(latitude, longitude);
+                    new GetAddressTask().execute(latitude, longitude);
                 }
             }
             String tags = mPost.getMt_keywords();
@@ -724,15 +724,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         } else if (id == R.id.updateLocation) {
             mLocationHelper.getLocation(EditPostActivity.this, locationResult);
         } else if (id == R.id.removeLocation) {
-            if (mCurrentLocation != null) {
-                mCurrentLocation.setLatitude(0.0);
-                mCurrentLocation.setLongitude(0.0);
-            }
-            if (mPost != null) {
-                mPost.setLatitude(0.0);
-                mPost.setLongitude(0.0);
-            }
-            mLocationText.setText("");
+            removeLocation();
         }
     }
 
@@ -957,13 +949,15 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         boolean hasLocationProvider = false;
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
-        for (String providerName : providers) {
-            if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                hasLocationProvider = true;
+        if (providers != null) {
+            for (String providerName : providers) {
+                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+                    hasLocationProvider = true;
+                }
             }
         }
         if (hasLocationProvider && mBlog.isLocation() && !mIsPage) {
-            enableLBSButtons();
+            enableLocation();
         }
     }
 
@@ -1185,21 +1179,42 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     private LocationResult locationResult = new LocationResult() {
         @Override
-        public void gotLocation(Location location) {
-            if (location != null) {
-                mCurrentLocation = location;
-                new getAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            } else {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        mLocationText.setText(getString(R.string.location_not_found));
-                    }
-                });
-            }
+        public void gotLocation(final Location location) {
+            // note that location will be null when retrieving location fails
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    updateLocation(location);
+                }
+            });
         }
     };
 
-    private void enableLBSButtons() {
+    /*
+     * called when location is retrieved/updated for this post - looks up the address to
+     * display for the lat/long
+     */
+    private void updateLocation(Location location) {
+        if (location != null) {
+            mCurrentLocation = location;
+            new GetAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        } else {
+            mLocationText.setText(getString(R.string.location_not_found));
+        }
+    }
+
+    private void removeLocation() {
+        if (mCurrentLocation != null) {
+            mCurrentLocation.setLatitude(0.0);
+            mCurrentLocation.setLongitude(0.0);
+        }
+        if (mPost != null) {
+            mPost.setLatitude(0.0);
+            mPost.setLongitude(0.0);
+        }
+        mLocationText.setText("");
+    }
+
+    private void enableLocation() {
         mLocationHelper = new LocationHelper();
         ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
         Button viewMap = (Button) findViewById(R.id.viewMap);
@@ -1208,8 +1223,13 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
         viewMap.setOnClickListener(this);
-        if (mIsNew)
-            mLocationHelper.getLocation(EditPostActivity.this, locationResult);
+
+        // if this is a new post, get the user's current location
+        if (mIsNew) {
+            boolean canGetLocation = mLocationHelper.getLocation(EditPostActivity.this, locationResult);
+            if (!canGetLocation)
+                updateLocation(null);
+        }
     }
 
     @Override
@@ -2045,15 +2065,32 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         task.execute(apiArgs);
     }
 
-    private class getAddressTask extends AsyncTask<Double, Void, String> {
+    /*
+     * retrieves and displays the friendly address for a lat/long location
+     */
+    private class GetAddressTask extends AsyncTask<Double, Void, String> {
+        double latitude;
+        double longitude;
 
         @Override
         protected String doInBackground(Double... args) {
+            // args will be the latitude, longitude to look up
+            latitude = args[0];
+            longitude = args[1];
+
+            // first make sure a Geocoder service exists on this device (requires API 9)
+            if (!Geocoder.isPresent())
+                return null;
+
             Geocoder gcd = new Geocoder(EditPostActivity.this, Locale.getDefault());
-            String finalText = "";
             List<Address> addresses;
             try {
-                addresses = gcd.getFromLocation(args[0], args[1], 1);
+                addresses = gcd.getFromLocation(latitude, longitude, 1);
+
+                // addresses may be null or empty if network isn't connected
+                if (addresses==null || addresses.size()==0)
+                    return null;
+
                 String locality = "", adminArea = "", country = "";
                 if (addresses.get(0).getLocality() != null)
                     locality = addresses.get(0).getLocality();
@@ -2062,20 +2099,24 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 if (addresses.get(0).getCountryName() != null)
                     country = addresses.get(0).getCountryName();
 
-                if (addresses.size() > 0) {
-                    finalText = ((locality.equals("")) ? locality : locality + ", ")
-                            + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
-                    if (finalText.equals(""))
-                        finalText = getString(R.string.location_not_found);
-                }
+                return ((locality.equals("")) ? locality : locality + ", ")
+                     + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
             } catch (IOException e) {
+                // may get "Unable to parse response from server" IOException here if Geocoder
+                // service is hit too frequently
                 e.printStackTrace();
+                return null;
             }
-            return finalText;
         }
 
         protected void onPostExecute(String result) {
-            mLocationText.setText(result);
+            if (result==null || result.isEmpty()) {
+                // show lat/long when Geocoder fails (ugly, but better than not showing anything
+                // or showing an error since the location has been assigned to the post already)
+                mLocationText.setText(Double.toString(latitude) + ", " + Double.toString(longitude));
+            } else {
+                mLocationText.setText(result);
+            }
         }
     }
 
