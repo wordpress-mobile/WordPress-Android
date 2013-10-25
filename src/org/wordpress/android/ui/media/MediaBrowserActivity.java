@@ -133,12 +133,16 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_QUERY, mQuery);
+        if(mMediaEditFragment!= null)
+            mMediaEditFragment.saveState(outState);
     }
     
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
+        if(mMediaEditFragment!= null)
+            mMediaEditFragment.restoreState(savedInstanceState);
     }
     
     private void uploadSharedFiles() {
