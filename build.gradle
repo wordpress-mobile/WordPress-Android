@@ -40,8 +40,8 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName project.version
-        versionCode 77
+        versionName "2.5"
+        versionCode 83
         minSdkVersion 9
         targetSdkVersion 18
     }
@@ -116,4 +116,19 @@ android.buildTypes.all { buildType ->
             task.mustRunAfter(wordpressConfig)
         }
     }
+}
+
+// For app signing
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+    android {
+        signingConfigs {
+            release {
+                storeFile = file(project.storeFile)
+                storePassword = project.storePassword
+                keyAlias = project.keyAlias
+                keyPassword = project.keyPassword
+            }
+        }
+    }
+    android.buildTypes.release.signingConfig = android.signingConfigs.release
 }

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android"
     android:installLocation="auto"
-    android:versionCode="77"
-    android:versionName="2.4.5" >
+    android:versionCode="83"
+    android:versionName="2.5" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -132,8 +132,6 @@
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
-        </activity>
-        <activity android:name=".ui.stats.StatsActivityTablet" >
         </activity>
         
         <!-- Media Activities -->
