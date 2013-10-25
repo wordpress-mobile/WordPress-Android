@@ -394,9 +394,9 @@ public class WordPress extends Application {
             String token = null;
             Blog blog = null;
 
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
             if (siteId == null) {
                 // Use the global access token
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
                 token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
             } else {
                 blog = wpDB.getBlogForDotComBlogId(siteId);
@@ -406,8 +406,8 @@ public class WordPress extends Application {
                     token = blog.getApi_key();
 
                     // if there is no access token, but this is the dotcom flag
-                    if (token == null && blog.isDotcomFlag()) {
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+                    if (token == null && (blog.isDotcomFlag() &&
+                            blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, "")))) {
                         token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
                     }
                 }

@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
@@ -123,7 +124,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
                     Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                    settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+                    settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
                 }
                 return true;
