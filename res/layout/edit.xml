@@ -93,6 +93,8 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:drawableLeft="@drawable/ic_action_location_searching"
+                    android:gravity="center_vertical"
                     android:id="@+id/locationText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
