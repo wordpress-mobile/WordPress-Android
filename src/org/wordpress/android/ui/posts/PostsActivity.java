@@ -779,6 +779,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 post.delete();
+                                popPostDetail();
                                 attemptToSelectPost();
                                 postList.loadPosts(false);
                             }

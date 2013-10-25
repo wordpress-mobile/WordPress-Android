@@ -1821,18 +1821,25 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-
-            
             if (!mIsNew) {
                 // update the images
                 mPost.deleteMediaFiles();
 
                 Editable s = mContentEditText.getText();
-                WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (click_spans.length != 0) {
 
-                    for (int i = 0; i < click_spans.length; i++) {
-                        WPImageSpan wpIS = click_spans[i];
+                // Add gallery shortcode
+                MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
+                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                    int start = s.getSpanStart(gallerySpan);
+                    s.removeSpan(gallerySpan);
+                    s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                }
+
+                WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
+                if (imageSpans.length != 0) {
+
+                    for (int i = 0; i < imageSpans.length; i++) {
+                        WPImageSpan wpIS = imageSpans[i];
                         images += wpIS.getImageSource().toString() + ",";
 
                         if (wpIS.getMediaId() != null) {
@@ -1855,8 +1862,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         }
 
                         int tagStart = s.getSpanStart(wpIS);
-                        if (!isAutoSave) {  
-
+                        if (!isAutoSave) {
                             s.removeSpan(wpIS);
                             
                             // network image has a mediaId 
@@ -1866,13 +1872,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                             } else { // local image for upload
                                 s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             }
-                            if (mLocalDraft)
-                                content = WPHtml.toHtml(s);
-                            else
-                                content = s.toString();
                         }
                     }
                 }
+
+                if (mLocalDraft)
+                    content = WPHtml.toHtml(s);
+                else
+                    content = s.toString();
             } else {
 
                 Editable s = mContentEditText.getText();
