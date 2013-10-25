@@ -20,6 +20,7 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -316,6 +317,13 @@ public class MediaItemFragment extends SherlockFragment {
         int itemId = item.getItemId();
         
         if (itemId == R.id.menu_delete) {
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            boolean canDeleteMedia = MediaUtils.canDeleteMedia(blogId, getMediaId());
+            if (!canDeleteMedia) {
+                Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+                return true;
+            }
+            
             Builder builder = new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.confirm_delete_media)
                     .setCancelable(true)
@@ -332,6 +340,7 @@ public class MediaItemFragment extends SherlockFragment {
             AlertDialog dialog = builder.create();
             dialog.show();
             return true;
+
         }
         
         return super.onOptionsItemSelected(item);

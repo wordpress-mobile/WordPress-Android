@@ -263,4 +263,18 @@ public class MediaUtils {
         return true;
     }
     
+    public static boolean canDeleteMedia(String blogId, String mediaID) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return false;
+        }
+        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        cursor.close();
+        if (state != null && state.equals("uploading")) {
+
+            return false;
+        }
+        return true;
+    }
 }

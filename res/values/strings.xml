@@ -157,6 +157,8 @@
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
     <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
+    <string name="wait_until_upload_completes">Please wait until upload completes.</string>
+    <string name="cannot_delete_multi_media_items">Some media cannot be deleted at this time. Please try again later.</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
