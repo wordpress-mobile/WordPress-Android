@@ -307,7 +307,7 @@ public class MediaItemFragment extends SherlockFragment {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
         
-        if (mIsLocal)
+        if (mIsLocal || ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
             menu.findItem(R.id.menu_edit_media).setVisible(false);
     }
     

@@ -143,9 +143,22 @@ public class MediaEditFragment extends SherlockFragment {
             }
         });
 
+        disableEditingOnOldVersion();
+
         restoreState(savedInstanceState);
         
         return mScrollView;
+    }
+    
+    private void disableEditingOnOldVersion() {
+        
+        if( MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+            return;
+        
+        mSaveButton.setEnabled(false);
+        mTitleView.setEnabled(false);
+        mCaptionView.setEnabled(false);
+        mDescriptionView.setEnabled(false);
     }
     
     private void restoreState(Bundle savedInstanceState) {
@@ -325,6 +338,8 @@ public class MediaEditFragment extends SherlockFragment {
             mNetworkImageView.setVisibility(View.GONE);
             mLocalImageView.setVisibility(View.GONE);
         }
+        
+        disableEditingOnOldVersion();
     }
     
     @Override
@@ -342,6 +357,9 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
         }
+       
+        if( ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+            menu.findItem(R.id.menu_save_media).setVisible(false);
     }
     
     @Override
