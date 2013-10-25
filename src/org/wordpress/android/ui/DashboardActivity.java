@@ -91,14 +91,6 @@ public class DashboardActivity extends SherlockActivity {
         loadDashboard();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Friendly reminder that they are in the dashboard :)
-        Toast.makeText(this, getString(R.string.dashboard_tip), Toast.LENGTH_LONG).show();
-    }
-
     
     private void loadDashboard() {
         String dashboardUrl = mBlog.getAdminUrl();
@@ -145,7 +137,7 @@ public class DashboardActivity extends SherlockActivity {
     protected void loadAuthenticatedUrl(String url) {
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    mBlog.getUsername(), mBlog.getPassword(),
+                    URLEncoder.encode(mBlog.getUsername(), "UTF-8"), URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
