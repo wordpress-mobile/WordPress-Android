@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -35,8 +36,9 @@ public class TestUtils {
             InputStream is = testContext.getAssets().open(filename);
             InputStreamReader inputStreamReader = new InputStreamReader(is);
             BufferedReader f = new BufferedReader(inputStreamReader);
-            for (String line = f.readLine(); line != null; line = f.readLine()) {
+            for (String line = f.readLine(); !TextUtils.isEmpty(line); line = f.readLine()) {
                 try {
+                    Log.d("WordPress.Test", String.format("Trying to run line %s", line));
                     db.execSQL(line);
                 } catch (android.database.sqlite.SQLiteException e ) {
                     // ignore import errors

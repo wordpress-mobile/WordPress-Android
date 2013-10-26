@@ -1,0 +1,5 @@
+wp.oauth.redirect_uri=http\://example.com/
+wp.oauth.app_secret=WORDPRESS_API_SECRET
+wp.oauth.app_id=WORDPRESS_API_ID
+wp.db_secret=DB_SECRET
+wp.gcm.id=GCM_ID
