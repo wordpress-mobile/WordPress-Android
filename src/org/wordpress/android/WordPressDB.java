@@ -1756,9 +1756,9 @@ public class WordPressDB {
 
     }
 
-    public boolean findLocalChanges(int blogId) {
+    public boolean findLocalChanges(int blogId, boolean isPage) {
         Cursor c = db.query(POSTS_TABLE, null,
-                "isLocalChange=? AND blogID=?", new String[] {"1", String.valueOf(blogId)}, null, null, null);
+                "isLocalChange=? AND blogID=? AND isPage=?", new String[]{"1", String.valueOf(blogId), (isPage) ? "1" : "0"}, null, null, null);
         int numRows = c.getCount();
         c.close();
         if (numRows > 0) {
