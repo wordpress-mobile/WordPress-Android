@@ -210,7 +210,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId());
         if (hasLocalChanges) {
             if (!shouldPrompt)
                 return;

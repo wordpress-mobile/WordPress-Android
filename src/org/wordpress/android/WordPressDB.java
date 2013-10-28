@@ -1756,14 +1756,14 @@ public class WordPressDB {
 
     }
 
-    public boolean findLocalChanges() {
+    public boolean findLocalChanges(int blogId) {
         Cursor c = db.query(POSTS_TABLE, null,
-                "isLocalChange=1", null, null, null, null);
+                "isLocalChange=? AND blogID=?", new String[] {"1", String.valueOf(blogId)}, null, null, null);
         int numRows = c.getCount();
+        c.close();
         if (numRows > 0) {
             return true;
         }
-        c.close();
 
         return false;
     }

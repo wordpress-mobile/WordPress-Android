@@ -119,7 +119,7 @@ public class PostsListFragment extends ListFragment {
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
-                if (!WordPress.wpDB.findLocalChanges()) {
+                if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId())) {
                     // first view is showing, show the second progress view
                     switcher.showNext();
                     // get 20 more posts
