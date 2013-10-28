@@ -42,10 +42,6 @@ import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 public class MediaEditFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
-    private static final String BUNDLE_MEDIA_ID = "media_id";
-    private static final String BUNDLE_TITLE_ID = "title_id";
-    private static final String BUNDLE_CAPTION_ID = "caption_id";
-    private static final String BUNDLE_DESCRIPTION_ID = "description_id";
     public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
     
     private NetworkImageView mNetworkImageView;
@@ -160,8 +156,6 @@ public class MediaEditFragment extends SherlockFragment {
        
         loadMedia(getMediaId());
         
-        restoreState(savedInstanceState);
-        
         return mScrollView;
     }
     
@@ -176,36 +170,11 @@ public class MediaEditFragment extends SherlockFragment {
         mDescriptionView.setEnabled(false);
     }
     
-    public void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(BUNDLE_MEDIA_ID)) {
-                mMediaId = savedInstanceState.getString(BUNDLE_MEDIA_ID);
-            }
-            if (savedInstanceState.containsKey(BUNDLE_TITLE_ID) && savedInstanceState.getString(BUNDLE_TITLE_ID) != null) {
-                mTitleView.setText( savedInstanceState.getString(BUNDLE_TITLE_ID) );
-            }
-            if (savedInstanceState.containsKey(BUNDLE_DESCRIPTION_ID) && savedInstanceState.getString(BUNDLE_DESCRIPTION_ID) != null) {
-                mDescriptionView.setText( savedInstanceState.getString(BUNDLE_DESCRIPTION_ID) );
-            }
-            if (savedInstanceState.containsKey(BUNDLE_CAPTION_ID) && savedInstanceState.getString(BUNDLE_CAPTION_ID) != null) {
-                mCaptionView.setText( savedInstanceState.getString(BUNDLE_CAPTION_ID) );
-            }
-        }
-    }
-    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveState(outState);
      }
     
-    public void saveState(Bundle outState) {
-        outState.putString(BUNDLE_MEDIA_ID, getMediaId());
-        outState.putString(BUNDLE_TITLE_ID, mTitleView.getText().toString());
-        outState.putString(BUNDLE_DESCRIPTION_ID, mDescriptionView.getText().toString());
-        outState.putString(BUNDLE_CAPTION_ID, mCaptionView.getText().toString());
-    }
-
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
         Blog blog = WordPress.getCurrentBlog();
@@ -265,6 +234,9 @@ public class MediaEditFragment extends SherlockFragment {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
     
                         setMediaUpdating(false);
+                        
+                        getSherlockActivity().invalidateOptionsMenu();
+                        
                         if (hasCallback())
                             mCallback.onSavedEdit(mediaId, false);
                     }
