@@ -284,10 +284,8 @@ public class PostUploadService extends Service {
 
             // post format
             if (!post.isPage()) {
-                if (!post.getWP_post_format().equals("")) {
-                    if (!post.getWP_post_format().equals("standard")) {
-                        contentStruct.put("wp_post_format", post.getWP_post_format());
-                    }
+                if (!TextUtils.isEmpty(post.getWP_post_format())) {
+                    contentStruct.put("wp_post_format", post.getWP_post_format());
                 }
             }
 
