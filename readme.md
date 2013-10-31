@@ -15,7 +15,7 @@ WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/
 
 ## Contributing ##
 
-Fork [WordPress-Mobile/WordPress-Android][github] on GithHub and send a pull request!
+Fork [WordPress-Mobile/WordPress-Android][github] on GithHub and send a pull request.
 
 [github]: https://github.com/WordPress-Mobile/WordPress-Android
 
