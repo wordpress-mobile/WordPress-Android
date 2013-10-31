@@ -36,7 +36,8 @@ public class TestUtils {
             InputStream is = testContext.getAssets().open(filename);
             InputStreamReader inputStreamReader = new InputStreamReader(is);
             BufferedReader f = new BufferedReader(inputStreamReader);
-            for (String line = f.readLine(); !TextUtils.isEmpty(line); line = f.readLine()) {
+            for (String line = f.readLine(); line != null; line = f.readLine()) {
+                if (TextUtils.isEmpty(line)) continue;
                 try {
                     db.execSQL(line);
                 } catch (android.database.sqlite.SQLiteException e ) {
