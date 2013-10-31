@@ -12,6 +12,7 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 /**
@@ -62,9 +63,9 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         String fileType = null;
         
         // get the file extension from the fileURL
-        String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
-        if (filePath == null)
-            filePath = cursor.getString(cursor.getColumnIndex("fileURL"));
+        String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("filePath")));
+        if (filePath.isEmpty())
+            filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("fileURL")));
             
         fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         

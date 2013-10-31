@@ -31,20 +31,54 @@ public class MediaFile {
     private String uploadState = null;
     private String mediaId;
 
+    /*
+     *  wrappers for extracting values from the resultMap passed to the MediaFile constructor
+     *   getMapStr() is guaranteed to return "" if value doesn't exist (never returns null)
+     *   getMapInt() & getMapLong() are guaranteed to return 0 if value doesn't exist or isn't a number
+     *   getMapDate() DOES return null if value doesn't exist or isn't a date
+     */
+    private static String getMapStr(final Map<?, ?> map, final String key) {
+        if (map==null || key==null || !map.containsKey(key))
+            return "";
+        return map.get(key).toString();
+    }
+    private static int getMapInt(final Map<?, ?> map, final String key) {
+        try {
+            return Integer.parseInt(getMapStr(map, key));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+    private static long getMapLong(final Map<?, ?> map, final String key) {
+        try {
+            return Long.parseLong(getMapStr(map, key));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+    private static Date getMapDate(final Map<?, ?> map, final String key) {
+        if (map==null || key==null || !map.containsKey(key))
+            return null;
+        try {
+            return (Date) map.get(key);
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         
         boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
         
         setBlogId(blogId);
-        setMediaId(resultMap.get("attachment_id").toString());
-        setPostID(Long.parseLong(resultMap.get("parent").toString()));
-        setTitle(resultMap.get("title").toString());
-        setCaption(resultMap.get("caption").toString());
-        setDescription(resultMap.get("description").toString());
+        setMediaId(getMapStr(resultMap, "attachment_id"));
+        setPostID(getMapLong(resultMap, "parent"));
+        setTitle(getMapStr(resultMap, "title"));
+        setCaption(getMapStr(resultMap, "caption"));
+        setDescription(getMapStr(resultMap, "description"));
         
         // get the file name from the link
-        String link = resultMap.get("link").toString();
+        String link = getMapStr(resultMap, "link");
         setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
         
         String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
@@ -53,26 +87,27 @@ public class MediaFile {
         
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
-        String fileUrl = resultMap.get("link").toString();
+        String fileUrl = getMapStr(resultMap, "link");
         if (isDotCom)
             fileUrl = fileUrl.replace("http:", "https:"); 
         setFileURL(fileUrl);
         
-        String thumbnailURL = resultMap.get("thumbnail").toString();
-        if(thumbnailURL != null && thumbnailURL.startsWith("http")) {
+        String thumbnailURL = getMapStr(resultMap, "thumbnail");
+        if (thumbnailURL.startsWith("http")) {
             if (isDotCom)
                 thumbnailURL = thumbnailURL.replace("http:", "https:");
             setThumbnailURL(thumbnailURL);
         }
 
-        Date date = (Date) resultMap.get("date_created_gmt");
-        setDateCreatedGMT(date.getTime());
-        
+        Date date = getMapDate(resultMap, "date_created_gmt");
+        if (date != null)
+            setDateCreatedGMT(date.getTime());
+
         Object meta = resultMap.get("metadata");
         if(meta != null && meta instanceof Map) {
             Map<?, ?> metadata = (Map<?, ?>) meta;
-            setWidth(Integer.parseInt(metadata.get("width").toString()));
-            setHeight(Integer.parseInt(metadata.get("height").toString()));
+            setWidth(getMapInt(metadata, "width"));
+            setHeight(getMapInt(metadata, "height"));
         }
     }
     
