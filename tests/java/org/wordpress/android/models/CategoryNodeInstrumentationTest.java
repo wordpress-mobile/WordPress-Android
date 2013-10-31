@@ -26,7 +26,7 @@ public class CategoryNodeInstrumentationTest extends InstrumentationTestCase {
                 "one_category.sql");
         CategoryNode node = CategoryNode.createCategoryTreeFromDB(1);
         // At least 1 category exists in test db: malformed_category_parent_id.sql
-        assertTrue((node.getChildren().size() != 0));
+        assertEquals(0, node.getChildren().size());
         db.close();
     }
 
