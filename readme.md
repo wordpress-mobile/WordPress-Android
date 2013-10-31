@@ -13,7 +13,11 @@ Source Code: <http://android.svn.wordpress.org>
 Issue Tracker and Code Browser: <http://android.trac.wordpress.org/>
 WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/>
 
+## Contributing ##
 
+Fork [WordPress-Mobile/WordPress-Android][github] on GithHub and send a pull request. Please include tests :).
+
+[github]: https://github.com/WordPress-Mobile/WordPress-Android
 
 ## Build Instructions ##
 
