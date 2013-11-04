@@ -953,7 +953,6 @@ public class CommentsListFragment extends ListFragment {
                         model.clear();
                     }
                     allComments.clear();
-                    Log.v("FIXME", "list adapter=" + getListAdapter());
                     getListView().invalidateViews();
                     onCommentStatusChangeListener.onCommentStatusChanged("clear");
                     WordPress.currentComment = null;
