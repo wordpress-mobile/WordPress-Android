@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android"
-    android:installLocation="auto"
-    android:versionCode="77"
-    android:versionName="2.4.5" >
+    android:installLocation="auto" >
 
     <uses-sdk
         android:minSdkVersion="8"
