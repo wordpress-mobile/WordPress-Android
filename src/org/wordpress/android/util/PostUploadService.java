@@ -17,10 +17,10 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.R;
@@ -769,6 +769,7 @@ public class PostUploadService extends Service {
                 message = message.substring(message.indexOf(": ") + 2, message.length());
             if (message.indexOf("[code") > -1)
                 message = message.substring(0, message.indexOf("[code"));
+            message = StringUtils.unescapeHTML(message);
             return message;
         } else {
             return "";
