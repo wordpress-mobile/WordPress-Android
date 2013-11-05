@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.themes;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +21,9 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * A fragment to display a preview of the theme being applied on a blog.
@@ -179,7 +179,8 @@ public class ThemePreviewFragment extends SherlockFragment {
 
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    mBlog.getUsername(), mBlog.getPassword(),
+                    URLEncoder.encode(mBlog.getUsername(), "UTF-8"),
+                    URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(WordPress.getLoginUrl(mBlog), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
