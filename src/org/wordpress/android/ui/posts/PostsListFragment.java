@@ -38,6 +38,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,6 @@ import java.util.Map;
 import java.util.Vector;
 
 public class PostsListFragment extends ListFragment {
-    /** Called when the activity is first created. */
     private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
             mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
     private int[] mUploaded;
@@ -56,8 +56,6 @@ public class PostsListFragment extends ListFragment {
     private OnRefreshListener mOnRefreshListener;
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
-    
-    public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
     public int totalDrafts = 0;
@@ -151,19 +149,12 @@ public class PostsListFragment extends ListFragment {
             numRecords = 20;
         }
         List<Object> apiArgs = new Vector<Object>();
-        apiArgs.add(WordPress.currentBlog);
+        apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(isPage);
         apiArgs.add(numRecords);
         apiArgs.add(loadMore);
         getPostsTask = new getRecentPostsTask();
         getPostsTask.execute(apiArgs);
-    }
-
-    public Map<String, ?> createItem(String title, String caption) {
-        Map<String, String> item = new HashMap<String, String>();
-        item.put("title", title);
-        item.put("caption", caption);
-        return item;
     }
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
@@ -610,8 +601,8 @@ public class PostsListFragment extends ListFragment {
     public class getRecentPostsTask extends
             AsyncTask<List<?>, Void, Boolean> {
 
-        Context ctx;
-        boolean isPage, loadMore;
+        private boolean mIsPage, mLoadMore;
+        private Blog mBlog;
 
         protected void onPostExecute(Boolean result) {
             if (isCancelled() || !result) {
@@ -622,7 +613,7 @@ public class PostsListFragment extends ListFragment {
                     FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
                     WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newInstance(String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
+                            .newInstance(String.format(getResources().getString(R.string.error_refresh), (mIsPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
                     try {
                         alert.show(ft, "alert");
                     } catch (Exception e) {
@@ -633,7 +624,7 @@ public class PostsListFragment extends ListFragment {
                 return;
             }
 
-            if (loadMore)
+            if (mLoadMore)
                 switcher.showPrevious();
             mOnRefreshListener.onRefresh(false);
             if (isAdded()) {
@@ -642,7 +633,7 @@ public class PostsListFragment extends ListFragment {
                         
                         @Override
                         public void run() {
-                            loadPosts(loadMore);      
+                            loadPosts(mLoadMore);
                         }
                     });
                 }
@@ -653,57 +644,35 @@ public class PostsListFragment extends ListFragment {
         protected Boolean doInBackground(List<?>... args) {
             boolean success = false;
             List<?> arguments = args[0];
-            WordPress.currentBlog = (Blog) arguments.get(0);
-            isPage = (Boolean) arguments.get(1);
+            mBlog = (Blog) arguments.get(0);
+            if (mBlog == null)
+                return false;
+            mIsPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
-            loadMore = (Boolean) arguments.get(3);
-            XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
-            Object[] result = null;
-            Object[] params = { WordPress.currentBlog.getBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(), recordCount };
+            mLoadMore = (Boolean) arguments.get(3);
+            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(),
+                    mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
+            Object[] params = {mBlog.getBlogId(),
+                    mBlog.getUsername(),
+                    mBlog.getPassword(), recordCount};
             try {
-                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                Object[] result = (Object[]) client.call((mIsPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", params);
                 if (result != null) {
                     if (result.length > 0) {
                         success = true;
-                        Map<?, ?> contentHash = new HashMap<Object, Object>();
-                        List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
-
-                        if (!loadMore) {
-                            WordPress.wpDB.deleteUploadedPosts(
-                                    WordPress.currentBlog.getId(), isPage);
+                        List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                        if (!mLoadMore) {
+                            WordPress.wpDB.deleteUploadedPosts(mBlog.getId(), mIsPage);
                         }
 
                         for (int ctr = 0; ctr < result.length; ctr++) {
-                            Map<String, Object> dbValues = new HashMap<String, Object>();
-                            contentHash = (Map<?, ?>) result[ctr];
-                            dbValues.put("blogID",
-                                    WordPress.currentBlog.getBlogId());
-                            dbVector.add(ctr, contentHash);
+                            Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                            postsList.add(ctr, postMap);
                         }
 
-                        WordPress.wpDB.savePosts(dbVector,
-                                WordPress.currentBlog.getId(), isPage);
-                    } else {
-                        if (mPostListAdapter != null) {
-                            if (mPostIDs.length == 2) {
-                                try {
-                                    WordPress.wpDB.deleteUploadedPosts(
-                                            WordPress.currentBlog.getId(),
-                                            WordPress.currentPost.isPage());
-                                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR,
-                                            WordPress.currentPost);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                WordPress.currentPost = null;
-                            }
-                        }
+                        WordPress.wpDB.savePosts(postsList, mBlog.getId(), mIsPage);
                     }
                 }
             } catch (XMLRPCException e) {
