@@ -20,21 +20,31 @@ public class MapUtils {
     }
 
     /*
-     * returns an int/long value for the passed key in the passed map
-     * returns 0 if key doesn't exist or isn't a number
+     * returns an int value for the passed key in the passed map
+     * defaultValue is returned if key doesn't exist or isn't a number
      */
     public static int getMapInt(final Map<?, ?> map, final String key) {
+        return getMapInt(map, key, 0);
+    }
+    public static int getMapInt(final Map<?, ?> map, final String key, int defaultValue) {
         try {
             return Integer.parseInt(getMapStr(map, key));
         } catch (NumberFormatException e) {
-            return 0;
+            return defaultValue;
         }
     }
+
+    /*
+     * long version of above
+     */
     public static long getMapLong(final Map<?, ?> map, final String key) {
+        return getMapLong(map, key, 0);
+    }
+    public static long getMapLong(final Map<?, ?> map, final String key, long defaultValue) {
         try {
             return Long.parseLong(getMapStr(map, key));
         } catch (NumberFormatException e) {
-            return 0;
+            return defaultValue;
         }
     }
 
