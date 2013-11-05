@@ -25,10 +25,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -53,6 +55,7 @@ public class PostUploadService extends Service {
     private static NotificationManager nm;
     private static Post currentUploadingPost = null;
     private UploadPostTask currentTask = null;
+    private FeatureSet mFeatureSet;
         
     public static void addPostToUpload(Post currentPost) {
         synchronized (listOfPosts) {
@@ -80,6 +83,16 @@ public class PostUploadService extends Service {
             }
         }
         uploadNextPost();
+    }
+
+    private FeatureSet synchronousGetFeatureSet() {
+        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
+            return null;
+        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures();
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(WordPress.getCurrentBlog());
+        mFeatureSet = task.doSynchronously(apiArgs);
+        return mFeatureSet;
     }
 
     private void uploadNextPost(){
@@ -497,30 +510,29 @@ public class PostUploadService extends Service {
                     m.put("bits", mf);
                     m.put("overwrite", true);
 
-                    Object[] params = { 1, post.getBlog().getUsername(), post.getBlog().getPassword(), m };
+                    Object[] params = { 1, post.getBlog().getUsername(),
+                            post.getBlog().getPassword(), m };
 
-                    Object result = null;
-
-                    try {
-                        result = (Object) client.call("wp.uploadFile", params, tempFile);
-                    } catch (XMLRPCException e) {
-                        error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                    FeatureSet featureSet = synchronousGetFeatureSet();
+                    boolean selfHosted = WordPress.currentBlog != null &&
+                            !WordPress.currentBlog.isDotcomFlag();
+                    boolean isVideoEnabled = selfHosted ||
+                            (featureSet != null && mFeatureSet.isVideopressEnabled());
+                    if (isVideoEnabled) {
+                        Object result = uploadFileHelper(client, params, tempFile);
+                        Map<?, ?> contentHash = (HashMap<?, ?>) result;
+                        String resultURL = contentHash.get("url").toString();
+                        if (contentHash.containsKey("videopress_shortcode")) {
+                            resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
+                        } else {
+                            resultURL = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                                            xRes, yRes, resultURL, mimeType, resultURL);
+                        }
+                        content = content + resultURL;
+                    } else {
+                        error = getString(R.string.media_no_video_message);
                         return null;
                     }
-
-                    Map<?, ?> contentHash = (HashMap<?, ?>) result;
-
-                    String resultURL = contentHash.get("url").toString();
-                    if (contentHash.containsKey("videopress_shortcode")) {
-                        resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
-                    } else {
-                        resultURL = String
-                                .format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                        xRes, yRes, resultURL, mimeType, resultURL);
-                    }
-
-                    content = content + resultURL;
-
                 } // end video
                 else {
                     
@@ -730,22 +742,15 @@ public class PostUploadService extends Service {
             }
 
             File tempFile = context.getFileStreamPath(tempFileName);
-    
             Object[] params = { 1, post.getBlog().getUsername(), post.getBlog().getPassword(), pictureParams };
-    
-            Object result = null;
-    
-            try {
-                result = (Object) client.call("wp.uploadFile", params, tempFile);
-            } catch (XMLRPCException e) {
-                error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+            Object result = uploadFileHelper(client, params, tempFile);
+            if (result == null) {
                 mediaError = true;
                 return null;
             }
-    
+
             Map<?, ?> contentHash = (HashMap<?, ?>) result;
-    
-           String pictureURL = contentHash.get("url").toString();
+            String pictureURL = contentHash.get("url").toString();
            
             if (mf.isFeatured()) {
                 try {
@@ -761,8 +766,20 @@ public class PostUploadService extends Service {
             
             return pictureURL;
         }
+
+        private Object uploadFileHelper(XMLRPCClient client, Object[] params, File tempFile) {
+            final Object result;
+            try {
+                result = client.call("wp.uploadFile", params, tempFile);
+            } catch (XMLRPCException e) {
+                error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                return null;
+            }
+            return result;
+        }
     }
-    
+
+
     public String cleanXMLRPCErrorMessage(String message) {
         if (message != null) {
             if (message.indexOf(": ") > -1)
