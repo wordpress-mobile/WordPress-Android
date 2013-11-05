@@ -3,10 +3,6 @@
     package="org.wordpress.android"
     android:installLocation="auto" >
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
