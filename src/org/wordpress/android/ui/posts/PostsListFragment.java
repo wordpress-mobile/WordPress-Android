@@ -1,13 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,10 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -44,6 +32,17 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class PostsListFragment extends ListFragment {
     /** Called when the activity is first created. */
@@ -195,6 +194,8 @@ public class PostsListFragment extends ListFragment {
             mStatuses = new String[0];
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
+                mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
+                WordPress.currentPost = null;
             }
         }
         if (loadedPosts != null) {
@@ -695,8 +696,7 @@ public class PostsListFragment extends ListFragment {
                                     WordPress.wpDB.deleteUploadedPosts(
                                             WordPress.currentBlog.getId(),
                                             WordPress.currentPost.isPage());
-                                    mOnPostActionListener
-                                    .onPostAction(PostsActivity.POST_CLEAR,
+                                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR,
                                             WordPress.currentPost);
                                 } catch (Exception e) {
                                     e.printStackTrace();
