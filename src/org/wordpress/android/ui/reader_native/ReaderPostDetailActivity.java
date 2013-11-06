@@ -82,7 +82,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
 
-    final Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     private ListView getListView() {
         if (mListView==null) {
@@ -159,7 +159,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     /*
      * triggered when user chooses to like or follow
      */
-    public void doPostAction(View btnAction, ReaderPostActions.PostAction action, ReaderPost post) {
+    private void doPostAction(View btnAction, ReaderPostActions.PostAction action, ReaderPost post) {
         boolean isSelected = btnAction.isSelected();
         btnAction.setSelected(!isSelected);
         ReaderAniUtils.zoomAction(btnAction);
@@ -435,7 +435,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     /*
      * show progress bar at the bottom of the screen - used when getting newer comments
      */
-    protected void showProgressFooter() {
+    private void showProgressFooter() {
         if (mProgressFooter ==null || mProgressFooter.getVisibility()==View.VISIBLE )
             return;
         mProgressFooter.setVisibility(View.VISIBLE);
@@ -444,7 +444,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     /*
      * hide the footer progress bar if it's showing
      */
-    protected void hideProgressFooter() {
+    private void hideProgressFooter() {
         if (mProgressFooter ==null || mProgressFooter.getVisibility()!=View.VISIBLE )
             return;
         mProgressFooter.setVisibility(View.INVISIBLE);
@@ -819,15 +819,19 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     /*
      * creates formatted div for passed video with passed (optional) thumbnail
      */
-    private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
+    /*private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
         if (TextUtils.isEmpty(videoUrl))
             return "";
 
-        final int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
-        final int thumbWidth = getMaxImageWidth();
-        final int thumbHeight = (int)(thumbWidth * 0.65f);
-        final int overlayLeft = (thumbWidth / 2) - (overlaySz / 2);
-        final int overlayTop = (thumbHeight / 2) - (overlaySz / 2);
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
+        int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
+
+        int thumbWidth = (int)(displayWidth * 0.5f) - marginLarge;
+        int thumbHeight = (int)(thumbWidth * 0.65f);
+
+        int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
+        int overlayLeft = (thumbWidth / 2) - (overlaySz / 2);
+        int overlayTop = (thumbHeight / 2) - (overlaySz / 2);
 
         if (TextUtils.isEmpty(thumbnailUrl)) {
             return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
@@ -837,20 +841,22 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                     + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx; left:%dpx; top:%dpx; position:absolute;' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz, overlayLeft, overlayTop)
                     + "</div>";
         }
-    }
+    }*/
 
-    /*
-     * returns the maximum width images should be displayed at inside the WebView - used to
-     * prevent images from extending beyond the width of the display
-     */
-    private int getMaxImageWidth() {
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
-        int maxWidth = (int)(displayWidth * 0.5f);
+    private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
+        if (TextUtils.isEmpty(videoUrl))
+            return "";
 
-        // take the left margin into account
-        maxWidth -= getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
+        int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
 
-        return maxWidth;
+        if (TextUtils.isEmpty(thumbnailUrl)) {
+            return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
+        } else {
+            return "<div style='position:relative'>"
+                    + String.format("<a href='%s'><img src='%s' style='width:100%%; height:auto;' /></a>", videoUrl, thumbnailUrl)
+                    + String.format("<a href='%s'><img src='%s' style='width:%dpx; height:%dpx; position:absolute; left:0px; right:0px; top:0px; bottom:0px; margin:auto;'' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz)
+                    + "</div>";
+        }
     }
 
     /*
@@ -887,9 +893,8 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             content = "";
         }
 
-        int maxImageWidth = getMaxImageWidth();
         int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-        int marginMedium = getResources().getDimensionPixelSize(R.dimen.reader_margin_medium);
+        int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);
@@ -907,7 +912,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin: ").append(marginMedium).append("px auto !important; }");
+        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // css for video div when no video thumb available (see processVideos)
         sbHtml.append("  div.wpreader-video { background-color: ").append(greyLight).append(";")
@@ -919,15 +924,9 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         // hide iframes & embeds (they won't work since script is disabled)
         sbHtml.append("  iframe, embed { display: none; }");
 
-        // display all images as block-level elements, and don't allow any to be wider than the screen...
-        sbHtml.append("  img { display: block; overflow: hidden; height: auto; margin: 10px 0px !important; max-width: 100% !important; }");
-
-        // ...but make sure wp emoticons are inline...
-        sbHtml.append("  img.wp-smiley { display: inline; margin: auto !important; }");
-
         // show large wp images full-width (unnecessary in most cases since they'll already be at least
         // as wide as the display, except maybe when viewed on a large landscape tablet)
-        sbHtml.append("  img.size-full, img.size-large { width: ").append(maxImageWidth).append("px !important; }");
+        sbHtml.append("  img.size-full, img.size-large { width: 100% !important; }");
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { margin-left: auto !important; margin-right: auto !important; }");
@@ -994,19 +993,13 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
             if (!result) {
                 /*
-                 * post couldn't be loaded (?)
+                 * TODO: post couldn't be loaded, which means it should be retrieved from server
                  */
                 txtTitle.setText(R.string.reader_title_err_unable_to_load_post);
                 txtSource.setVisibility(View.GONE);
                 imgAvatar.setImageResource(R.drawable.ic_error);
                 return;
             }
-
-            // likes appears above the webView so force the like layout to take up space before loading
-            // them in refreshLikes() - this way the webView won't appear and then be pushed down the
-            // page once likes are loaded
-            //if (mPost.numLikes > 0 && mLayoutLikes.getVisibility()==View.GONE)
-            //    mLayoutLikes.setVisibility(View.INVISIBLE);
 
             if (mPost.hasTitle()) {
                 txtTitle.setText(mPost.getTitle());
@@ -1064,7 +1057,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             // note: even with JavaScript enabled video embeds are unreliable (some work, some don't)
             webView.getSettings().setJavaScriptEnabled(false);
             webView.getSettings().setUserAgentString(Constants.USER_AGENT);
-            webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS); // <-- not sure this is necessary
 
             // webView is hidden at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
