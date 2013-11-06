@@ -23,6 +23,7 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
@@ -56,7 +57,7 @@ public class PostUploadService extends Service {
     private static Post currentUploadingPost = null;
     private UploadPostTask currentTask = null;
     private FeatureSet mFeatureSet;
-        
+
     public static void addPostToUpload(Post currentPost) {
         synchronized (listOfPosts) {
             listOfPosts.add(currentPost);
@@ -127,18 +128,16 @@ public class PostUploadService extends Service {
     }
     
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
-
         private Post post;
-        String error = "";
-        boolean mediaError = false;
+        private String mErrorMessage = "";
+        private boolean mIsMediaError = false;
+        private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
-
         private int notificationID;
         private Notification n;
         
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
-
             if (postUploadedSuccessfully) {
                 WordPress.postUploaded();
                 nm.cancel(notificationID);
@@ -152,15 +151,20 @@ public class PostUploadService extends Service {
                 notificationIntent.setAction("android.intent.action.MAIN");
                 notificationIntent.addCategory("android.intent.category.LAUNCHER");
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-                notificationIntent.putExtra("errorMessage", error);
+                notificationIntent.putExtra("errorMessage", mErrorMessage);
+                if (mErrorUnavailableVideoPress) {
+                    notificationIntent.putExtra("errorInfoTitle", getString(R.string.learn_more));
+                    notificationIntent.putExtra("errorInfoLink", Constants.videoPressURL);
+                }
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                        notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 n.flags |= Notification.FLAG_AUTO_CANCEL;
                 String errorText = context.getResources().getText(R.string.upload_failed).toString();
-                if (mediaError)
+                if (mIsMediaError)
                     errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
-                n.setLatestEventInfo(context, (mediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
-                        (mediaError) ? error : postOrPage + " " + errorText + ": " + error, pendingIntent);
+                n.setLatestEventInfo(context, (mIsMediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
+                        (mIsMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage, pendingIntent);
 
                 nm.notify(notificationID, n); // needs a unique id
             }
@@ -170,7 +174,7 @@ public class PostUploadService extends Service {
 
         @Override
         protected Boolean doInBackground(Post... posts) {
-
+            mErrorUnavailableVideoPress = false;
             post = posts[0];
 
             // add the uploader to the notification bar
@@ -250,7 +254,7 @@ public class PostUploadService extends Service {
                                         descriptionContent = descriptionContent.replace(tag, "");
                                     else
                                         moreContent = moreContent.replace(tag, "");
-                                    mediaError = true;
+                                    mIsMediaError = true;
                                 }
                             }
                         }
@@ -260,7 +264,7 @@ public class PostUploadService extends Service {
             }
 
             // If media file upload failed, let's stop here and prompt the user
-            if (mediaError)
+            if (mIsMediaError)
                 return false;
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
@@ -394,11 +398,11 @@ public class PostUploadService extends Service {
                 post.update();
                 return true;
             } catch (final XMLRPCException e) {
-                error = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
+                mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
                         .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
                         + " " + cleanXMLRPCErrorMessage(e.getMessage());
-                mediaError = false;
-                Log.i("WP", error);
+                mIsMediaError = false;
+                Log.i("WP", mErrorMessage);
             }
 
             return false;
@@ -432,8 +436,8 @@ public class PostUploadService extends Service {
                     try {
                         context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
                     } catch (FileNotFoundException e) {
-                        error = getResources().getString(R.string.file_error_create);
-                        mediaError = true;
+                        mErrorMessage = getResources().getString(R.string.file_error_create);
+                        mIsMediaError = true;
                         return null;
                     }
 
@@ -496,7 +500,7 @@ public class PostUploadService extends Service {
                     }
                     
                     if (fVideo == null) {
-                        error = context.getResources().getString(R.string.error_media_upload) + ".";
+                        mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ".";
                         return null;
                     }
 
@@ -530,7 +534,8 @@ public class PostUploadService extends Service {
                         }
                         content = content + resultURL;
                     } else {
-                        error = getString(R.string.media_no_video_message);
+                        mErrorMessage = getString(R.string.media_no_video_message);
+                        mErrorUnavailableVideoPress = true;
                         return null;
                     }
                 } // end video
@@ -584,8 +589,8 @@ public class PostUploadService extends Service {
 
                     // check if the file exists
                     if (jpeg == null) {
-                        error = context.getString(R.string.file_not_found);
-                        mediaError = true;
+                        mErrorMessage = context.getString(R.string.file_not_found);
+                        mIsMediaError = true;
                         return null;
                     }
 
@@ -620,8 +625,8 @@ public class PostUploadService extends Service {
                         try {
                             bytes = new byte[(int) jpeg.length()];
                         } catch (OutOfMemoryError er) {
-                            error = context.getString(R.string.out_of_memory);
-                            mediaError = true;
+                            mErrorMessage = context.getString(R.string.out_of_memory);
+                            mIsMediaError = true;
                             return null;
                         }
 
@@ -648,8 +653,8 @@ public class PostUploadService extends Service {
                         finalBytes = ih2.createThumbnail(bytes, width, orientation, false);
 
                         if (finalBytes == null) {
-                            error = context.getString(R.string.out_of_memory);
-                            mediaError = true;
+                            mErrorMessage = context.getString(R.string.out_of_memory);
+                            mIsMediaError = true;
                             return null;
                         }
                         
@@ -728,7 +733,6 @@ public class PostUploadService extends Service {
    
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf) {
-            
             XMLRPCClient client = new XMLRPCClient(post.getBlog().getUrl(), post.getBlog().getHttpuser(), post.getBlog().getHttppassword());
             
             // create temp file for media upload
@@ -736,8 +740,8 @@ public class PostUploadService extends Service {
             try {
                 context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             } catch (FileNotFoundException e) {
-                mediaError = true;
-                error = context.getString(R.string.file_not_found);
+                mIsMediaError = true;
+                mErrorMessage = context.getString(R.string.file_not_found);
                 return null;
             }
 
@@ -745,7 +749,7 @@ public class PostUploadService extends Service {
             Object[] params = { 1, post.getBlog().getUsername(), post.getBlog().getPassword(), pictureParams };
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
-                mediaError = true;
+                mIsMediaError = true;
                 return null;
             }
 
@@ -772,7 +776,7 @@ public class PostUploadService extends Service {
             try {
                 result = client.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
-                error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
                 return null;
             }
             return result;

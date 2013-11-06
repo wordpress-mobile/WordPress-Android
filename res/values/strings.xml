@@ -107,6 +107,7 @@
     <string name="please_wait_refresh_done">Please wait, loading items.</string>
     <string name="please_wait_uploading_done">Please wait, uploading item.</string>
     <string name="info">Info</string>
+    <string name="learn_more">Learn More</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
