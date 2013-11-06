@@ -817,30 +817,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     /*
      * creates formatted div for passed video with passed (optional) thumbnail
      */
-    /*private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(videoUrl))
-            return "";
-
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-
-        int thumbWidth = (int)(displayWidth * 0.5f) - marginLarge;
-        int thumbHeight = (int)(thumbWidth * 0.65f);
-
-        int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
-        int overlayLeft = (thumbWidth / 2) - (overlaySz / 2);
-        int overlayTop = (thumbHeight / 2) - (overlaySz / 2);
-
-        if (TextUtils.isEmpty(thumbnailUrl)) {
-            return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
-        } else {
-            return "<div style='position:relative'>"
-                    + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx;' class='wpreader-video-thumb' /></a>", videoUrl, thumbnailUrl, thumbWidth, thumbHeight)
-                    + String.format("<a href='%s'><img src='%s' style='display:inline; width:%dpx; height:%dpx; left:%dpx; top:%dpx; position:absolute;' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz, overlayLeft, overlayTop)
-                    + "</div>";
-        }
-    }*/
-
     private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
         if (TextUtils.isEmpty(videoUrl))
             return "";
