@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
@@ -778,14 +777,13 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             if (iFrameEnd == -1)
                 return text;
 
+            // extract the src attribute
             int srcStart = text.indexOf(usesSingleQuotes ? "src='" : "src=\"", iFrameStart);
             if (srcStart == -1 || srcStart > iFrameEnd)
                 return text;
-
             int srcEnd = text.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
             if (srcEnd == -1 || srcEnd > iFrameEnd)
                 return text;
-
             String src = text.substring(srcStart+5, srcEnd);
 
             boolean isVideo = (src.contains("youtube")
@@ -847,6 +845,10 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (TextUtils.isEmpty(videoUrl))
             return "";
 
+        // sometimes we get src values like "//player.vimeo.com/video/70534716" - prefix these with http:
+        if (videoUrl.startsWith("//"))
+            videoUrl = "http:" + videoUrl;
+
         int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
 
         if (TextUtils.isEmpty(thumbnailUrl)) {
@@ -872,6 +874,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             ReaderActivityLauncher.showReaderPhotoViewer(this, imageUrl);
         }
     }
+
     /*
      * build html for post's content
      */
@@ -926,10 +929,10 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         // show large wp images full-width (unnecessary in most cases since they'll already be at least
         // as wide as the display, except maybe when viewed on a large landscape tablet)
-        sbHtml.append("  img.size-full, img.size-large { width: 100% !important; }");
+        sbHtml.append("  img.size-full, img.size-large { display: block; width: 100% !important; height: auto; }");
 
         // center medium-sized wp image
-        sbHtml.append("  img.size-medium { margin-left: auto !important; margin-right: auto !important; }");
+        sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
 
         // hide VideoPress divs that don't make sense on mobile
         sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
