@@ -151,7 +151,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
     
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
-                                          final String infoLink) {
+                                          final String infoURL) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(errorMessage);
@@ -161,11 +161,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         // Just close the window.
                     }
                 });
-        if (infoTitle != null && infoLink != null) {
+        if (infoTitle != null && infoURL != null) {
             dialogBuilder.setNeutralButton(infoTitle,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoLink)));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
                     }
                 });
         }
