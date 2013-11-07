@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -39,14 +38,13 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
 /**
  * Created by nbradbury on 6/30/13.
  * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific tag
  */
-public class ReaderPostListFragment extends Fragment implements View.OnTouchListener, AbsListView.OnScrollListener {
+public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
     private ReaderActionBarTagAdapter mActionBarAdapter;
 
@@ -159,10 +157,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     @Override
     public void onPause() {
         super.onPause();
-        // turn off row animation - this prevents the list from animating when the keyboard is
-        // shown/hidden in the tag editor (or any other activity)
-        if (hasPostAdapter())
-            getPostAdapter().enableRowAnimation(false);
         unscheduleAutoUpdate();
         hideLoadingProgress();
     }
@@ -230,7 +224,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
 
         if (useGridView) {
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
-            gridView.setOnTouchListener(this);
 
             if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
@@ -260,8 +253,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         } else {
             final ListView listView = (ListView) view.findViewById(android.R.id.list);
 
-            // set the listView's touch/scroll listeners so we can detect up/down scrolling
-            listView.setOnTouchListener(this);
+            // set the listView's scroll listeners so we can detect up/down scrolling
             listView.setOnScrollListener(this);
 
             // add listView footer containing progress bar - appears when loading older posts
@@ -672,37 +664,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         mFooterProgress.setVisibility(View.GONE);
     }
 
-    /**
-     * row animation in the listView is only enabled when user is scrolling down and not flinging
-     **/
-    private float mCurrentY;
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mCurrentY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float y = event.getY();
-                float yDiff = y - mCurrentY;
-                getPostAdapter().enableRowAnimation(yDiff < 0.0f);
-                mCurrentY = y;
-                break;
-        }
-
-        return false;
-    }
-
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        // (1) disable row animation when scrolling is done - will be re-enabled in onTouch() when user scrolls down
-        // (2) disable row animation during fling on pre-ICS devices (on older devices animation will seem choppy)
-        if (scrollState==SCROLL_STATE_IDLE) {
-            getPostAdapter().enableRowAnimation(false);
-        } else if (scrollState==SCROLL_STATE_FLING && !SysUtils.isGteAndroid4()) {
-            getPostAdapter().enableRowAnimation(false);
-        }
+        // nop
     }
 
     private int mPrevFirstVisibleItem = -1;
