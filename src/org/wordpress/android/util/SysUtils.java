@@ -18,20 +18,6 @@ public class SysUtils {
     }
 
     /*
-     *  returns true if device is running Android 4.1 (JellyBean) or later
-     */
-    public static boolean isGteAndroid41() {
-        return (Build.VERSION.SDK_INT >= 16);
-    }
-
-    /*
-     * returns true if device is running Android 4.2 or later
-     */
-    public static boolean isGteAndroid42() {
-        return (Build.VERSION.SDK_INT >= 17);
-    }
-
-    /*
      * returns true on API 11 and above - called to determine whether
      * AsyncTask.executeOnExecutor() can be used
      */

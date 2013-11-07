@@ -26,6 +26,11 @@ import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
+/*
+ * created by nbradbury
+ * this activity serves as the host for ReaderPostListFragment
+ */
+
 public class NativeReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnFirstVisibleItemChangeListener {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";

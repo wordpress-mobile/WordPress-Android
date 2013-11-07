@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -80,7 +81,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     private boolean mIsPostChanged = false;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
-
+    private View mDecorView;
     private final Handler mHandler = new Handler();
 
     private ListView getListView() {
@@ -112,7 +113,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     }
 
     /*
-     * important to NOT call this until mPost has been loaded
+     * adapter containing comments for this post
      */
     private ReaderCommentAdapter mAdapter;
     private ReaderCommentAdapter getCommentAdapter() {
@@ -207,6 +208,8 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         // remove window background since background color is set in layout (prevents overdraw)
         getWindow().setBackgroundDrawable(null);
 
+        mDecorView = getWindow().getDecorView();
+
         // set the "fake" ActionBar height to that of a real one
         final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
         final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
@@ -256,6 +259,21 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         // hide listView until post is loaded
         getListView().setVisibility(View.INVISIBLE);
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        // enable immersive mode on KitKat
+        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
     @SuppressLint("NewApi")
@@ -887,8 +905,8 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
 
         sbHtml.append("<style type='text/css'>")
-                .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
-                .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
+              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
+              .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
         // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
@@ -902,6 +920,9 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         // hide iframes & embeds (they won't work since script is disabled)
         sbHtml.append("  iframe, embed { display: none; }");
+
+        // don't allow any image to be wider than the screen
+        sbHtml.append("  img { max-width: 100% !important; height: auto;}");
 
         // show large wp images full-width (unnecessary in most cases since they'll already be at least
         // as wide as the display, except maybe when viewed on a large landscape tablet)
