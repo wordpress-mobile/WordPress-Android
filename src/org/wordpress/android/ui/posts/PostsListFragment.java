@@ -57,7 +57,7 @@ public class PostsListFragment extends ListFragment {
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
     private ListScrollPositionManager mListScrollPositionManager;
-    private int mLoadedBlogID;
+    private int mLoadedBlogId;
 
     public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
@@ -67,7 +67,7 @@ public class PostsListFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-    
+
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
     private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
 
@@ -124,7 +124,7 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
-        if (mLoadedBlogID != WordPress.getCurrentBlog().getBlogId()) {
+        if (mLoadedBlogId != WordPress.getCurrentBlog().getBlogId()) {
             WordPress.currentPost = null;
             loadPosts(false);
         }
@@ -192,7 +192,7 @@ public class PostsListFragment extends ListFragment {
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
         if (WordPress.currentBlog != null) {
-            mLoadedBlogID = WordPress.currentBlog.getBlogId();
+            mLoadedBlogId = WordPress.currentBlog.getBlogId();
         }
         try {
             loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), isPage);
@@ -332,7 +332,7 @@ public class PostsListFragment extends ListFragment {
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
-                        
+
                         // Show comments menu option only if post allows commenting
                         boolean allowComments = false;
                         Post post = new Post(WordPress.currentBlog
@@ -340,7 +340,7 @@ public class PostsListFragment extends ListFragment {
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
                         }
-                        
+
                         mRowID = info.position;
 
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
@@ -541,7 +541,7 @@ public class PostsListFragment extends ListFragment {
                         EditPostActivity.class);
                 i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
-                
+
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
                     i2.putExtra("isPage", true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
@@ -549,7 +549,7 @@ public class PostsListFragment extends ListFragment {
                         i2.putExtra("isPage", true);
                     i2.putExtra("localDraft", true);
                 }
-                
+
                 startActivityForResult(i2, 0);
                 return true;
             case MENU_ITEM_DELETE:
@@ -607,10 +607,10 @@ public class PostsListFragment extends ListFragment {
             if (isAdded()) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
-                        
+
                         @Override
                         public void run() {
-                            loadPosts(loadMore);      
+                            loadPosts(loadMore);
                         }
                     });
                 }
