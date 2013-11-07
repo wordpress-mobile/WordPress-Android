@@ -783,7 +783,7 @@
     <string name="blog_name_exists">Sorry, that site already exists!</string>
     <string name="blog_name_reserved">Sorry, that site is reserved!</string>
     <string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days.</string>
-    <string name="password_invalid">Your password is invalid because it does not meet our security guidelines. Please try a more complex password.</string>
+    <string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
     <string name="blog_name_invalid">Invalid Site Address</string>
     <string name="blog_title_invalid">Invalid Site Title</string>
     <string name="username_invalid">Invalid username</string>
