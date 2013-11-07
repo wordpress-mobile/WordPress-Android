@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -56,6 +57,7 @@ public class PostsListFragment extends ListFragment {
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
     private ListScrollPositionManager mListScrollPositionManager;
+    private int mLoadedBlogID;
 
     public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
@@ -122,6 +124,10 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
+        if (mLoadedBlogID != WordPress.getCurrentBlog().getBlogId()) {
+            WordPress.currentPost = null;
+            loadPosts(false);
+        }
     }
 
     public void createSwitcher() {
@@ -185,12 +191,11 @@ public class PostsListFragment extends ListFragment {
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
+        if (WordPress.currentBlog != null) {
+            mLoadedBlogID = WordPress.currentBlog.getBlogId();
+        }
         try {
-            if (isPage) {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
-            } else {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), false);
-            }
+            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), isPage);
         } catch (Exception e1) {
             return false;
         }
@@ -210,6 +215,10 @@ public class PostsListFragment extends ListFragment {
             mStatuses = new String[0];
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
+                if (WordPress.currentPost != null) {
+                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
+                    WordPress.currentPost = null;
+                }
             }
         }
         if (loadedPosts != null) {
@@ -655,8 +664,7 @@ public class PostsListFragment extends ListFragment {
                                     WordPress.wpDB.deleteUploadedPosts(
                                             WordPress.currentBlog.getId(),
                                             WordPress.currentPost.isPage());
-                                    mOnPostActionListener
-                                    .onPostAction(PostsActivity.POST_CLEAR,
+                                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR,
                                             WordPress.currentPost);
                                 } catch (Exception e) {
                                     e.printStackTrace();
