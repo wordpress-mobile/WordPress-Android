@@ -41,14 +41,39 @@
                 android:inputType="text"
                 android:layout_marginBottom="8dp" />
 
-            <EditText
-                android:id="@+id/site_url"
-                style="@style/WordPress.NUXEditText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/add_account_blog_url"
-                android:inputType="textUri"
-                android:layout_marginBottom="8dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/site_url"
+                    style="@style/WordPress.NUXEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_account_blog_url"
+                    android:inputType="textUri"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text=".wordpress.com"
+                    android:id="@+id/textView"
+                    android:layout_alignParentEnd="false"
+                    android:background="@color/blue_medium"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:paddingTop="3dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="4dp" />
+            </RelativeLayout>
 
             <Spinner
                 android:id="@+id/langs_spinner"
@@ -93,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/agree_terms_of_service"
                 style="@style/WordPress.NUXTos" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

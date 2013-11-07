@@ -580,7 +580,7 @@
 
     <string name="ok">OK</string>
     <string name="image_settings">Image Settings</string>
-    <string name="add_account_blog_url">Blog URL</string>
+    <string name="add_account_blog_url">Blog Address</string>
     <string name="wordpress_blog">WordPress Blog</string>
     <string name="blogusername">blogusername</string>
     <string name="column_1">Column 1</string>
