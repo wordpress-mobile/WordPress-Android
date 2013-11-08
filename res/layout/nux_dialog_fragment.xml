@@ -37,7 +37,9 @@
             android:shadowDx="0"
             android:shadowDy="1"
             android:shadowRadius="2"
-            app:fontVariation="light"/>
+            app:fontVariation="light"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_dialog_description"
@@ -51,7 +53,9 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="1"
-            android:shadowRadius="2" />
+            android:shadowRadius="2"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
 
     </LinearLayout>
