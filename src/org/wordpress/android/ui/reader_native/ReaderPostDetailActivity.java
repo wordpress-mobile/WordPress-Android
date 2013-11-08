@@ -261,7 +261,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         getListView().setVisibility(View.INVISIBLE);
     }
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -274,7 +274,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
-    }
+    }*/
 
     @SuppressLint("NewApi")
     @Override
