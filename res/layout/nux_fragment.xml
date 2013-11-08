@@ -44,18 +44,4 @@
 
     </LinearLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/nux_fragment_footer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="28dp"
-        android:text="SWIPE TO CONTINUE"
-        android:textColor="#78bad8"
-        android:textSize="14sp"
-        android:shadowColor="@color/nux_shadow"
-        android:shadowDx="0"
-        android:shadowDy="1"
-        android:shadowRadius="2" />
-
 </LinearLayout>
