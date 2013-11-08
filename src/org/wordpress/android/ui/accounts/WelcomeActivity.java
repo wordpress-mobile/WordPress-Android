@@ -82,7 +82,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         mPager.setAdapter(mPagerAdapter);
         
         mFooterView = (RelativeLayout) findViewById(R.id.footer_view);
-        
+
         mLinePageIndicator = (LinePageIndicator)findViewById(R.id.pageIndicator);
         mLinePageIndicator.setViewPager(mPager);
         mLinePageIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

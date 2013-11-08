@@ -17,6 +17,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
 import org.wordpress.android.util.WPViewPager;
+import org.wordpress.android.widgets.WPTextView;
 
 
 public class TutorialActivity extends SherlockFragmentActivity {
@@ -72,12 +73,15 @@ public class TutorialActivity extends SherlockFragmentActivity {
         mLinePageIndicator.setViewPager(mPager);
 
         RelativeLayout footerView = (RelativeLayout)findViewById(R.id.footer_view);
-        footerView.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        };
+        footerView.setOnClickListener(clickListener);
+        WPTextView skipButton = (WPTextView) findViewById(R.id.nux_sign_in);
+        skipButton.setOnClickListener(clickListener);
 
         // Show success dialog
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

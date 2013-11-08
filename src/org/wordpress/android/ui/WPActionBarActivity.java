@@ -59,7 +59,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
