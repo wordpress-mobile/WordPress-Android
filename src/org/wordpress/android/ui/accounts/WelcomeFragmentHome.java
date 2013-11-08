@@ -31,6 +31,9 @@ public class WelcomeFragmentHome extends NewAccountAbstractPageFragment {
         WPTextView statsDescription = (WPTextView)rootView.findViewById(R.id.nux_fragment_description);
         statsDescription.setText(R.string.nux_welcome_description);
 
+        WPTextView footerText = (WPTextView)rootView.findViewById(R.id.nux_fragment_footer);
+        footerText.setVisibility(View.GONE);
+
         return rootView;
     }
     
