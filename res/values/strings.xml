@@ -792,7 +792,7 @@
     <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="update_credentials">Please update your credentials and try again.</string>
-    <string name="nux_tap_continue">TAP TO CONTINUE</string>
+    <string name="nux_tap_continue">CONTINUE</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
     <string name="nux_welcome">Welcome to WordPress</string>
     <string name="nux_welcome_description">Hold the web in the palm of your hand. Full publishing power in a pint-sized package.</string>
@@ -808,6 +808,9 @@
     <string name="nux_welcome_create_account">Create Account</string>
     <string name="nux_swipe_to_continue">SWIPE TO CONTINUE</string>
     <string name="nux_tutorial_tap_to_start">Tap to start using WordPress</string>
+    <string name="nux_dialog_success">Success!</string>
+    <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
+    <string name="nux_dialog_success_continue">CONTINUE</string>
 
     <string-array name="privacy_array">
          <item>Public</item>
