@@ -59,13 +59,16 @@ public class NUXDialogFragment extends SherlockDialogFragment {
         mFooterTextView.setText(args.getString(ARG_FOOTER));
         mImageView.setImageResource(args.getInt(ARG_IMAGE));
 
-        v.setClickable(true);
-        v.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissAllowingStateLoss();
             }
-        });
+        };
+
+        v.setClickable(true);
+        v.setOnClickListener(clickListener);
+        mFooterTextView.setOnClickListener(clickListener);
 
         return v;
     }
