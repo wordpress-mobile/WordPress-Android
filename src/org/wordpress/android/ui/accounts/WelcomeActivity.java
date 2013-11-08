@@ -54,6 +54,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
     private WPTextView mSignInTextView;
+    private boolean mShowFooter = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +92,17 @@ public class WelcomeActivity extends SherlockFragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 2) {
-                    mLinePageIndicator.setVisibility(View.GONE);
-                    mSignInButton.setVisibility(View.GONE);
-                    mCreateAccountButton.setVisibility(View.GONE);
-                    mSignInTextView.setVisibility(View.VISIBLE);
+                    mShowFooter = false;
+                    mFooterView.setVisibility(View.GONE);
                 } else {
-                    mLinePageIndicator.setVisibility(View.VISIBLE);
+                    mShowFooter = true;
+                    mFooterView.setVisibility(View.VISIBLE);
                     mSignInButton.setVisibility(View.VISIBLE);
                     mCreateAccountButton.setVisibility(View.VISIBLE);
-                    mSignInTextView.setVisibility(View.GONE);
                 }
             }
         });
+        mLinePageIndicator.setVisibility(View.GONE);
         
         // Hide the footer view if the soft keyboard is showing
         // See: http://stackoverflow.com/questions/2150078/how-to-check-visibility-of-software-keyboard-in-android
@@ -114,7 +114,9 @@ public class WelcomeActivity extends SherlockFragmentActivity {
                 if (heightDiff > 100) {
                     mFooterView.setVisibility(View.GONE);
                 } else {
-                    mFooterView.setVisibility(View.VISIBLE);
+                    if (mShowFooter) {
+                        mFooterView.setVisibility(View.VISIBLE);
+                    }
                 }
              }
         });
