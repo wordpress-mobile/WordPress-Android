@@ -124,7 +124,8 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
-        if (mLoadedBlogId != WordPress.getCurrentBlog().getBlogId()) {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null && mLoadedBlogId != currentBlog.getBlogId()) {
             WordPress.currentPost = null;
             loadPosts(false);
         }
