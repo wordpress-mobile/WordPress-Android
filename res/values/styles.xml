@@ -252,7 +252,7 @@
     </style>
 
     <style name="WordPress.NUXSecondaryButton">
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/nux_text_light_grey</item>
         <item name="android:padding">8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:shadowDx">0</item>
