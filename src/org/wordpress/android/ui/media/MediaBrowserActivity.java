@@ -557,19 +557,33 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onDeleteMedia(final List<String> ids) {
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-
+        List<String> sanitizedIds = new ArrayList<String>(ids.size());
+        
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             // phone layout: pop the item fragment if it's visible
             getSupportFragmentManager().popBackStack();
         }
-
+        
+        //Make sure there are no media in "uploading"
+        for (String currentID : ids) {
+            if (MediaUtils.canDeleteMedia(blogId, currentID))
+                sanitizedIds.add(currentID);
+        }
+        
+        if( sanitizedIds.size() != ids.size()) {
+            if ( ids.size() == 1  )
+                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+        }
+        
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
-        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, ids);
+        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
 
         if (mMediaEditFragment != null) {
             String mediaId = mMediaEditFragment.getMediaId();
-            for (String id : ids) {
+            for (String id : sanitizedIds) {
                 if (id.equals(mediaId)) {
                     mMediaEditFragment.loadMedia(null);
                     break;

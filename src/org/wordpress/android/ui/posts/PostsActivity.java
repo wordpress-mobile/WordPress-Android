@@ -206,7 +206,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), isPage);
         if (hasLocalChanges) {
             if (!shouldPrompt)
                 return;
@@ -775,6 +775,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 post.delete();
+                                popPostDetail();
                                 attemptToSelectPost();
                                 postList.loadPosts(false);
                             }

@@ -3,26 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFFFF"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp" >
+            android:padding="8dp">
 
             <LinearLayout
                 android:id="@+id/sectionContent"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/title"
@@ -58,7 +58,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/tags"
@@ -80,58 +80,65 @@
                 android:id="@+id/sectionCategories"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp" >
-            </org.wordpress.android.util.FlowLayout>
+                android:paddingLeft="8dp"></org.wordpress.android.util.FlowLayout>
 
             <RelativeLayout
                 android:id="@+id/sectionLocation"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_marginTop="2dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="8dp"
                 android:orientation="vertical"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <TextView
+                    android:drawableLeft="@drawable/ic_action_location_searching"
+                    android:gravity="center_vertical"
                     android:id="@+id/locationText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginRight="4dp"
                     android:layout_marginTop="4dp"
                     android:text="@string/loading" />
 
-                <Button
-                    android:id="@+id/viewMap"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/sectionLocationButtons"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/locationText"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:maxWidth="110dp"
-                    android:text="@string/view_map" />
+                    android:layout_below="@+id/locationText"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/updateLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/viewMap"
-                    android:layout_toRightOf="@id/viewMap"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:maxWidth="110dp"
-                    android:text="@string/update_location" />
+                    <Button
+                        android:id="@+id/viewMap"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="@string/view_map" />
 
-                <Button
-                    android:id="@+id/removeLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/updateLocation"
-                    android:layout_toRightOf="@id/updateLocation"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:maxWidth="110dp"
-                    android:text="@string/remove_location" />
+                    <Button
+                        android:id="@+id/updateLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="@string/update_location" />
+
+                    <Button
+                        android:id="@+id/removeLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="@string/remove_location" />
+                </LinearLayout>
+
             </RelativeLayout>
 
             <LinearLayout
@@ -139,7 +146,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <!--
                       <TextView
@@ -177,7 +184,7 @@
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/pubDateLabel"
@@ -228,16 +235,16 @@
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
         android:padding="4dp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <HorizontalScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="34dp" >
+            android:layout_marginRight="34dp">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <ToggleButton
                     android:id="@+id/bold"

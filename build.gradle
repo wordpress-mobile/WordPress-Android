@@ -30,7 +30,7 @@ dependencies {
     compile 'org.wordpress:graphview:3.1'
     compile 'org.wordpress:drag-sort-listview:0.6.1'
     compile 'org.wordpress:slidinguppanel:1.0.0'
-    compile 'org.wordpress:android-passcodelock:0.0.3'
+    compile 'org.wordpress:android-passcodelock:0.0.4'
     compile 'org.wordpress:commons-lang:2.6'
 }
 
@@ -39,7 +39,7 @@ project.archivesBaseName="WordPress-Android"
 android {
 
     compileSdkVersion 19
-    buildToolsVersion "18.1.1"
+    buildToolsVersion "19"
 
     defaultConfig {
         packageName "org.wordpress.android"
@@ -119,4 +119,19 @@ android.buildTypes.all { buildType ->
             task.mustRunAfter(wordpressConfig)
         }
     }
+}
+
+// For app signing
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+    android {
+        signingConfigs {
+            release {
+                storeFile = file(project.storeFile)
+                storePassword = project.storePassword
+                keyAlias = project.keyAlias
+                keyPassword = project.keyPassword
+            }
+        }
+    }
+    android.buildTypes.release.signingConfig = android.signingConfigs.release
 }

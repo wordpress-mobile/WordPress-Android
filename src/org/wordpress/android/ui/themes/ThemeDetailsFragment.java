@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.themes;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,8 +32,10 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.util.Utils;
 
+import java.util.ArrayList;
+
 /**
- * A fragment to show the theme's details, including it's description and features.
+ * A fragment to show the theme's details, including its description and features.
  */
 public class ThemeDetailsFragment extends SherlockDialogFragment {
 
@@ -87,6 +87,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        // retain this fragment across configuration changes
+        setRetainInstance(true);
     }
 
     @Override
@@ -98,6 +101,17 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ThemeDetailsFragmentCallback");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        // set callback to null so we don't accidentally leak the activity instance
+        mCallback = null;
+    }
+
+    private boolean hasCallback() {
+        return (mCallback != null);
     }
 
     @Override
@@ -153,7 +167,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
             @Override
             public void onClick(View v) {
-                if (mPreviewURL != null)
+                if (mPreviewURL != null && hasCallback())
                     mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
             }
         });
@@ -164,11 +178,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             public void onClick(View v) {
                 String themeId = getThemeId();
                 if (themeId != null) {
-                    mCallback.onActivateThemeClicked(themeId, ThemeDetailsFragment.this);
-                    mActivateThemeButton.setEnabled(false);
-                    mActivateThemeButton.setText("");
-                    mActivatingProgressView.setVisibility(View.VISIBLE);
-                    
+                    if (hasCallback())
+                        mCallback.onActivateThemeClicked(themeId, ThemeDetailsFragment.this);
+                    setIsActivatingTheme(true);
                 }
 
             }
@@ -189,13 +201,15 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResume(this);
+        if (hasCallback())
+            mCallback.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPause(this);
+        if (hasCallback())
+            mCallback.onPause(this);
     };
 
     @Override
@@ -204,10 +218,23 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         menu.removeItem(R.id.menu_refresh);
     }
 
+    /*
+     * update views to indicate that a theme is being activated, or has finished being activated
+     */
+    protected void setIsActivatingTheme(boolean isActivating) {
+        if (isActivating) {
+            mActivateThemeButton.setEnabled(false);
+            mActivateThemeButton.setText("");
+            mActivatingProgressView.setVisibility(View.VISIBLE);
+        } else {
+            mActivateThemeButton.setEnabled(true);
+            mActivateThemeButton.setText(R.string.theme_activate_button);
+            mActivatingProgressView.setVisibility(View.GONE);
+        }
+    }
+
     public void onThemeActivated(boolean activated) {
-        mActivateThemeButton.setEnabled(true);
-        mActivateThemeButton.setText(R.string.theme_activate_button);
-        mActivatingProgressView.setVisibility(View.GONE);
+        setIsActivatingTheme(false);
         if (activated)
             showViewSite();
     }

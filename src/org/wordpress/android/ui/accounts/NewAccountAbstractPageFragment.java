@@ -55,7 +55,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         if ( requestQueue == null )
             requestQueue = Volley.newRequestQueue(getActivity());
         if( restClient == null )
-            restClient = new WPRestClient(requestQueue, null, null);
+            restClient = new WPRestClient(requestQueue, null);
     }
 
 

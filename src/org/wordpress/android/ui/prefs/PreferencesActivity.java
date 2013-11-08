@@ -39,6 +39,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -48,7 +49,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.DeviceUtils;
 
 @SuppressWarnings("deprecation")
@@ -475,7 +475,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                                 .get(mTypeList[i].toString());
                         CheckBoxPreference typePreference = new CheckBoxPreference(this);
                         typePreference.setKey(mTypeList[i].toString());
-                        typePreference.setChecked(typeMap.get("value").toString().equals("1"));
+                        typePreference.setChecked(MapUtils.getMapBool(typeMap, "value"));
                         typePreference.setTitle(typeMap.get("desc").toString());
                         typePreference.setOnPreferenceChangeListener(mTypeChangeListener);
                         notificationTypesCategory.addPreference(typePreference);
@@ -489,7 +489,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     if (blogName == null || blogName.trim().equals(""))
                         blogName = (String) blogMap.get("url");
                     CheckBoxPreference blogPreference = new CheckBoxPreference(this);
-                    blogPreference.setChecked(!blogMap.get("value").toString().equals("1"));
+                    blogPreference.setChecked(!MapUtils.getMapBool(blogMap, "value"));
                     blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
                     blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
                     selectBlogsCategory.addPreference(blogPreference);

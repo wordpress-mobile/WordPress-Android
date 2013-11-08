@@ -110,7 +110,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             
             switch (requestCode) {
             case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY:
+            case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                 Uri imageUri = data.getData();
                 path = getRealPathFromURI(imageUri);
                 queueFileForUpload(path);

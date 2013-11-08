@@ -100,7 +100,7 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
     protected void loadAuthenticatedUrl(String url) {
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    mBlog.getUsername(), mBlog.getPassword(),
+                    URLEncoder.encode(mBlog.getUsername(), "UTF-8"), URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
         } catch (UnsupportedEncodingException e) {

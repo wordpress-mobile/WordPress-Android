@@ -428,4 +428,26 @@ public class Post {
     public String getQuickPostType() {
         return quickPostType;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + blogID;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + (isPage ? 1231 : 1237);
+        return result;
+    }
+
+    @Override    
+    public boolean equals(Object other) {
+        if (other == this) return true;
+        if (other == null) return false;
+        if (getClass() != other.getClass()) return false;
+        Post otherPost = (Post)other;
+        return (this.id == otherPost.id && 
+                this.isPage == otherPost.isPage &&
+                this.blogID == otherPost.blogID
+                );
+      }
 }

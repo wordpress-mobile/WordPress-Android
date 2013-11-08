@@ -177,17 +177,35 @@ public class NotificationsListFragment extends ListFragment {
                 if (mProgressFooterView != null)
                     mProgressFooterView.setVisibility(View.GONE);
             } else {
-                // disable notifyOnChange while adding notes - otherwise every call to add() will
-                // trigger a call to notifyDataSetChanged()
+                // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
+                // will be triggered for each added note
                 setNotifyOnChange(false);
                 try {
                     Iterator<Note> noteIterator = notes.iterator();
-                    while (noteIterator.hasNext())
+                    while(noteIterator.hasNext()){
                         add(noteIterator.next());
+                    }
                 } finally {
                     setNotifyOnChange(true);
                 }
             }
+        }
+        /*
+         * replaces an existing note with an updated one, returns the index of the note
+         * or -1 if it doesn't exist
+         */
+        public int updateNote(final Note originalNote, final Note updatedNote) {
+            if (originalNote==null || updatedNote==null)
+                return -1;
+
+            int position = getPosition(originalNote);
+            if (position >= 0) {
+                remove(originalNote);
+                insert(updatedNote, position);
+                notifyDataSetChanged();
+            }
+
+            return position;
         }
 
         @Override
