@@ -21,6 +21,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.MapUtils;
 
 /**
  * WordPress.com specific XML-RPC API calls
@@ -173,7 +174,7 @@ public class WPComXMLRPCApi {
         ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<StringMap<Double>>();
         for (int i = 0; i < blogsList.size(); i++) {
             StringMap<Double> userBlog = blogsList.get(i);
-            if (Double.valueOf(userBlog.get("value")) == 1.0) {
+            if (MapUtils.getMapBool(userBlog, "value")) {
                 mutedBlogsList.add(userBlog);
             }
         }

@@ -42,7 +42,6 @@ import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 public class MediaEditFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
-    private static final String BUNDLE_MEDIA_ID = "media_id";
     public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
     
     private NetworkImageView mNetworkImageView;
@@ -80,6 +79,9 @@ public class MediaEditFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        
+        // retain this fragment across configuration changes
+        setRetainInstance(true);
     }
     
     @Override
@@ -93,23 +95,30 @@ public class MediaEditFragment extends SherlockFragment {
         }
     }
 
+    
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        // set callback to null so we don't accidentally leak the activity instance
+        mCallback = null;
+    }
+
+    private boolean hasCallback() {
+        return (mCallback != null);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResume(this);
-        getView().post(new Runnable() {
-            
-            @Override
-            public void run() {
-                loadMedia(getMediaId());
-            }
-        });
+        if (hasCallback())
+            mCallback.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPause(this);
+        if (hasCallback())
+            mCallback.onPause(this);
     }
 
     public String getMediaId() {
@@ -143,29 +152,29 @@ public class MediaEditFragment extends SherlockFragment {
             }
         });
 
-        restoreState(savedInstanceState);
+        disableEditingOnOldVersion();
+       
+        loadMedia(getMediaId());
         
         return mScrollView;
     }
     
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(BUNDLE_MEDIA_ID)) {
-                mMediaId = savedInstanceState.getString(BUNDLE_MEDIA_ID);
-            }
-        }
+    private void disableEditingOnOldVersion() {
+        
+        if( MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+            return;
+        
+        mSaveButton.setEnabled(false);
+        mTitleView.setEnabled(false);
+        mCaptionView.setEnabled(false);
+        mDescriptionView.setEnabled(false);
     }
     
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveState(outState);
-    }
-
-    private void saveState(Bundle outState) {
-        outState.putString(BUNDLE_MEDIA_ID, getMediaId());
-    }
-
+     }
+    
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
         Blog blog = WordPress.getCurrentBlog();
@@ -215,7 +224,8 @@ public class MediaEditFragment extends SherlockFragment {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
 
                         setMediaUpdating(false);
-                        mCallback.onSavedEdit(mediaId, true);
+                        if (hasCallback())
+                            mCallback.onSavedEdit(mediaId, true);
                     }
 
                     @Override
@@ -224,7 +234,11 @@ public class MediaEditFragment extends SherlockFragment {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
     
                         setMediaUpdating(false);
-                        mCallback.onSavedEdit(mediaId, false);
+                        
+                        getSherlockActivity().invalidateOptionsMenu();
+                        
+                        if (hasCallback())
+                            mCallback.onSavedEdit(mediaId, false);
                     }
                 });
 
@@ -325,6 +339,8 @@ public class MediaEditFragment extends SherlockFragment {
             mNetworkImageView.setVisibility(View.GONE);
             mLocalImageView.setVisibility(View.GONE);
         }
+        
+        disableEditingOnOldVersion();
     }
     
     @Override
@@ -342,6 +358,9 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
         }
+       
+        if( ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+            menu.findItem(R.id.menu_save_media).setVisible(false);
     }
     
     @Override

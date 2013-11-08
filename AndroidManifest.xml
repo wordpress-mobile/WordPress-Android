@@ -128,8 +128,6 @@
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
         </activity>
-        <activity android:name=".ui.stats.StatsActivityTablet" >
-        </activity>
         
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
@@ -207,9 +205,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.OldStatsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >

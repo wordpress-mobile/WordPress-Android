@@ -6,6 +6,7 @@ import java.util.Map;
 import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.MapUtils;
 
 public class MediaFile {
 
@@ -31,20 +32,19 @@ public class MediaFile {
     private String uploadState = null;
     private String mediaId;
 
-
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         
         boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
         
         setBlogId(blogId);
-        setMediaId(resultMap.get("attachment_id").toString());
-        setPostID(Long.parseLong(resultMap.get("parent").toString()));
-        setTitle(resultMap.get("title").toString());
-        setCaption(resultMap.get("caption").toString());
-        setDescription(resultMap.get("description").toString());
+        setMediaId(MapUtils.getMapStr(resultMap, "attachment_id"));
+        setPostID(MapUtils.getMapLong(resultMap, "parent"));
+        setTitle(MapUtils.getMapStr(resultMap, "title"));
+        setCaption(MapUtils.getMapStr(resultMap, "caption"));
+        setDescription(MapUtils.getMapStr(resultMap, "description"));
         
         // get the file name from the link
-        String link = resultMap.get("link").toString();
+        String link = MapUtils.getMapStr(resultMap, "link");
         setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
         
         String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
@@ -53,26 +53,27 @@ public class MediaFile {
         
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
-        String fileUrl = resultMap.get("link").toString();
+        String fileUrl = MapUtils.getMapStr(resultMap, "link");
         if (isDotCom)
             fileUrl = fileUrl.replace("http:", "https:"); 
         setFileURL(fileUrl);
         
-        String thumbnailURL = resultMap.get("thumbnail").toString();
-        if(thumbnailURL != null && thumbnailURL.startsWith("http")) {
+        String thumbnailURL = MapUtils.getMapStr(resultMap, "thumbnail");
+        if (thumbnailURL.startsWith("http")) {
             if (isDotCom)
                 thumbnailURL = thumbnailURL.replace("http:", "https:");
             setThumbnailURL(thumbnailURL);
         }
 
-        Date date = (Date) resultMap.get("date_created_gmt");
-        setDateCreatedGMT(date.getTime());
-        
+        Date date = MapUtils.getMapDate(resultMap, "date_created_gmt");
+        if (date != null)
+            setDateCreatedGMT(date.getTime());
+
         Object meta = resultMap.get("metadata");
         if(meta != null && meta instanceof Map) {
             Map<?, ?> metadata = (Map<?, ?>) meta;
-            setWidth(Integer.parseInt(metadata.get("width").toString()));
-            setHeight(Integer.parseInt(metadata.get("height").toString()));
+            setWidth(MapUtils.getMapInt(metadata, "width"));
+            setHeight(MapUtils.getMapInt(metadata, "height"));
         }
     }
     

@@ -18,7 +18,11 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 
+import org.wordpress.passcodelock.AppLockManager;
+
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.Version;
 
 public class MediaUtils {
 
@@ -28,7 +32,6 @@ public class MediaUtils {
         public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
         public static final int ACTIVITY_REQUEST_CODE_BROWSE_FILES = 1400;
-        public static final int ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY = 1500;
     }
     
     public interface LaunchCameraCallback {
@@ -111,6 +114,7 @@ public class MediaUtils {
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         
+        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
@@ -119,6 +123,7 @@ public class MediaUtils {
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         
+        AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
@@ -129,6 +134,7 @@ public class MediaUtils {
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
             fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            AppLockManager.getInstance().setExtendedTimeout();
         }
     }
     
@@ -139,6 +145,7 @@ public class MediaUtils {
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
             activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            AppLockManager.getInstance().setExtendedTimeout();
         }
     }
 
@@ -184,6 +191,7 @@ public class MediaUtils {
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
     
     public static void launchVideoLibrary(Fragment fragment) {
@@ -191,16 +199,19 @@ public class MediaUtils {
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
     
     public static void launchVideoCamera(Activity activity) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
     
     public static void launchVideoCamera(Fragment fragment) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     public static boolean isLocalFile(String state) {
@@ -226,4 +237,44 @@ public class MediaUtils {
         return uri;
     }
     
+    /**
+     * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties within the app.
+     * See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
+     * @return
+     */
+    public static boolean isWordPressVersionWithMediaEditingCapabilities() {
+        
+        if( WordPress.currentBlog.isDotcomFlag())
+            return true;
+        
+        Version minVersion;
+        Version currentVersion;
+        try {
+            minVersion = new Version("3.5.2");
+            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
+            
+            if( currentVersion.compareTo(minVersion) == -1 )
+                return false;
+            
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+       
+        return true;
+    }
+    
+    public static boolean canDeleteMedia(String blogId, String mediaID) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return false;
+        }
+        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        cursor.close();
+        if (state != null && state.equals("uploading")) {
+
+            return false;
+        }
+        return true;
+    }
 }

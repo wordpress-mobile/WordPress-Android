@@ -1,6 +1,12 @@
 
 package org.wordpress.android;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -52,6 +58,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         Log.v("WORDPRESS", "GCM Error: " + errorId);
     }
 
+    private static String mPreviousNoteId = null;
+    private static long mPreviousNoteTime = 0L;
+
     @Override
     protected void onMessage(Context context, Intent intent) {
         Log.v("WORDPRESS", "Received Message");
@@ -93,6 +102,31 @@ public class GCMIntentService extends GCMBaseIntentService {
             note_id = String.valueOf(WordPressDB.generateIdFor(note));
             md5GeneratedNoteId = true;
         }
+
+        /*
+         * if this has the same note_id as the previous notification, and the previous notification
+         * was received within the last second, then skip showing it - this handles duplicate
+         * notifications being shown due to the device being registered multiple times with different tokens. 
+         * (still investigating how this could happen - 21-Oct-13) 
+         *
+         * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
+         * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
+         * which we also want to avoid since it would drain the battery and annoy the user
+         *
+         * NOTE: different comments on the same post will have a different note_id, but different likes
+         * on the same post will have the same note_id, so don't assume that the note_id is unique
+         */
+        long thisTime = System.currentTimeMillis();
+        if (mPreviousNoteId != null && mPreviousNoteId.equals(note_id)) {
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - mPreviousNoteTime);
+            if (seconds <= 1) {
+                Log.w("WORDPRESS", "skipped potential duplicate notification");
+                return;
+            }
+        }
+
+        mPreviousNoteId = note_id;
+        mPreviousNoteTime = thisTime;
 
         if (note_id != null) {
             if (!activeNotificationsMap.containsKey(note_id))
