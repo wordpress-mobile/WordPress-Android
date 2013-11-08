@@ -27,11 +27,6 @@
             style="@style/WordPress.NUXTitle"
             app:fontVariation="light" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/nux_divider" />
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_fragment_description"
             android:layout_width="wrap_content"
@@ -45,11 +40,6 @@
             android:shadowDx="0"
             android:shadowDy="1"
             android:shadowRadius="2" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/nux_divider" />
 
 
     </LinearLayout>
