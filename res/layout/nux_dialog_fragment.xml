@@ -62,7 +62,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginBottom="28dp"
-        android:textColor="@color/gray"
-        android:textSize="14sp" />
+        style="@style/WordPress.NUXSecondaryButton" />
 
 </LinearLayout>
