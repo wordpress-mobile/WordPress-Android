@@ -1,37 +1,33 @@
 
 package org.wordpress.android.ui.accounts;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NewUserPageFragment extends NewAccountAbstractPageFragment {
 
@@ -117,46 +113,49 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
             if (false == checkUserData())
                 return;
 
-            pd = ProgressDialog.show(NewUserPageFragment.this
-                    .getActivity(),
+            pd = ProgressDialog.show(NewUserPageFragment.this.getActivity(),
                     getString(R.string.account_setup),
                     getString(R.string.validating_user_data), true, false);
-
-            String path = "users/new";
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("username", username);
-            params.put("password", password);
-            params.put("email", email);
-            params.put("validate", "1");
-            params.put("client_id", Config.OAUTH_APP_ID);
-            params.put("client_secret", Config.OAUTH_APP_SECRET);
-
-            restClient.post(path, params, null,
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (pd != null)
-                                pd.dismiss();
-                            Log.d("1. New User PAGE", String.format("OK %s", response.toString()));
-                            try {
-                                if(response.getBoolean("success")) {
-                                    NewAccountActivity act = (NewAccountActivity)getActivity();
-                                    act.validatedEmail = email;
-                                    act.validatedPassword = password;
-                                    act.validatedUsername = username;
-                                    act.showNextItem();
-                                } else {
-                                    showError(getString(R.string.error_generic));
-                                }
-                            } catch (JSONException e) {
-                                showError(getString(R.string.error_generic));
-                            }
-                        }
-                    },
-                    new ErrorListener()
-                    );
+            restPostNewUser(username, password, email, pd);
         }
     };
+
+    private void restPostNewUser(final String username, final String password, final String email,
+                                 final ProgressDialog progressDialog) {
+        String path = "users/new";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("username", username);
+        params.put("password", password);
+        params.put("email", email);
+        params.put("validate", "1");
+        params.put("client_id", Config.OAUTH_APP_ID);
+        params.put("client_secret", Config.OAUTH_APP_SECRET);
+
+        restClient.post(path, params, null,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (progressDialog != null)
+                            progressDialog.dismiss();
+                        Log.d("1. New User PAGE", String.format("OK %s", response.toString()));
+                        try {
+                            if (response.getBoolean("success")) {
+                                NewAccountActivity act = (NewAccountActivity) getActivity();
+                                act.validatedEmail = email;
+                                act.validatedPassword = password;
+                                act.validatedUsername = username;
+                                act.showNextItem();
+                            } else {
+                                showError(getString(R.string.error_generic));
+                            }
+                        } catch (JSONException e) {
+                            showError(getString(R.string.error_generic));
+                        }
+                    }
+                },
+                new ErrorListener()
+        );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
