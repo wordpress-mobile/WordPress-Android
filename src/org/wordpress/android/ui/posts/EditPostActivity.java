@@ -123,6 +123,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
+import java.util.zip.Checksum;
+import java.util.zip.CRC32;
 
 public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -184,6 +186,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private int mBlogID = -1;
     private long mPostID = -1;
     private long mCustomPubDate = 0;
+    private long mInitialPostCRC = 0;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private int mStyleStart, mSelectionStart, mSelectionEnd;
@@ -499,6 +502,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         mBquoteToggleButton.setOnClickListener(this);
         mMoreButton.setOnClickListener(this);
         softKeyboardHook();
+
+        mInitialPostCRC = computePostCRC();
     }
 
     private void prepareMediaGallery() {
@@ -968,9 +973,34 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         showCancelAlert(false);
     }
 
+    private long computePostCRC() {
+        long crcValue = 0;
+        String textArray = "";
+        byte byteArray[] = null;
+        Checksum checksum = new CRC32();
+
+        Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
+
+        textArray += mContentEditText.getText().toString();
+        textArray += mTitleEditText.getText().toString();
+        textArray += mPasswordEditText.getText().toString();
+        textArray += mLocationText.getText().toString();
+        textArray += mPubDateText.getText().toString();
+        textArray += mTagsEditText.getText().toString();
+        textArray += String.valueOf(mStatusSpinner.getSelectedItemPosition());
+        textArray += String.valueOf(postFormatSpinner.getSelectedItemPosition());
+
+        byteArray = textArray.getBytes();
+
+        checksum.update(byteArray,0,byteArray.length);
+        crcValue = checksum.getValue();
+
+        return crcValue;
+    }
+
     private void showCancelAlert(final boolean isUpPress) {
-        // Empty post? Let's not prompt then.
-        if (mIsNew && mContentEditText.getText().toString().equals("") && mTitleEditText.getText().toString().equals("")) {
+        // Has the user not changed the post's content? Let's not prompt then.
+        if(mInitialPostCRC == computePostCRC()) {
             finish();
             return;
         }
