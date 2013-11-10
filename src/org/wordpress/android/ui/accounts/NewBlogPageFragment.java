@@ -1,13 +1,6 @@
 
 package org.wordpress.android.ui.accounts;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -29,13 +22,19 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class NewBlogPageFragment extends NewAccountAbstractPageFragment implements TextWatcher {
 
@@ -171,7 +170,7 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
         List<String> list = new ArrayList<String>(wordpressComSupportedLanguages.keySet());
         
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.sherlock_spinner_item, list);
+                R.layout.spinner_textview, list);
         dataAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
         langSpinner.setAdapter(dataAdapter);
         

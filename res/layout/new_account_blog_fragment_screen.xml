@@ -16,9 +16,7 @@
             android:maxWidth="480dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="50dp"
@@ -32,18 +30,37 @@
                 style="@style/WordPress.NUXTitle"
                 app:fontVariation="light" />
 
-            <EditText
-                android:id="@+id/site_title"
-                style="@style/WordPress.NUXEditText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/title"
-                android:inputType="text"
-                android:layout_marginBottom="8dp" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <EditText
+                    android:id="@+id/site_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXEditText"
+                    android:hint="@string/title"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:layout_marginLeft="32dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_edit"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <EditText
                     android:id="@+id/site_url"
@@ -52,8 +69,10 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_account_blog_url"
                     android:inputType="textUri"
-                    android:layout_marginBottom="8dp"
-                    android:clickable="true" />
+                    android:clickable="true"
+                    android:layout_marginLeft="32dp"
+                    android:layout_toLeftOf="@+id/textView"
+                    android:padding="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -62,23 +81,59 @@
                     android:text=".wordpress.com"
                     android:id="@+id/textView"
                     android:layout_alignParentEnd="false"
-                    android:background="@color/blue_medium"
-                    android:textColor="@color/white"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="4dp"
                     android:layout_alignParentStart="false"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="false"
                     android:paddingTop="3dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="3dp"
-                    android:paddingLeft="4dp" />
+                    android:paddingLeft="4dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="4dp"
+                    android:inputType="textUri"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_action_web_site"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
+
             </RelativeLayout>
 
-            <Spinner
-                android:id="@+id/langs_spinner"
+
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:id="@+id/relativeLayout">
+
+                <Spinner
+                    android:id="@+id/langs_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="48dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:background="@color/white" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_navigate_next"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
+            </RelativeLayout>
 
             <Spinner
                 android:id="@+id/privacy_spinner"
@@ -89,7 +144,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp">
 
@@ -97,18 +152,20 @@
                     android:id="@+id/prev_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/action_previous"
-                    style="@style/WordPress.NUXPrimaryButton" />
+                    style="@style/WordPress.NUXThirdButton"
+                    android:layout_marginLeft="8dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/next_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:text="@string/action_next"
                     android:enabled="false"
-                    style="@style/WordPress.NUXPrimaryButton" />
+                    style="@style/WordPress.NUXThirdButton"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center" />
 
             </LinearLayout>
 
