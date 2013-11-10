@@ -98,25 +98,17 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/prev_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
-                    android:text="@string/action_previous"
-                    style="@style/WordPress.NUXPrimaryButton" />
-
-                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/next_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:text="@string/action_next"
-                    style="@style/WordPress.NUXPrimaryButton" />
+                    style="@style/WordPress.NUXThirdButton"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
 

@@ -150,15 +150,6 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
 
         mNextButton = (WPTextView) rootView.findViewById(R.id.next_button);
         mNextButton.setOnClickListener(nextClickListener);
-        
-        final WPTextView prevButton = (WPTextView) rootView.findViewById(R.id.prev_button);
-        prevButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewAccountActivity act = (NewAccountActivity)getActivity();
-                act.showPrevItem();
-            }
-        });
 
         siteURL = (EditText) rootView.findViewById(R.id.site_url);
         siteURL.addTextChangedListener(this);

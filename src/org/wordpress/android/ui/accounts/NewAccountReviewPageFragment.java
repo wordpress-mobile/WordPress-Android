@@ -1,9 +1,6 @@
 
 package org.wordpress.android.ui.accounts;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,18 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import org.wordpress.android.Config;
-import org.wordpress.android.R;
 
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import org.wordpress.android.Config;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment {
 
@@ -209,15 +208,6 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         
         final WPTextView nextButton = (WPTextView) rootView.findViewById(R.id.next_button);
         nextButton.setOnClickListener(nextClickListener);
-        
-        final WPTextView prevButton = (WPTextView) rootView.findViewById(R.id.prev_button);
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewAccountActivity act = (NewAccountActivity)getActivity();
-                act.showPrevItem();
-            }
-        });
 
         return rootView;
     }

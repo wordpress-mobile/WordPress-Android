@@ -149,15 +149,6 @@
                 android:layout_marginBottom="8dp">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/prev_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/action_previous"
-                    style="@style/WordPress.NUXThirdButton"
-                    android:layout_marginLeft="8dp" />
-
-                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/next_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -165,7 +156,8 @@
                     android:enabled="false"
                     style="@style/WordPress.NUXThirdButton"
                     android:layout_marginRight="8dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:layout_marginLeft="8dp" />
 
             </LinearLayout>
 
