@@ -262,6 +262,29 @@
         <item name="android:background">@drawable/nux_secondary_button_selector</item>
     </style>
 
+    <style name="WordPress.NUXThirdButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowColor">@color/nux_primary_button_shadow</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:background">@drawable/nux_third_button_selector</item>
+    </style>
+
+
+    <style name="WordPress.NUXWhiteButtonNoBg">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowColor">@color/nux_secondary_button_shadow</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+
+
     <style name="WordPress.NUXEditText">
         <item name="android:padding">8dp</item>
         <item name="android:background">#FFFFFF</item>

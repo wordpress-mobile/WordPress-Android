@@ -40,9 +40,7 @@ public class WPTextView extends TextView {
         // read custom fontVariation from attributes, default to normal
         int variation = VARIATION_NORMAL;
         if (attrs!=null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(
-                    attrs,
-                    R.styleable.WPTextView,
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView,
                     0, 0);
 
             if (a!=null) {

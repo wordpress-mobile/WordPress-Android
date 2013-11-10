@@ -22,32 +22,7 @@
 			android:paddingBottom="16dp"
 			android:layout_gravity="bottom"          
             />
-    </FrameLayout>
 
-    <RelativeLayout
-        android:id="@+id/footer_view"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#2b2d2e"
-        android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" >
-
-        <org.wordpress.android.widgets.WPTextView
-            style="@style/WordPress.NUXSecondaryButton"
-            android:id="@+id/nux_create_account_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nux_welcome_create_account" />
-
-        <org.wordpress.android.widgets.WPTextView
-            style="@style/WordPress.NUXPrimaryButton"
-            android:id="@+id/nux_sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/sign_in_capital" />
-        
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_sign_in"
             android:layout_width="wrap_content"
@@ -58,6 +33,7 @@
             android:visibility="gone"
             android:background="@drawable/selectable_background_wordpress"
             />
-    </RelativeLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

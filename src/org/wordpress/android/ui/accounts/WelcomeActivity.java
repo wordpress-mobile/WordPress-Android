@@ -6,19 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
-import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
 import org.wordpress.android.util.WPViewPager;
-import org.wordpress.android.widgets.WPTextView;
 
 
 public class WelcomeActivity extends SherlockFragmentActivity {
@@ -30,7 +24,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
      */
     private static final int NUM_PAGES = 2;
 
-    static final int CREATE_ACCOUNT_REQUEST = 0;
+    public static final int CREATE_ACCOUNT_REQUEST = 0;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -49,13 +43,6 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     WelcomeFragmentHome welcomeFragmentHome;
     WelcomeFragmentPublish welcomeFragmentPublish;
     WelcomeFragmentSignIn welcomeFragmentSignIn;
-    
-    private RelativeLayout mFooterView;
-    
-    private WPTextView mSignInButton;
-    private WPTextView mCreateAccountButton;
-    private WPTextView mSignInTextView;
-    private boolean mShowFooter = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,60 +50,11 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
 
-        mSignInButton = (WPTextView) findViewById(R.id.nux_sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(1);
-            }
-            
-        });
-        mCreateAccountButton = (WPTextView) findViewById(R.id.nux_create_account_button);
-        mCreateAccountButton.setOnClickListener(mCreateAccountListener);
-
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (WPViewPager) findViewById(R.id.pager);
         mPager.setPagingEnabled(false);
         mPagerAdapter = new NewAccountPagerAdapter( super.getSupportFragmentManager() );
         mPager.setAdapter(mPagerAdapter);
-        
-        mFooterView = (RelativeLayout) findViewById(R.id.footer_view);
-
-        mLinePageIndicator = (LinePageIndicator)findViewById(R.id.pageIndicator);
-        mLinePageIndicator.setViewPager(mPager);
-        mLinePageIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 1) {
-                    mShowFooter = false;
-                    mFooterView.setVisibility(View.GONE);
-                } else {
-                    mShowFooter = true;
-                    mFooterView.setVisibility(View.VISIBLE);
-                    mSignInButton.setVisibility(View.VISIBLE);
-                    mCreateAccountButton.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        mLinePageIndicator.setVisibility(View.GONE);
-        
-        // Hide the footer view if the soft keyboard is showing
-        // See: http://stackoverflow.com/questions/2150078/how-to-check-visibility-of-software-keyboard-in-android
-        final View mainView = findViewById(R.id.main_view);
-        mainView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = mainView.getRootView().getHeight() - mainView.getHeight();
-                if (heightDiff > 100) {
-                    mFooterView.setVisibility(View.GONE);
-                } else {
-                    if (mShowFooter) {
-                        mFooterView.setVisibility(View.VISIBLE);
-                    }
-                }
-             }
-        });
 
         if (getIntent().getBooleanExtra(SKIP_WELCOME, false))
             mPager.setCurrentItem(1);
@@ -156,7 +94,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
             
             switch (position) {
                 case 0:
-                    welcomeFragmentHome = new WelcomeFragmentHome();
+                    welcomeFragmentHome = new WelcomeFragmentHome(mPager);
                     currentPage = welcomeFragmentHome;
                     break;
                 case 1:
@@ -196,11 +134,5 @@ public class WelcomeActivity extends SherlockFragmentActivity {
 
     }
 
-    private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent newAccountIntent = new Intent(WelcomeActivity.this, NewAccountActivity.class);
-            startActivityForResult(newAccountIntent, CREATE_ACCOUNT_REQUEST);
-        }
-    };
+
 }

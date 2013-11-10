@@ -39,13 +39,33 @@
             android:shadowColor="@color/nux_shadow"
             android:shadowDx="0"
             android:shadowDy="1"
-            android:shadowRadius="2" />
+            android:shadowRadius="2"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp" />
 
-        <view
+        <org.wordpress.android.widgets.WPTextView
+            style="@style/WordPress.NUXThirdButton"
+            android:id="@+id/nux_sign_in_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in_capital"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:capitalize="characters"
+            android:gravity="center"
+            android:padding="8dp" />
+
+        <org.wordpress.android.widgets.WPTextView
+            style="@style/WordPress.NUXWhiteButtonNoBg"
+            android:id="@+id/nux_create_account_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            class="org.wordpress.android.widgets.WPTextView"
-            android:id="@+id/view" />
+            android:text="@string/nux_welcome_create_account" />
+
 
     </LinearLayout>
 
