@@ -290,6 +290,7 @@
         <item name="android:background">#FFFFFF</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">#444444</item>
+        <item name="android:textColorHint">#AAAAAA</item>
     </style>
 
     <style name="WordPress.NUXTos">

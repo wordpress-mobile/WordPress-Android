@@ -757,7 +757,7 @@
     <string name="dont_yet_have_an_account">Do not have an account yet?</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="agree_terms_of_service">You agree to the fascinating %1$sTerms of Service%2$s by pressing the \'Next\' button.</string>
-    <string name="username_email">Username / Email</string>
+    <string name="username_email">Username or Email</string>
     <string name="site_address">Site address (URL)</string>
     <string name="dont_have_account">Don\'t have an account? %1$sCreate one!%2$s</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>

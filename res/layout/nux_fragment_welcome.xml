@@ -51,11 +51,9 @@
             android:layout_height="wrap_content"
             android:text="@string/sign_in_capital"
             android:layout_marginBottom="8dp"
-            android:textAlignment="center"
             android:textAllCaps="true"
             android:clickable="true"
             android:textStyle="bold"
-            android:capitalize="characters"
             android:gravity="center"
             android:padding="8dp" />
 
