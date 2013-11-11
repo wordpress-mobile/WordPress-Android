@@ -157,9 +157,9 @@
                     style="@style/WordPress.NUXThirdButton"
                     android:textAllCaps="true"
                     android:textStyle="bold"
-                    android:layout_marginRight="8dp"
-                    android:gravity="center"
-                    android:layout_marginLeft="8dp" />
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center" />
 
             </LinearLayout>
 
