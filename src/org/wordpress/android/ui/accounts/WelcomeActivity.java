@@ -23,7 +23,6 @@ public class WelcomeActivity extends SherlockFragmentActivity {
      * The number of pages (wizard steps)
      */
     private static final int NUM_PAGES = 2;
-
     public static final int CREATE_ACCOUNT_REQUEST = 0;
 
     /**
@@ -119,20 +118,12 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case CREATE_ACCOUNT_REQUEST:
-                if (resultCode == RESULT_OK && data != null) {
-                    String username = data.getStringExtra("username");
-                    if (username != null) {
-                        mPager.setCurrentItem(2);
-                        welcomeFragmentSignIn.signInDotComUser();
-                    }
-                }
-                break;
+        if (resultCode == RESULT_OK && data != null) {
+            String username = data.getStringExtra("username");
+            if (username != null) {
+                mPager.setCurrentItem(1);
+                welcomeFragmentSignIn.signInDotComUser();
+            }
         }
-
     }
-
-
 }

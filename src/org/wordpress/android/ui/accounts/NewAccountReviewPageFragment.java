@@ -33,12 +33,11 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
     private TextView siteTitle;
     private TextView siteAddress;
     private TextView siteLanguage;
-    
-    
+
     public NewAccountReviewPageFragment() {
 
     }
-    
+
     View.OnClickListener nextClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -52,21 +51,21 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
                     .getActivity(),
                     getString(R.string.account_setup),
                     getString(R.string.signing_up), true, false);
-            
+
             validateUser();
         }
     };
-    
+
     private class ResponseHandler implements RestRequest.Listener {
-        
+
         public static final int VALIDATE_USER = 1;
         public static final int VALIDATE_SITE = 2;
         public static final int CREATE_USER = 3;
         public static final int AUTHENTICATE_USER = 4;
         public static final int CREATE_SITE = 5;
-        
+
         private int currentStep = VALIDATE_USER;
-        
+
         public ResponseHandler(int step) {
             super();
             this.currentStep = step;
@@ -77,10 +76,10 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
             Log.d("REST Response", String.format("Create Account step %d", currentStep));
             Log.d("REST Response", String.format("OK %s", response.toString()));
             try {
-                if( currentStep == AUTHENTICATE_USER) {
+                if (currentStep == AUTHENTICATE_USER) {
                     createTheBlog();
                 } else {
-                    if(response.getBoolean("success")) {
+                    if (response.getBoolean("success")) {
                         switch (currentStep) { //Fire the next action
                             case VALIDATE_USER:
                                 validateSite();
@@ -93,7 +92,7 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
                                 break;
                             case CREATE_SITE:
                                 finishThisStuff();
-                                break;      
+                                break;
                             default:
                                 break;
                         }
@@ -106,9 +105,9 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
             }
         }
     }
-    
-    private void validateUser(){
-        NewAccountActivity act = (NewAccountActivity)getActivity();
+
+    private void validateUser() {
+        NewAccountActivity act = (NewAccountActivity) getActivity();
         String path = "users/new";
         Map<String, String> params = new HashMap<String, String>();
         params.put("username", act.validatedUsername);
@@ -119,9 +118,9 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         params.put("client_secret", Config.OAUTH_APP_SECRET);
         restClient.post(path, params, null, new ResponseHandler(ResponseHandler.VALIDATE_USER), new ErrorListener());
     }
-    
-    private void validateSite(){
-        final NewAccountActivity act = (NewAccountActivity)getActivity();
+
+    private void validateSite() {
+        final NewAccountActivity act = (NewAccountActivity) getActivity();
         String path = "sites/new";
         Map<String, String> params = new HashMap<String, String>();
         params.put("blog_name", act.validatedBlogURL);
@@ -133,9 +132,9 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         params.put("client_secret", Config.OAUTH_APP_SECRET);
         restClient.post(path, params, null, new ResponseHandler(ResponseHandler.VALIDATE_SITE), new ErrorListener());
     }
-    
+
     private void createUser() {
-        NewAccountActivity act = (NewAccountActivity)getActivity();
+        NewAccountActivity act = (NewAccountActivity) getActivity();
         String path = "users/new";
         Map<String, String> params = new HashMap<String, String>();
         params.put("username", act.validatedUsername);
@@ -144,22 +143,25 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         params.put("validate", "0");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        restClient.post(path, params, null, new ResponseHandler(ResponseHandler.CREATE_USER), new ErrorListener());
+        restClient.post(path, params, null, new ResponseHandler(ResponseHandler.CREATE_USER),
+                new ErrorListener());
     }
 
     private void authenticateUser() {
-        NewAccountActivity act = (NewAccountActivity)getActivity();
+        NewAccountActivity act = (NewAccountActivity) getActivity();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(act);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, act.validatedUsername);
-        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(act.validatedPassword));
+        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE,
+                WordPressDB.encryptPassword(act.validatedPassword));
         editor.commit();
         // fire off a request to get an access token
-        WordPress.restClient.get("me", new ResponseHandler(ResponseHandler.AUTHENTICATE_USER), new ErrorListener());
+        WordPress.restClient.get("me", new ResponseHandler(ResponseHandler.AUTHENTICATE_USER),
+                new ErrorListener());
     }
-    
-    private void createTheBlog(){
-        NewAccountActivity act = (NewAccountActivity)getActivity();
+
+    private void createTheBlog() {
+        NewAccountActivity act = (NewAccountActivity) getActivity();
         String path = "sites/new";
         Map<String, String> params = new HashMap<String, String>();
         params.put("blog_name", act.validatedBlogURL);
@@ -169,13 +171,14 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         params.put("validate", "false");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        WordPress.restClient.post(path, params, null, new ResponseHandler(ResponseHandler.CREATE_SITE), new ErrorListener());
+        WordPress.restClient.post(path, params, null,
+                new ResponseHandler(ResponseHandler.CREATE_SITE), new ErrorListener());
     }
-    
-    private void finishThisStuff(){
+
+    private void finishThisStuff() {
         if (pd != null)
             pd.dismiss();
-        final NewAccountActivity act = (NewAccountActivity)getActivity();
+        final NewAccountActivity act = (NewAccountActivity) getActivity();
         Bundle bundle = new Bundle();
         bundle.putString("username", act.validatedUsername);
         Intent mIntent = new Intent();
@@ -183,19 +186,19 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         act.setResult(act.RESULT_OK, mIntent);
         act.finish();
     }
-    
-    public void updateUI(){
-        NewAccountActivity act = (NewAccountActivity)getActivity();
+
+    public void updateUI() {
+        NewAccountActivity act = (NewAccountActivity) getActivity();
         email.setText(act.validatedEmail);
         username.setText(act.validatedUsername);
         siteTitle.setText(act.validatedBlogTitle);
-        siteAddress.setText("http://"+act.validatedBlogURL+".wordpress.com");
+        siteAddress.setText("http://" + act.validatedBlogURL + ".wordpress.com");
         siteLanguage.setText(act.validatedLanguageID);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.new_account_review_fragment_screen, container, false);
@@ -205,7 +208,7 @@ public class NewAccountReviewPageFragment extends NewAccountAbstractPageFragment
         siteTitle = (TextView) rootView.findViewById(R.id.title_text);
         siteAddress = (TextView) rootView.findViewById(R.id.address_text);
         siteLanguage = (TextView) rootView.findViewById(R.id.language_text);
-        
+
         final WPTextView nextButton = (WPTextView) rootView.findViewById(R.id.next_button);
         nextButton.setOnClickListener(nextClickListener);
 
