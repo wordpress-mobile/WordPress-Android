@@ -90,6 +90,19 @@ public class TutorialActivity extends SherlockFragmentActivity {
                 getString(R.string.nux_dialog_success_continue), R.drawable.nux_icon_check);
         alert.show(ft, "alert");
     }
+
+    public void showPrevItem() {
+        if (mPager.getCurrentItem() == 0)
+            return;
+        mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0)
+            super.onBackPressed();
+        showPrevItem();
+    }
     
     private class TutorialPagerAdapter extends FragmentStatePagerAdapter {
        
