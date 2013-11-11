@@ -745,7 +745,8 @@
     <string name="invalid_password_message">Password must contain at least 4 characters.</string>
     <string name="passwords_do_not_match_message">Passwords don\'t match.</string>
     <string name="invalid_username_title">Invalid username</string>
-    <string name="invalid_username_length">Username must be shorter than 61 characters.</string>
+    <string name="invalid_username_too_short">Username must be longer than 4 characters.</string>
+    <string name="invalid_username_too_long">Username must be shorter than 61 characters.</string>
     <string name="email_hint">Email Address</string>
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm password</string>

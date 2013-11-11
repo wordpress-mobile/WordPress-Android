@@ -66,8 +66,14 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
             return false;
         }
 
+        if (username.length() < 4) {
+            usernameTextField.setError(getString(R.string.invalid_username_too_short));
+            usernameTextField.requestFocus();
+            return false;
+        }
+
         if (username.length() > 60) {
-            usernameTextField.setError(getString(R.string.invalid_username_length));
+            usernameTextField.setError(getString(R.string.invalid_username_too_long));
             usernameTextField.requestFocus();
             return false;
         }
