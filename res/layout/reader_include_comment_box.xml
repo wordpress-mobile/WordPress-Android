@@ -3,30 +3,39 @@
     comment box at bottom of post detail
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
 
     <EditText
-            android:id="@+id/edit_comment"
-            style="@style/ReaderEditText.Comment"
-            android:paddingLeft="@dimen/reader_margin_large"
-            android:layout_toLeftOf="@+id/image_post_comment"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/reader_hint_comment_on_post"/>
+        android:id="@+id/edit_comment"
+        style="@style/ReaderEditText.Comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/image_post_comment"
+        android:gravity="center_vertical"
+        android:hint="@string/reader_hint_comment_on_post"
+        android:paddingLeft="@dimen/reader_margin_large" />
 
     <ImageView
-            android:id="@+id/image_post_comment"
-            android:paddingRight="@dimen/reader_margin_medium"
-            android:paddingTop="@dimen/reader_margin_large"
-            android:paddingBottom="@dimen/reader_margin_large"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/edit_comment"
-            android:layout_alignBottom="@+id/edit_comment"
-            android:src="@drawable/ic_send"/>
+        android:id="@+id/image_post_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edit_comment"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/edit_comment"
+        android:paddingBottom="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingTop="@dimen/reader_margin_large"
+        android:src="@drawable/ic_send" />
+
+    <ProgressBar
+        android:id="@+id/progress_submit_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/reader_margin_small"
+        android:visibility="gone" />
 
 </RelativeLayout>

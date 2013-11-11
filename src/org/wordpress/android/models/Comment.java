@@ -16,6 +16,13 @@ public class Comment {
     public String dateCreatedFormatted = "";
     public URI profileImageUrl = null;
 
+    public static enum CommentStatus {
+        UNKNOWN,
+        PENDING,
+        APPROVED,
+        SPAM,
+    }
+
     public Comment(String postID, int commentID, int position, String name,
             String dateCreatedFormatted, String comment, String status,
             String postTitle, String authorURL, String authorEmail,
@@ -32,5 +39,15 @@ public class Comment {
         this.authorEmail = authorEmail;
         this.profileImageUrl = profileImageUrl;
         this.dateCreatedFormatted = dateCreatedFormatted;
+    }
+
+    public CommentStatus getStatusEnum() {
+        if (status==null)
+            return CommentStatus.UNKNOWN;
+        if (status.equals("approve"))
+            return CommentStatus.APPROVED;
+        if (status.equals("hold"))
+            return CommentStatus.PENDING;
+        return CommentStatus.UNKNOWN;
     }
 }

@@ -107,6 +107,8 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
         super.onCreate();
+
+        //wpDB.copyDatabase();
     }
 
     public static Context getContext() {

@@ -33,7 +33,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
@@ -58,7 +60,6 @@ public class CommentsListFragment extends ListFragment {
     public ArrayList<Comment> model = null;
     public Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
     public int ID_DIALOG_MODERATING = 1;
-    public int ID_DIALOG_REPLYING = 2;
     public int ID_DIALOG_DELETING = 3;
     public static final int COMMENTS_PER_PAGE = 30;
     public boolean shouldSelectAfterLoad = false;

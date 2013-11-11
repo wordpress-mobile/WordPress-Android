@@ -172,7 +172,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
     }
 
-    @Override
+    /*@Override
     public void onCommentSelected(Comment comment) {
 
         FragmentManager fm = getSupportFragmentManager();
@@ -186,6 +186,31 @@ public class CommentsActivity extends WPActionBarActivity implements
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(commentList);
                 f = new CommentFragment();
+                ft.add(R.id.commentDetailFragmentContainer, f);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
+            } else {
+                f.loadComment(comment);
+            }
+        }
+    }*/
+
+    @Override
+    public void onCommentSelected(Comment comment) {
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.executePendingTransactions();
+        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+
+        if (comment != null && fm.getBackStackEntryCount() == 0) {
+
+            if (f == null || !f.isInLayout()) {
+                WordPress.currentComment = comment;
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(commentList);
+                f = CommentDetailFragment.newInstance(WordPress.currentBlog.getId(), comment.postID, comment.commentID);
                 ft.add(R.id.commentDetailFragmentContainer, f);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);

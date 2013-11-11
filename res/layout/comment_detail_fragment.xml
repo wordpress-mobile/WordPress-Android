@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
     comment detail displayed from both the notification list and the comment list
 -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/reader_margin_large">
+    android:paddingLeft="@dimen/reader_margin_large"
+    android:paddingRight="@dimen/reader_margin_large"
+    android:paddingTop="@dimen/reader_margin_large">
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
@@ -13,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_gravity="center_vertical"
@@ -57,7 +61,9 @@
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="web"
             android:text="text_content"
+            android:textColorLink="@color/reader_hyperlink"
             android:textSize="@dimen/reader_text_sz_large" />
     </ScrollView>
 
@@ -74,15 +80,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btn_approve"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_approve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/reader_margin_medium"
             android:background="@drawable/reader_button_transparent_selector"
-            style="@style/ReaderButton"
             android:drawableLeft="@drawable/moderate_approve"
-            android:text="@string/approve" />
+            android:padding="@dimen/reader_margin_large"
+            android:text="@string/approve"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/reader_text_sz_extra_large" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -28,6 +28,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1084,20 +1089,21 @@ public class WordPressDB {
     /*
      * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist
      */
-    public Comment getSingleComment(int blogId, final String postId, int commentId) {
+    public Comment getSingleComment(int internalBlogId, final String postId, int commentId) {
         if (TextUtils.isEmpty(postId))
             return null;
 
-        String[] args = {Integer.toString(blogId), postId, Integer.toString(commentId)};
+        String[] cols = {"author",
+                         "comment",
+                         "commentDateFormatted",
+                         "status",
+                         "url",
+                         "email",
+                         "postTitle"};
+        String[] args = {Integer.toString(internalBlogId), postId, Integer.toString(commentId)};
         Cursor c = db.query(COMMENTS_TABLE,
-                            new String[] { "author",
-                                           "comment",
-                                           "commentDateFormatted",
-                                           "status",
-                                           "url",
-                                           "email",
-                                           "postTitle"},
-                            "blogID=?, postID=?, iCommentID=?",
+                            cols,
+                            "blogID=? AND postID=? AND iCommentID=?",
                             args,
                             null, null, null);
 
@@ -2014,4 +2020,28 @@ public class WordPressDB {
     public void clearNotes() {
         db.delete(NOTES_TABLE, null, null);
     }
+
+    /*
+     * nbradbury - used during development to copy database to SD card so we can access it via DDMS
+     */
+    /*protected void copyDatabase() {
+        String copyFrom = db.getPath();
+        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
+
+        try {
+            InputStream input = new FileInputStream(copyFrom);
+            OutputStream output = new FileOutputStream(copyTo);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0)
+                output.write(buffer, 0, length);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            Log.e("WORDPRESS", "failed to copy database", e);
+        }
+    }*/
 }
