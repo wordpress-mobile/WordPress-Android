@@ -284,6 +284,12 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
+    <style name="WordPress.NUXReviewText">
+        <item name="android:padding">8dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:editable">false</item>
+    </style>
 
     <style name="WordPress.NUXEditText">
         <item name="android:padding">8dp</item>
@@ -301,17 +307,6 @@
         <item name="android:shadowRadius">2</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/nux_tos</item>
-    </style>
-
-    <style name="WordPress.NUXReviewRow">
-        <item name="android:shadowColor">@color/nux_shadow</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/nux_review</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
     </style>
 
     <style name="WordPress.NUXTitle">

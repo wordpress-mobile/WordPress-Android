@@ -153,10 +153,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/action_next"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
                     android:enabled="false"
                     style="@style/WordPress.NUXThirdButton"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
                     android:layout_marginRight="8dp"
                     android:gravity="center"
                     android:layout_marginLeft="8dp" />
