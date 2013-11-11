@@ -3,14 +3,6 @@
  */
 package org.wordpress.android.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import android.os.AsyncTask;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -26,10 +18,17 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class WPRestClient {
     
@@ -441,6 +440,8 @@ public class WPRestClient {
 
             if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
                 int marker = SITE_PREFIX.length();
+                if (url.indexOf("/", marker) < marker)
+                    return null;
                 return url.substring(marker, url.indexOf("/", marker));
             }
             // not a sites/$siteId request
