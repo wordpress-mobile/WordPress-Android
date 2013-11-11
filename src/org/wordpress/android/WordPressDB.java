@@ -11,6 +11,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
@@ -1077,6 +1079,51 @@ public class WordPressDB {
         c.close();
 
         return values;
+    }
+
+    /*
+     * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist
+     */
+    public Comment getSingleComment(int blogId, final String postId, int commentId) {
+        if (TextUtils.isEmpty(postId))
+            return null;
+
+        String[] args = {Integer.toString(blogId), postId, Integer.toString(commentId)};
+        Cursor c = db.query(COMMENTS_TABLE,
+                            new String[] { "author",
+                                           "comment",
+                                           "commentDateFormatted",
+                                           "status",
+                                           "url",
+                                           "email",
+                                           "postTitle"},
+                            "blogID=?, postID=?, iCommentID=?",
+                            args,
+                            null, null, null);
+
+        if (!c.moveToFirst())
+            return null;
+
+        String authorName = c.getString(0);
+        String content = c.getString(1);
+        String dateCreatedFormatted = c.getString(2);
+        String status = c.getString(3);
+        String authorUrl = c.getString(4);
+        String authorEmail = c.getString(5);
+        String postTitle = c.getString(6);
+
+        return new Comment(postId,
+                           commentId,
+                           0,
+                           authorName,
+                           dateCreatedFormatted,
+                           content,
+                           status,
+                           postTitle,
+                           authorUrl,
+                           authorEmail,
+                           null);
+
     }
 
     public List<Map<String, Object>> loadComments(int blogID) {
