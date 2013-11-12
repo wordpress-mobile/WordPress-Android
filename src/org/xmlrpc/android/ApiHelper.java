@@ -1,17 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
@@ -23,10 +11,21 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApiHelper {
     /** Called when the activity is first created. */
@@ -757,11 +756,18 @@ public class ApiHelper {
         }
 
         private Callback mCallback;
-        
+
+        public GetFeatures() {
+        }
+
         public GetFeatures(Callback callback) {
             mCallback = callback;
         }
-        
+
+        public FeatureSet doSynchronously(List<?>... params) {
+            return doInBackground(params);
+        }
+
         @Override
         protected FeatureSet doInBackground(List<?>... params) {
             

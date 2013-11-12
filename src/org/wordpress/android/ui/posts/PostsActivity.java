@@ -1,19 +1,12 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,23 +19,30 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.AddCommentActivity;
-import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
+import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
@@ -75,7 +75,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             startNotificationsActivity(extras);
             return;
         }
-        
+
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
@@ -123,9 +123,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
-            String errorMessage = extras.getString("errorMessage");
-            if (errorMessage != null)
-                showPostUploadErrorAlert(errorMessage);
+            showErrorDialogIfNeeded(extras);
         }
         
         if (isPage)
@@ -151,20 +149,25 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             popPostDetail();
     }
     
-    private void showPostUploadErrorAlert(String errorMessage) {
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                PostsActivity.this);
-        dialogBuilder.setTitle(getResources().getText(
-                R.string.error));
+    private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
+                                          final String infoURL) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+        dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                            int whichButton) {
+                    public void onClick(DialogInterface dialog, int whichButton) {
                         // Just close the window.
                     }
                 });
+        if (infoTitle != null && infoURL != null) {
+            dialogBuilder.setNeutralButton(infoTitle,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
+                    }
+                });
+        }
         dialogBuilder.setCancelable(true);
         if (!isFinishing())
             dialogBuilder.create().show();
@@ -181,12 +184,19 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 startNotificationsActivity(extras);
                 return;
             }
-            
-            String errorMessage = extras.getString("errorMessage");
-            if (errorMessage != null)
-                showPostUploadErrorAlert(errorMessage);
         }
-        
+    }
+
+    private void showErrorDialogIfNeeded(Bundle extras) {
+        if (extras == null) {
+            return ;
+        }
+        String errorMessage = extras.getString("errorMessage");
+        String errorInfoTitle = extras.getString("errorInfoTitle");
+        String errorInfoLink = extras.getString("errorInfoLink");
+        if (errorMessage != null) {
+            showPostUploadErrorAlert(errorMessage, errorInfoTitle, errorInfoLink);
+        }
     }
 
     private void startNotificationsActivity(Bundle extras) {
@@ -345,7 +355,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 if (!returnText.equals("CANCEL")) {
                     // Add comment to the server if user didn't cancel.
                     final String postID = extras.getString("postID");
-                    new PostsActivity.addCommentTask().execute(postID, returnText);
+                    new addCommentTask().execute(postID, returnText);
                 }
             }
         }
@@ -709,7 +719,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     private void refreshComments() {
-        new PostsActivity.refreshCommentsTask().execute();
+        new refreshCommentsTask().execute();
     }
     
     private String getShortlinkTagHref(String urlString) {
@@ -813,7 +823,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
-                                new PostsActivity.deletePostTask().execute(post);
+                                new deletePostTask().execute(post);
                             }
                         });
                 dialogBuilder.setNegativeButton(
@@ -832,7 +842,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
             }
         } else if (action == POST_SHARE) {
-            new PostsActivity.shareURLTask().execute(post);
+            new shareURLTask().execute(post);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm

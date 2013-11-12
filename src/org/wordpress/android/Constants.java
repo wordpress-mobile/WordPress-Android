@@ -13,7 +13,9 @@ public class Constants {
     
     public static String wpcomXMLRPCURL = "https://wordpress.com/xmlrpc.php";
     public static String wpcomLoginURL = "https://wordpress.com/wp-login.php";
-    
+
+    public static String videoPressURL = "http://videopress.com";
+
     public static int QUICK_POST_PHOTO_CAMERA = 0;
     public static int QUICK_POST_PHOTO_LIBRARY = 1;
     public static int QUICK_POST_VIDEO_CAMERA = 2;
