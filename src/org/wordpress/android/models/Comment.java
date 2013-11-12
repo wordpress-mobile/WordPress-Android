@@ -16,13 +16,6 @@ public class Comment {
     public String dateCreatedFormatted = "";
     public URI profileImageUrl = null;
 
-    public static enum CommentStatus {
-        UNKNOWN,
-        PENDING,
-        APPROVED,
-        SPAM,
-    }
-
     public Comment(String postID, int commentID, int position, String name,
             String dateCreatedFormatted, String comment, String status,
             String postTitle, String authorURL, String authorEmail,
@@ -41,13 +34,35 @@ public class Comment {
         this.dateCreatedFormatted = dateCreatedFormatted;
     }
 
-    public CommentStatus getStatusEnum() {
-        if (status==null)
+    public static enum CommentStatus {
+        UNKNOWN,
+        PENDING,
+        APPROVED,
+        SPAM;
+
+        public String toString() {
+            switch (this) {
+                case PENDING:
+                    return "hold";
+                case APPROVED:
+                    return "approve";
+                case SPAM :
+                    return "spam";
+                default :
+                    return "";
+            }
+        }
+
+        public static CommentStatus fromString(String value) {
+            if (value==null)
+                return CommentStatus.UNKNOWN;
+            if (value.equals("approve"))
+                return CommentStatus.APPROVED;
+            if (value.equals("hold"))
+                return CommentStatus.PENDING;
+            if (value.equals("spam"))
+                return SPAM;
             return CommentStatus.UNKNOWN;
-        if (status.equals("approve"))
-            return CommentStatus.APPROVED;
-        if (status.equals("hold"))
-            return CommentStatus.PENDING;
-        return CommentStatus.UNKNOWN;
+        }
     }
 }

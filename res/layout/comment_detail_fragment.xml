@@ -6,27 +6,28 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/reader_margin_large"
-    android:paddingRight="@dimen/reader_margin_large"
-    android:paddingTop="@dimen/reader_margin_large">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/grey_extra_light"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_large"
+        android:paddingTop="@dimen/reader_margin_large">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/reader_margin_large" />
+            style="@style/ReaderImageView.Avatar.Large"
+            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/reader_margin_large"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -42,7 +43,7 @@
                 style="@style/ReaderTextView.Source.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/reader_margin_small"
+                android:paddingTop="@dimen/reader_margin_small"
                 android:text="text_date" />
         </LinearLayout>
     </LinearLayout>
@@ -53,9 +54,12 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_detail_header"
-        android:layout_marginBottom="@dimen/reader_margin_large"
-        android:layout_marginTop="@dimen/reader_margin_large"
-        android:fillViewport="true">
+        android:background="@color/grey_extra_light"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/reader_margin_large"
+        android:paddingLeft="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_large"
+        android:paddingTop="@dimen/reader_margin_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_content"
@@ -74,22 +78,39 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_medium" />
+
         <include
             android:id="@+id/layout_comment_box"
             layout="@layout/reader_include_comment_box"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_approve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
             android:background="@drawable/reader_button_transparent_selector"
             android:drawableLeft="@drawable/moderate_approve"
             android:padding="@dimen/reader_margin_large"
             android:text="@string/approve"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/reader_text_sz_extra_large" />
+            android:textSize="@dimen/reader_text_sz_extra_large"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -1088,6 +1088,8 @@ public class WordPressDB {
 
     /*
      * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist
+     * note that the passed blog Id is the internal id (unique id in account table)
+     * rather than the actual blogId since comments are stored with the internal id
      */
     public Comment getSingleComment(int internalBlogId, final String postId, int commentId) {
         if (TextUtils.isEmpty(postId))
@@ -1129,7 +1131,6 @@ public class WordPressDB {
                            authorUrl,
                            authorEmail,
                            null);
-
     }
 
     public List<Map<String, Object>> loadComments(int blogID) {
