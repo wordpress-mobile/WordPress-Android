@@ -16,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -217,24 +218,25 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                     xmlrpcClient.callAsync(new XMLRPCCallback() {
                         @Override
                         public void onSuccess(long id, Object result) {
-                            Map<?, ?> blogOptions = (HashMap<?, ?>) result;
-                            if (blogOptions != null && blogOptions.containsKey("jetpack_client_id")) {
-                                String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
-                                if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
-                                    currentBlog.setApi_blogid(apiBlogId);
-                                    currentBlog.save("");
-                                    if (!isFinishing())
-                                        refreshStats();
+                            if (result != null && ( result instanceof HashMap )) {
+                                Map<?, ?> blogOptions = (HashMap<?, ?>) result;
+                                if ( blogOptions.containsKey("jetpack_client_id") ) {
+                                    String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
+                                    if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
+                                        currentBlog.setApi_blogid(apiBlogId);
+                                        currentBlog.save("");
+                                        if (!isFinishing())
+                                            refreshStats();
+                                    }
                                 }
                             }
                         }
-
                         @Override
                         public void onFailure(long id, XMLRPCException error) {
+                            Log.e("StatsActivity", "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
                         }
                     }, "wp.getOptions", params);
                 }
-
             refreshStats();
             }
         }
