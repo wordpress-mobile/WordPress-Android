@@ -38,6 +38,8 @@ public class CommentDetailFragment extends Fragment {
     private Comment mComment;
 
     private boolean mIsReplyBoxShowing = false;
+    private boolean mIsSubmittingReply = false;
+    private boolean mIsApprovingComment = false;
 
     private OnCommentChangeListener mChangeListener;
     protected interface OnCommentChangeListener {
@@ -187,24 +189,35 @@ public class CommentDetailFragment extends Fragment {
      * approve the current comment
      */
     private void approveComment() {
-        if (!hasActivity() || !hasComment())
+        if (!hasActivity() || !hasComment() || mIsApprovingComment)
             return;
 
         final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
-        txtBtnApprove.setVisibility(View.GONE);
+        ReaderAniUtils.flyOut(txtBtnApprove);
 
-        showMessageBar(getString(R.string.comment_approved), true);
+        // immediately show MessageBox saying comment has been approved - runnable below executes
+        // once MessageBar disappears
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                showReplyBox();
+            }
+        };
+        showMessageBar(getString(R.string.comment_approved), runnable);
+
+        mIsApprovingComment = true;
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                txtBtnApprove.setEnabled(true);
+                mIsApprovingComment = false;
                 if (succeeded) {
                     mComment.status = Comment.CommentStatus.APPROVED.toString();
                     mChangeListener.onCommentModified(mComment);
                 } else {
-                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                    hideReplyBox();
                     txtBtnApprove.setVisibility(View.VISIBLE);
+                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                     hideReplyBox();
                 }
             }
@@ -215,7 +228,6 @@ public class CommentDetailFragment extends Fragment {
     /*
      * post the text typed into the comment box as a reply to the current comment
      */
-    private boolean mIsSubmittingReply = false;
     private void submitReply() {
         if (!hasActivity() || mIsSubmittingReply)
             return;
@@ -244,7 +256,7 @@ public class CommentDetailFragment extends Fragment {
 
                 if (succeeded) {
                     mChangeListener.onCommentAdded();
-                    showMessageBar(getString(R.string.note_reply_successful), false);
+                    showMessageBar(getString(R.string.note_reply_successful), null);
                     editComment.setText(null);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
@@ -265,8 +277,9 @@ public class CommentDetailFragment extends Fragment {
 
     /*
      * animate a message in from the bottom, then animate it back out after a brief delay
+     * passed runnable will be executed by hideMessageBar() once the bar disappears
      */
-    private void showMessageBar(final String message, final boolean showReplyBoxWhenDone) {
+    private void showMessageBar(final String message, final Runnable runnable) {
         if (!hasActivity())
             return;
 
@@ -282,12 +295,12 @@ public class CommentDetailFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                hideMessageBar(showReplyBoxWhenDone);
+                hideMessageBar(runnable);
             }
         }, 1500);
     }
 
-    private void hideMessageBar(final boolean showReplyBoxWhenDone) {
+    private void hideMessageBar(final Runnable runnable) {
         if (!hasActivity())
             return;
 
@@ -301,8 +314,8 @@ public class CommentDetailFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 txtMessageBar.setVisibility(View.GONE);
-                if (showReplyBoxWhenDone)
-                    showReplyBox();
+                if (runnable != null)
+                    runnable.run();
             }
             @Override
             public void onAnimationRepeat(Animation animation) { }

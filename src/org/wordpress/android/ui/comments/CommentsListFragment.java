@@ -994,14 +994,14 @@ public class CommentsListFragment extends ListFragment {
 
     /*
      * replace existing comment with the passed one and refresh list to show changes - assumes
-     * the comment ID hasn't changed
+     * the postID & commentID haven't changed
      */
     protected void replaceComment(Comment comment) {
         if (comment==null || model==null)
             return;
         for (int i=0; i < model.size(); i++) {
             Comment thisComment = model.get(i);
-            if (thisComment.commentID == comment.commentID) {
+            if (thisComment.commentID==comment.commentID && thisComment.postID==comment.postID) {
                 model.set(i, comment);
                 getListView().invalidateViews();
                 return;
