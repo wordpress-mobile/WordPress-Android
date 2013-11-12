@@ -11,7 +11,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -19,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
@@ -1087,11 +1085,11 @@ public class WordPressDB {
     }
 
     /*
-     * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist
-     * note that the passed blog Id is the internal id (unique id in account table)
-     * rather than the actual blogId since comments are stored with the internal id
+     * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist - note
+     * that the passed blog Id is the internal id (unique id in account table) rather
+     * than the actual blogId since comments are stored with the internal id
      */
-    public Comment getSingleComment(int internalBlogId, final String postId, int commentId) {
+    /*public Comment getSingleComment(int internalBlogId, final String postId, int commentId) {
         if (TextUtils.isEmpty(postId))
             return null;
 
@@ -1102,7 +1100,9 @@ public class WordPressDB {
                          "url",
                          "email",
                          "postTitle"};
-        String[] args = {Integer.toString(internalBlogId), postId, Integer.toString(commentId)};
+        String[] args = {Integer.toString(internalBlogId),
+                         postId,
+                         Integer.toString(commentId)};
         Cursor c = db.query(COMMENTS_TABLE,
                             cols,
                             "blogID=? AND postID=? AND iCommentID=?",
@@ -1131,7 +1131,7 @@ public class WordPressDB {
                            authorUrl,
                            authorEmail,
                            null);
-    }
+    }*/
 
     public List<Map<String, Object>> loadComments(int blogID) {
 
@@ -2025,7 +2025,7 @@ public class WordPressDB {
     /*
      * nbradbury - used during development to copy database to SD card so we can access it via DDMS
      */
-    /*protected void copyDatabase() {
+    protected void copyDatabase() {
         String copyFrom = db.getPath();
         String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
 
@@ -2044,5 +2044,5 @@ public class WordPressDB {
         } catch (IOException e) {
             Log.e("WORDPRESS", "failed to copy database", e);
         }
-    }*/
+    }
 }

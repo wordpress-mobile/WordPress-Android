@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -33,7 +38,7 @@ public class CommentActions {
 
     /***
      * reply to an individual comment
-     ***/
+     */
     protected static void submitReply(final Blog blog,
                                       final Comment comment,
                                       final String replyText,
@@ -93,7 +98,7 @@ public class CommentActions {
 
     /***
      * change the status of a comment
-     ***/
+     */
     protected static void setCommentStatus(final Blog blog,
                                            final Comment comment,
                                            final Comment.CommentStatus status,
@@ -137,6 +142,54 @@ public class CommentActions {
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
                     WordPress.wpDB.updateCommentStatus(blog.getId(), comment.commentID, status.toString());
+
+                if (listener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onActionResult(success);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /***
+     * delete (trash) a single comment - UNTESTED
+     */
+    private void deleteComment(final Blog blog,
+                               final Comment comment,
+                               final CommentActionListener listener) {
+        if (blog==null || comment==null) {
+            if (listener != null)
+                listener.onActionResult(false);
+            return;
+        }
+
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
+
+                Object[] params = { blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
+                        comment.commentID };
+
+                Object result;
+                try {
+                    result = client.call("wp.deleteComment", params);
+                } catch (final XMLRPCException e) {
+                    result = null;
+                }
+
+                final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
+                // TODO: delete from local DB upon success
 
                 if (listener != null) {
                     handler.post(new Runnable() {

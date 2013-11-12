@@ -14,6 +14,9 @@ public class GravatarUtils {
         return gravatarUrlFromEmail(email, 0);
     }
     public static String gravatarUrlFromEmail(final String email, int size) {
+        if (TextUtils.isEmpty(email))
+            return "";
+
         String url = "http://gravatar.com/avatar/"
                     + StringUtils.getMd5Hash(email)
                     + "?d=mm";

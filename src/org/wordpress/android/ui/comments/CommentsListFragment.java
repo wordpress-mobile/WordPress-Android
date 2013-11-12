@@ -514,7 +514,7 @@ public class CommentsListFragment extends ListFragment {
 
             sdk_version = android.os.Build.VERSION.SDK_INT;
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            CommentFragment f = (CommentFragment) fm.findFragmentById(R.id.commentDetail);
+            CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
             if (f != null && f.isInLayout())
                 detailViewVisible = true;
         }
@@ -576,20 +576,22 @@ public class CommentsListFragment extends ListFragment {
 
             row.setId(Integer.valueOf(s.commentID));
 
-            String prettyComment, textColor = "";
+            final String prettyComment;
+            final String textColor;
 
-            if (s.status.equals("spam")) {
-                prettyComment = getResources().getText(R.string.spam)
-                        .toString();
-                textColor = "#FF0000";
-            } else if (s.status.equals("hold")) {
-                prettyComment = getResources().getText(R.string.unapproved)
-                        .toString();
-                textColor = "#D54E21";
-            } else {
-                prettyComment = getResources().getText(R.string.approved)
-                        .toString();
-                textColor = "#006505";
+            switch (Comment.CommentStatus.fromString(s.status)) {
+                case SPAM :
+                    prettyComment = getResources().getText(R.string.spam).toString();
+                    textColor = "#FF0000";
+                    break;
+                case PENDING:
+                    prettyComment = getResources().getText(R.string.unapproved).toString();
+                    textColor = "#D54E21";
+                    break;
+                default :
+                    prettyComment = getResources().getText(R.string.approved).toString();
+                    textColor = "#006505";
+                    break;
             }
 
             getBulkEditGroup().setVisibility(View.VISIBLE);
@@ -987,9 +989,24 @@ public class CommentsListFragment extends ListFragment {
             }
 
             return commentsResult;
-
         }
+    }
 
+    /*
+     * replace existing comment with the passed one and refresh list to show changes - assumes
+     * the comment ID hasn't changed
+     */
+    protected void replaceComment(Comment comment) {
+        if (comment==null || model==null)
+            return;
+        for (int i=0; i < model.size(); i++) {
+            Comment thisComment = model.get(i);
+            if (thisComment.commentID == comment.commentID) {
+                model.set(i, comment);
+                getListView().invalidateViews();
+                return;
+            }
+        }
     }
 
     public interface OnCommentSelectedListener {

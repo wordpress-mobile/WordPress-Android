@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,39 +37,15 @@ public class CommentDetailFragment extends Fragment {
 
     private boolean mIsReplyBoxShowing = false;
 
-    private static final String KEY_INTERNAL_BLOG_ID = "internal_blog_id";
-    private static final String KEY_POST_ID = "post_id";
-    private static final String KEY_COMMENT_ID = "comment_id";
-
-    private OnCommentModifiedListener mModifiedListener;
-    protected interface OnCommentModifiedListener {
-        public void onCommentModified();
+    private OnCommentChangeListener mChangeListener;
+    protected interface OnCommentChangeListener {
+        public void onCommentModified(Comment comment);
     }
 
-    protected static CommentDetailFragment newInstance(final int internalBlogId,
-                                                       final String postId,
-                                                       final int commentId) {
-        Bundle args = new Bundle();
-        args.putInt(KEY_INTERNAL_BLOG_ID, internalBlogId);
-        args.putString(KEY_POST_ID, StringUtils.notNullStr(postId));
-        args.putInt(KEY_COMMENT_ID, commentId);
-
+    protected static CommentDetailFragment newInstance(final Comment comment) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setArguments(args);
-
+        fragment.setComment(comment);
         return fragment;
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-
-        if (args!=null) {
-            int internalBlogId = args.getInt(KEY_INTERNAL_BLOG_ID);
-            String postId = args.getString(KEY_POST_ID);
-            int commentId = args.getInt(KEY_COMMENT_ID);
-            mComment = WordPress.wpDB.getSingleComment(internalBlogId, postId, commentId);
-        }
     }
 
     @Override
@@ -77,14 +54,20 @@ public class CommentDetailFragment extends Fragment {
         return view;
     }
 
+    protected void setComment(final Comment comment) {
+        mComment = comment;
+        if (hasActivity())
+            showComment();
+    }
+
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        /*try {
+        try {
             // container activity must implement this callback
-            mModifiedListener = (OnCommentModifiedListener) activity;
+            mChangeListener = (OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement CommentModifiedListener");
-        }*/
+        }
     }
 
     @Override
@@ -134,18 +117,10 @@ public class CommentDetailFragment extends Fragment {
     }
 
     /*
-     * called from container when user selects a comment from the list
-     */
-    protected void loadComment(Comment comment) {
-        mComment = comment;
-        showComment();
-    }
-
-    /*
      * display the current comment
      */
     private void showComment() {
-        if (mComment == null || !hasActivity())
+        if (!hasActivity())
             return;
 
         final NetworkImageView imgAvatar = (NetworkImageView) getActivity().findViewById(R.id.image_avatar);
@@ -154,15 +129,27 @@ public class CommentDetailFragment extends Fragment {
         final TextView txtContent = (TextView) getActivity().findViewById(R.id.text_content);
         final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
 
-        txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : mComment.name);
-        txtDate.setText(mComment.dateCreatedFormatted);
-        txtContent.setText(mComment.comment);
-
-        imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-        if (!TextUtils.isEmpty(mComment.authorEmail)) {
-            String profileImageUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail);
-            imgAvatar.setImageUrl(profileImageUrl, WordPress.imageLoader);
+        // clear all views when comment is null
+        if (mComment == null) {
+            imgAvatar.setImageDrawable(null);
+            txtName.setText(null);
+            txtDate.setText(null);
+            txtContent.setText(null);
+            txtBtnApprove.setVisibility(View.GONE);
+            return;
         }
+
+        txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.name));
+        txtDate.setText(mComment.dateCreatedFormatted);
+        txtContent.setText(Html.fromHtml(mComment.comment));
+
+        // TODO: anonymous comments will have a blank avatar because the version of Volley
+        // we're using as of 11/11/13 doesn't show the default image - latest version of
+        // Volley corrects this
+        int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
+        imgAvatar.setDefaultImageResId(R.drawable.placeholder);
+        String profileImageUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
+        imgAvatar.setImageUrl(profileImageUrl, WordPress.imageLoader);
 
         // approve button only appears when comment hasn't already been approved, reply box only
         // appears from approved comments
@@ -170,6 +157,8 @@ public class CommentDetailFragment extends Fragment {
         if (status == Comment.CommentStatus.APPROVED) {
             txtBtnApprove.setVisibility(View.GONE);
             showReplyBox();
+            mComment.status = Comment.CommentStatus.APPROVED.toString();
+            mChangeListener.onCommentModified(mComment);
         } else {
             txtBtnApprove.setVisibility(View.VISIBLE);
             txtBtnApprove.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +180,7 @@ public class CommentDetailFragment extends Fragment {
         final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress);
         final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
 
+        txtBtnApprove.setVisibility(View.INVISIBLE);
         progress.setVisibility(View.VISIBLE);
         txtBtnApprove.setText(R.string.moderating_comment);
 
@@ -198,11 +188,13 @@ public class CommentDetailFragment extends Fragment {
             @Override
             public void onActionResult(boolean succeeded) {
                 progress.setVisibility(View.GONE);
-                txtBtnApprove.setText(R.string.approve);
                 if (succeeded) {
                     txtBtnApprove.setVisibility(View.GONE);
                     showReplyBox();
+                    mComment.status = Comment.CommentStatus.APPROVED.toString();
+                    mChangeListener.onCommentModified(mComment);
                 } else {
+                    txtBtnApprove.setVisibility(View.VISIBLE);
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                 }
             }

@@ -7,7 +7,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:visibility="gone">
+
+    <View
+        android:id="@+id/divider_comment"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/grey_medium" />
 
     <EditText
         android:id="@+id/edit_comment"

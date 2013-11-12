@@ -6,21 +6,22 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_extra_light">
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_extra_light"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/reader_margin_large"
-        android:paddingRight="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_medium"
         android:paddingTop="@dimen/reader_margin_large">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar.Large"
+            android:layout_width="@dimen/reader_avatar_sz_large"
+            android:layout_height="@dimen/reader_avatar_sz_large"
             android:layout_gravity="center_vertical" />
 
         <LinearLayout
@@ -34,6 +35,7 @@
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="3"
                 android:text="text_name"
                 android:textColor="@color/reader_hyperlink"
                 android:textSize="@dimen/reader_text_sz_extra_large" />
@@ -43,6 +45,7 @@
                 style="@style/ReaderTextView.Source.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:paddingTop="@dimen/reader_margin_small"
                 android:text="text_date" />
         </LinearLayout>
@@ -54,12 +57,11 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_detail_header"
-        android:background="@color/grey_extra_light"
         android:fillViewport="true"
-        android:paddingBottom="@dimen/reader_margin_large"
+        android:paddingBottom="@dimen/reader_margin_medium"
         android:paddingLeft="@dimen/reader_margin_large"
-        android:paddingRight="@dimen/reader_margin_large"
-        android:paddingTop="@dimen/reader_margin_large">
+        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingTop="@dimen/reader_margin_medium">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_content"
@@ -78,24 +80,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/grey_medium" />
-
         <include
             android:id="@+id/layout_comment_box"
             layout="@layout/reader_include_comment_box"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider" />
+            android:layout_height="wrap_content" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_approve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider"
             android:background="@drawable/reader_button_transparent_selector"
             android:drawableLeft="@drawable/moderate_approve"
             android:padding="@dimen/reader_margin_large"
