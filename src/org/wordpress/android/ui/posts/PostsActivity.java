@@ -75,8 +75,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             startNotificationsActivity(extras);
             return;
         }
-        showErrorDialogIfNeeded(extras);
-        
+
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
