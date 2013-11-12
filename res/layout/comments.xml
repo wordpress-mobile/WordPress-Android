@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:id="@+id/comments"
-  android:padding="0px"
-  android:background="#F4F4F4"
-  android:orientation="vertical">
-  <LinearLayout
-    android:id="@+id/commentDetailFragmentContainer"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <fragment
-      android:name="org.wordpress.android.ui.comments.CommentsListFragment"
-      android:id="@+id/commentList"
-      android:layout_weight="1"
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:background="#00FF00" />
-  </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comments"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F4F4F4"
+    android:orientation="vertical"
+    android:padding="0px">
+
+    <LinearLayout
+        android:id="@+id/commentDetailFragmentContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <fragment
+            android:id="@+id/commentList"
+            android:name="org.wordpress.android.ui.comments.CommentsListFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00FF00" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/text_message_bar"
+        layout="@layout/message_bar_include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

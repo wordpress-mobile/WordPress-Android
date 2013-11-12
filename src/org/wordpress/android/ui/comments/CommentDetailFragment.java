@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -26,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -113,12 +112,16 @@ public class CommentDetailFragment extends Fragment {
         mIsReplyBoxShowing = true;
     }
 
-    private void hideReplyBox() {
+    private void hideReplyBox(boolean hideImmediately) {
         if (!mIsReplyBoxShowing || !hasActivity())
             return;
 
         final ViewGroup layoutComment = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        ReaderAniUtils.flyOut(layoutComment);
+        if (hideImmediately) {
+            layoutComment.setVisibility(View.GONE);
+        } else {
+            ReaderAniUtils.flyOut(layoutComment);
+        }
         mIsReplyBoxShowing = false;
 
     }
@@ -182,6 +185,7 @@ public class CommentDetailFragment extends Fragment {
                     approveComment();
                 }
             });
+            hideReplyBox(true);
         }
     }
 
@@ -203,7 +207,10 @@ public class CommentDetailFragment extends Fragment {
                 showReplyBox();
             }
         };
-        showMessageBar(getString(R.string.comment_approved), runnable);
+        MessageBarUtils.showMessageBar(getActivity(),
+                                       getString(R.string.comment_approved),
+                                       MessageBarUtils.MessageBarType.INFO,
+                                       runnable);
 
         mIsApprovingComment = true;
 
@@ -215,10 +222,9 @@ public class CommentDetailFragment extends Fragment {
                     mComment.status = Comment.CommentStatus.APPROVED.toString();
                     mChangeListener.onCommentModified(mComment);
                 } else {
-                    hideReplyBox();
+                    hideReplyBox(false);
                     txtBtnApprove.setVisibility(View.VISIBLE);
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
-                    hideReplyBox();
                 }
             }
         };
@@ -256,7 +262,7 @@ public class CommentDetailFragment extends Fragment {
 
                 if (succeeded) {
                     mChangeListener.onCommentAdded();
-                    showMessageBar(getString(R.string.note_reply_successful), null);
+                    MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
                     editComment.setText(null);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
@@ -275,51 +281,5 @@ public class CommentDetailFragment extends Fragment {
                                    actionListener);
     }
 
-    /*
-     * animate a message in from the bottom, then animate it back out after a brief delay
-     * passed runnable will be executed by hideMessageBar() once the bar disappears
-     */
-    private void showMessageBar(final String message, final Runnable runnable) {
-        if (!hasActivity())
-            return;
 
-        final TextView txtMessageBar = (TextView) getActivity().findViewById(R.id.text_message_bar);
-        if (txtMessageBar==null || txtMessageBar.getVisibility()==View.VISIBLE)
-            return;
-
-        txtMessageBar.setText(message);
-
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_in);
-        txtMessageBar.setVisibility(View.VISIBLE);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideMessageBar(runnable);
-            }
-        }, 1500);
-    }
-
-    private void hideMessageBar(final Runnable runnable) {
-        if (!hasActivity())
-            return;
-
-        final TextView txtMessageBar = (TextView) getActivity().findViewById(R.id.text_message_bar);
-        if (txtMessageBar==null || txtMessageBar.getVisibility()!=View.VISIBLE)
-            return;
-
-        Animation.AnimationListener listener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                txtMessageBar.setVisibility(View.GONE);
-                if (runnable != null)
-                    runnable.run();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-        };
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_out, listener);
-    }
 }

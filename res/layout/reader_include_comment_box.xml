@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    comment box at bottom of post detail and comment detail
+    comment box at bottom of comment detail and reader post detail
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

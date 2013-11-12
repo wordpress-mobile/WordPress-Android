@@ -107,11 +107,11 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <org.wordpress.android.widgets.WPTextView
+    <include
         android:id="@+id/text_message_bar"
-        style="@style/ReaderTextView.MessageBar"
+        layout="@layout/message_bar_include"
         android:layout_alignBottom="@+id/layout_bottom"
-        android:text="text_message_bar"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

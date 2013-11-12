@@ -207,7 +207,6 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public void onAnimateRefreshButton(boolean start) {
-
         if (start) {
             shouldAnimateRefreshButton = true;
             this.startAnimatingRefreshButton(refreshMenuItem);
@@ -218,7 +217,6 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private void attemptToSelectComment() {
-
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
 
