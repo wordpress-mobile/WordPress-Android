@@ -192,6 +192,14 @@ public class CommentsActivity extends WPActionBarActivity
         commentList.replaceComment(comment);
     }
 
+    /*
+     * called from CommentDetailFragment when comment is replied to
+     */
+    @Override
+    public void onCommentAdded() {
+        commentList.refreshComments(false, true, false);
+    }
+
     @Override
     public void onCommentStatusChanged(String status) {
         // TODO: remove this when CommentDetailFragment completely replaces CommentFragment

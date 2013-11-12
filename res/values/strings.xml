@@ -244,6 +244,7 @@
     <string name="view_comment_from">Comment from</string>
     <string name="edit_comment">Edit Comment</string>
     <string name="comments_empty_list">No comments.</string>
+    <string name="comment_approved">Comment approved</string>
 
     <!-- edit comment view -->
     <string name="author_name">Name</string>

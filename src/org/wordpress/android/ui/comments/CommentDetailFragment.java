@@ -3,6 +3,7 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ public class CommentDetailFragment extends Fragment {
     private OnCommentChangeListener mChangeListener;
     protected interface OnCommentChangeListener {
         public void onCommentModified(Comment comment);
+        public void onCommentAdded();
     }
 
     protected static CommentDetailFragment newInstance(final Comment comment) {
@@ -106,6 +109,16 @@ public class CommentDetailFragment extends Fragment {
 
         ReaderAniUtils.flyIn(layoutComment);
         mIsReplyBoxShowing = true;
+    }
+
+    private void hideReplyBox() {
+        if (!mIsReplyBoxShowing || !hasActivity())
+            return;
+
+        final ViewGroup layoutComment = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
+        ReaderAniUtils.flyOut(layoutComment);
+        mIsReplyBoxShowing = false;
+
     }
 
     private boolean hasActivity() {
@@ -177,25 +190,22 @@ public class CommentDetailFragment extends Fragment {
         if (!hasActivity() || !hasComment())
             return;
 
-        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress);
         final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
+        txtBtnApprove.setVisibility(View.GONE);
 
-        txtBtnApprove.setVisibility(View.INVISIBLE);
-        progress.setVisibility(View.VISIBLE);
-        txtBtnApprove.setText(R.string.moderating_comment);
+        showMessageBar(getString(R.string.comment_approved), true);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                progress.setVisibility(View.GONE);
+                txtBtnApprove.setEnabled(true);
                 if (succeeded) {
-                    txtBtnApprove.setVisibility(View.GONE);
-                    showReplyBox();
                     mComment.status = Comment.CommentStatus.APPROVED.toString();
                     mChangeListener.onCommentModified(mComment);
                 } else {
-                    txtBtnApprove.setVisibility(View.VISIBLE);
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                    txtBtnApprove.setVisibility(View.VISIBLE);
+                    hideReplyBox();
                 }
             }
         };
@@ -233,7 +243,8 @@ public class CommentDetailFragment extends Fragment {
                 mIsSubmittingReply = false;
 
                 if (succeeded) {
-                    ToastUtils.showToast(getActivity(), R.string.note_reply_successful);
+                    mChangeListener.onCommentAdded();
+                    showMessageBar(getString(R.string.note_reply_successful), false);
                     editComment.setText(null);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
@@ -250,5 +261,52 @@ public class CommentDetailFragment extends Fragment {
                                    mComment,
                                    replyText,
                                    actionListener);
+    }
+
+    /*
+     * animate a message in from the bottom, then animate it back out after a brief delay
+     */
+    private void showMessageBar(final String message, final boolean showReplyBoxWhenDone) {
+        if (!hasActivity())
+            return;
+
+        final TextView txtMessageBar = (TextView) getActivity().findViewById(R.id.text_message_bar);
+        if (txtMessageBar==null || txtMessageBar.getVisibility()==View.VISIBLE)
+            return;
+
+        txtMessageBar.setText(message);
+
+        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_in);
+        txtMessageBar.setVisibility(View.VISIBLE);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideMessageBar(showReplyBoxWhenDone);
+            }
+        }, 1500);
+    }
+
+    private void hideMessageBar(final boolean showReplyBoxWhenDone) {
+        if (!hasActivity())
+            return;
+
+        final TextView txtMessageBar = (TextView) getActivity().findViewById(R.id.text_message_bar);
+        if (txtMessageBar==null || txtMessageBar.getVisibility()!=View.VISIBLE)
+            return;
+
+        Animation.AnimationListener listener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                txtMessageBar.setVisibility(View.GONE);
+                if (showReplyBoxWhenDone)
+                    showReplyBox();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        };
+        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_out, listener);
     }
 }
