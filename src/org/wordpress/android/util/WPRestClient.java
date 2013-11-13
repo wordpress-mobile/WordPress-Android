@@ -199,11 +199,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for geoviews (views by country)
      */
-    public void getStatsGeoviews(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/geoviews";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsGeoviews(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/country-views?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**

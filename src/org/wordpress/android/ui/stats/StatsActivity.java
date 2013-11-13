@@ -264,10 +264,10 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 //            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
 //        }
 
-//        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
-//            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-//        }
+        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+        }
 
         if (fm.findFragmentByTag(StatsSearchEngineTermsFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);

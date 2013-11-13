@@ -130,8 +130,9 @@ public class StatsRestHelper {
                 getStatsVideoPlays(blogId, today);
                 break;
             case VIEWS_BY_COUNTRY:
-                updateRefreshMap(type, 1);
+                updateRefreshMap(type, 2);
                 getStatsViewsByCountry(blogId, today);
+                getStatsViewsByCountry(blogId, yesterday);
                 break;
             case VISITORS_AND_VIEWS:
                 updateRefreshMap(type, 3);
@@ -834,7 +835,7 @@ public class StatsRestHelper {
 
 
     private static void getStatsViewsByCountry(final String blogId, String date) {
-        WordPress.restClient.getStatsGeoviews(blogId, 
+        WordPress.restClient.getStatsGeoviews(blogId, date,
                 new Listener() {
                     
                     @Override
@@ -861,16 +862,19 @@ public class StatsRestHelper {
             
             Context context = WordPress.getContext();
             
-            if (response != null && response.has("result")) {
+            if (response != null && response.has("country-views")) {
                 try {
-                    JSONArray results = response.getJSONArray("result");
+                    JSONArray results = response.getJSONArray("country-views");
                     int count = results.length();
-
+                    String date = response.getString("date");
+                    long dateMs = StatUtils.toMs(date);
                     ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
                     
                     if (count > 0) {
-                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI).withSelection("blogId=?", new String[] { blogId }).build();
-                        operations.add(op);
+                        // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                        ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI)
+                                .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        operations.add(delete_op);
                     }
                     
                     for (int i = 0; i < count; i++ ) {
