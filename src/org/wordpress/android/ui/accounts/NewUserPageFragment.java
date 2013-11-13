@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +37,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
     private EditText emailTextField;
     private EditText passwordTextField;
     private EditText usernameTextField;
+    private EmailChecker mEmailChecker;
 
     public NewUserPageFragment() {
+        mEmailChecker = new EmailChecker();
     }
     
     private boolean checkUserData() {
@@ -163,6 +168,15 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         );
     }
 
+    private void checkEmail() {
+        final String email = emailTextField.getText().toString().trim();
+        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        if (suggest.compareTo(email) != 0) {
+            emailTextField.setError("Did you mean: " + suggest + " ?");
+            emailTextField.requestFocus();
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -188,6 +202,21 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         emailTextField = (EditText) rootView.findViewById(R.id.email_address);
         passwordTextField = (EditText) rootView.findViewById(R.id.password);
         usernameTextField = (EditText) rootView.findViewById(R.id.username);
+
+        emailTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkEmail();
+            }
+        });
 
         return rootView;
     }
