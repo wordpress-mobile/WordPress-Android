@@ -310,7 +310,7 @@ abstract public class GraphView extends LinearLayout {
 			}
 
 			// vertical labels
-			paint.setTextAlign(Align.RIGHT);
+			paint.setTextAlign(Align.LEFT);
 			int vers = verlabels.length - 1;
 			for (int i = 0; i < verlabels.length; i++) {
 				float y = ((graphheight / vers) * i) + border;
