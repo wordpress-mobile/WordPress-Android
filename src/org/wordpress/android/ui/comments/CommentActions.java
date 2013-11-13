@@ -1,13 +1,8 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -156,11 +151,11 @@ public class CommentActions {
     }
 
     /***
-     * delete (trash) a single comment - UNTESTED
+     * delete (trash) a single comment
      */
-    private void deleteComment(final Blog blog,
-                               final Comment comment,
-                               final CommentActionListener listener) {
+    protected static void deleteComment(final Blog blog,
+                                        final Comment comment,
+                                        final CommentActionListener listener) {
         if (blog==null || comment==null) {
             if (listener != null)
                 listener.onActionResult(false);
@@ -189,7 +184,8 @@ public class CommentActions {
                 }
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                // TODO: delete from local DB upon success
+                if (success)
+                    WordPress.wpDB.deleteComment(blog.getId(), comment.postID, comment.commentID);
 
                 if (listener != null) {
                     handler.post(new Runnable() {

@@ -22,10 +22,4 @@
             android:background="#00FF00" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/text_message_bar"
-        layout="@layout/message_bar_include"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
 </RelativeLayout>

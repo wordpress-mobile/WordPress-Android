@@ -34,7 +34,9 @@ public class MessageBarUtils {
             return;
 
         final TextView txtMessageBar = (TextView) activity.findViewById(R.id.text_message_bar);
-        if (txtMessageBar==null || txtMessageBar.getVisibility()== View.VISIBLE)
+        if (txtMessageBar==null)
+            return;
+        if (txtMessageBar.getVisibility()==View.VISIBLE)
             return;
 
         switch (messageBarType) {
@@ -66,7 +68,9 @@ public class MessageBarUtils {
             return;
 
         final TextView txtMessageBar = (TextView) activity.findViewById(R.id.text_message_bar);
-        if (txtMessageBar==null || txtMessageBar.getVisibility()!=View.VISIBLE)
+        if (txtMessageBar==null)
+            return;
+        if (txtMessageBar.getVisibility()!=View.VISIBLE)
             return;
 
         // hide w/o animation if caller requested it

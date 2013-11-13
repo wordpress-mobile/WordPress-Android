@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -15,17 +17,17 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Comment.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
-import org.wordpress.android.ui.comments.CommentsListFragment.OnContextCommentStatusChangeListener;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCClient;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    CommentDetailFragment.OnCommentChangeListener,
-                   OnAnimateRefreshButtonListener,
-                   OnContextCommentStatusChangeListener {
+                   OnAnimateRefreshButtonListener {
 
     protected int id;
 
@@ -33,6 +35,9 @@ public class CommentsActivity extends WPActionBarActivity
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
+
+    public static final int ID_DIALOG_MODERATING = 1;
+    public static final int ID_DIALOG_DELETING = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,7 @@ public class CommentsActivity extends WPActionBarActivity
 
         attemptToSelectComment();
         if (fromNotification)
-            commentList.refreshComments(false, false, false);
+            commentList.refreshComments();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -73,7 +78,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        commentList.refreshComments(false, false, false);
+        commentList.refreshComments();
     }
 
     @Override
@@ -95,7 +100,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
             attemptToSelectComment();
-            commentList.refreshComments(false, false, false);
+            commentList.refreshComments();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -129,7 +134,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (WordPress.currentBlog != null) {
             boolean commentsLoaded = commentList.loadComments(false, false);
             if (!commentsLoaded)
-                commentList.refreshComments(false, false, false);
+                commentList.refreshComments();
         }
     }
 
@@ -193,17 +198,87 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
-     * called from CommentDetailFragment when comment is replied to
+     * called from CommentListFragment after user selects from ListView's context menu
+     */
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        if (item.getItemId()==CommentsListFragment.MENU_ID_EDIT) {
+            /*
+             * start activity to edit this comment
+             */
+            Intent i = new Intent(
+                    getApplicationContext(),
+                    EditCommentActivity.class);
+            startActivityForResult(i, 0);
+            return true;
+        } else if (item.getItemId()==CommentsListFragment.MENU_ID_DELETE) {
+            /*
+             * fire background action to delete this comment
+             */
+            showDialog(ID_DIALOG_DELETING);
+            CommentActions.deleteComment(WordPress.currentBlog,
+                    WordPress.currentComment,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            dismissDialog(ID_DIALOG_DELETING);
+                            if (succeeded) {
+                                commentList.refreshComments();
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
+                            } else {
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
+                            }
+                        }
+                    });
+            return true;
+        } else {
+            /*
+             * remainder are all comment moderation actions
+             */
+            showDialog(ID_DIALOG_MODERATING);
+            final CommentStatus status;
+            switch (item.getItemId()) {
+                case CommentsListFragment.MENU_ID_APPROVED:
+                    status = CommentStatus.APPROVED;
+                    break;
+                case CommentsListFragment.MENU_ID_UNAPPROVED:
+                    status = CommentStatus.PENDING;
+                    break;
+                case CommentsListFragment.MENU_ID_SPAM:
+                    status = CommentStatus.SPAM;
+                    break;
+                default :
+                    return true;
+            }
+
+            CommentActions.setCommentStatus(WordPress.currentBlog,
+                                            WordPress.currentComment,
+                                            status,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            dismissDialog(ID_DIALOG_MODERATING);
+                            if (succeeded) {
+                                commentList.refreshComments();
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
+                            } else {
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
+                            }
+                        }
+                    });
+
+            return true;
+        }
+    }
+
+    /*
+     * called from CommentDetailFragment when comment is replied to (adding a new comment)
      */
     @Override
     public void onCommentAdded() {
-        commentList.refreshComments(false, true, false);
+        commentList.refreshComments();
     }
 
-    @Override
-    public void onCommentStatusChanged(String status) {
-        // TODO: remove this when CommentDetailFragment completely replaces CommentFragment
-    }
 
     @Override
     public void onAnimateRefreshButton(boolean start) {
@@ -231,5 +306,36 @@ public class CommentsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == ID_DIALOG_MODERATING) {
+            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
+            if (commentList.checkedCommentTotal <= 1) {
+                loadingDialog.setMessage(getResources().getText(
+                        R.string.moderating_comment));
+            } else {
+                loadingDialog.setMessage(getResources().getText(
+                        R.string.moderating_comments));
+            }
+            loadingDialog.setIndeterminate(true);
+            loadingDialog.setCancelable(false);
+            return loadingDialog;
+        } else if (id == ID_DIALOG_DELETING) {
+            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
+            if (commentList.checkedCommentTotal <= 1) {
+                loadingDialog.setMessage(getResources().getText(
+                        R.string.deleting_comment));
+            } else {
+                loadingDialog.setMessage(getResources().getText(
+                        R.string.deleting_comments));
+            }
+            loadingDialog.setIndeterminate(true);
+            loadingDialog.setCancelable(false);
+            return loadingDialog;
+        } else {
+            return super.onCreateDialog(id);
+        }
     }
 }

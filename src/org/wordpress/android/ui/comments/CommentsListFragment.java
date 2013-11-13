@@ -2,7 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,6 +37,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Comment.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
@@ -77,9 +76,15 @@ public class CommentsListFragment extends ListFragment {
     private Object[] commentParams;
     private OnCommentSelectedListener onCommentSelectedListener;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
-    private OnContextCommentStatusChangeListener onCommentStatusChangeListener;
     private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
+
+    // context menu IDs
+    protected static final int MENU_ID_APPROVED = 100;
+    protected static final int MENU_ID_UNAPPROVED = 101;
+    protected static final int MENU_ID_SPAM = 102;
+    protected static final int MENU_ID_DELETE = 103;
+    protected static final int MENU_ID_EDIT = 105;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -102,7 +107,6 @@ public class CommentsListFragment extends ListFragment {
             // check that the containing activity implements our callback
             onCommentSelectedListener = (OnCommentSelectedListener) activity;
             onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
-            onCommentStatusChangeListener = (OnContextCommentStatusChangeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -130,7 +134,7 @@ public class CommentsListFragment extends ListFragment {
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 switcher.showNext();
-                refreshComments(true, false, false);
+                refreshComments(true);
             }
         });
 
@@ -206,6 +210,16 @@ public class CommentsListFragment extends ListFragment {
         return v;
     }
 
+    private void dismissDialog(int id) {
+        if (getActivity()==null)
+            return;
+        try {
+            getActivity().dismissDialog(id);
+        } catch (IllegalArgumentException e) {
+            // raised when dialog wasn't created
+        }
+    }
+
     @SuppressWarnings("unchecked")
     protected void moderateComments(String newStatus) {
         // handles bulk moderation
@@ -253,7 +267,7 @@ public class CommentsListFragment extends ListFragment {
                 moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
             }
         }
-        getActivity().dismissDialog(ID_DIALOG_MODERATING);
+        dismissDialog(ID_DIALOG_MODERATING);
         Thread action = new Thread() {
             public void run() {
                 if (moderateErrorMsg == "") {
@@ -311,7 +325,7 @@ public class CommentsListFragment extends ListFragment {
                 moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
             }
         }
-        getActivity().dismissDialog(ID_DIALOG_DELETING);
+        dismissDialog(ID_DIALOG_DELETING);
         Thread action = new Thread() {
             public void run() {
                 if (moderateErrorMsg == "") {
@@ -324,7 +338,7 @@ public class CommentsListFragment extends ListFragment {
                             Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
-                    refreshComments(false, false, false);
+                    refreshComments();
                 } else {
                     // error occurred during delete request
                     if (!getActivity().isFinishing()) {
@@ -444,6 +458,7 @@ public class CommentsListFragment extends ListFragment {
             }
         });
 
+        // configure the listView's context menu
         listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             public void onCreateContextMenu(ContextMenu menu, View v,
                                             ContextMenu.ContextMenuInfo menuInfo) {
@@ -456,27 +471,33 @@ public class CommentsListFragment extends ListFragment {
                 }
                 WordPress.currentComment = model.get(info.position);
                 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
-                menu.add(0, 0, 0, getResources().getText(R.string.mark_approved));
-                menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
-                menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
-                menu.add(0, 3, 0, getResources().getText(R.string.reply));
-                menu.add(0, 4, 0, getResources().getText(R.string.delete));
-                menu.add(0, 5, 0, getResources().getText(R.string.edit));
+                CommentStatus status = WordPress.currentComment.getStatusEnum();
+                if (status != CommentStatus.APPROVED) {
+                    menu.add(0, MENU_ID_APPROVED, 0, getResources().getText(R.string.mark_approved));
+                } else {
+                    menu.add(0, MENU_ID_UNAPPROVED, 0, getResources().getText(R.string.mark_unapproved));
+                }
+                if (status != CommentStatus.SPAM) {
+                    menu.add(0, MENU_ID_SPAM, 0, getResources().getText(R.string.mark_spam));
+                }
+                menu.add(0, MENU_ID_DELETE, 0, getResources().getText(R.string.delete));
+                menu.add(0, MENU_ID_EDIT, 0, getResources().getText(R.string.edit));
             }
         });
     }
 
-    public void refreshComments(final boolean more, final boolean refresh, final boolean background) {
+    public void refreshComments() {
+        refreshComments(false);
+    }
+    public void refreshComments(boolean loadMore) {
         mListScrollPositionManager.saveScrollOffset();
-        loadMore = more;
-        refreshOnly = refresh;
-        doInBackground = background;
 
-        if (!loadMore && !doInBackground) {
+        if (!loadMore) {
             onAnimateRefreshButton.onAnimateRefreshButton(true);
         }
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
+        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+                                  WordPress.currentBlog.getHttpuser(),
+                                  WordPress.currentBlog.getHttppassword());
 
         Map<String, Object> hPost = new HashMap<String, Object>();
         if (loadMore) {
@@ -579,7 +600,7 @@ public class CommentsListFragment extends ListFragment {
             final String prettyComment;
             final String textColor;
 
-            switch (Comment.CommentStatus.fromString(s.status)) {
+            switch (CommentStatus.fromString(s.status)) {
                 case SPAM :
                     prettyComment = getResources().getText(R.string.spam).toString();
                     textColor = "#FF0000";
@@ -860,7 +881,7 @@ public class CommentsListFragment extends ListFragment {
                 handler.post(new Runnable() {
                     public void run() {
                         if (!getActivity().isFinishing()) {
-                            getActivity().dismissDialog(ID_DIALOG_MODERATING);
+                            dismissDialog(ID_DIALOG_MODERATING);
                             FragmentTransaction ft = getFragmentManager()
                                     .beginTransaction();
                             WPAlertDialogFragment alert = WPAlertDialogFragment
@@ -873,7 +894,7 @@ public class CommentsListFragment extends ListFragment {
                 handler.post(new Runnable() {
                     public void run() {
                         if (!getActivity().isFinishing()) {
-                            getActivity().dismissDialog(ID_DIALOG_MODERATING);
+                            dismissDialog(ID_DIALOG_MODERATING);
                             FragmentTransaction ft = getFragmentManager()
                                     .beginTransaction();
                             WPAlertDialogFragment alert = WPAlertDialogFragment
@@ -891,39 +912,6 @@ public class CommentsListFragment extends ListFragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        /* Switch on the ID of the item, to get what the user selected. */
-        switch (item.getItemId()) {
-            case 0:
-                onCommentStatusChangeListener.onCommentStatusChanged("approve");
-                return true;
-            case 1:
-                onCommentStatusChangeListener.onCommentStatusChanged("hold");
-                return true;
-            case 2:
-                onCommentStatusChangeListener.onCommentStatusChanged("spam");
-                return true;
-            case 3:
-                onCommentStatusChangeListener.onCommentStatusChanged("reply");
-                return true;
-            case 4:
-                onCommentStatusChangeListener.onCommentStatusChanged("delete");
-                return true;
-            case 5:
-//            selectedPosition = position;
-//            Comment comment = model.get((int) id);
-//            onCommentSelectedListener.onCommentSelected(comment);
-                Intent i = new Intent(
-                        getActivity().getApplicationContext(),
-                        EditCommentActivity.class);
-                startActivityForResult(i, 0);
-                return true;
-
-        }
-        return false;
-    }
-
     class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
             if (isCancelled())
@@ -935,7 +923,7 @@ public class CommentsListFragment extends ListFragment {
                     model.clear();
                     allComments.clear();
                     getListView().invalidateViews();
-                    onCommentStatusChangeListener.onCommentStatusChanged("clear");
+                    //onCommentStatusChangeListener.onCommentStatusChanged("clear");
                     WordPress.currentComment = null;
                     loadComments(false, false);
                 }
@@ -1015,10 +1003,6 @@ public class CommentsListFragment extends ListFragment {
 
     public interface OnAnimateRefreshButtonListener {
         public void onAnimateRefreshButton(boolean start);
-    }
-
-    public interface OnContextCommentStatusChangeListener {
-        public void onCommentStatusChanged(String status);
     }
 
     @Override

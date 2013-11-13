@@ -34,6 +34,10 @@ public class Comment {
         this.dateCreatedFormatted = dateCreatedFormatted;
     }
 
+    public CommentStatus getStatusEnum() {
+        return CommentStatus.fromString(status);
+    }
+
     public static enum CommentStatus {
         UNKNOWN,
         PENDING,

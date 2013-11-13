@@ -11,6 +11,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
@@ -1084,12 +1086,14 @@ public class WordPressDB {
         return values;
     }
 
-    /*
-     * nbradbury 11/11/13 - returns a single comment, or null if it doesn't exist - note
-     * that the passed blog Id is the internal id (unique id in account table) rather
-     * than the actual blogId since comments are stored with the internal id
+    /**
+     * nbradbury 11/11/13 - retrieve a single comment
+     * @param accountId - unique id in account table for this blog
+     * @param postId - postId of the post this comment is on
+     * @param commentId - commentId of the actual comment
+     * @return Comment if found, null otherwise
      */
-    /*public Comment getSingleComment(int internalBlogId, final String postId, int commentId) {
+    public Comment getComment(int accountId, final String postId, int commentId) {
         if (TextUtils.isEmpty(postId))
             return null;
 
@@ -1100,7 +1104,7 @@ public class WordPressDB {
                          "url",
                          "email",
                          "postTitle"};
-        String[] args = {Integer.toString(internalBlogId),
+        String[] args = {Integer.toString(accountId),
                          postId,
                          Integer.toString(commentId)};
         Cursor c = db.query(COMMENTS_TABLE,
@@ -1131,7 +1135,25 @@ public class WordPressDB {
                            authorUrl,
                            authorEmail,
                            null);
-    }*/
+    }
+
+    /**
+     * nbradbury 11/12/13 - delete a single comment
+     * @param accountId - unique id in account table for this blog
+     * @param postId - postId of the post this comment is on
+     * @param commentId - commentId of the actual comment
+     * @return true if comment deleted, false otherwise
+     */
+    public boolean deleteComment(int accountId, String postId, int commentId) {
+        if (TextUtils.isEmpty(postId))
+            return false;
+
+        String[] args = {Integer.toString(accountId),
+                postId,
+                Integer.toString(commentId)};
+        int count = db.delete(COMMENTS_TABLE, "blogID=? AND postID=? AND iCommentID=?", args);
+        return (count > 0);
+    }
 
     public List<Map<String, Object>> loadComments(int blogID) {
 

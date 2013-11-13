@@ -171,8 +171,7 @@ public class CommentDetailFragment extends Fragment {
 
         // approve button only appears when comment hasn't already been approved, reply box only
         // appears from approved comments
-        Comment.CommentStatus status = Comment.CommentStatus.fromString(mComment.status);
-        if (status == Comment.CommentStatus.APPROVED) {
+        if (mComment.getStatusEnum() == Comment.CommentStatus.APPROVED) {
             txtBtnApprove.setVisibility(View.GONE);
             showReplyBox();
             mComment.status = Comment.CommentStatus.APPROVED.toString();
