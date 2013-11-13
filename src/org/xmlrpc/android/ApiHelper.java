@@ -253,7 +253,7 @@ public class ApiHelper {
             };
             try {
                 Map<String, Object> userInfo = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
-                if (userInfo.containsKey("roles")) {
+                if (userInfo.containsKey("roles") && ( userInfo.get("roles") instanceof Object[])) {
                     Object[] userRoles = (Object[])userInfo.get("roles");
                     mBlog.setAdmin(false);
                     for (int i = 0; i < userRoles.length; i++) {
