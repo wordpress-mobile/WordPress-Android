@@ -289,10 +289,10 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
         }
 
-//        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
-//            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-//        }
+        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+        }
 
 //        if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
 //            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
@@ -352,9 +352,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 //        mFragmentContainer.removeView(frameView);
 //        mColumnLeft.addView(frameView);
 
-//        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
-//        mFragmentContainer.removeView(frameView);
-//        mColumnRight.addView(frameView);
+        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnRight.addView(frameView);
 
 //        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
 //        mFragmentContainer.removeView(frameView);

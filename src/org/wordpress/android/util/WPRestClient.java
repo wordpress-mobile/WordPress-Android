@@ -265,11 +265,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for top posts and pages
      */
-    public void getStatsTopPosts(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/top_posts";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsTopPosts(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/top-posts?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
