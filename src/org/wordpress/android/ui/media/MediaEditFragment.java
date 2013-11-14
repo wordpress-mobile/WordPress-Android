@@ -349,7 +349,6 @@ public class MediaEditFragment extends SherlockFragment {
             inflater.inflate(R.menu.media_edit, menu);
         }
     }
-    
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -357,8 +356,8 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_refresh).setVisible(false);
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
-       
-            if( ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+
+            if (!MediaUtils.isWordPressVersionWithMediaEditingCapabilities())
                 menu.findItem(R.id.menu_save_media).setVisible(false);
         }
     }
