@@ -860,10 +860,13 @@ public class ApiHelper {
     public static InputStream getResponseStream(String urlString) {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
-            return request.buffer();
-        } else {
-            return null;
+            try {
+                return request.buffer();
+            } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+            }
         }
+        return null;
     }
 
     /**
@@ -879,6 +882,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
                 return null;
             }
         } else {
