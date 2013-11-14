@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.view.Window;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
@@ -52,7 +52,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (WPViewPager) findViewById(R.id.pager);
         mPager.setPagingEnabled(false);
-        mPagerAdapter = new NewAccountPagerAdapter( super.getSupportFragmentManager() );
+        mPagerAdapter = new NewAccountPagerAdapter(super.getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
         if (getIntent().getBooleanExtra(SKIP_WELCOME, false))

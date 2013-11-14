@@ -9,10 +9,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
