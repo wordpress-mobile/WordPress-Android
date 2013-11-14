@@ -524,7 +524,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 //        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
             StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
 //        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
-//        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
+            StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
             StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
         } else {
             if (mStatsViewFragment != null) {
