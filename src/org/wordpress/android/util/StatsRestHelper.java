@@ -727,9 +727,9 @@ public class StatsRestHelper {
             
             Context context = WordPress.getContext();
             
-            if (response != null && response.has("result")) {
+            if (response != null && response.has("top-posts")) {
                 try {
-                    JSONArray results = response.getJSONArray("result");
+                    JSONArray results = response.getJSONArray("top-posts");
                     int count = results.length();
 
                     String date = response.getString("date");
