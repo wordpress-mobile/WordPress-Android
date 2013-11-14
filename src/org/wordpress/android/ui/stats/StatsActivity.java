@@ -47,6 +47,7 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -376,39 +377,50 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     }
 
-    public void verifyJetpackSettings() {
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.RefreshBlogContentTask.Callback() {
-            @Override
-            public void onSuccess() {
-                if (getBlogId() == null) {
-                    // Blog has not returned a jetpack_client_id
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
-                    builder.setMessage(getString(R.string.jetpack_message))
-                            .setTitle(getString(R.string.jetpack_not_found));
-                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent jetpackIntent = new Intent(StatsActivity.this, AuthenticatedWebViewActivity.class);
-                            jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
-                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
-                            startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                        }
-                    });
-                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    builder.create().show();
-                }
-            }
+    private class VerifyJetpackSettingsCallback implements ApiHelper.RefreshBlogContentTask.Callback {
 
-            @Override
-            public void onFailure() {
-
+        private final WeakReference<StatsActivity> statsActivityWeakRef;
+        
+        public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
+            this.statsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
+        }
+       
+        @Override
+        public void onSuccess() {
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()) {
+                return;
             }
-        }).execute(false);
+            
+            if (getBlogId() == null) {
+                // Blog has not returned a jetpack_client_id
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
+                builder.setMessage(getString(R.string.jetpack_message))
+                        .setTitle(getString(R.string.jetpack_not_found));
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent jetpackIntent = new Intent(VerifyJetpackSettingsCallback.this.statsActivityWeakRef.get(), AuthenticatedWebViewActivity.class);
+                        jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
+                                + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
+                        startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    }
+                });
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                builder.create().show();
+            }
+        }
+
+        @Override
+        public void onFailure() {
+
+        }
     }
-
+    
+    
+    
     protected void showViews() {
         FragmentManager fm = getSupportFragmentManager();
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
@@ -481,7 +493,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         else {
             blogId = getBlogId();
             if (blogId == null) {
-                verifyJetpackSettings();
+                //Refresh Jetpack Settings
+                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new VerifyJetpackSettingsCallback( StatsActivity.this ) ).execute(false);
             }
         }
 
