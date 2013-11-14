@@ -69,30 +69,31 @@ android {
 // or by other means provided by Gradle
 task wordpressConfig(group: "build", description: "Generate Config class") {
     def dir = "${buildDir}/source/wordpress"
-    def file = new File(dir, "org/wordpress/android/Config.java")
-    android {
-        sourceSets {
-            main {
-                java {
-                    srcDir dir
-                }
-            }
-        }
-    }
+    File file = new File(dir, "org/wordpress/android/Config.java")
+    File localProperties = new File(rootDir, "local.properties")
+
+    android.sourceSets.main.java.srcDir dir
+
+    inputs.file localProperties
     outputs.file file
+
     doLast {
         file.getParentFile().mkdirs()
         def properties = new Properties()
-        new File("${rootDir}/local.properties").withInputStream { stream ->
-            properties.load(stream)
-        }
         def constants = [:]
-        properties.propertyNames().each { property ->
-            def keys = property.tokenize('.')
-            if (keys[0] == 'wp') {
-                def name = property.tokenize('.')[1..-1].collect { key -> key.toUpperCase()}.join('_')
-                constants[name] = properties.getProperty(property)
+        try {
+            localProperties.withInputStream { stream ->
+                properties.load(stream)
             }
+            properties.propertyNames().each { property ->
+                def keys = property.tokenize('.')
+                if (keys[0] == 'wp') {
+                    def name = keys[1..-1].collect { key -> key.toUpperCase()}.join('_')
+                    constants[name] = properties.getProperty(property)
+                }
+            }
+        } catch (java.io.FileNotFoundException e) {
+            logger.warn('Missing local.properties')
         }
         def writer = new FileWriter(file)
         def config = constants.inject("") { consts, name, val ->
