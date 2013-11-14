@@ -5,9 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +32,11 @@ import java.util.regex.Pattern;
 
 public class NewUserPageFragment extends NewAccountAbstractPageFragment {
 
-    private EditText emailTextField;
-    private EditText passwordTextField;
-    private EditText usernameTextField;
+    private EditText mEmailTextField;
+    private EditText mPasswordTextField;
+    private EditText mUsernameTextField;
     private EmailChecker mEmailChecker;
+    private boolean mAutocorrected;
 
     public NewUserPageFragment() {
         mEmailChecker = new EmailChecker();
@@ -45,13 +44,13 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
     
     private boolean checkUserData() {
         // try to create the user
-        final String email = emailTextField.getText().toString().trim();
-        final String password = passwordTextField.getText().toString().trim();
-        final String username = usernameTextField.getText().toString().trim();
+        final String email = mEmailTextField.getText().toString().trim();
+        final String password = mPasswordTextField.getText().toString().trim();
+        final String username = mUsernameTextField.getText().toString().trim();
 
         if (email.equals("")) {
-            emailTextField.setError(getString(R.string.required_field));
-            emailTextField.requestFocus();
+            mEmailTextField.setError(getString(R.string.required_field));
+            mEmailTextField.requestFocus();
             return false;
         }
 
@@ -60,38 +59,38 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
                 Pattern.DOTALL);
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
-            emailTextField.setError(getString(R.string.invalid_email_message));
-            emailTextField.requestFocus();
+            mEmailTextField.setError(getString(R.string.invalid_email_message));
+            mEmailTextField.requestFocus();
             return false;
         }
 
         if (username.equals("")) {
-            usernameTextField.setError(getString(R.string.required_field));
-            usernameTextField.requestFocus();
+            mUsernameTextField.setError(getString(R.string.required_field));
+            mUsernameTextField.requestFocus();
             return false;
         }
 
         if (username.length() < 4) {
-            usernameTextField.setError(getString(R.string.invalid_username_too_short));
-            usernameTextField.requestFocus();
+            mUsernameTextField.setError(getString(R.string.invalid_username_too_short));
+            mUsernameTextField.requestFocus();
             return false;
         }
 
         if (username.length() > 60) {
-            usernameTextField.setError(getString(R.string.invalid_username_too_long));
-            usernameTextField.requestFocus();
+            mUsernameTextField.setError(getString(R.string.invalid_username_too_long));
+            mUsernameTextField.requestFocus();
             return false;
         }
 
         if (password.equals("")) {
-            passwordTextField.setError(getString(R.string.required_field));
-            passwordTextField.requestFocus();
+            mPasswordTextField.setError(getString(R.string.required_field));
+            mPasswordTextField.requestFocus();
             return false;
         }
 
         if (password.length() < 4) {
-            passwordTextField.setError(getString(R.string.invalid_password_message));
-            passwordTextField.requestFocus();
+            mPasswordTextField.setError(getString(R.string.invalid_password_message));
+            mPasswordTextField.requestFocus();
             return false;
         }
 
@@ -117,9 +116,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
             }
             
             // try to create the user
-            final String email = emailTextField.getText().toString().trim();
-            final String password = passwordTextField.getText().toString().trim();
-            final String username = usernameTextField.getText().toString().trim();
+            final String email = mEmailTextField.getText().toString().trim();
+            final String password = mPasswordTextField.getText().toString().trim();
+            final String username = mUsernameTextField.getText().toString().trim();
 
             if (false == checkUserData())
                 return;
@@ -168,12 +167,15 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         );
     }
 
-    private void checkEmail() {
-        final String email = emailTextField.getText().toString().trim();
+    private void autocorrectEmail() {
+        if (mAutocorrected)
+            return ;
+        final String email = mEmailTextField.getText().toString().trim();
         String suggest = mEmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
-            emailTextField.setError("Did you mean: " + suggest + " ?");
-            emailTextField.requestFocus();
+            mAutocorrected = true;
+            mEmailTextField.setText(suggest);
+            mEmailTextField.setSelection(suggest.length());
         }
     }
 
@@ -199,22 +201,15 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
         WPTextView signupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(signupClickListener);
 
-        emailTextField = (EditText) rootView.findViewById(R.id.email_address);
-        passwordTextField = (EditText) rootView.findViewById(R.id.password);
-        usernameTextField = (EditText) rootView.findViewById(R.id.username);
+        mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
+        mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
+        mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
 
-        emailTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                checkEmail();
+        mEmailTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    autocorrectEmail();
+                }
             }
         });
 
