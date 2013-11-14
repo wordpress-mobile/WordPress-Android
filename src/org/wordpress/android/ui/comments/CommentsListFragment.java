@@ -37,7 +37,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.Comment.CommentStatus;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
@@ -258,7 +258,7 @@ public class CommentsListFragment extends ListFragment {
                 boolean bResult = Boolean.parseBoolean(result.toString());
                 if (bResult) {
                     iter.remove();
-                    listRow.status = newStatus;
+                    listRow.setStatus(newStatus);
                     contentHash.put("status", newStatus);
                     model.set(i, listRow);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), listRow.commentID, newStatus);
@@ -600,12 +600,12 @@ public class CommentsListFragment extends ListFragment {
             final String prettyComment;
             final String textColor;
 
-            switch (CommentStatus.fromString(s.status)) {
+            switch (s.getStatusEnum()) {
                 case SPAM :
                     prettyComment = getResources().getText(R.string.spam).toString();
                     textColor = "#FF0000";
                     break;
-                case PENDING:
+                case UNAPPROVED:
                     prettyComment = getResources().getText(R.string.unapproved).toString();
                     textColor = "#D54E21";
                     break;

@@ -8,7 +8,7 @@ public class Comment {
     public int position;
     public String name = "";
     public String emailURL = "";
-    public String status = "";
+    private String status = "";
     public String comment = "";
     public String postTitle = "";
     public String authorURL = "";
@@ -38,35 +38,13 @@ public class Comment {
         return CommentStatus.fromString(status);
     }
 
-    public static enum CommentStatus {
-        UNKNOWN,
-        PENDING,
-        APPROVED,
-        SPAM;
-
-        public String toString() {
-            switch (this) {
-                case PENDING:
-                    return "hold";
-                case APPROVED:
-                    return "approve";
-                case SPAM :
-                    return "spam";
-                default :
-                    return "";
-            }
-        }
-
-        public static CommentStatus fromString(String value) {
-            if (value==null)
-                return CommentStatus.UNKNOWN;
-            if (value.equals("approve"))
-                return CommentStatus.APPROVED;
-            if (value.equals("hold"))
-                return CommentStatus.PENDING;
-            if (value.equals("spam"))
-                return SPAM;
-            return CommentStatus.UNKNOWN;
-        }
+    public String getStatus() {
+        return status;
     }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+
 }

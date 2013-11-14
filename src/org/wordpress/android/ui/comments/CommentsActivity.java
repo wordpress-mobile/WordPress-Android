@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.Comment.CommentStatus;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
@@ -242,7 +242,7 @@ public class CommentsActivity extends WPActionBarActivity
                     status = CommentStatus.APPROVED;
                     break;
                 case CommentsListFragment.MENU_ID_UNAPPROVED:
-                    status = CommentStatus.PENDING;
+                    status = CommentStatus.UNAPPROVED;
                     break;
                 case CommentsListFragment.MENU_ID_SPAM:
                     status = CommentStatus.SPAM;

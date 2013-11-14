@@ -22,6 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
@@ -169,12 +170,12 @@ public class CommentDetailFragment extends Fragment {
         String profileImageUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
         imgAvatar.setImageUrl(profileImageUrl, WordPress.imageLoader);
 
-        // approve button only appears when comment hasn't already been approved, reply box only
-        // appears from approved comments
-        if (mComment.getStatusEnum() == Comment.CommentStatus.APPROVED) {
+        // approve button only appears when comment hasn't already been approved,
+        // reply box only appears for approved comments
+        if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
             txtBtnApprove.setVisibility(View.GONE);
             showReplyBox();
-            mComment.status = Comment.CommentStatus.APPROVED.toString();
+            mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
             mChangeListener.onCommentModified(mComment);
         } else {
             txtBtnApprove.setVisibility(View.VISIBLE);
@@ -218,7 +219,7 @@ public class CommentDetailFragment extends Fragment {
             public void onActionResult(boolean succeeded) {
                 mIsApprovingComment = false;
                 if (succeeded) {
-                    mComment.status = Comment.CommentStatus.APPROVED.toString();
+                    mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
                     mChangeListener.onCommentModified(mComment);
                 } else {
                     hideReplyBox(false);
@@ -227,7 +228,7 @@ public class CommentDetailFragment extends Fragment {
                 }
             }
         };
-        CommentActions.setCommentStatus(WordPress.currentBlog, mComment, Comment.CommentStatus.APPROVED, actionListener);
+        CommentActions.setCommentStatus(WordPress.currentBlog, mComment, CommentStatus.APPROVED, actionListener);
     }
 
     /*
@@ -274,10 +275,10 @@ public class CommentDetailFragment extends Fragment {
         };
 
         mIsSubmittingReply = true;
-        CommentActions.submitReply(WordPress.currentBlog,
-                                   mComment,
-                                   replyText,
-                                   actionListener);
+        CommentActions.submitReplyToComment(WordPress.currentBlog,
+                                            mComment,
+                                            replyText,
+                                            actionListener);
     }
 
 
