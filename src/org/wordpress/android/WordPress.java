@@ -27,6 +27,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 
+import com.simperium.Simperium;
+
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
@@ -70,6 +73,7 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static BitmapLruCache localImageCache;
+    public static Simperium simperium;
 
     private static Context mContext;
 
@@ -83,6 +87,9 @@ public class WordPress extends Application {
         wpStatsDB = new WordPressStatsDB(this);
 
         mContext = this;
+
+        simperium = SimperiumUtils.configureSimperium(this,
+            getWPComAuthToken(this));
 
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
@@ -378,6 +385,7 @@ public class WordPress extends Application {
                             if (blog == null) {
                                 settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
                                         commit();
+                                SimperiumUtils.authorizeUser(simperium, token.toString());
                             } else {
                                 blog.setApi_key(token.toString());
                                 blog.save();
