@@ -499,6 +499,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
             fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
             ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+            
+            ft.commit();
         }
         refreshStats();
     }
