@@ -793,7 +793,8 @@
     <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="update_credentials">Please update your credentials and try again.</string>
-    <string name="nux_tap_continue">CONTINUE</string>
+    <string name="nux_tap_continue">Continue</string>
+    <string name="nux_tap_learn_more">Learn More</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
     <string name="nux_welcome">Welcome to WordPress</string>
     <string name="nux_welcome_description">Hold the web in the palm of your hand. Full publishing power in a pint-sized package.</string>

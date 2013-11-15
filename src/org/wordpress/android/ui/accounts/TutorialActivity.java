@@ -87,7 +87,7 @@ public class TutorialActivity extends SherlockFragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         NUXDialogFragment alert = NUXDialogFragment.newInstance(getString(R.string.nux_dialog_success),
                 getString(R.string.nux_dialog_success_message),
-                getString(R.string.nux_dialog_success_continue), R.drawable.nux_icon_check);
+                getString(R.string.nux_dialog_success_continue), R.drawable.nux_icon_check, true);
         alert.show(ft, "alert");
     }
 

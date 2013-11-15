@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -18,24 +19,34 @@ public class NUXDialogFragment extends SherlockDialogFragment {
     private static String ARG_DESCRIPTION = "message";
     private static String ARG_FOOTER = "footer";
     private static String ARG_IMAGE = "image";
+    private static String ARG_TWO_BUTTONS = "two-buttons";
 
     private ImageView mImageView;
     private WPTextView mTitleTextView;
     private WPTextView mDescriptionTextView;
-    private WPTextView mFooterTextView;
+    private WPTextView mFooterOneButton;
+    private WPTextView mFooterLeftButton;
+    private WPTextView mFooterRightButton;
+    private RelativeLayout mFooterTwoButtons;
 
     public NUXDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
+    public static NUXDialogFragment newInstance(String title, String message, String footer,
+                                                int imageSource) {
+        return newInstance(title, message, footer, imageSource, false);
+    }
 
-    public static NUXDialogFragment newInstance(String title, String message, String footer, int imageSource) {
+    public static NUXDialogFragment newInstance(String title, String message, String footer,
+                                                int imageSource, boolean twoButtons) {
         NUXDialogFragment adf = new NUXDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
         bundle.putString(ARG_DESCRIPTION, message);
         bundle.putString(ARG_FOOTER, footer);
         bundle.putInt(ARG_IMAGE, imageSource);
+        bundle.putBoolean(ARG_TWO_BUTTONS, twoButtons);
         adf.setArguments(bundle);
         adf.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme);
         return adf;
@@ -50,25 +61,41 @@ public class NUXDialogFragment extends SherlockDialogFragment {
         mImageView = (ImageView)v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView)v.findViewById(R.id.nux_dialog_title);
         mDescriptionTextView = (WPTextView)v.findViewById(R.id.nux_dialog_description);
-        mFooterTextView = (WPTextView)v.findViewById(R.id.nux_dialog_footer);
-
+        mFooterOneButton = (WPTextView)v.findViewById(R.id.nux_dialog_footer_1_button);
+        mFooterTwoButtons = (RelativeLayout) v.findViewById(R.id.nux_dialog_footer_2_buttons);
+        mFooterRightButton = (WPTextView)v.findViewById(R.id.nux_dialog_get_started_button);
+        mFooterLeftButton = (WPTextView)v.findViewById(R.id.nux_dialog_learn_more_button);
         Bundle args = this.getArguments();
 
         mTitleTextView.setText(args.getString(ARG_TITLE));
         mDescriptionTextView.setText(args.getString(ARG_DESCRIPTION));
-        mFooterTextView.setText(args.getString(ARG_FOOTER));
+        mFooterOneButton.setText(args.getString(ARG_FOOTER));
         mImageView.setImageResource(args.getInt(ARG_IMAGE));
 
-        View.OnClickListener clickListener = new View.OnClickListener() {
+        if (args.getBoolean(ARG_TWO_BUTTONS)) {
+            mFooterOneButton.setVisibility(View.GONE);
+            mFooterTwoButtons.setVisibility(View.VISIBLE);
+        }
+
+        View.OnClickListener clickListenerDismiss = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissAllowingStateLoss();
             }
         };
 
+        View.OnClickListener clickListenerFinish = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        };
+
         v.setClickable(true);
-        v.setOnClickListener(clickListener);
-        mFooterTextView.setOnClickListener(clickListener);
+        v.setOnClickListener(clickListenerDismiss);
+        mFooterOneButton.setOnClickListener(clickListenerDismiss);
+        mFooterLeftButton.setOnClickListener(clickListenerDismiss);
+        mFooterRightButton.setOnClickListener(clickListenerFinish);
 
         return v;
     }
