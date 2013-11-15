@@ -25,6 +25,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
@@ -677,6 +678,13 @@ public class WordPressDB {
         return accountName;
     }
 
+    /*
+     * nbradbury 11/14/13
+     */
+    public int getAccountIdForBlogId(int blogId) {
+        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
+    }
+
     public void updateNotificationFlag(int id, boolean flag) {
 
         ContentValues values = new ContentValues();
@@ -1089,27 +1097,23 @@ public class WordPressDB {
     /**
      * nbradbury 11/11/13 - retrieve a single comment
      * @param accountId - unique id in account table for this blog
-     * @param postId - postId of the post this comment is on
      * @param commentId - commentId of the actual comment
      * @return Comment if found, null otherwise
      */
-    public Comment getComment(int accountId, final String postId, int commentId) {
-        if (TextUtils.isEmpty(postId))
-            return null;
-
+    public Comment getComment(int accountId, int commentId) {
         String[] cols = {"author",
                          "comment",
                          "commentDateFormatted",
                          "status",
                          "url",
                          "email",
-                         "postTitle"};
+                         "postTitle",
+                         "postID"};
         String[] args = {Integer.toString(accountId),
-                         postId,
                          Integer.toString(commentId)};
         Cursor c = db.query(COMMENTS_TABLE,
                             cols,
-                            "blogID=? AND postID=? AND iCommentID=?",
+                            "blogID=? AND iCommentID=?",
                             args,
                             null, null, null);
 
@@ -1123,6 +1127,7 @@ public class WordPressDB {
         String authorUrl = c.getString(4);
         String authorEmail = c.getString(5);
         String postTitle = c.getString(6);
+        String postId = c.getString(7);
 
         return new Comment(postId,
                            commentId,

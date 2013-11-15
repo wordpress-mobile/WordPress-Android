@@ -17,12 +17,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
@@ -30,26 +35,44 @@ import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.Map;
+
 /**
  * Created by nbradbury on 11/11/13.
  * comment detail displayed from both the notification list and the comment list
+ * prior to this there were separate comment detail screens for each list
  */
-public class CommentDetailFragment extends Fragment {
+public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private Comment mComment;
+    private Note mNote;
 
     private boolean mIsReplyBoxShowing = false;
     private boolean mIsSubmittingReply = false;
     private boolean mIsApprovingComment = false;
+    private boolean mIsRequestingComment = false;
 
     private OnCommentChangeListener mChangeListener;
+
     protected interface OnCommentChangeListener {
         public void onCommentModified(Comment comment);
         public void onCommentAdded();
     }
 
+    /*
+     * used when called from comment list
+     */
     protected static CommentDetailFragment newInstance(final Comment comment) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setComment(comment);
+        return fragment;
+    }
+
+    /*
+     * used when called from notification list for a comment notification
+     */
+    public static CommentDetailFragment newInstance(final Note note) {
+        CommentDetailFragment fragment = new CommentDetailFragment();
+        fragment.setNote(note);
         return fragment;
     }
 
@@ -65,13 +88,22 @@ public class CommentDetailFragment extends Fragment {
             showComment();
     }
 
+    @Override
+    public Note getNote() {
+        return mNote;
+    }
+
+    @Override
+    public void setNote(Note note) {
+        mNote = note;
+    }
+
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            // container activity must implement this callback
             mChangeListener = (OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement CommentModifiedListener");
+            mChangeListener = null;
         }
     }
 
@@ -155,6 +187,10 @@ public class CommentDetailFragment extends Fragment {
             txtDate.setText(null);
             txtContent.setText(null);
             txtBtnApprove.setVisibility(View.GONE);
+
+            if (mNote != null && !mIsRequestingComment)
+                showCommentForNote(mNote);
+
             return;
         }
 
@@ -167,8 +203,12 @@ public class CommentDetailFragment extends Fragment {
         // Volley corrects this
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-        String profileImageUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
-        imgAvatar.setImageUrl(profileImageUrl, WordPress.imageLoader);
+        if (mComment.profileImageUrl == null) {
+            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+        } else {
+            imgAvatar.setImageUrl(mComment.profileImageUrl.toString(), WordPress.imageLoader);
+        }
 
         // approve button only appears when comment hasn't already been approved,
         // reply box only appears for approved comments
@@ -176,7 +216,8 @@ public class CommentDetailFragment extends Fragment {
             txtBtnApprove.setVisibility(View.GONE);
             showReplyBox();
             mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
-            mChangeListener.onCommentModified(mComment);
+            if (mChangeListener != null)
+                mChangeListener.onCommentModified(mComment);
         } else {
             txtBtnApprove.setVisibility(View.VISIBLE);
             txtBtnApprove.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +261,8 @@ public class CommentDetailFragment extends Fragment {
                 mIsApprovingComment = false;
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
-                    mChangeListener.onCommentModified(mComment);
+                    if (mChangeListener != null)
+                        mChangeListener.onCommentModified(mComment);
                 } else {
                     hideReplyBox(false);
                     txtBtnApprove.setVisibility(View.VISIBLE);
@@ -239,7 +281,7 @@ public class CommentDetailFragment extends Fragment {
             return;
 
         final EditText editComment = (EditText) getActivity().findViewById(R.id.edit_comment);
-        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress);
+        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
         final ImageView imgSubmit = (ImageView) getActivity().findViewById(R.id.image_post_comment);
 
         final String replyText = EditTextUtils.getText(editComment);
@@ -261,7 +303,8 @@ public class CommentDetailFragment extends Fragment {
                 mIsSubmittingReply = false;
 
                 if (succeeded) {
-                    mChangeListener.onCommentAdded();
+                    if (mChangeListener != null)
+                        mChangeListener.onCommentAdded();
                     MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
                     editComment.setText(null);
                 } else {
@@ -281,5 +324,67 @@ public class CommentDetailFragment extends Fragment {
                                             actionListener);
     }
 
+    private void showCommentForNote(Note note) {
+        /*
+         * in order to get the actual comment from a notification we need to extract the
+         * blogId/postId/commentId from the notification, and this info is buried in the
+         * "actions" array of the note's JSON. each action entry contains a "params"
+         * array which contains these IDs, so find the first action then extract the IDs
+         * from its params
+         */
+        Map<String,JSONObject> actions = note.getActions();
+        if (actions.size() > 0) {
+            String firstKey = actions.keySet().iterator().next();
+            JSONObject jsonAction = actions.get(firstKey);
+            JSONObject jsonParams = jsonAction.optJSONObject("params");
+            if (jsonParams != null) {
+                int blogId = jsonParams.optInt("blog_id");
+                //int postId = jsonParams.optInt("post_id");
+                int commentId = jsonParams.optInt("comment_id");
+                // first try to get from local db, if that fails request it from the server
+                int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+                Comment comment = null;//WordPress.wpDB.getComment(accountId, commentId);
+                if (comment != null) {
+                    setComment(comment);
+                } else {
+                    requestComment(blogId, commentId);
+                }
+            }
+        }
+    }
 
+    /*
+     * request a comment via the REST API
+     */
+    private void requestComment(int siteId, int commentId) {
+        final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
+        if (progress != null)
+            progress.setVisibility(View.VISIBLE);
+
+        RestRequest.Listener restListener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                mIsRequestingComment = false;
+                if (progress != null)
+                    progress.setVisibility(View.GONE);
+                Comment comment = Comment.fromJSON(jsonObject);
+                if (comment != null)
+                    setComment(comment);
+            }
+        };
+        RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mIsRequestingComment = false;
+                if (progress != null)
+                    progress.setVisibility(View.GONE);
+                // TODO: let user know comment could not be loaded
+            }
+        };
+
+        // /sites/$site/comments/$comment_ID
+        final String path = String.format("/sites/%s/comments/%s", siteId, commentId);
+        mIsRequestingComment = true;
+        WordPress.restClient.get(path, restListener, restErrListener);
+    }
 }
