@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,18 +32,42 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewUserPageFragment extends NewAccountAbstractPageFragment {
+public class NewUserPageFragment extends NewAccountAbstractPageFragment implements TextWatcher {
 
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
+    private WPTextView mSignupButton;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
     public NewUserPageFragment() {
         mEmailChecker = new EmailChecker();
     }
-    
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (fieldsFilled()) {
+            mSignupButton.setEnabled(true);
+        } else {
+            mSignupButton.setEnabled(false);
+        }
+    }
+
+    private boolean fieldsFilled() {
+        return mEmailTextField.getText().toString().trim().length() > 0
+                && mPasswordTextField.getText().toString().trim().length() > 0
+                && mUsernameTextField.getText().toString().trim().length() > 0;
+    }
+
     private boolean checkUserData() {
         // try to create the user
         final String email = mEmailTextField.getText().toString().trim();
@@ -197,13 +223,17 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
                     }
                 }
         );
-        
-        WPTextView signupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
-        signupButton.setOnClickListener(signupClickListener);
+
+        mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
+        mSignupButton.setOnClickListener(signupClickListener);
+        mSignupButton.setEnabled(false);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
+        mEmailTextField.addTextChangedListener(this);
+        mPasswordTextField.addTextChangedListener(this);
+        mUsernameTextField.addTextChangedListener(this);
 
         mEmailTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
