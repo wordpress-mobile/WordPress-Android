@@ -17,7 +17,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
@@ -47,8 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher,
-        OnFocusChangeListener {
+public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
 
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
@@ -124,12 +122,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private boolean selfHostedFieldsFilled() {
         return wpcomFieldsFilled()
                 && mUrlEditText.getText().toString().trim().length() > 0;
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        // TODO Auto-generated method stub
-        
     }
 
     public void signInDotComUser() {
