@@ -68,9 +68,9 @@
             style="@style/WordPress.NUXWhiteButtonNoBg"
             android:id="@+id/nux_create_account_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="@string/nux_welcome_create_account"
-            android:gravity="center|bottom"
+            android:gravity="center|top"
             android:layout_gravity="center" />
     </LinearLayout>
 
