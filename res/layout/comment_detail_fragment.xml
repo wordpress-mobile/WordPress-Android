@@ -97,21 +97,20 @@
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/reader_text_sz_extra_large"
             android:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <include
         android:id="@+id/text_message_bar"
         layout="@layout/message_bar_include"
-        android:layout_alignBottom="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/layout_bottom" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

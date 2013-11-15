@@ -43,4 +43,12 @@
         android:paddingRight="@dimen/reader_margin_medium"
         android:src="@drawable/ic_send" />
 
+    <ProgressBar
+        android:id="@+id/progress_submit_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
 </RelativeLayout>
