@@ -52,13 +52,13 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (WPViewPager) findViewById(R.id.pager);
         mPager.setPagingEnabled(false);
-        mPagerAdapter = new NewAccountPagerAdapter( super.getSupportFragmentManager() );
+        mPagerAdapter = new NewAccountPagerAdapter(super.getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
         if (getIntent().getBooleanExtra(SKIP_WELCOME, false))
             mPager.setCurrentItem(1);
     }
-    
+
     public void showNextItem() {
         mPager.setCurrentItem(mPager.getCurrentItem() + 1);
     }

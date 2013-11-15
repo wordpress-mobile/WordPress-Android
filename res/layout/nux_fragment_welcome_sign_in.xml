@@ -122,6 +122,22 @@
                 android:layout_marginRight="16dp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:gravity="bottom">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/WordPress.NUXWhiteButtonNoBg"
+                android:id="@+id/nux_create_account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/nux_welcome_create_account"
+                android:gravity="center|top"
+                android:layout_gravity="center" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

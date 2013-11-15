@@ -38,12 +38,12 @@ import java.util.Map;
 
 public class NewBlogPageFragment extends NewAccountAbstractPageFragment implements TextWatcher {
 
-    private EditText siteURL;
-    private EditText siteTitle;
-    private Spinner langSpinner;
-    private Spinner privacySpinner;
-    private Hashtable<String,String> wordpressComSupportedLanguages = null;
-    private String matchedDeviceLanguage = null;
+    private EditText mSiteURL;
+    private EditText mSiteTitle;
+    private Spinner mLangSpinner;
+    private Spinner mPrivacySpinner;
+    private Hashtable<String,String> mWordpressComSupportedLanguages;
+    private String mMatchedDeviceLanguage;
     private WPTextView mNextButton;
 
     private static int WordPressComApiBlogVisibilityPublic = 0;
@@ -54,9 +54,31 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
 
     }
 
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (fieldsFilled()) {
+            mNextButton.setEnabled(true);
+        } else {
+            mNextButton.setEnabled(false);
+        }
+    }
+
+    private boolean fieldsFilled() {
+        return mSiteURL.getText().toString().trim().length() > 0
+                && mSiteTitle.getText().toString().trim().length() > 0;
+    }
+
     private boolean checkSiteData() {
-        final String siteAddress = siteURL.getText().toString().trim();
-        //final String siteTitleString = siteTitle.getText().toString().trim();
+        final String siteAddress = mSiteURL.getText().toString().trim();
+        //final String siteTitleString = mSiteTitle.getText().toString().trim();
 
         if (siteAddress.equals("")) {
             AlertUtil.showAlert(NewBlogPageFragment.this.getActivity(), R.string.required_fields,
@@ -84,8 +106,8 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
             if (false == checkSiteData())
                 return;
             
-            final String siteAddress = siteURL.getText().toString().trim();
-            final String siteTitleString = siteTitle.getText().toString().trim();
+            final String siteAddress = mSiteURL.getText().toString().trim();
+            final String siteTitleString = mSiteTitle.getText().toString().trim();
             
             pd = ProgressDialog.show(NewBlogPageFragment.this
                     .getActivity(),
@@ -96,10 +118,10 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
             Map<String, String> params = new HashMap<String, String>();
             params.put("blog_name", siteAddress);
             params.put("blog_title", siteTitleString);
-            params.put("lang_id", wordpressComSupportedLanguages.get(langSpinner.getSelectedItem()));
+            params.put("lang_id", mWordpressComSupportedLanguages.get(mLangSpinner.getSelectedItem()));
             
             final String visibility;
-            int selectedPrivacyIndex = privacySpinner.getSelectedItemPosition();
+            int selectedPrivacyIndex = mPrivacySpinner.getSelectedItemPosition();
             if( selectedPrivacyIndex == 0 || selectedPrivacyIndex == Spinner.INVALID_POSITION) {
                 visibility = String.valueOf(WordPressComApiBlogVisibilityPublic);
             } else if( selectedPrivacyIndex == 1 ) {
@@ -124,7 +146,7 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
                                     NewAccountActivity act = (NewAccountActivity)getActivity();
                                     act.validatedBlogURL = siteAddress;
                                     act.validatedBlogTitle = siteTitleString;
-                                    act.validatedLanguageID = langSpinner.getSelectedItem().toString();
+                                    act.validatedLanguageID = mLangSpinner.getSelectedItem().toString();
                                     act.validatedPrivacyOption = visibility;
                                     act.showNextItem();
                                 } else {
@@ -151,35 +173,35 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
         mNextButton = (WPTextView) rootView.findViewById(R.id.next_button);
         mNextButton.setOnClickListener(nextClickListener);
 
-        siteURL = (EditText) rootView.findViewById(R.id.site_url);
-        siteURL.addTextChangedListener(this);
-        siteTitle = (EditText) rootView.findViewById(R.id.site_title);
-        siteTitle.addTextChangedListener(this);
+        mSiteURL = (EditText) rootView.findViewById(R.id.site_url);
+        mSiteURL.addTextChangedListener(this);
+        mSiteTitle = (EditText) rootView.findViewById(R.id.site_title);
+        mSiteTitle.addTextChangedListener(this);
 
-        langSpinner = (Spinner) rootView.findViewById(R.id.langs_spinner);
+        mLangSpinner = (Spinner) rootView.findViewById(R.id.langs_spinner);
         loadWordPressComLanguages();
-        List<String> list = new ArrayList<String>(wordpressComSupportedLanguages.keySet());
+        List<String> list = new ArrayList<String>(mWordpressComSupportedLanguages.keySet());
         
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.spinner_textview, list);
         dataAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-        langSpinner.setAdapter(dataAdapter);
+        mLangSpinner.setAdapter(dataAdapter);
         
         for (int i = 0; i < list.size(); i++) {
-            if( list.get(i).equalsIgnoreCase(matchedDeviceLanguage)) {
-                langSpinner.setSelection(i);
+            if( list.get(i).equalsIgnoreCase(mMatchedDeviceLanguage)) {
+                mLangSpinner.setSelection(i);
                 break;
             }
         }    
         
-        privacySpinner = (Spinner) rootView.findViewById(R.id.privacy_spinner);
+        mPrivacySpinner = (Spinner) rootView.findViewById(R.id.privacy_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.privacy_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        privacySpinner.setAdapter(adapter);
+        mPrivacySpinner.setAdapter(adapter);
 
         WPTextView termsOfServiceTextView = (WPTextView)rootView.findViewById(R.id.l_agree_terms_of_service);
         termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service, "<u>", "</u>"))));
@@ -227,7 +249,7 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
                             {
                                 entries.put(parser.getText() , currentID );
                                 if(currentLangIsDeviceLanguage)
-                                    matchedDeviceLanguage = parser.getText();
+                                    mMatchedDeviceLanguage = parser.getText();
                             }
                             eventType = parser.next();
                         }  
@@ -239,27 +261,9 @@ public class NewBlogPageFragment extends NewAccountAbstractPageFragment implemen
             entries = new Hashtable<String, String>();
             entries.put("en - English", "1");
         } 
-        wordpressComSupportedLanguages = entries;
+        mWordpressComSupportedLanguages = entries;
         
-        if(matchedDeviceLanguage == null)
-            matchedDeviceLanguage = "en - English";
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (siteURL.getText().toString().trim().length() > 0 && siteTitle.getText().toString().length() > 0)
-            mNextButton.setEnabled(true);
-        else
-            mNextButton.setEnabled(false);
+        if(mMatchedDeviceLanguage == null)
+            mMatchedDeviceLanguage = "en - English";
     }
 }

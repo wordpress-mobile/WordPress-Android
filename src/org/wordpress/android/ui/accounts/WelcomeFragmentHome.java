@@ -43,7 +43,7 @@ public class WelcomeFragmentHome extends NewAccountAbstractPageFragment {
                 mPager.setCurrentItem(1);
             }
         });
-        mCreateAccountButton = (WPTextView) (WPTextView)rootView.findViewById(R.id.nux_create_account_button);
+        mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
 
         return rootView;
@@ -56,5 +56,4 @@ public class WelcomeFragmentHome extends NewAccountAbstractPageFragment {
             startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
         }
     };
-    
 }

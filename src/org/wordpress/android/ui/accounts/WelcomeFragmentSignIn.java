@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
     private WPTextView mSignInButton;
+    private WPTextView mCreateAccountButton;
     private List mUsersBlogsList;
     private static final String DEFAULT_IMAGE_SIZE = "2000";
     private boolean mHttpAuthRequired;
@@ -75,11 +77,21 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in);
         mSignInButton.setOnClickListener(mSignInClickListener);
+        mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
+        mCreateAccountButton.setOnClickListener(mCreateAccountListener);
+
         return rootView;
     }
+
+    private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
+            startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+        }
+    };
     
     private OnClickListener mSignInClickListener = new OnClickListener() {
-
         @Override
         public void onClick(View v) {
             if (!wpcomFieldsFilled()) {
@@ -97,12 +109,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     @Override
     public void afterTextChanged(Editable s) {
-        // Nope
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        // Nope
     }
 
     @Override
