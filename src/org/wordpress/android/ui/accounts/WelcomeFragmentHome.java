@@ -33,9 +33,6 @@ public class WelcomeFragmentHome extends NewAccountAbstractPageFragment {
         WPTextView statsTitle = (WPTextView)rootView.findViewById(R.id.nux_fragment_title);
         statsTitle.setText(R.string.nux_welcome);
 
-        WPTextView statsDescription = (WPTextView)rootView.findViewById(R.id.nux_fragment_description);
-        statsDescription.setText(R.string.nux_welcome_description);
-
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override

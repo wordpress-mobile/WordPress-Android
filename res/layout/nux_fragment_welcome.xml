@@ -28,23 +28,6 @@
             app:fontVariation="light" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_fragment_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:textColor="#bdddec"
-            android:textSize="18sp"
-            android:shadowColor="@color/nux_shadow"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp" />
-
-        <org.wordpress.android.widgets.WPTextView
             style="@style/WordPress.NUXThirdButton"
             android:id="@+id/nux_sign_in_button"
             android:layout_width="fill_parent"
@@ -53,7 +36,8 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:layout_marginTop="8dp" />
 
 
     </LinearLayout>
