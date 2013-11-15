@@ -95,9 +95,9 @@ public class StatsTopPostsAndPagesTable extends SQLTable {
             return database.rawQuery(
                     "SELECT * FROM " + NAME + ", " +
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
-                                "( SELECT MAX(date) AS max FROM " + NAME + ")" +
-                            " WHERE " + NAME + ".date < max) AS temp " + 
-                    "WHERE temp.date = " + NAME + ".date AND " + selection + " ORDER BY " + sort, selectionArgs);
+                            "( SELECT MAX(date) AS max FROM " + NAME + ")" +
+                            " WHERE " + NAME + ".date < max) AS temp " +
+                            "WHERE " + NAME + ".date = temp.date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
 
         return super.query(database, uri, projection, selection, selectionArgs, sort);
