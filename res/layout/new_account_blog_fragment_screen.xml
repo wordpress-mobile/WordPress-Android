@@ -155,8 +155,6 @@
                     android:text="@string/action_next"
                     android:enabled="false"
                     style="@style/WordPress.NUXThirdButton"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
                     android:layout_marginRight="16dp"
                     android:layout_marginLeft="16dp"
                     android:gravity="center" />

@@ -122,8 +122,6 @@
                 android:id="@+id/signup_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textStyle="bold"
                 android:clickable="true"
                 android:gravity="center"
                 android:text="@string/action_next"
