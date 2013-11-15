@@ -24,6 +24,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.UserEmail;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -229,8 +230,11 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mSignupButton.setEnabled(false);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
+        mEmailTextField.setText(UserEmail.getPrimaryEmail(getActivity()));
+        mEmailTextField.setSelection(mEmailTextField.getText().toString().length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
+
         mEmailTextField.addTextChangedListener(this);
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
