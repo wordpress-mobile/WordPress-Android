@@ -36,7 +36,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
     private EmailChecker mEmailChecker;
-    private boolean mAutocorrected;
+    private boolean mEmailAutoCorrected;
 
     public NewUserPageFragment() {
         mEmailChecker = new EmailChecker();
@@ -168,12 +168,12 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment {
     }
 
     private void autocorrectEmail() {
-        if (mAutocorrected)
+        if (mEmailAutoCorrected)
             return ;
         final String email = mEmailTextField.getText().toString().trim();
         String suggest = mEmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
-            mAutocorrected = true;
+            mEmailAutoCorrected = true;
             mEmailTextField.setText(suggest);
             mEmailTextField.setSelection(suggest.length());
         }
