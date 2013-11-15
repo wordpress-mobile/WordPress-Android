@@ -28,20 +28,20 @@
         android:id="@+id/footer_view"
         android:layout_width="fill_parent"
         android:layout_height="58dp"
-        android:background="#2b2d2e"
         android:gravity="center"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:clickable="true">
-        
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/nux_tutorial_tap_to_start"
-            style="@style/WordPress.NUXSecondaryButton"
-            android:clickable="true" />
+            android:clickable="true"
+            android:textColor="@color/white"
+            android:padding="16dp" />
     </RelativeLayout>
 
 </LinearLayout>
