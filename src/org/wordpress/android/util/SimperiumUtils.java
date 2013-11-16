@@ -6,6 +6,7 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketNameInvalid;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.Config;
 import org.wordpress.android.models.Note;
 
@@ -31,9 +32,14 @@ public class SimperiumUtils {
             notesBucket.start();
             metaBucket.start();
 
+            WordPress.simperium = simperium;
+            WordPress.notesBucket = notesBucket;
+            WordPress.metaBucket = metaBucket;
+
         } catch (BucketNameInvalid e) {
             throw new RuntimeException("Failed to configure simperium", e);
         }
+
 
         return simperium;
     }

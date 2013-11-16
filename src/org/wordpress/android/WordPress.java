@@ -28,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 
 import com.simperium.Simperium;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObject;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
@@ -38,6 +40,7 @@ import org.xmlrpc.android.WPComXMLRPCApi;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
@@ -74,6 +77,9 @@ public class WordPress extends Application {
     public static ImageLoader imageLoader;
     public static BitmapLruCache localImageCache;
     public static Simperium simperium;
+
+    public static Bucket<Note> notesBucket;
+    public static Bucket<BucketObject> metaBucket;
 
     private static Context mContext;
 

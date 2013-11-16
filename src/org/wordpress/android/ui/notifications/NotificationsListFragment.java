@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.notifications;
 
+import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -8,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -53,8 +55,6 @@ public class NotificationsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        // setup the initial notes adapter
-        mNotesAdapter = new NotesAdapter();
     }
 
     @Override
@@ -67,12 +67,14 @@ public class NotificationsListFragment extends ListFragment {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
+
+        // setup the initial notes adapter, starst listening to the bucket
+        mNotesAdapter = new NotesAdapter(WordPress.notesBucket);
+
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setOnScrollListener(new ListScrollListener());
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
-        listView.addFooterView(mProgressFooterView, null, false);
         setListAdapter(mNotesAdapter);
 
         // Set empty text if no notifications
@@ -83,8 +85,15 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     @Override
+    public void onDestroy() {
+        // unregister the listener and close the cursor
+        mNotesAdapter.stopListening();
+        super.onDestroy();
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Note note = mNotesAdapter.getItem(position);
+        Note note = mNotesAdapter.getNote(position);
         l.setItemChecked(position, true);
         if (note != null && !note.isPlaceholder() && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
@@ -105,41 +114,86 @@ public class NotificationsListFragment extends ListFragment {
         return mNotesAdapter;
     }
 
-    public void setNoteProvider(NoteProvider provider) {
-        mNoteProvider = provider;
-    }
-
     public void setOnNoteClickListener(OnNoteClickListener listener) {
         mNoteClickListener = listener;
     }
 
-    protected void requestMoreNotifications() {
-        if (mNoteProvider != null) {
-            mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
-        }
-    }
+    class NotesAdapter extends ResourceCursorAdapter implements Bucket.Listener<Note> {
 
-    class NotesAdapter extends ArrayAdapter<Note> {
         int mAvatarSz;
+        Query<Note> mQuery;
+        Bucket<Note> mBucket;
 
-        NotesAdapter() {
-            this(getActivity());
+        NotesAdapter(Bucket<Note> bucket) {
+            super(getActivity(), R.layout.note_list_item, null, 0x0);
+
+            mBucket = bucket;
+
+            // start listening to bucket change events
+            mBucket.addListener(this);
+
+            // build a query that sorts by timestamp descending
+            mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX,
+                Query.SortType.DESCENDING);
+
+            mAvatarSz = DisplayUtils.dpToPx(getActivity(), 48);
+            refreshNotes();
         }
 
-        NotesAdapter(Context context) {
-            this(context, new ArrayList<Note>());
-        }
-
-        NotesAdapter(Context context, List<Note> notes) {
-            super(context, R.layout.note_list_item, R.id.note_label, notes);
-            mAvatarSz = DisplayUtils.dpToPx(context, 48);
+        public void stopListening() {
+            mBucket.removeListener(this);
+            Cursor cursor = getCursor();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            final Note note = getItem(position);
+        public void onSaveObject(Bucket<Note> bucket, Note object) {
+            refreshNotes();
+        }
 
+        @Override
+        public void onDeleteObject(Bucket<Note> bucket, Note object) {
+            refreshNotes();
+        }
+
+        @Override
+        public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+            refreshNotes();
+        }
+
+        public void refreshNotes() {
+            Activity activity = getActivity();
+            if (activity == null) return;
+
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run(){
+                    swapCursor(mQuery.execute());
+                }
+
+            });
+
+        }
+
+        public Note getNote(int position) {
+            getCursor().moveToPosition(position);
+            return getNote();
+        }
+
+        public Note getNote() {
+            return ((Bucket.ObjectCursor<Note>) getCursor()).getObject();
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+
+            Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
+            final Note note = bucketCursor.getObject();
+
+            final TextView noteLabelText = (TextView) view.findViewById(R.id.note_label);
             final TextView detailText = (TextView) view.findViewById(R.id.note_detail);
             final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
             final NetworkImageView avatarView = (NetworkImageView) view.findViewById(R.id.note_avatar);
@@ -153,11 +207,14 @@ public class NotificationsListFragment extends ListFragment {
                 detailText.setVisibility(View.GONE);
             }
 
+            noteLabelText.setText(note.getSubject());
+
             // gravatars default to having s=256 which is considerably larger than we need here, so
             // change the s= param to the actual size used here
             String iconUrl = note.getIconURL();
             if (iconUrl!=null && iconUrl.contains("s=256"))
                 iconUrl = iconUrl.replace("s=256", "s=" + mAvatarSz);
+
             avatarView.setImageUrl(iconUrl, WordPress.imageLoader);
             avatarView.setDefaultImageResId(R.drawable.placeholder);
 
@@ -166,54 +223,8 @@ public class NotificationsListFragment extends ListFragment {
             unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.GONE);
             placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
-            return view;
         }
 
-        public void addAll(List<Note> notes) {
-            Collections.sort(notes, new Note.TimeStampComparator());
-            if (notes.size() == 0) {
-                // No more notes available
-                mAllNotesLoaded = true;
-                if (mProgressFooterView != null)
-                    mProgressFooterView.setVisibility(View.GONE);
-            } else {
-                // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
-                // will be triggered for each added note
-                setNotifyOnChange(false);
-                try {
-                    Iterator<Note> noteIterator = notes.iterator();
-                    while(noteIterator.hasNext()){
-                        add(noteIterator.next());
-                    }
-                } finally {
-                    setNotifyOnChange(true);
-                }
-            }
-        }
-        /*
-         * replaces an existing note with an updated one, returns the index of the note
-         * or -1 if it doesn't exist
-         */
-        public int updateNote(final Note originalNote, final Note updatedNote) {
-            if (originalNote==null || updatedNote==null)
-                return -1;
-
-            int position = getPosition(originalNote);
-            if (position >= 0) {
-                remove(originalNote);
-                insert(updatedNote, position);
-                notifyDataSetChanged();
-            }
-
-            return position;
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            super.notifyDataSetChanged();
-            if (mProgressFooterView != null)
-                mProgressFooterView.setVisibility(View.GONE);
-        }
 
         // HashMap of drawables for note types
         private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();

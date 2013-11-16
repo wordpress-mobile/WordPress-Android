@@ -20,9 +20,11 @@ import org.wordpress.android.util.WPHtmlTagHandler;
 import com.simperium.client.BucketSchema;
 import com.simperium.client.Syncable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class Note extends Syncable {
@@ -30,6 +32,30 @@ public class Note extends Syncable {
     public static class Schema extends BucketSchema<Note> {
 
         static public final String NAME = "notes";
+        static public final String TIMESTAMP_INDEX = "timestamp";
+
+        private static Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
+
+            @Override
+            public List<Index> index(Note note) {
+                List<Index> indexes = new ArrayList<Index>(1);
+                try {
+                    Integer timestamp = Integer.parseInt(note.getTimestamp());
+                    indexes.add(new Index(TIMESTAMP_INDEX, timestamp));
+                } catch (NumberFormatException e) {
+                    // note will not have an indexed timestamp so it will
+                    // show up at the end of a query sorting by timestamp
+                    android.util.Log.e("WordPress", "Failed to index timestamp", e);
+                }
+                return indexes;
+            }
+
+        };
+
+        public Schema() {
+            // save an index with a timestamp
+            addIndex(sTimestampIndexer);
+        }
 
         @Override
         public String getRemoteName() {
@@ -38,13 +64,11 @@ public class Note extends Syncable {
 
         @Override
         public Note build(String key, JSONObject properties) {
-            android.util.Log.d("WordPress", "build note " + key);
             return new Note(properties);
         }
 
         public void update(Note note, JSONObject properties) {
-            note.mNoteJSON = properties;
-            android.util.Log.d("WordPress", "update note " + note.getSimperiumKey());
+            note.updateJSON(properties);
         }
 
     }
@@ -287,6 +311,20 @@ public class Note extends Syncable {
             }
         }
         return mActions;
+    }
+
+    protected void updateJSON(JSONObject json){
+
+        mNoteJSON = json;
+
+        // clear out the preloaded content
+        mComment = null;
+        mCommentPreview = null;
+        mSubject = null;
+        mIconUrl = null;
+
+        // preload content again
+        preloadContent();
     }
 
     /**
