@@ -14,7 +14,8 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="600dp"
             android:layout_width="wrap_content"
             android:maxWidth="480dp"
             android:layout_height="wrap_content"
@@ -177,6 +178,6 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>

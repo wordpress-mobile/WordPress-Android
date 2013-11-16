@@ -11,7 +11,8 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="600dp"
             android:layout_width="wrap_content"
             android:maxWidth="480dp"
             android:layout_height="match_parent"
@@ -168,6 +169,6 @@
                 android:text="@string/agree_terms_of_service"
                 style="@style/WordPress.NUXTos" />
 
-        </LinearLayout>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>

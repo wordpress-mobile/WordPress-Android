@@ -6,9 +6,9 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+        app:maxWidth="600dp"
         android:layout_width="fill_parent"
-        android:maxWidth="480dp"
         android:layout_height="fill_parent"
         android:gravity="center"
         android:orientation="vertical"
@@ -40,7 +40,7 @@
             android:layout_marginTop="8dp" />
 
 
-    </LinearLayout>
+    </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
     <LinearLayout
         android:orientation="vertical"
