@@ -30,9 +30,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simperium.client.Bucket;
+import com.simperium.client.Query;
+
 public class NotificationsListFragment extends ListFragment {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
-    private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private View mProgressFooterView;
@@ -43,13 +45,6 @@ public class NotificationsListFragment extends ListFragment {
      */
     public interface OnNoteClickListener {
         public void onClickNote(Note note);
-    }
-
-    /**
-     * For providing more notes data when getting to the end of the list
-     */
-    public interface NoteProvider {
-        public void onRequestMoreNotifications(ListView listView, ListAdapter adapter);
     }
 
     @Override
@@ -66,7 +61,6 @@ public class NotificationsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
 
         // setup the initial notes adapter, starst listening to the bucket
         mNotesAdapter = new NotesAdapter(WordPress.notesBucket);
@@ -246,28 +240,6 @@ public class NotificationsListFragment extends ListFragment {
 
             mNoteIcons.put(noteType, icon);
             return icon;
-        }
-    }
-
-    private class ListScrollListener implements AbsListView.OnScrollListener {
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (mAllNotesLoaded)
-                return;
-
-            // if we're within 5 from the last item we should ask for more items
-            if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
-                if (totalItemCount <= 1)
-                    mProgressFooterView.setVisibility(View.GONE);
-                else
-                    mProgressFooterView.setVisibility(View.VISIBLE);
-
-                requestMoreNotifications();
-            }
-        }
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
         }
     }
 

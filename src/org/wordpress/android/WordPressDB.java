@@ -1884,52 +1884,6 @@ public class WordPressDB {
         }
     }
 
-    public ArrayList<Note> getLatestNotes() {
-        return getLatestNotes(20);
-    }
-
-    public ArrayList<Note> getLatestNotes(int limit) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data", "placeholder"},
-                null, null, null, null, "timestamp DESC", "" + limit);
-        ArrayList<Note> notes = new ArrayList<Note>();
-        while (cursor.moveToNext()) {
-            String note_id = cursor.getString(0);
-            String raw_note_data = cursor.getString(1);
-            boolean placeholder = cursor.getInt(2) == 1;
-            try {
-                Note note = new Note(new JSONObject(raw_note_data));
-                note.setPlaceholder(placeholder);
-                notes.add(note);
-            } catch (JSONException e) {
-                Log.e(WordPress.TAG, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
-            }
-        }
-        cursor.close();
-        return notes;
-    }
-
-    public void removePlaceholderNotes() {
-        db.delete(NOTES_TABLE, "placeholder=1", null);
-    }
-
-    public void addNote(Note note, boolean placeholder) {
-        ContentValues values = new ContentValues();
-        values.put("type", note.getType());
-        values.put("timestamp", note.getTimestamp());
-        values.put("placeholder", placeholder);
-        values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
-
-        if (note.getId().equals("0") || note.getId().equals("")) {
-            values.put("id", generateIdFor(note));
-            values.put("note_id", "0");
-        } else {
-            values.put("id", note.getId());
-            values.put("note_id", note.getId());
-        }
-
-        db.insertWithOnConflict(NOTES_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
     public static int generateIdFor(Note note) {
         if (note == null) {
             return 0;
@@ -1937,34 +1891,4 @@ public class WordPressDB {
         return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
     }
 
-    public void saveNotes(List<Note> notes) {
-        db.beginTransaction();
-        try {
-            for (Note note: notes)
-                addNote(note, false);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public Note getNoteById(int id) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},  "id=" + id, null, null, null, null);
-        cursor.moveToFirst();
-
-        try {
-            JSONObject jsonNote = new JSONObject(cursor.getString(0));
-            return new Note(jsonNote);
-        } catch (JSONException e) {
-            Log.e(WordPress.TAG, "Can't parse JSON Note: " + e);
-            return null;
-        } catch (CursorIndexOutOfBoundsException e) {
-            Log.v(WordPress.TAG, "No Note with this id: " + e);
-            return null;
-        }
-    }
-
-    public void clearNotes() {
-        db.delete(NOTES_TABLE, null, null);
-    }
 }
