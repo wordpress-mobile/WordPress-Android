@@ -73,6 +73,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private MenuItem mRefreshMenuItem;
     private int mResultCode = -1;
     private boolean mIsRestoredFromState = false, mIsTablet;
+    private boolean mIsInFront;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -141,6 +142,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     protected void onResume() {
         super.onResume();
+        mIsInFront = true;
         
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
@@ -170,6 +172,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     protected void onPause() {
         super.onPause();
 
+        mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
         
@@ -387,7 +390,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
        
         @Override
         public void onSuccess() {
-            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()) {
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing() || statsActivityWeakRef.get().mIsInFront == false) {
                 return;
             }
             
