@@ -402,6 +402,35 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        StatsAbsViewFragment fragment;
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+        ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+        ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+        ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+        ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+        ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
+
+        fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+        ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+
+        ft.commit();
+
         refreshStats();
     }
 
