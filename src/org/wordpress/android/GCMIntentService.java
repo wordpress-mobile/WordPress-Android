@@ -79,23 +79,11 @@ public class GCMIntentService extends GCMBaseIntentService {
         String note_id = extras.getString("note_id");
 
         Note note = null;
-        if (extras.getString("note_full_data") != null) {
-            byte[] decode = Base64.decode(intent.getStringExtra("note_full_data"), Base64.DEFAULT);
-            String unzippedString = NotificationUtils.unzipString(decode);
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(unzippedString);
-                JSONArray notesJSON = jsonObject.getJSONArray("notes");
-                note = new Note(notesJSON.getJSONObject(0));
-                WordPress.wpDB.addNote(note, false);
-            } catch (JSONException e) {
-                Log.e(WordPress.TAG, "Can't parse restRequest JSON response, notifications: " + e);
-            }
-        } else { // create a placeholder note
-            note = new Note(extras);
-            WordPress.wpDB.addNote(note, true);
-            refreshNotes();
-        }
+
+        // TODO: get the note from the bucket. If we're online and can get a
+        // push notification, then we should be getting the note pushed to the
+        // bucket as well assuming Simperium.com isn't experiencing any issues
+        // ;).
 
         boolean md5GeneratedNoteId = false;
         if (note_id == null && note != null) {
@@ -270,8 +258,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             public void onResponse(JSONObject jsonObject) {
                 try {
                     List<Note> notes = NotificationUtils.parseNotes(jsonObject);
-                    WordPress.wpDB.clearNotes();
-                    WordPress.wpDB.saveNotes(notes);
                     broadcastNewNotification();
                 } catch (JSONException e) {
                     Log.e(WordPress.TAG, "Can't parse restRequest JSON response, notifications: " + e);
