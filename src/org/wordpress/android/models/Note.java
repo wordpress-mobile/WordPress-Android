@@ -17,12 +17,39 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPHtmlTagHandler;
 
+import com.simperium.client.BucketSchema;
+import com.simperium.client.Syncable;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class Note {
+public class Note extends Syncable {
+
+    public static class Schema extends BucketSchema<Note> {
+
+        static public final String NAME = "notes";
+
+        @Override
+        public String getRemoteName() {
+            return NAME;
+        }
+
+        @Override
+        public Note build(String key, JSONObject properties) {
+            android.util.Log.d("WordPress", "build note " + key);
+            return new Note(properties);
+        }
+
+        public void update(Note note, JSONObject properties) {
+            note.mNoteJSON = properties;
+            android.util.Log.d("WordPress", "update note " + note.getSimperiumKey());
+        }
+
+    }
+
+
     protected static final String TAG="NoteModel";
     public static final String UNKNOWN_TYPE="unknown";
     public static final String COMMENT_TYPE="comment";
@@ -105,6 +132,22 @@ public class Note {
             Log.e(TAG, "Failed to put key in noteJSON", e);
         }
         mNoteJSON = tmpNoteJSON;
+    }
+
+    /**
+     * Simperium method @see Diffable
+     */
+    @Override
+    public JSONObject getDiffableValue() {
+        return mNoteJSON;
+    }
+
+    /**
+     * Simperium method for identifying bucket object @see Diffable
+     */
+    @Override
+    public String getSimperiumKey() {
+        return getId();
     }
 
     public boolean isPlaceholder() {

@@ -7,6 +7,7 @@ import com.simperium.client.BucketObject;
 import com.simperium.client.BucketNameInvalid;
 
 import org.wordpress.android.Config;
+import org.wordpress.android.models.Note;
 
 import android.content.Context;
 
@@ -24,12 +25,12 @@ public class SimperiumUtils {
         }
 
         try {
-            Bucket<BucketObject> notesBucket = simperium.bucket("notes");
+            Bucket<Note> notesBucket = simperium.bucket(new Note.Schema());
             Bucket<BucketObject> metaBucket = simperium.bucket("meta");
 
             notesBucket.start();
             metaBucket.start();
-            
+
         } catch (BucketNameInvalid e) {
             throw new RuntimeException("Failed to configure simperium", e);
         }
@@ -44,9 +45,8 @@ public class SimperiumUtils {
 
         // The token is WPCC/SIMPERIUM_SECRET/WP_OAUTH_ACCESS_TOKEN
 
-        // String wpccToken = String.format(TOKEN_FORMAT, Config.SIMPERIUM_APP_SECRET, token);
+        String wpccToken = String.format(TOKEN_FORMAT, Config.SIMPERIUM_APP_SECRET, token);
 
-        String wpccToken = Config.SIMPERIUM_DEBUG_ACCESS_TOKEN;
         user.setAccessToken(wpccToken);
 
         user.setStatus(User.Status.AUTHORIZED);
