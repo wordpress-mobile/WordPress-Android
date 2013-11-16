@@ -43,6 +43,8 @@ import java.util.Map;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
+    private int mAccountId;
+
     private Comment mComment;
     private Note mNote;
 
@@ -53,16 +55,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private OnCommentChangeListener mChangeListener;
 
-    protected interface OnCommentChangeListener {
-        public void onCommentModified(Comment comment);
+    public interface OnCommentChangeListener {
+        public void onCommentModerated(Comment comment);
         public void onCommentAdded();
     }
 
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(final Comment comment) {
+    protected static CommentDetailFragment newInstance(int blogId, final Comment comment) {
         CommentDetailFragment fragment = new CommentDetailFragment();
+        fragment.setBlogId(blogId);
         fragment.setComment(comment);
         return fragment;
     }
@@ -82,6 +85,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
+    private void setBlogId(int blogId) {
+        //mBlogId = blogId;
+        mAccountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+    }
+
     protected void setComment(final Comment comment) {
         mComment = comment;
         if (hasActivity())
@@ -96,6 +104,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
+        if (hasActivity())
+            showComment();
     }
 
     public void onAttach(Activity activity) {
@@ -128,7 +138,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         editReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId== EditorInfo.IME_ACTION_DONE || actionId==EditorInfo.IME_ACTION_SEND)
+                if (actionId==EditorInfo.IME_ACTION_DONE || actionId==EditorInfo.IME_ACTION_SEND)
                     submitReply();
                 return false;
             }
@@ -188,6 +198,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtContent.setText(null);
             txtBtnApprove.setVisibility(View.GONE);
 
+            // if a notification was passed, request its associated comment
             if (mNote != null && !mIsRequestingComment)
                 showCommentForNote(mNote);
 
@@ -215,9 +226,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
             txtBtnApprove.setVisibility(View.GONE);
             showReplyBox();
-            mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
-            if (mChangeListener != null)
-                mChangeListener.onCommentModified(mComment);
         } else {
             txtBtnApprove.setVisibility(View.VISIBLE);
             txtBtnApprove.setOnClickListener(new View.OnClickListener() {
@@ -259,22 +267,24 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsApprovingComment = false;
-                if (succeeded) {
-                    mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
-                    if (mChangeListener != null)
-                        mChangeListener.onCommentModified(mComment);
-                } else {
-                    hideReplyBox(false);
-                    txtBtnApprove.setVisibility(View.VISIBLE);
-                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                if (hasActivity()) {
+                    if (succeeded) {
+                        mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
+                        if (mChangeListener != null)
+                            mChangeListener.onCommentModerated(mComment);
+                    } else {
+                        hideReplyBox(false);
+                        txtBtnApprove.setVisibility(View.VISIBLE);
+                        ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                    }
                 }
             }
         };
-        CommentActions.setCommentStatus(WordPress.currentBlog, mComment, CommentStatus.APPROVED, actionListener);
+        CommentActions.moderateComment(WordPress.currentBlog, mComment, CommentStatus.APPROVED, actionListener);
     }
 
     /*
-     * post the text typed into the comment box as a reply to the current comment
+     * post comment box text as a reply to the current comment
      */
     private void submitReply() {
         if (!hasActivity() || mIsSubmittingReply)
@@ -297,22 +307,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                editComment.setEnabled(true);
-                imgSubmit.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
                 mIsSubmittingReply = false;
 
-                if (succeeded) {
-                    if (mChangeListener != null)
-                        mChangeListener.onCommentAdded();
-                    MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
-                    editComment.setText(null);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
-                    // refocus editor on failure and show soft keyboard
-                    editComment.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(editComment, InputMethodManager.SHOW_IMPLICIT);
+                if (hasActivity()) {
+                    editComment.setEnabled(true);
+                    imgSubmit.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
+
+                    if (succeeded) {
+                        if (mChangeListener != null)
+                            mChangeListener.onCommentAdded();
+                        MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
+                        editComment.setText(null);
+                    } else {
+                        ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                        // refocus editor on failure and show soft keyboard
+                        editComment.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(editComment, InputMethodManager.SHOW_IMPLICIT);
+                    }
                 }
             }
         };
@@ -324,6 +337,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                                             actionListener);
     }
 
+    /*
+     * display the comment associated with the passed notification
+     */
     private void showCommentForNote(Note note) {
         /*
          * in order to get the actual comment from a notification we need to extract the
@@ -339,11 +355,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             JSONObject jsonParams = jsonAction.optJSONObject("params");
             if (jsonParams != null) {
                 int blogId = jsonParams.optInt("blog_id");
+                setBlogId(blogId);
                 //int postId = jsonParams.optInt("post_id");
                 int commentId = jsonParams.optInt("comment_id");
                 // first try to get from local db, if that fails request it from the server
-                int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
-                Comment comment = null;//WordPress.wpDB.getComment(accountId, commentId);
+                Comment comment = WordPress.wpDB.getComment(mAccountId, commentId);
                 if (comment != null) {
                     setComment(comment);
                 } else {
@@ -356,7 +372,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * request a comment via the REST API
      */
-    private void requestComment(int siteId, int commentId) {
+    private void requestComment(int blogId, int commentId) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -365,25 +381,31 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onResponse(JSONObject jsonObject) {
                 mIsRequestingComment = false;
-                if (progress != null)
-                    progress.setVisibility(View.GONE);
-                Comment comment = Comment.fromJSON(jsonObject);
-                if (comment != null)
-                    setComment(comment);
+                if (hasActivity()) {
+                    if (progress != null)
+                        progress.setVisibility(View.GONE);
+                    Comment comment = new Comment(jsonObject);
+                    if (comment != null) {
+                        WordPress.wpDB.addComment(mAccountId, comment);
+                        setComment(comment);
+                    }
+                }
             }
         };
         RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 mIsRequestingComment = false;
-                if (progress != null)
-                    progress.setVisibility(View.GONE);
-                // TODO: let user know comment could not be loaded
+                if (hasActivity()) {
+                    if (progress != null)
+                        progress.setVisibility(View.GONE);
+                    // TODO: needs a better error string
+                    ToastUtils.showToast(getActivity(), R.string.connection_error, ToastUtils.Duration.LONG);
+                }
             }
         };
 
-        // /sites/$site/comments/$comment_ID
-        final String path = String.format("/sites/%s/comments/%s", siteId, commentId);
+        final String path = String.format("/sites/%s/comments/%s", blogId, commentId);
         mIsRequestingComment = true;
         WordPress.restClient.get(path, restListener, restErrListener);
     }

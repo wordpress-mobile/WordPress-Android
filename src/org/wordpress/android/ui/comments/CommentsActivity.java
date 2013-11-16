@@ -175,7 +175,7 @@ public class CommentsActivity extends WPActionBarActivity
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(commentList);
-                f = CommentDetailFragment.newInstance(comment);
+                f = CommentDetailFragment.newInstance(WordPress.getCurrentBlogId(), comment);
                 ft.add(R.id.commentDetailFragmentContainer, f);
                 //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
@@ -189,11 +189,11 @@ public class CommentsActivity extends WPActionBarActivity
 
 
     /*
-     * called from CommentDetailFragment when comment is changed (moderated) - replace the
+     * called from CommentDetailFragment when comment is moderated - replace the
      * existing comment in the list with the passed one
      */
     @Override
-    public void onCommentModified(Comment comment) {
+    public void onCommentModerated(Comment comment) {
         commentList.replaceComment(comment);
     }
 
@@ -251,9 +251,9 @@ public class CommentsActivity extends WPActionBarActivity
                     return true;
             }
 
-            CommentActions.setCommentStatus(WordPress.currentBlog,
-                                            WordPress.currentComment,
-                                            status,
+            CommentActions.moderateComment(WordPress.currentBlog,
+                                           WordPress.currentComment,
+                                           status,
                     new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {

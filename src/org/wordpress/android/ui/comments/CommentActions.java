@@ -17,7 +17,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 /**
  * Created by nbradbury on 11/8/13.
- * actions related to comments - replies, etc.
+ * actions related to comments - replies, moderating, etc.
  * methods below do network calls in the background & update local DB upon success
  * all methods below MUST be called from UI thread
  */
@@ -123,12 +123,12 @@ public class CommentActions {
     /**
      * change the status of a comment
      */
-    protected static void setCommentStatus(final Blog blog,
-                                           final Comment comment,
-                                           final CommentStatus status,
-                                           final CommentActionListener actionListener) {
+    protected static void moderateComment(final Blog blog,
+                                          final Comment comment,
+                                          final CommentStatus newStatus,
+                                          final CommentActionListener actionListener) {
 
-        if (blog==null || comment==null || status==null || status== CommentStatus.UNKNOWN) {
+        if (blog==null || comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
             return;
@@ -158,7 +158,11 @@ public class CommentActions {
 
                 String siteId = Integer.toString(blog.getBlogId());
                 String commentId = Integer.toString(comment.commentID);
-                WordPress.restClient.moderateComment(siteId, commentId, CommentStatus.toString(status, CommentStatus.ApiFormat.REST), restListener, restErrListener);
+                WordPress.restClient.moderateComment(siteId,
+                                                     commentId,
+                                                     CommentStatus.toString(newStatus, CommentStatus.ApiFormat.REST),
+                                                     restListener,
+                                                     restErrListener);
 
                 /* Pre-v2.6 XMLRPC code commented out below
                 XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
@@ -236,7 +240,7 @@ public class CommentActions {
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
-                    WordPress.wpDB.deleteComment(blog.getId(), comment.postID, comment.commentID);
+                    WordPress.wpDB.deleteComment(blog.getId(), comment.commentID);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {

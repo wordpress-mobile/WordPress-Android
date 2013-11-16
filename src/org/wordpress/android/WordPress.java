@@ -278,6 +278,13 @@ public class WordPress extends Application {
         return currentBlog;
     }
 
+    /*
+     * returns the blogID of the current blog
+     */
+    public static int getCurrentBlogId() {
+        return (currentBlog != null ? currentBlog.getBlogId() : 0);
+    }
+
     /**
      * Checks for WordPress.com credentials
      *

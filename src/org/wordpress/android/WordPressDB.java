@@ -643,7 +643,7 @@ public class WordPressDB {
 
         Cursor c = null;
         try {
-            c = db.query(SETTINGS_TABLE, new String[] { "id" }, "runService=1",
+            c = db.query(SETTINGS_TABLE, new String[]{"id"}, "runService=1",
                     null, null, null, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -667,7 +667,7 @@ public class WordPressDB {
     public String getAccountName(String accountID) {
 
         String accountName = "";
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName" }, "id="
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"blogName"}, "id="
                 + accountID, null, null, null, null);
         c.moveToFirst();
         if (c.getString(0) != null) {
@@ -950,6 +950,17 @@ public class WordPressDB {
         return (returnValue);
     }
 
+    /**
+     * nbradbury 11/15/13 - get the title of a specific post
+     * @param accountId - - unique id in account table for this blog
+     * @param postId - id of the desired post
+     * @return title if exists, empty string otherwise
+     */
+    public String getPostTitle(int accountId, String postId) {
+        String[] args = {Integer.toString(accountId), StringUtils.notNullStr(postId)};
+        return SqlUtils.stringForQuery(db, "SELECT TITLE FROM " + POSTS_TABLE + " WHERE blogID=? AND postid=?", args);
+    }
+
     public int updatePost(Post post, int blogID) {
         int success = 0;
         if (post != null) {
@@ -1095,8 +1106,37 @@ public class WordPressDB {
     }
 
     /**
+     * nbradbury 11/15/13 - add a single comment
+     * @param accountId - unique id in account table for the blog the comment is from
+     * @param comment - comment object to store
+     */
+    public void addComment(int accountId, Comment comment) {
+        if (comment == null)
+            return;
+
+        // first delete existing comment (necessary since there's no primary key or indexes
+        // on this table, which means we can't rely on using CONFLICT_REPLACE below)
+        deleteComment(accountId, comment.commentID);
+
+        ContentValues values = new ContentValues();
+        values.put("blogID", accountId);
+        values.put("postID", StringUtils.notNullStr(comment.postID));
+        values.put("iCommentID", comment.commentID);
+        values.put("author", StringUtils.notNullStr(comment.name));
+        values.put("url", StringUtils.notNullStr(comment.authorURL));
+        values.put("comment", StringUtils.notNullStr(comment.comment));
+        values.put("status", StringUtils.notNullStr(comment.getStatus()));
+        values.put("email", StringUtils.notNullStr(comment.authorEmail));
+        values.put("postTitle", StringUtils.notNullStr(comment.postTitle));
+        values.put("commentDateFormatted", StringUtils.notNullStr(comment.dateCreatedFormatted));
+        values.put("commentDate", StringUtils.notNullStr(comment.dateCreatedFormatted));
+
+        db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
      * nbradbury 11/11/13 - retrieve a single comment
-     * @param accountId - unique id in account table for this blog
+     * @param accountId - unique id in account table for the blog the comment is from
      * @param commentId - commentId of the actual comment
      * @return Comment if found, null otherwise
      */
@@ -1145,18 +1185,13 @@ public class WordPressDB {
     /**
      * nbradbury 11/12/13 - delete a single comment
      * @param accountId - unique id in account table for this blog
-     * @param postId - postId of the post this comment is on
      * @param commentId - commentId of the actual comment
      * @return true if comment deleted, false otherwise
      */
-    public boolean deleteComment(int accountId, String postId, int commentId) {
-        if (TextUtils.isEmpty(postId))
-            return false;
-
+    public boolean deleteComment(int accountId, int commentId) {
         String[] args = {Integer.toString(accountId),
-                postId,
-                Integer.toString(commentId)};
-        int count = db.delete(COMMENTS_TABLE, "blogID=? AND postID=? AND iCommentID=?", args);
+                         Integer.toString(commentId)};
+        int count = db.delete(COMMENTS_TABLE, "blogID=? AND iCommentID=?", args);
         return (count > 0);
     }
 

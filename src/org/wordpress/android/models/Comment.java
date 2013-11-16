@@ -1,9 +1,13 @@
 package org.wordpress.android.models;
 
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
+import org.xmlrpc.android.ApiHelper;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Comment {
     public String postID = "";
@@ -37,42 +41,46 @@ public class Comment {
         this.dateCreatedFormatted = dateCreatedFormatted;
     }
 
-    private Comment() {
-
-    }
-
     /*
      * nbradbury 11/14/13 - create a comment from JSON (REST response)
      * https://developer.wordpress.com/docs/api/1/get/sites/%24site/comments/%24comment_ID/
      */
-    public static Comment fromJSON(JSONObject json) {
+    public Comment(JSONObject json) {
         if (json == null)
-            return null;
+            return;
 
-        Comment comment = new Comment();
+        this.commentID = json.optInt("ID");
+        this.status = JSONUtil.getString(json, "status");
+        this.comment = JSONUtil.getString(json, "content"); // contains html
 
-        comment.commentID = json.optInt("ID");
-        comment.status = JSONUtil.getString(json, "status");
-        comment.comment = JSONUtil.getString(json, "content"); // contains html
-        comment.dateCreatedFormatted = JSONUtil.getString(json, "date");
+        java.util.Date date = DateTimeUtils.iso8601ToJavaDate(JSONUtil.getString(json, "date"));
+        if (date != null)
+            this.dateCreatedFormatted = ApiHelper.getFormattedCommentDate(WordPress.getContext(), date);
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
-            comment.postID = Integer.toString(jsonPost.optInt("ID"));
+            this.postID = Integer.toString(jsonPost.optInt("ID"));
             // c.postTitle = ???
         }
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             // author names may contain html entities (esp. pingbacks)
-            comment.name = JSONUtil.getStringDecoded(jsonAuthor, "name");
-            comment.profileImageUrl = URI.create(JSONUtil.getString(jsonAuthor, "avatar_URL"));
-            comment.authorURL = JSONUtil.getString(jsonAuthor, "URL");
-            comment.authorEmail = JSONUtil.getString(jsonAuthor, "email");
-            comment.emailURL = comment.authorURL;
-        }
+            this.name = JSONUtil.getStringDecoded(jsonAuthor, "name");
+            this.authorURL = JSONUtil.getString(jsonAuthor, "URL");
 
-        return comment;
+            // email address will be set to "false" when there isn't an email address
+            this.authorEmail = JSONUtil.getString(jsonAuthor, "email");
+            if (this.authorEmail.equals("false"))
+                this.authorEmail = "";
+            this.emailURL = this.authorEmail;
+
+            try {
+                this.profileImageUrl = URI.create(JSONUtil.getString(jsonAuthor, "avatar_URL"));
+            } catch (IllegalArgumentException e) {
+                this.profileImageUrl = null;
+            }
+        }
     }
 
     public CommentStatus getStatusEnum() {

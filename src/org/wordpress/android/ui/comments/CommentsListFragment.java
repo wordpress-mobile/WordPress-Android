@@ -981,8 +981,7 @@ public class CommentsListFragment extends ListFragment {
     }
 
     /*
-     * replace existing comment with the passed one and refresh list to show changes - assumes
-     * the postID & commentID haven't changed
+     * replace existing comment with the passed one and refresh list to show changes
      */
     protected void replaceComment(Comment comment) {
         if (comment==null || model==null)
