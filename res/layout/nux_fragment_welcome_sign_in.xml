@@ -37,6 +37,7 @@
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/username_email"
                     android:padding="16dp"
+                    android:inputType="textEmailAddress"
                     android:layout_marginLeft="32dp" />
 
                 <ImageView
