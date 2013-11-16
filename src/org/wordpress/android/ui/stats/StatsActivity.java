@@ -473,6 +473,35 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+
+        FragmentManager fm = getSupportFragmentManager();  
+        
+        if (!mIsTablet) {
+            StatsViewType viewType = StatsViewType.getImplemented()[mNavPosition];
+            mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
+            fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
+        } else {
+            FragmentTransaction ft = fm.beginTransaction();
+
+            StatsAbsViewFragment fragment;
+
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+            ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
+
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+            ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
+
+            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+            
+            ft.commit();
+        }
         refreshStats();
     }
 
