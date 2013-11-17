@@ -601,7 +601,11 @@ public class CommentsListFragment extends ListFragment {
             getBulkCheck().setOnClickListener(new OnClickListener() {
 
                 public void onClick(View arg0) {
-                    selectedCommentPositions.add(position);
+                    if (getBulkCheck().isChecked()) {
+                        selectedCommentPositions.add(position);
+                    } else {
+                        selectedCommentPositions.remove(position);
+                    }
                     showOrHideModerationBar();
                 }
             });
