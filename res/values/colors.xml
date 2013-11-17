@@ -50,5 +50,6 @@
     <color name="stats_tablet_header_title">#434343</color>
     <color name="stats_alt_row">#EEF6F8</color>
     <color name="stats_div_color">#B7B7B7</color>
+    <color name="stats_activity_bg">#E8E8E8</color>
 </resources>
 

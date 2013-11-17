@@ -57,22 +57,18 @@ import java.util.Map;
  * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
+public class StatsActivity extends WPActionBarActivity {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
-    
-    private StatsAbsViewFragment mStatsViewFragment;
-    private View mActionbarNav;
-    private TextView mActionbarNavText;
-    private DialogFragment mNavFragment;
+
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
 
     private MenuItem mRefreshMenuItem;
     private int mResultCode = -1;
-    private boolean mIsRestoredFromState = false, mIsTablet;
+    private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
 
     // Used for tablet UI
@@ -92,51 +88,14 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             return;
         }
 
-        setTitle("");
+        createMenuDrawer(R.layout.stats_activity);
+        mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
+        mColumnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
+        mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
 
-        if (Utils.isTablet())
-            mIsTablet = true;
+        loadStatsFragments();
+        setTitle(R.string.stats);
 
-        if (mIsTablet) {
-            createMenuDrawer(R.layout.stats_activity_tablet);
-            mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
-            mColumnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
-            mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
-
-            loadStatsFragments();
-            setTitle(R.string.stats);
-        } else {
-            createMenuDrawer(R.layout.stats_activity);
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
-            restoreState(savedInstanceState);
-
-            mActionbarNav = getLayoutInflater().inflate(R.layout.stats_ab_navigation, null, false);
-            actionBar.setCustomView(mActionbarNav);
-
-            mActionbarNavText = (TextView) mActionbarNav.findViewById(R.id.stats_ab_nav_text);
-            mActionbarNavText.setText(StatsViewType.getImplemented()[mNavPosition].getLabel());
-            mActionbarNavText.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (!isFinishing())
-                        showViews();
-                }
-
-            });
-
-            FragmentManager fm = getSupportFragmentManager();
-            mStatsViewFragment = (StatsAbsViewFragment) fm.findFragmentByTag(StatsAbsViewFragment.TAG);
-            if (mStatsViewFragment == null) {
-                mStatsViewFragment = StatsAbsViewFragment.newInstance(StatsViewType.getImplemented()[0]);
-                fm.beginTransaction().add(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
-            }
-
-            mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
-        }
     }
     
     @Override
@@ -421,20 +380,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
         }
     }
-    
-    
-    
-    protected void showViews() {
-        FragmentManager fm = getSupportFragmentManager();
-        mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
-        if (mNavFragment == null)
-            mNavFragment = StatsNavDialogFragment.newInstance(mNavPosition);
-        else if (mNavFragment.getDialog().isShowing())
-            return;
-            
-        if (!mNavFragment.isVisible())
-            mNavFragment.show(getSupportFragmentManager(), StatsNavDialogFragment.TAG);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -456,55 +401,39 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    @Override
-    public void onItemClick(int position) {
-        mNavPosition = position;
-        StatsViewType viewType = StatsViewType.getImplemented()[mNavPosition];
-        mActionbarNavText.setText(viewType.getLabel());
-
-        FragmentManager fm = getSupportFragmentManager();
-        StatsNavDialogFragment navFragment = (StatsNavDialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
-        if (navFragment != null)
-            navFragment.dismissAllowingStateLoss();
-        
-        mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
-        fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
-        refreshStats();
-    }
 
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
 
-        FragmentManager fm = getSupportFragmentManager();  
-        
-        if (!mIsTablet) {
-            StatsViewType viewType = StatsViewType.getImplemented()[mNavPosition];
-            mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
-            fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
-        } else {
-            FragmentTransaction ft = fm.beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
 
-            StatsAbsViewFragment fragment;
+        StatsAbsViewFragment fragment;
 
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
-            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+        ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
 
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
-            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
 
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
-            ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+        ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
 
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
-            ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+        ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
 
-            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
-            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-            
-            ft.commit();
-        }
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+        ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
+
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+        ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
+
+        fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+        ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+
+        ft.commit();
+
         refreshStats();
     }
 
@@ -527,6 +456,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             if (blogId == null) {
                 //Refresh Jetpack Settings
                 new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new VerifyJetpackSettingsCallback( StatsActivity.this ) ).execute(false);
+                return;
             }
         }
 
@@ -561,24 +491,17 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             }
         });
 
-        if (mIsTablet) {
-            StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
-//        StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
-            StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
-            StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
-//        StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
-            // data for total followers and shares will already be fetched
-//        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
-            StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
-//        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
-            StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
-            StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
-        } else {
-            if (mStatsViewFragment != null) {
-                StatsViewType viewType = mStatsViewFragment.getViewType();
-                StatsRestHelper.getStats(viewType, blogId);
-            }
-        }
+        StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
+//      StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
+        StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
+        StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
+//      StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
+        // data for total followers and shares will already be fetched
+//      StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
+        StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
+//      StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
+        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
+        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
     }
 
     public String getBlogId() {
@@ -625,23 +548,10 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 // stop or start animating refresh button depending on result
                 boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
 
-                if (mIsTablet) {
-                    if (started)
-                        startAnimatingRefreshButton(mRefreshMenuItem);
-                    else
-                        stopAnimatingRefreshButton(mRefreshMenuItem);
-                } else {
-                    int ordinal = intent.getIntExtra(StatsRestHelper.REFRESH_VIEW_TYPE_ORDINAL, -1);
-                    if (ordinal == -1 && !started) {
-                        stopAnimatingRefreshButton(mRefreshMenuItem);
-                    } else if (mStatsViewFragment != null && mStatsViewFragment.getViewType().ordinal() == ordinal) {
-                        if (started)
-                            startAnimatingRefreshButton(mRefreshMenuItem);
-                        else
-                            stopAnimatingRefreshButton(mRefreshMenuItem);
-
-                    }
-                }
+                if (started)
+                    startAnimatingRefreshButton(mRefreshMenuItem);
+                else
+                    stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         }
     };

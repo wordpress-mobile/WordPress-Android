@@ -7,7 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:paddingTop="16dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -122,7 +125,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/stats_visitors_and_views_today_visitors_count"
-                            android:text="@string/stats_totals_visitors" />
+                            android:text="@string/stats_totals_visitors"
+                            android:singleLine="true" />
                     </RelativeLayout>
 
                     <!-- TODAY: Views -->
@@ -145,7 +149,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/stats_visitors_and_views_today_views_count"
-                            android:text="@string/stats_totals_views" />
+                            android:text="@string/stats_totals_views"
+                            android:singleLine="true" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -181,7 +186,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/stats_totals_views" />
+                    android:text="@string/stats_totals_views"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <include layout="@layout/stats_vertical_line" />
@@ -227,7 +233,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/stats_visitors_and_views_all_time_view_count"
-                            android:text="@string/stats_totals_views" />
+                            android:text="@string/stats_totals_views"
+                            android:singleLine="true" />
                     </RelativeLayout>
 
                     <!-- ALL TIME: Comments -->
@@ -250,7 +257,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/stats_visitors_and_views_all_time_comment_count"
-                            android:text="@string/stats_totals_comments" />
+                            android:text="@string/stats_totals_comments"
+                            android:singleLine="true"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
