@@ -68,11 +68,4 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
     }
     
     public abstract String getTitle();
-    
-    protected String getCurrentBlogId() {
-        if (WordPress.getCurrentBlog() != null)
-            return String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        return null;
-    }
-    
 }

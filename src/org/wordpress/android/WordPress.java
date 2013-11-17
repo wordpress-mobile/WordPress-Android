@@ -405,6 +405,11 @@ public class WordPress extends Application {
                     // get the access token from api key field
                     token = blog.getApi_key();
 
+                    // valid oauth tokens are 64 chars
+                    if (token != null && token.length() < 64 && !blog.isDotcomFlag()) {
+                        token = null;
+                    }
+
                     // if there is no access token, but this is the dotcom flag
                     if (token == null && (blog.isDotcomFlag() &&
                             blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, "")))) {
