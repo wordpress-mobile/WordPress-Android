@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
@@ -18,7 +15,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.util.WPRestClient;
 
@@ -58,7 +54,6 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             restClient = new WPRestClient(requestQueue, null);
     }
 
-
     /**
      * Returns the page number represented by this fragment object.
      */
@@ -71,23 +66,23 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         public void onErrorResponse(VolleyError error) {
             Log.d("ErrorListener", String.format("Error type: %s", error));
             String message = null;
-            
-            if( error.networkResponse != null && error.networkResponse.data != null ) {
+
+            if (error.networkResponse != null && error.networkResponse.data != null) {
                 Log.d("ErrorListener", String.format("Error message: %s", new String(error.networkResponse.data)));
                 String jsonString = new String(error.networkResponse.data);
                 try {
                     JSONObject errorObj = new JSONObject(jsonString);
-                    message = getErrorMessageForErrorCode((String)errorObj.get("error"));
-                    if(message == null) {//Not one of our common errors. Show the error message from the server.
-                        message = (String)errorObj.get("message");
+                    message = getErrorMessageForErrorCode((String) errorObj.get("error"));
+                    if (message == null) { // Not one of our common errors. Show the error message from the server.
+                        message = (String) errorObj.get("message");
                     }
                 } catch (JSONException e) {
                     Log.d("ErrorListener", String.format("Error parsing the error message :( : %s", e));
                     message = getString(R.string.error_generic);
                 }
             } else {
-                if( error.getMessage() != null ) {
-                    if(error.getMessage().contains("Limit reached"))
+                if (error.getMessage() != null) {
+                    if (error.getMessage().contains("Limit reached"))
                         message = getString(R.string.limit_reached);
                     else
                         message = error.getMessage();
@@ -98,13 +93,13 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             showError(message);
         }
     }
-    
+
     protected void showError(String message) {
         if(pd != null ) 
             pd.dismiss();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert = NUXDialogFragment
-                .newInstance(getString(R.string.error), message, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error),
+                message, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
         nuxAlert.show(ft, "alert");
     }
     

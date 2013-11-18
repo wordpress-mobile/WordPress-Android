@@ -239,7 +239,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (usersBlogsList == null && mErrorMsg != null) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment
-                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg,                                getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
                 return;
