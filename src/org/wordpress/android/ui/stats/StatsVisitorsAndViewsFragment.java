@@ -165,13 +165,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
         private void refreshSummary() {
             if (WordPress.getCurrentBlog() == null)
                 return;
-               
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+
+            String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+            if (TextUtils.isEmpty(blogId)) blogId = "0";
+
+            final String statsBlogId = blogId;
             new AsyncTask<Void, Void, StatsSummary>() {
 
                 @Override
                 protected StatsSummary doInBackground(Void... params) {
-                    return StatUtils.getSummary(blogId);
+                    return StatUtils.getSummary(statsBlogId);
                 }
                 
                 protected void onPostExecute(final StatsSummary result) {
