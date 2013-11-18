@@ -28,15 +28,10 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
      * The argument key for the page number this fragment represents.
      */
     public static final String ARG_PAGE = "page";
-    
     protected ConnectivityManager mSystemService;
-    
-    protected ProgressDialog pd;
-
-    protected static RequestQueue requestQueue = null; 
-
+    protected ProgressDialog mProgressDialog;
+    protected static RequestQueue requestQueue = null;
     protected static WPRestClient restClient = null;
-    
 
     /**
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
@@ -47,10 +42,11 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
-        mSystemService = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if ( requestQueue == null )
+        mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(getActivity());
-        if( restClient == null )
+        if (restClient == null)
             restClient = new WPRestClient(requestQueue, null);
     }
 
@@ -82,10 +78,11 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
                 }
             } else {
                 if (error.getMessage() != null) {
-                    if (error.getMessage().contains("Limit reached"))
+                    if (error.getMessage().contains("Limit reached")) {
                         message = getString(R.string.limit_reached);
-                    else
-                        message = error.getMessage();
+                    } else {
+                        message = getString(R.string.error_generic);
+                    }
                 } else {
                     message = getString(R.string.error_generic);
                 }
@@ -95,8 +92,8 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     }
 
     protected void showError(String message) {
-        if(pd != null ) 
-            pd.dismiss();
+        if (mProgressDialog != null)
+            mProgressDialog.dismiss();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error),
                 message, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);

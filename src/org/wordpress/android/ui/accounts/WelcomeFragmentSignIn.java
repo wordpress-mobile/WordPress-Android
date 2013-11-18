@@ -101,10 +101,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 alert.show(ft, "alert");
                 return;
             }
-            
             new SetupBlogTask().execute();
         }
-        
     };
 
     @Override

@@ -100,9 +100,6 @@ public class WelcomeActivity extends SherlockFragmentActivity {
                     welcomeFragmentSignIn = new WelcomeFragmentSignIn();
                     currentPage = welcomeFragmentSignIn;
                     break;
-                default:
-                    currentPage = new NewBlogPageFragment();
-                    break;
             }
 
             currentPage.setArguments(args);

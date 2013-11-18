@@ -133,9 +133,6 @@ public class TutorialActivity extends SherlockFragmentActivity {
                     mTutorialFragmentGetStarted = new TutorialFragmentGetStarted();
                     currentPage = mTutorialFragmentGetStarted;
                     break;
-                default:
-                    currentPage = new NewBlogPageFragment();
-                    break;
             }
 
             currentPage.setArguments(args);
