@@ -25,7 +25,9 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.wordpress.rest.Oauth;
+
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
@@ -56,6 +58,7 @@ public class WordPress extends Application {
     private static final String APP_ID_PROPERTY="oauth.app_id";
     private static final String APP_SECRET_PROPERTY="oauth.app_secret";
     private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
+    public static final String MIXPANEL_TOKEN = "mixpanel.token";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -70,6 +73,7 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static BitmapLruCache localImageCache;
+    public static MixpanelAPI mixpanel;
 
     private static Context mContext;
 
@@ -105,6 +109,8 @@ public class WordPress extends Application {
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
+
+        mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
 
         super.onCreate();
     }
