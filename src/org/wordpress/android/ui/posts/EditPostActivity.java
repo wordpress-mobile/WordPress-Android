@@ -276,7 +276,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             }
         }
 
-        setContentView(R.layout.edit);
+        setContentView(R.layout.activity_edit_post);
         mContentEditText = (WPEditText) findViewById(R.id.postContent);
         mTitleEditText = (EditText) findViewById(R.id.title);
         mExcerptEditText = (EditText) findViewById(R.id.postExcerpt);
