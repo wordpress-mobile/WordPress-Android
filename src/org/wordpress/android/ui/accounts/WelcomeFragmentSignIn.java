@@ -1,17 +1,12 @@
 
 package org.wordpress.android.ui.accounts;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,20 +18,15 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -47,13 +37,23 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
-public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher, OnFocusChangeListener {
+import java.net.URI;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
 
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
     private WPTextView mSignInButton;
+    private WPTextView mCreateAccountButton;
     private List mUsersBlogsList;
     private static final String DEFAULT_IMAGE_SIZE = "2000";
     private boolean mHttpAuthRequired;
@@ -77,12 +77,21 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in);
         mSignInButton.setOnClickListener(mSignInClickListener);
+        mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
+        mCreateAccountButton.setOnClickListener(mCreateAccountListener);
 
         return rootView;
     }
+
+    private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
+            startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+        }
+    };
     
     private OnClickListener mSignInClickListener = new OnClickListener() {
-
         @Override
         public void onClick(View v) {
             if (!wpcomFieldsFilled()) {
@@ -100,12 +109,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     @Override
     public void afterTextChanged(Editable s) {
-        // Nope
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        // Nope
     }
 
     @Override
@@ -125,12 +132,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private boolean selfHostedFieldsFilled() {
         return wpcomFieldsFilled()
                 && mUrlEditText.getText().toString().trim().length() > 0;
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        // TODO Auto-generated method stub
-        
     }
 
     public void signInDotComUser() {
@@ -238,7 +239,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (usersBlogsList == null && mErrorMsg != null) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment
-                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg,                                getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
                 return;

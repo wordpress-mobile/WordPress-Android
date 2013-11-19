@@ -2,7 +2,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1d8abc"
+    android:background="@color/nux_background"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -28,21 +28,20 @@
         android:id="@+id/footer_view"
         android:layout_width="fill_parent"
         android:layout_height="58dp"
-        android:background="#2b2d2e"
         android:gravity="center"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:clickable="true">
-        
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:gravity="center"
             android:text="@string/nux_tutorial_tap_to_start"
-            android:background="@drawable/selectable_background_wordpress"
-            />
+            android:clickable="true"
+            android:textColor="@color/white"
+            android:padding="16dp" />
     </RelativeLayout>
 
 </LinearLayout>

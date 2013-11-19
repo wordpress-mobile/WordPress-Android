@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -56,6 +57,8 @@ public class PostsListFragment extends ListFragment {
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
     private ListScrollPositionManager mListScrollPositionManager;
+    private int mLoadedBlogId;
+
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
     public int totalDrafts = 0;
@@ -63,7 +66,7 @@ public class PostsListFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-    
+
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
     private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
 
@@ -120,6 +123,11 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null && mLoadedBlogId != currentBlog.getBlogId()) {
+            WordPress.currentPost = null;
+            loadPosts(false);
+        }
     }
 
     public void createSwitcher() {
@@ -128,11 +136,10 @@ public class PostsListFragment extends ListFragment {
         Button footer = (Button) View.inflate(getActivity()
                 .getApplicationContext(), R.layout.list_footer_btn, null);
         footer.setText(getResources().getText(R.string.load_more) + " "
-                + getResources().getText((isPage)? R.string.tab_pages : R.string.tab_posts));
+                + getResources().getText((isPage) ? R.string.tab_pages : R.string.tab_posts));
 
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), isPage)) {
                     // first view is showing, show the second progress view
                     switcher.showNext();
@@ -176,12 +183,11 @@ public class PostsListFragment extends ListFragment {
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
+        if (WordPress.currentBlog != null) {
+            mLoadedBlogId = WordPress.currentBlog.getBlogId();
+        }
         try {
-            if (isPage) {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
-            } else {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), false);
-            }
+            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), isPage);
         } catch (Exception e1) {
             return false;
         }
@@ -201,8 +207,10 @@ public class PostsListFragment extends ListFragment {
             mStatuses = new String[0];
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
-                mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
-                WordPress.currentPost = null;
+                if (WordPress.currentPost != null) {
+                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
+                    WordPress.currentPost = null;
+                }
             }
         }
         if (loadedPosts != null) {
@@ -316,7 +324,7 @@ public class PostsListFragment extends ListFragment {
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
-                        
+
                         // Show comments menu option only if post allows commenting
                         boolean allowComments = false;
                         Post post = new Post(WordPress.currentBlog
@@ -324,11 +332,11 @@ public class PostsListFragment extends ListFragment {
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
                         }
-                        
-                        if( PostUploadService.isUploading(post) ) {
+
+                        if (PostUploadService.isUploading(post)) {
                             return;
                         }
-                        
+
                         mRowID = info.position;
 
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
@@ -529,7 +537,7 @@ public class PostsListFragment extends ListFragment {
                         EditPostActivity.class);
                 i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
-                
+
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
                     i2.putExtra("isPage", true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
@@ -537,7 +545,7 @@ public class PostsListFragment extends ListFragment {
                         i2.putExtra("isPage", true);
                     i2.putExtra("localDraft", true);
                 }
-                
+
                 startActivityForResult(i2, 0);
                 return true;
             case MENU_ITEM_DELETE:
@@ -595,10 +603,10 @@ public class PostsListFragment extends ListFragment {
             if (isAdded()) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
-                        
+
                         @Override
                         public void run() {
-                            loadPosts(mLoadMore);
+                        loadPosts(mLoadMore);
                         }
                     });
                 }
@@ -631,12 +639,10 @@ public class PostsListFragment extends ListFragment {
                         if (!mLoadMore) {
                             WordPress.wpDB.deleteUploadedPosts(mBlog.getId(), mIsPage);
                         }
-
                         for (int ctr = 0; ctr < result.length; ctr++) {
                             Map<?, ?> postMap = (Map<?, ?>) result[ctr];
                             postsList.add(ctr, postMap);
                         }
-
                         WordPress.wpDB.savePosts(postsList, mBlog.getId(), mIsPage);
                     }
                 }

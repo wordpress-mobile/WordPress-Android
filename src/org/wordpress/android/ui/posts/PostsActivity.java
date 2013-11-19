@@ -691,16 +691,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                             || (!isPage && !"publish".equals(contentHash.get(
                                     "post_status").toString()))) {
                         if (isPage) {
-                            errorMsg = getResources().getText(
-                                    R.string.page_not_published).toString();
+                            errorMsg = getString(R.string.page_not_published);
                         } else {
-                            errorMsg = getResources().getText(
-                                    R.string.post_not_published).toString();
+                            errorMsg = getString(R.string.post_not_published);
                         }
                         return null;
                     } else {
-                        String postURL = contentHash.get("permaLink")
-                                .toString();
+                        String postURL = contentHash.get("permaLink").toString();
                         String shortlink = getShortlinkTagHref(postURL);
                         if (shortlink == null) {
                             result = postURL;

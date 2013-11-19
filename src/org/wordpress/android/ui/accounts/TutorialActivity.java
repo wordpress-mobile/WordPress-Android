@@ -8,18 +8,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.LinePageIndicator;
 import org.wordpress.android.util.WPViewPager;
+import org.wordpress.android.widgets.WPTextView;
 
 
 public class TutorialActivity extends SherlockFragmentActivity {
@@ -75,18 +73,35 @@ public class TutorialActivity extends SherlockFragmentActivity {
         mLinePageIndicator.setViewPager(mPager);
 
         RelativeLayout footerView = (RelativeLayout)findViewById(R.id.footer_view);
-        footerView.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        };
+        footerView.setOnClickListener(clickListener);
+        WPTextView skipButton = (WPTextView) findViewById(R.id.nux_sign_in);
+        skipButton.setOnClickListener(clickListener);
 
         // Show success dialog
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        NUXDialogFragment alert = NUXDialogFragment
-                .newInstance("Success!", "You have successfully signed in to your WordPress account.", "TAP TO CONTINUE", R.drawable.nux_icon_check);
+        NUXDialogFragment alert = NUXDialogFragment.newInstance(getString(R.string.nux_dialog_success),
+                getString(R.string.nux_dialog_success_message),
+                getString(R.string.nux_dialog_success_continue), R.drawable.nux_icon_check, true);
         alert.show(ft, "alert");
+    }
+
+    public void showPrevItem() {
+        if (mPager.getCurrentItem() == 0)
+            return;
+        mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0)
+            super.onBackPressed();
+        showPrevItem();
     }
     
     private class TutorialPagerAdapter extends FragmentStatePagerAdapter {

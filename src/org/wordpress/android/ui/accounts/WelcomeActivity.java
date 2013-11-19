@@ -6,18 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.text.Html;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.Window;
-import android.widget.RelativeLayout;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
+
 import org.wordpress.android.R;
 import org.wordpress.android.util.LinePageIndicator;
 import org.wordpress.android.util.WPViewPager;
-import org.wordpress.android.widgets.WPTextView;
 
 
 public class WelcomeActivity extends SherlockFragmentActivity {
@@ -27,9 +22,8 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     /**
      * The number of pages (wizard steps)
      */
-    private static final int NUM_PAGES = 3;
-
-    static final int CREATE_ACCOUNT_REQUEST = 0;
+    private static final int NUM_PAGES = 2;
+    public static final int CREATE_ACCOUNT_REQUEST = 0;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -48,12 +42,6 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     WelcomeFragmentHome welcomeFragmentHome;
     WelcomeFragmentPublish welcomeFragmentPublish;
     WelcomeFragmentSignIn welcomeFragmentSignIn;
-    
-    private RelativeLayout mFooterView;
-    
-    private WPTextView mSignInButton;
-    private WPTextView mCreateAccountButton;
-    private WPTextView mSignInTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,68 +49,16 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
 
-        mSignInButton = (WPTextView) findViewById(R.id.nux_sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(2);
-            }
-            
-        });
-        mCreateAccountButton = (WPTextView) findViewById(R.id.nux_create_account_button);
-        mCreateAccountButton.setOnClickListener(mCreateAccountListener);
-        mSignInTextView = (WPTextView) findViewById(R.id.nux_sign_in);
-        mSignInTextView.setText(Html.fromHtml(String.format(getString(R.string.dont_have_account, "<u>", "</u>"))));
-
-        mSignInTextView.setOnClickListener(mCreateAccountListener);
-        
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (WPViewPager) findViewById(R.id.pager);
-        mPager.setPagingEnabled(true);
-        mPagerAdapter = new NewAccountPagerAdapter( super.getSupportFragmentManager() );
+        mPager.setPagingEnabled(false);
+        mPagerAdapter = new NewAccountPagerAdapter(super.getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        
-        mFooterView = (RelativeLayout) findViewById(R.id.footer_view);
-        
-        mLinePageIndicator = (LinePageIndicator)findViewById(R.id.pageIndicator);
-        mLinePageIndicator.setViewPager(mPager);
-        mLinePageIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 2) {
-                    mLinePageIndicator.setVisibility(View.GONE);
-                    mSignInButton.setVisibility(View.GONE);
-                    mCreateAccountButton.setVisibility(View.GONE);
-                    mSignInTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mLinePageIndicator.setVisibility(View.VISIBLE);
-                    mSignInButton.setVisibility(View.VISIBLE);
-                    mCreateAccountButton.setVisibility(View.VISIBLE);
-                    mSignInTextView.setVisibility(View.GONE);
-                }
-            }
-        });
-        
-        // Hide the footer view if the soft keyboard is showing
-        // See: http://stackoverflow.com/questions/2150078/how-to-check-visibility-of-software-keyboard-in-android
-        final View mainView = findViewById(R.id.main_view);
-        mainView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = mainView.getRootView().getHeight() - mainView.getHeight();
-                if (heightDiff > 100) {
-                    mFooterView.setVisibility(View.GONE);
-                } else {
-                    mFooterView.setVisibility(View.VISIBLE);
-                }
-             }
-        });
 
         if (getIntent().getBooleanExtra(SKIP_WELCOME, false))
-            mPager.setCurrentItem(2);
+            mPager.setCurrentItem(1);
     }
-    
+
     public void showNextItem() {
         mPager.setCurrentItem(mPager.getCurrentItem() + 1);
     }
@@ -157,14 +93,10 @@ public class WelcomeActivity extends SherlockFragmentActivity {
             
             switch (position) {
                 case 0:
-                    welcomeFragmentHome = new WelcomeFragmentHome();
+                    welcomeFragmentHome = new WelcomeFragmentHome(mPager);
                     currentPage = welcomeFragmentHome;
                     break;
                 case 1:
-                    welcomeFragmentPublish = new WelcomeFragmentPublish();
-                    currentPage = welcomeFragmentPublish;
-                    break;
-                case 2:
                     welcomeFragmentSignIn = new WelcomeFragmentSignIn();
                     currentPage = welcomeFragmentSignIn;
                     break;
@@ -186,26 +118,12 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case CREATE_ACCOUNT_REQUEST:
-                if (resultCode == RESULT_OK && data != null) {
-                    String username = data.getStringExtra("username");
-                    if (username != null) {
-                        mPager.setCurrentItem(2);
-                        welcomeFragmentSignIn.signInDotComUser();
-                    }
-                }
-                break;
+        if (resultCode == RESULT_OK && data != null) {
+            String username = data.getStringExtra("username");
+            if (username != null) {
+                mPager.setCurrentItem(1);
+                welcomeFragmentSignIn.signInDotComUser();
+            }
         }
-
     }
-
-    private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent newAccountIntent = new Intent(WelcomeActivity.this, NewAccountActivity.class);
-            startActivityForResult(newAccountIntent, CREATE_ACCOUNT_REQUEST);
-        }
-    };
 }

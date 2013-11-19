@@ -2,12 +2,11 @@ package org.wordpress.android.ui.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Window;
+import com.actionbarsherlock.view.Window;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -70,11 +69,18 @@ public class NewAccountActivity extends SherlockFragmentActivity {
     }
     
     public void showPrevItem() {
-        if ( mPager.getCurrentItem() == 0 )
+        if (mPager.getCurrentItem() == 0)
             return;
         mPager.setCurrentItem(mPager.getCurrentItem() - 1);
     }
-    
+
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0)
+            super.onBackPressed();
+        showPrevItem();
+    }
+
     private class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
        
         public NewAccountPagerAdapter(FragmentManager fm) {
