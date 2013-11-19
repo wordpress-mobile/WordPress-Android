@@ -494,11 +494,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();
-                    mMenuDrawer.openMenu(false);
+                    //mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
-
-                    // Show the tutorial if user hasn't seen it yet
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
                 } else {
                     finish();
                 }
