@@ -20,14 +20,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.wordpress.android.Constants;
@@ -280,72 +276,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             if (usersBlogsList != null) {
                 mUsersBlogsList = usersBlogsList;
-
-                if (mUsersBlogsList.size() == 1) {
-                    // Just add the one blog and finish up
-                    SparseBooleanArray oneBlogArray = new SparseBooleanArray();
-                    oneBlogArray.put(0, true);
-                    addBlogs(oneBlogArray);
-                    return;
+                if (usersBlogsList.size() != 0) {
+                    SparseBooleanArray allBlogs = new SparseBooleanArray();
+                    for (int i = 0; i < mUsersBlogsList.size(); i++) {
+                        allBlogs.put(i, true);
+                    }
+                    addBlogs(allBlogs);
                 }
-
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
-                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                lv.setItemsCanFocus(false);
-
-                final UsersBlogsArrayAdapter adapter = new UsersBlogsArrayAdapter(getActivity(), R.layout.blogs_row,
-                        mUsersBlogsList);
-
-                lv.setAdapter(adapter);
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                dialogBuilder.setTitle(R.string.select_blogs);
-                dialogBuilder.setView(lv);
-                dialogBuilder.setNegativeButton(R.string.add_selected, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        SparseBooleanArray selectedBlogs = lv.getCheckedItemPositions();
-                        addBlogs(selectedBlogs);
-                    }
-                });
-                dialogBuilder.setPositiveButton(R.string.add_all, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        SparseBooleanArray allBlogs = new SparseBooleanArray();
-                        for (int i = 0; i < adapter.getCount(); i++) {
-                            allBlogs.put(i, true);
-                        }
-                        if (allBlogs.size() > 0)
-                            addBlogs(allBlogs);
-
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                AlertDialog ad = dialogBuilder.create();
-                ad.setInverseBackgroundForced(true);
-                ad.show();
-
-                final Button addSelected = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
-                addSelected.setEnabled(false);
-
-                lv.setOnItemClickListener(new OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                        SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-                        boolean isChecked = false;
-                        for (int i = 0; i < selectedItems.size(); i++) {
-                            if (selectedItems.get(selectedItems.keyAt(i)) == true) {
-                                isChecked = true;
-                            }
-                        }
-                        if (!isChecked) {
-                            addSelected.setEnabled(false);
-                        } else {
-                            addSelected.setEnabled(true);
-                        }
-                    }
-                });
             }
         }
 
