@@ -43,7 +43,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.TutorialActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -500,11 +499,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
                     // Show the tutorial if user hasn't seen it yet
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-                    boolean hasViewedTutorial = settings.getBoolean(TutorialActivity.VIEWED_TUTORIAL, false);
-                    if (!hasViewedTutorial) {
-                        Intent tutorialIntent = new Intent(this, TutorialActivity.class);
-                        startActivity(tutorialIntent);
-                    }
                 } else {
                     finish();
                 }
@@ -708,16 +702,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private class PostsMenuItem extends MenuDrawerItem {
-        PostsMenuItem(){
+        PostsMenuItem() {
             super(POSTS_ACTIVITY, R.string.posts, R.drawable.dashboard_icon_posts);
         }
+
         @Override
-        public Boolean isSelected(){
+        public Boolean isSelected() {
             WPActionBarActivity activity = WPActionBarActivity.this;
             return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
         }
+
         @Override
-        public void onSelectItem(){
+        public void onSelectItem() {
             if (!(WPActionBarActivity.this instanceof PostsActivity)
                     || (WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
