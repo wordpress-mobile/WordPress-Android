@@ -92,11 +92,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
             args.putInt(NewAccountAbstractPageFragment.ARG_PAGE, position);
             
             switch (position) {
-                case 0:
-                    welcomeFragmentHome = new WelcomeFragmentHome(mPager);
-                    currentPage = welcomeFragmentHome;
-                    break;
-                case 1:
+                default:
                     welcomeFragmentSignIn = new WelcomeFragmentSignIn();
                     currentPage = welcomeFragmentSignIn;
                     break;

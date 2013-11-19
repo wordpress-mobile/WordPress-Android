@@ -26,7 +26,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -54,6 +56,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private EditText mUrlEditText;
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
+    private WPTextView mAddSelfHostedButton;
     private List mUsersBlogsList;
     private static final String DEFAULT_IMAGE_SIZE = "2000";
     private boolean mHttpAuthRequired;
@@ -66,20 +69,41 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.nux_fragment_welcome_sign_in, container, false);
+                .inflate(R.layout.nux_fragment_welcome, container, false);
+
+        ImageView statsIcon = (ImageView) rootView.findViewById(R.id.nux_fragment_icon);
+        statsIcon.setImageResource(R.drawable.nux_icon_wp);
+
+        WPTextView statsTitle = (WPTextView) rootView.findViewById(R.id.nux_fragment_title);
+        statsTitle.setText(R.string.nux_welcome);
+
+        final RelativeLayout urlButtonLayout = (RelativeLayout) rootView.
+                findViewById(R.id.url_button_layout);
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
-        mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in);
+        mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
-
+        mAddSelfHostedButton = (WPTextView) rootView.findViewById(R.id.nux_add_selfhosted_button);
+        mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (urlButtonLayout.getVisibility() == View.VISIBLE) {
+                    urlButtonLayout.setVisibility(View.GONE);
+                    mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+                } else {
+                    urlButtonLayout.setVisibility(View.VISIBLE);
+                    mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
+                }
+            }
+        });
         return rootView;
     }
 
@@ -90,7 +114,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
         }
     };
-    
+
     private OnClickListener mSignInClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -126,7 +150,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         return mUsernameEditText.getText().toString().trim().length() > 0
                 && mPasswordEditText.getText().toString().trim().length() > 0;
     }
-    
+
     private boolean selfHostedFieldsFilled() {
         return wpcomFieldsFilled()
                 && mUrlEditText.getText().toString().trim().length() > 0;
@@ -150,7 +174,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         private String mPassword;
         private String mXmlrpcUrl;
         private boolean mIsCustomUrl;
-        
+
         @Override
         protected void onPreExecute() {
             mProgressDialog = ProgressDialog.show(getActivity(), "", (selfHostedFieldsFilled()) ? getString(R.string.attempting_configure) : getString(R.string.connecting_wpcom),
@@ -164,13 +188,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 mXmlrpcUrl = Constants.wpcomXMLRPCURL;
             }
-            
+
             if (mXmlrpcUrl == null) {
                 if (!mHttpAuthRequired)
                     mErrorMsg = getString(R.string.no_site_error);
                 return null;
             }
-            
+
             // Validate the URL found before calling the client. Prevent a crash that can occur during the setup of self-hosted sites.
             try {
                 URI.create(mXmlrpcUrl);
@@ -178,12 +202,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 mErrorMsg = getString(R.string.no_site_error);
                 return null;
             }
-            
+
             mUsername = mUsernameEditText.getText().toString().trim();
             mPassword = mPasswordEditText.getText().toString().trim();
-            
+
             XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, mHttpUsername, mHttpPassword);
-            Object[] params = { mUsername, mPassword };
+            Object[] params = {mUsername, mPassword};
             try {
                 Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
                 Arrays.sort(userBlogs, Utils.BlogNameComparator);
@@ -212,8 +236,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 alert.setTitle(R.string.http_authorization_required);
 
                 View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
-                final EditText usernameEditText = (EditText)httpAuth.findViewById(R.id.http_username);
-                final EditText passwordEditText = (EditText)httpAuth.findViewById(R.id.http_password);
+                final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
+                final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
                 alert.setView(httpAuth);
 
                 alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
@@ -237,23 +261,23 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (usersBlogsList == null && mErrorMsg != null) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment
-                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg,                                getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
                 return;
             }
-            
+
             // Update wp.com credentials
             if (mXmlrpcUrl.contains("wordpress.com")) {
-              SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-              SharedPreferences.Editor editor = settings.edit();
-              editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-              editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
-              editor.commit();
-              // Fire off a request to get an access token
-              WordPress.restClient.get("me", null, null);
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
+                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
+                editor.commit();
+                // Fire off a request to get an access token
+                WordPress.restClient.get("me", null, null);
             }
-            
+
             if (usersBlogsList != null) {
                 mUsersBlogsList = usersBlogsList;
 
@@ -291,7 +315,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         for (int i = 0; i < adapter.getCount(); i++) {
                             allBlogs.put(i, true);
                         }
-                        if (allBlogs.size() > 0) 
+                        if (allBlogs.size() > 0)
                             addBlogs(allBlogs);
 
                         getActivity().setResult(Activity.RESULT_OK);
@@ -324,7 +348,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 });
             }
         }
-        
+
         // Attempts to retrieve the xmlrpc url for a self-hosted site, in this order:
         // 1: Try to retrieve it by finding the ?rsd url in the site's header
         // 2: Take whatever URL the user entered to see if that returns a correct response
@@ -341,13 +365,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 mErrorMsg = getString(R.string.invalid_url_message);
                 return null;
             }
-            
+
             // Attempt to get the XMLRPC URL via RSD
             String rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(url);
             if (rsdUrl == null) {
                 rsdUrl = ApiHelper.getRSDMetaTagHref(url);
             }
-            
+
             if (rsdUrl != null) {
                 xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
                 if (xmlrpcUrl == null)
@@ -385,15 +409,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
             return xmlrpcUrl;
         }
-        
+
         // Add selected blog(s) to the database
         private void addBlogs(SparseBooleanArray selectedBlogs) {
             for (int i = 0; i < selectedBlogs.size(); i++) {
                 if (selectedBlogs.get(selectedBlogs.keyAt(i)) == true) {
                     int rowID = selectedBlogs.keyAt(i);
-                    
-                    Map blogMap = (HashMap)mUsersBlogsList.get(rowID);
-                    
+
+                    Map blogMap = (HashMap) mUsersBlogsList.get(rowID);
+
                     String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
                     String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
 
@@ -422,11 +446,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             getActivity().finish();
         }
     }
-    
+
     private class UsersBlogsArrayAdapter extends ArrayAdapter {
 
         public UsersBlogsArrayAdapter(Context context, int resource,
-                List<Object> list) {
+                                      List<Object> list) {
             super(context, resource, list);
         }
 
@@ -437,11 +461,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 convertView = inflater.inflate(R.layout.blogs_row, parent, false);
             }
-            
+
             Map<String, Object> blogMap = (HashMap<String, Object>) mUsersBlogsList.get(position);
             if (blogMap != null) {
-                
-                CheckedTextView blogTitleView = (CheckedTextView)convertView.findViewById(R.id.blog_title);
+
+                CheckedTextView blogTitleView = (CheckedTextView) convertView.findViewById(R.id.blog_title);
                 String blogTitle = blogMap.get("blogName").toString();
                 if (blogTitle != null && blogTitle.trim().length() > 0) {
                     blogTitleView.setText(StringUtils.unescapeHTML(blogTitle));
@@ -449,7 +473,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     blogTitleView.setText(blogMap.get("url").toString());
                 }
             }
-            
+
             return convertView;
         }
     }
