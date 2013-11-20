@@ -27,7 +27,7 @@ dependencies {
     compile 'org.wordpress:volley:wp-0.0.1'
     compile 'com.automattic:wordpresscom-rest:0.0.3'
     compile 'org.wordpress:httpmime:4.1.2'
-    compile 'org.wordpress:graphview:3.1'
+    compile 'org.wordpress:graphview:3.1.1'
     compile 'org.wordpress:drag-sort-listview:0.6.1'
     compile 'org.wordpress:slidinguppanel:1.0.0'
     compile 'org.wordpress:android-passcodelock:0.0.4'
@@ -44,8 +44,8 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.5"
-        versionCode 83
+        versionName "2.5.1"
+        versionCode 85
         minSdkVersion 9
         targetSdkVersion 19
     }
