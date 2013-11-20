@@ -18,7 +18,7 @@
         android:paddingRight="@dimen/reader_margin_medium"
         android:paddingTop="@dimen/reader_margin_large">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/image_avatar"
             android:layout_width="@dimen/reader_avatar_sz_large"
             android:layout_height="@dimen/reader_avatar_sz_large"
