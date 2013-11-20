@@ -935,7 +935,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
                 } else {
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
-                    mContentEditText.setSelection(mContentEditText.getSelectionStart());
+                    int selectionStart = mContentEditText.getSelectionStart();
+                    if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart);
+                        mContentEditText.setSelection(selectionStart, mContentEditText.getSelectionEnd());
                 }
                 
                 // get media gallery spans
