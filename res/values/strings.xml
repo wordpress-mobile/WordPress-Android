@@ -727,6 +727,9 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
 
+    <string name="reader_empty_followed_tags_title">You are not following any blogs yet.</string>
+    <string name="reader_empty_followed_tags_description">But don\'t worry, just tap the plus icon in the top menu to explore and follow blogs. They\'ll show up right here!</string>
+
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_blog_wpcom">Create your first WordPress.com site</string>
