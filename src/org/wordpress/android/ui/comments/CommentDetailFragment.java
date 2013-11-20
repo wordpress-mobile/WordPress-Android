@@ -30,6 +30,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
@@ -215,8 +216,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.name));
         txtDate.setText(mComment.dateCreatedFormatted);
 
-        // convert emoticons first so their images won't be downloaded, then convert to HTML with an
-        // image getter that enforces a max image size
+        // convert emoticons in content first so their images won't be downloaded, then convert to HTML
         String content = StringUtils.notNullStr(mComment.comment);
         if (content.contains("icon_"))
             content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
@@ -229,11 +229,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         txtContent.setText(html);
 
-
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         if (mComment.profileImageUrl == null) {
             if (!TextUtils.isEmpty(mComment.authorEmail)) {
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
                 String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
                 imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
             } else {
@@ -257,6 +256,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 }
             });
             hideReplyBox(true);
+        }
+
+        // navigate to author's home page when avatar or name clicked
+        if (!TextUtils.isEmpty(mComment.authorURL)) {
+            View.OnClickListener authorListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.openUrl(getActivity(), mComment.authorURL);
+                }
+            };
+            imgAvatar.setOnClickListener(authorListener);
+            txtName.setOnClickListener(authorListener);
         }
     }
 
