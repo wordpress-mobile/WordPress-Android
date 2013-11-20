@@ -323,6 +323,7 @@ public class CommentsListFragment extends ListFragment {
                             Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
+                    selectedCommentPositions.clear();
                     refreshComments(false, false, false);
                 } else {
                     // error occurred during delete request
@@ -342,7 +343,6 @@ public class CommentsListFragment extends ListFragment {
         };
         getActivity().runOnUiThread(action);
         progressDialog = new ProgressDialog(getActivity().getApplicationContext());
-
     }
 
     public boolean loadComments(boolean refresh, boolean loadMore) {
@@ -601,7 +601,11 @@ public class CommentsListFragment extends ListFragment {
             getBulkCheck().setOnClickListener(new OnClickListener() {
 
                 public void onClick(View arg0) {
-                    selectedCommentPositions.add(position);
+                    if (getBulkCheck().isChecked()) {
+                        selectedCommentPositions.add(position);
+                    } else {
+                        selectedCommentPositions.remove(position);
+                    }
                     showOrHideModerationBar();
                 }
             });
