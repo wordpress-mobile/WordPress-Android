@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
+    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
@@ -56,6 +58,11 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         ArrayList<String> checkedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
+        
+        ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
+        if( prevSelectedItems != null ) 
+            checkedItems.addAll(prevSelectedItems);
+        
         if (savedInstanceState != null) {
             checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
@@ -222,8 +229,9 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 @Override
                 public void onFailure(int errorCode) {
 
-                    if (errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP) {
-                        Toast.makeText(MediaGalleryPickerActivity.this, "You do not have permission to view the media library", Toast.LENGTH_SHORT).show();
+                    if ( errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP || errorCode == SyncMediaLibraryTask.UNKNOWN_ERROR ) {
+                        String errorMessage = errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP ? "You do not have permission to view the media library" : "Something went wrong while refreshing the media library. Try again later.";
+                        Toast.makeText(MediaGalleryPickerActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
                         adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);

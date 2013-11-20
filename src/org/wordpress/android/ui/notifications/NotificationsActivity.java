@@ -314,7 +314,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                         // there should only be one note!
                         if (!notes.isEmpty()) {
                             Note updatedNote = notes.get(0);
-                            updateNote(originalNote, updatedNote);
+                            updateModeratedNote(originalNote, updatedNote);
                         }
                     }
                 };
@@ -337,25 +337,26 @@ public class NotificationsActivity extends WPActionBarActivity {
         };
         WordPress.restClient.moderateComment(siteId, commentId, status, success, failure);
     }
-    
-    public void updateNote(Note originalNote, Note updatedNote) {
+
+    /*
+     * passed note has just been moderated, update it in the list adapter and note fragment
+     */
+    public void updateModeratedNote(Note originalNote, Note updatedNote) {
         if (isFinishing())
             return;
-        int position = mNotesList.getNotesAdapter().getPosition(originalNote);
-        if (position >= 0) {
-            mNotesList.getNotesAdapter().remove(originalNote);
-            mNotesList.getNotesAdapter().insert(updatedNote, position);
-            mNotesList.getNotesAdapter().notifyDataSetChanged();
-            // Update comment detail fragment if we're still viewing the same note
-            if (position == mNotesList.getListView().getCheckedItemPosition()) {
-                FragmentManager fm = getSupportFragmentManager();
-                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
-                if (f != null) {
-                    f.setNote(updatedNote);
-                    f.onStart();
-                    f.animateModeration(false);
-                }
+
+        // TODO: position will be -1 for notes displayed from push notification, even though the note exists
+        int position = mNotesList.getNotesAdapter().updateNote(originalNote, updatedNote);
+
+        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+        if (f != null) {
+            // if this is the active note, update it in the fragment
+            if (position >= 0 && position == mNotesList.getListView().getCheckedItemPosition()) {
+                f.setNote(updatedNote);
+                f.onStart();
             }
+            // stop animating the moderation
+            f.animateModeration(false);
         }
     }
 

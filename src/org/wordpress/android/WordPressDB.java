@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -575,6 +576,25 @@ public class WordPressDB {
         c.close();
 
         return returnVector;
+    }
+
+    public Blog getBlogForDotComBlogId(String dotComBlogId) {
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" }, "api_blogid=? OR (blogId=? AND dotcomFlag=1)", new String[] {dotComBlogId, dotComBlogId}, null, null, null);
+
+        int id = -1;
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        if (numRows > 0) {
+            id = c.getInt(0);
+        }
+
+        c.close();
+        try {
+            return new Blog(id);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<String> loadStatsLogin(int id) {
@@ -1580,7 +1600,7 @@ public class WordPressDB {
         int numRows = c.getCount();
         c.moveToFirst();
         MediaFile mf = new MediaFile();
-        if (numRows == 1) {
+        if (numRows >= 1) {
             mf.setPostID(c.getInt(1));
             mf.setFilePath(c.getString(2));
             mf.setFileName(c.getString(3));
@@ -1739,14 +1759,14 @@ public class WordPressDB {
 
     }
 
-    public boolean findLocalChanges() {
+    public boolean findLocalChanges(int blogId, boolean isPage) {
         Cursor c = db.query(POSTS_TABLE, null,
-                "isLocalChange=1", null, null, null, null);
+                "isLocalChange=? AND blogID=? AND isPage=?", new String[]{"1", String.valueOf(blogId), (isPage) ? "1" : "0"}, null, null, null);
         int numRows = c.getCount();
+        c.close();
         if (numRows > 0) {
             return true;
         }
-        c.close();
 
         return false;
     }
@@ -1797,7 +1817,7 @@ public class WordPressDB {
         return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
     }
     
-    public Cursor getThemesPremium(String blogId) {
+    /*public Cursor getThemesPremium(String blogId) {
         return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND price > 0 ORDER BY name ASC", new String[] { blogId });
     }
     
@@ -1807,8 +1827,12 @@ public class WordPressDB {
     
     public Cursor getCurrentTheme(String blogId) {
         return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrentTheme='true'", new String[] { blogId });
+    }*/
+
+    public String getCurrentThemeId(String blogId) {
+        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
     }
-    
+
     public void setCurrentTheme(String blogId, String themeId) {
         
         // update any old themes that are set to true to false
@@ -1855,6 +1879,7 @@ public class WordPressDB {
             
             return theme;
         } else {
+            cursor.close();
             return null;    
         }
     }

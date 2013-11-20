@@ -13,12 +13,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -27,7 +25,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -63,11 +60,12 @@ public class CommentsListFragment extends ListFragment {
     public int ID_DIALOG_MODERATING = 1;
     public int ID_DIALOG_REPLYING = 2;
     public int ID_DIALOG_DELETING = 3;
-    public boolean initializing = true, shouldSelectAfterLoad = false;
-    public int selectedID = 0, rowID = 0, numRecords = 0, totalComments = 0,
-            commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition,
+    public static final int COMMENTS_PER_PAGE = 30;
+    public boolean shouldSelectAfterLoad = false;
+    public int numRecords = 0, totalComments = 0,
+            checkedCommentTotal = 0, selectedPosition,
             scrollPosition = 0, scrollPositionTop = 0;
-    public ProgressDialog pd;
+    public ProgressDialog progressDialog;
     public getRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
@@ -137,7 +135,7 @@ public class CommentsListFragment extends ListFragment {
 
         mFooterSpacer = new View(getActivity());
         mFooterSpacer.setLayoutParams(new AbsListView.LayoutParams(10, 0));
-        
+
         View progress = View.inflate(getActivity().getApplicationContext(),
                 R.layout.list_footer_progress, null);
 
@@ -268,7 +266,7 @@ public class CommentsListFragment extends ListFragment {
                     checkedCommentTotal = 0;
                     hideModerationBar();
                     getListView().invalidateViews();
-                    
+
                     // update the comment counter on the menu drawer 
                     ((WPActionBarActivity) getActivity()).updateMenuDrawer();
                 } else {
@@ -278,9 +276,9 @@ public class CommentsListFragment extends ListFragment {
                         hideModerationBar();
                         getListView().invalidateViews();
                         FragmentTransaction ft = getFragmentManager()
-                            .beginTransaction();
+                                .beginTransaction();
                         WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newInstance(moderateErrorMsg);
+                                .newInstance(moderateErrorMsg);
                         alert.show(ft, "alert");
                     }
                     moderateErrorMsg = "";
@@ -289,7 +287,7 @@ public class CommentsListFragment extends ListFragment {
             }
         };
         getActivity().runOnUiThread(action);
-        pd = new ProgressDialog(getActivity().getApplicationContext());
+        progressDialog = new ProgressDialog(getActivity().getApplicationContext());
     }
 
     protected void deleteComments() {
@@ -343,7 +341,7 @@ public class CommentsListFragment extends ListFragment {
             }
         };
         getActivity().runOnUiThread(action);
-        pd = new ProgressDialog(getActivity().getApplicationContext());
+        progressDialog = new ProgressDialog(getActivity().getApplicationContext());
 
     }
 
@@ -353,122 +351,47 @@ public class CommentsListFragment extends ListFragment {
         int commentID;
 
         List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
+
+        if (refreshOnly) {
+            if (model != null) {
+                model.clear();
+            }
+        } else {
+            model = new ArrayList<Comment>();
+        }
+
         if (loadedComments != null) {
             numRecords = loadedComments.size();
-            if (refreshOnly) {
-                if (model != null) {
-                    model.clear();
-                }
-            } else {
-                model = new ArrayList<Comment>();
-            }
 
             for (int i = 0; i < loadedComments.size(); i++) {
                 Map<String, Object> contentHash = loadedComments.get(i);
-                allComments.put((Integer)contentHash.get("commentID"),
-                        contentHash);
-                author = StringUtils.unescapeHTML(contentHash.get("author")
-                        .toString());
-                commentID = (Integer)contentHash.get("commentID");
+                allComments.put((Integer) contentHash.get("commentID"), contentHash);
+                author = StringUtils.unescapeHTML(contentHash.get("author").toString());
+                commentID = (Integer) contentHash.get("commentID");
                 postID = contentHash.get("postID").toString();
-                comment = StringUtils.unescapeHTML(contentHash.get("comment")
-                        .toString());
-                dateCreatedFormatted = contentHash.get("commentDateFormatted")
-                        .toString();
+                comment = StringUtils.unescapeHTML(contentHash.get("comment").toString());
+                dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
                 status = contentHash.get("status").toString();
-                authorEmail = StringUtils.unescapeHTML(contentHash.get("email")
-                        .toString());
-                authorURL = StringUtils.unescapeHTML(contentHash.get("url")
-                        .toString());
-                postTitle = StringUtils.unescapeHTML(contentHash.get(
-                        "postTitle").toString());
+                authorEmail = StringUtils.unescapeHTML(contentHash.get("email").toString());
+                authorURL = StringUtils.unescapeHTML(contentHash.get("url").toString());
+                postTitle = StringUtils.unescapeHTML(contentHash.get("postTitle").toString());
 
                 if (model == null) {
                     model = new ArrayList<Comment>();
                 }
 
                 // add to model
-                model.add(new Comment(postID, commentID, i, author,
-                        dateCreatedFormatted, comment, status, postTitle,
+                model.add(new Comment(postID, commentID, i, author, dateCreatedFormatted, comment,
+                        status, postTitle,
                         authorURL, authorEmail, URI
-                                .create("http://gravatar.com/avatar/"
-                                        + StringUtils.getMd5Hash(authorEmail.trim())
-                                        + "?s=140&d=404")));
+                        .create("http://gravatar.com/avatar/"
+                                + StringUtils.getMd5Hash(authorEmail.trim())
+                                + "?s=140&d=404")));
             }
 
             if (!refreshOnly) {
-                ListView listView = this.getListView();
-                listView.removeFooterView(switcher);
-                listView.removeFooterView(mFooterSpacer);
-                if (loadedComments.size() % 30 == 0) {
-                    listView.addFooterView(switcher);
-                }
-                listView.addFooterView(mFooterSpacer);
-                setListAdapter(new CommentAdapter());
-                
-
-                listView.setOnItemClickListener(new OnItemClickListener() {
-
-                    public void onItemClick(AdapterView<?> arg0, View view,
-                            int position, long id) {
-                        selectedPosition = position;
-                        Comment comment = model.get((int) id);
-                        onCommentSelectedListener.onCommentSelected(comment);
-                        getListView().invalidateViews();
-                    }
-                });
-
-//                listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//                    @Override
-//                    public boolean onItemLongClick(AdapterView<?> arg0,
-//                            View view, int position, long id) {
-//
-//                        selectedPosition = position;
-//                        Comment comment = model.get((int) id);
-//                        onCommentSelectedListener.onCommentSelected(comment);
-//
-//                        Intent i = new Intent(
-//                                getActivity().getApplicationContext(),
-//                                EditComment.class);
-//                        startActivityForResult(i, 0);
-//
-//                        return false;
-//                    }
-//
-//                });
-
-                listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-                    public void onCreateContextMenu(ContextMenu menu, View v,
-                            ContextMenuInfo menuInfo) {
-                        AdapterView.AdapterContextMenuInfo info;
-                        try {
-                            info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                        } catch (ClassCastException e) {
-                            // Log.e(TAG, "bad menuInfo", e);
-                            return;
-                        }
-
-                        WordPress.currentComment = model.get(info.position);
-
-                        menu.setHeaderTitle(getResources().getText(
-                                R.string.comment_actions));
-                        menu.add(0, 0, 0,
-                                getResources().getText(R.string.mark_approved));
-                        menu.add(0, 1, 0,
-                                getResources()
-                                        .getText(R.string.mark_unapproved));
-                        menu.add(0, 2, 0,
-                                getResources().getText(R.string.mark_spam));
-                        menu.add(0, 3, 0, getResources()
-                                .getText(R.string.reply));
-                        menu.add(0, 4, 0,
-                                getResources().getText(R.string.delete));
-                        menu.add(0, 5, 0,
-                                getResources().getText(R.string.edit));
-                    }
-                });
+                boolean showSwitcher = loadedComments.size() % COMMENTS_PER_PAGE == 0;
+                setUpListView(showSwitcher);
             } else {
                 getListView().invalidateViews();
             }
@@ -488,8 +411,7 @@ public class CommentsListFragment extends ListFragment {
             if (loadMore && scrollPosition > 0) {
                 ListView listView = this.getListView();
                 try {
-                    listView.setSelectionFromTop(scrollPosition,
-                            scrollPositionTop);
+                    listView.setSelectionFromTop(scrollPosition, scrollPositionTop);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -497,8 +419,50 @@ public class CommentsListFragment extends ListFragment {
             mListScrollPositionManager.restoreScrollOffset();
             return true;
         } else {
+            setUpListView(false);
             return false;
         }
+    }
+
+    private void setUpListView(boolean showSwitcher) {
+        ListView listView = this.getListView();
+        listView.removeFooterView(switcher);
+        listView.removeFooterView(mFooterSpacer);
+        if (showSwitcher) {
+            listView.addFooterView(switcher);
+        }
+        listView.addFooterView(mFooterSpacer);
+        setListAdapter(new CommentAdapter());
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                selectedPosition = position;
+                Comment comment = model.get((int) id);
+                onCommentSelectedListener.onCommentSelected(comment);
+                getListView().invalidateViews();
+            }
+        });
+
+        listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            public void onCreateContextMenu(ContextMenu menu, View v,
+                                            ContextMenu.ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info;
+                try {
+                    info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                } catch (ClassCastException e) {
+                    // Log.e(TAG, "bad menuInfo", e);
+                    return;
+                }
+                WordPress.currentComment = model.get(info.position);
+                menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
+                menu.add(0, 0, 0, getResources().getText(R.string.mark_approved));
+                menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
+                menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
+                menu.add(0, 3, 0, getResources().getText(R.string.reply));
+                menu.add(0, 4, 0, getResources().getText(R.string.delete));
+                menu.add(0, 5, 0, getResources().getText(R.string.edit));
+            }
+        });
     }
 
     public void refreshComments(final boolean more, final boolean refresh, final boolean background) {
@@ -511,7 +475,7 @@ public class CommentsListFragment extends ListFragment {
             onAnimateRefreshButton.onAnimateRefreshButton(true);
         }
         client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
-                                  WordPress.currentBlog.getHttppassword());
+                WordPress.currentBlog.getHttppassword());
 
         Map<String, Object> hPost = new HashMap<String, Object>();
         if (loadMore) {
@@ -520,9 +484,9 @@ public class CommentsListFragment extends ListFragment {
             View firstVisibleView = listView.getChildAt(0);
             scrollPositionTop = (firstVisibleView == null) ? 0
                     : firstVisibleView.getTop();
-            hPost.put("number", numRecords + 30);
+            hPost.put("number", numRecords + COMMENTS_PER_PAGE);
         } else {
-            hPost.put("number", 30);
+            hPost.put("number", COMMENTS_PER_PAGE);
         }
 
         Object[] params = { WordPress.currentBlog.getBlogId(),
@@ -549,8 +513,7 @@ public class CommentsListFragment extends ListFragment {
 
             sdk_version = android.os.Build.VERSION.SDK_INT;
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            CommentFragment f = (CommentFragment) fm
-                    .findFragmentById(R.id.commentDetail);
+            CommentFragment f = (CommentFragment) fm.findFragmentById(R.id.commentDetail);
             if (f != null && f.isInLayout())
                 detailViewVisible = true;
         }
@@ -740,7 +703,7 @@ public class CommentsListFragment extends ListFragment {
             hideModerationBar();
         }
     }
-    
+
     protected void showModerationBar() {
         RelativeLayout moderationBar = (RelativeLayout) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.VISIBLE )
@@ -808,7 +771,7 @@ public class CommentsListFragment extends ListFragment {
                     totalComments = Integer.valueOf(countResult.get(
                             "awaiting_moderation").toString())
                             + Integer.valueOf(countResult.get("approved")
-                                    .toString());
+                            .toString());
                 } catch (XMLRPCException e) {
                     e.printStackTrace();
                 }
@@ -822,8 +785,8 @@ public class CommentsListFragment extends ListFragment {
             } catch (final XMLRPCFault e) {
                 handler.post(new Runnable() {
                     public void run() {
-                        if (pd.isShowing()) {
-                            pd.dismiss();
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
                         }
                         if (!getActivity().isFinishing()) {
                             onAnimateRefreshButton.onAnimateRefreshButton(false);
@@ -838,8 +801,8 @@ public class CommentsListFragment extends ListFragment {
             } catch (final XMLRPCException e) {
                 handler.post(new Runnable() {
                     public void run() {
-                        if (pd.isShowing()) {
-                            pd.dismiss();
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
                         }
                         if (!getActivity().isFinishing()) {
                             onAnimateRefreshButton.onAnimateRefreshButton(false);
@@ -866,7 +829,7 @@ public class CommentsListFragment extends ListFragment {
         private XMLRPCMethodCallbackEditComment callBack;
 
         public XMLRPCMethodEditComment(String method,
-                XMLRPCMethodCallbackEditComment callBack) {
+                                       XMLRPCMethodCallbackEditComment callBack) {
             this.method = method;
             this.callBack = callBack;
             handler = new Handler();
@@ -929,30 +892,30 @@ public class CommentsListFragment extends ListFragment {
     public boolean onContextItemSelected(MenuItem item) {
         /* Switch on the ID of the item, to get what the user selected. */
         switch (item.getItemId()) {
-        case 0:
-            onCommentStatusChangeListener.onCommentStatusChanged("approve");
-            return true;
-        case 1:
-            onCommentStatusChangeListener.onCommentStatusChanged("hold");
-            return true;
-        case 2:
-            onCommentStatusChangeListener.onCommentStatusChanged("spam");
-            return true;
-        case 3:
-            onCommentStatusChangeListener.onCommentStatusChanged("reply");
-            return true;
-        case 4:
-            onCommentStatusChangeListener.onCommentStatusChanged("delete");
-            return true;
-        case 5:
+            case 0:
+                onCommentStatusChangeListener.onCommentStatusChanged("approve");
+                return true;
+            case 1:
+                onCommentStatusChangeListener.onCommentStatusChanged("hold");
+                return true;
+            case 2:
+                onCommentStatusChangeListener.onCommentStatusChanged("spam");
+                return true;
+            case 3:
+                onCommentStatusChangeListener.onCommentStatusChanged("reply");
+                return true;
+            case 4:
+                onCommentStatusChangeListener.onCommentStatusChanged("delete");
+                return true;
+            case 5:
 //            selectedPosition = position;
 //            Comment comment = model.get((int) id);
 //            onCommentSelectedListener.onCommentSelected(comment);
-            Intent i = new Intent(
-                    getActivity().getApplicationContext(),
-                    EditCommentActivity.class);
-            startActivityForResult(i, 0);
-            return true;
+                Intent i = new Intent(
+                        getActivity().getApplicationContext(),
+                        EditCommentActivity.class);
+                startActivityForResult(i, 0);
+                return true;
 
         }
         return false;
@@ -988,8 +951,8 @@ public class CommentsListFragment extends ListFragment {
 
             if (commentsResult.size() == 0) {
                 // no comments found
-                if (pd.isShowing()) {
-                    pd.dismiss();
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
                 }
             } else {
                 allComments.putAll(commentsResult);

@@ -165,7 +165,6 @@
 	<string name="refresh">刷新</string>
 	<string name="quick_photo">快速拍照</string>
 	<string name="quick_video">快速摄影</string>
-	<string name="gallery_error">抱歉，无法从图库检索该媒体对象。</string>
 	<string name="upload_failed">上传失败</string>
 	<string name="invalid_url_message">请检查所输博客 URL 是否有效。</string>
 	<string name="view_in_browser">在浏览器中查看</string>
@@ -201,9 +200,9 @@
 	<string name="url_username_password_required">请填写所有字段后再提交。</string>
 	<string name="new_to_wp">在 WordPress.com 新建一个博客</string>
 	<string name="view_comment_from">评论作者</string>
+	
 	<string name="stats_password">密码</string>
 	<string name="stats_username">用户名</string>
-	<string name="username_password_required">“用户名”与“密码”为必填字段。</string>
 	<string name="title">标题</string>
 	<string name="tags_separate_with_commas">标签（多个标签请以英文逗号“,”隔开）</string>
 	<string name="categories">分类</string>
@@ -229,7 +228,6 @@
 	<string name="status">状态</string>
 	<string name="sdcard_message">上传媒体需要已装载的 SD 卡。</string>
 	<string name="location">位置</string>
-	<string name="take_video">拍摄新视频</string>
 	<string name="sdcard_title">需要 SD 卡</string>
 	<string name="select_video">从媒体库选择视频</string>
 	<string name="preview_page">查看页面</string>
@@ -260,11 +258,11 @@
 	<string name="blogs">博客</string>
 	<string name="could_not_remove_account">无法移除博客。</string>
 	<string name="select_photo">从媒体库选择照片</string>
-	<string name="take_photo">拍摄新的照片</string>
 	<string name="error">错误</string>
 	<string name="selected_categories">已选分类:</string>
 	<string name="dont_yet_have_a_blog">还没有博客?</string>
 	<string name="get_free_blog">在 WordPress.com 获取免费博客</string>
+	<string name="app_name">WordPress</string>
 	<string name="cancel">取消</string>
 	<string name="save">保存</string>
 	<string name="add">添加</string>
@@ -331,5 +329,10 @@
 		<item>标准</item>
 		<item>状态</item>
 		<item>视频</item>
+	</string-array>
+	<string-array name="privacy_array">
+		<item>Public</item>
+		<item>Hidden</item>
+		<item>Private</item>
 	</string-array>
 </resources>

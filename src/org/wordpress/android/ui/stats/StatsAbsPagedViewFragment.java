@@ -123,6 +123,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     
     private void initPhoneLayout(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

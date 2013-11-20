@@ -369,13 +369,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 @Override
                 public void onFailure(int errorCode) {
 
-                    if (errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP) {
-                        Toast.makeText(getActivity(), "You do not have permission to view the media library", Toast.LENGTH_SHORT).show();
+                    if (errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP || errorCode == SyncMediaLibraryTask.UNKNOWN_ERROR ) {
+                        String errorMessage = errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP ? "You do not have permission to view the media library" : "Something went wrong while refreshing the media library. Try again later.";
+                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
                         adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
                     }
-
+                    
                     // the activity may be cone by the time we get this, so check for it
                     if (getActivity() != null  && MediaGridFragment.this.isVisible()) {
                         getActivity().runOnUiThread(new Runnable() {

@@ -56,6 +56,7 @@ public class ImageHelper {
                 thumbData = cur.getString(dataColumn);
                 path = thumbData;
             }
+            cur.close();
         } else { // file is not in media library
             path = uri.toString().replace("file://", "");
         }
@@ -309,6 +310,7 @@ public class ImageHelper {
                         if (orientation == null)
                             orientation = "";
                     }
+                    cur.close();
 
                     if (thumbData == null) {
                         return null;

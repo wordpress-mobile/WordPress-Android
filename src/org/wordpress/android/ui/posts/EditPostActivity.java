@@ -50,6 +50,8 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -189,6 +191,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private int mCurrentActivityRequest = -1;
 
     private float mLastYPos = 0;
+
+    private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -369,7 +373,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mStatusSpinner.setAdapter(adapter);
 
-        getLocationProvider();
+        initLocation();
 
         if (mIsNew) {
             if (mQuickMediaType >= 0) {
@@ -465,8 +469,10 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 Double latitude = mPost.getLatitude();
                 Double longitude = mPost.getLongitude();
 
+                // if this post has location attached to it, look up the location address
                 if (latitude != 0.0) {
-                    new getAddressTask().execute(latitude, longitude);
+                    setLocationStatus(LocationStatus.SEARCHING);
+                    new GetAddressTask().execute(latitude, longitude);
                 }
             }
             String tags = mPost.getMt_keywords();
@@ -751,17 +757,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.updateLocation) {
-            mLocationHelper.getLocation(EditPostActivity.this, locationResult);
+            getLocation();
         } else if (id == R.id.removeLocation) {
-            if (mCurrentLocation != null) {
-                mCurrentLocation.setLatitude(0.0);
-                mCurrentLocation.setLongitude(0.0);
-            }
-            if (mPost != null) {
-                mPost.setLatitude(0.0);
-                mPost.setLongitude(0.0);
-            }
-            mLocationText.setText("");
+            removeLocation();
         }
     }
 
@@ -1016,20 +1014,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             showBlogErrorAndFinish();
     }
 
-    private void getLocationProvider() {
-        boolean hasLocationProvider = false;
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        for (String providerName : providers) {
-            if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                hasLocationProvider = true;
-            }
-        }
-        if (hasLocationProvider && mBlog.isLocation() && !mIsPage) {
-            enableLBSButtons();
-        }
-    }
-
     private void setupTitleForShareAction() {
         mIsNew = true;
         mLocalDraft = true;
@@ -1248,31 +1232,122 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     private LocationResult locationResult = new LocationResult() {
         @Override
-        public void gotLocation(Location location) {
-            if (location != null) {
-                mCurrentLocation = location;
-                new getAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            } else {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        mLocationText.setText(getString(R.string.location_not_found));
-                    }
-                });
-            }
+        public void gotLocation(final Location location) {
+            // note that location will be null when requesting location fails
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    setLocation(location);
+                }
+            });
         }
     };
 
-    private void enableLBSButtons() {
-        mLocationHelper = new LocationHelper();
-        ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
-        Button viewMap = (Button) findViewById(R.id.viewMap);
-        Button updateLocation = (Button) findViewById(R.id.updateLocation);
-        Button removeLocation = (Button) findViewById(R.id.removeLocation);
-        updateLocation.setOnClickListener(this);
-        removeLocation.setOnClickListener(this);
-        viewMap.setOnClickListener(this);
-        if (mIsNew)
-            mLocationHelper.getLocation(EditPostActivity.this, locationResult);
+    /*
+     * called when activity is created to initialize the location provider, show views related
+     * to location if enabled for this blog, and retrieve the current location if necessary
+     */
+    private void initLocation() {
+        boolean hasLocationProvider = false;
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        if (providers != null) {
+            for (String providerName : providers) {
+                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+                    hasLocationProvider = true;
+                }
+            }
+        }
+
+        // show the location views if a provider was found and this is a post on a blog that has location enabled
+        if (hasLocationProvider && mBlog.isLocation() && !mIsPage) {
+            ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
+            Button viewMap = (Button) findViewById(R.id.viewMap);
+            Button updateLocation = (Button) findViewById(R.id.updateLocation);
+            Button removeLocation = (Button) findViewById(R.id.removeLocation);
+            updateLocation.setOnClickListener(this);
+            removeLocation.setOnClickListener(this);
+            viewMap.setOnClickListener(this);
+
+            // if this is a new post, get the user's current location
+            if (mIsNew) {
+                getLocation();
+            }
+        }
+    }
+
+    /*
+     * get the current location
+     */
+    private void getLocation() {
+        if (mLocationHelper==null)
+            mLocationHelper = new LocationHelper();
+        boolean canGetLocation = mLocationHelper.getLocation(EditPostActivity.this, locationResult);
+        if (canGetLocation) {
+            setLocationStatus(LocationStatus.SEARCHING);
+            mLocationText.setText(getString(R.string.loading));
+        } else {
+            setLocation(null);
+        }
+    }
+
+    /*
+     * called when location is retrieved/updated for this post - looks up the address to
+     * display for the lat/long
+     */
+    private void setLocation(Location location) {
+        if (location != null) {
+            mCurrentLocation = location;
+            new GetAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        } else {
+            mLocationText.setText(getString(R.string.location_not_found));
+            setLocationStatus(LocationStatus.NOT_FOUND);
+        }
+    }
+
+    private void removeLocation() {
+        if (mCurrentLocation != null) {
+            mCurrentLocation.setLatitude(0.0);
+            mCurrentLocation.setLongitude(0.0);
+        }
+        if (mPost != null) {
+            mPost.setLatitude(0.0);
+            mPost.setLongitude(0.0);
+        }
+        mLocationText.setText("");
+        setLocationStatus(LocationStatus.NONE);
+    }
+
+    /*
+     * changes the left drawable on the location text to match the passed status
+     */
+    private void setLocationStatus(LocationStatus status) {
+        // animate location text when searching
+        if (status==LocationStatus.SEARCHING) {
+            Animation aniBlink = AnimationUtils.loadAnimation(this, R.anim.blink);
+            mLocationText.startAnimation(aniBlink);
+        } else {
+            mLocationText.clearAnimation();
+        }
+
+        final int drawableId;
+        switch (status) {
+            case FOUND:
+                drawableId = R.drawable.ic_action_location_found;
+                break;
+            case NOT_FOUND:
+                drawableId = R.drawable.ic_action_location_off;
+                break;
+            case SEARCHING:
+                drawableId = R.drawable.ic_action_location_searching;
+                break;
+            case NONE :
+                drawableId = 0;
+                break;
+            default :
+                return;
+        }
+
+        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
     @Override
@@ -1463,12 +1538,17 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     private WPImageSpan prepareWPImageSpan(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-        if (cursor == null || !cursor.moveToFirst())
+        if (cursor == null || !cursor.moveToFirst()){
+            if (cursor != null)
+                cursor.close();
             return null; 
+        }
 
         String url = cursor.getString(cursor.getColumnIndex("fileURL"));
-        if (url == null)
+        if (url == null) {
+            cursor.close();            
             return null;
+        }
         
         Uri uri = Uri.parse(url);
         WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);
@@ -1859,27 +1939,48 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-
-            
             if (!mIsNew) {
                 // update the images
                 mPost.deleteMediaFiles();
 
                 Editable s = mContentEditText.getText();
-                WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (click_spans.length != 0) {
 
-                    for (int i = 0; i < click_spans.length; i++) {
-                        WPImageSpan wpIS = click_spans[i];
+                // Add gallery shortcode
+                MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
+                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                    int start = s.getSpanStart(gallerySpan);
+                    s.removeSpan(gallerySpan);
+                    s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                }
+
+                WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
+                if (imageSpans.length != 0) {
+
+                    for (int i = 0; i < imageSpans.length; i++) {
+                        WPImageSpan wpIS = imageSpans[i];
                         images += wpIS.getImageSource().toString() + ",";
 
                         if (wpIS.getMediaId() != null) {
                             updateMediaFileOnServer(wpIS);
+                        } else {
+                            MediaFile mf = new MediaFile();
+                            mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
+                            mf.setPostID(mPost.getId());
+                            mf.setTitle(wpIS.getTitle());
+                            mf.setCaption(wpIS.getCaption());
+                            // mf.setDescription(wpIS.getDescription());
+                            mf.setFeatured(wpIS.isFeatured());
+                            mf.setFeaturedInPost(wpIS.isFeaturedInPost());
+                            mf.setFileName(wpIS.getImageSource().toString());
+                            mf.setFilePath(wpIS.getImageSource().toString());
+                            mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+                            mf.setWidth(wpIS.getWidth());
+                            mf.setVideo(wpIS.isVideo());
+                            mf.save();
                         }
 
                         int tagStart = s.getSpanStart(wpIS);
-                        if (!isAutoSave) {  
-
+                        if (!isAutoSave) {
                             s.removeSpan(wpIS);
                             
                             // network image has a mediaId 
@@ -1889,13 +1990,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                             } else { // local image for upload
                                 s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             }
-                            if (mLocalDraft)
-                                content = WPHtml.toHtml(s);
-                            else
-                                content = s.toString();
                         }
                     }
                 }
+
+                if (mLocalDraft)
+                    content = WPHtml.toHtml(s);
+                else
+                    content = s.toString();
             } else {
 
                 Editable s = mContentEditText.getText();
@@ -2088,15 +2190,32 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         task.execute(apiArgs);
     }
 
-    private class getAddressTask extends AsyncTask<Double, Void, String> {
+    /*
+     * retrieves and displays the friendly address for a lat/long location
+     */
+    private class GetAddressTask extends AsyncTask<Double, Void, String> {
+        double latitude;
+        double longitude;
 
         @Override
         protected String doInBackground(Double... args) {
+            // args will be the latitude, longitude to look up
+            latitude = args[0];
+            longitude = args[1];
+
+            // first make sure a Geocoder service exists on this device (requires API 9)
+            if (!Geocoder.isPresent())
+                return null;
+
             Geocoder gcd = new Geocoder(EditPostActivity.this, Locale.getDefault());
-            String finalText = "";
             List<Address> addresses;
             try {
-                addresses = gcd.getFromLocation(args[0], args[1], 1);
+                addresses = gcd.getFromLocation(latitude, longitude, 1);
+
+                // addresses may be null or empty if network isn't connected
+                if (addresses==null || addresses.size()==0)
+                    return null;
+
                 String locality = "", adminArea = "", country = "";
                 if (addresses.get(0).getLocality() != null)
                     locality = addresses.get(0).getLocality();
@@ -2105,20 +2224,25 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 if (addresses.get(0).getCountryName() != null)
                     country = addresses.get(0).getCountryName();
 
-                if (addresses.size() > 0) {
-                    finalText = ((locality.equals("")) ? locality : locality + ", ")
-                            + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
-                    if (finalText.equals(""))
-                        finalText = getString(R.string.location_not_found);
-                }
+                return ((locality.equals("")) ? locality : locality + ", ")
+                     + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
             } catch (IOException e) {
+                // may get "Unable to parse response from server" IOException here if Geocoder
+                // service is hit too frequently
                 e.printStackTrace();
+                return null;
             }
-            return finalText;
         }
 
         protected void onPostExecute(String result) {
-            mLocationText.setText(result);
+            setLocationStatus(LocationStatus.FOUND);
+            if (result==null || result.isEmpty()) {
+                // show lat/long when Geocoder fails (ugly, but better than not showing anything
+                // or showing an error since the location has been assigned to the post already)
+                mLocationText.setText(Double.toString(latitude) + ", " + Double.toString(longitude));
+            } else {
+                mLocationText.setText(result);
+            }
         }
     }
 
