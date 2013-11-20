@@ -245,6 +245,21 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
         mSiteUrlTextField.addTextChangedListener(this);
+        mUsernameTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // auto fill blog address
+                mSiteUrlTextField.setText(mUsernameTextField.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         mEmailTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
