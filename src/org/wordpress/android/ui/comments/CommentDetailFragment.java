@@ -2,11 +2,9 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,17 +29,12 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPHtmlTagHandler;
-import org.wordpress.android.util.WPImageGetter;
 
-import java.net.URI;
 import java.util.Map;
 
 /**
@@ -214,31 +207,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.name));
         txtDate.setText(mComment.dateCreatedFormatted);
+        txtContent.setText(Html.fromHtml(mComment.comment));
 
-        // convert emoticons first so their images won't be downloaded, then convert to HTML with an
-        // image getter that enforces a max image size
-        String content = StringUtils.notNullStr(mComment.comment);
-        if (content.contains("icon_"))
-            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
-        final SpannableStringBuilder html;
-        if (content.contains("<img")) {
-            int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(getActivity(), txtContent, maxImageSz), null);
-        } else {
-            html = (SpannableStringBuilder) Html.fromHtml(content);
-        }
-        txtContent.setText(html);
-
-
+        // TODO: anonymous comments will have a blank avatar because the version of Volley
+        // we're using as of 11/11/13 doesn't show the default image - latest version of
+        // Volley corrects this
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         if (mComment.profileImageUrl == null) {
-            if (!TextUtils.isEmpty(mComment.authorEmail)) {
-                String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
-                imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
-            } else {
-                imgAvatar.setImageResource(R.drawable.placeholder);
-            }
+            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
         } else {
             imgAvatar.setImageUrl(mComment.profileImageUrl.toString(), WordPress.imageLoader);
         }
@@ -380,17 +358,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setBlogId(blogId);
                 //int postId = jsonParams.optInt("post_id");
                 int commentId = jsonParams.optInt("comment_id");
-
-                String icon = note.getIconURL();
-                final URI iconURI = (TextUtils.isEmpty(icon) ? null : URI.create(icon));
-
                 // first try to get from local db, if that fails request it from the server
                 Comment comment = WordPress.wpDB.getComment(mAccountId, commentId);
                 if (comment != null) {
-                    comment.profileImageUrl = iconURI;
                     setComment(comment);
                 } else {
-                    requestComment(blogId, commentId, iconURI);
+                    requestComment(blogId, commentId);
                 }
             }
         }
@@ -399,7 +372,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * request a comment via the REST API
      */
-    private void requestComment(int blogId, int commentId, final URI profileImageURI) {
+    private void requestComment(int blogId, int commentId) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -413,8 +386,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     Comment comment = new Comment(jsonObject);
                     if (comment != null) {
-                        if (profileImageURI != null)
-                            comment.profileImageUrl = profileImageURI;
                         WordPress.wpDB.addComment(mAccountId, comment);
                         setComment(comment);
                     }
