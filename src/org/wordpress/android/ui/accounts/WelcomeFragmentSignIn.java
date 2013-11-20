@@ -19,34 +19,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
-import java.net.URI;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
-
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -54,7 +44,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
     private List mUsersBlogsList;
-    private static final String DEFAULT_IMAGE_SIZE = "2000";
     private boolean mHttpAuthRequired;
     private String mHttpUsername = "";
     private String mHttpPassword = "";
@@ -165,60 +154,28 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private ProgressDialog mProgressDialog;
+        private SetupBlog mSetupBlog;
         private String mErrorMsg;
-        private String mUsername;
-        private String mPassword;
-        private String mXmlrpcUrl;
-        private boolean mIsCustomUrl;
 
         @Override
         protected void onPreExecute() {
-            mProgressDialog = ProgressDialog.show(getActivity(), "", (selfHostedFieldsFilled()) ? getString(R.string.attempting_configure) : getString(R.string.connecting_wpcom),
+            mSetupBlog = new SetupBlog();
+            mSetupBlog.setUsername(mUsernameEditText.getText().toString().trim());
+            mSetupBlog.setPassword(mPasswordEditText.getText().toString().trim());
+            mSetupBlog.setSelfHostedURL(mUrlEditText.getText().toString().trim());
+            mProgressDialog = ProgressDialog.show(getActivity(), "",
+                    (selfHostedFieldsFilled()) ? getString(R.string.attempting_configure):
+                            getString(R.string.connecting_wpcom),
                     true, false);
         }
 
         @Override
         protected List doInBackground(Void... args) {
-            if (selfHostedFieldsFilled()) {
-                mXmlrpcUrl = getSelfHostedXmlrpcUrl();
-            } else {
-                mXmlrpcUrl = Constants.wpcomXMLRPCURL;
+            List userBlogList = mSetupBlog.getBlogList();
+            if (mSetupBlog.getErrorMsgId() != -1) {
+                mErrorMsg = getString(mSetupBlog.getErrorMsgId());
             }
-
-            if (mXmlrpcUrl == null) {
-                if (!mHttpAuthRequired)
-                    mErrorMsg = getString(R.string.no_site_error);
-                return null;
-            }
-
-            // Validate the URL found before calling the client. Prevent a crash that can occur during the setup of self-hosted sites.
-            try {
-                URI.create(mXmlrpcUrl);
-            } catch (Exception e1) {
-                mErrorMsg = getString(R.string.no_site_error);
-                return null;
-            }
-
-            mUsername = mUsernameEditText.getText().toString().trim();
-            mPassword = mPasswordEditText.getText().toString().trim();
-
-            XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, mHttpUsername, mHttpPassword);
-            Object[] params = {mUsername, mPassword};
-            try {
-                Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
-                Arrays.sort(userBlogs, Utils.BlogNameComparator);
-                List<Object> userBlogsList = Arrays.asList(userBlogs);
-                return userBlogsList;
-            } catch (XMLRPCException e) {
-                String message = e.getMessage();
-                if (message.contains("code 403"))
-                    mErrorMsg = getString(R.string.update_credentials);
-                else if (message.contains("404"))
-                    mErrorMsg = getString(R.string.xmlrpc_error);
-                else if (message.contains("425"))
-                    mErrorMsg = getString(R.string.account_two_step_auth_enabled);
-                return null;
-            }
+            return userBlogList;
         }
 
         @Override
@@ -238,8 +195,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
                 alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        mHttpUsername = usernameEditText.getText().toString();
-                        mHttpPassword = passwordEditText.getText().toString();
+                        mSetupBlog.setHttpUsername(usernameEditText.getText().toString());
+                        mSetupBlog.setHttpPassword(passwordEditText.getText().toString());
                         new SetupBlogTask().execute();
                     }
                 });
@@ -257,18 +214,21 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (usersBlogsList == null && mErrorMsg != null) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment
-                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg,
+                                getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
                 return;
             }
 
             // Update wp.com credentials
-            if (mXmlrpcUrl.contains("wordpress.com")) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
+                SharedPreferences settings = PreferenceManager.
+                        getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
+                editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
+                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE,
+                        WordPressDB.encryptPassword(mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
                 WordPress.restClient.get("me", null, null);
@@ -281,106 +241,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     for (int i = 0; i < mUsersBlogsList.size(); i++) {
                         allBlogs.put(i, true);
                     }
-                    addBlogs(allBlogs);
+                    mSetupBlog.addBlogs(usersBlogsList, allBlogs);
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
                 }
             }
-        }
-
-        // Attempts to retrieve the xmlrpc url for a self-hosted site, in this order:
-        // 1: Try to retrieve it by finding the ?rsd url in the site's header
-        // 2: Take whatever URL the user entered to see if that returns a correct response
-        // 3: Finally, just guess as to what the xmlrpc url should be
-        private String getSelfHostedXmlrpcUrl() {
-            String xmlrpcUrl = null;
-            String url = mUrlEditText.getText().toString().trim();
-            // Add http to the beginning of the URL if needed
-            if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-                url = "http://" + url; // default to http
-            }
-
-            if (!URLUtil.isValidUrl(url)) {
-                mErrorMsg = getString(R.string.invalid_url_message);
-                return null;
-            }
-
-            // Attempt to get the XMLRPC URL via RSD
-            String rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(url);
-            if (rsdUrl == null) {
-                rsdUrl = ApiHelper.getRSDMetaTagHref(url);
-            }
-
-            if (rsdUrl != null) {
-                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
-                if (xmlrpcUrl == null)
-                    xmlrpcUrl = rsdUrl.replace("?rsd", "");
-            } else {
-                // Try the user entered path
-                try {
-                    XMLRPCClient client = new XMLRPCClient(url, mHttpUsername, mHttpPassword);
-                    try {
-                        client.call("system.listMethods");
-                        xmlrpcUrl = url;
-                        mIsCustomUrl = true;
-                    } catch (XMLRPCException e) {
-
-                        if (e.getMessage().contains("401")) {
-                            mHttpAuthRequired = true;
-                            return null;
-                        }
-
-                        // Guess the xmlrpc path
-                        String guessURL = url;
-                        if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
-                            guessURL = guessURL.substring(0, guessURL.length() - 1);
-                        }
-                        guessURL += "/xmlrpc.php";
-                        client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
-                        try {
-                            client.call("system.listMethods");
-                            xmlrpcUrl = guessURL;
-                        } catch (XMLRPCException ex) {
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            }
-            return xmlrpcUrl;
-        }
-
-        // Add selected blog(s) to the database
-        private void addBlogs(SparseBooleanArray selectedBlogs) {
-            for (int i = 0; i < selectedBlogs.size(); i++) {
-                if (selectedBlogs.get(selectedBlogs.keyAt(i)) == true) {
-                    int rowID = selectedBlogs.keyAt(i);
-
-                    Map blogMap = (HashMap) mUsersBlogsList.get(rowID);
-
-                    String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
-                    String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
-
-                    if (!WordPress.wpDB.checkForExistingBlog(blogName, xmlrpcUrl, mUsername, mPassword)) {
-                        // The blog isn't in the app, so let's create it
-                        Blog blog = new Blog(xmlrpcUrl, mUsername, mPassword);
-                        blog.setHomeURL(blogMap.get("url").toString());
-                        blog.setHttpuser(mHttpUsername);
-                        blog.setHttppassword(mHttpPassword);
-                        blog.setBlogName(blogName);
-                        blog.setImagePlacement(""); //deprecated
-                        blog.setFullSizeImage(false);
-                        blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
-                        blog.setMaxImageWidthId(5);
-                        blog.setRunService(false); //deprecated
-                        blog.setBlogId(Integer.parseInt(blogMap.get("blogid").toString()));
-                        blog.setDotcomFlag(xmlrpcUrl.contains("wordpress.com"));
-                        blog.setWpVersion(""); // assigned later in getOptions call
-                        if (blog.save(null) && i == 0)
-                            WordPress.setCurrentBlog(blog.getId());
-                    }
-                }
-            }
-
-            getActivity().setResult(Activity.RESULT_OK);
-            getActivity().finish();
         }
     }
 
