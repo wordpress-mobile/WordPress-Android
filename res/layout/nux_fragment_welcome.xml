@@ -121,21 +121,44 @@
                     android:layout_marginLeft="10dp" />
             </RelativeLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXThirdButton"
-                android:id="@+id/nux_sign_in_button"
-                android:layout_width="fill_parent"
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_in_capital"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:padding="8dp"
-                android:enabled="false"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp" />
+                android:layout_marginRight="16dp">
 
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXThirdButton"
+                    android:id="@+id/nux_sign_in_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/sign_in_capital"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:enabled="false"/>
+
+                <ProgressBar
+                    android:id="@+id/nux_sign_in_progress_bar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    style="@style/WordPress.NUXThirdButton"
+                    android:enabled="false"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/WordPress.NUXWhiteButtonNoBg"
+                android:id="@+id/nux_sign_in_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textColor="@color/blue_extra_light"
+                android:gravity="center|top"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 

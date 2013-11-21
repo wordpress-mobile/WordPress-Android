@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
@@ -40,9 +40,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
+    private boolean mSelfHosted;
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
+    private WPTextView mProgressTextSignIn;
+    private ProgressBar mProgressBarSignIn;
     private List mUsersBlogsList;
     private boolean mHttpAuthRequired;
     private String mHttpUsername = "";
@@ -74,6 +77,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
+        mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
+        mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
+
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
         mAddSelfHostedButton = (WPTextView) rootView.findViewById(R.id.nux_add_selfhosted_button);
@@ -83,9 +89,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 if (urlButtonLayout.getVisibility() == View.VISIBLE) {
                     urlButtonLayout.setVisibility(View.GONE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+                    mSelfHosted = false;
                 } else {
                     urlButtonLayout.setVisibility(View.VISIBLE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
+                    mSelfHosted = true;
                 }
             }
         });
@@ -152,8 +160,26 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     }
 
+    private void startProgressSignIn(String message) {
+        mProgressBarSignIn.setVisibility(View.VISIBLE);
+        mProgressTextSignIn.setVisibility(View.VISIBLE);
+        mSignInButton.setVisibility(View.GONE);
+        mProgressBarSignIn.setEnabled(false);
+        mProgressTextSignIn.setText(message);
+    }
+
+    private void updateProgressSignIn(String message) {
+        mProgressTextSignIn.setText(message);
+    }
+
+    private void endProgressSignIn() {
+        mProgressBarSignIn.setVisibility(View.GONE);
+        mProgressTextSignIn.setVisibility(View.GONE);
+        mSignInButton.setVisibility(View.VISIBLE);
+    }
+
+
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
-        private ProgressDialog mProgressDialog;
         private SetupBlog mSetupBlog;
         private String mErrorMsg;
 
@@ -162,11 +188,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog = new SetupBlog();
             mSetupBlog.setUsername(mUsernameEditText.getText().toString().trim());
             mSetupBlog.setPassword(mPasswordEditText.getText().toString().trim());
-            mSetupBlog.setSelfHostedURL(mUrlEditText.getText().toString().trim());
-            mProgressDialog = ProgressDialog.show(getActivity(), "",
-                    (selfHostedFieldsFilled()) ? getString(R.string.attempting_configure):
-                            getString(R.string.connecting_wpcom),
-                    true, false);
+            if (mSelfHosted) {
+                mSetupBlog.setSelfHostedURL(mUrlEditText.getText().toString().trim());
+            } else {
+                mSetupBlog.setSelfHostedURL(null);
+            }
+            startProgressSignIn(selfHostedFieldsFilled() ? getString(R.string.attempting_configure):
+                    getString(R.string.connecting_wpcom));
         }
 
         @Override
@@ -180,8 +208,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
         @Override
         protected void onPostExecute(List<Object> usersBlogsList) {
-            mProgressDialog.dismiss();
-
             if (mHttpAuthRequired) {
                 // Prompt for http credentials
                 mHttpAuthRequired = false;
@@ -208,6 +234,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 });
 
                 alert.show();
+                endProgressSignIn();
                 return;
             }
 
@@ -218,6 +245,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                                 getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
+                endProgressSignIn();
                 return;
             }
 
@@ -234,17 +262,17 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", null, null);
             }
 
-            if (usersBlogsList != null) {
+            if (usersBlogsList != null && usersBlogsList.size() != 0) {
                 mUsersBlogsList = usersBlogsList;
-                if (usersBlogsList.size() != 0) {
-                    SparseBooleanArray allBlogs = new SparseBooleanArray();
-                    for (int i = 0; i < mUsersBlogsList.size(); i++) {
-                        allBlogs.put(i, true);
-                    }
-                    mSetupBlog.addBlogs(usersBlogsList, allBlogs);
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
+                SparseBooleanArray allBlogs = new SparseBooleanArray();
+                for (int i = 0; i < mUsersBlogsList.size(); i++) {
+                    allBlogs.put(i, true);
                 }
+                mSetupBlog.addBlogs(usersBlogsList, allBlogs);
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            } else {
+                endProgressSignIn();
             }
         }
     }
@@ -275,9 +303,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     blogTitleView.setText(blogMap.get("url").toString());
                 }
             }
-
             return convertView;
         }
     }
-
 }
