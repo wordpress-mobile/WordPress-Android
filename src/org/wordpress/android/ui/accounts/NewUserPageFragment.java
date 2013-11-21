@@ -1,7 +1,6 @@
 
 package org.wordpress.android.ui.accounts;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -35,6 +35,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
     private WPTextView mSignupButton;
+    private WPTextView mProgressTextSignIn;
+    private ProgressBar mProgressBarSignIn;
+
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
@@ -64,6 +67,24 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 && mPasswordTextField.getText().toString().trim().length() > 0
                 && mUsernameTextField.getText().toString().trim().length() > 0
                 && mSiteUrlTextField.getText().toString().trim().length() > 0;
+    }
+
+    protected void startProgress(String message) {
+        mProgressBarSignIn.setVisibility(View.VISIBLE);
+        mProgressTextSignIn.setVisibility(View.VISIBLE);
+        mSignupButton.setVisibility(View.GONE);
+        mProgressBarSignIn.setEnabled(false);
+        mProgressTextSignIn.setText(message);
+    }
+
+    protected void updateProgress(String message) {
+        mProgressTextSignIn.setText(message);
+    }
+
+    protected void endProgress() {
+        mProgressBarSignIn.setVisibility(View.GONE);
+        mProgressTextSignIn.setVisibility(View.GONE);
+        mSignupButton.setVisibility(View.VISIBLE);
     }
 
     private boolean checkUserData() {
@@ -151,16 +172,14 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         if (!checkUserData())
             return;
 
+        startProgress(getString(R.string.validating_user_data));
+
         final String siteUrl = mSiteUrlTextField.getText().toString().trim();
         final String email = mEmailTextField.getText().toString().trim();
         final String password = mPasswordTextField.getText().toString().trim();
         final String username = mUsernameTextField.getText().toString().trim();
         final String siteName = siteUrlToSiteName(siteUrl);
         final String language = getDeviceLanguage();
-
-        mProgressDialog = ProgressDialog.show(getActivity(),
-                getString(R.string.account_setup), getString(R.string.validating_user_data),
-                true, false);
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
                 siteUrl, siteName, language, restClient, getActivity(), new ErrorListener(),
@@ -169,13 +188,13 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     public void onStepFinished(CreateUserAndBlog.Step step) {
                         switch (step) {
                             case VALIDATE_USER:
-                                mProgressDialog.setMessage(getString(R.string.validating_site_data));
+                                updateProgress(getString(R.string.validating_site_data));
                                 break;
                             case VALIDATE_SITE:
-                                mProgressDialog.setMessage(getString(R.string.create_account_wpcom));
+                                updateProgress(getString(R.string.create_account_wpcom));
                                 break;
                             case CREATE_USER:
-                                mProgressDialog.setMessage(getString(R.string.create_blog_wpcom));
+                                updateProgress(getString(R.string.create_blog_wpcom));
                                 break;
                             case CREATE_SITE: // no messages
                             case AUTHENTICATE_USER:
@@ -186,13 +205,13 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
                     @Override
                     public void onSuccess() {
-                        mProgressDialog.dismiss();
+                        endProgress();
                         finishThisStuff(username);
                     }
 
                     @Override
                     public void onError(int messageId) {
-                        mProgressDialog.dismiss();
+                        endProgress();
                         showError(getString(messageId));
                     }
                 });
@@ -233,6 +252,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
         mSignupButton.setOnClickListener(signupClickListener);
         mSignupButton.setEnabled(false);
+
+        mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
+        mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
         mEmailTextField.setText(UserEmail.getPrimaryEmail(getActivity()));

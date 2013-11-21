@@ -17,6 +17,7 @@
             android:layout_height="0dp"
             android:gravity="center"
             android:layout_weight="1"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <ImageView
@@ -120,7 +121,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="8dp">
 
                 <EditText
                     android:id="@+id/site_url"
@@ -166,18 +167,43 @@
                     android:layout_marginLeft="10dp" />
 
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXThirdButton"
+                    android:id="@+id/signup_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/nux_welcome_create_account"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:enabled="false"/>
+
+                <ProgressBar
+                    android:id="@+id/nux_sign_in_progress_bar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    style="@style/WordPress.NUXThirdButton"
+                    android:enabled="false"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXThirdButton"
-                android:id="@+id/signup_button"
-                android:layout_width="fill_parent"
+                style="@style/WordPress.NUXWhiteButtonNoBg"
+                android:id="@+id/nux_sign_in_progress_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="@string/nux_welcome_create_account"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp" />
+                android:visibility="gone"
+                android:textColor="@color/blue_extra_light"
+                android:gravity="center|top"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_agree_terms_of_service"

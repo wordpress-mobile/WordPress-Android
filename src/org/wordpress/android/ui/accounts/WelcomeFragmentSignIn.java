@@ -160,7 +160,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     }
 
-    private void startProgressSignIn(String message) {
+    protected void startProgress(String message) {
         mProgressBarSignIn.setVisibility(View.VISIBLE);
         mProgressTextSignIn.setVisibility(View.VISIBLE);
         mSignInButton.setVisibility(View.GONE);
@@ -168,16 +168,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mProgressTextSignIn.setText(message);
     }
 
-    private void updateProgressSignIn(String message) {
-        mProgressTextSignIn.setText(message);
-    }
-
-    private void endProgressSignIn() {
+    protected void endProgress() {
         mProgressBarSignIn.setVisibility(View.GONE);
         mProgressTextSignIn.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);
     }
-
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
@@ -193,7 +188,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 mSetupBlog.setSelfHostedURL(null);
             }
-            startProgressSignIn(selfHostedFieldsFilled() ? getString(R.string.attempting_configure):
+            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure):
                     getString(R.string.connecting_wpcom));
         }
 
@@ -234,7 +229,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 });
 
                 alert.show();
-                endProgressSignIn();
+                endProgress();
                 return;
             }
 
@@ -245,7 +240,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                                 getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                 nuxAlert.show(ft, "alert");
                 mErrorMsg = null;
-                endProgressSignIn();
+                endProgress();
                 return;
             }
 
@@ -272,7 +267,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             } else {
-                endProgressSignIn();
+                endProgress();
             }
         }
     }

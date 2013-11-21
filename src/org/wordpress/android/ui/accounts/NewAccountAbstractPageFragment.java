@@ -50,6 +50,15 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             restClient = new WPRestClient(requestQueue, null);
     }
 
+    protected void startProgress(String message) {
+    }
+
+    protected void updateProgress(String message) {
+    }
+
+    protected void endProgress() {
+    }
+
     /**
      * Returns the page number represented by this fragment object.
      */
@@ -92,8 +101,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     }
 
     protected void showError(String message) {
-        if (mProgressDialog != null)
-            mProgressDialog.dismiss();
+        endProgress();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error),
                 message, getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
