@@ -244,6 +244,9 @@ public class MediaUtils {
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
         
+        if( WordPress.currentBlog == null) 
+            return false;
+        
         if( WordPress.currentBlog.isDotcomFlag())
             return true;
         

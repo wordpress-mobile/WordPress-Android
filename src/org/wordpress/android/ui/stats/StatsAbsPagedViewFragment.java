@@ -60,12 +60,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         
         setRetainInstance(true);
         
-        if (Utils.isTablet()) {
-            initTabletLayout(view);
-        } else {
-            initPhoneLayout(view);
-        }
-        
+        initLayout(view);
+
         restoreState(savedInstanceState);
         
         return view;
@@ -78,7 +74,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
     }
 
-    private void initTabletLayout(View view) {
+    private void initLayout(View view) {
         
         TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
@@ -92,9 +88,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            int dp4 = (int) Utils.dpToPx(4);
-            params.setMargins(dp4, 0, dp4, 0);
-            rb.setMinimumWidth((int) Utils.dpToPx(100));
+            int dp8 = (int) Utils.dpToPx(8);
+            params.setMargins(0, 0, dp8, 0);
+            rb.setMinimumWidth((int) Utils.dpToPx(80));
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
@@ -118,33 +114,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
             Fragment fragment = getFragment(index);
             getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex).commit();
-        }
-    }
-    
-    private void initPhoneLayout(View view) {
-        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
-
-        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_pager_tabs);
-        mTabView.setVisibility(View.VISIBLE);
-        mTabView.setTabListener(this);
-        
-        mAdapter = getAdapter();
-        mViewPager.setAdapter(mAdapter);
-        addTabs();
-        mTabView.setSelectedTab(0);
-    }
-    
-    private void addTabs() {
-        for (int i = 0; i < mAdapter.getCount(); i++) {
-            mTabView.addTab(mTabView.newTab().setText(mAdapter.getPageTitle(i)));
         }
     }
 

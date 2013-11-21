@@ -107,6 +107,7 @@
     <string name="please_wait_refresh_done">Please wait, loading items.</string>
     <string name="please_wait_uploading_done">Please wait, uploading item.</string>
     <string name="info">Info</string>
+    <string name="learn_more">Learn More</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -460,7 +461,7 @@
 
     <!-- stats: empty list strings -->
     <string name="stats_empty_geoviews">No posts viewed.</string>
-    <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages.</b> This panel shows your most viewed posts and pages.]]></string>
+    <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages found yet.</b> This view shows your most viewed posts and pages.]]></string>
     <string name="stats_empty_referrers"><![CDATA[<b>No referrers.</b> A referrer is a click from another site that links to yours.]]></string>
     <string name="stats_empty_clicks"><![CDATA[<b>No clicks recorded.</b> "Clicks" are viewers clicking outbound links on your site.]]></string>
     <string name="stats_empty_top_authors">No posts viewed.</string>

@@ -406,4 +406,16 @@ public class Blog {
     public boolean hasValidJetpackCredentials() {
         return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
     }
+
+    /**
+     * Get the WordPress.com blog ID
+     * Stored in blogId for WP.com, api_blogId for Jetpack
+     * @return WP.com blogId string, potentially null for Jetpack sites
+     */
+    public String getDotComBlogId() {
+        if (isDotcomFlag())
+            return String.valueOf(getBlogId());
+        else
+            return getApi_blogid();
+    }
 }

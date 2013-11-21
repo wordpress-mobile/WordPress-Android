@@ -255,7 +255,7 @@ public class ApiHelper {
             };
             try {
                 Map<String, Object> userInfo = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
-                if (userInfo.containsKey("roles")) {
+                if (userInfo.containsKey("roles") && ( userInfo.get("roles") instanceof Object[])) {
                     Object[] userRoles = (Object[])userInfo.get("roles");
                     mBlog.setAdmin(false);
                     for (int i = 0; i < userRoles.length; i++) {
@@ -770,11 +770,18 @@ public class ApiHelper {
         }
 
         private Callback mCallback;
-        
+
+        public GetFeatures() {
+        }
+
         public GetFeatures(Callback callback) {
             mCallback = callback;
         }
-        
+
+        public FeatureSet doSynchronously(List<?>... params) {
+            return doInBackground(params);
+        }
+
         @Override
         protected FeatureSet doInBackground(List<?>... params) {
             
@@ -867,10 +874,13 @@ public class ApiHelper {
     public static InputStream getResponseStream(String urlString) {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
-            return request.buffer();
-        } else {
-            return null;
+            try {
+                return request.buffer();
+            } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+            }
         }
+        return null;
     }
 
     /**
@@ -886,6 +896,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
                 return null;
             }
         } else {

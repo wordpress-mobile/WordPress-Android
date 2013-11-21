@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -36,9 +33,7 @@ import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
@@ -52,6 +47,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main activity in which the user can browse their media.
@@ -236,15 +236,19 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String title = getString(R.string.media_no_video_title);
         String message = getString(R.string.media_no_video_message);
-        WPAlertDialogFragment.newInstance(message, title, false).show(ft, "alert");
-    };
+        String infoTitle = getString(R.string.learn_more);
+        String infoURL = Constants.videoPressURL;
+
+        WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL)
+                .show(ft, "alert");
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
-    };
+    }
 
     /** Get the feature set for a wordpress.com hosted blog **/
     private void getFeatureSet() {

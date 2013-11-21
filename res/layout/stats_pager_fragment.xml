@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <org.wordpress.android.ui.HorizontalTabView
-        android:id="@+id/stats_pager_tabs"
+    <TextView
+        android:id="@+id/stats_pager_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/stats_tablet_header_title"
+        android:padding="6dp"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        android:visibility="gone" />
+        android:background="@drawable/stats_white_background"
+        android:orientation="vertical"
+        android:paddingBottom="8dp" >
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/stats_pager_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        <RadioGroup
+            android:id="@+id/stats_pager_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="6dp"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+        </RadioGroup>
 
-    <FrameLayout 
-        android:id="@+id/stats_pager_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <FrameLayout
+            android:id="@+id/stats_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>
