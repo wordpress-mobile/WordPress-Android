@@ -332,6 +332,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                 startBoxAndPagesAnimation();
                 if (hasTagEverUpdated) {
                     description.setText(R.string.reader_empty_followed_tags_description);
+                    description.setVisibility(View.VISIBLE);
                 } else {
                     description.setVisibility(View.GONE);
                 }
