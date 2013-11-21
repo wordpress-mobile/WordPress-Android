@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -47,9 +45,7 @@ import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -330,24 +326,23 @@ public class CommentsListFragment extends ListFragment {
         dismissDialog(ID_DIALOG_DELETING);
         Thread action = new Thread() {
             public void run() {
-                if (moderateErrorMsg == "") {
-                    String msg = getResources().getText(
-                            R.string.comment_moderated).toString();
-                    if (checkedCommentTotal > 1)
-                        msg = getResources().getText(
-                                R.string.comments_moderated).toString();
-                    Toast.makeText(getActivity().getApplicationContext(), msg,
-                            Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(moderateErrorMsg)) {
+                    final String msg;
+                    if (checkedCommentTotal > 1) {
+                        msg = getResources().getText(R.string.comments_moderated).toString();
+                    } else {
+                        msg = getResources().getText(R.string.comment_moderated).toString();
+                    }
+                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
+                    selectedCommentPositions.clear();
                     refreshComments();
                 } else {
                     // error occurred during delete request
                     if (!getActivity().isFinishing()) {
-                        FragmentTransaction ft = getFragmentManager()
-                                .beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment
-                                .newInstance(moderateErrorMsg);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
                         try {
                             alert.show(ft, "alert");
                         } catch (Exception e) {
@@ -359,7 +354,6 @@ public class CommentsListFragment extends ListFragment {
         };
         getActivity().runOnUiThread(action);
         progressDialog = new ProgressDialog(getActivity().getApplicationContext());
-
     }
 
     public boolean loadComments(boolean refresh, boolean loadMore) {
@@ -627,9 +621,12 @@ public class CommentsListFragment extends ListFragment {
             bulkCheck.setChecked(selectedCommentPositions.contains(position));
             bulkCheck.setTag(position);
             bulkCheck.setOnClickListener(new OnClickListener() {
-
                 public void onClick(View arg0) {
-                    selectedCommentPositions.add(position);
+                    if (bulkCheck.isChecked()) {
+                        selectedCommentPositions.add(position);
+                    } else {
+                        selectedCommentPositions.remove(position);
+                    }
                     showOrHideModerationBar();
                 }
             });
@@ -649,12 +646,12 @@ public class CommentsListFragment extends ListFragment {
             return;
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(1.0f, 0.0f);
-        animation.setDuration(500);
+        animation.setDuration(MODERATION_BAR_ANI_MS);
         set.addAnimation(animation);
         animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        animation.setDuration(500);
+        animation.setDuration(MODERATION_BAR_ANI_MS);
         set.addAnimation(animation);
         moderationBar.clearAnimation();
         moderationBar.startAnimation(set);
@@ -670,18 +667,20 @@ public class CommentsListFragment extends ListFragment {
         }
     }
 
+    private static final long MODERATION_BAR_ANI_MS = 250;
+
     protected void showModerationBar() {
         ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.VISIBLE )
             return;
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
+        animation.setDuration(MODERATION_BAR_ANI_MS);
         set.addAnimation(animation);
         animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animation.setDuration(500);
+        animation.setDuration(MODERATION_BAR_ANI_MS);
         set.addAnimation(animation);
         moderationBar.setVisibility(View.VISIBLE);
         moderationBar.startAnimation(set);
@@ -695,158 +694,6 @@ public class CommentsListFragment extends ListFragment {
         else
             params.height = 0;
         mFooterSpacer.setLayoutParams(params);
-    }
-
-    interface XMLRPCMethodCallback {
-        void callFinished(Object[] result);
-    }
-
-    class XMLRPCMethod extends Thread {
-        private String method;
-        private Object[] params;
-        private Handler handler;
-        private XMLRPCMethodCallback callBack;
-
-        public XMLRPCMethod(String method, XMLRPCMethodCallback callBack) {
-            this.method = method;
-            this.callBack = callBack;
-            handler = new Handler();
-        }
-
-        public void call() {
-            call(null);
-        }
-
-        public void call(Object[] params) {
-            this.params = params;
-            start();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public void run() {
-            try {
-                // get the total comments
-                Map<Object, Object> countResult = new HashMap<Object, Object>();
-                Object[] countParams = { WordPress.currentBlog.getBlogId(),
-                        WordPress.currentBlog.getUsername(),
-                        WordPress.currentBlog.getPassword(), 0 };
-                try {
-                    countResult = (Map<Object, Object>) client.call(
-                            "wp.getCommentCount", countParams);
-                    totalComments = Integer.valueOf(countResult.get(
-                            "awaiting_moderation").toString())
-                            + Integer.valueOf(countResult.get("approved")
-                            .toString());
-                } catch (XMLRPCException e) {
-                    e.printStackTrace();
-                }
-                final Object[] result = (Object[]) client.call(method, params);
-                handler.post(new Runnable() {
-                    public void run() {
-
-                        callBack.callFinished(result);
-                    }
-                });
-            } catch (final XMLRPCFault e) {
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                        if (!getActivity().isFinishing()) {
-                            onAnimateRefreshButton.onAnimateRefreshButton(false);
-                            FragmentTransaction ft = getFragmentManager()
-                                    .beginTransaction();
-                            WPAlertDialogFragment alert = WPAlertDialogFragment
-                                    .newInstance(e.getLocalizedMessage());
-                            alert.show(ft, "alert");
-                        }
-                    }
-                });
-            } catch (final XMLRPCException e) {
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                        if (!getActivity().isFinishing()) {
-                            onAnimateRefreshButton.onAnimateRefreshButton(false);
-                            FragmentTransaction ft = getFragmentManager()
-                                    .beginTransaction();
-                            WPAlertDialogFragment alert = WPAlertDialogFragment
-                                    .newInstance(e.getLocalizedMessage());
-                            alert.show(ft, "alert");
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    interface XMLRPCMethodCallbackEditComment {
-        void callFinished(Object result);
-    }
-
-    class XMLRPCMethodEditComment extends Thread {
-        private String method;
-        private Object[] params;
-        private Handler handler;
-        private XMLRPCMethodCallbackEditComment callBack;
-
-        public XMLRPCMethodEditComment(String method,
-                                       XMLRPCMethodCallbackEditComment callBack) {
-            this.method = method;
-            this.callBack = callBack;
-            handler = new Handler();
-        }
-
-        public void call() {
-            call(null);
-        }
-
-        public void call(Object[] params) {
-            this.params = params;
-            start();
-        }
-
-        @Override
-        public void run() {
-            try {
-                final Object result = (Object) client.call(method, params);
-                handler.post(new Runnable() {
-                    public void run() {
-                        callBack.callFinished(result);
-                    }
-                });
-            } catch (final XMLRPCFault e) {
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (!getActivity().isFinishing()) {
-                            dismissDialog(ID_DIALOG_MODERATING);
-                            FragmentTransaction ft = getFragmentManager()
-                                    .beginTransaction();
-                            WPAlertDialogFragment alert = WPAlertDialogFragment
-                                    .newInstance(e.getFaultString());
-                            alert.show(ft, "alert");
-                        }
-                    }
-                });
-            } catch (final XMLRPCException e) {
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (!getActivity().isFinishing()) {
-                            dismissDialog(ID_DIALOG_MODERATING);
-                            FragmentTransaction ft = getFragmentManager()
-                                    .beginTransaction();
-                            WPAlertDialogFragment alert = WPAlertDialogFragment
-                                    .newInstance(e.getLocalizedMessage());
-                            alert.show(ft, "alert");
-                        }
-                    }
-                });
-            }
-        }
     }
 
     @Override
