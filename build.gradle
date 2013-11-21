@@ -33,6 +33,7 @@ dependencies {
     compile 'org.wordpress:android-passcodelock:0.0.4'
     compile 'org.wordpress:commons-lang:2.6'
     compile files('libs/MixpanelAPI.jar')
+    compile files('libs/QuantcastAndroidSdk.jar')
 }
 
 project.archivesBaseName="WordPress-Android"
