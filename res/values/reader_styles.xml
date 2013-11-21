@@ -158,7 +158,8 @@
     <style name="ReaderEditText.Comment" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>
         <item name="android:inputType">text|textCapSentences|textMultiLine</item>
-        <item name="android:lines">4</item>
+        <item name="android:minLines">1</item>
+        <item name="android:maxLines">4</item>
         <item name="android:imeOptions">actionSend</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
