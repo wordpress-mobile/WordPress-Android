@@ -83,6 +83,10 @@ public class WPMobileStatsUtil {
     public static final String StatsPropertyPagedOpened = "pages_opened";
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
 
+    // Quick Photo
+    public static final String StatsEventQuickPhotoOpened = "Quick Photo - Opened";
+
+
     /* /Events  */
 
     private static final String MIXPANEL_TOKEN = "mixpanel.token";
