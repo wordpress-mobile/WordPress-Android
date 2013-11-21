@@ -603,25 +603,25 @@ public class CommentsListFragment extends ListFragment {
 
             row.setId(Integer.valueOf(comment.commentID));
 
-            final String prettyComment;
+            final String status;
             final String textColor;
 
             switch (comment.getStatusEnum()) {
                 case SPAM :
-                    prettyComment = getResources().getText(R.string.spam).toString();
+                    status = getResources().getText(R.string.spam).toString();
                     textColor = "#FF0000";
                     break;
                 case UNAPPROVED:
-                    prettyComment = getResources().getText(R.string.unapproved).toString();
+                    status = getResources().getText(R.string.unapproved).toString();
                     textColor = "#D54E21";
                     break;
                 default :
-                    prettyComment = getResources().getText(R.string.approved).toString();
+                    status = getResources().getText(R.string.approved).toString();
                     textColor = "#006505";
                     break;
             }
 
-            txtStatus.setText(prettyComment);
+            txtStatus.setText(status);
             txtStatus.setTextColor(Color.parseColor(textColor));
 
             bulkCheck.setChecked(selectedCommentPositions.contains(position));
@@ -644,7 +644,7 @@ public class CommentsListFragment extends ListFragment {
     }
 
     protected void hideModerationBar() {
-        RelativeLayout moderationBar = (RelativeLayout) getActivity().findViewById(R.id.moderationBar);
+        ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.INVISIBLE )
             return;
         AnimationSet set = new AnimationSet(true);
@@ -671,7 +671,7 @@ public class CommentsListFragment extends ListFragment {
     }
 
     protected void showModerationBar() {
-        RelativeLayout moderationBar = (RelativeLayout) getActivity().findViewById(R.id.moderationBar);
+        ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.VISIBLE )
             return;
         AnimationSet set = new AnimationSet(true);

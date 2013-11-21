@@ -27,21 +27,10 @@
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignBottom="@+id/name"
+        android:layout_alignParentRight="true"
         android:textAllCaps="true"
         android:textSize="@dimen/reader_text_sz_small" />
-
-    <CheckBox
-        android:id="@+id/bulkCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:focusable="false"
-        android:paddingBottom="@dimen/reader_margin_medium"
-        android:paddingLeft="@dimen/reader_margin_medium"
-        android:paddingTop="@dimen/reader_margin_medium" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/email_url"
@@ -49,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/reader_hyperlink"
@@ -61,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/email_url"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="#666666"
@@ -78,5 +65,14 @@
         android:maxLines="4"
         android:paddingTop="@dimen/reader_margin_small"
         android:textColor="#545454" />
+
+    <CheckBox
+        android:id="@+id/bulkCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comment"
+        android:focusable="false"
+        android:paddingLeft="@dimen/reader_margin_medium" />
 
 </RelativeLayout>
