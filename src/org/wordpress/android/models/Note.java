@@ -24,9 +24,11 @@ import java.util.Map;
 
 public class Note {
     protected static final String TAG="NoteModel";
-    public static final String UNKNOWN_TYPE="unknown";
-    public static final String COMMENT_TYPE="comment";
-    public static final String LIKE_TYPE="like";
+    protected static final String UNKNOWN_TYPE="unknown";
+    protected static final String COMMENT_TYPE="comment";
+    //protected static final String LIKE_TYPE="like";
+    //protected static final String MATCHER_TYPE = "automattcher";
+
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
@@ -128,7 +130,7 @@ public class Note {
     public String getType(){
         return queryJSON("type", UNKNOWN_TYPE);
     }
-    public Boolean isType(String type){
+    private Boolean isType(String type){
         return getType().equals(type);
     }
     public Boolean isCommentType(){

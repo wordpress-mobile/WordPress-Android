@@ -230,16 +230,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtContent.setText(html);
 
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-        if (mComment.profileImageUrl == null) {
-            if (!TextUtils.isEmpty(mComment.authorEmail)) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
-                String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
-                imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
-            } else {
-                imgAvatar.setImageResource(R.drawable.placeholder);
-            }
+        if (mComment.hasProfileImageUrl()) {
+            imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WordPress.imageLoader);
         } else {
-            imgAvatar.setImageUrl(mComment.profileImageUrl.toString(), WordPress.imageLoader);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
+            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
         }
 
         // approve button only appears when comment hasn't already been approved,
@@ -392,16 +388,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 //int postId = jsonParams.optInt("post_id");
                 int commentId = jsonParams.optInt("comment_id");
 
-                String icon = note.getIconURL();
-                final URI iconURI = (TextUtils.isEmpty(icon) ? null : URI.create(icon));
-
                 // first try to get from local db, if that fails request it from the server
                 Comment comment = WordPress.wpDB.getComment(mAccountId, commentId);
                 if (comment != null) {
-                    comment.profileImageUrl = iconURI;
+                    comment.setProfileImageUrl(note.getIconURL());
                     setComment(comment);
                 } else {
-                    requestComment(blogId, commentId, iconURI);
+                    requestComment(blogId, commentId, note.getIconURL());
                 }
             }
         }
@@ -410,7 +403,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * request a comment via the REST API
      */
-    private void requestComment(int blogId, int commentId, final URI profileImageURI) {
+    private void requestComment(int blogId, int commentId, final String profileImageUrl) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -424,8 +417,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     Comment comment = new Comment(jsonObject);
                     if (comment != null) {
-                        if (profileImageURI != null)
-                            comment.profileImageUrl = profileImageURI;
+                        if (profileImageUrl != null)
+                            comment.setProfileImageUrl(profileImageUrl);
                         WordPress.wpDB.addComment(mAccountId, comment);
                         setComment(comment);
                     }

@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -396,12 +398,17 @@ public class CommentsListFragment extends ListFragment {
                 }
 
                 // add to model
-                model.add(new Comment(postID, commentID, i, author, dateCreatedFormatted, comment,
-                        status, postTitle,
-                        authorURL, authorEmail, URI
-                        .create("http://gravatar.com/avatar/"
-                                + StringUtils.getMd5Hash(authorEmail.trim())
-                                + "?s=140&d=404")));
+                model.add(new Comment(postID,
+                                      commentID,
+                                      i,
+                                      author,
+                                      dateCreatedFormatted,
+                                      comment,
+                                      status,
+                                      postTitle,
+                                      authorURL,
+                                      authorEmail,
+                                      GravatarUtils.gravatarUrlFromEmail(authorEmail, 140)));
             }
 
             if (!refreshOnly) {
@@ -562,45 +569,44 @@ public class CommentsListFragment extends ListFragment {
     }
 
     class CommentEntryWrapper {
-        private TextView name = null;
-        private TextView emailURL = null;
-        private TextView comment = null;
-        private TextView status = null;
-        private TextView postTitle = null;
-        private NetworkImageView avatar = null;
-        private View row = null;
-        private CheckBox bulkCheck = null;
-        private RelativeLayout bulkEditGroup = null;
+        private TextView txtName;
+        private TextView txtEmailURL;
+        private TextView txtComment;
+        private TextView txtStatus;
+        private TextView txtPostTitle;
+        private NetworkImageView imgAvatar;
+        private View row;
+        private CheckBox bulkCheck;
 
         CommentEntryWrapper(View row) {
             this.row = row;
+
+            // locate views
+            txtName = (TextView) row.findViewById(R.id.name);
+            txtEmailURL = (TextView) row.findViewById(R.id.email_url);
+            txtComment = (TextView) row.findViewById(R.id.comment);
+            txtStatus = (TextView) row.findViewById(R.id.status); // setTextSize(12)
+            txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
+            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
+            bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
         }
 
-        void populateFrom(Comment s, final int position) {
+        void populateFrom(Comment comment, final int position) {
+            txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : getString(R.string.anonymous));
+            txtComment.setText(comment.comment);
+            txtPostTitle.setText(getResources().getText(R.string.on) + " " + comment.postTitle);
 
-            String authorName = s.name;
-
-            if(authorName.length() > 0)
-                getName().setText(authorName);
-            else
-                getName().setText(getResources().getText(R.string.anonymous));
-
-            String fEmailURL = s.authorURL;
             // use the email address if the commenter didn't add a url
-            if (fEmailURL == "")
-                fEmailURL = s.emailURL;
+            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.emailURL : comment.authorURL);
+            txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
+            txtEmailURL.setText(fEmailURL);
 
-            getEmailURL().setText(fEmailURL);
-            getComment().setText(s.comment);
-            getPostTitle().setText(
-                    getResources().getText(R.string.on) + " " + s.postTitle);
-
-            row.setId(Integer.valueOf(s.commentID));
+            row.setId(Integer.valueOf(comment.commentID));
 
             final String prettyComment;
             final String textColor;
 
-            switch (s.getStatusEnum()) {
+            switch (comment.getStatusEnum()) {
                 case SPAM :
                     prettyComment = getResources().getText(R.string.spam).toString();
                     textColor = "#FF0000";
@@ -615,14 +621,12 @@ public class CommentsListFragment extends ListFragment {
                     break;
             }
 
-            getBulkEditGroup().setVisibility(View.VISIBLE);
+            txtStatus.setText(prettyComment);
+            txtStatus.setTextColor(Color.parseColor(textColor));
 
-            getStatus().setText(prettyComment);
-            getStatus().setTextColor(Color.parseColor(textColor));
-
-            getBulkCheck().setChecked(selectedCommentPositions.contains(position));
-            getBulkCheck().setTag(position);
-            getBulkCheck().setOnClickListener(new OnClickListener() {
+            bulkCheck.setChecked(selectedCommentPositions.contains(position));
+            bulkCheck.setTag(position);
+            bulkCheck.setOnClickListener(new OnClickListener() {
 
                 public void onClick(View arg0) {
                     selectedCommentPositions.add(position);
@@ -630,75 +634,13 @@ public class CommentsListFragment extends ListFragment {
                 }
             });
 
-            getAvatar().setImageUrl(s.profileImageUrl.toString(), WordPress.imageLoader);
-        }
-
-        TextView getName() {
-            if (name == null) {
-                name = (TextView) row.findViewById(R.id.name);
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
+            if (comment.hasProfileImageUrl()) {
+                imgAvatar.setImageUrl(comment.getProfileImageUrl(), WordPress.imageLoader);
+            } else {
+                imgAvatar.setImageResource(R.drawable.placeholder);
             }
-
-            return (name);
         }
-
-        TextView getEmailURL() {
-            if (emailURL == null) {
-                emailURL = (TextView) row.findViewById(R.id.email_url);
-            }
-
-            return (emailURL);
-        }
-
-        TextView getComment() {
-            if (comment == null) {
-                comment = (TextView) row.findViewById(R.id.comment);
-            }
-
-            return (comment);
-        }
-
-        TextView getStatus() {
-            if (status == null) {
-                status = (TextView) row.findViewById(R.id.status);
-            }
-
-            status.setTextSize(12);
-
-            return (status);
-        }
-
-        TextView getPostTitle() {
-            if (postTitle == null) {
-                postTitle = (TextView) row.findViewById(R.id.postTitle);
-            }
-
-            return (postTitle);
-        }
-
-        NetworkImageView getAvatar() {
-            if (avatar == null) {
-                avatar = (NetworkImageView) row.findViewById(R.id.avatar);
-            }
-
-            return (avatar);
-        }
-
-        CheckBox getBulkCheck() {
-            if (bulkCheck == null) {
-                bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
-            }
-
-            return (bulkCheck);
-        }
-
-        RelativeLayout getBulkEditGroup() {
-            if (bulkEditGroup == null) {
-                bulkEditGroup = (RelativeLayout) row.findViewById(R.id.bulkEditGroup);
-            }
-
-            return (bulkEditGroup);
-        }
-
     }
 
     protected void hideModerationBar() {

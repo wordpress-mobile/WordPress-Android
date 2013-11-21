@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
@@ -21,12 +23,19 @@ public class Comment {
     public String authorURL = "";
     public String authorEmail = "";
     public String dateCreatedFormatted = "";
-    public URI profileImageUrl = null;
+    private String profileImageUrl = null;
 
-    public Comment(String postID, int commentID, int position, String name,
-            String dateCreatedFormatted, String comment, String status,
-            String postTitle, String authorURL, String authorEmail,
-            URI profileImageUrl) {
+    public Comment(String postID,
+            int commentID,
+            int position,
+            String name,
+            String dateCreatedFormatted,
+            String comment,
+            String status,
+            String postTitle,
+            String authorURL,
+            String authorEmail,
+            String profileImageUrl) {
         this.postID = postID;
         this.commentID = commentID;
         this.position = position;
@@ -75,12 +84,18 @@ public class Comment {
                 this.authorEmail = "";
             this.emailURL = this.authorEmail;
 
-            try {
-                this.profileImageUrl = URI.create(JSONUtil.getString(jsonAuthor, "avatar_URL"));
-            } catch (IllegalArgumentException e) {
-                this.profileImageUrl = null;
-            }
+            this.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
         }
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+    public void setProfileImageUrl(String url) {
+        profileImageUrl = url;
+    }
+    public boolean hasProfileImageUrl() {
+        return !TextUtils.isEmpty(profileImageUrl);
     }
 
     public CommentStatus getStatusEnum() {
