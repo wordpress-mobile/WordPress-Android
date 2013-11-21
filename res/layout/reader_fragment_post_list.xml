@@ -24,11 +24,58 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="100dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/nux_icon_wp" />
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/empty_tags_box_bottom"
+                android:layout_width="86dp"
+                android:layout_height="54dp"
+                android:src="@drawable/box_with_pages_bottom"
+                android:layout_alignParentBottom="true" />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page3"
+                android:layout_width="54dp"
+                android:layout_height="70dp"
+                android:src="@drawable/box_with_pages_page3"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="2dp"
+                />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page2"
+                android:layout_width="53dp"
+                android:layout_height="70dp"
+                android:src="@drawable/box_with_pages_page2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="17dp"
+                android:layout_marginBottom="15dp"
+                />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page1"
+                android:layout_width="56dp"
+                android:layout_height="73.5dp"
+                android:src="@drawable/box_with_pages_page1"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="28dp"
+                />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_top"
+                android:layout_width="86dp"
+                android:layout_height="54dp"
+                android:src="@drawable/box_with_pages_top"
+                android:layout_alignParentBottom="true" />
+
+
+        </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title_empty"
