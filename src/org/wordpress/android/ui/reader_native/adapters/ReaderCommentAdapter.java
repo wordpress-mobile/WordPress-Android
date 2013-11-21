@@ -290,6 +290,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
+            if (mPost==null)
+                return false;
+
             // determine whether more comments can be downloaded by comparing the number of
             // comments the post says it has with the number of comments actually stored
             // locally for this post
