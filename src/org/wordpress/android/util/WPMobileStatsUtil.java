@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
-import org.xmlrpc.android.ApiHelper;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,6 +25,12 @@ import java.util.HashMap;
 
 /**
  * Created by Eric on 11/20/13.
+ *
+ * WPMobieStatsUtils handles stats logging. Its public methods should for the most part be service
+ * neutral to allow to ease possible changes in the stats libs we use in the future.
+ *
+ * WPMobileStatsUtils is not thread safe so only call it from the main thread.
+ *
  */
 public class WPMobileStatsUtil {
 
@@ -87,15 +92,21 @@ public class WPMobileStatsUtil {
     private static MixpanelAPI mixpanel;
     private HashMap<String, JSONObject> aggregatedProperties;
 
-    private WPMobileStatsUtil(){
-        aggregatedProperties = new HashMap<String, JSONObject>();
-    }
-
+    /*
+        Singleton
+     */
     public static WPMobileStatsUtil getInstance() {
         return instance;
     }
 
+    private WPMobileStatsUtil(){
+        aggregatedProperties = new HashMap<String, JSONObject>();
+    }
 
+    /*
+        Sets up and configures some session wide tracking.
+        Should be called when the application is launched and at sign in/out.
+     */
     public static void initialize() {
         mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), MIXPANEL_TOKEN);
 
@@ -139,6 +150,11 @@ public class WPMobileStatsUtil {
 
     // WPCom Stats
 
+    /*
+        Bump WordPress.com stats.
+
+        @param statName The name of the stat to bump.
+     */
     public static void pingWPComStats(String statName) {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -156,6 +172,11 @@ public class WPMobileStatsUtil {
 
     // Quantcast
 
+    /*
+        Begin tracking an activity.  This should be called from an activity's onStart method.
+
+        @param context The activity being tracked.
+     */
     public static void resumeSession(Context context) {
         String userId = "";
         try {
@@ -168,50 +189,109 @@ public class WPMobileStatsUtil {
         QuantcastClient.activityStart(context, QUANTCAST_KEY, userId, null);
     }
 
+    /*
+        Stop tracking an activity.
+     */
     public static void endSession() {
         QuantcastClient.activityStop();
     }
 
+    /*
+        Log an activities event. resumeSession must be called prior to calling logQuantCastEvent.
+
+        @param event  The name of the event to log.
+     */
     public static void logQuantcastEvent(String event) {
         QuantcastClient.logEvent(event);
     }
 
     // Generic
 
-    public static void trackEventForSelfHostedAndWPCom( String event ) {
+    /*
+        Track an event for WordPress self-hosted and .com users.
+
+        @param event One of the constants representing the event to track.
+     */
+    public static void trackEventForSelfHostedAndWPCom(String event) {
         WPMobileStatsUtil.instance.track(false, event);
     }
 
-    public static void trackEventForSelfHostedAndWPCom( String event, JSONObject properties ) {
+    /*
+        Track an event for WordPress self-hosted and .com users.
+
+        @param event One of the constants representing the event to track.
+        @param properties JSONObject of keys/values to track. Valid properties are boolean, integer and strings.
+     */
+    public static void trackEventForSelfHostedAndWPCom(String event, JSONObject properties) {
         WPMobileStatsUtil.instance.track(false, event, properties);
     }
 
-    public static void trackEventForSelfHostedAndWPComWithSavedProperties( String event ) {
+    /*
+        Track an event for WordPress self-hosted and .com users.
+
+        @param event One of the constants representing the event to track.
+     */
+    public static void trackEventForSelfHostedAndWPComWithSavedProperties(String event) {
         WPMobileStatsUtil.instance.trackWithSavedProperties(false, event);
     }
 
-    public static void trackEventForWPCom( String event ) {
+    /*
+        Track an event WordPress only for .com users.
+
+        @param event One of the constants representing the event to track.
+     */
+    public static void trackEventForWPCom(String event) {
         WPMobileStatsUtil.instance.track(true, event);
     }
 
-    public static void trackEventForWPCom( String event, JSONObject properties ) {
+    /*
+        Track an event WordPress only for .com users.
+
+        @param event One of the constants representing the event to track.
+        @param properties JSONObject of keys/values to track. Valid properties are boolean, integer and strings.
+     */
+    public static void trackEventForWPCom(String event, JSONObject properties) {
         WPMobileStatsUtil.instance.track(true, event, properties);
     }
 
+    /*
+        Track an event WordPress only for .com users.
+
+        @param event One of the constants representing the event to track.
+     */
     public static void trackEventForWPComWithSavedProperties( String event ) {
         WPMobileStatsUtil.instance.trackWithSavedProperties(true, event);
     }
 
+    /*
+        Clears saved properties for the current session.
+     */
     public static void clearPropertiesForAllEvents() {
         WPMobileStatsUtil.instance.clearProperties();
     }
 
-    public static void incrementProperty( String property, String event ) {
-        WPMobileStatsUtil.instance.increment(property, event);
+    /*
+        Increments the specified property.  If the property does not exist it is created.
+        A subsequent call to trackEventWithSavedProperties or trackEventForWPComWithSavedProperties
+        should be made to record the property with the stats service.
+
+        @param event One of the constants representing the event to track.
+        @param property The property to increment.
+     */
+    public static void incrementProperty( String event, String property ) {
+        WPMobileStatsUtil.instance.increment(event, property);
     }
 
-    public static void flagProperty( String property, String event ) {
-        WPMobileStatsUtil.instance.flag(property, event);
+    /*
+        Flags the specified property.  If the property does not exist it is created.
+        A subsequent call to trackEventWithSavedProperties or trackEventForWPComWithSavedProperties
+        should be made to record the property with the stats service.
+
+        @param event One of the constants representing the event to track.
+        @param property The property to flag.
+     */
+    public static void flagProperty( String event, String property ) {
+        WPMobileStatsUtil.instance.flag(event, property);
     }
 
 
@@ -252,16 +332,37 @@ public class WPMobileStatsUtil {
         aggregatedProperties.clear();
     }
 
+    /*
+        Increments the specified property, for the specified event.
+
+        @param event One of the constants representing the event to track.
+        @param property The name of the property.
+     */
     private void increment(String event, String property) {
         Integer count = (Integer)propertyForEvent(event, property);
         count++;
         saveProperty(event, property, count);
     }
 
+    /*
+        Flags the specified property as true, for the specified event.
+
+        @param event One of the constants representing the event to track.
+        @param property The name of the property.
+     */
     private void flag(String event, String property) {
         saveProperty(event, property, true);
     }
 
+
+    /*
+        Returns the value of the specified property for the specified event.
+        If the property does not exist 0 is returned.
+        Return values are a boxed primitive of type boolean, integer, or string.
+
+        @param event One of the constants representing the event to track.
+        @param property The name of the property.
+     */
     private Object propertyForEvent(String event, String property) {
         JSONObject properties = aggregatedProperties.get(event);
         Object val = 0;
@@ -273,6 +374,13 @@ public class WPMobileStatsUtil {
         return val;
     }
 
+    /*
+        Save locally the specified property and value for the specified event.
+
+        @param event One of the constants representing the event to track.
+        @param property The name of the property.
+        @param value A boxed primitive of type boolean, integer or string.
+     */
     private void saveProperty(String event, String property, Object value) {
         JSONObject properties = aggregatedProperties.get(event);
         if (properties == null) {
