@@ -22,7 +22,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.XMLRPCClient;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -31,7 +30,6 @@ public class CommentsActivity extends WPActionBarActivity
 
     protected int id;
 
-    private XMLRPCClient client;
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;

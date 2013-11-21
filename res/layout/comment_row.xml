@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/reader_margin_medium">
 
-    <org.wordpress.android.ui.FadeInNetworkImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/reader_avatar_sz_medium"
         android:layout_height="@dimen/reader_avatar_sz_medium" />

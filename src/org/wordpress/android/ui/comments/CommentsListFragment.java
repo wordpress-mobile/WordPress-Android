@@ -60,9 +60,11 @@ public class CommentsListFragment extends ListFragment {
     public int ID_DIALOG_DELETING = 3;
     public static final int COMMENTS_PER_PAGE = 30;
     public boolean shouldSelectAfterLoad = false;
-    public int numRecords = 0, totalComments = 0,
-            checkedCommentTotal = 0, selectedPosition,
-            scrollPosition = 0, scrollPositionTop = 0;
+    public int numRecords = 0,
+               checkedCommentTotal = 0,
+               selectedPosition,
+               scrollPosition = 0,
+               scrollPositionTop = 0;
     public ProgressDialog progressDialog;
     public getRecentCommentsTask getCommentsTask;
 
