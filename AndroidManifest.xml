@@ -142,7 +142,24 @@
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
         </activity>
+        
+        <!-- Twitter deep linking activity -->
+        <activity
+            android:name=".ui.DeepLinkingIntentReceiverActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="viewpost"
+                    android:scheme="wordpress" >
+                </data>
+            </intent-filter>
+        </activity>
+        
         <!-- Native Reader Activities -->
         <activity
             android:name=".ui.reader_native.NativeReaderActivity"

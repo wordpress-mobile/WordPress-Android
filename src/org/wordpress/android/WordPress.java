@@ -104,8 +104,12 @@ public class WordPress extends Application {
         //Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
-
+            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+                    new String[]{
+                            "org.wordpress.android.ui.ShareIntentReceiverActivity",
+                            "org.wordpress.android.ui.TwitterDeepLinkingIntentReceiverActivity"
+                    }
+                    );
         super.onCreate();
 
         //wpDB.copyDatabase();
