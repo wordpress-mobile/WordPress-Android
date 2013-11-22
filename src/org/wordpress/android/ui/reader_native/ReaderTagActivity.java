@@ -2,13 +2,11 @@ package org.wordpress.android.ui.reader_native;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,7 +20,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.ReaderAniUtils;
+import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /**
@@ -32,7 +30,6 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     private ViewGroup mLayoutAddTag;
     private EditText mEditAddTag;
     private ListView mListView;
-    private TextView mTxtMessageBar;
     private TextView mTxtTitle;
 
     private boolean mTagsChanged;
@@ -81,7 +78,6 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
                 toggleTopics();
             }
         });
-        mTxtMessageBar = (TextView) findViewById(R.id.text_message_bar);
 
         mLayoutAddTag = (ViewGroup) findViewById(R.id.layout_add_topic);
         mEditAddTag = (EditText) findViewById(R.id.edit_add);
@@ -165,7 +161,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     private void toggleTopics() {
         mIsShowingFollowedTags = !mIsShowingFollowedTags;
 
-        hideMessageBar(true);
+        MessageBarUtils.hideMessageBar(this, null, true);
         updateTitle();
         mLayoutAddTag.setVisibility(mIsShowingFollowedTags ? View.VISIBLE : View.GONE);
 
@@ -206,7 +202,21 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         if (TextUtils.isEmpty(topicName))
             return;
 
-        showMessageBar(action, topicName);
+        final String messageBarText;
+        final MessageBarUtils.MessageBarType messageBarType;
+        switch (action) {
+            case ADD:
+                messageBarText = getString(R.string.reader_label_added_tag, topicName);
+                messageBarType = MessageBarUtils.MessageBarType.INFO;
+                break;
+            case DELETE:
+                messageBarText = getString(R.string.reader_label_removed_tag, topicName);
+                messageBarType = MessageBarUtils.MessageBarType.ALERT;
+                break;
+            default :
+                return;
+        }
+        MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
 
         switch (action) {
             case ADD:
@@ -253,62 +263,5 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
             }
         };
         ReaderTagActions.updateTags(listener);
-    }
-
-    /*
-     * animate in from the bottom a message stating that a topic has been added or removed,
-     * then animate it back out after a brief delay
-     */
-    private void showMessageBar(ReaderTagActions.TagAction action, String topicName) {
-        hideMessageBar(true);
-
-        if (mTxtMessageBar==null || mTxtMessageBar.getVisibility()==View.VISIBLE)
-            return;
-
-        switch (action) {
-            case ADD:
-                mTxtMessageBar.setText(getString(R.string.reader_label_added_tag, topicName));
-                mTxtMessageBar.setBackgroundResource(R.color.reader_message_bar_blue);
-                break;
-            case DELETE:
-                mTxtMessageBar.setText(getString(R.string.reader_label_removed_tag, topicName));
-                mTxtMessageBar.setBackgroundResource(R.color.reader_message_bar_orange);
-                break;
-            default :
-                return;
-        }
-
-        ReaderAniUtils.startAnimation(mTxtMessageBar, R.anim.reader_bottom_bar_in);
-        mTxtMessageBar.setVisibility(View.VISIBLE);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideMessageBar(false);
-            }
-        }, 1500);
-    }
-
-    private void hideMessageBar(boolean immediate) {
-        if (mTxtMessageBar==null || mTxtMessageBar.getVisibility()!=View.VISIBLE)
-            return;
-
-        if (immediate) {
-            mTxtMessageBar.clearAnimation();
-            mTxtMessageBar.setVisibility(View.GONE);
-            return;
-        }
-
-        Animation.AnimationListener listener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mTxtMessageBar.setVisibility(View.GONE);
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-        };
-        ReaderAniUtils.startAnimation(mTxtMessageBar, R.anim.reader_bottom_bar_out, listener);
     }
 }
