@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -220,7 +221,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
         if (isTranslucentActionBarEnabled) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.setMargins(0, actionbarHeight, 0, 0);
+            if (params != null) {
+                params.setMargins(0, actionbarHeight, 0, 0);
+            }
             mEmptyView.setPadding(0, actionbarHeight, 0, 0);
         }
 
@@ -308,14 +311,16 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         page3.startAnimation(animPage3);
     }
 
-    private String[] getEmptyTitleAndDecription() {
+    private void setEmptyTitleAndDecriptionForCurrentTag() {
         int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
         boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
         int title, description = -1;
+        setEmptyViewTipArrowVisible(View.GONE);
         switch (tagIndex) {
             case 0: // Blogs I Follow
                 title = R.string.reader_empty_followed_blogs_title;
                 description = R.string.reader_empty_followed_blogs_description;
+                setEmptyViewTipArrowVisible(View.VISIBLE);
                 break;
             case 2: // Posts I Like
                 title = R.string.reader_empty_posts_liked;
@@ -328,10 +333,36 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 }
                 break;
         }
+        TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
+        titleView.setText(getString(title));
         if (description == -1) {
-            return new String[]{getString(title), null};
+            descriptionView.setVisibility(View.INVISIBLE);
         } else {
-            return new String[]{getString(title), getString(description)};
+            descriptionView.setText(getString(description));
+            descriptionView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setEmptyViewTipArrowVisible(int visibility) {
+        if (hasActivity() && getActivity() instanceof NativeReaderActivity) {
+            View view = getActivity().findViewById(R.id.empty_arrow_tip);
+            int[] location = ((NativeReaderActivity) getActivity()).getTagMenuItemLocation();
+            if (location == null || location[0] == 0) {
+                view.setVisibility(View.INVISIBLE);
+                return;
+            }
+            if (visibility == View.VISIBLE) {
+                Animation animArrow = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down);
+                view.startAnimation(animArrow);
+            }
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+            if (params != null) {
+                float iconWidth = getResources().getDimension(R.dimen.arrow_tip_size);
+                params.setMargins(location[0] - (int) (iconWidth / 2.), 0, 0, 0);
+                view.setLayoutParams(params);
+            }
+            view.setVisibility(visibility);
         }
     }
 
@@ -342,21 +373,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
-                TextView descriptionView = (TextView) getActivity().
-                        findViewById(R.id.description_empty);
-                String title, description;
-                String[] titleAndDesc = getEmptyTitleAndDecription();
-                title = titleAndDesc[0];
-                description = titleAndDesc[1];
                 startBoxAndPagesAnimation();
-                titleView.setText(title);
-                if (description == null) {
-                    descriptionView.setVisibility(View.GONE);
-                } else {
-                    descriptionView.setText(description);
-                    descriptionView.setVisibility(View.VISIBLE);
-                }
+                setEmptyTitleAndDecriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
