@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -220,7 +221,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
         if (isTranslucentActionBarEnabled) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.setMargins(0, actionbarHeight, 0, 0);
+            if (params != null) {
+                params.setMargins(0, actionbarHeight, 0, 0);
+            }
             mEmptyView.setPadding(0, actionbarHeight, 0, 0);
         }
 
@@ -308,6 +311,61 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         page3.startAnimation(animPage3);
     }
 
+    private void setEmptyTitleAndDecriptionForCurrentTag() {
+        boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
+        int title, description = -1;
+        setEmptyViewTipArrowVisible(View.GONE);
+        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+        ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+        String tagId = tag.getTagStringId();
+        if (tagId.equals("following")) {
+            title = R.string.reader_empty_followed_blogs_title;
+            description = R.string.reader_empty_followed_blogs_description;
+            setEmptyViewTipArrowVisible(View.VISIBLE);
+        } else {
+            if (tagId.equals("liked")) {
+                title = R.string.reader_empty_posts_liked;
+            } else {
+                if (hasTagEverUpdated) {
+                    title = R.string.reader_empty_posts_in_tag;
+                } else {
+                    title = R.string.reader_empty_posts_in_tag_never_updated;
+                }
+            }
+        }
+        TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
+        titleView.setText(getString(title));
+        if (description == -1) {
+            descriptionView.setVisibility(View.INVISIBLE);
+        } else {
+            descriptionView.setText(getString(description));
+            descriptionView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setEmptyViewTipArrowVisible(int visibility) {
+        if (hasActivity() && getActivity() instanceof NativeReaderActivity) {
+            View view = getActivity().findViewById(R.id.empty_arrow_tip);
+            int[] location = ((NativeReaderActivity) getActivity()).getTagMenuItemLocation();
+            if (location == null || location[0] == 0) {
+                view.setVisibility(View.INVISIBLE);
+                return;
+            }
+            if (visibility == View.VISIBLE) {
+                Animation animArrow = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down);
+                view.startAnimation(animArrow);
+            }
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+            if (params != null) {
+                float iconWidth = getResources().getDimension(R.dimen.arrow_tip_size);
+                params.setMargins(location[0] - (int) (iconWidth / 2.), 0, 0, 0);
+                view.setLayoutParams(params);
+            }
+            view.setVisibility(visibility);
+        }
+    }
+
     /*
      * called by post adapter when data has been loaded
      */
@@ -315,18 +373,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
-                final TextView title = (TextView) getActivity().findViewById(R.id.title_empty);
-                title.setText(hasTagEverUpdated ?
-                        R.string.reader_empty_followed_tags_title :
-                        R.string.reader_empty_posts_in_tag_never_updated);
-                final TextView description = (TextView) getActivity().findViewById(R.id.description_empty);
                 startBoxAndPagesAnimation();
-                if (hasTagEverUpdated) {
-                    description.setText(R.string.reader_empty_followed_tags_description);
-                } else {
-                    description.setVisibility(View.GONE);
-                }
+                setEmptyTitleAndDecriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
