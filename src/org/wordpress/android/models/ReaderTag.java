@@ -50,6 +50,22 @@ public class ReaderTag {
         this.endpoint = StringUtils.notNullStr(endpoint);
     }
 
+    /**
+     * Extract tag Id from endpoint, only works for ReaderTagType.DEFAULT
+     *
+     * @return a string Id if tagType is ReaderTagType.DEFAULT, empty string else
+     */
+    public String getTagStringId() {
+        if (tagType != ReaderTagType.DEFAULT) {
+            return "";
+        }
+        String[] splitted = endpoint.split("/");
+        if (splitted != null && splitted.length > 0) {
+            return splitted[splitted.length - 1];
+        }
+        return "";
+    }
+
     public String getTagName() {
         return StringUtils.notNullStr(tagName);
     }

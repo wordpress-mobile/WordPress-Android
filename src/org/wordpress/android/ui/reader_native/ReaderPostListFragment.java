@@ -312,26 +312,26 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     private void setEmptyTitleAndDecriptionForCurrentTag() {
-        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
         boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
         int title, description = -1;
         setEmptyViewTipArrowVisible(View.GONE);
-        switch (tagIndex) {
-            case 0: // Blogs I Follow
-                title = R.string.reader_empty_followed_blogs_title;
-                description = R.string.reader_empty_followed_blogs_description;
-                setEmptyViewTipArrowVisible(View.VISIBLE);
-                break;
-            case 2: // Posts I Like
+        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+        ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+        String tagId = tag.getTagStringId();
+        if (tagId.equals("following")) {
+            title = R.string.reader_empty_followed_blogs_title;
+            description = R.string.reader_empty_followed_blogs_description;
+            setEmptyViewTipArrowVisible(View.VISIBLE);
+        } else {
+            if (tagId.equals("liked")) {
                 title = R.string.reader_empty_posts_liked;
-                break;
-            default: // Freshly Pressed and other Tags
+            } else {
                 if (hasTagEverUpdated) {
                     title = R.string.reader_empty_posts_in_tag;
                 } else {
                     title = R.string.reader_empty_posts_in_tag_never_updated;
                 }
-                break;
+            }
         }
         TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
         TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
