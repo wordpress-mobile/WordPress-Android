@@ -37,6 +37,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private String mHttpPassword = "";
 
     public WelcomeFragmentSignIn() {
-
     }
 
     @Override
@@ -68,9 +68,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
         ImageView statsIcon = (ImageView) rootView.findViewById(R.id.nux_fragment_icon);
         statsIcon.setImageResource(R.drawable.nux_icon_wp);
-
-        WPTextView statsTitle = (WPTextView) rootView.findViewById(R.id.nux_fragment_title);
-        statsTitle.setText(R.string.nux_welcome);
 
         final RelativeLayout urlButtonLayout = (RelativeLayout) rootView.
                 findViewById(R.id.url_button_layout);
@@ -262,7 +259,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", null, null);
             }
 
-            if (usersBlogsList != null && usersBlogsList.size() != 0) {
+            if (usersBlogsList != null) {
                 mUsersBlogsList = usersBlogsList;
                 showBlogSelectionDialog();
             } else {
@@ -271,6 +268,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
 
         private void showBlogSelectionDialog() {
+            if (mUsersBlogsList == null) {
+                mUsersBlogsList = new ArrayList();
+            }
+            if (mUsersBlogsList.size() == 0) {
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+                return;
+            }
             if (mUsersBlogsList.size() == 1) {
                 // Just add the one blog and finish up
                 SparseBooleanArray oneBlogArray = new SparseBooleanArray();

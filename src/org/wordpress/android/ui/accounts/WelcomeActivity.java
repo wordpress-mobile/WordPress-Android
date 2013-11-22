@@ -20,7 +20,9 @@ public class WelcomeActivity extends SherlockFragmentActivity {
      * The number of pages (wizard steps)
      */
     private static final int NUM_PAGES = 2;
-    public static final int CREATE_ACCOUNT_REQUEST = 0;
+    public static final int SIGNIN_REQUEST = 1;
+    public static final int CREATE_ACCOUNT_REQUEST = 2;
+    public static final int CREATE_BLOG_REQUEST = 3;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -51,6 +53,11 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         mPager.setPagingEnabled(false);
         mPagerAdapter = new NewAccountPagerAdapter(super.getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getInt("request", -1) == CREATE_BLOG_REQUEST) {
+            createBlog();
+        }
     }
 
     public void showNextItem() {
@@ -112,5 +119,10 @@ public class WelcomeActivity extends SherlockFragmentActivity {
                 welcomeFragmentSignIn.signInDotComUser();
             }
         }
+    }
+
+    protected void createBlog() {
+        Intent newAccountIntent = new Intent(WelcomeActivity.this, NewAccountActivity.class);
+        startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_BLOG_REQUEST);
     }
 }

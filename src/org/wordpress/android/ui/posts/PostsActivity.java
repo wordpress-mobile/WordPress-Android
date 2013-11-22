@@ -348,11 +348,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 if (data.getBooleanExtra("shouldRefresh", false))
                     postList.loadPosts(false);
             } else if (requestCode == ACTIVITY_ADD_COMMENT) {
-                
                 Bundle extras = data.getExtras();
-                
                 final String returnText = extras.getString("commentText");
-
                 if (!returnText.equals("CANCEL")) {
                     // Add comment to the server if user didn't cancel.
                     final String postID = extras.getString("postID");

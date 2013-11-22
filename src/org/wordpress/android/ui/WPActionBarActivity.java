@@ -75,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Request code used when no accounts exist, and user is prompted to add an
      * account.
      */
-    static final int ADD_ACCOUNT_REQUEST = 100;
+    private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
      * Request code for reloading menu after returning from  the PreferencesActivity.
      */
-    static final int SETTINGS_REQUEST = 200;
+    private static final int SETTINGS_REQUEST = 200;
     /**
      * Request code for re-authentication
      */
-    static final int AUTHENTICATE_REQUEST = 300;
-    
+    private static final int AUTHENTICATE_REQUEST = 300;
+
     /**
      * Used to restore active activity on app creation
      */
@@ -472,12 +472,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void setupCurrentBlog() {
         Blog currentBlog = WordPress.getCurrentBlog();
 
+        // TODO: separate both condition (signed out OR no blog)
         // No blogs are configured or user has signed out, so display new account activity
         if (currentBlog == null || getBlogNames().length == 0) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
-            Intent i = new Intent(this, WelcomeActivity.class);
-            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra("request", WelcomeActivity.SIGNIN_REQUEST);
+            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
             return;
         }
     }
