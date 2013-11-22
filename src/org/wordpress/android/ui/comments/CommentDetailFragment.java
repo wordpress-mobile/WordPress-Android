@@ -2,7 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -34,15 +33,12 @@ import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPHtmlTagHandler;
 import org.wordpress.android.util.WPImageGetter;
 
-import java.net.URI;
 import java.util.Map;
 
 /**
@@ -52,6 +48,7 @@ import java.util.Map;
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private int mAccountId;
+    private int mBlogId;
 
     private Comment mComment;
     private Note mNote;
@@ -94,7 +91,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setBlogId(int blogId) {
-        //mBlogId = blogId;
+        mBlogId = blogId;
         mAccountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
     }
 
@@ -298,7 +295,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsApprovingComment = false;
                 if (hasActivity()) {
                     if (succeeded) {
-                        mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED, CommentStatus.ApiFormat.XMLRPC));
+                        mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
                         if (mChangeListener != null)
                             mChangeListener.onCommentModerated(mComment);
                     } else {
@@ -361,6 +358,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
         CommentActions.submitReplyToComment(WordPress.currentBlog,
+                                            mBlogId,
                                             mComment,
                                             replyText,
                                             actionListener);
@@ -383,8 +381,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             JSONObject jsonAction = actions.get(firstKey);
             JSONObject jsonParams = jsonAction.optJSONObject("params");
             if (jsonParams != null) {
-                int blogId = jsonParams.optInt("blog_id");
-                setBlogId(blogId);
+                setBlogId(jsonParams.optInt("blog_id"));
                 //int postId = jsonParams.optInt("post_id");
                 int commentId = jsonParams.optInt("comment_id");
 
@@ -394,16 +391,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     comment.setProfileImageUrl(note.getIconURL());
                     setComment(comment);
                 } else {
-                    requestComment(blogId, commentId, note.getIconURL());
+                    requestComment(commentId, note.getIconURL());
                 }
             }
         }
     }
 
     /*
-     * request a comment via the REST API
+     * request a comment - note that this uses the REST API rather than XMLRPC, which means the user must
+     * either be wp.com or have Jetpack, but it's safe to do this since this method is only called when
+     * displayed from a notification (and notifications require wp.com/Jetpack)
      */
-    private void requestComment(int blogId, int commentId, final String profileImageUrl) {
+    private void requestComment(int commentId, final String profileImageUrl) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -432,13 +431,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (hasActivity()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
-                    // TODO: needs a better error string
                     ToastUtils.showToast(getActivity(), R.string.connection_error, ToastUtils.Duration.LONG);
                 }
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", blogId, commentId);
+        final String path = String.format("/sites/%s/comments/%s", mBlogId, commentId);
         mIsRequestingComment = true;
         WordPress.restClient.get(path, restListener, restErrListener);
     }

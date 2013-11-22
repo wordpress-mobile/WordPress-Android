@@ -10,41 +10,39 @@ public enum CommentStatus {
     TRASH,
     SPAM;
 
-    // XMLRPC and REST use different strings - consider XMLRPC the default, since that's the format
-    // the app has stored the comment status as since the start
-    public static String toString(CommentStatus status, ApiFormat format) {
-        switch (format) {
-            case XMLRPC:
-                switch (status) {
-                    case UNAPPROVED:
-                        return "hold";
-                    case APPROVED:
-                        return "approve";
-                    case SPAM:
-                        return "spam";
-                    default:
-                        return "";
-                }
-
-            case REST:
-                switch (status) {
-                    case UNAPPROVED:
-                        return "unapproved";
-                    case APPROVED:
-                        return "approved";
-                    case SPAM:
-                        return "spam";
-                    case TRASH:
-                        return "trash";
-                    default:
-                        return "";
-                }
-
+    /*
+     * returns the string representation of the passed status, as used by the XMLRPC API
+     */
+    public static String toString(CommentStatus status) {
+        switch (status) {
+            case UNAPPROVED:
+                return "hold";
+            case APPROVED:
+                return "approve";
+            case SPAM:
+                return "spam";
             default:
                 return "";
         }
+
+        /* for future reference, REST API uses these strings:
+        switch (status) {
+            case UNAPPROVED:
+                return "unapproved";
+            case APPROVED:
+                return "approved";
+            case SPAM:
+                return "spam";
+            case TRASH:
+                return "trash";
+            default:
+                return "";
+        } */
     };
 
+    /*
+     * returns the status associated with the passed strings - handles both XMLRPC and REST
+     */
     public static CommentStatus fromString(String value) {
         if (value == null)
             return CommentStatus.UNKNOWN;
@@ -58,6 +56,4 @@ public enum CommentStatus {
             return TRASH;
         return CommentStatus.UNKNOWN;
     }
-
-    public static enum ApiFormat {XMLRPC, REST}
 };
