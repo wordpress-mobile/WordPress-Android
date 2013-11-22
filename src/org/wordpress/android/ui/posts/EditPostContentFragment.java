@@ -1427,77 +1427,53 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     @Override
     public void afterTextChanged(Editable s) {
 
-        try {
-            int position = Selection.getSelectionStart(mContentEditText.getText());
-            if ((mIsBackspace && position != 1) || mLastPosition == position || !mPost.isLocalDraft())
-                return;
+        int position = Selection.getSelectionStart(mContentEditText.getText());
+        if ((mIsBackspace && position != 1) || mLastPosition == position || !mPost.isLocalDraft())
+            return;
 
-            if (position < 0) {
-                position = 0;
+        if (position < 0) {
+            position = 0;
+        }
+        mLastPosition = position;
+        if (position > 0) {
+
+            if (mStyleStart > position) {
+                mStyleStart = position - 1;
             }
-            mLastPosition = position;
-            if (position > 0) {
 
-                if (mStyleStart > position) {
-                    mStyleStart = position - 1;
-                }
-                boolean exists;
-                if (mBoldToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (StyleSpan styleSpan : ss) {
-                        if (styleSpan.getStyle() == Typeface.BOLD) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mEmToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (StyleSpan styleSpan : ss) {
-                        if (styleSpan.getStyle() == Typeface.ITALIC) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position,
-                                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mEmToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (StyleSpan styleSpan : ss) {
-                        if (styleSpan.getStyle() == Typeface.ITALIC) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position,
-                                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mUnderlineToggleButton.isChecked()) {
-                    WPUnderlineSpan[] ss = s.getSpans(mStyleStart, position, WPUnderlineSpan.class);
-                    exists = (ss.length > 0);
-                    if (!exists)
-                        s.setSpan(new WPUnderlineSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mStrikeToggleButton.isChecked()) {
-                    StrikethroughSpan[] ss = s.getSpans(mStyleStart, position, StrikethroughSpan.class);
-                    exists = (ss.length > 0);
-                    if (!exists)
-                        s.setSpan(new StrikethroughSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mBquoteToggleButton.isChecked()) {
-                    QuoteSpan[] ss = s.getSpans(mStyleStart, position, QuoteSpan.class);
-                    exists = (ss.length > 0);
-                    if (!exists)
-                        s.setSpan(new QuoteSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            boolean shouldBold = mBoldToggleButton.isChecked();
+            boolean shouldEm = mEmToggleButton.isChecked();
+            boolean shouldUnderline = mUnderlineToggleButton.isChecked();
+            boolean shouldStrike = mStrikeToggleButton.isChecked();
+            boolean shouldQuote = mBquoteToggleButton.isChecked();
+
+            Object[] allSpans = s.getSpans(mStyleStart, position, Object.class);
+            for (Object span : allSpans) {
+                if (span instanceof StyleSpan) {
+                    StyleSpan styleSpan = (StyleSpan) span;
+                    if (styleSpan.getStyle() == Typeface.BOLD)
+                        shouldBold = false;
+                    else if (styleSpan.getStyle() == Typeface.ITALIC)
+                        shouldEm = false;
+                    else if (span instanceof WPUnderlineSpan)
+                        shouldUnderline = false;
+                    else if (span instanceof StrikethroughSpan)
+                        shouldStrike = false;
+                    else if (span instanceof QuoteSpan)
+                        shouldQuote = false;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            if (shouldBold)
+                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            if (shouldEm)
+                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            if (shouldUnderline)
+                s.setSpan(new WPUnderlineSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            if (shouldStrike)
+                s.setSpan(new StrikethroughSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            if (shouldQuote)
+                s.setSpan(new QuoteSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
     }
 
