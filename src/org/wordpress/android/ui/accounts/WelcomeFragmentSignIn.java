@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,14 +15,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -188,7 +193,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 mSetupBlog.setSelfHostedURL(null);
             }
-            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure):
+            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) :
                     getString(R.string.connecting_wpcom));
         }
 
@@ -259,23 +264,102 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             if (usersBlogsList != null && usersBlogsList.size() != 0) {
                 mUsersBlogsList = usersBlogsList;
+                showBlogSelectionDialog();
+            } else {
+                endProgress();
+            }
+        }
+
+        private void showBlogSelectionDialog() {
+            if (mUsersBlogsList.size() == 1) {
+                // Just add the one blog and finish up
+                SparseBooleanArray oneBlogArray = new SparseBooleanArray();
+                oneBlogArray.put(0, true);
+                mSetupBlog.addBlogs(mUsersBlogsList, oneBlogArray);
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+                return;
+            }
+            if (mUsersBlogsList != null && mUsersBlogsList.size() != 0) {
                 SparseBooleanArray allBlogs = new SparseBooleanArray();
                 for (int i = 0; i < mUsersBlogsList.size(); i++) {
                     allBlogs.put(i, true);
                 }
-                mSetupBlog.addBlogs(usersBlogsList, allBlogs);
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-            } else {
-                endProgress();
+                LayoutInflater inflater = (LayoutInflater) getActivity()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final ListView listView = (ListView) inflater.inflate(R.layout.select_blogs_list,
+                        null);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                listView.setItemsCanFocus(false);
+                final UsersBlogsArrayAdapter adapter = new UsersBlogsArrayAdapter(getActivity(),
+                        R.layout.blogs_row,
+                        mUsersBlogsList);
+                listView.setAdapter(adapter);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                dialogBuilder.setTitle(R.string.select_blogs);
+                dialogBuilder.setView(listView);
+                dialogBuilder.setNegativeButton(R.string.add_selected,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                SparseBooleanArray selectedBlogs = listView.
+                                        getCheckedItemPositions();
+                                mSetupBlog.addBlogs(mUsersBlogsList, selectedBlogs);
+                                getActivity().setResult(Activity.RESULT_OK);
+                                getActivity().finish();
+                            }
+                        });
+                dialogBuilder.setPositiveButton(R.string.add_all,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                SparseBooleanArray allBlogs = new SparseBooleanArray();
+                                for (int i = 0; i < adapter.getCount(); i++) {
+                                    allBlogs.put(i, true);
+                                }
+                                if (allBlogs.size() > 0) {
+                                    mSetupBlog.addBlogs(mUsersBlogsList, allBlogs);
+                                }
+                                getActivity().setResult(Activity.RESULT_OK);
+                                getActivity().finish();
+                            }
+                        });
+                dialogBuilder.setOnKeyListener(new ProgressDialog.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        endProgress();
+                        return false;
+                    }
+                });
+                dialogBuilder.setCancelable(true);
+                AlertDialog ad = dialogBuilder.create();
+                ad.setInverseBackgroundForced(true);
+                ad.show();
+
+
+                final Button addSelected = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
+                addSelected.setEnabled(false);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                        SparseBooleanArray selectedItems = listView.getCheckedItemPositions();
+                        boolean isChecked = false;
+                        for (int i = 0; i < selectedItems.size(); i++) {
+                            if (selectedItems.get(selectedItems.keyAt(i)) == true) {
+                                isChecked = true;
+                            }
+                        }
+                        if (!isChecked) {
+                            addSelected.setEnabled(false);
+                        } else {
+                            addSelected.setEnabled(true);
+                        }
+                    }
+                });
             }
         }
     }
 
     private class UsersBlogsArrayAdapter extends ArrayAdapter {
-
-        public UsersBlogsArrayAdapter(Context context, int resource,
-                                      List<Object> list) {
+        public UsersBlogsArrayAdapter(Context context, int resource, List<Object> list) {
             super(context, resource, list);
         }
 
@@ -290,7 +374,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             Map<String, Object> blogMap = (HashMap<String, Object>) mUsersBlogsList.get(position);
             if (blogMap != null) {
 
-                CheckedTextView blogTitleView = (CheckedTextView) convertView.findViewById(R.id.blog_title);
+                CheckedTextView blogTitleView = (CheckedTextView)
+                        convertView.findViewById(R.id.blog_title);
                 String blogTitle = blogMap.get("blogName").toString();
                 if (blogTitle != null && blogTitle.trim().length() > 0) {
                     blogTitleView.setText(StringUtils.unescapeHTML(blogTitle));
