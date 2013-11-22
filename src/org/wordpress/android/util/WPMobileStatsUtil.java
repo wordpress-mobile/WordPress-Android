@@ -36,56 +36,53 @@ public class WPMobileStatsUtil {
 
     /* Events */
 
+    public static final String StatsEventAppOpened = "Application Opened";
+
     // Posts
-    public static final String StatsPropertyPostsOpened = "posts_opened";
+    public static final String StatsEventPostsOpened = "Posts - Opened";
+    public static final String StatsEventPostsClosed= "Posts - Closed";
     public static final String StatsEventPostsClickedNewPost = "Posts - Clicked New Post";
 
     // Post Detail
+    public static final String StatsPropertyPostMenuClickedEdit = "menu_clicked_edit";
+    public static final String StatsPropertyPostMenuClickedComment = "menu_clicked_comment";
+    public static final String StatsPropertyPostMenuClickedShare = "menu_clicked_share";
+    public static final String StatsPropertyPostMenuClickedPreview = "menu_clicked_preview";
+    public static final String StatsPropertyPostMenuClickedDelete = "menu_clicked_delete";
     public static final String StatsPropertyPostDetailClickedEdit = "clicked_edit";
-    public static final String StatsPropertyPostDetailClickedSettings = "clicked_settings";
-    public static final String StatsPropertyPostDetailClickedMedia = "clicked_media";
+    public static final String StatsPropertyPostDetailClickedComment = "clicked_comment";
+    public static final String StatsPropertyPostDetailClickedShare = "clicked_share";
     public static final String StatsPropertyPostDetailClickedPreview = "clicked_preview";
-    public static final String StatsPropertyPostDetailClickedMediaOptions = "clicked_media_options";
-    public static final String StatsPropertyPostDetailClickedAddVideo = "clicked_add_video";
-    public static final String StatsPropertyPostDetailClickedAddPhoto = "clicked_add_photo";
+    public static final String StatsPropertyPostDetailClickedDelete = "clicked_delete";
     public static final String StatsPropertyPostDetailClickedShowCategories = "clicked_show_categories";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarBoldButton = "clicked_keyboard_toolbar_bold_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarItalicButton = "clicked_keyboard_toolbar_italic_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarLinkButton = "clicked_keyboard_toolbar_link_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarBlockquoteButton = "clicked_keyboard_toolbar_blockquote_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarDelButton = "clicked_keyboard_toolbar_del_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarUnorderedListButton = "clicked_keyboard_toolbar_unordered_list_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarOrderedListButton = "clicked_keyboard_toolbar_ordered_list_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarListItemButton = "clicked_keyboard_toolbar_list_item_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarCodeButton = "clicked_keyboard_toolbar_code_button";
-    public static final String StatsEventPostDetailClickedKeyboardToolbarMoreButton = "clicked_keyboard_toolbar_more_button";
-    public static final String StatsEventPostDetailAddedPhoto = "Added Photo";
-    public static final String StatsEventPostDetailRemovedPhoto = "Removed Photo";
-    public static final String StatsEventPostDetailClickedSchedule = "Clicked Schedule Button";
-    public static final String StatsEventPostDetailClickedSave = "Clicked Save Button";
-    public static final String StatsEventPostDetailClickedUpdate = "Clicked Update Button";
-    public static final String StatsEventPostDetailClickedPublish = "Clicked Publish Button";
-    public static final String StatsEventPostDetailOpenedEditor = "Opened Editor";
-    public static final String StatsEventPostDetailClosedEditor = "Closed Editor";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarBoldButton = "clicked_keyboard_toolbar_bold_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarItalicButton = "clicked_keyboard_toolbar_italic_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarUnderlineButton = "clicked_keyboard_toolbar_underline_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarLinkButton = "clicked_keyboard_toolbar_link_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarBlockquoteButton = "clicked_keyboard_toolbar_blockquote_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarDelButton = "clicked_keyboard_toolbar_del_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarMoreButton = "clicked_keyboard_toolbar_more_button";
+    public static final String StatsPropertyPostDetailClickedKeyboardToolbarPictureButton = "clicked_keyboard_toolbar_picture_button";
+    public static final String StatsPropertyPostDetailClickedUpdate = "clicked_update_button";
+    public static final String StatsPropertyPostDetailClickedPublish = "clicked_publish_button";
+
+    public static final String StatsEventPostDetailOpenedEditor = "Post - Opened Editor";
+    public static final String StatsEventPostDetailClosedEditor = "Post - Closed Editor";
 
     // Post Detail - Settings
     public static final String StatsPropertyPostDetailSettingsClickedStatus = "settings_clicked_status";
-    public static final String StatsPropertyPostDetailSettingsClickedVisibility = "settings_clicked_visibility";
     public static final String StatsPropertyPostDetailSettingsClickedScheduleFor = "settings_clicked_schedule_for";
     public static final String StatsPropertyPostDetailSettingsClickedPostFormat = "settings_clicked_post_format";
-    public static final String StatsEventPostDetailSettingsClickedSetFeaturedImage = "Settings - Clicked Set Featured Image";
-    public static final String StatsEventPostDetailSettingsClickedRemoveFeaturedImage = "Settings - Clicked Remove Featured Image";
-    public static final String StatsEventPostDetailSettingsClickedAddLocation = "Settings - Clicked Add Location";
-    public static final String StatsEventPostDetailSettingsClickedUpdateLocation = "Settings - Clicked Update Location";
-    public static final String StatsEventPostDetailSettingsClickedRemoveLocation = "Settings - Clicked Remove Location";
+    public static final String StatsPropertyPostDetailSettingsClickedAddLocation = "settings_clicked_add_location";
+    public static final String StatsPropertyPostDetailSettingsClickedUpdateLocation = "settings_clicked_update_location";
+    public static final String StatsPropertyPostDetailSettingsClickedRemoveLocation = "settings_clicked_remove_location";
 
     // Pages
-    public static final String StatsPropertyPagedOpened = "pages_opened";
+    public static final String StatsEventPagesOpened = "Pages - Opened";
+    public static final String StatsEventPagesClosed= "Pages - Closed";
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
-
-    // Quick Photo
-    public static final String StatsEventQuickPhotoOpened = "Quick Photo - Opened";
-
+    public static final String StatsEventPageDetailOpenedEditor = "Page - Opened Editor";
+    public static final String StatsEventPageDetailClosedEditor = "Page - Closed Editor";
 
     /* /Events  */
 
@@ -132,7 +129,7 @@ public class WPMobileStatsUtil {
             properties.put("number_of_blogs", numBlogs);
             mixpanel.registerSuperProperties(properties);
         } catch(JSONException e) {
-            //
+            e.printStackTrace();
         }
 
         // Application opened and start.
@@ -147,7 +144,7 @@ public class WPMobileStatsUtil {
                 jsonObj.put("$first_name", username);
                 mixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
-                //
+                e.printStackTrace();
             }
         }
     }
@@ -187,7 +184,7 @@ public class WPMobileStatsUtil {
             String wpcomId = String.format("%d%n", ReaderPrefs.getCurrentUserId());
             userId = new String(MessageDigest.getInstance("md5").digest(wpcomId.getBytes()));
         } catch( NoSuchAlgorithmException e) {
-            //
+            e.printStackTrace();
         }
 
         QuantcastClient.activityStart(context, QUANTCAST_KEY, userId, null);
@@ -394,7 +391,7 @@ public class WPMobileStatsUtil {
         try {
             properties.put(property, value);
         } catch (JSONException e) {
-            //
+            e.printStackTrace();
         }
     }
 

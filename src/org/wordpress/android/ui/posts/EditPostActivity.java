@@ -101,6 +101,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -177,6 +178,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private String mAccountName = "";
     private int mQuickMediaType = -1;
     private String mMediaCapturePath = "";
+    private String mStatEventEditorClosed = "";
 
     private String[] mPostFormats = null;
     private String[] mPostFormatTitles = null;
@@ -356,6 +358,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 if (mPostFormats[i].equals(activePostFormat))
                     pfSpinner.setSelection(i);
             }
+            pfSpinner.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedPostFormat);
+                        }
+                    }
+            );
 
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
                 setContent();
@@ -372,6 +382,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mStatusSpinner.setAdapter(adapter);
+        mStatusSpinner.setOnClickListener(
+            new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedStatus);
+                }
+            }
+        );
 
         initLocation();
 
@@ -499,6 +517,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         mBquoteToggleButton.setOnClickListener(this);
         mMoreButton.setOnClickListener(this);
         softKeyboardHook();
+
+        if (mIsPage) {
+            WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
+            mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+        } else {
+            WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
+            mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
+        }
     }
 
     private void prepareMediaGallery() {
@@ -540,6 +566,12 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
+        super.onDestroy();
     }
 
     @Override
@@ -678,23 +710,33 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         });
     }
 
+    public void trackFormatButtonClick(String statPropertyName) {
+        WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, statPropertyName);
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.bold) {
             formatBtnClick(mBoldToggleButton, "strong");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBoldButton);
         } else if (id == R.id.em) {
             formatBtnClick(mEmToggleButton, "em");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarItalicButton);
         } else if (id == R.id.underline) {
             formatBtnClick(mUnderlineToggleButton, "u");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarUnderlineButton);
         } else if (id == R.id.strike) {
             formatBtnClick(mStrikeToggleButton, "strike");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarDelButton);
         } else if (id == R.id.bquote) {
             formatBtnClick(mBquoteToggleButton, "blockquote");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBlockquoteButton);
         } else if (id == R.id.more) {
             mSelectionEnd = mContentEditText.getSelectionEnd();
             Editable str = mContentEditText.getText();
             str.insert(mSelectionEnd, "\n<!--more-->\n");
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarMoreButton);
         } else if (id == R.id.link) {
             mSelectionStart = mContentEditText.getSelectionStart();
             mStyleStart = mSelectionStart;
@@ -709,10 +751,13 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
                 i.putExtra("selectedText", selectedText);
             }
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarLinkButton);
             startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
         } else if (id == R.id.addPictureButton) {
             mAddPictureButton.performLongClick();
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarPictureButton);
         } else if (id == R.id.pubDateButton) {
+            WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
             showDialog(ID_DIALOG_DATE);
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
@@ -724,8 +769,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
+            trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedShowCategories);
             onCategoryButtonClick(v);
         } else if (id == R.id.post) {
+            if (mPost.isUploaded()) {
+                WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailClickedUpdate);
+            } else {
+                WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
+            }
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
             if (savePost(false, false)) {
@@ -751,6 +802,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 e.printStackTrace();
             }
             if (latitude != 0.0) {
+                WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
                 String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
                 startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
             } else {
@@ -758,8 +810,10 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             }
         } else if (id == R.id.updateLocation) {
             getLocation();
+            WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedUpdateLocation);
         } else if (id == R.id.removeLocation) {
             removeLocation();
+            WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
         }
     }
 

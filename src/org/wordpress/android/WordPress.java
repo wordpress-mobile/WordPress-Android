@@ -109,6 +109,7 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
         WPMobileStatsUtil.initialize();
+        WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
 
         super.onCreate();
     }

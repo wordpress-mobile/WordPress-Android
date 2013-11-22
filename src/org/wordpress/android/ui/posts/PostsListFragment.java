@@ -32,6 +32,7 @@ import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -505,6 +506,14 @@ public class PostsListFragment extends ListFragment {
 
     }
 
+    public String statEventForViewClosing() {
+        if (isPage) {
+            return WPMobileStatsUtil.StatsEventPagesClosed;
+        } else {
+            return WPMobileStatsUtil.StatsEventPostsClosed;
+        }
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Post post = new Post(WordPress.currentBlog.getId(), mSelectedID, isPage);
@@ -525,6 +534,7 @@ public class PostsListFragment extends ListFragment {
         if (itemGroupID == MENU_GROUP_POSTS || itemGroupID == MENU_GROUP_PAGES || itemGroupID == MENU_GROUP_DRAFTS ) {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
                 i2.putExtra("postID", mSelectedID);
@@ -541,9 +551,11 @@ public class PostsListFragment extends ListFragment {
                 startActivityForResult(i2, 0);
                 return true;
             case MENU_ITEM_DELETE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case MENU_ITEM_PREVIEW:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedPreview);
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 i.putExtra("isPage", itemGroupID == MENU_GROUP_PAGES ? true : false);
                 i.putExtra("postID", mSelectedID);
@@ -551,9 +563,11 @@ public class PostsListFragment extends ListFragment {
                 startActivity(i);
                 return true;
             case MENU_ITEM_SHARE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedShare);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             case MENU_ITEM_ADD_COMMENT:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedComment);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
                 return true;
             default:
