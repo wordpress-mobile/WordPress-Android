@@ -68,5 +68,5 @@
     <dimen name="page_indicator_gap_width">4dp</dimen>
     <dimen name="page_indicator_stroke_width">4dp</dimen>
 
-    <dimen name="nux_title_font_size">32sp</dimen>
+    <dimen name="nux_title_font_size">28sp</dimen>
 </resources>
