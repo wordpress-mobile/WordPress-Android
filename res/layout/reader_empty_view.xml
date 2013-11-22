@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:visibility="gone"
-    >
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +16,9 @@
             android:layout_height="@dimen/arrow_tip_size"
             android:id="@+id/empty_arrow_tip"
             android:src="@drawable/tip_up_arrow"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:adjustViewBounds="false"
+            android:padding="4dp" />
 
     </LinearLayout>
 
