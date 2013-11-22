@@ -14,6 +14,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/categoryLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categories"
+            android:layout_marginBottom="8dp"/>
+
+        <org.wordpress.android.util.FlowLayout
+            android:id="@+id/sectionCategories"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp" />
+
         <EditText
             android:id="@+id/tags"
             android:layout_width="fill_parent"
@@ -22,33 +36,8 @@
             android:hint="@string/tags_separate_with_commas"
             android:inputType="textAutoCorrect" />
 
-        <TextView
-            android:id="@+id/categoryLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/categories"
-            android:layout_marginBottom="8dp"/>
+
     </LinearLayout>
-
-    <org.wordpress.android.util.FlowLayout
-        android:id="@+id/sectionCategories"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="8dp" />
-
-    <TextView
-        android:id="@+id/postFormatLabel"
-        style="@style/WordPressSubHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/post_format" />
-
-    <Spinner
-        android:id="@+id/postFormat"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:prompt="@string/post_format" />
 
     <EditText
         android:id="@+id/postExcerpt"
@@ -57,14 +46,33 @@
         android:gravity="top"
         android:hint="@string/post_excerpt"
         android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-        android:minLines="1" />
+        android:minLines="1"/>
+
+    <EditText
+        android:id="@+id/post_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/post_password"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/postFormatLabel"
+        style="@style/WordPressSubHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/post_format" />
+
+    <Spinner
+        android:id="@+id/postFormat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/post_format" />
 
     <RelativeLayout
         android:id="@+id/sectionLocation"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="8dp"
         android:orientation="vertical"
         android:visibility="gone">
@@ -122,8 +130,7 @@
         android:id="@+id/sectionSettings"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/statusLabel"
@@ -170,14 +177,6 @@
                 android:paddingTop="8dp"
                 android:text="@string/immediately" />
         </RelativeLayout>
-
-        <EditText
-            android:id="@+id/post_password"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/format_bar_height"
-            android:hint="@string/post_password"
-            android:inputType="textPassword" />
     </LinearLayout>
 </LinearLayout>
 </ScrollView>
