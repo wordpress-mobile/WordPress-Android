@@ -55,7 +55,7 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="selected_categories">Selected categories:</string>
-    <string name="publish">Publish? </string>
+    <string name="publish">Publish</string>
     <string name="add_account">Add Blog</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
@@ -809,6 +809,8 @@
     <string name="nux_welcome_create_account">Create Account</string>
     <string name="nux_swipe_to_continue">SWIPE TO CONTINUE</string>
     <string name="nux_tutorial_tap_to_start">Tap to start using WordPress</string>
+    <string name="done">DONE</string>
+    <string name="post_settings">Post Settings</string>
 
     <string-array name="privacy_array">
          <item>Public</item>

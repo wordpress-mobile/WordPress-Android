@@ -296,7 +296,7 @@ public class WordPressDB {
                             c.getString(6), 0, 0, true, "", false, false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
-                    post.setPage(true);
+                    post.setIsPage(true);
                     savePost(post, c.getInt(0));
                 }
                 c.moveToNext();

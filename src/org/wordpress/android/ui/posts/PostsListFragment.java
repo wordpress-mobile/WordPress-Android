@@ -526,16 +526,14 @@ public class PostsListFragment extends ListFragment {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
+                        NewEditPostActivity.class);
+                i2.putExtra(NewEditPostActivity.EXTRA_POSTID, mSelectedID);
                 
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra("isPage", true);
+                    i2.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage)
-                        i2.putExtra("isPage", true);
-                    i2.putExtra("localDraft", true);
+                        i2.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, true);
                 }
                 
                 startActivityForResult(i2, 0);

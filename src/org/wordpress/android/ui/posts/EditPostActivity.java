@@ -593,7 +593,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.edit, menu);
+        inflater.inflate(R.menu.edit_post, menu);
         return true;
     }
 
@@ -939,7 +939,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                     if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart);
                         mContentEditText.setSelection(selectionStart, mContentEditText.getSelectionEnd());
                 }
-                
+
                 // get media gallery spans
 
                 MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
@@ -947,7 +947,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                     final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
                     startMediaGalleryActivity(gallerySpan.getMediaGallery());
                 }
-                
+
             }
         } else if (event.getAction() == 1) {
             mScrollDetected = false;

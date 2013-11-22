@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.util.Log;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -10,6 +11,7 @@ import org.json.JSONException;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPHtml;
 
 public class Post {
 
@@ -49,7 +51,6 @@ public class Post {
     private Blog blog;
 
     public List<String> imageUrl = new Vector<String>();
-    List<String> selectedCategories = new Vector<String>();
 
     public Post(int blog_id, long post_id, boolean isPage) {
         // load an existing post
@@ -96,6 +97,12 @@ public class Post {
         } else {
             this.id = -1;
         }
+    }
+
+    public Post(int blogId, boolean isPage) {
+        // creates a new, empty post for the passed in blogId
+        this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", true, false);
+        this.localDraft = true;
     }
 
     public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
@@ -363,7 +370,7 @@ public class Post {
         return isPage;
     }
 
-    public void setPage(boolean isPage) {
+    public void setIsPage(boolean isPage) {
         this.isPage = isPage;
     }
 
@@ -450,4 +457,26 @@ public class Post {
                 this.blogID == otherPost.blogID
                 );
       }
+
+    /**
+     * Get the entire post content
+     * Joins description and mt_text_more fields if both are valid
+     * @return post content as String
+     */
+    public String getContent() {
+        String postContent;
+        if (!getMt_text_more().equals("")) {
+            if (isLocalDraft())
+                postContent = getDescription() + "\n&lt;!--more--&gt;\n" + getMt_text_more();
+            else
+                postContent = getDescription() + "\n<!--more-->\n" + getMt_text_more();
+        } else
+            postContent = getDescription();
+
+        return postContent;
+    }
+
+    public boolean isNew() {
+        return getId() >= 0;
+    }
 }
