@@ -8,13 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 public class Blog {
 
