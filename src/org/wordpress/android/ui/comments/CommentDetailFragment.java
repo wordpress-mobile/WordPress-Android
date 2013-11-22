@@ -53,25 +53,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
-    private boolean mIsReplyBoxShowing = false;
     private boolean mIsSubmittingReply = false;
     private boolean mIsApprovingComment = false;
     private boolean mIsRequestingComment = false;
 
-    private OnCommentChangeListener mChangeListener;
-
-    public interface OnCommentChangeListener {
-        public void onCommentModerated(Comment comment);
-        public void onCommentAdded();
-    }
+    private CommentActions.OnCommentChangeListener mChangeListener;
 
     /*
      * used when called from comment list
      */
     protected static CommentDetailFragment newInstance(int blogId, final Comment comment) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setBlogId(blogId);
-        fragment.setComment(comment);
+        fragment.setComment(blogId, comment);
         return fragment;
     }
 
@@ -90,13 +83,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    private void setBlogId(int blogId) {
+    protected void setComment(int blogId, final Comment comment) {
+        mComment = comment;
         mBlogId = blogId;
         mAccountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
-    }
-
-    protected void setComment(final Comment comment) {
-        mComment = comment;
         if (hasActivity())
             showComment();
     }
@@ -116,7 +106,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mChangeListener = (OnCommentChangeListener) activity;
+            mChangeListener = (CommentActions.OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
             mChangeListener = null;
         }
@@ -132,11 +122,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * enable replying to this comment
      */
     private void showReplyBox() {
-        if (mIsReplyBoxShowing || !hasActivity())
+        if (!hasActivity())
             return;
 
-        final ViewGroup layoutComment = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        final EditText editReply = (EditText) layoutComment.findViewById(R.id.edit_comment);
+        final ViewGroup layoutReply = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
+        if (layoutReply == null || layoutReply.getVisibility()==View.VISIBLE)
+            return;
+
+        final EditText editReply = (EditText) layoutReply.findViewById(R.id.edit_comment);
         final ImageView imgSubmit = (ImageView) getActivity().findViewById(R.id.image_post_comment);
 
         editReply.setHint(R.string.reply_to_comment);
@@ -156,22 +149,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        ReaderAniUtils.flyIn(layoutComment);
-        mIsReplyBoxShowing = true;
+        ReaderAniUtils.flyIn(layoutReply);
     }
 
     private void hideReplyBox(boolean hideImmediately) {
-        if (!mIsReplyBoxShowing || !hasActivity())
+        if (!hasActivity())
             return;
 
-        final ViewGroup layoutComment = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        if (hideImmediately) {
-            layoutComment.setVisibility(View.GONE);
-        } else {
-            ReaderAniUtils.flyOut(layoutComment);
-        }
-        mIsReplyBoxShowing = false;
+        final ViewGroup layoutReply = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
+        if (layoutReply == null || layoutReply.getVisibility() != View.VISIBLE)
+            return;
 
+        if (hideImmediately) {
+            layoutReply.setVisibility(View.GONE);
+        } else {
+            ReaderAniUtils.flyOut(layoutReply);
+        }
     }
 
     private boolean hasActivity() {
@@ -181,6 +174,32 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean hasComment() {
         return (mComment != null);
     }
+
+    protected int getCommentId() {
+        return (mComment != null ? mComment.commentID : 0);
+    }
+
+    protected int getBlogId() {
+        return mBlogId;
+    }
+
+    /*
+     * reload the current comment from the local database
+     */
+    protected void refreshComment() {
+        if (!hasComment())
+            return;
+        Comment updatedComment = WordPress.wpDB.getComment(mAccountId, getCommentId());
+        setComment(mBlogId, updatedComment);
+    }
+
+    /*
+     * clear the currently displayed comment
+     */
+    protected void clearComment() {
+        setComment(0, null);
+    }
+
 
     /*
      * display the current comment
@@ -202,6 +221,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtDate.setText(null);
             txtContent.setText(null);
             txtBtnApprove.setVisibility(View.GONE);
+            hideReplyBox(true);
 
             // if a notification was passed, request its associated comment
             if (mNote != null && !mIsRequestingComment)
@@ -297,9 +317,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (succeeded) {
                         mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
                         if (mChangeListener != null)
-                            mChangeListener.onCommentModerated(mComment);
+                            mChangeListener.onCommentModerated();
                     } else {
-                        hideReplyBox(false);
+                        hideReplyBox(true);
                         txtBtnApprove.setVisibility(View.VISIBLE);
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                     }
@@ -381,17 +401,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             JSONObject jsonAction = actions.get(firstKey);
             JSONObject jsonParams = jsonAction.optJSONObject("params");
             if (jsonParams != null) {
-                setBlogId(jsonParams.optInt("blog_id"));
-                //int postId = jsonParams.optInt("post_id");
+                int blogId = jsonParams.optInt("blog_id");
                 int commentId = jsonParams.optInt("comment_id");
+                int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
 
                 // first try to get from local db, if that fails request it from the server
-                Comment comment = WordPress.wpDB.getComment(mAccountId, commentId);
+                Comment comment = WordPress.wpDB.getComment(accountId, commentId);
                 if (comment != null) {
                     comment.setProfileImageUrl(note.getIconURL());
-                    setComment(comment);
+                    setComment(blogId, comment);
                 } else {
-                    requestComment(commentId, note.getIconURL());
+                    requestComment(blogId, commentId, note.getIconURL());
                 }
             }
         }
@@ -402,7 +422,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * either be wp.com or have Jetpack, but it's safe to do this since this method is only called when
      * displayed from a notification (and notifications require wp.com/Jetpack)
      */
-    private void requestComment(int commentId, final String profileImageUrl) {
+    private void requestComment(final int blogId, final int commentId, final String profileImageUrl) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -419,7 +439,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         if (profileImageUrl != null)
                             comment.setProfileImageUrl(profileImageUrl);
                         WordPress.wpDB.addComment(mAccountId, comment);
-                        setComment(comment);
+                        setComment(blogId, comment);
                     }
                 }
             }
@@ -436,7 +456,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", mBlogId, commentId);
+        final String path = String.format("/sites/%s/comments/%s", blogId, commentId);
         mIsRequestingComment = true;
         WordPress.restClient.get(path, restListener, restErrListener);
     }
