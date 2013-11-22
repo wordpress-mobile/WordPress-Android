@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
@@ -125,6 +126,20 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
                 finish();
             }
         }
+
+        // Check for Android share action
+        // If it is a share action, create a new post
+        String action = getIntent().getAction();
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
+                || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+            mPost = new Post(WordPress.getCurrentBlog().getId(), false);
+            if (mPost.getId() < 0) {
+                // TODO: uh oh, error
+                finish();
+            }
+        }
     }
 
     @Override
@@ -167,7 +182,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
             finish();
             return true;
         } else if (itemId == android.R.id.home) {
-            showCancelAlert(true);
+            showCancelAlert();
             return true;
         }
         return false;
@@ -187,10 +202,10 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
 
     @Override
     public void onBackPressed() {
-        showCancelAlert(false);
+        showCancelAlert();
     }
 
-    private void showCancelAlert(final boolean isUpPress) {
+    private void showCancelAlert() {
         // Empty post? Let's not prompt then.
         if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
             if (mIsNewPost)

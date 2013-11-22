@@ -314,7 +314,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public void newPost() {
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getId(), isPage);
-        newPost.save();
+        if (newPost.getId() < 0) {
+            // TODO: Post wasn't created, show error
+            return;
+        }
         Intent i = new Intent(this, NewEditPostActivity.class);
         i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
         i.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, isPage);

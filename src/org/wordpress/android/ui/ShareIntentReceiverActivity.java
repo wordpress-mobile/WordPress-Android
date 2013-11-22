@@ -24,6 +24,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.NewEditPostActivity;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -144,7 +145,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         
         if (mActionIndex == 0) { 
             // new post
-            intent = new Intent(this, EditPostActivity.class);
+            intent = new Intent(this, NewEditPostActivity.class);
         } else if (mActionIndex == 1) {
             // add to media gallery
             intent = new Intent(this, MediaBrowserActivity.class);
@@ -162,7 +163,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             } else {
-                Uri extra = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             }
             startActivity(intent);

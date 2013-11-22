@@ -103,6 +103,7 @@ public class Post {
         // creates a new, empty post for the passed in blogId
         this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", true, false);
         this.localDraft = true;
+        save();
     }
 
     public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
