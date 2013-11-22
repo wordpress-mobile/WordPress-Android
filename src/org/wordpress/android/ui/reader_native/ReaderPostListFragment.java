@@ -308,6 +308,33 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         page3.startAnimation(animPage3);
     }
 
+    private String[] getEmptyTitleAndDecription() {
+        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+        boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
+        int title, description = -1;
+        switch (tagIndex) {
+            case 0: // Blogs I Follow
+                title = R.string.reader_empty_followed_blogs_title;
+                description = R.string.reader_empty_followed_blogs_description;
+                break;
+            case 2: // Posts I Like
+                title = R.string.reader_empty_posts_liked;
+                break;
+            default: // Freshly Pressed and other Tags
+                if (hasTagEverUpdated) {
+                    title = R.string.reader_empty_posts_in_tag;
+                } else {
+                    title = R.string.reader_empty_posts_in_tag_never_updated;
+                }
+                break;
+        }
+        if (description == -1) {
+            return new String[]{getString(title), null};
+        } else {
+            return new String[]{getString(title), getString(description)};
+        }
+    }
+
     /*
      * called by post adapter when data has been loaded
      */
@@ -315,18 +342,20 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
-                final TextView title = (TextView) getActivity().findViewById(R.id.title_empty);
-                title.setText(hasTagEverUpdated ?
-                        R.string.reader_empty_followed_tags_title :
-                        R.string.reader_empty_posts_in_tag_never_updated);
-                final TextView description = (TextView) getActivity().findViewById(R.id.description_empty);
+                TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
+                TextView descriptionView = (TextView) getActivity().
+                        findViewById(R.id.description_empty);
+                String title, description;
+                String[] titleAndDesc = getEmptyTitleAndDecription();
+                title = titleAndDesc[0];
+                description = titleAndDesc[1];
                 startBoxAndPagesAnimation();
-                if (hasTagEverUpdated) {
-                    description.setText(R.string.reader_empty_followed_tags_description);
-                    description.setVisibility(View.VISIBLE);
+                titleView.setText(title);
+                if (description == null) {
+                    descriptionView.setVisibility(View.GONE);
                 } else {
-                    description.setVisibility(View.GONE);
+                    descriptionView.setText(description);
+                    descriptionView.setVisibility(View.VISIBLE);
                 }
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
