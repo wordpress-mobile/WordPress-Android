@@ -156,12 +156,6 @@
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
         <item name="android:textColorHint">@color/grey_medium</item>
     </style>
-    <style name="ReaderEditText.Comment" parent="ReaderEditText">
-        <item name="android:background">@color/transparent</item>
-        <item name="android:inputType">text|textCapSentences|textMultiLine</item>
-        <item name="android:lines">4</item>
-        <item name="android:imeOptions">actionSend</item>
-    </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>
         <item name="android:padding">@dimen/reader_margin_medium</item>

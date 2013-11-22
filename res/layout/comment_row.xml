@@ -1,107 +1,80 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    style="@style/WordPressListRowBackground">
-    <RelativeLayout
-        android:id="@+id/bulkEditGroup"
+    style="@style/WordPressListRowBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/reader_margin_medium">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/reader_avatar_sz_medium"
+        android:layout_height="@dimen/reader_avatar_sz_medium" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
-        android:layout_height="119dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_margin_medium"
+        android:layout_toLeftOf="@+id/status"
+        android:layout_toRightOf="@+id/avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/grey_extra_dark"
+        android:textSize="@dimen/reader_text_sz_large" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:gravity="right|center"
-        android:visibility="gone" >
+        android:layout_marginTop="@dimen/reader_margin_small"
+        android:layout_marginLeft="@dimen/reader_margin_medium"
+        android:textAllCaps="true"
+        android:textSize="@dimen/reader_text_sz_small" />
 
-        <CheckBox
-            android:id="@+id/bulkCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:focusable="false" />
-    </RelativeLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/email_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/name"
+        android:layout_toLeftOf="@+id/bulkCheck"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/reader_hyperlink"
+        android:textSize="@dimen/reader_text_sz_medium" />
 
-    <RelativeLayout
-        android:id="@+id/commentWrapper"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_toLeftOf="@id/bulkEditGroup"
-        android:orientation="vertical" >
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/postTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/email_url"
+        android:layout_toLeftOf="@+id/bulkCheck"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/reader_text_sz_medium" />
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/avatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp" />
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/postTitle"
+        android:layout_toLeftOf="@+id/bulkCheck"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:paddingTop="@dimen/reader_margin_small"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/reader_text_sz_medium" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginLeft="78dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="-2dp"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:padding="0px"
-                    android:singleLine="true"
-                    android:textColor="#444444"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/email_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:padding="0px"
-                    android:singleLine="true"
-                    android:textColor="#666666"
-                    android:textColorLink="#21759b"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/postTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:textColor="#666666"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="4"
-                    android:minLines="2"
-                    android:orientation="vertical"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:textColor="#545454"
-                    android:fontFamily="sans-serif-light" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:singleLine="true" />
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
+    <CheckBox
+        android:id="@+id/bulkCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comment"
+        android:focusable="false"
+        android:padding="@dimen/reader_margin_small" />
 
 </RelativeLayout>
