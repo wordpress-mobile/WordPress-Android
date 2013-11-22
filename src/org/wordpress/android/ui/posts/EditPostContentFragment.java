@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -76,9 +78,11 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by dan on 11/20/13.
@@ -89,6 +93,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     NewEditPostActivity mActivity;
 
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
+    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
+    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
+    public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
 
     private Post mPost;
@@ -98,7 +105,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private EditText mTitleEditText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
-    private Button mLinkButton, mMoreButton;
     private RelativeLayout mFormatBar;
     private boolean mIsBackspace;
     private boolean mScrollDetected;
@@ -110,6 +116,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private int mCurrentActivityRequest = -1;
 
     private float mLastYPos = 0;
+
+    private int mQuickMediaType = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,8 +136,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mUnderlineToggleButton = (ToggleButton) rootView.findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) rootView.findViewById(R.id.strike);
         mAddPictureButton = (ImageButton) rootView.findViewById(R.id.addPictureButton);
-        mLinkButton = (Button) rootView.findViewById(R.id.link);
-        mMoreButton = (Button) rootView.findViewById(R.id.more);
+        Button linkButton = (Button) rootView.findViewById(R.id.link);
+        Button moreButton = (Button) rootView.findViewById(R.id.more);
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
@@ -137,12 +145,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mContentEditText.addTextChangedListener(this);
         mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
-        mLinkButton.setOnClickListener(mFormatBarButtonClickListener);
+        linkButton.setOnClickListener(mFormatBarButtonClickListener);
         mEmToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         mUnderlineToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         mStrikeToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         mBquoteToggleButton.setOnClickListener(mFormatBarButtonClickListener);
-        mMoreButton.setOnClickListener(mFormatBarButtonClickListener);
+        moreButton.setOnClickListener(mFormatBarButtonClickListener);
 
         mPost = mActivity.getPost();
         if (mPost != null) {
@@ -167,6 +175,26 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         });
 
         setContentEditTextFocusable(true);
+
+        // Check for Android share action
+        String action = mActivity.getIntent().getAction();
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
+            setPostContentFromShareAction();
+        else if (NEW_MEDIA_GALLERY.equals(action))
+            prepareMediaGallery();
+        else if (NEW_MEDIA_POST.equals(action))
+            prepareMediaPost();
+        else if (mQuickMediaType >= 0) {
+            // User selected a 'Quick (media type)' option in the menu drawer
+            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
+                launchCamera();
+            else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+                launchPictureLibrary();
+            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
+                launchVideoCamera();
+            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+                launchVideoLibrary();
+        }
 
         return rootView;
     }
@@ -268,7 +296,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         try {
                             File f = new File(mMediaCapturePath);
                             Uri capturedImageUri = Uri.fromFile(f);
-                            f = null;
                             if (!addMedia(capturedImageUri, null))
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
@@ -295,8 +322,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 case ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     try {
                         extras = data.getExtras();
+                        if (extras == null)
+                            return;
                         String linkURL = extras.getString("linkURL");
-                        if (!linkURL.equals("http://") && !linkURL.equals("")) {
+                        if (linkURL != null && !linkURL.equals("http://") && !linkURL.equals("")) {
 
                             if (mSelectionStart > mSelectionEnd) {
                                 int temp = mSelectionEnd;
@@ -304,6 +333,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 mSelectionStart = temp;
                             }
                             Editable str = mContentEditText.getText();
+                            if (str == null)
+                                return;
                             if (mPost.isLocalDraft()) {
                                 if (extras.getString("linkText") == null) {
                                     if (mSelectionStart < mSelectionEnd)
@@ -314,6 +345,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                     mContentEditText.setSelection(mSelectionStart + linkURL.length());
                                 } else {
                                     String linkText = extras.getString("linkText");
+                                    if (linkText == null)
+                                        return;
                                     if (mSelectionStart < mSelectionEnd)
                                         str.delete(mSelectionStart, mSelectionEnd);
                                     str.insert(mSelectionStart, linkText);
@@ -371,6 +404,75 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         return false;
     }
 
+    protected void setPostContentFromShareAction() {
+        Intent intent = mActivity.getIntent();
+        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+        if (text != null) {
+
+            if (title != null) {
+                mTitleEditText.setText(title);
+            }
+
+            if (text.contains("youtube_gdata")) {
+                // Just use the URL for YouTube links for oEmbed support
+                mContentEditText.setText(text);
+            } else {
+                // add link tag around URLs, trac #64
+                text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
+                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mPost));
+            }
+        } else {
+            String action = intent.getAction();
+            final String type = intent.getType();
+            final ArrayList<Uri> multi_stream;
+            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            } else {
+                multi_stream = new ArrayList<Uri>();
+                multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            }
+
+            List<Serializable> params = new Vector<Serializable>();
+            params.add(multi_stream);
+            params.add(type);
+            new processAttachmentsTask().execute(params);
+        }
+    }
+
+    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
+
+        protected void onPreExecute() {
+            Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected SpannableStringBuilder doInBackground(List<?>... args) {
+            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
+            String type = (String) args[0].get(1);
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            for (Object streamUri : multi_stream) {
+                if (streamUri instanceof Uri) {
+                    Uri imageUri = (Uri) streamUri;
+                    if (type != null) {
+                        addMedia(imageUri, ssb);
+                    }
+                }
+            }
+            return ssb;
+        }
+
+        protected void onPostExecute(SpannableStringBuilder ssb) {
+            if (ssb != null) {
+                if (ssb.length() > 0) {
+                    mContentEditText.setText(ssb);
+                }
+            } else {
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     /**
      * Media
      */
@@ -421,18 +523,18 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (mPost == null)
             return;
 
-        String title = mTitleEditText.getText().toString();
+        String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content;
 
         if (mPost.isLocalDraft() || !isAutoSave) {
             Editable e = mContentEditText.getText();
-            if (android.os.Build.VERSION.SDK_INT >= 14) {
+            if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
                 // remove suggestion spans, they cause craziness in
                 // WPHtml.toHTML().
-                CharacterStyle[] style = e.getSpans(0, e.length(), CharacterStyle.class);
-                for (int i = 0; i < style.length; i++) {
-                    if (style[i].getClass().getName().equals("android.text.style.SuggestionSpan"))
-                        e.removeSpan(style[i]);
+                CharacterStyle[] characterStyles = e.getSpans(0, e.length(), CharacterStyle.class);
+                for (CharacterStyle characterStyle : characterStyles) {
+                    if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan"))
+                        e.removeSpan(characterStyle);
                 }
             }
             content = WPHtml.toHtml(e);
@@ -444,7 +546,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
                     .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
         } else {
-            content = mContentEditText.getText().toString();
+            content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
         }
 
         String images = "";
@@ -464,8 +566,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
         if (imageSpans.length != 0) {
 
-            for (int i = 0; i < imageSpans.length; i++) {
-                WPImageSpan wpIS = imageSpans[i];
+            for (WPImageSpan wpIS : imageSpans) {
                 images += wpIS.getImageSource().toString() + ",";
 
                 if (wpIS.getMediaId() != null) {
@@ -506,7 +607,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         mPost.setTitle(title);
         // split up the post content if there's a more tag
-        if (mPost.isLocalDraft() && content.indexOf(moreTag) >= 0) {
+        if (mPost.isLocalDraft() && content.contains(moreTag)) {
             mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
             mPost.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
         } else {
@@ -579,36 +680,37 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             selectionStart = temp;
         }
 
-        int line = 0, column = 0;
-        try {
+        int line, column = 0;
+        if (mContentEditText.getLayout() != null) {
             line = mContentEditText.getLayout().getLineForOffset(selectionStart);
             column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
         }
 
         Editable s = mContentEditText.getText();
-        WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-        if (gallerySpans.length != 0) {
-            // insert a few line breaks if the cursor is already on an image
-            s.insert(selectionEnd, "\n\n");
-            selectionStart = selectionStart + 2;
-            selectionEnd = selectionEnd + 2;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
+        if (s != null) {
+            WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            if (gallerySpans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
 
-        s.insert(selectionStart, " ");
-        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
+            s.insert(selectionStart, " ");
+            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n\n");
+            try {
+                mContentEditText.setSelection(s.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         // load image from server
@@ -703,10 +805,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     if (resizedBitmap == null)
                         return;
                     Editable s = mContentEditText.getText();
+                    if (s == null)
+                        return;
                     WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
                     if (spans.length != 0) {
                         for (WPImageSpan is : spans) {
-                            if (mediaId != null && mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
+                            if (mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
 
                                 // replace the existing span with a new one with the correct image, re-add it to the same position.
                                 int spanStart = s.getSpanStart(is);
@@ -776,24 +880,24 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             selectionStart = temp;
         }
 
-        int line = 0, column = 0;
-        try {
+        int line, column = 0;
+        if (mContentEditText.getLayout() != null) {
             line = mContentEditText.getLayout().getLineForOffset(selectionStart);
             column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
         }
 
         Editable s = mContentEditText.getText();
+        if (s == null)
+            return;
         MediaGalleryImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
         if (gallerySpans.length != 0) {
-            for (int i = 0; i < gallerySpans.length; i++) {
-                if (gallerySpans[i].getMediaGallery().getUniqueId() == gallery.getUniqueId()) {
-
+            for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                if (gallerySpan.getMediaGallery().getUniqueId() == gallery.getUniqueId()) {
                     // replace the existing span with a new gallery, re-add it to the same position.
-                    gallerySpans[i].setMediaGallery(gallery);
-                    int spanStart = s.getSpanStart(gallerySpans[i]);
-                    int spanEnd = s.getSpanEnd(gallerySpans[i]);
-                    s.setSpan(gallerySpans[i], spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    gallerySpan.setMediaGallery(gallery);
+                    int spanStart = s.getSpanStart(gallerySpan);
+                    int spanEnd = s.getSpanEnd(gallerySpan);
+                    s.setSpan(gallerySpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             return;
@@ -848,7 +952,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             is.setTitle((String) mediaData.get("title"));
             is.setImageSource(imageUri);
-            is.setVideo(imageUri.getEncodedPath().contains("video"));
+            if (imageUri.getEncodedPath() != null)
+                is.setVideo(imageUri.getEncodedPath().contains("video"));
             ssb.append(" ");
             ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
@@ -866,21 +971,21 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             }
 
             Editable s = mContentEditText.getText();
+            if (s == null)
+                return false;
             WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
 
             MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
 
             is.setTitle((String) mediaData.get("title"));
             is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath().contains("video")) {
-                is.setVideo(true);
-            }
+            if (imageUri.getEncodedPath() != null)
+                is.setVideo(imageUri.getEncodedPath().contains("video"));
 
-            int line = 0, column = 0;
-            try {
+            int line, column = 0;
+            if (mContentEditText.getLayout() != null) {
                 line = mContentEditText.getLayout().getLineForOffset(selectionStart);
                 column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-            } catch (Exception ex) {
             }
 
             WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
@@ -931,7 +1036,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
-                str.insert(mSelectionEnd, "\n<!--more-->\n");
+                if (str != null)
+                    str.insert(mSelectionEnd, "\n<!--more-->\n");
             } else if (id == R.id.link) {
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
@@ -943,37 +1049,22 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 }
                 Intent i = new Intent(getActivity(), EditLinkActivity.class);
                 if (mSelectionEnd > mSelectionStart) {
-                    String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
-                    i.putExtra("selectedText", selectedText);
+                    if (mContentEditText.getText() != null) {
+                        String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
+                        i.putExtra("selectedText", selectedText);
+                    }
                 }
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
                 mAddPictureButton.performLongClick();
-            } else if (id == R.id.post) {
-                // TODO: uploading happens from new activity
-                /*if (mAutoSaveHandler != null)
-                    mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-                if (savePost(false, false)) {
-                    if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
-                        if (mQuickMediaType >= 0) {
-                            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                                mPost.setQuickPostType("QuickPhoto");
-                            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                                mPost.setQuickPostType("QuickVideo");
-                        }
-
-                        WordPress.currentPost = mPost;
-                        PostUploadService.addPostToUpload(mPost);
-                        startService(new Intent(this, PostUploadService.class));
-                    }
-                    getActivity().finish();*/
-                }
             }
+        }
     };
 
     private void formatBtnClick(ToggleButton toggleButton, String tag) {
-        try {
             Spannable s = mContentEditText.getText();
+            if (s == null)
+                return;
             int selectionStart = mContentEditText.getSelectionStart();
             mStyleStart = selectionStart;
             int selectionEnd = mContentEditText.getSelectionEnd();
@@ -991,10 +1082,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
 
                         boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
-                            if (style == android.graphics.Typeface.BOLD) {
-                                str.removeSpan(ss[i]);
+                        for (StyleSpan styleSpan : ss) {
+                            int style = styleSpan.getStyle();
+                            if (style == Typeface.BOLD) {
+                                str.removeSpan(styleSpan);
                                 exists = true;
                             }
                         }
@@ -1008,10 +1099,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
 
                         boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
-                            if (style == android.graphics.Typeface.ITALIC) {
-                                str.removeSpan(ss[i]);
+                        for (StyleSpan styleSpan : ss) {
+                            int style = styleSpan.getStyle();
+                            if (style == Typeface.ITALIC) {
+                                str.removeSpan(styleSpan);
                                 exists = true;
                             }
                         }
@@ -1026,8 +1117,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         WPUnderlineSpan[] ss = str.getSpans(selectionStart, selectionEnd, WPUnderlineSpan.class);
 
                         boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
+                        for (WPUnderlineSpan underlineSpan : ss) {
+                            str.removeSpan(underlineSpan);
                             exists = true;
                         }
 
@@ -1041,8 +1132,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         StrikethroughSpan[] ss = str.getSpans(selectionStart, selectionEnd, StrikethroughSpan.class);
 
                         boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
+                        for (StrikethroughSpan strikethroughSpan : ss) {
+                            str.removeSpan(strikethroughSpan);
                             exists = true;
                         }
 
@@ -1056,8 +1147,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd, QuoteSpan.class);
 
                         boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
+                        for (QuoteSpan quoteSpan : ss) {
+                            str.removeSpan(quoteSpan);
                             exists = true;
                         }
 
@@ -1073,46 +1164,46 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                         StyleSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StyleSpan.class);
 
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            if (ss[i].getStyle() == android.graphics.Typeface.BOLD && tag.equals("strong")) {
-                                tagStart = s.getSpanStart(ss[i]);
-                                tagEnd = s.getSpanEnd(ss[i]);
-                                s.removeSpan(ss[i]);
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), tagStart, tagEnd,
+                        for (StyleSpan styleSpan : ss) {
+                            int tagStart;
+                            int tagEnd;
+                            if (styleSpan.getStyle() == Typeface.BOLD && tag.equals("strong")) {
+                                tagStart = s.getSpanStart(styleSpan);
+                                tagEnd = s.getSpanEnd(styleSpan);
+                                s.removeSpan(styleSpan);
+                                s.setSpan(new StyleSpan(Typeface.BOLD), tagStart, tagEnd,
                                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             }
-                            if (ss[i].getStyle() == android.graphics.Typeface.ITALIC && tag.equals("em")) {
-                                tagStart = s.getSpanStart(ss[i]);
-                                tagEnd = s.getSpanEnd(ss[i]);
-                                s.removeSpan(ss[i]);
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), tagStart, tagEnd,
+                            if (styleSpan.getStyle() == Typeface.ITALIC && tag.equals("em")) {
+                                tagStart = s.getSpanStart(styleSpan);
+                                tagEnd = s.getSpanEnd(styleSpan);
+                                s.removeSpan(styleSpan);
+                                s.setSpan(new StyleSpan(Typeface.ITALIC), tagStart, tagEnd,
                                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             }
                         }
                     } else if (tag.equals("u")) {
                         WPUnderlineSpan[] us = s.getSpans(mStyleStart - 1, mStyleStart, WPUnderlineSpan.class);
-                        for (int i = 0; i < us.length; i++) {
-                            int tagStart = s.getSpanStart(us[i]);
-                            int tagEnd = s.getSpanEnd(us[i]);
-                            s.removeSpan(us[i]);
+                        for (WPUnderlineSpan underlineSpan : us) {
+                            int tagStart = s.getSpanStart(underlineSpan);
+                            int tagEnd = s.getSpanEnd(underlineSpan);
+                            s.removeSpan(underlineSpan);
                             s.setSpan(new WPUnderlineSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     } else if (tag.equals("strike")) {
                         StrikethroughSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StrikethroughSpan.class);
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            s.removeSpan(ss[i]);
+                        for (StrikethroughSpan strikethroughSpan : ss) {
+                            int tagStart = s.getSpanStart(strikethroughSpan);
+                            int tagEnd = s.getSpanEnd(strikethroughSpan);
+                            s.removeSpan(strikethroughSpan);
                             s.setSpan(new StrikethroughSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     } else if (tag.equals("blockquote")) {
                         QuoteSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, QuoteSpan.class);
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            s.removeSpan(ss[i]);
+                        for (QuoteSpan quoteSpan : ss) {
+                            int tagStart = s.getSpanStart(quoteSpan);
+                            int tagEnd = s.getSpanEnd(quoteSpan);
+                            s.removeSpan(quoteSpan);
                             s.setSpan(new QuoteSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }
@@ -1134,9 +1225,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     mContentEditText.setSelection(selectionEnd + endTag.length());
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -1169,6 +1257,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 int charPosition = layout.getOffsetForHorizontal(line, x);
 
                 final Spannable s = mContentEditText.getText();
+                if (s == null)
+                    return false;
                 // check if image span was tapped
                 WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
 
@@ -1177,6 +1267,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     if (!span.isVideo()) {
                         LayoutInflater factory = LayoutInflater.from(getActivity());
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
+                        if (alertView == null)
+                            return false;
                         final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
                         // final EditText descText = (EditText)
@@ -1276,19 +1368,20 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
-                                        span.setTitle(titleText.getText().toString());
+                                        String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
+                                        span.setTitle(title);
                                         // span.setDescription(descText.getText().toString());
                                         span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
                                         span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
-                                        span.setCaption(caption.getText().toString());
+                                        String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
+                                        span.setCaption(captionText);
                                         span.setFeatured(featuredCheckBox.isChecked());
                                         if (featuredCheckBox.isChecked()) {
                                             // remove featured flag from all
                                             // other images
                                             WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
                                             if (click_spans.length > 1) {
-                                                for (int i = 0; i < click_spans.length; i++) {
-                                                    WPImageSpan verifySpan = click_spans[i];
+                                                for (WPImageSpan verifySpan : click_spans) {
                                                     if (verifySpan != span) {
                                                         verifySpan.setFeatured(false);
                                                         verifySpan.setFeaturedInPost(false);
@@ -1312,8 +1405,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 } else {
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
                     int selectionStart = mContentEditText.getSelectionStart();
-                    if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart);
-                    mContentEditText.setSelection(selectionStart, mContentEditText.getSelectionEnd());
+                    if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart)
+                        mContentEditText.setSelection(selectionStart, mContentEditText.getSelectionEnd());
                 }
 
                 // get media gallery spans
@@ -1348,12 +1441,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 if (mStyleStart > position) {
                     mStyleStart = position - 1;
                 }
-                boolean exists = false;
+                boolean exists;
                 if (mBoldToggleButton.isChecked()) {
                     StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
                     exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
+                    for (StyleSpan styleSpan : ss) {
+                        if (styleSpan.getStyle() == Typeface.BOLD) {
                             exists = true;
                         }
                     }
@@ -1363,8 +1456,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 if (mEmToggleButton.isChecked()) {
                     StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
                     exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+                    for (StyleSpan styleSpan : ss) {
+                        if (styleSpan.getStyle() == Typeface.ITALIC) {
                             exists = true;
                         }
                     }
@@ -1375,8 +1468,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 if (mEmToggleButton.isChecked()) {
                     StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
                     exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+                    for (StyleSpan styleSpan : ss) {
+                        if (styleSpan.getStyle() == Typeface.ITALIC) {
                             exists = true;
                         }
                     }
@@ -1386,29 +1479,19 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 }
                 if (mUnderlineToggleButton.isChecked()) {
                     WPUnderlineSpan[] ss = s.getSpans(mStyleStart, position, WPUnderlineSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
+                    exists = (ss.length > 0);
                     if (!exists)
                         s.setSpan(new WPUnderlineSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 }
                 if (mStrikeToggleButton.isChecked()) {
                     StrikethroughSpan[] ss = s.getSpans(mStyleStart, position, StrikethroughSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
+                    exists = (ss.length > 0);
                     if (!exists)
                         s.setSpan(new StrikethroughSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 }
                 if (mBquoteToggleButton.isChecked()) {
-
                     QuoteSpan[] ss = s.getSpans(mStyleStart, position, QuoteSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
+                    exists = (ss.length > 0);
                     if (!exists)
                         s.setSpan(new QuoteSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 }
@@ -1420,10 +1503,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        if ((count - after == 1) || (s.length() == 0))
-            mIsBackspace = true;
-        else
-            mIsBackspace = false;
+        mIsBackspace = (count - after == 1) || (s.length() == 0);
     }
 
     @Override
@@ -1436,6 +1516,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return;
 
         final Spannable s = mContentEditText.getText();
+        if (s == null)
+            return;
         // set toggle buttons if cursor is inside of a matching span
         mStyleStart = mContentEditText.getSelectionStart();
         Object[] spans = s.getSpans(mContentEditText.getSelectionStart(), mContentEditText.getSelectionStart(), Object.class);
@@ -1470,8 +1552,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private int getEditTextIntegerClamped(EditText editText, int min, int max) {
         int width = 10;
         try {
-            width = Integer.parseInt(editText.getText().toString().replace("px", ""));
+            if (editText.getText() != null)
+                width = Integer.parseInt(editText.getText().toString().replace("px", ""));
         } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         width = Math.min(max, Math.max(width, min));
         return width;
