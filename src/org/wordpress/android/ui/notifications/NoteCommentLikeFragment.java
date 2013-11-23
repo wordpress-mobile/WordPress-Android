@@ -58,7 +58,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         // set the footer
         DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);        
         JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
-        String footerText = JSONUtil.getStringDecoded(bodyObject, "header_text");
+        String footerText = getFooterText();
         if (!footerText.equals("")) {
             noteFooter.setText(footerText);
             String footerUrl = JSONUtil.getString(bodyObject, "header_link");
@@ -90,6 +90,12 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         JSONArray mItems = getNote().queryJSON("body.items", new JSONArray());
         JSONObject noteItem = JSONUtil.queryJSON(mItems, String.format("[%d]", 0), new JSONObject());
         return JSONUtil.getStringDecoded(noteItem, "header_text");
+    }
+    
+    private String getFooterText() {
+        JSONArray mItems = getNote().queryJSON("body.items", new JSONArray());
+        JSONObject noteItem = JSONUtil.queryJSON(mItems, String.format("[%d]", 0), new JSONObject());
+        return JSONUtil.getStringDecoded(noteItem, "html");
     }
     
     class NoteAdapter extends BaseAdapter {
