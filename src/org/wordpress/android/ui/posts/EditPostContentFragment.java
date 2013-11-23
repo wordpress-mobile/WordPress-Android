@@ -1119,7 +1119,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     shouldAddSpan = false;
                     break;
                 } else if (!toggleButton.isChecked()) {
-                    // Sets span at cursor, so span styling is set as the user types
+                    // Remove span at cursor point if button isn't checked
                     Object[] spans = s.getSpans(mStyleStart - 1, mStyleStart, styleClass);
                     for (Object removeSpan : spans) {
                         selectionStart = s.getSpanStart(removeSpan);
