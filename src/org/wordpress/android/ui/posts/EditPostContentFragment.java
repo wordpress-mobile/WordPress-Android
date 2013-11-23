@@ -98,6 +98,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
 
+    private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";
+    private static final String TAG_FORMAT_BAR_BUTTON_EM = "em";
+    private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
+    private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
+    private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
+
     private Post mPost;
 
     private WPEditText mContentEditText;
@@ -1024,15 +1030,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.bold) {
-                formatBtnClick(mBoldToggleButton, "strong");
+                onFormatButtonClick(mBoldToggleButton, TAG_FORMAT_BAR_BUTTON_STRONG);
             } else if (id == R.id.em) {
-                formatBtnClick(mEmToggleButton, "em");
+                onFormatButtonClick(mEmToggleButton, TAG_FORMAT_BAR_BUTTON_EM);
             } else if (id == R.id.underline) {
-                formatBtnClick(mUnderlineToggleButton, "u");
+                onFormatButtonClick(mUnderlineToggleButton, TAG_FORMAT_BAR_BUTTON_UNDERLINE);
             } else if (id == R.id.strike) {
-                formatBtnClick(mStrikeToggleButton, "strike");
+                onFormatButtonClick(mStrikeToggleButton, TAG_FORMAT_BAR_BUTTON_STRIKE);
             } else if (id == R.id.bquote) {
-                formatBtnClick(mBquoteToggleButton, "blockquote");
+                onFormatButtonClick(mBquoteToggleButton, TAG_FORMAT_BAR_BUTTON_QUOTE);
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
@@ -1061,7 +1067,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
     };
 
-    private void formatBtnClick(ToggleButton toggleButton, String tag) {
+    /**
+     * Applies formatting to selected text, or marks the entry for a new text style
+     * at the current cursor position
+     * @param toggleButton button from formatting bar
+     * @param tag HTML tag name for text style
+     */
+    private void onFormatButtonClick(ToggleButton toggleButton, String tag) {
             Spannable s = mContentEditText.getText();
             if (s == null)
                 return;
@@ -1075,156 +1087,81 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 selectionStart = temp;
             }
 
-            if (mPost.isLocalDraft()) {
-                if (selectionEnd > selectionStart) {
-                    Spannable str = mContentEditText.getText();
-                    if (tag.equals("strong")) {
-                        StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
+        Class styleClass = null;
+        if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG) || tag.equals(TAG_FORMAT_BAR_BUTTON_EM))
+                styleClass = StyleSpan.class;
+        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_UNDERLINE))
+                styleClass = WPUnderlineSpan.class;
+        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRIKE))
+                styleClass = StrikethroughSpan.class;
+        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_QUOTE))
+                styleClass = QuoteSpan.class;
 
-                        boolean exists = false;
-                        for (StyleSpan styleSpan : ss) {
-                            int style = styleSpan.getStyle();
-                            if (style == Typeface.BOLD) {
-                                str.removeSpan(styleSpan);
-                                exists = true;
-                            }
-                        }
+        if (styleClass == null)
+            return;
 
-                        if (!exists) {
-                            str.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("em")) {
-                        StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
-
-                        boolean exists = false;
-                        for (StyleSpan styleSpan : ss) {
-                            int style = styleSpan.getStyle();
-                            if (style == Typeface.ITALIC) {
-                                str.removeSpan(styleSpan);
-                                exists = true;
-                            }
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("u")) {
-
-                        WPUnderlineSpan[] ss = str.getSpans(selectionStart, selectionEnd, WPUnderlineSpan.class);
-
-                        boolean exists = false;
-                        for (WPUnderlineSpan underlineSpan : ss) {
-                            str.removeSpan(underlineSpan);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new WPUnderlineSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("strike")) {
-
-                        StrikethroughSpan[] ss = str.getSpans(selectionStart, selectionEnd, StrikethroughSpan.class);
-
-                        boolean exists = false;
-                        for (StrikethroughSpan strikethroughSpan : ss) {
-                            str.removeSpan(strikethroughSpan);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new StrikethroughSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("blockquote")) {
-
-                        QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd, QuoteSpan.class);
-
-                        boolean exists = false;
-                        for (QuoteSpan quoteSpan : ss) {
-                            str.removeSpan(quoteSpan);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new QuoteSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    }
-                } else if (!toggleButton.isChecked()) {
-
-                    if (tag.equals("strong") || tag.equals("em")) {
-
-                        StyleSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StyleSpan.class);
-
-                        for (StyleSpan styleSpan : ss) {
-                            int tagStart;
-                            int tagEnd;
-                            if (styleSpan.getStyle() == Typeface.BOLD && tag.equals("strong")) {
-                                tagStart = s.getSpanStart(styleSpan);
-                                tagEnd = s.getSpanEnd(styleSpan);
-                                s.removeSpan(styleSpan);
-                                s.setSpan(new StyleSpan(Typeface.BOLD), tagStart, tagEnd,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (styleSpan.getStyle() == Typeface.ITALIC && tag.equals("em")) {
-                                tagStart = s.getSpanStart(styleSpan);
-                                tagEnd = s.getSpanEnd(styleSpan);
-                                s.removeSpan(styleSpan);
-                                s.setSpan(new StyleSpan(Typeface.ITALIC), tagStart, tagEnd,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                        }
-                    } else if (tag.equals("u")) {
-                        WPUnderlineSpan[] us = s.getSpans(mStyleStart - 1, mStyleStart, WPUnderlineSpan.class);
-                        for (WPUnderlineSpan underlineSpan : us) {
-                            int tagStart = s.getSpanStart(underlineSpan);
-                            int tagEnd = s.getSpanEnd(underlineSpan);
-                            s.removeSpan(underlineSpan);
-                            s.setSpan(new WPUnderlineSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } else if (tag.equals("strike")) {
-                        StrikethroughSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StrikethroughSpan.class);
-                        for (StrikethroughSpan strikethroughSpan : ss) {
-                            int tagStart = s.getSpanStart(strikethroughSpan);
-                            int tagEnd = s.getSpanEnd(strikethroughSpan);
-                            s.removeSpan(strikethroughSpan);
-                            s.setSpan(new StrikethroughSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } else if (tag.equals("blockquote")) {
-                        QuoteSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, QuoteSpan.class);
-                        for (QuoteSpan quoteSpan : ss) {
-                            int tagStart = s.getSpanStart(quoteSpan);
-                            int tagEnd = s.getSpanEnd(quoteSpan);
-                            s.removeSpan(quoteSpan);
-                            s.setSpan(new QuoteSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
+        Object[] allSpans = s.getSpans(selectionStart, selectionEnd, styleClass);
+        boolean textIsSelected = selectionEnd > selectionStart;
+        if (mPost.isLocalDraft()) {
+            // Local drafts can use the rich text editor. Yay!
+            boolean shouldAddSpan = true;
+            for (Object span : allSpans) {
+                if (span instanceof StyleSpan) {
+                    StyleSpan styleSpan = (StyleSpan)span;
+                    if ((styleSpan.getStyle() == Typeface.BOLD && !tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG))
+                            || (styleSpan.getStyle() == Typeface.ITALIC && !tag.equals(TAG_FORMAT_BAR_BUTTON_EM))) {
+                        continue;
                     }
                 }
-            } else {
-                String startTag = "<" + tag + ">";
-                String endTag = "</" + tag + ">";
-                Editable content = mContentEditText.getText();
-                if (selectionEnd > selectionStart) {
-                    content.insert(selectionStart, startTag);
-                    content.insert(selectionEnd + startTag.length(), endTag);
-                    toggleButton.setChecked(false);
-                    mContentEditText.setSelection(selectionEnd + startTag.length() + endTag.length());
-                } else if (toggleButton.isChecked()) {
-                    content.insert(selectionStart, startTag);
-                    mContentEditText.setSelection(selectionEnd + startTag.length());
+                if (!toggleButton.isChecked() && textIsSelected) {
+                    // If span exists and text is selected, remove the span
+                    s.removeSpan(span);
+                    shouldAddSpan = false;
+                    break;
                 } else if (!toggleButton.isChecked()) {
-                    content.insert(selectionEnd, endTag);
-                    mContentEditText.setSelection(selectionEnd + endTag.length());
+                    // Sets span at cursor, so span styling is set as the user types
+                    Object[] spans = s.getSpans(mStyleStart - 1, mStyleStart, styleClass);
+                    for (Object removeSpan : spans) {
+                        selectionStart = s.getSpanStart(removeSpan);
+                        selectionEnd = s.getSpanEnd(removeSpan);
+                        s.removeSpan(removeSpan);
+                    }
                 }
             }
+
+            if (shouldAddSpan) {
+                if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG)) {
+                        s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else if (tag.equals(TAG_FORMAT_BAR_BUTTON_EM)) {
+                        s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    try {
+                        s.setSpan(styleClass.newInstance(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } catch (java.lang.InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            // Add HTML tags when editing an existing post
+            String startTag = "<" + tag + ">";
+            String endTag = "</" + tag + ">";
+            Editable content = mContentEditText.getText();
+            if (textIsSelected) {
+                content.insert(selectionStart, startTag);
+                content.insert(selectionEnd + startTag.length(), endTag);
+                toggleButton.setChecked(false);
+                mContentEditText.setSelection(selectionEnd + startTag.length() + endTag.length());
+            } else if (toggleButton.isChecked()) {
+                content.insert(selectionStart, startTag);
+                mContentEditText.setSelection(selectionEnd + startTag.length());
+            } else if (!toggleButton.isChecked()) {
+                content.insert(selectionEnd, endTag);
+                mContentEditText.setSelection(selectionEnd + endTag.length());
+            }
+        }
     }
 
     /**
@@ -1455,12 +1392,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         shouldBold = false;
                     else if (styleSpan.getStyle() == Typeface.ITALIC)
                         shouldEm = false;
-                    else if (span instanceof WPUnderlineSpan)
-                        shouldUnderline = false;
-                    else if (span instanceof StrikethroughSpan)
-                        shouldStrike = false;
-                    else if (span instanceof QuoteSpan)
-                        shouldQuote = false;
+                } else if (span instanceof WPUnderlineSpan) {
+                    shouldUnderline = false;
+                } else if (span instanceof StrikethroughSpan) {
+                    shouldStrike = false;
+                } else if (span instanceof QuoteSpan) {
+                    shouldQuote = false;
                 }
             }
 
