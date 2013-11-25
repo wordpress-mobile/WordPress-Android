@@ -38,11 +38,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
 
     // ActionBar alpha
     protected static final int ALPHA_NONE = 0;
-    protected static final int ALPHA_LEVEL_1 = 230;
-    protected static final int ALPHA_LEVEL_2 = 210;
-    protected static final int ALPHA_LEVEL_3 = 190;
-    protected static final int ALPHA_LEVEL_4 = 170;
-    protected static final int ALPHA_LEVEL_5 = 150;
+    protected static final int ALPHA_LEVEL_1 = 245;
+    protected static final int ALPHA_LEVEL_2 = 230;
+    protected static final int ALPHA_LEVEL_3 = 215;
+    protected static final int ALPHA_LEVEL_4 = 200;
+    protected static final int ALPHA_LEVEL_5 = 185;
 
     private int mCurrentActionBarAlpha = 0;
     private int mPrevActionBarAlpha = 0;
