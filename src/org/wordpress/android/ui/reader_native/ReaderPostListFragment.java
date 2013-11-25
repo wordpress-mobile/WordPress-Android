@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,7 +51,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private ReaderActionBarTagAdapter mActionBarAdapter;
 
     private TextView mNewPostsBar;
-    private TextView mEmptyMessage;
+    private View mEmptyView;
     private View mFooterProgress;
 
     private String mCurrentTag;
@@ -213,13 +215,15 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         });
 
         // textView that appears when current tag has no posts
-        mEmptyMessage = (TextView) view.findViewById(R.id.text_empty);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
         // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
         if (isTranslucentActionBarEnabled) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.setMargins(0, actionbarHeight, 0, 0);
-            mEmptyMessage.setPadding(0, actionbarHeight, 0, 0);
+            if (params != null) {
+                params.setMargins(0, actionbarHeight, 0, 0);
+            }
+            mEmptyView.setPadding(0, actionbarHeight, 0, 0);
         }
 
         if (useGridView) {
@@ -289,6 +293,54 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         return view;
     }
 
+    private void startBoxAndPagesAnimation() {
+        Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page1);
+        ImageView page1 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page1);
+        page1.startAnimation(animPage1);
+
+        Animation animPage2 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page2);
+        ImageView page2 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page2);
+        page2.startAnimation(animPage2);
+
+        Animation animPage3 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page3);
+        ImageView page3 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page3);
+        page3.startAnimation(animPage3);
+    }
+
+    private void setEmptyTitleAndDecriptionForCurrentTag() {
+        boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
+        int title, description = -1;
+        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+        ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+        String tagId = tag.getStringIdFromEndpoint();
+        if (tagId.equals("following")) {
+            title = R.string.reader_empty_followed_blogs_title;
+            description = R.string.reader_empty_followed_blogs_description;
+        } else {
+            if (tagId.equals("liked")) {
+                title = R.string.reader_empty_posts_liked;
+            } else {
+                if (hasTagEverUpdated) {
+                    title = R.string.reader_empty_posts_in_tag;
+                } else {
+                    title = R.string.reader_empty_posts_in_tag_never_updated;
+                }
+            }
+        }
+        TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
+        titleView.setText(getString(title));
+        if (description == -1) {
+            descriptionView.setVisibility(View.INVISIBLE);
+        } else {
+            descriptionView.setText(getString(description));
+            descriptionView.setVisibility(View.VISIBLE);
+        }
+    }
+
     /*
      * called by post adapter when data has been loaded
      */
@@ -296,12 +348,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                // different empty text depending on whether this tag has ever been updated
-                boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
-                mEmptyMessage.setText(hasTagEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
-                mEmptyMessage.setVisibility(View.VISIBLE);
+                startBoxAndPagesAnimation();
+                setEmptyTitleAndDecriptionForCurrentTag();
+                mEmptyView.setVisibility(View.VISIBLE);
             } else {
-                mEmptyMessage.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.GONE);
                 // restore previous scroll position
                 if (mScrollToIndex > 0) {
                     final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);

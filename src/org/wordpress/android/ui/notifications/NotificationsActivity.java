@@ -95,6 +95,16 @@ public class NotificationsActivity extends WPActionBarActivity {
         fragmentDetectors.add(new FragmentDetector() {
             @Override
             public Fragment getFragment(Note note) {
+                if (note.isMultiLineListTemplate() && note.isCommentLikeType()) {
+                    Fragment fragment = new NoteCommentLikeFragment();
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
                 if (note.isSingleLineListTemplate()) {
                     Fragment fragment = new SingleLineListFragment();
                     return fragment;
