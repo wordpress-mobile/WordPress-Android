@@ -214,7 +214,9 @@ public class CommentsActivity extends WPActionBarActivity
              * fire background action to delete this comment
              */
             showDialog(ID_DIALOG_DELETING);
-            CommentActions.deleteComment(WordPress.currentBlog,
+            CommentActions.deleteComment(
+                    WordPress.currentBlog,
+                    WordPress.getCurrentBlogId(),
                     WordPress.currentComment,
                     new CommentActions.CommentActionListener() {
                         @Override
