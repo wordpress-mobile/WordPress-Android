@@ -2,70 +2,71 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
+
+        <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
+        <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.WordPress</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.WordPress</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.WordPress</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_wordpress</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
+
         <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
         <item name="android:editTextStyle">@style/WordPressEditTextStyle</item>
         <item name="android:checkboxStyle">@style/WordPressCheckBoxStyle</item>
-        <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
-        <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
-        <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
-        <item name="dropDownListViewStyle">@style/wordpress_DropDownListView</item>
-        <item name="actionBarTabStyle">@style/wordpress_ActionBarTabStyle</item>
-        <item name="actionDropDownStyle">@style/wordpress_DropDownNav</item>
-        <item name="actionBarStyle">@style/wordpress_solid_ActionBar</item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
-        <!-- Light.DarkActionBar specific -->
-        <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
     </style>
 
-    <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_solid_wordpress</item>
-        <item name="background">@drawable/ab_solid_wordpress</item>
-        <item name="android:icon">@drawable/ab_icon_wp</item>
+    <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="icon">@drawable/ab_icon_wp</item>
+        <item name="background">@drawable/ab_solid_wordpress</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
-        <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
-        <item name="progressBarStyle">@style/wordpress_ProgressBar</item>
+        <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
     </style>
 
-    <style name="wordpress_transparent_ActionBar" parent="Widget.Sherlock.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_wordpress</item>
+    <style name="ActionBar.Transparent.WordPress" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_wordpress</item>
-        <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
-        <item name="progressBarStyle">@style/wordpress_ProgressBar</item>
+        <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
     </style>
 
-    <style name="wordpress_PopupMenu" parent="Widget.Sherlock.ListPopupWindow">
+    <style name="PopupMenu.WordPress" parent="@style/Widget.Sherlock.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
-    <style name="wordpress_DropDownListView" parent="Widget.Sherlock.ListView.DropDown">
+    <style name="DropDownListView.WordPress" parent="@style/Widget.Sherlock.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
-    <style name="wordpress_ActionBarTabStyle" parent="Widget.Sherlock.ActionBar.TabView">
+    <style name="ActionBarTabStyle.WordPress" parent="@style/Widget.Sherlock.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_wordpress</item>
-        <item name="background">@drawable/tab_indicator_ab_wordpress</item>
     </style>
 
-    <style name="wordpress_DropDownNav" parent="Widget.Sherlock.Spinner.DropDown.ActionBar">
+    <style name="DropDownNav.WordPress" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
-        <item name="background">@drawable/spinner_background_ab_wordpress</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
-    <style name="wordpress_ProgressBar" parent="Widget.Sherlock.ProgressBar.Horizontal">
+    <style name="ProgressBar.WordPress" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>
 
+    <style name="ActionButton.CloseMode.WordPress" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_wordpress</item>
+    </style>
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.wordpress.widget" parent="Theme.Sherlock">
-        <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
-        <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
-        <item name="dropDownListViewStyle">@style/wordpress_DropDownListView</item>
+    <style name="Theme.WordPress.Widget" parent="@style/Theme.Sherlock">
+        <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.WordPress</item>
     </style>
 
     <style name="WordPress.Dialog" parent="@android:style/Theme.Dialog"></style>
