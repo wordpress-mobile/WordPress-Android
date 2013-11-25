@@ -28,7 +28,7 @@ public class Note {
     protected static final String COMMENT_TYPE="comment";
     protected static final String COMMENT_LIKE_TYPE="comment_like";
     //protected static final String LIKE_TYPE="like";
-    //protected static final String MATCHER_TYPE = "automattcher";
+    protected static final String MATCHER_TYPE = "automattcher";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
@@ -139,6 +139,9 @@ public class Note {
     }
     public Boolean isCommentLikeType(){
         return isType(COMMENT_LIKE_TYPE);
+    }
+    public Boolean isAutomattcherType(){
+        return isType(MATCHER_TYPE);
     }
     public String getSubject(){
         if (mSubject==null) {
