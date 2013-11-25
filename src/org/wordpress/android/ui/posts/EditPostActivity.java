@@ -52,6 +52,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -358,11 +359,13 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 if (mPostFormats[i].equals(activePostFormat))
                     pfSpinner.setSelection(i);
             }
-            pfSpinner.setOnClickListener(
-                    new OnClickListener() {
+
+            pfSpinner.setOnTouchListener(
+                    new OnTouchListener() {
                         @Override
-                        public void onClick(View view) {
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
                             WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedPostFormat);
+                            return false;
                         }
                     }
             );
@@ -382,13 +385,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mStatusSpinner.setAdapter(adapter);
-        mStatusSpinner.setOnClickListener(
-            new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedStatus);
+        mStatusSpinner.setOnTouchListener(
+                new OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        WPMobileStatsUtil.flagProperty(mStatEventEditorClosed, WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedStatus);
+                        return false;
+                    }
                 }
-            }
         );
 
         initLocation();
