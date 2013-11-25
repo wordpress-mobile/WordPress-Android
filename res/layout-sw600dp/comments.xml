@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:id="@+id/commentsRL"
-  android:padding="0px"
-  android:background="#F4F4F4"
-  android:orientation="vertical">
-  <LinearLayout
-    android:id="@+id/commentFragmentContainer"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <FrameLayout
-      android:layout_weight="0.4"
-      android:layout_width="0dp"
-      android:layout_height="match_parent">
-    <fragment
-      android:name="org.wordpress.android.ui.comments.CommentsListFragment"
-      android:id="@+id/commentList"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="#00FF00" />
-      <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:background="@drawable/right_shadow"/>
-      </FrameLayout>
-    <fragment
-      android:name="org.wordpress.android.ui.comments.CommentFragment"
-      android:id="@+id/commentDetail"
-      android:layout_weight="0.6"
-      android:layout_width="0dp"
-      android:layout_height="match_parent" />
-  </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commentsRL"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F4F4F4"
+    android:orientation="vertical"
+    android:padding="0px">
+
+    <LinearLayout
+        android:id="@+id/commentFragmentContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4">
+
+            <fragment
+                android:id="@+id/commentList"
+                android:name="org.wordpress.android.ui.comments.CommentsListFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FF00" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/right_shadow"
+                android:orientation="vertical" />
+        </FrameLayout>
+
+        <fragment
+            android:id="@+id/commentDetail"
+            android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6" />
+    </LinearLayout>
 </RelativeLayout>

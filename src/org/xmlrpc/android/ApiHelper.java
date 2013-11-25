@@ -336,17 +336,7 @@ public class ApiHelper {
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = d.toString();
-            try {
-                int flags = 0;
-                flags |= DateUtils.FORMAT_SHOW_DATE;
-                flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= DateUtils.FORMAT_SHOW_YEAR;
-                flags |= DateUtils.FORMAT_SHOW_TIME;
-                formattedDate = DateUtils.formatDateTime(ctx,
-                        d.getTime(), flags);
-            } catch (Exception e) {
-            }
+            String formattedDate = getFormattedCommentDate(ctx, d);
 
             dbValues.put("blogID", String.valueOf(blog.getId()));
             dbValues.put("postID", postID);
@@ -365,6 +355,28 @@ public class ApiHelper {
         WordPress.wpDB.saveComments(dbVector);
 
         return allComments;
+    }
+
+    /**
+     * nbradbury 11/15/13 - this code was originally in refreshComments() above, moved here
+     * for re-usability
+     * @param context
+     * @param date
+     * @return
+     */
+    public static String getFormattedCommentDate(Context context, java.util.Date date) {
+        if (date == null)
+            return "";
+        try {
+            int flags = 0;
+            flags |= DateUtils.FORMAT_SHOW_DATE;
+            flags |= DateUtils.FORMAT_ABBREV_MONTH;
+            flags |= DateUtils.FORMAT_SHOW_YEAR;
+            flags |= DateUtils.FORMAT_SHOW_TIME;
+            return DateUtils.formatDateTime(context, date.getTime(), flags);
+        } catch (Exception e) {
+            return date.toString();
+        }
     }
     
     public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Integer> {

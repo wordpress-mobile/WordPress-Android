@@ -11,7 +11,6 @@
         android:id="@+id/layout_detail_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/reader_margin_medium"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_large"
         android:layout_marginTop="@dimen/reader_margin_large"

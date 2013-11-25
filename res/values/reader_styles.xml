@@ -137,8 +137,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
+
     <style name="ReaderTextView.MessageBar" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -154,12 +155,6 @@
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
         <item name="android:textColorHint">@color/grey_medium</item>
-    </style>
-    <style name="ReaderEditText.Comment" parent="ReaderEditText">
-        <item name="android:background">@color/transparent</item>
-        <item name="android:inputType">text|textCapSentences|textMultiLine</item>
-        <item name="android:lines">4</item>
-        <item name="android:imeOptions">actionSend</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>

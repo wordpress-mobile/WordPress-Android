@@ -69,6 +69,7 @@
     <color name="grey_extra_light">#eeeeee</color>
     <color name="grey_light">#dddddd</color>
     <color name="grey_medium">#999999</color>
+    <color name="grey_medium_dark">#777777</color>
     <color name="grey_dark">#333333</color>
     <color name="grey_extra_dark">#222222</color>
 
