@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
@@ -86,8 +87,6 @@ public class WPMobileStatsUtil {
 
     /* /Events  */
 
-    private static final String MIXPANEL_TOKEN = "mixpanel.token";
-    private static final String QUANTCAST_KEY = "quantcast.key";
     private static final WPMobileStatsUtil instance = new WPMobileStatsUtil();
 
     private static MixpanelAPI mixpanel;
@@ -109,7 +108,7 @@ public class WPMobileStatsUtil {
         Should be called when the application is launched and at sign in/out.
      */
     public static void initialize() {
-        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), MIXPANEL_TOKEN);
+        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), Config.MIXPANEL_TOKEN);
 
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -187,7 +186,7 @@ public class WPMobileStatsUtil {
             e.printStackTrace();
         }
 
-        QuantcastClient.activityStart(context, QUANTCAST_KEY, userId, null);
+        QuantcastClient.activityStart(context, Config.QUANTCAST_KEY, userId, null);
     }
 
     /*
@@ -327,6 +326,7 @@ public class WPMobileStatsUtil {
             aggregatedProperties.put(event, properties);
         }
         mixpanel.track(event, properties);
+        mixpanel.flush();
     }
 
     private void clearProperties() {
