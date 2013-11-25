@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/post_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="22sp"
-        android:hint="@string/title"
-        android:inputType="textCapSentences|textAutoCorrect" />
-
-    <org.wordpress.android.util.WPEditText
-        android:id="@+id/post_content"
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="top"
-        android:hint="@string/post_content"
-        android:lineSpacingExtra="4dp"
-        android:textSize="18sp"
-        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-        android:textColorLink="#21759b"
-        android:layout_weight="1"/>
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/post_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="22sp"
+                android:hint="@string/title"
+                android:inputType="textCapSentences|textAutoCorrect" />
+
+            <org.wordpress.android.util.WPEditText
+                android:id="@+id/post_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:hint="@string/post_content"
+                android:background="@null"
+                android:lineSpacingExtra="4dp"
+                android:textSize="18sp"
+                android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+                android:imeOptions="flagNoExtractUi"
+                android:textColorLink="#21759b" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/format_bar"

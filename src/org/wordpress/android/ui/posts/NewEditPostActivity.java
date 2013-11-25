@@ -27,6 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.WPViewPager;
 
 public class NewEditPostActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
@@ -47,7 +48,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    WPViewPager mViewPager;
 
     private Post mPost;
     private Post mOriginalPost;
@@ -72,7 +73,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (WPViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 
@@ -150,16 +151,6 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        if (getSupportActionBar() != null)
-            menu.findItem(R.id.menu_edit_post).setVisible(getSupportActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS);
-
-        return true;
-    }
-
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
@@ -202,7 +193,12 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
 
     @Override
     public void onBackPressed() {
-        showCancelAlert();
+        if (getSupportActionBar() != null) {
+            if (getSupportActionBar().isShowing())
+                showCancelAlert();
+            else if (mEditPostContentFragment != null)
+                mEditPostContentFragment.setContentEditingModeVisible(false);
+        }
     }
 
     private void showCancelAlert() {
@@ -259,6 +255,11 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    public void setViewPagerEnabled(boolean isEnabled) {
+        if (mViewPager != null)
+            mViewPager.setPagingEnabled(isEnabled);
     }
 
     /**

@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -69,6 +70,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -130,8 +132,24 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                              Bundle savedInstanceState) {
         mActivity = (NewEditPostActivity)getActivity();
 
-        ViewGroup rootView = (ViewGroup) inflater
+        final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_content, container, false);
+
+
+        // Listens for soft keyboard dismissal, to return from full screen edit mode
+        // See: http://stackoverflow.com/a/4737265/309558
+        if (rootView != null && rootView.getViewTreeObserver() != null) {
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                    if (heightDiff < Utils.dpToPx(100)) {
+                        if (!mActivity.getSupportActionBar().isShowing())
+                            setContentEditingModeVisible(false);
+                    }
+                }
+            });
+        }
 
         mFormatBar = (RelativeLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
@@ -180,6 +198,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             }
         });
 
+        mContentEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
+                    setContentEditingModeVisible(true);
+                }
+            }
+        });
+
         setContentEditTextFocusable(true);
 
         // Check for Android share action
@@ -212,52 +239,22 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
     }
 
-    private void setContentEditingModeVisible(boolean isVisible) {
+    public void setContentEditingModeVisible(boolean isVisible) {
         if (mActivity == null)
             return;
         ActionBar actionBar = mActivity.getSupportActionBar();
         if (isVisible) {
-
-            //actionBar.hide();
-
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            ViewGroup actionBarLayout = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.edit_post_content_action_bar, null);
-            actionBar.setCustomView(actionBarLayout);
-            Button doneButton = (Button) mActivity.findViewById(R.id.action_bar_done);
-            doneButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setContentEditingModeVisible(false);
-                }
-            });
-
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.hide();
             mTitleEditText.setVisibility(View.GONE);
-
-            mActivity.supportInvalidateOptionsMenu();
-            //actionBar.show();
-
-            Animation fadeIn = new AlphaAnimation(0, 1);
-            fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-            fadeIn.setDuration(300);
-            fadeIn.setStartOffset(300);
+            mActivity.setViewPagerEnabled(false);
             mFormatBar.setVisibility(View.VISIBLE);
-            mFormatBar.startAnimation(fadeIn);
 
         } else {
-            //actionBar.hide();
-
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayShowCustomEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            mActivity.setViewPagerEnabled(true);
             mTitleEditText.setVisibility(View.VISIBLE);
             mFormatBar.setVisibility(View.GONE);
             mActivity.supportInvalidateOptionsMenu();
-
-            //actionBar.show();
+            actionBar.show();
         }
     }
 
