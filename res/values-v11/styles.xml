@@ -4,18 +4,18 @@
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
 
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
 
         <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
+        <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
@@ -30,8 +30,8 @@
     <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:icon">@drawable/ab_icon_wp</item>
         <item name="android:background">@color/blue_new_kid</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
     </style>
 

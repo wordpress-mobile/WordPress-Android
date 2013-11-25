@@ -298,11 +298,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             return;
 
         // solid background if no alpha, otherwise create color drawable with alpha applied
-        // (source color is based on ab_stacked_solid_wordpress.9.png)
+        // (source color is based on R.color.blue_new_kid)
          if (alpha==ALPHA_NONE) {
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_new_kid));
         } else {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 46, 162, 204)));
         }
         mCurrentActionBarAlpha = alpha;
     }
