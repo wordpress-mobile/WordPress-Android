@@ -125,7 +125,7 @@
                     android:id="@+id/nux_sign_in_button"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    android:text="@string/sign_in_capital"
+                    android:text="@string/sign_in"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:gravity="center"
