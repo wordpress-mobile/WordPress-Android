@@ -55,7 +55,7 @@ public class ReaderTag {
      *
      * @return a string Id if tagType is ReaderTagType.DEFAULT, empty string else
      */
-    public String getTagStringId() {
+    public String getStringIdFromEndpoint() {
         if (tagType != ReaderTagType.DEFAULT) {
             return "";
         }

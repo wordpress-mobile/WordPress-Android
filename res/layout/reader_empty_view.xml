@@ -8,22 +8,6 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
-
-        <ImageView
-            android:layout_width="@dimen/arrow_tip_size"
-            android:layout_height="@dimen/arrow_tip_size"
-            android:id="@+id/empty_arrow_tip"
-            android:src="@drawable/tip_up_arrow"
-            android:visibility="invisible"
-            android:adjustViewBounds="false"
-            android:padding="4dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1"
