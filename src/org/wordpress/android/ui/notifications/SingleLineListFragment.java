@@ -51,20 +51,17 @@ public class SingleLineListFragment extends ListFragment implements Notification
         // set the header
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        noteHeader.setText(currentNote.queryJSON("body.header_text", ""));
+        noteHeader.setText(currentNote.queryJSON("subject.text", ""));
         noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-        noteHeader.setClickable(false);
-        list.addHeaderView(noteHeader);
-        
-        // set the footer
-        DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         String footerUrl = currentNote.queryJSON("body.header_link", "");
         if (!footerUrl.equals("")) {
-            noteFooter.setText(footerUrl);
-            noteFooter.setUrl(footerUrl);
-            list.addFooterView(noteFooter);
+            noteHeader.setUrl(footerUrl);
+            noteHeader.setClickable(true);
         }
+        
+        list.addHeaderView(noteHeader);
+        
         // set the adapter
         setListAdapter(new NoteAdapter());
     }
