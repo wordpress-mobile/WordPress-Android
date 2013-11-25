@@ -317,7 +317,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         setEmptyViewTipArrowVisible(View.GONE);
         int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
         ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
-        String tagId = tag.getTagStringId();
+        String tagId = tag.getStringIdFromEndpoint();
         if (tagId.equals("following")) {
             title = R.string.reader_empty_followed_blogs_title;
             description = R.string.reader_empty_followed_blogs_description;
