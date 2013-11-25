@@ -11,11 +11,12 @@
     
     <color name="image_options_label">#CCCCCC</color>
     <color name="image_options_text">#FFFFFF</color>
-    <color name="pressed_wordpress">#CC2EA2CC</color>
+    <color name="pressed_wordpress">#CC78C8E6</color>
     <color name="list_row_bg">#FFFFFF</color>
     <color name="list_row_selected">#78c8e6</color>
 
     <!-- Colors for menu drawer. -->
+    <color name="md__defaultBackground">#222222</color>
     <color name="md__itemBackground">#CC2EA2CC</color>
     <color name="md__iconTintColor">#DDFFFFFF</color>
     <color name="md__shadowColor">#99000000</color>
@@ -60,6 +61,7 @@
     -->
     <color name="blue_extra_light">#c8eefc</color>
     <color name="blue_light">#78c8e6</color>
+    <color name="blue_new_kid">#2EA2CC</color>
     <color name="blue_medium">#1e8cbe</color>
     <color name="blue_dark">#0074a2</color>
     <color name="blue_extra_dark">#005684</color>
