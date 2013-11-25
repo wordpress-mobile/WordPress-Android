@@ -137,8 +137,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
+
     <style name="ReaderTextView.MessageBar" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

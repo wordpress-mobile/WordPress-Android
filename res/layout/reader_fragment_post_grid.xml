@@ -33,4 +33,7 @@
         android:text="@string/reader_empty_posts_in_tag"
         android:visibility="gone" />
 
+    <include android:id="@+id/empty_view"
+        layout="@layout/reader_empty_view"/>
+
 </RelativeLayout>

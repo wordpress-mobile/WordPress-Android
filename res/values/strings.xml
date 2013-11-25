@@ -727,6 +727,9 @@
     <string name="reader_empty_posts_in_tag_never_updated">No articles with this tag yet</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the plus icon to start exploring!</string>
+    <string name="reader_empty_posts_liked">You have not liked any posts.</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
