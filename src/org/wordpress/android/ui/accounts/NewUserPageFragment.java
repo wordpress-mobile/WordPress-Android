@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -98,9 +99,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             return false;
         }
 
-        final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-        final Pattern emailRegExPattern = Pattern.compile(emailRegEx,
-                Pattern.DOTALL);
+        final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
             showEmailError(R.string.invalid_email_message);
