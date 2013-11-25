@@ -75,10 +75,6 @@ public class NewAccountActivity extends SherlockFragmentActivity {
             args.putInt(NewAccountAbstractPageFragment.ARG_PAGE, position);
             
             switch (position) {
-                case 0:
-                    userFragment = new NewUserPageFragment();
-                    currentPage = userFragment;
-                    break;
                 default:
                     currentPage = new NewUserPageFragment();
                     break;
