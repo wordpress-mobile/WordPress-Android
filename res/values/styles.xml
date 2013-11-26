@@ -13,6 +13,7 @@
         <item name="actionModeBackground">@drawable/cab_background_top_wordpress</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
@@ -48,6 +49,10 @@
 
     <style name="ActionBarTabStyle.WordPress" parent="@style/Widget.Sherlock.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_wordpress</item>
+    </style>
+
+    <style name="TabTextStyle.WordPress" parent="@style/Widget.Sherlock.ActionBar.TabText">
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
 
     <style name="DropDownNav.WordPress" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
