@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,11 +37,14 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     private EditText mUsernameEditText;
@@ -56,8 +60,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private boolean mHttpAuthRequired;
     private String mHttpUsername = "";
     private String mHttpPassword = "";
+    private EmailChecker mEmailChecker;
+    private boolean mEmailAutoCorrected;
 
     public WelcomeFragmentSignIn() {
+        mEmailChecker = new EmailChecker();
     }
 
     @Override
@@ -99,7 +106,34 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
+
+        mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    autocorrectUsername();
+                }
+            }
+        });
         return rootView;
+    }
+
+    private void autocorrectUsername() {
+        if (mEmailAutoCorrected)
+            return;
+        final String email = mUsernameEditText.getText().toString().trim();
+        // Check if the username looks like an email address
+        final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
+        Matcher matcher = emailRegExPattern.matcher(email);
+        if (!matcher.find()) {
+            return ;
+        }
+        // It looks like an email address, then try to correct it
+        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        if (suggest.compareTo(email) != 0) {
+            mEmailAutoCorrected = true;
+            mUsernameEditText.setText(suggest);
+            mUsernameEditText.setSelection(suggest.length());
+        }
     }
 
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {

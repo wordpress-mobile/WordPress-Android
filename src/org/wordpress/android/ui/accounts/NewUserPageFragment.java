@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,48 +95,39 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         final String username = mUsernameTextField.getText().toString().trim();
 
         if (email.equals("")) {
-            mEmailTextField.setError(getString(R.string.required_field));
-            mEmailTextField.requestFocus();
+            showEmailError(R.string.required_field);
             return false;
         }
 
-        final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-        final Pattern emailRegExPattern = Pattern.compile(emailRegEx,
-                Pattern.DOTALL);
+        final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
-            mEmailTextField.setError(getString(R.string.invalid_email_message));
-            mEmailTextField.requestFocus();
+            showEmailError(R.string.invalid_email_message);
             return false;
         }
 
         if (username.equals("")) {
-            mUsernameTextField.setError(getString(R.string.required_field));
-            mUsernameTextField.requestFocus();
+            showUsernameError(R.string.required_field);
             return false;
         }
 
         if (username.length() < 4) {
-            mUsernameTextField.setError(getString(R.string.invalid_username_too_short));
-            mUsernameTextField.requestFocus();
+            showUsernameError(R.string.invalid_username_too_short);
             return false;
         }
 
         if (username.length() > 60) {
-            mUsernameTextField.setError(getString(R.string.invalid_username_too_long));
-            mUsernameTextField.requestFocus();
+            showUsernameError(R.string.invalid_username_too_long);
             return false;
         }
 
         if (password.equals("")) {
-            mPasswordTextField.setError(getString(R.string.required_field));
-            mPasswordTextField.requestFocus();
+            showPasswordError(R.string.required_field);
             return false;
         }
 
         if (password.length() < 4) {
-            mPasswordTextField.setError(getString(R.string.invalid_password_message));
-            mPasswordTextField.requestFocus();
+            showPasswordError(R.string.invalid_password_message);
             return false;
         }
 
@@ -161,6 +153,44 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         intent.putExtras(bundle);
         act.setResult(act.RESULT_OK, intent);
         act.finish();
+    }
+
+    protected boolean specificShowError(int messageId) {
+        switch (getErrorType(messageId)) {
+            case USERNAME:
+                showUsernameError(messageId);
+                return true;
+            case PASSWORD:
+                showPasswordError(messageId);
+                return true;
+            case EMAIL:
+                showEmailError(messageId);
+                return true;
+            case SITE_URL:
+                showSiteUrlError(messageId);
+                return true;
+        }
+        return false;
+    }
+
+    private void showPasswordError(int messageId) {
+        mPasswordTextField.setError(getString(messageId));
+        mPasswordTextField.requestFocus();
+    }
+
+    private void showEmailError(int messageId) {
+        mEmailTextField.setError(getString(messageId));
+        mEmailTextField.requestFocus();
+    }
+
+    private void showUsernameError(int messageId) {
+        mUsernameTextField.setError(getString(messageId));
+        mUsernameTextField.requestFocus();
+    }
+
+    private void showSiteUrlError(int messageId) {
+        mSiteUrlTextField.setError(getString(messageId));
+        mSiteUrlTextField.requestFocus();
     }
 
     private void validateAndCreateUserAndBlog() {

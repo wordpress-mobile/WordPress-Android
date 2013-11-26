@@ -135,10 +135,10 @@
                     android:layout_alignParentStart="false"
                     android:layout_alignParentTop="false"
                     android:paddingRight="8dp"
+                    android:enabled="false"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
-                    android:inputType="textUri"
                     android:textColor="@color/black" />
 
                 <ImageView

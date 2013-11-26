@@ -19,7 +19,8 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     /**
      * The number of pages (wizard steps)
      */
-    private static final int NUM_PAGES = 2;
+    private static final int NUM_PAGES = 1; // TODO: this will probably be merged with New
+                                            // Account Activity
     public static final int SIGNIN_REQUEST = 1;
     public static final int CREATE_ACCOUNT_REQUEST = 2;
     public static final int CREATE_BLOG_REQUEST = 3;

@@ -399,7 +399,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 int top = view.getPaddingTop();
                 int right = view.getPaddingRight();
                 int left = view.getPaddingLeft();
-                view.setBackgroundResource(R.drawable.menu_drawer_selected);
+                view.setBackgroundResource(R.color.blue_dark);
                 view.setPadding(left, top, right, bottom);
             } else {
                 view.setBackgroundResource(R.drawable.md_list_selector);

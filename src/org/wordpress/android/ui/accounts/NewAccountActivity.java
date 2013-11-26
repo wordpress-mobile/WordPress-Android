@@ -17,7 +17,7 @@ public class NewAccountActivity extends SherlockFragmentActivity {
     /**
      * The number of pages (wizard steps)
      */
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 1;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -75,10 +75,6 @@ public class NewAccountActivity extends SherlockFragmentActivity {
             args.putInt(NewAccountAbstractPageFragment.ARG_PAGE, position);
             
             switch (position) {
-                case 0:
-                    userFragment = new NewUserPageFragment();
-                    currentPage = userFragment;
-                    break;
                 default:
                     currentPage = new NewUserPageFragment();
                     break;

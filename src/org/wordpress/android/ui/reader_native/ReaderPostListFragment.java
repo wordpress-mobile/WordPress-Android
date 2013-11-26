@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -314,14 +313,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private void setEmptyTitleAndDecriptionForCurrentTag() {
         boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
         int title, description = -1;
-        setEmptyViewTipArrowVisible(View.GONE);
         int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
         ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
-        String tagId = tag.getTagStringId();
+        String tagId = tag.getStringIdFromEndpoint();
         if (tagId.equals("following")) {
             title = R.string.reader_empty_followed_blogs_title;
             description = R.string.reader_empty_followed_blogs_description;
-            setEmptyViewTipArrowVisible(View.VISIBLE);
         } else {
             if (tagId.equals("liked")) {
                 title = R.string.reader_empty_posts_liked;
@@ -341,28 +338,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         } else {
             descriptionView.setText(getString(description));
             descriptionView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setEmptyViewTipArrowVisible(int visibility) {
-        if (hasActivity() && getActivity() instanceof NativeReaderActivity) {
-            View view = getActivity().findViewById(R.id.empty_arrow_tip);
-            int[] location = ((NativeReaderActivity) getActivity()).getTagMenuItemLocation();
-            if (location == null || location[0] == 0) {
-                view.setVisibility(View.INVISIBLE);
-                return;
-            }
-            if (visibility == View.VISIBLE) {
-                Animation animArrow = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down);
-                view.startAnimation(animArrow);
-            }
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-            if (params != null) {
-                float iconWidth = getResources().getDimension(R.dimen.arrow_tip_size);
-                params.setMargins(location[0] - (int) (iconWidth / 2.), 0, 0, 0);
-                view.setLayoutParams(params);
-            }
-            view.setVisibility(visibility);
         }
     }
 

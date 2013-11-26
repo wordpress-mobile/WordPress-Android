@@ -54,7 +54,7 @@
 
         <com.actionbarsherlock.internal.widget.IcsSpinner
             android:id="@+id/blog_spinner"
-            style="@style/wordpress_DropDownNav"
+            style="@style/DropDownNav.WordPress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="0dp" />
@@ -81,7 +81,7 @@
 
         <com.actionbarsherlock.internal.widget.IcsSpinner
             android:id="@+id/action_spinner"
-            style="@style/wordpress_DropDownNav"
+            style="@style/DropDownNav.WordPress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="0dp" />

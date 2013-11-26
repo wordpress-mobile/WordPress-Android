@@ -7,8 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import com.actionbarsherlock.view.MenuInflater;
@@ -40,17 +38,16 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
 
     // ActionBar alpha
     protected static final int ALPHA_NONE = 0;
-    protected static final int ALPHA_LEVEL_1 = 230;
-    protected static final int ALPHA_LEVEL_2 = 210;
-    protected static final int ALPHA_LEVEL_3 = 190;
-    protected static final int ALPHA_LEVEL_4 = 170;
-    protected static final int ALPHA_LEVEL_5 = 150;
+    protected static final int ALPHA_LEVEL_1 = 245;
+    protected static final int ALPHA_LEVEL_2 = 230;
+    protected static final int ALPHA_LEVEL_3 = 215;
+    protected static final int ALPHA_LEVEL_4 = 200;
+    protected static final int ALPHA_LEVEL_5 = 185;
 
     private int mCurrentActionBarAlpha = 0;
     private int mPrevActionBarAlpha = 0;
 
     private MenuItem mRefreshMenuItem;
-    private int[] mTagMenuItemLocation;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
 
@@ -206,30 +203,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         }
     }
 
-    private void hookTagItemMenuLocationWatcher() {
-        final ViewTreeObserver viewTreeObserver = getWindow().getDecorView().getViewTreeObserver();
-        if (viewTreeObserver != null) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    View menuButton = findViewById(R.id.menu_tags);
-                    if (menuButton != null) {
-                        mTagMenuItemLocation = new int[2];
-                        menuButton.getLocationInWindow(mTagMenuItemLocation);
-                        // We want the center position
-                        mTagMenuItemLocation[0] += menuButton.getWidth() / 2;
-                        mTagMenuItemLocation[1] += menuButton.getHeight() / 2;
-                    }
-                    viewTreeObserver.removeOnGlobalLayoutListener(this);
-                }
-            });
-        }
-    }
-
-    public int[] getTagMenuItemLocation() {
-        return mTagMenuItemLocation;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -240,7 +213,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             shouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
-        hookTagItemMenuLocationWatcher();
         return true;
     }
 
@@ -326,11 +298,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             return;
 
         // solid background if no alpha, otherwise create color drawable with alpha applied
-        // (source color is based on ab_stacked_solid_wordpress.9.png)
+        // (source color is based on R.color.blue_new_kid)
          if (alpha==ALPHA_NONE) {
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_new_kid));
         } else {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 46, 162, 204)));
         }
         mCurrentActionBarAlpha = alpha;
     }
