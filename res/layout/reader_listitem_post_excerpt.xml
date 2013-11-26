@@ -10,7 +10,7 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
-        style="@style/ReaderImageView.Featured"/>
+        style="@style/ReaderImageView.Featured" />
 
     <!-- the top margin of the avatar image is set at runtime to overlap the featured image -->
     <org.wordpress.android.widgets.WPNetworkImageView
@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/text_title"
             android:layout_below="@+id/text_title"
-            android:layout_marginTop="@dimen/reader_margin_small"
             android:layout_marginBottom="@dimen/reader_margin_medium"
+            android:layout_marginTop="@dimen/reader_margin_small"
             android:text="text_source" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -74,28 +74,23 @@
         android:layout_marginBottom="@dimen/reader_margin_medium"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_medium"
-        android:layout_marginTop="@dimen/reader_margin_medium">
+        android:layout_marginTop="@dimen/reader_margin_medium"
+        android:gravity="right|center_vertical">
 
-        <!--
-            use TextViews rather than buttons or else listView's click listener won't work
-        -->
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_like_button"
-            style="@style/ReaderTextView.ActionButton.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/reader_margin_small"
-            android:layout_weight="1"
-            android:text="@string/reader_btn_like" />
+        <ImageView
+            android:id="@+id/image_like_btn"
+            style="@style/ReaderImageView.ButtonIcon"
+            android:src="@drawable/reader_button_like" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_reblog_button"
-            style="@style/ReaderTextView.ActionButton.Small"
-            android:layout_marginLeft="@dimen/reader_margin_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/reader_btn_reblog" />
+        <ImageView
+            android:id="@+id/image_comment_btn"
+            style="@style/ReaderImageView.ButtonIcon"
+            android:src="@drawable/reader_button_comment" />
+
+        <ImageView
+            android:id="@+id/image_reblog_btn"
+            style="@style/ReaderImageView.ButtonIcon"
+            android:src="@drawable/reader_button_reblog" />
 
     </LinearLayout>
 

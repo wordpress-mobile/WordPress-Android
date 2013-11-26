@@ -51,6 +51,8 @@
     <dimen name="reader_avatar_sz_like">28dp</dimen>
     <dimen name="reader_avatar_sz_large">96dp</dimen>
 
+    <dimen name="reader_button_icon_sz">48dp</dimen>
+
     <dimen name="reader_featured_image_height">240dp</dimen>
     <dimen name="reader_divider_size">12dp</dimen>
     <dimen name="reader_video_overlay_size">48dp</dimen>

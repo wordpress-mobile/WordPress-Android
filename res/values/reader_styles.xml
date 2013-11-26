@@ -236,6 +236,10 @@
         <item name="android:layout_width">@dimen/reader_avatar_sz_large</item>
         <item name="android:layout_height">@dimen/reader_avatar_sz_large</item>
     </style>
+    <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/reader_button_icon_sz</item>
+        <item name="android:layout_height">@dimen/reader_button_icon_sz</item>
+    </style>
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />

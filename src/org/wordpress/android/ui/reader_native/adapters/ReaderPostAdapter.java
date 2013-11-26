@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -198,12 +199,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTitle = (TextView) convertView.findViewById(R.id.text_title);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_excerpt);
             holder.txtSource = (TextView) convertView.findViewById(R.id.text_source);
-            holder.txtLikeButton = (TextView) convertView.findViewById(R.id.text_like_button);
-            holder.txtReblogButton = (TextView) convertView.findViewById(R.id.text_reblog_button);
             holder.txtCounts = (TextView) convertView.findViewById(R.id.text_counts);
             holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
             holder.layoutActions = (ViewGroup) convertView.findViewById(R.id.layout_actions);
+
+            holder.imgBtnLike = (ImageView) convertView.findViewById(R.id.image_like_btn);
+            holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
+            holder.imgBtnReblog = (ImageView) convertView.findViewById(R.id.image_reblog_btn);
 
             convertView.setTag(holder);
         } else {
@@ -259,17 +262,17 @@ public class ReaderPostAdapter extends BaseAdapter {
         // likes, comments & reblogging
         if (post.isWP()) {
             final int pos = position;
-            showLikeStatus(holder.txtLikeButton, post.isLikedByCurrentUser);
-            holder.txtLikeButton.setOnClickListener(new View.OnClickListener() {
+            showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
+            holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, pos, post);
                 }
             });
 
-            showReblogStatus(holder.txtReblogButton, post.isRebloggedByCurrentUser);
+            showReblogStatus(holder.imgBtnReblog, post.isRebloggedByCurrentUser);
             if (!post.isRebloggedByCurrentUser && post.isWP()) {
-                holder.txtReblogButton.setOnClickListener(new View.OnClickListener() {
+                holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mReblogListener!=null)
@@ -355,8 +358,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         private TextView txtTitle;
         private TextView txtText;
         private TextView txtSource;
-        private TextView txtLikeButton;
-        private TextView txtReblogButton;
+        private ImageView imgBtnLike;
+        private ImageView imgBtnComment;
+        private ImageView imgBtnReblog;
         private TextView txtCounts;
 
         private WPNetworkImageView imgFeatured;
@@ -370,32 +374,32 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     public void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
-        ReaderAniUtils.zoomAction(holder.txtLikeButton);
+        ReaderAniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!ReaderPostActions.performPostAction(holder.txtLikeButton.getContext(), ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
+        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;
 
         // update post in array and on screen
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
-        showLikeStatus(holder.txtLikeButton, updatedPost.isLikedByCurrentUser);
+        showLikeStatus(holder.imgBtnLike, updatedPost.isLikedByCurrentUser);
         showCounts(holder.txtCounts, updatedPost);
     }
 
-    private void showLikeStatus(TextView txtLikeButton, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser!=txtLikeButton.isSelected()) {
-            txtLikeButton.setText(isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
-            txtLikeButton.setSelected(isLikedByCurrentUser);
+    private void showLikeStatus(ImageView imgBtnLike, boolean isLikedByCurrentUser) {
+        if (isLikedByCurrentUser != imgBtnLike.isSelected()) {
+            imgBtnLike.setSelected(isLikedByCurrentUser);
+            //imgBtnLike.setText(isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
         }
     }
 
-    private void showReblogStatus(TextView txtReblogButton, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser!=txtReblogButton.isSelected()) {
-            txtReblogButton.setSelected(isRebloggedByCurrentUser);
-            txtReblogButton.setText(isRebloggedByCurrentUser ? R.string.reader_btn_reblogged : R.string.reader_btn_reblog);
+    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
+        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
+            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
+            //imgBtnReblog.setText(isRebloggedByCurrentUser ? R.string.reader_btn_reblogged : R.string.reader_btn_reblog);
         }
         if (isRebloggedByCurrentUser)
-            txtReblogButton.setOnClickListener(null);
+            imgBtnReblog.setOnClickListener(null);
     }
 
 
