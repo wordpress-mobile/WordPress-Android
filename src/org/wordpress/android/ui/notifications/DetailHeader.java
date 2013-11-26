@@ -39,7 +39,7 @@ public class DetailHeader extends LinearLayout {
                 public void onClick(View view){
                     Context context = getContext();
                     Intent intent = new Intent(context, NotificationsWebViewActivity.class);
-                    intent.putExtra("external_url", url);
+                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
                     context.startActivity(intent);
                 }
             });

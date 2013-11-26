@@ -12,6 +12,9 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 @SuppressLint("SetJavaScriptEnabled")
 public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
     
+    public static final String URL_TO_LOAD = "external_url";
+    
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +22,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
      
         // load URL if one was provided in the intent
-        String url = getIntent().getStringExtra("external_url");
+        String url = getIntent().getStringExtra(URL_TO_LOAD);
         if (url != null) {
             loadUrl(url);
         }
