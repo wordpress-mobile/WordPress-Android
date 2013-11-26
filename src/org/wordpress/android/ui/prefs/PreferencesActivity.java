@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,11 +10,11 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.View;
@@ -38,18 +29,26 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.DeviceUtils;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
@@ -212,7 +211,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         Preference addBlogPreference = new Preference(this);
         addBlogPreference.setTitle(R.string.add_account);
         Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra(WelcomeActivity.SKIP_WELCOME, true);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
@@ -514,7 +512,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
-            i.putExtra(WelcomeActivity.SKIP_WELCOME, true);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);

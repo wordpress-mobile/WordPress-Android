@@ -27,14 +27,16 @@ public class CommentActions {
     }
 
     /*
-     * result when a comment action is performed
+     * listener when a comment action is performed
      */
     protected interface CommentActionListener {
         public void onActionResult(boolean succeeded);
     }
 
-    protected interface GetCommentListener {
-        public void onActionResult(Comment comment);
+    protected interface OnCommentChangeListener {
+        public void onCommentModerated();
+        public void onCommentAdded();
+        public void onCommentDeleted();
     }
 
     /**
