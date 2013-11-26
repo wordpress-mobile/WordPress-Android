@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    comment detail displayed from both the notification list and the comment list
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_extra_light">
+
+    <LinearLayout
+        android:id="@+id/layout_detail_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_title"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingTop="@dimen/reader_margin_large">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="@dimen/reader_avatar_sz_large"
+            android:layout_height="@dimen/reader_avatar_sz_large"
+            android:layout_gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/reader_margin_large"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:text="text_name"
+                android:textColor="@color/reader_hyperlink"
+                android:textSize="@dimen/reader_text_sz_extra_large" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_date"
+                style="@style/ReaderTextView.Source.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingTop="@dimen/reader_margin_small"
+                android:text="text_date" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_detail_header"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/reader_margin_medium"
+        android:paddingLeft="@dimen/reader_margin_large"
+        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingTop="@dimen/reader_margin_medium">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="text_content"
+            android:textColorLink="@color/reader_hyperlink"
+            android:textSize="@dimen/reader_text_sz_large" />
+    </ScrollView>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <include
+            android:id="@+id/layout_comment_box"
+            layout="@layout/reader_include_comment_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_approve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reader_button_transparent_selector"
+            android:drawableLeft="@drawable/moderate_approve"
+            android:padding="@dimen/reader_margin_large"
+            android:text="@string/approve"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/reader_text_sz_extra_large"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/text_message_bar"
+        layout="@layout/message_bar_include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/layout_bottom" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

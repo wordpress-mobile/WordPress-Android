@@ -107,6 +107,8 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
         super.onCreate();
+
+        //wpDB.copyDatabase();
     }
 
     public static Context getContext() {
@@ -274,6 +276,13 @@ public class WordPress extends Application {
         }
 
         return currentBlog;
+    }
+
+    /*
+     * returns the blogID of the current blog
+     */
+    public static int getCurrentBlogId() {
+        return (currentBlog != null ? currentBlog.getBlogId() : 0);
     }
 
     /**

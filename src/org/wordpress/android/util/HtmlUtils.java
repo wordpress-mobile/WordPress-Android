@@ -13,8 +13,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class HtmlUtils {
 
     /*
-     * removes html from the passed string - this relies on Html.fromHtml which is very slow, so
-     * don't use this where performance is important
+     * removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
+     * but it's very slow, so avoid using this where performance is important
      */
     public static String stripHtml(final String text) {
         if (TextUtils.isEmpty(text))

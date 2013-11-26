@@ -29,7 +29,7 @@
         android:background="@drawable/right_shadow"/>
       </FrameLayout>
     <fragment
-      android:name="org.wordpress.android.ui.comments.CommentFragment"
+      android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
       android:id="@+id/commentDetail"
       android:layout_weight="2"
       android:layout_width="0dp"

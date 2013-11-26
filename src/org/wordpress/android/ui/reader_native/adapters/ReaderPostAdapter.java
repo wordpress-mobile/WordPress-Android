@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +40,10 @@ public class ReaderPostAdapter extends BaseAdapter {
     private int mDefaultOffset;
     private int mAvatarSz;
 
-    private boolean mEnableRowAnimation = true;
     private final float mRowAnimationFromYDelta;
     private final int mRowAnimationDuration;
-    private int mPreviousGetViewPosition = -1;
     private boolean mCanRequestMorePosts = false;
+    private boolean mAnimateRows = false;
 
     private Context mContext;
     private final LayoutInflater mInflater;
@@ -111,13 +111,21 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public void refresh() {
         //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
-        mEnableRowAnimation = isEmpty(); // only animate new rows when grid was previously empty
         loadPosts();
     }
 
     public void reload() {
+        // briefly animate the appearance of new rows when reloading - happens when the tag is
+        // changed or the user taps to view new posts
+        mAnimateRows = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAnimateRows = false;
+            }
+        }, 750);
+
         clear();
-        mEnableRowAnimation = true;
         loadPosts();
     }
 
@@ -277,12 +285,9 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         showCounts(holder.txtCounts, post);
 
-        // animate the appearance of this row if it's after the previous position shown by getView()
-        // and row animation is enabled
-        if (mEnableRowAnimation && position > mPreviousGetViewPosition)
+        // animate the appearance of this row while new posts are being loaded
+        if (mAnimateRows)
             animateRow(convertView);
-
-        mPreviousGetViewPosition = position;
 
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
@@ -327,10 +332,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         return counts;
-    }
-
-    public void enableRowAnimation(boolean enable) {
-        mEnableRowAnimation = enable;
     }
 
     /*
@@ -437,7 +438,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mPreviousGetViewPosition = -1;
                 mPosts = (ReaderPostList)(tmpPosts.clone());
                 notifyDataSetChanged();
             }

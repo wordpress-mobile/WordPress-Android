@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentDetailFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +85,22 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public Fragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    Fragment fragment = new NoteCommentFragment();
+                    //Fragment fragment = new NoteCommentFragment();
+                    Fragment fragment = CommentDetailFragment.newInstance(note);
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
+                if (note.isMultiLineListTemplate()){
+                    Fragment fragment = null;
+                    if (note.isCommentLikeType())
+                        fragment = new NoteCommentLikeFragment();
+                    else if (note.isAutomattcherType())
+                        fragment = new NoteMatcherFragment();
                     return fragment;
                 }
                 return null;

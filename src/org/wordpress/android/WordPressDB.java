@@ -11,6 +11,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,14 +19,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -635,7 +643,7 @@ public class WordPressDB {
 
         Cursor c = null;
         try {
-            c = db.query(SETTINGS_TABLE, new String[] { "id" }, "runService=1",
+            c = db.query(SETTINGS_TABLE, new String[]{"id"}, "runService=1",
                     null, null, null, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -659,7 +667,7 @@ public class WordPressDB {
     public String getAccountName(String accountID) {
 
         String accountName = "";
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName" }, "id="
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"blogName"}, "id="
                 + accountID, null, null, null, null);
         c.moveToFirst();
         if (c.getString(0) != null) {
@@ -668,6 +676,13 @@ public class WordPressDB {
         c.close();
 
         return accountName;
+    }
+
+    /*
+     * nbradbury 11/14/13
+     */
+    public int getAccountIdForBlogId(int blogId) {
+        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
     }
 
     public void updateNotificationFlag(int id, boolean flag) {
@@ -935,6 +950,17 @@ public class WordPressDB {
         return (returnValue);
     }
 
+    /**
+     * nbradbury 11/15/13 - get the title of a specific post
+     * @param accountId - - unique id in account table for this blog
+     * @param postId - id of the desired post
+     * @return title if exists, empty string otherwise
+     */
+    public String getPostTitle(int accountId, String postId) {
+        String[] args = {Integer.toString(accountId), StringUtils.notNullStr(postId)};
+        return SqlUtils.stringForQuery(db, "SELECT TITLE FROM " + POSTS_TABLE + " WHERE blogID=? AND postid=?", args);
+    }
+
     public int updatePost(Post post, int blogID) {
         int success = 0;
         if (post != null) {
@@ -1077,6 +1103,96 @@ public class WordPressDB {
         c.close();
 
         return values;
+    }
+
+    /**
+     * nbradbury 11/15/13 - add a single comment
+     * @param accountId - unique id in account table for the blog the comment is from
+     * @param comment - comment object to store
+     */
+    public void addComment(int accountId, Comment comment) {
+        if (comment == null)
+            return;
+
+        // first delete existing comment (necessary since there's no primary key or indexes
+        // on this table, which means we can't rely on using CONFLICT_REPLACE below)
+        deleteComment(accountId, comment.commentID);
+
+        ContentValues values = new ContentValues();
+        values.put("blogID", accountId);
+        values.put("postID", StringUtils.notNullStr(comment.postID));
+        values.put("iCommentID", comment.commentID);
+        values.put("author", StringUtils.notNullStr(comment.name));
+        values.put("url", StringUtils.notNullStr(comment.authorURL));
+        values.put("comment", StringUtils.notNullStr(comment.comment));
+        values.put("status", StringUtils.notNullStr(comment.getStatus()));
+        values.put("email", StringUtils.notNullStr(comment.authorEmail));
+        values.put("postTitle", StringUtils.notNullStr(comment.postTitle));
+        values.put("commentDateFormatted", StringUtils.notNullStr(comment.dateCreatedFormatted));
+        values.put("commentDate", StringUtils.notNullStr(comment.dateCreatedFormatted));
+
+        db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
+     * nbradbury 11/11/13 - retrieve a single comment
+     * @param accountId - unique id in account table for the blog the comment is from
+     * @param commentId - commentId of the actual comment
+     * @return Comment if found, null otherwise
+     */
+    public Comment getComment(int accountId, int commentId) {
+        String[] cols = {"author",
+                         "comment",
+                         "commentDateFormatted",
+                         "status",
+                         "url",
+                         "email",
+                         "postTitle",
+                         "postID"};
+        String[] args = {Integer.toString(accountId),
+                         Integer.toString(commentId)};
+        Cursor c = db.query(COMMENTS_TABLE,
+                            cols,
+                            "blogID=? AND iCommentID=?",
+                            args,
+                            null, null, null);
+
+        if (!c.moveToFirst())
+            return null;
+
+        String authorName = c.getString(0);
+        String content = c.getString(1);
+        String dateCreatedFormatted = c.getString(2);
+        String status = c.getString(3);
+        String authorUrl = c.getString(4);
+        String authorEmail = c.getString(5);
+        String postTitle = c.getString(6);
+        String postId = c.getString(7);
+
+        return new Comment(postId,
+                           commentId,
+                           0,
+                           authorName,
+                           dateCreatedFormatted,
+                           content,
+                           status,
+                           postTitle,
+                           authorUrl,
+                           authorEmail,
+                           null);
+    }
+
+    /**
+     * nbradbury 11/12/13 - delete a single comment
+     * @param accountId - unique id in account table for this blog
+     * @param commentId - commentId of the actual comment
+     * @return true if comment deleted, false otherwise
+     */
+    public boolean deleteComment(int accountId, int commentId) {
+        String[] args = {Integer.toString(accountId),
+                         Integer.toString(commentId)};
+        int count = db.delete(COMMENTS_TABLE, "blogID=? AND iCommentID=?", args);
+        return (count > 0);
     }
 
     public List<Map<String, Object>> loadComments(int blogID) {
@@ -1966,5 +2082,29 @@ public class WordPressDB {
 
     public void clearNotes() {
         db.delete(NOTES_TABLE, null, null);
+    }
+
+    /*
+     * nbradbury - used during development to copy database to SD card so we can access it via DDMS
+     */
+    protected void copyDatabase() {
+        String copyFrom = db.getPath();
+        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
+
+        try {
+            InputStream input = new FileInputStream(copyFrom);
+            OutputStream output = new FileOutputStream(copyTo);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0)
+                output.write(buffer, 0, length);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            Log.e("WORDPRESS", "failed to copy database", e);
+        }
     }
 }
