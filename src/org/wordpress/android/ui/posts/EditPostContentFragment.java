@@ -136,21 +136,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 .inflate(R.layout.fragment_edit_post_content, container, false);
 
 
-        // Listens for soft keyboard dismissal, to return from full screen edit mode
-        // See: http://stackoverflow.com/a/4737265/309558
-        if (rootView != null && rootView.getViewTreeObserver() != null) {
-            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                    if (heightDiff < Utils.dpToPx(100)) {
-                        if (!mActivity.getSupportActionBar().isShowing())
-                            setContentEditingModeVisible(false);
-                    }
-                }
-            });
-        }
-
         mFormatBar = (RelativeLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
         mContentEditText = (WPEditText)rootView.findViewById(R.id.post_content);
@@ -167,6 +152,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
         mContentEditText.addTextChangedListener(this);
+        mContentEditText.setOnEditTextImeBackListener(new WPEditText.EditTextImeBackListener() {
+            @Override
+            public void onImeBack(WPEditText ctrl, String text) {
+                // Go back to regular editor if IME keyboard is dismissed
+                if (!mActivity.getSupportActionBar().isShowing())
+                    setContentEditingModeVisible(false);
+            }
+        });
         mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         linkButton.setOnClickListener(mFormatBarButtonClickListener);
