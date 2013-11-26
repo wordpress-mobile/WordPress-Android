@@ -43,7 +43,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.TutorialActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -59,7 +58,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Request code used when no accounts exist, and user is prompted to add an
      * account.
      */
-    static final int ADD_ACCOUNT_REQUEST = 100;
+    private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
      * Request code for reloading menu after returning from  the PreferencesActivity.
      */
-    static final int SETTINGS_REQUEST = 200;
+    private static final int SETTINGS_REQUEST = 200;
     /**
      * Request code for re-authentication
      */
-    static final int AUTHENTICATE_REQUEST = 300;
-    
+    private static final int AUTHENTICATE_REQUEST = 300;
+
     /**
      * Used to restore active activity on app creation
      */
@@ -474,12 +472,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void setupCurrentBlog() {
         Blog currentBlog = WordPress.getCurrentBlog();
 
+        // TODO: separate both condition (signed out OR no blog)
         // No blogs are configured or user has signed out, so display new account activity
         if (currentBlog == null || getBlogNames().length == 0) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
-            Intent i = new Intent(this, WelcomeActivity.class);
-            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra("request", WelcomeActivity.SIGNIN_REQUEST);
+            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
             return;
         }
     }
@@ -498,14 +498,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     initMenuDrawer();
                     mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
-
-                    // Show the tutorial if user hasn't seen it yet
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-                    boolean hasViewedTutorial = settings.getBoolean(TutorialActivity.VIEWED_TUTORIAL, false);
-                    if (!hasViewedTutorial) {
-                        Intent tutorialIntent = new Intent(this, TutorialActivity.class);
-                        startActivity(tutorialIntent);
-                    }
                 } else {
                     finish();
                 }
@@ -709,16 +701,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private class PostsMenuItem extends MenuDrawerItem {
-        PostsMenuItem(){
+        PostsMenuItem() {
             super(POSTS_ACTIVITY, R.string.posts, R.drawable.dashboard_icon_posts);
         }
+
         @Override
-        public Boolean isSelected(){
+        public Boolean isSelected() {
             WPActionBarActivity activity = WPActionBarActivity.this;
             return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
         }
+
         @Override
-        public void onSelectItem(){
+        public void onSelectItem() {
             if (!(WPActionBarActivity.this instanceof PostsActivity)
                     || (WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;

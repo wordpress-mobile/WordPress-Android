@@ -8,7 +8,7 @@
     <color name="gray">#CCC</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    
+
     <color name="image_options_label">#CCCCCC</color>
     <color name="image_options_text">#FFFFFF</color>
     <color name="pressed_wordpress">#CC78C8E6</color>
@@ -20,9 +20,9 @@
     <color name="md__itemBackground">#CC2EA2CC</color>
     <color name="md__iconTintColor">#DDFFFFFF</color>
     <color name="md__shadowColor">#99000000</color>
-    
+
     <color name="wordpress_blue">#21759B</color>
-    
+
     <!-- Media Gallery colors -->
     <color name="media_gallery_grid_label_bg">#B3000000</color>
     <color name="media_gallery_grid_label">#FFFFFF</color>
@@ -31,24 +31,24 @@
 	<color name="media_gallery_bg">#75797C</color>
 	<color name="media_gallery_option_selected">#333333</color>
 	<color name="media_gallery_option_default">#EEEEEE</color>
-	
-    
+
+
     <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">#FFFFFF</color>
     <color name="theme_details_premium">#B0710E</color>
     <color name="theme_feature_text">#555555</color>
-    
+
     <!-- Horizontal Tab View colors -->
     <color name="tab_divider">#565656</color>
     <color name="tab_background">#363636</color>
     <color name="tab_text">@color/white</color>
-    
+
     <!-- Stats bar graph colors -->
     <color name="stats_bar_graph_views">#7CABC1</color>
     <color name="stats_bar_graph_visitors">#124277</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
-    
+
     <!-- Stats Tablet header -->
     <color name="stats_tablet_header_title">#434343</color>
     <color name="stats_alt_row">#EEF6F8</color>
@@ -93,8 +93,9 @@
     <color name="nux_tos">#77FFFFFF</color>
     <color name="nux_review">#BCDDEC</color>
     <color name="nux_alert_bg">#EE000000</color>
+    <color name="nux_text_light_grey">#D1D1D1</color>
+    <color name="nux_background">#2C9ECA</color>
 
-    <color name="page_indicator_selected_color">#2EA2CC</color>
-    <color name="page_indicator_unselected_color">#0F80B0</color>
+    <color name="page_indicator_selected_color">#AED5E8</color>
+    <color name="page_indicator_unselected_color">#2384B8</color>
 </resources>
-

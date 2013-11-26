@@ -348,11 +348,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 if (data.getBooleanExtra("shouldRefresh", false))
                     postList.loadPosts(false);
             } else if (requestCode == ACTIVITY_ADD_COMMENT) {
-                
                 Bundle extras = data.getExtras();
-                
                 final String returnText = extras.getString("commentText");
-
                 if (!returnText.equals("CANCEL")) {
                     // Add comment to the server if user didn't cancel.
                     final String postID = extras.getString("postID");
@@ -691,16 +688,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                             || (!isPage && !"publish".equals(contentHash.get(
                                     "post_status").toString()))) {
                         if (isPage) {
-                            errorMsg = getResources().getText(
-                                    R.string.page_not_published).toString();
+                            errorMsg = getString(R.string.page_not_published);
                         } else {
-                            errorMsg = getResources().getText(
-                                    R.string.post_not_published).toString();
+                            errorMsg = getString(R.string.post_not_published);
                         }
                         return null;
                     } else {
-                        String postURL = contentHash.get("permaLink")
-                                .toString();
+                        String postURL = contentHash.get("permaLink").toString();
                         String shortlink = getShortlinkTagHref(postURL);
                         if (shortlink == null) {
                             result = postURL;
