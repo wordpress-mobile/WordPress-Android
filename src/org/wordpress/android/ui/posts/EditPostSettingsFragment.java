@@ -68,7 +68,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private Spinner mStatusSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
-    private Button mPubDateButton;
     private ViewGroup mSectionCategories;
 
     private ArrayList<String> mCategories;
@@ -83,7 +82,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private String[] mPostFormats;
     private String[] mPostFormatTitles;
 
-    private static enum LocationStatus { NONE, FOUND, NOT_FOUND, SEARCHING }
+    private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Override
     public void onClick(View v) {
@@ -138,18 +137,23 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_settings, container, false);
 
+        if (rootView == null)
+            return null;
+
         mActivity = (NewEditPostActivity) getActivity();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mLocationText = (TextView) rootView.findViewById(R.id.locationText);
-        mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
+        Button mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
         mPubDateButton.setOnClickListener(this);
+
+        initLocation();
 
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
@@ -171,8 +175,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 args.add(mActivity);
                 new ApiHelper.getPostFormatsTask().execute(args);
                 mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
-                mPostFormats = defaultPostFormatTitles;
+                mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
             } else {
                 try {
                     Gson gson = new Gson();
@@ -300,8 +303,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
-                    populateSelectedCategories();
+                    if (extras != null && extras.containsKey("selectedCategories")) {
+                        mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                        populateSelectedCategories();
+                    }
                     break;
             }
         }
@@ -311,9 +316,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         if (mPost == null)
             return;
 
-        String password = mPasswordEditText.getText().toString();
-        String pubDate = mPubDateText.getText().toString();
-        String excerpt = mExcerptEditText.getText().toString();
+        String password = (mPasswordEditText.getText() != null) ? mPasswordEditText.getText().toString() : "";
+        String pubDate = (mPubDateText.getText() != null) ? mPubDateText.getText().toString() : "";
+        String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
         if (!pubDate.equals(getResources().getText(R.string.immediately))) {
@@ -325,7 +330,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
-            tags = mTagsEditText.getText().toString();
+            tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
             // post format
             Spinner postFormatSpinner = (Spinner) getActivity().findViewById(R.id.postFormat);
             postFormat = mPostFormats[postFormatSpinner.getSelectedItemPosition()];
@@ -404,7 +409,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 addresses = gcd.getFromLocation(latitude, longitude, 1);
 
                 // addresses may be null or empty if network isn't connected
-                if (addresses==null || addresses.size()==0)
+                if (addresses == null || addresses.size() == 0)
                     return null;
 
                 String locality = "", adminArea = "", country = "";
@@ -427,7 +432,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         protected void onPostExecute(String result) {
             setLocationStatus(LocationStatus.FOUND);
-            if (result==null || result.isEmpty()) {
+            if (result == null || result.isEmpty()) {
                 // show lat/long when Geocoder fails (ugly, but better than not showing anything
                 // or showing an error since the location has been assigned to the post already)
                 mLocationText.setText(Double.toString(latitude) + ", " + Double.toString(longitude));
@@ -487,7 +492,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
      * get the current location
      */
     private void getLocation() {
-        if (mLocationHelper==null)
+        if (mLocationHelper == null)
             mLocationHelper = new LocationHelper();
         boolean canGetLocation = mLocationHelper.getLocation(getActivity(), locationResult);
         if (canGetLocation) {
@@ -530,9 +535,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
      */
     private void setLocationStatus(LocationStatus status) {
         // animate location text when searching
-        if (status==LocationStatus.SEARCHING) {
+        if (status == LocationStatus.SEARCHING) {
             Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
-            mLocationText.startAnimation(aniBlink);
+            if (aniBlink != null)
+                mLocationText.startAnimation(aniBlink);
         } else {
             mLocationText.clearAnimation();
         }
@@ -548,10 +554,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             case SEARCHING:
                 drawableId = R.drawable.ic_action_location_searching;
                 break;
-            case NONE :
+            case NONE:
                 drawableId = 0;
                 break;
-            default :
+            default:
                 return;
         }
 
@@ -588,32 +594,37 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         List<View> viewsToRemove = new ArrayList<View>();
         for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
             View v = mSectionCategories.getChildAt(i);
+            if (v == null)
+                return;
             Object tag = v.getTag();
             if (tag != null && tag.getClass() == String.class &&
                     (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
                 viewsToRemove.add(v);
             }
         }
-        for (int i = 0; i < viewsToRemove.size(); i++) {
-            mSectionCategories.removeView(viewsToRemove.get(i));
+        for (View viewToRemove : viewsToRemove) {
+            mSectionCategories.removeView(viewToRemove);
         }
         viewsToRemove.clear();
 
         // New category buttons
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        for (int i = 0; i < mCategories.size(); i++) {
-            String categoryName = mCategories.get(i);
+        for (String categoryName : mCategories) {
             Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
-            buttonCategory.setText(Html.fromHtml(categoryName));
-            buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
-            buttonCategory.setOnClickListener(this);
-            mSectionCategories.addView(buttonCategory);
+            if (categoryName != null && buttonCategory != null) {
+                buttonCategory.setText(Html.fromHtml(categoryName));
+                buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+                buttonCategory.setOnClickListener(this);
+                mSectionCategories.addView(buttonCategory);
+            }
         }
 
         // Add select category button
         Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        selectCategory.setOnClickListener(this);
-        mSectionCategories.addView(selectCategory);
+        if (selectCategory != null) {
+            selectCategory.setOnClickListener(this);
+            mSectionCategories.addView(selectCategory);
+        }
     }
 
     /**
