@@ -168,7 +168,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             if (mActivity.getPost().getBlog().getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();
                 args.add(mActivity.getPost().getBlog());
-                args.add(this);
+                args.add(mActivity);
                 new ApiHelper.getPostFormatsTask().execute(args);
                 mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
                 String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
