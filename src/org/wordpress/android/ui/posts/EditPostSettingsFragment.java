@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -69,6 +71,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ViewGroup mSectionCategories;
+    private RelativeLayout mLocationRelativeLayout;
 
     private ArrayList<String> mCategories;
 
@@ -153,13 +156,12 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         mPubDateButton.setOnClickListener(this);
 
-        initLocation();
-
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) rootView.findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) rootView.findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
+        ((TextView) rootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
 
         if (mActivity.getPost().isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
@@ -289,6 +291,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
             populateSelectedCategories();
         }
+
+        initLocation(rootView);
 
         return rootView;
     }
@@ -458,7 +462,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
-    private void initLocation() {
+    private void initLocation(ViewGroup rootView) {
         boolean hasLocationProvider = false;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
@@ -471,11 +475,11 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && mPost.getBlog().isLocation() && !mPost.isPage()) {
-            getActivity().findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
-            Button viewMap = (Button) getActivity().findViewById(R.id.viewMap);
-            Button updateLocation = (Button) getActivity().findViewById(R.id.updateLocation);
-            Button removeLocation = (Button) getActivity().findViewById(R.id.removeLocation);
+        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && !mPost.isPage()) {
+            rootView.findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
+            Button viewMap = (Button) rootView.findViewById(R.id.viewMap);
+            Button updateLocation = (Button) rootView.findViewById(R.id.updateLocation);
+            Button removeLocation = (Button) rootView.findViewById(R.id.removeLocation);
             updateLocation.setOnClickListener(this);
             removeLocation.setOnClickListener(this);
             viewMap.setOnClickListener(this);

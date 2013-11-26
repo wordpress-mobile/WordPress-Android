@@ -55,27 +55,20 @@
         android:hint="@string/post_password"
         android:inputType="textPassword" />
 
-    <TextView
-        android:id="@+id/postFormatLabel"
-        style="@style/WordPressSubHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/post_format" />
-
-    <Spinner
-        android:id="@+id/postFormat"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:prompt="@string/post_format" />
-
     <RelativeLayout
         android:id="@+id/sectionLocation"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="8dp"
         android:orientation="vertical"
         android:visibility="gone">
+
+        <TextView
+            android:id="@+id/locationLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/location"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:drawableLeft="@drawable/ic_action_location_searching"
@@ -83,7 +76,8 @@
             android:id="@+id/locationText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_below="@+id/locationLabel"
+            android:layout_marginLeft="8dp"
             android:layout_marginBottom="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
@@ -94,6 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/locationText"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:orientation="horizontal">
 
             <Button
@@ -125,6 +121,20 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/postFormatLabel"
+        style="@style/WordPressSubHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/post_format" />
+
+    <Spinner
+        android:id="@+id/postFormat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/post_format" />
 
     <LinearLayout
         android:id="@+id/sectionSettings"
