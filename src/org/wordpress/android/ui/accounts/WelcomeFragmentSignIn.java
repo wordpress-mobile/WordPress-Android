@@ -63,6 +63,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
+
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
     }

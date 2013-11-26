@@ -477,8 +477,7 @@
 
     <!-- invalid_url -->
     <string name="invalid_url">Invalid blog URL</string>
-  <string name="invalid_url_message">Please check that the blog URL entered is valid.
-  </string>
+    <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -732,7 +731,8 @@
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
-    <string name="create_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_new_blog_wpcom">Create a WordPress.com site</string>
     <string name="review_your_information">Review your information</string>
     <string name="validating_user_data">Validating User Data</string>
     <string name="validating_site_data">Validating Site Data</string>

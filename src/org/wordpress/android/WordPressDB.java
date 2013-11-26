@@ -11,7 +11,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -367,7 +366,7 @@ public class WordPressDB {
             int blogId = c.getInt(3);
             String url = c.getString(4);
             String password = c.getString(5);
-            if (!password.equals("") && id > 0) {
+            if (password != null && !password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);

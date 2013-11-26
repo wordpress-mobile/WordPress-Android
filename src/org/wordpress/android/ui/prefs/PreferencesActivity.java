@@ -518,7 +518,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             return true;
         }
     };
-    
+
     private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
 
         @Override

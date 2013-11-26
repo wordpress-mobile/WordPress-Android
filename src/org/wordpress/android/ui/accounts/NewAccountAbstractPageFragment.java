@@ -24,10 +24,6 @@ import org.wordpress.android.util.WPRestClient;
  *
  */
 public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
-    /**
-     * The argument key for the page number this fragment represents.
-     */
-    public static final String ARG_PAGE = "page";
     protected ConnectivityManager mSystemService;
     protected ProgressDialog mProgressDialog;
     protected static RequestQueue requestQueue = null;
@@ -35,15 +31,9 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
 
-    /**
-     * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
-     */
-    protected int mPageNumber;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPageNumber = getArguments().getInt(ARG_PAGE);
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         if (requestQueue == null)
@@ -61,13 +51,6 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected void endProgress() {
     }
 
-    /**
-     * Returns the page number represented by this fragment object.
-     */
-    public int getPageNumber() {
-        return mPageNumber;
-    }
-    
     protected class ErrorListener implements RestRequest.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
