@@ -69,13 +69,13 @@
             android:id="@+id/note_icon"
             android:layout_width="@dimen/note_icon_sz"
             android:layout_height="@dimen/note_icon_sz"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="right" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="right"
             android:textColor="@color/grey_medium"
             android:textSize="@dimen/reader_text_sz_small" />
 
