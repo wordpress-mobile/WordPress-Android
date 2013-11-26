@@ -155,8 +155,7 @@ public class NotificationsListFragment extends ListFragment {
                 txtDetail.setVisibility(View.GONE);
             }
 
-            String timespan = DateTimeUtils.timestampToTimeSpan(Long.valueOf(note.getTimestamp()));
-            txtDate.setText(timespan);
+            txtDate.setText(note.getTimeSpan());
 
             // gravatars default to having s=256 which is considerably larger than we need here, so
             // change the s= param to the actual size used here

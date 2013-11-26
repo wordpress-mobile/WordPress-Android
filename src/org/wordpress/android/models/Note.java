@@ -12,6 +12,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
@@ -54,6 +55,7 @@ public class Note {
     private transient String mCommentPreview = null;
     private transient String mSubject = null;
     private transient String mIconUrl = null;
+    private transient String mTimestamp = null;
 
     /**
      * Create a note using JSON from REST API
@@ -217,12 +219,29 @@ public class Note {
         Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
         return reply;
     }
+
     /**
-     * Get the timestamp provided by the API for the note.
+     * Get the timestamp provided by the API for the note - cached for performance
      */
     public String getTimestamp(){
-        return queryJSON("timestamp", "");
+        if (mTimestamp == null)
+            mTimestamp = queryJSON("timestamp", "");
+        return mTimestamp;
     }
+
+    /*
+     * returns a string representing the timespan based on the note's timestamp - used for display
+     * in the notification list (ex: "3d")
+     */
+    public String getTimeSpan() {
+        try {
+            return DateTimeUtils.timestampToTimeSpan(Long.valueOf(getTimestamp()));
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "failed to convert timestamp to long", e);
+            return "";
+        }
+    }
+
     public String getTemplate(){
         return queryJSON("body.template", "");
     }
