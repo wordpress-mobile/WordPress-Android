@@ -18,8 +18,9 @@ def check_drawables(rootdir):
     for subdir, dirs, files in os.walk(rootdir):
         for filename in files:
             for dpi in TO_CHECK:
-                if subdir.endswith("drawable" + dpi):
-                    if dpi == "":
+                if subdir.endswith("drawable" + dpi) and \
+                   filename.endswith("png"):
+                    if dpi == "": # merge drawable-mdpi and drawable dir
                         filenames[subdir + "-mdpi"].add(filename)
                     else:
                         filenames[subdir].add(filename)
