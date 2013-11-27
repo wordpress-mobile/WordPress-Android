@@ -359,7 +359,6 @@ public class WordPressDB {
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
-
             int id = c.getInt(0);
             String blogName = c.getString(1);
             String username = c.getString(2);

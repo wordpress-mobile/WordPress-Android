@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
@@ -20,10 +19,9 @@ public class WelcomeActivity extends SherlockFragmentActivity {
      */
     private static final int NUM_PAGES = 1; // TODO: this will probably be merged with New
                                             // Account Activity
-    public static final int SIGNIN_REQUEST = 1;
-    public static final int CREATE_ACCOUNT_REQUEST = 2;
-    public static final int CREATE_BLOG_REQUEST = 3;
-    public static final int ADD_SELF_HOSTED_BLOG = 4;
+    public static final int SIGN_IN_REQUEST = 1;
+    public static final int ADD_SELF_HOSTED_BLOG = 2;
+    public static final int CREATE_ACCOUNT_REQUEST = 3;
 
     public static String START_FRAGMENT_KEY = "start-fragment";
 
@@ -36,11 +34,9 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
-    private PagerAdapter mPagerAdapter;
-
-    //keep references to single page here
-    NewBlogFragment welcomeFragmentNewBlog;
-    WelcomeFragmentSignIn welcomeFragmentSignIn;
+    private NewAccountPagerAdapter mPagerAdapter;
+    private int mActionMode;
+    private WelcomeFragmentSignIn mWelcomeFragmentSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +51,10 @@ public class WelcomeActivity extends SherlockFragmentActivity {
         mPager.setAdapter(mPagerAdapter);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getInt(START_FRAGMENT_KEY, -1) == CREATE_BLOG_REQUEST) {
-            createBlog();
+        mActionMode = SIGN_IN_REQUEST;
+        if (extras != null) {
+            mActionMode = extras.getInt(START_FRAGMENT_KEY, -1);
         }
-        if (extras != null && extras.getInt(START_FRAGMENT_KEY, -1) == ADD_SELF_HOSTED_BLOG) {
-            addSelfHosted();
-        }
-
     }
 
     public void showNextItem() {
@@ -85,7 +78,6 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     }
 
     private class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
-       
         public NewAccountPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -97,8 +89,11 @@ public class WelcomeActivity extends SherlockFragmentActivity {
 
             switch (position) {
                 default:
-                    welcomeFragmentSignIn = new WelcomeFragmentSignIn();
-                    currentPage = welcomeFragmentSignIn;
+                    mWelcomeFragmentSignIn = new WelcomeFragmentSignIn();
+                    if (mActionMode == ADD_SELF_HOSTED_BLOG) {
+                        mWelcomeFragmentSignIn.setForceSelfHostedMode(true);
+                    }
+                    currentPage = mWelcomeFragmentSignIn;
                     break;
             }
 
@@ -119,18 +114,8 @@ public class WelcomeActivity extends SherlockFragmentActivity {
             String username = data.getStringExtra("username");
             if (username != null) {
                 mPager.setCurrentItem(1);
-                welcomeFragmentSignIn.signInDotComUser();
+                mWelcomeFragmentSignIn.signInDotComUser();
             }
         }
-    }
-
-    protected void addSelfHosted() {
-    }
-
-    protected void createBlog() {
-        Intent newAccountIntent = new Intent(WelcomeActivity.this, NewAccountActivity.class);
-        newAccountIntent.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
-                WelcomeActivity.CREATE_BLOG_REQUEST);
-        startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_BLOG_REQUEST);
     }
 }

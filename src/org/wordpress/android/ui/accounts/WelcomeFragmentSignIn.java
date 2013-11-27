@@ -56,13 +56,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
     private ProgressBar mProgressBarSignIn;
+    private RelativeLayout mUrlButtonLayout;
     private List mUsersBlogsList;
     private boolean mHttpAuthRequired;
     private String mHttpUsername = "";
     private String mHttpPassword = "";
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-
+    private boolean mForceSelfHosted;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -77,9 +78,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         ImageView statsIcon = (ImageView) rootView.findViewById(R.id.nux_fragment_icon);
         statsIcon.setImageResource(R.drawable.nux_icon_wp);
 
-        final RelativeLayout urlButtonLayout = (RelativeLayout) rootView.
-                findViewById(R.id.url_button_layout);
-
+        mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
@@ -96,12 +95,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (urlButtonLayout.getVisibility() == View.VISIBLE) {
-                    urlButtonLayout.setVisibility(View.GONE);
+                if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
+                    mUrlButtonLayout.setVisibility(View.GONE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
                     mSelfHosted = false;
                 } else {
-                    urlButtonLayout.setVisibility(View.VISIBLE);
+                    mUrlButtonLayout.setVisibility(View.VISIBLE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
                     mSelfHosted = true;
                 }
@@ -115,7 +114,25 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
+        if (mForceSelfHosted) {
+            forceSelfHostedMode();
+        }
         return rootView;
+    }
+
+    public void setForceSelfHostedMode(boolean force) {
+        mForceSelfHosted = force;
+    }
+
+    /**
+     * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
+     * edit box
+     */
+    private void forceSelfHostedMode() {
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setVisibility(View.GONE);
+        mCreateAccountButton.setVisibility(View.GONE);
+        mSelfHosted = true;
     }
 
     private void autocorrectUsername() {
