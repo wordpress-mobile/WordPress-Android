@@ -18,7 +18,7 @@
     <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="please_sign_in">Please sign in again.</string>
-    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Please open WordPress.com in your browser, and generate an application-specific passwords to use with this app.\n(Log in to WordPress, and go to Settings->security).</string>
+    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit Security Settings</string>
 
     <!-- form labels -->
