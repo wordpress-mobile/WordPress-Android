@@ -69,11 +69,21 @@ public class WordPress extends Application {
     public static WPRestClient restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static BitmapLruCache localImageCache;
 
     private static Context mContext;
 
     public static final String TAG = "WordPress";
+
+    private static BitmapLruCache mBitmapCache;
+    public static BitmapLruCache getBitmapCache() {
+        if (mBitmapCache == null) {
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            // Use a small slice of available memory for the image cache
+            int cacheSize = maxMemory / 32;
+            mBitmapCache = new BitmapLruCache(cacheSize);
+        }
+        return mBitmapCache;
+    }
 
     @Override
     public void onCreate() {
@@ -86,13 +96,7 @@ public class WordPress extends Application {
 
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // Use a small slice of available memory for the image cache
-        int cacheSize = maxMemory / 32;
-        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
-
-        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
-        localImageCache = new BitmapLruCache(cacheSize / 2);
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)

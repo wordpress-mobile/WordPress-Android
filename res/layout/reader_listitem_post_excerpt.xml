@@ -28,11 +28,11 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"
             style="@style/ReaderTextView"
-            android:maxLines="2"
-            android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/image_avatar"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="text_blog_name"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/reader_text_sz_medium" />
@@ -106,39 +106,41 @@
             android:id="@+id/image_like_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/text_like_count"
+            android:layout_marginRight="@dimen/reader_margin_extra_small"
+            android:layout_toLeftOf="@+id/image_comment_btn"
             android:src="@drawable/reader_button_like" />
 
         <org.wordpress.android.widgets.WPTextView
-            style="@style/ReaderTextView.Count"
             android:id="@+id/text_like_count"
-            android:gravity="center_vertical"
-            android:layout_toLeftOf="@+id/image_comment_btn"
+            style="@style/ReaderTextView.Count"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/reader_margin_medium"
-            android:text="0"/>
+            android:layout_toLeftOf="@+id/image_comment_btn"
+            android:gravity="center_vertical"
+            android:text="0" />
 
         <ImageView
             android:id="@+id/image_comment_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/text_comment_count"
+            android:layout_marginLeft="@dimen/reader_margin_small"
+            android:layout_marginRight="@dimen/reader_margin_small"
+            android:layout_toLeftOf="@+id/image_reblog_btn"
             android:src="@drawable/reader_button_comment" />
 
         <org.wordpress.android.widgets.WPTextView
-            style="@style/ReaderTextView.Count"
             android:id="@+id/text_comment_count"
-            android:gravity="center_vertical"
-            android:layout_toLeftOf="@+id/image_reblog_btn"
+            style="@style/ReaderTextView.Count"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/reader_margin_medium"
-            android:text="0"/>
+            android:layout_toLeftOf="@+id/image_reblog_btn"
+            android:gravity="center_vertical"
+            android:text="0" />
 
         <ImageView
             android:id="@+id/image_reblog_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_reblog" />
 
     </RelativeLayout>

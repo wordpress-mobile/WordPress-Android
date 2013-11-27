@@ -108,10 +108,9 @@
         <item name="android:textColor">@color/blue_medium</item>
     </style>
     <style name="ReaderTextView.Count" parent="ReaderTextView">
-        <item name="android:background">@drawable/reader_count_circle</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/blue_medium</item>
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
     </style>
     <style name="ReaderTextView.ActionButton" parent="ReaderTextView">
@@ -233,7 +232,7 @@
         <item name="android:layout_height">@dimen/reader_avatar_sz_large</item>
     </style>
     <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">@dimen/reader_button_icon_sz</item>
         <item name="android:layout_height">@dimen/reader_button_icon_sz</item>
     </style>
 

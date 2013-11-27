@@ -40,7 +40,6 @@
 
     <dimen name="actionbar_refresh_margin">12dp</dimen>
 
-    <!-- http://developer.android.com/design/style/typography.html -->
     <dimen name="reader_text_sz_small">12sp</dimen>
     <dimen name="reader_text_sz_medium">14sp</dimen>
     <dimen name="reader_text_sz_large">18sp</dimen>
@@ -51,7 +50,7 @@
     <dimen name="reader_avatar_sz_like">28dp</dimen>
     <dimen name="reader_avatar_sz_large">96dp</dimen>
 
-    <dimen name="reader_button_icon_sz">42dp</dimen>
+    <dimen name="reader_button_icon_sz">48dp</dimen>
 
     <dimen name="reader_featured_image_height">240dp</dimen>
     <dimen name="reader_divider_size">12dp</dimen>

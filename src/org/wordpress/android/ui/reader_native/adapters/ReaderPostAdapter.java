@@ -13,8 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -48,6 +52,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private final int mColorFollow;
     private final int mColorFollowing;
+
+    private int mLastGetViewPos = -1;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -100,6 +106,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void clear() {
+        mLastGetViewPos = -1;
         if (!mPosts.isEmpty()) {
             mPosts.clear();
             notifyDataSetChanged();
@@ -152,6 +159,35 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             new LoadPostsTask().execute();
         }
+    }
+
+    ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
+        @Override
+        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+
+        }
+    };
+
+    /*
+     * preload the featured image for the passed post
+     */
+    private void preloadFeaturedImage(final ReaderPost post) {
+        if (post == null || !post.hasFeaturedImage())
+            return;
+
+        final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
+        if (WordPress.imageLoader.isCached(imageUrl, mPhotonWidth, mPhotonHeight)) {
+            ReaderLog.i("image already cached");
+            return;
+        }
+
+        ReaderLog.i("caching " + imageUrl);
+        WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }
 
     @Override
@@ -288,6 +324,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
+
+        // preload the featured image for the next post
+        if (position > mLastGetViewPos && position < getCount())
+            preloadFeaturedImage(mPosts.get(position + 1));
+
+        mLastGetViewPos = position;
 
         return convertView;
     }
@@ -457,6 +499,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts = (ReaderPostList)(tmpPosts.clone());
+                if (mPosts.size() > 0)
+                    preloadFeaturedImage(mPosts.get(0));
                 notifyDataSetChanged();
             }
 
