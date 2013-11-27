@@ -10,7 +10,6 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.util.StringUtils;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
@@ -23,6 +22,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
         mWebView.getSettings().setDisplayZoomControls(false);
+        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
      
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
