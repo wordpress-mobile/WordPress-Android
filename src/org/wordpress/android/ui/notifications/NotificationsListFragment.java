@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,8 +235,10 @@ public class NotificationsListFragment extends ListFragment {
                 return icon;
 
             int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
-            if (imageId==0)
+            if (imageId==0) {
+                Log.w(WordPress.TAG, "unknown note type - " + noteType);
                 return null;
+            }
 
             icon = getResources().getDrawable(imageId);
             if (icon==null)

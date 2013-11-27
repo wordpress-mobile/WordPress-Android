@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class Note {
     protected static final String TAG="NoteModel";
+
     protected static final String NOTE_UNKNOWN_TYPE="unknown";
     public static final String NOTE_COMMENT_TYPE="comment";
     public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
