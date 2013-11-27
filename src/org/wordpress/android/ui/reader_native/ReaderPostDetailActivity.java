@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -88,23 +87,14 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (mListView==null) {
             mListView = (ListView) findViewById(android.R.id.list);
 
-            // enable replying to an individual comment when the user long clicks it - this is done
-            // instead of setting an OnItemClickListener for two reasons:
-            //   1. OnItemClickListener won't fire for comments that contain links (due
-            //      to the comment text using autoLink="web")
-            //   2. It's too easy to accidentally cause OnItemClickListener to fire while
-            //      scrolling/flinging through the list, whereas OnItemLongClickListener
-            //      is a more deliberate action
-            mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            // enable replying to an individual comment when the user taps it
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    // id will be the id of the tapped comment - note that it will be -1 when the
-                    // post detail header is long clicked, which we want to ignore
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // id is the commentId of the tapped comment - note that it will be -1 when the
+                    // post detail header is tapped, which we want to ignore
                     if (id > 0) {
                         showAddCommentBox(id);
-                        return true;
-                    } else {
-                        return false;
                     }
                 }
             });

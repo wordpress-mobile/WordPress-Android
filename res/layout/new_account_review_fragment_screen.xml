@@ -10,116 +10,172 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="600dp"
             android:layout_width="wrap_content"
-            android:maxWidth="480dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="52dp"
-                android:src="@drawable/nux_icon_wp"
-                android:layout_marginBottom="8dp" />
+                android:src="@drawable/nux_icon_wp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:text="@string/review_your_information"
                 style="@style/WordPress.NUXTitle"
-                app:fontVariation="light" />
+                app:fontVariation="light"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingBottom="4dp" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/email_text"
-                style="@style/WordPress.NUXReviewRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/email_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXReviewText"
+                    android:padding="4dp"
+                    android:layout_marginLeft="48dp" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_action_email"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/white" />
+            </RelativeLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/username_text"
-                style="@style/WordPress.NUXReviewRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/username_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXReviewText"
+                    android:padding="4dp"
+                    android:layout_marginLeft="48dp" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/title_text"
-                style="@style/WordPress.NUXReviewRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_action_person"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/white" />
+            </RelativeLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/address_text"
-                style="@style/WordPress.NUXReviewRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/title_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXReviewText"
+                    android:padding="4dp"
+                    android:layout_marginLeft="48dp" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_edit"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/white" />
+            </RelativeLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/language_text"
-                style="@style/WordPress.NUXReviewRow"
-                android:textStyle="normal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/nux_divider" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/address_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXReviewText"
+                    android:padding="4dp"
+                    android:layout_marginLeft="48dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/ic_action_web_site"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/language_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/WordPress.NUXReviewText"
+                    android:padding="4dp"
+                    android:layout_marginLeft="48dp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/dashicon_translation"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/white" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/prev_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
-                    android:text="@string/action_previous"
-                    style="@style/WordPress.NUXPrimaryButton" />
-
-                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/next_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:text="@string/action_next"
-                    style="@style/WordPress.NUXPrimaryButton" />
+                    style="@style/WordPress.NUXThirdButton"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp" />
 
             </LinearLayout>
 
-        </LinearLayout>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>

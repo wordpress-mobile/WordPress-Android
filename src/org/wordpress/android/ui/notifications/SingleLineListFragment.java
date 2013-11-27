@@ -42,30 +42,26 @@ public class SingleLineListFragment extends ListFragment implements Notification
         list.setDividerHeight(1);
         list.setHeaderDividersEnabled(false);
 
+        Note currentNote = getNote();
+        
         // No note? No service.
-        if (getNote() == null)
+        if (currentNote == null)
             return;
-
+        
         // set the header
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        noteHeader.setText(getNote().queryJSON("body.header_text", ""));
+        noteHeader.setText(JSONUtil.getStringDecoded(currentNote.queryJSON("subject", new JSONObject()), "text"));
         noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-        noteHeader.setClickable(false);
+        String footerUrl = currentNote.queryJSON("body.header_link", "");
+        if (!footerUrl.equals("")) {
+            noteHeader.setUrl(footerUrl);
+            noteHeader.setClickable(true);
+        }
+        
         list.addHeaderView(noteHeader);
         
-        // set the footer
-        DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        String footerText = getNote().queryJSON("body.footer_text", "");
-        if (!footerText.equals("")) {
-            noteFooter.setText(footerText);
-            String footerUrl = getNote().queryJSON("body.footer_link", "");
-            if (!footerUrl.equals("")) {
-                noteFooter.setUrl(footerUrl);
-            }
-            list.addFooterView(noteFooter);
-        }
         // set the adapter
         setListAdapter(new NoteAdapter());
     }

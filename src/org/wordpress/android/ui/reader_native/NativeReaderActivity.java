@@ -38,11 +38,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
 
     // ActionBar alpha
     protected static final int ALPHA_NONE = 0;
-    protected static final int ALPHA_LEVEL_1 = 230;
-    protected static final int ALPHA_LEVEL_2 = 210;
-    protected static final int ALPHA_LEVEL_3 = 190;
-    protected static final int ALPHA_LEVEL_4 = 170;
-    protected static final int ALPHA_LEVEL_5 = 150;
+    protected static final int ALPHA_LEVEL_1 = 245;
+    protected static final int ALPHA_LEVEL_2 = 230;
+    protected static final int ALPHA_LEVEL_3 = 215;
+    protected static final int ALPHA_LEVEL_4 = 200;
+    protected static final int ALPHA_LEVEL_5 = 185;
 
     private int mCurrentActionBarAlpha = 0;
     private int mPrevActionBarAlpha = 0;
@@ -95,12 +95,17 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             });
         }
 
-        if (savedInstanceState==null) {
-            showPostListFragment();
-        } else {
+        if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getPostListFragment() == null)
+            showPostListFragment();
     }
 
     @Override
@@ -234,6 +239,15 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSignout() {
+        super.onSignout();
+        // reader database will have been cleared by the time this is called, but the fragment must
+        // be removed or else it will continue to show the same articles - onResume() will take care
+        // of re-displaying the fragment if necessary
+        removePostListFragment();
+    }
+
     /*
      * show fragment containing list of latest posts
      */
@@ -298,11 +312,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             return;
 
         // solid background if no alpha, otherwise create color drawable with alpha applied
-        // (source color is based on ab_stacked_solid_wordpress.9.png)
+        // (source color is based on R.color.blue_new_kid)
          if (alpha==ALPHA_NONE) {
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_new_kid));
         } else {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 46, 162, 204)));
         }
         mCurrentActionBarAlpha = alpha;
     }

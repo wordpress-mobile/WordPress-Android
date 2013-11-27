@@ -14,7 +14,7 @@
 
         <org.wordpress.android.ui.CustomSpinner
             android:id="@+id/media_filter_spinner"
-            style="@style/wordpress_DropDownNav"
+            style="@style/DropDownNav.WordPress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"

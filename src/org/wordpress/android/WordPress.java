@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -31,6 +32,8 @@ import com.wordpress.rest.Oauth;
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.datasets.ReaderDatabase;
+import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -76,6 +79,7 @@ public class WordPress extends Application {
     private static Context mContext;
 
     public static final String TAG = "WordPress";
+    public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
 
     @Override
     public void onCreate() {
@@ -445,6 +449,17 @@ public class WordPress extends Application {
         wpDB.deactivateAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+
+        // reset all reader-related prefs & data
+        ReaderPrefs.reset();
+        ReaderDatabase.reset();
+
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        context.sendBroadcast(broadcastIntent);
+
     }
 
     public static String getLoginUrl(Blog blog) {

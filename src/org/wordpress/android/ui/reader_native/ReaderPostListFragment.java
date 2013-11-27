@@ -666,6 +666,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         return mActionBarAdapter;
     }
 
+    private boolean hasActionBarAdapter() {
+        return (mActionBarAdapter != null);
+    }
     /*
      * refresh the list of tags shown in the ActionBar
      */

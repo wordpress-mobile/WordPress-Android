@@ -18,7 +18,7 @@
     <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="please_sign_in">Please sign in again.</string>
-    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Please open WordPress.com in your browser, and generate an application-specific passwords to use with this app.\n(Log in to WordPress, and go to Settings->security).</string>
+    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit Security Settings</string>
 
     <!-- form labels -->
@@ -97,7 +97,6 @@
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
     <string name="wpcom">WordPress.com</string>
     <string name="sign_in">Sign in</string>
-    <string name="sign_in_capital">Sign In</string>
     <string name="sign_out">Sign out</string>
     <string name="all">All</string>
     <string name="images">Images</string>
@@ -584,7 +583,7 @@
 
     <string name="ok">OK</string>
     <string name="image_settings">Image Settings</string>
-    <string name="add_account_blog_url">Blog URL</string>
+    <string name="add_account_blog_url">Blog Address</string>
     <string name="wordpress_blog">WordPress Blog</string>
     <string name="blogusername">blogusername</string>
     <string name="column_1">Column 1</string>
@@ -750,20 +749,21 @@
     <string name="invalid_password_message">Password must contain at least 4 characters.</string>
     <string name="passwords_do_not_match_message">Passwords don\'t match.</string>
     <string name="invalid_username_title">Invalid username</string>
-    <string name="invalid_username_length">Username must be shorter than 61 characters.</string>
+    <string name="invalid_username_too_short">Username must be longer than 4 characters.</string>
+    <string name="invalid_username_too_long">Username must be shorter than 61 characters.</string>
     <string name="email_hint">Email Address</string>
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="blog_address_required">Blog address is required.</string>
     <string name="signup_label">Sign Up</string>
     <string name="signin_label">Sign In</string>
-    <string name="signing_up">Signing up...</string>
-    <string name="signing_in">Signing in...</string>
+    <string name="signing_up">Signing up…</string>
+    <string name="signing_in">Signing in…</string>
     <string name="dont_yet_have_an_account">Do not have an account yet?</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
-    <string name="agree_terms_of_service">You agree to the fascinating %1$sTerms of Service%2$s by pressing the \'Next\' button.</string>
-    <string name="username_email">Username / Email</string>
-    <string name="site_address">Site address (URL)</string>
+    <string name="agree_terms_of_service">By creating an account you agree to the %1$sTerms of Service%2$s.</string>
+    <string name="username_email">Username or Email</string>
+    <string name="site_address">Your Self-Hosted Address (URL)</string>
     <string name="dont_have_account">Don\'t have an account? %1$sCreate one!%2$s</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Sorry, usernames can only contain lowercase letters (a-z) and numbers.</string>
@@ -790,14 +790,15 @@
     <string name="blog_name_exists">Sorry, that site already exists!</string>
     <string name="blog_name_reserved">Sorry, that site is reserved!</string>
     <string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days.</string>
-    <string name="password_invalid">Your password is invalid because it does not meet our security guidelines. Please try a more complex password.</string>
+    <string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
     <string name="blog_name_invalid">Invalid Site Address</string>
     <string name="blog_title_invalid">Invalid Site Title</string>
     <string name="username_invalid">Invalid username</string>
     <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="update_credentials">Please update your credentials and try again.</string>
-    <string name="nux_tap_continue">TAP TO CONTINUE</string>
+    <string name="nux_tap_continue">Continue</string>
+    <string name="nux_tap_learn_more">Learn More</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
     <string name="nux_welcome">Welcome to WordPress</string>
     <string name="nux_welcome_description">Hold the web in the palm of your hand. Full publishing power in a pint-sized package.</string>
@@ -810,9 +811,13 @@
     <string name="nux_tutorial_notifications_title">Get real-time comment notifications</string>
     <string name="nux_tutorial_notifications_description">Keep the conversation going with notifications on the go. No need for a desktop to nurture the dialogue.</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
-    <string name="nux_welcome_create_account">Create Account</string>
-    <string name="nux_swipe_to_continue">SWIPE TO CONTINUE</string>
-    <string name="nux_tutorial_tap_to_start">Tap to start using WordPress</string>
+    <string name="nux_welcome_create_account">Create account</string>
+    <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
+    <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
+    <string name="nux_tutorial_tap_to_start">Start using WordPress</string>
+    <string name="nux_dialog_success">Success!</string>
+    <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
+    <string name="nux_dialog_success_continue">CONTINUE</string>
 
     <string-array name="privacy_array">
          <item>Public</item>
