@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background for like/comment count
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="@color/grey_light" />
+    <padding
+        android:bottom="2dp"
+        android:left="5dp"
+        android:right="5dp"
+        android:top="2dp" />
+</shape>

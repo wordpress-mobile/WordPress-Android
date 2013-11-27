@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@color/reader_divider_grey"
         staggered:drawSelectorOnTop="false"
-        staggered:itemMargin="@dimen/reader_divider_size"
+        staggered:itemMargin="0dp"
         staggered:numColumns="2" />
 
     <org.wordpress.android.widgets.WPTextView

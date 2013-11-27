@@ -232,7 +232,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                header.setMinimumHeight(actionbarHeight - (gridView.getItemMargin() * 2));
+                header.setMinimumHeight(actionbarHeight);
                 gridView.setHeaderView(header);
                 // we can't fade the ActionBar while items are scrolled because StaggeredGridView
                 // doesn't have a scroll listener, so just use a default alpha
@@ -265,11 +265,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             listView.addFooterView(mFooterProgress);
 
             if (isTranslucentActionBarEnabled) {
-                // add a transparent header to the listView that matches the size of the ActionBar,
-                // taking the size of the listView divider into account
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
+                // add a transparent header to the listView that matches the size of the ActionBar
                 RelativeLayout header = new RelativeLayout(context);
-                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
+                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
                 listView.addHeaderView(header, null, false);
                 initListViewOverscroll(listView);
             }

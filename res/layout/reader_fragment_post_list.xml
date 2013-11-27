@@ -7,7 +7,7 @@
 
     <ListView
         android:id="@android:id/list"
-        style="@style/ReaderListView.Posts"
+        style="@style/ReaderListView.NoDivider"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView

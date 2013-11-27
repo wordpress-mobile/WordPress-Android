@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.Constants;
@@ -21,6 +20,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
@@ -36,9 +36,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private int mPhotonWidth;
     private int mPhotonHeight;
-
-    private int mNegativeOffset;
-    private int mDefaultOffset;
     private int mAvatarSz;
 
     private final float mRowAnimationFromYDelta;
@@ -46,9 +43,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mCanRequestMorePosts = false;
     private boolean mAnimateRows = false;
 
-    private Context mContext;
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
+
+    private final int mColorFollow;
+    private final int mColorFollowing;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -61,7 +60,6 @@ public class ReaderPostAdapter extends BaseAdapter {
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
-        mContext = context.getApplicationContext();
         mInflater = LayoutInflater.from(context);
 
         mReblogListener = reblogListener;
@@ -69,12 +67,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         mDataRequestedListener = dataRequestedListener;
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
-
-        // negative top offset for avatar when both an avatar and featured image exist
-        mNegativeOffset = -(mAvatarSz / 2);
-
-        // offset when no featured image
-        mDefaultOffset = context.getResources().getDimensionPixelOffset(R.dimen.reader_margin_medium);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
@@ -87,6 +79,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         // when animating rows in, start from this y-position near the bottom using medium animation duration
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
+        // colors for follow text
+        mColorFollow = context.getResources().getColor(R.color.reader_hyperlink);
+        mColorFollowing = context.getResources().getColor(R.color.orange_medium);
     }
 
     public void setPosts(ReaderPostList posts) {
@@ -180,29 +176,24 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*if (debugCnt==0) {
-            Debug.startMethodTracing("WPReader");
-        } else if (debugCnt==100) {
-            Debug.stopMethodTracing();
-        }
-        debugCnt++;*/
-
         final ReaderPost post = (ReaderPost) getItem(position);
-
-        //ReaderLog.d("requesting view for post " + Long.toString(post.postId) + ", position " + Integer.toString(position));
-
         final PostViewHolder holder;
+
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
             holder = new PostViewHolder();
 
             holder.txtTitle = (TextView) convertView.findViewById(R.id.text_title);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_excerpt);
-            holder.txtSource = (TextView) convertView.findViewById(R.id.text_source);
-            holder.txtCounts = (TextView) convertView.findViewById(R.id.text_counts);
+            holder.txtBlogName = (TextView) convertView.findViewById(R.id.text_blog_name);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
+            holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
+
+            holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
+            holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
+
             holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-            holder.layoutActions = (ViewGroup) convertView.findViewById(R.id.layout_actions);
 
             holder.imgBtnLike = (ImageView) convertView.findViewById(R.id.image_like_btn);
             holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
@@ -219,7 +210,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTitle.setText(R.string.reader_untitled_post);
         }
 
-        // post text/excerpt
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
             holder.txtText.setText(post.getExcerpt());
@@ -227,41 +217,38 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtText.setVisibility(View.GONE);
         }
 
-        // blog name / author name / date
-        holder.txtSource.setText(post.getSource());
+        holder.txtBlogName.setText(post.getBlogName());
+        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         // featured image or video
-        final boolean isFeaturedImageVisible;
         if (post.hasFeaturedImage()) {
             holder.imgFeatured.setImageUrl(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), WPNetworkImageView.ImageType.PHOTO);
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            isFeaturedImageVisible = true;
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            isFeaturedImageVisible = true;
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-            isFeaturedImageVisible = false;
         }
 
-        // if there's a featured image and an avatar, we want the avatar to partially overlay the featured image
-        int topMargin = (isFeaturedImageVisible && post.hasPostAvatar() ? mNegativeOffset : mDefaultOffset);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)holder.imgAvatar.getLayoutParams();
-        if (layoutParams.topMargin!=topMargin)
-            layoutParams.topMargin = topMargin;
-
-        // avatar
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            holder.imgAvatar.setVisibility(View.VISIBLE);
         } else {
-            holder.imgAvatar.setVisibility(View.GONE);
+            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
         }
 
         // likes, comments & reblogging
         if (post.isWP()) {
             final int pos = position;
+
+            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollow(holder, pos, post);
+                }
+            });
+
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -281,12 +268,18 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
 
-            holder.layoutActions.setVisibility(View.VISIBLE);
+            holder.txtFollow.setVisibility(View.VISIBLE);
+            holder.imgBtnLike.setVisibility(View.VISIBLE);
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
+            holder.imgBtnReblog.setVisibility(View.VISIBLE);
         } else {
-            holder.layoutActions.setVisibility(View.GONE);
+            holder.txtFollow.setVisibility(View.GONE);
+            holder.imgBtnLike.setVisibility(View.GONE);
+            holder.imgBtnComment.setVisibility(View.GONE);
+            holder.imgBtnReblog.setVisibility(View.GONE);
         }
 
-        showCounts(holder.txtCounts, post);
+        showCounts(holder, post);
 
         // animate the appearance of this row while new posts are being loaded
         if (mAnimateRows)
@@ -302,16 +295,23 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * shows like & comment count
      */
-    private void showCounts(final TextView txtCounts, final ReaderPost post) {
-        if (post!=null && (post.numReplies > 0 || post.numLikes > 0)) {
-            txtCounts.setText(getLikeAndCommentCounts(post));
-            txtCounts.setVisibility(View.VISIBLE);
+    private void showCounts(final PostViewHolder holder, final ReaderPost post) {
+        if (post.numLikes > 0) {
+            holder.txtLikeCount.setText(Integer.toString(post.numLikes));
+            holder.txtLikeCount.setVisibility(View.VISIBLE);
         } else {
-            txtCounts.setVisibility(View.GONE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+        }
+
+        if (post.numReplies > 0) {
+            holder.txtCommentCount.setText(Integer.toString(post.numReplies));
+            holder.txtCommentCount.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtCommentCount.setVisibility(View.GONE);
         }
     }
 
-    public String getLikeAndCommentCounts(ReaderPost post) {
+    /*public String getLikeAndCommentCounts(ReaderPost post) {
         if (post==null || (post.numLikes==0 && post.numReplies==0))
             return "";
 
@@ -335,7 +335,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         return counts;
-    }
+    }*/
 
     /*
      * animate in the passed view - uses faster property animation on ICS and above, falls back to
@@ -357,16 +357,19 @@ public class ReaderPostAdapter extends BaseAdapter {
     private static class PostViewHolder {
         private TextView txtTitle;
         private TextView txtText;
-        private TextView txtSource;
+        private TextView txtBlogName;
+        private TextView txtDate;
+        private TextView txtFollow;
+
+        private TextView txtLikeCount;
+        private TextView txtCommentCount;
+
         private ImageView imgBtnLike;
         private ImageView imgBtnComment;
         private ImageView imgBtnReblog;
-        private TextView txtCounts;
 
         private WPNetworkImageView imgFeatured;
         private WPNetworkImageView imgAvatar;
-
-        private ViewGroup layoutActions;
     }
 
     /*
@@ -383,25 +386,36 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showLikeStatus(holder.imgBtnLike, updatedPost.isLikedByCurrentUser);
-        showCounts(holder.txtCounts, updatedPost);
+        showCounts(holder, post);
     }
 
     private void showLikeStatus(ImageView imgBtnLike, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser != imgBtnLike.isSelected()) {
+        if (isLikedByCurrentUser != imgBtnLike.isSelected())
             imgBtnLike.setSelected(isLikedByCurrentUser);
-            //imgBtnLike.setText(isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
-        }
     }
 
     private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
+        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected())
             imgBtnReblog.setSelected(isRebloggedByCurrentUser);
-            //imgBtnReblog.setText(isRebloggedByCurrentUser ? R.string.reader_btn_reblogged : R.string.reader_btn_reblog);
-        }
         if (isRebloggedByCurrentUser)
             imgBtnReblog.setOnClickListener(null);
     }
 
+    private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
+        ReaderAniUtils.zoomAction(holder.txtFollow);
+
+        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
+            return;
+
+        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
+        mPosts.set(position, updatedPost);
+        showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
+    }
+
+    private void showFollowStatus(TextView txtFollow, boolean isFollowedByCurrentUser) {
+        txtFollow.setText(isFollowedByCurrentUser ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        txtFollow.setTextColor(isFollowedByCurrentUser ? mColorFollowing : mColorFollow);
+    }
 
     /*
      * AsyncTask to load desired posts
