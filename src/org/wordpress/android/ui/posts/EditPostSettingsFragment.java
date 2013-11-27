@@ -62,8 +62,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
-    private Post mPost;
-
     private NewEditPostActivity mActivity;
 
 
@@ -96,7 +94,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             d.show();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", mPost.getBlogID());
+            bundle.putInt("id", mActivity.getPost().getBlogID());
             if (mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
@@ -213,9 +211,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             }
         }
 
-        mPost = mActivity.getPost();
-        if (mPost != null) {
-            mExcerptEditText.setText(mPost.getMt_excerpt());
+        Post post = mActivity.getPost();
+        if (post != null) {
+            mExcerptEditText.setText(post.getMt_excerpt());
 
             String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
                     getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
@@ -224,7 +222,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStatusSpinner.setAdapter(adapter);
 
-            if (mPost.isUploaded()) {
+            if (post.isUploaded()) {
                 items = new String[]{
                         getResources().getString(R.string.publish_post),
                         getResources().getString(R.string.draft),
@@ -235,7 +233,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 mStatusSpinner.setAdapter(adapter);
             }
 
-            long pubDate = mPost.getDate_created_gmt();
+            long pubDate = post.getDate_created_gmt();
             if (pubDate != 0) {
                 try {
                     int flags = 0;
@@ -251,11 +249,11 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 }
             }
 
-            if (mPost.getWP_password() != null)
-                mPasswordEditText.setText(mPost.getWP_password());
+            if (post.getWP_password() != null)
+                mPasswordEditText.setText(post.getWP_password());
 
-            if (mPost.getPost_status() != null) {
-                String status = mPost.getPost_status();
+            if (post.getPost_status() != null) {
+                String status = post.getPost_status();
 
                 if (status.equals("publish")) {
                     mStatusSpinner.setSelection(0, true);
@@ -270,13 +268,13 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 }
             }
 
-            if (!mPost.isPage()) {
-                if (mPost.getJSONCategories() != null) {
-                    mCategories = JSONUtil.fromJSONArrayToStringList(mPost.getJSONCategories());
+            if (!post.isPage()) {
+                if (post.getJSONCategories() != null) {
+                    mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
                 }
 
-                Double latitude = mPost.getLatitude();
-                Double longitude = mPost.getLongitude();
+                Double latitude = post.getLatitude();
+                Double longitude = post.getLongitude();
 
                 // if this post has location attached to it, look up the location address
                 if (latitude != 0.0) {
@@ -284,7 +282,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     new GetAddressTask().execute(latitude, longitude);
                 }
             }
-            String tags = mPost.getMt_keywords();
+            String tags = post.getMt_keywords();
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
@@ -317,7 +315,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     }
 
     public void savePostSettings(boolean isAutoSave) {
-        if (mPost == null)
+        Post post = mActivity.getPost();
+        if (post == null)
             return;
 
         String password = (mPasswordEditText.getText() != null) ? mPasswordEditText.getText().toString() : "";
@@ -328,12 +327,12 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
-            else if (mPost.getDate_created_gmt() > 0)
-                pubDateTimestamp = mPost.getDate_created_gmt();
+            else if (post.getDate_created_gmt() > 0)
+                pubDateTimestamp = post.getDate_created_gmt();
         }
 
         String tags = "", postFormat = "";
-        if (!mPost.isPage()) {
+        if (!post.isPage()) {
             tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
             // post format
             Spinner postFormatSpinner = (Spinner) getActivity().findViewById(R.id.postFormat);
@@ -360,7 +359,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         Double latitude = 0.0;
         Double longitude = 0.0;
-        if (mPost.getBlog().isLocation()) {
+        if (post.getBlog().isLocation()) {
             try {
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();
@@ -370,20 +369,20 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
 
         if (mCurrentLocation == null) {
-            latitude = mPost.getLatitude();
-            longitude = mPost.getLongitude();
+            latitude = post.getLatitude();
+            longitude = post.getLongitude();
         }
 
-        mPost.setMt_excerpt(excerpt);
-        mPost.setDate_created_gmt(pubDateTimestamp);
-        mPost.setJSONCategories(new JSONArray(mCategories));
-        mPost.setMt_keywords(tags);
-        mPost.setPost_status(status);
-        mPost.setWP_password(password);
-        mPost.setLatitude(latitude);
-        mPost.setLongitude(longitude);
-        mPost.setWP_post_form(postFormat);
-        mPost.update();
+        post.setMt_excerpt(excerpt);
+        post.setDate_created_gmt(pubDateTimestamp);
+        post.setJSONCategories(new JSONArray(mCategories));
+        post.setMt_keywords(tags);
+        post.setPost_status(status);
+        post.setWP_password(password);
+        post.setLatitude(latitude);
+        post.setLongitude(longitude);
+        post.setWP_post_form(postFormat);
+        post.update();
     }
 
     /**
@@ -475,7 +474,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && !mPost.isPage()) {
+        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
             rootView.findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
             Button viewMap = (Button) rootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) rootView.findViewById(R.id.updateLocation);
@@ -485,8 +484,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             viewMap.setOnClickListener(this);
 
             // if this is a new post, get the user's current location
-            if (mPost.isNew()) {
-                // TODO this is broken now
+            if (mActivity.getPost().isNew()) {
                 getLocation();
             }
         }
@@ -526,9 +524,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             mCurrentLocation.setLatitude(0.0);
             mCurrentLocation.setLongitude(0.0);
         }
-        if (mPost != null) {
-            mPost.setLatitude(0.0);
-            mPost.setLongitude(0.0);
+        if (mActivity.getPost() != null) {
+            mActivity.getPost().setLatitude(0.0);
+            mActivity.getPost().setLongitude(0.0);
         }
         mLocationText.setText("");
         setLocationStatus(LocationStatus.NONE);

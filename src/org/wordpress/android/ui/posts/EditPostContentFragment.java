@@ -106,8 +106,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
-    private Post mPost;
-
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private EditText mTitleEditText;
@@ -169,38 +167,29 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mBquoteToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         moreButton.setOnClickListener(mFormatBarButtonClickListener);
 
-        mPost = mActivity.getPost();
-        if (mPost != null) {
-            if (!TextUtils.isEmpty(mPost.getContent())) {
-                if (mPost.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(mPost.getContent().replaceAll("\uFFFC", ""), mActivity, mPost));
+        Post post = mActivity.getPost();
+        if (post != null) {
+            if (!TextUtils.isEmpty(post.getContent())) {
+                if (post.isLocalDraft())
+                    mContentEditText.setText(WPHtml.fromHtml(post.getContent().replaceAll("\uFFFC", ""), mActivity, post));
                 else
-                    mContentEditText.setText(mPost.getContent().replaceAll("\uFFFC", ""));
+                    mContentEditText.setText(post.getContent().replaceAll("\uFFFC", ""));
             }
-            if (!TextUtils.isEmpty(mPost.getTitle())) {
-                mTitleEditText.setText(mPost.getTitle());
+            if (!TextUtils.isEmpty(post.getTitle())) {
+                mTitleEditText.setText(post.getTitle());
             }
         }
 
-        mContentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mContentEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (mPost != null && hasFocus) {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP && mActivity != null && mActivity.getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
                 }
+
+                return false;
             }
         });
-
-        mContentEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
-                    setContentEditingModeVisible(true);
-                }
-            }
-        });
-
-        setContentEditTextFocusable(true);
 
         // Check for Android share action
         String action = mActivity.getIntent().getAction();
@@ -223,13 +212,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         return rootView;
-    }
-
-    public void setContentEditTextFocusable(boolean canFocus) {
-        if (mContentEditText != null) {
-            mContentEditText.setFocusableInTouchMode(canFocus);
-            mContentEditText.setFocusable(canFocus);
-        }
     }
 
     public void setContentEditingModeVisible(boolean isVisible) {
@@ -331,7 +313,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                             Editable str = mContentEditText.getText();
                             if (str == null)
                                 return;
-                            if (mPost.isLocalDraft()) {
+                            if (mActivity.getPost().isLocalDraft()) {
                                 if (extras.getString("linkText") == null) {
                                     if (mSelectionStart < mSelectionEnd)
                                         str.delete(mSelectionStart, mSelectionEnd);
@@ -416,7 +398,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } else {
                 // add link tag around URLs, trac #64
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mPost));
+                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost()));
             }
         } else {
             String action = intent.getAction();
@@ -516,13 +498,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     public void savePostContent(boolean isAutoSave) {
 
-        if (mPost == null)
+        Post post = mActivity.getPost();
+
+        if (post == null)
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content;
 
-        if (mPost.isLocalDraft() || !isAutoSave) {
+        if (post.isLocalDraft() || !isAutoSave) {
             Editable e = mContentEditText.getText();
             if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
                 // remove suggestion spans, they cause craziness in
@@ -547,7 +531,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         String images = "";
         // update the images
-        mPost.deleteMediaFiles();
+        post.deleteMediaFiles();
 
         Editable s = mContentEditText.getText();
 
@@ -570,7 +554,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 } else {
                     MediaFile mf = new MediaFile();
                     mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-                    mf.setPostID(mPost.getId());
+                    mf.setPostID(post.getId());
                     mf.setTitle(wpIS.getTitle());
                     mf.setCaption(wpIS.getCaption());
                     // mf.setDescription(wpIS.getDescription());
@@ -601,19 +585,19 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         String moreTag = "<!--more-->";
 
-        mPost.setTitle(title);
+        post.setTitle(title);
         // split up the post content if there's a more tag
-        if (mPost.isLocalDraft() && content.contains(moreTag)) {
-            mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
-            mPost.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
+        if (post.isLocalDraft() && content.contains(moreTag)) {
+            post.setDescription(content.substring(0, content.indexOf(moreTag)));
+            post.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
         } else {
-            mPost.setDescription(content);
-            mPost.setMt_text_more("");
+            post.setDescription(content);
+            post.setMt_text_more("");
         }
-        mPost.setMediaPaths(images);
-        if (!mPost.isLocalDraft())
-            mPost.setLocalChange(true);
-        mPost.update();
+        post.setMediaPaths(images);
+        if (!post.isLocalDraft())
+            post.setLocalChange(true);
+        post.update();
     }
 
     public boolean hasEmptyContentFields() {
@@ -750,8 +734,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private MediaFile getMediaFileFromWPImageSpan(WPImageSpan wpIS) {
         MediaFile mf = new MediaFile();
         mf.setMediaId(wpIS.getMediaId());
-        if (mPost != null)
-            mf.setPostID(mPost.getId());
+        if (mActivity.getPost() != null)
+            mf.setPostID(mActivity.getPost().getId());
         mf.setMIMEType(wpIS.getMimeType());
         mf.setHeight(wpIS.getHeight());
         mf.setFileName(wpIS.getFileName());
@@ -1092,7 +1076,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         Object[] allSpans = s.getSpans(selectionStart, selectionEnd, styleClass);
         boolean textIsSelected = selectionEnd > selectionStart;
-        if (mPost.isLocalDraft()) {
+        if (mActivity.getPost().isLocalDraft()) {
             // Local drafts can use the rich text editor. Yay!
             boolean shouldAddSpan = true;
             for (Object span : allSpans) {
@@ -1355,7 +1339,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     public void afterTextChanged(Editable s) {
 
         int position = Selection.getSelectionStart(mContentEditText.getText());
-        if ((mIsBackspace && position != 1) || mLastPosition == position || !mPost.isLocalDraft())
+        if ((mIsBackspace && position != 1) || mLastPosition == position || !mActivity.getPost().isLocalDraft())
             return;
 
         if (position < 0) {
@@ -1415,7 +1399,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     @Override
     public void onSelectionChanged() {
-        if (!mPost.isLocalDraft())
+        if (!mActivity.getPost().isLocalDraft())
             return;
 
         final Spannable s = mContentEditText.getText();
