@@ -3,9 +3,11 @@ package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -140,6 +142,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver();
 
         if (isAnimatingRefreshButton) {
             isAnimatingRefreshButton = false;
@@ -155,6 +158,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver();
         refreshMenuDrawer();
     }
 
@@ -620,6 +624,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
 
+    /**
+     * this method is called when the user signs out of the app - descendants should override
+     * this to perform activity-specific cleanup upon signout
+     */
+    public void onSignout() {
+
+    }
+
+
+
     public void startAnimatingRefreshButton(MenuItem refreshItem) {
         if (refreshItem != null && !isAnimatingRefreshButton) {
             isAnimatingRefreshButton = true;
@@ -914,4 +928,37 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             startActivityWithDelay(intent);
         }
     }
+
+    /**
+     * broadcast receiver which detects when user signs out of the app and calls onSignout()
+     * so descendants of this activity can do cleanup upon signout
+     */
+    private final void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
+        registerReceiver(mReceiver, filter);
+    }
+
+    private final void unregisterReceiver() {
+        if (mReceiver!=null) {
+            try {
+                unregisterReceiver(mReceiver);
+            } catch (IllegalArgumentException e) {
+                // exception occurs if receiver already unregistered (safe to ignore)
+            }
+        }
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null || intent.getAction() == null)
+                return;
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
+                onSignout();
+            }
+        }
+    };
+
+
 }

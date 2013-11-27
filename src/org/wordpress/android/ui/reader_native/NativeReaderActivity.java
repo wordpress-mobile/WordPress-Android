@@ -95,12 +95,17 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             });
         }
 
-        if (savedInstanceState==null) {
-            showPostListFragment();
-        } else {
+        if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getPostListFragment() == null)
+            showPostListFragment();
     }
 
     @Override
@@ -232,6 +237,15 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSignout() {
+        super.onSignout();
+        // reader database will have been cleared by the time this is called, but the fragment must
+        // be removed or else it will continue to show the same articles - onResume() will take care
+        // of re-displaying the fragment if necessary
+        removePostListFragment();
     }
 
     /*

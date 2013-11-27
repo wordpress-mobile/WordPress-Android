@@ -28,7 +28,7 @@ public class SetupBlog {
     private String mHttpPassword = "";
     private String mXmlrpcUrl;
 
-    private int mErrorMsgId = -1;
+    private int mErrorMsgId;
     private boolean mIsCustomUrl;
     private String mSelfHostedURL;
 

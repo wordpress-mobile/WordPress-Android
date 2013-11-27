@@ -217,7 +217,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
-        private String mErrorMsg;
+        private int mErrorMsgId;
 
         @Override
         protected void onPreExecute() {
@@ -235,11 +235,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
         @Override
         protected List doInBackground(Void... args) {
-            List usersBlogsList = mSetupBlog.getBlogList();
-            if (mSetupBlog.getErrorMsgId() != -1) {
-                mErrorMsg = getString(mSetupBlog.getErrorMsgId());
-            }
-            return usersBlogsList;
+            List userBlogList = mSetupBlog.getBlogList();
+            mErrorMsgId = mSetupBlog.getErrorMsgId();
+            return userBlogList;
         }
 
         @Override
@@ -274,13 +272,23 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            if (usersBlogsList == null && mErrorMsg != null) {
+            if (usersBlogsList == null && mErrorMsgId != 0) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                NUXDialogFragment nuxAlert = NUXDialogFragment
-                        .newInstance(getString(R.string.nux_cannot_log_in), mErrorMsg,
-                                getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                NUXDialogFragment nuxAlert;
+                if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
+                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
+                            R.drawable.nux_icon_alert, true,
+                            getString(R.string.visit_security_settings),
+                            NUXDialogFragment.ACTION_OPEN_URL,
+                            "https://wordpress.com/settings/security/?ssl=forced");
+                } else {
+                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
+                            R.drawable.nux_icon_alert);
+                }
                 nuxAlert.show(ft, "alert");
-                mErrorMsg = null;
+                mErrorMsgId = 0;
                 endProgress();
                 return;
             }

@@ -217,6 +217,9 @@
             android:name=".ui.notifications.NotificationsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
 
+        <activity
+            android:name=".ui.notifications.NotificationsWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
