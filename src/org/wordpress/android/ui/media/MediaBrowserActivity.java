@@ -37,6 +37,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -746,13 +747,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaGridFragment == null)
             return;
 
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        if (newPost.getId() < 0) {
+            return;
+        }
+
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
-        Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostActivity.NEW_MEDIA_POST);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
-        i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.get(0));
+        Intent i = new Intent(this, NewEditPostActivity.class);
+        i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
+        i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(NewEditPostActivity.EXTRA_IS_NEW_POST, true);
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.get(0));
         startActivity(i);
     }
 
@@ -780,10 +786,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
-        Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        if (newPost.getId() < 0) {
+            return;
+        }
+        Intent i = new Intent(this, NewEditPostActivity.class);
+        i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(NewEditPostActivity.EXTRA_IS_NEW_POST, true);
+        i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
         i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
         startActivity(i);
     }

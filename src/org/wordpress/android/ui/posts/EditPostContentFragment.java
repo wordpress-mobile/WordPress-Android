@@ -431,7 +431,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content;
 
-        if (post.isLocalDraft() || !isAutoSave) {
+        if (post.isLocalDraft() /*|| !isAutoSave*/) {
             Editable e = mContentEditText.getText();
             if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
                 // remove suggestion spans, they cause craziness in
@@ -828,6 +828,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private void startMediaGalleryActivity(MediaGallery mediaGallery) {
         Intent intent = new Intent(getActivity(), MediaGalleryActivity.class);
         intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
+        if (mediaGallery == null)
+            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
