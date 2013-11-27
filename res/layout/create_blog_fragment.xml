@@ -23,6 +23,9 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/create_account_label"
                 android:text="@string/create_new_blog_wpcom"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 style="@style/WordPress.NUXTitle"
                 app:fontVariation="light" />
 

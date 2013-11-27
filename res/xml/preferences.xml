@@ -6,11 +6,12 @@
         android:key="wp_pref_category_blogs"
         android:title="@string/blogs">
     </PreferenceCategory>
-    
+
     <PreferenceCategory
         android:title="@string/wpcom"
         android:key="wp_pref_wpcom_auth" >
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/notifications"
         android:key="wp_pref_notifications_category" >
         <PreferenceScreen

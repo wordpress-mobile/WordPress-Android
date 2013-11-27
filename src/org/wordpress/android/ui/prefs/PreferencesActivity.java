@@ -32,6 +32,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
@@ -55,8 +56,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
     EditTextPreference taglineTextPreference;
     OnPreferenceChangeListener preferenceChangeListener;
-    
-    private Object[] mTypeList;
+
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
@@ -209,7 +209,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
 
         Preference addBlogPreference = new Preference(this);
-        addBlogPreference.setTitle(R.string.add_account);
+        addBlogPreference.setTitle(R.string.add_blog);
         Intent intent = new Intent(this, WelcomeActivity.class);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(order++);
@@ -405,9 +405,15 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
-            
             wpcomCategory.addPreference(usernamePref);
-            
+
+            Preference createWPComBlogPref = new Preference(this);
+            createWPComBlogPref.setTitle(getString(R.string.create_new_blog_wpcom));
+            Intent intent = new Intent(this, NewBlogActivity.class);
+            createWPComBlogPref.setIntent(intent);
+            wpcomCategory.addPreference(createWPComBlogPref);
+
+
             loadNotifications();
         } else {
             Preference signInPref = new Preference(this);
@@ -464,8 +470,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
                 mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
                 Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
-                               
-                mTypeList = mNotificationSettings.keySet().toArray();
+
+                Object[] mTypeList = mNotificationSettings.keySet().toArray();
                 
                 for (int i = 0; i < mTypeList.length; i++) {
                     if (!mTypeList[i].equals("muted_blogs") && !mTypeList[i].equals("mute_until")) {
