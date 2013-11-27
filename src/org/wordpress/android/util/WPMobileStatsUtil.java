@@ -27,7 +27,7 @@ import java.util.HashMap;
 /**
  * Created by Eric on 11/20/13.
  *
- * WPMobieStatsUtils handles stats logging. Its public methods should for the most part be service
+ * WPMobileStatsUtils handles stats logging. Its public methods should for the most part be service
  * neutral to allow to ease possible changes in the stats libs we use in the future.
  *
  * WPMobileStatsUtils is not thread safe so only call it from the main thread.
@@ -79,6 +79,7 @@ public class WPMobileStatsUtil {
     public static final String StatsPropertyPostDetailSettingsClickedRemoveLocation = "settings_clicked_remove_location";
 
     // Pages
+    public static final String StatsPropertyPagesOpened = "pages_opened";
     public static final String StatsEventPagesOpened = "Pages - Opened";
     public static final String StatsEventPagesClosed= "Pages - Closed";
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
@@ -123,6 +124,7 @@ public class WPMobileStatsUtil {
         int numBlogs = WordPress.wpDB.getAccounts().size();
         try {
             JSONObject properties = new JSONObject();
+            properties.put("platform", "Android");
             properties.put("session_count", sessionCount);
             properties.put("connected_to_dotcom", connected);
             properties.put("number_of_blogs", numBlogs);
