@@ -72,6 +72,28 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mSignupButton.setVisibility(View.VISIBLE);
     }
 
+    private void showSiteUrlError(int messageId) {
+        mSiteUrlTextField.setError(getString(messageId));
+        mSiteUrlTextField.requestFocus();
+    }
+
+    private void showSiteTitleError(int messageId) {
+        mSiteTitleTextField.setError(getString(messageId));
+        mSiteTitleTextField.requestFocus();
+    }
+
+    protected boolean specificShowError(int messageId) {
+        switch (getErrorType(messageId)) {
+            case TITLE:
+                showSiteTitleError(messageId);
+                return true;
+            case SITE_URL:
+                showSiteUrlError(messageId);
+                return true;
+        }
+        return false;
+    }
+
     private boolean checkUserData() {
         // try to create the user
         final String siteTitle = mSiteTitleTextField.getText().toString().trim();
@@ -100,7 +122,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     };
 
     private String titleToUrl(String siteUrl) {
-        return siteUrl.replace(" ", "").toLowerCase();
+        return siteUrl.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
     }
 
     private void validateAndCreateUserAndBlog() {
