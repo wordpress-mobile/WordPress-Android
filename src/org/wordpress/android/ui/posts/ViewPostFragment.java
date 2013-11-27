@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPMobileStatsUtil;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
@@ -91,7 +92,7 @@ public class ViewPostFragment extends Fragment {
                 .findViewById(R.id.viewPost);
         viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-
+                onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
                 if (!parentActivity.isRefreshing)
                     loadPostPreview();
 
