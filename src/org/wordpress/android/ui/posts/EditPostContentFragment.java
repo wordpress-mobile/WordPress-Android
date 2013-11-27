@@ -118,8 +118,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private float mLastYPos = 0;
 
-    private int mQuickMediaType = -1;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -188,22 +186,32 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         // Check for Android share action
         String action = mActivity.getIntent().getAction();
+        int quickMediaType = -1;
+        if (mActivity.getIntent().getExtras() != null)
+            quickMediaType = mActivity.getIntent().getExtras().getInt("quick-media", -1);
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
             setPostContentFromShareAction();
         else if (NEW_MEDIA_GALLERY.equals(action))
             prepareMediaGallery();
         else if (NEW_MEDIA_POST.equals(action))
             prepareMediaPost();
-        else if (mQuickMediaType >= 0) {
+        else if (quickMediaType >= 0) {
             // User selected a 'Quick (media type)' option in the menu drawer
-            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
+            if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
                 launchCamera();
-            else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+            else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
                 launchPictureLibrary();
-            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
+            else if (quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
                 launchVideoCamera();
-            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+            else if (quickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                 launchVideoLibrary();
+
+            if (post != null) {
+                if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+                    post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
+                else if (quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || quickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+                    post.setQuickPostType(Post.QUICK_MEDIA_TYPE_VIDEO);
+            }
         }
 
         return rootView;

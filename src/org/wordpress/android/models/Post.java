@@ -15,6 +15,9 @@ import org.wordpress.android.util.WPHtml;
 
 public class Post {
 
+    public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
+    public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
+
     private long id;
     private int blogID;
     private String categories;
