@@ -32,11 +32,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -70,7 +66,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -418,84 +413,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
     }
 
-    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
-
-        protected void onPreExecute() {
-            Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected SpannableStringBuilder doInBackground(List<?>... args) {
-            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
-            String type = (String) args[0].get(1);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
-            for (Object streamUri : multi_stream) {
-                if (streamUri instanceof Uri) {
-                    Uri imageUri = (Uri) streamUri;
-                    if (type != null) {
-                        addMedia(imageUri, ssb);
-                    }
-                }
-            }
-            return ssb;
-        }
-
-        protected void onPostExecute(SpannableStringBuilder ssb) {
-            if (ssb != null) {
-                if (ssb.length() > 0) {
-                    mContentEditText.setText(ssb);
-                }
-            } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * Media
-     */
-
-    private void launchPictureLibrary() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
-        MediaUtils.launchPictureLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchCamera() {
-        MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
-
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
-    }
-
-    private void launchVideoLibrary() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
-        MediaUtils.launchVideoLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoCamera() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        MediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void verifyImage(Uri imageUri) {
-        if (MediaUtils.isPicasaImage(imageUri)) {
-            // Create an AsyncTask to download the file
-            new DownloadImageTask().execute(imageUri);
-        } else {
-            // It is a regular local image file
-            if (!addMedia(imageUri, null))
-                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void savePostContent(boolean isAutoSave) {
 
         Post post = mActivity.getPost();
@@ -604,6 +521,84 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         return TextUtils.isEmpty(mTitleEditText.getText()) && TextUtils.isEmpty(mContentEditText.getText());
     }
 
+    /**
+     * Media
+     */
+
+    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
+
+        protected void onPreExecute() {
+            Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected SpannableStringBuilder doInBackground(List<?>... args) {
+            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
+            String type = (String) args[0].get(1);
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            for (Object streamUri : multi_stream) {
+                if (streamUri instanceof Uri) {
+                    Uri imageUri = (Uri) streamUri;
+                    if (type != null) {
+                        addMedia(imageUri, ssb);
+                    }
+                }
+            }
+            return ssb;
+        }
+
+        protected void onPostExecute(SpannableStringBuilder ssb) {
+            if (ssb != null) {
+                if (ssb.length() > 0) {
+                    mContentEditText.setText(ssb);
+                }
+            } else {
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void launchPictureLibrary() {
+        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
+        MediaUtils.launchPictureLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchCamera() {
+        MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
+
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+        });
+    }
+
+    private void launchVideoLibrary() {
+        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
+        MediaUtils.launchVideoLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchVideoCamera() {
+        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
+        MediaUtils.launchVideoCamera(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void verifyImage(Uri imageUri) {
+        if (MediaUtils.isPicasaImage(imageUri)) {
+            // Create an AsyncTask to download the file
+            new DownloadImageTask().execute(imageUri);
+        } else {
+            // It is a regular local image file
+            if (!addMedia(imageUri, null))
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
 
         @Override
@@ -629,7 +624,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private void prepareMediaGallery() {
         MediaGallery mediaGallery = new MediaGallery();
-        mediaGallery.setIds(getActivity().getIntent().getStringArrayListExtra("NEW_MEDIA_GALLERY_EXTRA_IDS"));
+        mediaGallery.setIds(getActivity().getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS));
 
         startMediaGalleryActivity(mediaGallery);
     }

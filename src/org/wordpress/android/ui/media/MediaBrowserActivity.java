@@ -44,6 +44,8 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostContentFragment;
+import org.wordpress.android.ui.posts.NewEditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -782,7 +784,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
         i.putExtra("id", WordPress.currentBlog.getId());
         i.putExtra("isNew", true);
-        i.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
         startActivity(i);
     }
 }
