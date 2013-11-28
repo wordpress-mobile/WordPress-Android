@@ -197,7 +197,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUsernameEditText.requestFocus();
     }
 
-
     protected boolean specificShowError(int messageId) {
         switch (getErrorType(messageId)) {
             case USERNAME:
@@ -305,6 +304,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     if (mErrorMsgId == R.string.update_credentials) {
                         showUsernameError(mErrorMsgId);
                         showPasswordError(mErrorMsgId);
+                        mErrorMsgId = 0;
                         endProgress();
                         return ;
                     } else {
