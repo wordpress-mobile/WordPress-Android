@@ -307,23 +307,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (usersBlogsList != null) {
-                SelectBlogsDialog selectBlogsDialog = new SelectBlogsDialog(
-                        new SelectBlogsDialog.Listener() {
-                    @Override
-                    public void onSuccess(SparseBooleanArray selectedBlogs) {
-                        if (selectedBlogs != null && selectedBlogs.size() > 0) {
-                            mSetupBlog.addBlogs(usersBlogsList, selectedBlogs);
-                        }
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        endProgress();
-                    }
-                }, getActivity());
-                selectBlogsDialog.showBlogSelectionDialog(usersBlogsList);
+                // Add all blogs
+                SparseBooleanArray allBlogs = new SparseBooleanArray();
+                for (int i = 0; i < usersBlogsList.size(); i++) {
+                    allBlogs.put(i, true);
+                }
+                mSetupBlog.addBlogs(usersBlogsList, allBlogs);
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
             } else {
                 endProgress();
             }
