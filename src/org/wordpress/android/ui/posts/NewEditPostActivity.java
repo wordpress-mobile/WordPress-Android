@@ -27,6 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
 public class NewEditPostActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
@@ -58,6 +59,8 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
     private boolean mIsNewPost;
+
+    private String mStatEventEditorClosed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +129,15 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
                 } else {
                     mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
                 }
+
+                if (isPage) {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+                } else {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();
@@ -145,6 +157,12 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
+        super.onDestroy();
     }
 
     @Override
@@ -264,6 +282,10 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     public void setViewPagerEnabled(boolean isEnabled) {
         if (mViewPager != null)
             mViewPager.setPagingEnabled(isEnabled);
+    }
+
+    public String getStatEventEditorClosed() {
+        return mStatEventEditorClosed;
     }
 
     /**

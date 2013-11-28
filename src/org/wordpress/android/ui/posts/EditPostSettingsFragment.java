@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,6 +41,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
@@ -89,6 +91,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.pubDateButton) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
             DatePickerDialog d = new DatePickerDialog(getActivity(),
                     R.style.WordPress, mDateSetListener, mYear, mMonth, mDay);
             d.show();
@@ -102,6 +105,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShowCategories);
             onCategoryButtonClick(v);
         } else if (id == R.id.viewMap) {
             Double latitude = 0.0;
@@ -111,14 +115,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 e.printStackTrace();
             }
             if (latitude != 0.0) {
+                WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
                 String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
                 startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
             } else {
                 Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.updateLocation) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedUpdateLocation);
             getLocation();
         } else if (id == R.id.removeLocation) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
             removeLocation();
         }
     }
@@ -196,10 +203,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     e.printStackTrace();
                 }
             }
-            Spinner pfSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
+            Spinner postFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            pfSpinner.setAdapter(pfAdapter);
+            postFormatSpinner.setAdapter(pfAdapter);
             String activePostFormat = "standard";
 
 
@@ -207,8 +214,18 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 activePostFormat = mActivity.getPost().getWP_post_format();
             for (int i = 0; i < mPostFormats.length; i++) {
                 if (mPostFormats[i].equals(activePostFormat))
-                    pfSpinner.setSelection(i);
+                    postFormatSpinner.setSelection(i);
             }
+
+            postFormatSpinner.setOnTouchListener(
+                    new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedPostFormat);
+                            return false;
+                        }
+                    }
+            );
         }
 
         Post post = mActivity.getPost();
@@ -221,6 +238,15 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStatusSpinner.setAdapter(adapter);
+            mStatusSpinner.setOnTouchListener(
+                    new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedStatus);
+                            return false;
+                        }
+                    }
+            );
 
             if (post.isUploaded()) {
                 items = new String[]{
