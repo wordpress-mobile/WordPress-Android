@@ -98,6 +98,9 @@ public class WordPress extends Application {
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
 
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;

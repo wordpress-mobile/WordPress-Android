@@ -13,12 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -52,8 +48,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private final int mColorFollow;
     private final int mColorFollowing;
-
-    private int mLastGetViewPos = -1;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -106,7 +100,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void clear() {
-        mLastGetViewPos = -1;
         if (!mPosts.isEmpty()) {
             mPosts.clear();
             notifyDataSetChanged();
@@ -161,35 +154,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
-        @Override
-        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-
-        }
-    };
-
-    /*
-     * preload the featured image for the passed post
-     */
-    private void preloadFeaturedImage(final ReaderPost post) {
-        if (post == null || !post.hasFeaturedImage())
-            return;
-
-        final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-        if (WordPress.imageLoader.isCached(imageUrl, mPhotonWidth, mPhotonHeight)) {
-            ReaderLog.i("image already cached");
-            return;
-        }
-
-        ReaderLog.i("caching " + imageUrl);
-        WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
-    }
-
     @Override
     public int getCount() {
         return mPosts.size();
@@ -225,9 +189,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
             holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
 
-            holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
-            holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
-
             holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
 
@@ -258,7 +219,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         // featured image or video
         if (post.hasFeaturedImage()) {
-            holder.imgFeatured.setImageUrl(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), WPNetworkImageView.ImageType.PHOTO);
+            final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
+            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             holder.imgFeatured.setVisibility(View.VISIBLE);
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
@@ -298,6 +260,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ReaderAniUtils.zoomAction(holder.imgBtnReblog);
                         if (mReblogListener!=null)
                             mReblogListener.onRequestReblog(post);
                     }
@@ -310,9 +273,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
         } else {
             holder.txtFollow.setVisibility(View.GONE);
-            holder.imgBtnLike.setVisibility(View.GONE);
-            holder.imgBtnComment.setVisibility(View.GONE);
-            holder.imgBtnReblog.setVisibility(View.GONE);
+            holder.imgBtnLike.setVisibility(View.INVISIBLE);
+            holder.imgBtnComment.setVisibility(View.INVISIBLE);
+            holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
         showCounts(holder, post);
@@ -325,12 +288,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
-        // preload the featured image for the next post
-        if (position > mLastGetViewPos && position < getCount())
-            preloadFeaturedImage(mPosts.get(position + 1));
-
-        mLastGetViewPos = position;
-
         return convertView;
     }
 
@@ -338,7 +295,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * shows like & comment count
      */
     private void showCounts(final PostViewHolder holder, final ReaderPost post) {
-        if (post.numLikes > 0) {
+        /*if (post.numLikes > 0) {
             holder.txtLikeCount.setText(Integer.toString(post.numLikes));
             holder.txtLikeCount.setVisibility(View.VISIBLE);
         } else {
@@ -350,34 +307,8 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtCommentCount.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
-        }
+        }*/
     }
-
-    /*public String getLikeAndCommentCounts(ReaderPost post) {
-        if (post==null || (post.numLikes==0 && post.numReplies==0))
-            return "";
-
-        String counts;
-        if (post.numLikes==1) {
-            counts = mContext.getString(R.string.reader_label_like_count_singular);
-        } else if (post.numLikes > 1) {
-            counts = mContext.getString(R.string.reader_label_like_count_plural, post.numLikes);
-        } else {
-            counts = "";
-        }
-
-        if (post.numReplies > 0) {
-            if (post.numLikes > 0)
-                counts += ", ";
-            if (post.numReplies==1) {
-                counts += mContext.getString(R.string.reader_label_comment_count_singular);
-            } else {
-                counts += mContext.getString(R.string.reader_label_comment_count_plural, post.numReplies);
-            }
-        }
-
-        return counts;
-    }*/
 
     /*
      * animate in the passed view - uses faster property animation on ICS and above, falls back to
@@ -402,9 +333,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         private TextView txtBlogName;
         private TextView txtDate;
         private TextView txtFollow;
-
-        private TextView txtLikeCount;
-        private TextView txtCommentCount;
 
         private ImageView imgBtnLike;
         private ImageView imgBtnComment;
@@ -499,8 +427,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts = (ReaderPostList)(tmpPosts.clone());
-                if (mPosts.size() > 0)
-                    preloadFeaturedImage(mPosts.get(0));
                 notifyDataSetChanged();
             }
 
@@ -510,4 +436,46 @@ public class ReaderPostAdapter extends BaseAdapter {
             mIsTaskRunning = false;
         }
     }
+
+    /**
+     * pre-loads featured images so they're cached before posts are displayed
+     */
+    /*private class ImagePreloader {
+        private int currentIndex = -1;
+        private ArrayList<String> imageUrls = new ArrayList<String>();
+
+        ImagePreloader(final ReaderPostList posts) {
+            if (posts != null) {
+                for (ReaderPost post: posts) {
+                    if (post.hasFeaturedImage())
+                        imageUrls.add(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight));
+                }
+            }
+        }
+
+        void start() {
+            preloadNext();
+        }
+
+        void preloadNext() {
+            currentIndex++;
+            if (currentIndex >= imageUrls.size())
+                return;
+            WordPress.imageLoader.get(imageUrls.get(currentIndex), imagePreloadListener);
+        }
+
+        ImageLoader.ImageListener imagePreloadListener = new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
+                if (imageContainer != null)
+                    ReaderLog.i("preloaded (isImmediate=" + isImmediate + ") - " + imageContainer.getRequestUrl());
+                preloadNext();
+            }
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.e(volleyError);
+                preloadNext();
+            }
+        };
+    }*/
 }
