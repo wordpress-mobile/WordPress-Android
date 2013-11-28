@@ -32,6 +32,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -182,7 +183,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
 
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
         int order = 0;
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
@@ -208,12 +209,24 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogsCategory.addPreference(blogSettingsPreference);
         }
 
+        // Add blog button
         Preference addBlogPreference = new Preference(this);
         addBlogPreference.setTitle(R.string.add_blog);
         Intent intent = new Intent(this, WelcomeActivity.class);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
+
+        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAllAccounts();
+        if (allAccounts.size() > 1) {
+            // Add show/hide buttons
+            Preference manageBlogPreference = new Preference(this);
+            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
+            intent = new Intent(this, ManageBlogsActivity.class);
+            manageBlogPreference.setIntent(intent);
+            manageBlogPreference.setOrder(order++);
+            blogsCategory.addPreference(manageBlogPreference);
+        }
     }
 
     protected int getEnabledBlogsCount() {

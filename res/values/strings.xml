@@ -59,6 +59,8 @@
     <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="manage_blogs">Manage blogs</string>
+    <string name="show_and_hide_blogs">Show/hide blogs</string>
+    <string name="blogs_visibility">Blogs visibility</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>

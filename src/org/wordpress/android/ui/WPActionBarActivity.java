@@ -442,7 +442,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @return array of blog names
      */
     private static String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
 
         int blogCount = accounts.size();
         blogIDs = new int[blogCount];
