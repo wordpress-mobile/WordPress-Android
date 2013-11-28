@@ -83,7 +83,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
         }
-        
         loadSettingsForBlog();
     }
 

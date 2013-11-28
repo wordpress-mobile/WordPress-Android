@@ -144,7 +144,7 @@ public class WordPressDB {
             "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
 
     // add hidden flag to blog settings (accounts)
-    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default false;";
+    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
     private SQLiteDatabase db;
 
