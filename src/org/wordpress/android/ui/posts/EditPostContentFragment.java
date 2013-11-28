@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -101,6 +102,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
+    private View mRootView;
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private EditText mTitleEditText;
@@ -112,7 +114,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private String mMediaCapturePath = "";
 
-    private int mStyleStart, mSelectionStart, mSelectionEnd;
+    private int mStyleStart, mSelectionStart, mSelectionEnd, mOriginalViewBottom;
     private int mLastPosition = -1;
     private int mCurrentActivityRequest = -1;
 
@@ -147,7 +149,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             @Override
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
-                if (!mActivity.getSupportActionBar().isShowing())
+                // Bottom comparison is there to ensure that the keyboard is actually showing
+                if (mRootView.getBottom() < mOriginalViewBottom && !mActivity.getSupportActionBar().isShowing())
                     setContentEditingModeVisible(false);
             }
         });
@@ -172,17 +175,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 mTitleEditText.setText(post.getTitle());
             }
         }
-
-        mContentEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP && mActivity != null && mActivity.getSupportActionBar().isShowing()) {
-                    setContentEditingModeVisible(true);
-                }
-
-                return false;
-            }
-        });
 
         // Check for Android share action
         String action = mActivity.getIntent().getAction();
@@ -216,6 +208,20 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mRootView = view;
+        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+    }
+
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        public void onGlobalLayout() {
+            mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            mOriginalViewBottom = mRootView.getBottom();
+        }
+    };
 
     public void setContentEditingModeVisible(boolean isVisible) {
         if (mActivity == null)
@@ -1161,7 +1167,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         mLastYPos = pos;
 
-        if (event.getAction() == 1 && !mScrollDetected) {
+        if (event.getAction() == MotionEvent.ACTION_UP && !mScrollDetected) {
+            if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
+                setContentEditingModeVisible(true);
+                return false;
+            }
+
             Layout layout = ((TextView) v).getLayout();
             int x = (int) event.getX();
             int y = (int) event.getY();
