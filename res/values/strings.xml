@@ -796,7 +796,7 @@
     <string name="username_invalid">Invalid username</string>
     <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
-    <string name="update_credentials">Please update your credentials and try again.</string>
+    <string name="update_credentials">Wrong username or password. Update your credentials and try again.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_tap_learn_more">Learn More</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
