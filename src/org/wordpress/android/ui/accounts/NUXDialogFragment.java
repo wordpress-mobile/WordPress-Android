@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -14,12 +16,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NUXDialogFragment extends SherlockDialogFragment {
-
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
     private static String ARG_FOOTER = "footer";
     private static String ARG_IMAGE = "image";
     private static String ARG_TWO_BUTTONS = "two-buttons";
+    private static String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
+    private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
+    private static String ARG_SECOND_BUTTON_PARAM = "second-btn-param";
 
     private ImageView mImageView;
     private WPTextView mTitleTextView;
@@ -29,17 +33,22 @@ public class NUXDialogFragment extends SherlockDialogFragment {
     private WPTextView mFooterRightButton;
     private RelativeLayout mFooterTwoButtons;
 
+    public static int ACTION_FINISH = 1;
+    public static int ACTION_OPEN_URL = 2;
+
     public NUXDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
     public static NUXDialogFragment newInstance(String title, String message, String footer,
                                                 int imageSource) {
-        return newInstance(title, message, footer, imageSource, false);
+        return newInstance(title, message, footer, imageSource, false, "", 0, "");
     }
 
     public static NUXDialogFragment newInstance(String title, String message, String footer,
-                                                int imageSource, boolean twoButtons) {
+                                                int imageSource, boolean twoButtons,
+                                                String secondButtonLabel, int secondButtonAction,
+                                                String secondButtonParam) {
         NUXDialogFragment adf = new NUXDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
@@ -47,6 +56,10 @@ public class NUXDialogFragment extends SherlockDialogFragment {
         bundle.putString(ARG_FOOTER, footer);
         bundle.putInt(ARG_IMAGE, imageSource);
         bundle.putBoolean(ARG_TWO_BUTTONS, twoButtons);
+        bundle.putString(ARG_SECOND_BUTTON_LABEL, secondButtonLabel);
+        bundle.putInt(ARG_SECOND_BUTTON_ACTION, secondButtonAction);
+        bundle.putString(ARG_SECOND_BUTTON_PARAM, secondButtonParam);
+
         adf.setArguments(bundle);
         adf.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme);
         return adf;
@@ -75,6 +88,7 @@ public class NUXDialogFragment extends SherlockDialogFragment {
         if (args.getBoolean(ARG_TWO_BUTTONS)) {
             mFooterOneButton.setVisibility(View.GONE);
             mFooterTwoButtons.setVisibility(View.VISIBLE);
+            mFooterRightButton.setText(args.getString(ARG_SECOND_BUTTON_LABEL));
         }
 
         View.OnClickListener clickListenerDismiss = new View.OnClickListener() {
@@ -84,10 +98,20 @@ public class NUXDialogFragment extends SherlockDialogFragment {
             }
         };
 
+        final int action = args.getInt(ARG_SECOND_BUTTON_ACTION, 0);
+        final String param = args.getString(ARG_SECOND_BUTTON_PARAM);
+
         View.OnClickListener clickListenerFinish = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                if (action == ACTION_FINISH) {
+                    getActivity().finish();
+                }
+                if (action == ACTION_OPEN_URL) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(param));
+                    startActivity(intent);
+                    dismissAllowingStateLoss();
+                }
             }
         };
 

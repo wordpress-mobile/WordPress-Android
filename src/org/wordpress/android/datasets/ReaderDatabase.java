@@ -41,6 +41,16 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
 
     /*
+     * resets (clears) the reader database
+     */
+    public static void reset() {
+        // note that we must call getWritableDb() before getDatabase() in case the database
+        // object hasn't been created yet
+        SQLiteDatabase db = getWritableDb();
+        getDatabase().reset(db);
+    }
+
+    /*
      * used during development to copy database to SD card so we can access it via DDMS
      * MUST be commented out in release
      */

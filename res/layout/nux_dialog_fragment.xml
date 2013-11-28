@@ -49,7 +49,7 @@
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="1"
@@ -81,9 +81,9 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_dialog_learn_more_button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="38dp"
             android:textColor="@color/white"
-            android:text="@string/nux_tap_learn_more"
+            android:text="@string/cancel"
             android:singleLine="true"
             android:layout_alignParentStart="true"
             android:gravity="center_vertical" />
@@ -91,7 +91,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_dialog_get_started_button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="38dp"
             style="@style/WordPress.NUXThirdButton"
             android:text="@string/nux_tutorial_get_started_title"
             android:singleLine="true"
