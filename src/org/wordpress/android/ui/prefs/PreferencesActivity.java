@@ -211,13 +211,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // Add blog button
         Preference addBlogPreference = new Preference(this);
-        addBlogPreference.setTitle(R.string.add_blog);
+        addBlogPreference.setTitle(R.string.add_self_hosted_blog);
         Intent intent = new Intent(this, WelcomeActivity.class);
+        intent.putExtra(WelcomeActivity.START_FRAGMENT_KEY, WelcomeActivity.ADD_SELF_HOSTED_BLOG);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
 
-        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAllAccounts();
+        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         if (allAccounts.size() > 1) {
             // Add show/hide buttons
             Preference manageBlogPreference = new Preference(this);
