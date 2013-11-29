@@ -110,6 +110,7 @@
     <style name="ReaderTextView.Count" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/reader_count_background</item>
         <item name="android:textColor">@color/blue_medium</item>
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
     </style>

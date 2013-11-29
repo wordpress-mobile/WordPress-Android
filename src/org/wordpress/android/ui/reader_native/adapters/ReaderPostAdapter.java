@@ -189,6 +189,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
             holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
 
+            holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
+            holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
+
             holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
 
@@ -295,7 +298,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * shows like & comment count
      */
     private void showCounts(final PostViewHolder holder, final ReaderPost post) {
-        /*if (post.numLikes > 0) {
+        if (post.numLikes > 0) {
             holder.txtLikeCount.setText(Integer.toString(post.numLikes));
             holder.txtLikeCount.setVisibility(View.VISIBLE);
         } else {
@@ -307,7 +310,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtCommentCount.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
-        }*/
+        }
     }
 
     /*
@@ -328,18 +331,21 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private static class PostViewHolder {
-        private TextView txtTitle;
-        private TextView txtText;
-        private TextView txtBlogName;
-        private TextView txtDate;
-        private TextView txtFollow;
+        TextView txtTitle;
+        TextView txtText;
+        TextView txtBlogName;
+        TextView txtDate;
+        TextView txtFollow;
 
-        private ImageView imgBtnLike;
-        private ImageView imgBtnComment;
-        private ImageView imgBtnReblog;
+        TextView txtLikeCount;
+        TextView txtCommentCount;
 
-        private WPNetworkImageView imgFeatured;
-        private WPNetworkImageView imgAvatar;
+        ImageView imgBtnLike;
+        ImageView imgBtnComment;
+        ImageView imgBtnReblog;
+
+        WPNetworkImageView imgFeatured;
+        WPNetworkImageView imgAvatar;
     }
 
     /*
