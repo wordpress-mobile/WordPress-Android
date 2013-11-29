@@ -70,14 +70,35 @@ public class ManageBlogsActivity extends SherlockListActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            refreshBlogs();
-            return true;
-        } else if (itemId == android.R.id.home) {
-            finish();
-            return true;
+        switch (itemId) {
+            case R.id.menu_refresh:
+                refreshBlogs();
+                return true;
+            case R.id.menu_select_all:
+                selectAll();
+                return true;
+            case R.id.menu_deselect_all:
+                deselectAll();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void selectAll() {
+        for (int i = 0; i < mAccounts.size(); ++i) {
+            setItemChecked(i, true);
+        }
+    }
+
+    private void deselectAll() {
+        // force one item selected
+        setItemChecked(0, true);
+        for (int i = 1; i < mAccounts.size(); ++i) {
+            setItemChecked(i, false);
+        }
     }
 
     private void startAnimatingRefreshButton() {

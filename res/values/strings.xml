@@ -61,6 +61,8 @@
     <string name="manage_blogs">Manage blogs</string>
     <string name="show_and_hide_blogs">Show/hide blogs</string>
     <string name="blogs_visibility">Blogs visibility</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
