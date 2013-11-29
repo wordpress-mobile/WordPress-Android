@@ -15,7 +15,7 @@
 
         <fragment
             android:id="@+id/commentList"
-            android:name="org.wordpress.android.ui.comments.CommentsListFragment"
+            android:name="org.wordpress.android.ui.comments.CommentListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
