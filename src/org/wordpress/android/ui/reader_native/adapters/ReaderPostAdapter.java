@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.Constants;
@@ -270,15 +271,24 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
 
-            holder.txtFollow.setVisibility(View.VISIBLE);
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
+            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
-            holder.txtFollow.setVisibility(View.GONE);
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
+            holder.txtFollow.setVisibility(View.GONE);
+        }
+
+        // blog name needs to be centered vertically when the follow textView is hidden (which it
+        // will be for non-WP posts)
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtBlogName.getLayoutParams();
+        if (post.isWP()) {
+            params.addRule(RelativeLayout.CENTER_VERTICAL, 0); // this removes the rule
+        } else {
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
         }
 
         showCounts(holder, post);
