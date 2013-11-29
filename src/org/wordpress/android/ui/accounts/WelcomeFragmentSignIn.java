@@ -301,7 +301,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                             NUXDialogFragment.ACTION_OPEN_URL,
                             "https://wordpress.com/settings/security/?ssl=forced");
                 } else {
-                    if (mErrorMsgId == R.string.update_credentials) {
+                    if (mErrorMsgId == R.string.username_or_password_incorrect) {
                         showUsernameError(mErrorMsgId);
                         showPasswordError(mErrorMsgId);
                         mErrorMsgId = 0;
