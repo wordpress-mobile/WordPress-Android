@@ -35,8 +35,8 @@
     <!-- all margins/padding in reader layouts rely on these values -->
     <dimen name="reader_margin_extra_small">2dp</dimen>
     <dimen name="reader_margin_small">4dp</dimen>
-    <dimen name="reader_margin_medium">10dp</dimen>
-    <dimen name="reader_margin_large">16dp</dimen>
+    <dimen name="reader_margin_medium">8dp</dimen>
+    <dimen name="reader_margin_large">12dp</dimen>
 
     <dimen name="actionbar_refresh_margin">12dp</dimen>
 
