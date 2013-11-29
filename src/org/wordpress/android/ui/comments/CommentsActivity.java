@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,23 +18,22 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
-import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.ui.comments.CommentListFragment.CommentAsyncModerationReturnListener;
+import org.wordpress.android.ui.comments.CommentListFragment.CommentListFragmentListener;
+import org.wordpress.android.ui.comments.CommentListFragment.OnAnimateRefreshButtonListener;
 
-public class CommentsActivity extends WPActionBarActivity
-        implements OnCommentSelectedListener,
-                   CommentActions.OnCommentChangeListener,
-                   OnAnimateRefreshButtonListener {
+import java.util.ArrayList;
+
+public class CommentsActivity extends WPActionBarActivity implements CommentAsyncModerationReturnListener,
+        CommentListFragmentListener, OnAnimateRefreshButtonListener,
+        CommentDetailFragment.OnCommentChangeListener, ActionMode.Callback {
 
     protected int id;
 
-    private CommentsListFragment commentList;
+    private CommentListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
-
-    public static final int ID_DIALOG_MODERATING = 1;
-    public static final int ID_DIALOG_DELETING = 3;
+    private ActionMode mActionMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,13 +59,13 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        commentList = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
+        commentList = (CommentListFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
 
         attemptToSelectComment();
         if (fromNotification)
-            refreshCommentList();
+            commentList.refreshComments();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -76,7 +74,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        refreshCommentList();
+        commentList.refreshComments();
     }
 
     @Override
@@ -98,7 +96,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
             attemptToSelectComment();
-            refreshCommentList();
+            commentList.refreshComments();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -132,7 +130,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (WordPress.currentBlog != null) {
             boolean commentsLoaded = commentList.loadComments(false, false);
             if (!commentsLoaded)
-                refreshCommentList();
+                commentList.refreshComments();
         }
     }
 
@@ -161,9 +159,67 @@ public class CommentsActivity extends WPActionBarActivity
         }
     }
 
+    /*
+     * called from CommentDetailFragment when comment is moderated - replace the
+     * existing comment in the list with the passed one
+     */
     @Override
-    public void onCommentSelected(Comment comment) {
+    public void onCommentModerated(Comment comment) {
+        commentList.replaceComment(comment);
+    }
 
+    /*
+     * called from CommentDetailFragment when comment is replied to (adding a new comment)
+     */
+    @Override
+    public void onCommentAdded() {
+        commentList.refreshComments();
+    }
+
+    @Override
+    public void onAnimateRefreshButton(boolean start) {
+        if (start) {
+            shouldAnimateRefreshButton = true;
+            this.startAnimatingRefreshButton(refreshMenuItem);
+        } else {
+            this.stopAnimatingRefreshButton(refreshMenuItem);
+        }
+
+    }
+
+    private void attemptToSelectComment() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+
+        if (f != null && f.isInLayout()) {
+            commentList.shouldSelectAfterLoad = true;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
+            if (mActionMode != null) { mActionMode.invalidate(); }
+        } else if (commentModerationStatusType == CommentStatus.SPAM
+                || commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) { mActionMode.finish(); }
+        }
+    }
+
+    @Override
+    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) { }
+
+    @Override
+    public void onCommentClicked(Comment comment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
@@ -221,6 +277,7 @@ public class CommentsActivity extends WPActionBarActivity
     public void onCommentAdded() {
         refreshCommentList();
     }
+
     @Override
     public void onCommentDeleted() {
         refreshCommentList();
@@ -231,138 +288,125 @@ public class CommentsActivity extends WPActionBarActivity
         refreshCommentList();
         refreshCommentDetail();
     }
-
-    /*
-     * called from CommentListFragment after user selects from ListView's context menu
-     */
     @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        if (item.getItemId()==CommentsListFragment.MENU_ID_EDIT) {
-            /*
-             * start activity to edit this comment
-             */
-            Intent i = new Intent(
-                    getApplicationContext(),
-                    EditCommentActivity.class);
-            startActivityForResult(i, 0);
-            return true;
-        } else if (item.getItemId()==CommentsListFragment.MENU_ID_DELETE) {
-            /*
-             * fire background action to delete this comment
-             */
-            showDialog(ID_DIALOG_DELETING);
-            CommentActions.deleteComment(
-                    WordPress.getCurrentBlogAccountId(),
-                    WordPress.currentComment,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            dismissDialog(ID_DIALOG_DELETING);
-                            if (succeeded) {
-                                onCommentDeleted();
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
-                            } else {
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
-                            }
-                        }
-                    });
-            return true;
-        } else {
-            /*
-             * remainder are all comment moderation actions
-             */
-            showDialog(ID_DIALOG_MODERATING);
-            final CommentStatus status;
-            switch (item.getItemId()) {
-                case CommentsListFragment.MENU_ID_APPROVED:
-                    status = CommentStatus.APPROVED;
-                    break;
-                case CommentsListFragment.MENU_ID_UNAPPROVED:
-                    status = CommentStatus.UNAPPROVED;
-                    break;
-                case CommentsListFragment.MENU_ID_SPAM:
-                    status = CommentStatus.SPAM;
-                    break;
-                default :
-                    return true;
-            }
-
-            CommentActions.moderateComment(WordPress.getCurrentBlogAccountId(),
-                                           WordPress.currentComment,
-                                           status,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            dismissDialog(ID_DIALOG_MODERATING);
-                            if (succeeded) {
-                                onCommentModerated();
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
-                            } else {
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
-                            }
-                        }
-                    });
-
-            return true;
-        }
-    }
-
-    @Override
-    public void onAnimateRefreshButton(boolean start) {
-        if (start) {
-            shouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(refreshMenuItem);
-        } else {
-            this.stopAnimatingRefreshButton(refreshMenuItem);
+    public void onCommentSelected(int selectedCommentCount) {
+        // Check the cases when we are entering/exiting into/out of multi-select mode
+        if (selectedCommentCount > 0 && mActionMode == null) {
+            mActionMode = getSherlock().startActionMode(this);
+        } else if (selectedCommentCount == 0 && mActionMode != null) {
+            mActionMode.finish();
         }
 
-    }
-
-    private void attemptToSelectComment() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-
-        if (f != null && f.isInLayout()) {
-            commentList.shouldSelectAfterLoad = true;
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == ID_DIALOG_MODERATING) {
-            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.checkedCommentTotal <= 1) {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.moderating_comment));
+        // update contextual action bar title + action items
+        if (mActionMode != null) {
+            if (selectedCommentCount == 1) {
+                mActionMode.setTitle(getString(R.string.reader_label_comment_count_singular));
             } else {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.moderating_comments));
+                mActionMode.setTitle(getString(R.string.reader_label_comment_count_plural,
+                        selectedCommentCount));
             }
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
-        } else if (id == ID_DIALOG_DELETING) {
-            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.checkedCommentTotal <= 1) {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.deleting_comment));
-            } else {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.deleting_comments));
-            }
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
-        } else {
-            return super.onCreateDialog(id);
+            mActionMode.invalidate();
         }
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.comments_multiselect, menu);
+        mActionMode = mode;
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        boolean retVal;
+        ArrayList<Integer> commentListSelectedCommentIdArray = commentList.getSelectedCommentIdArray();
+        int numCommentsSelected = commentListSelectedCommentIdArray.size();
+        int selectedCommentStatusTypeBitMask = 0;
+
+        if (mActionMode != null) {
+            if (numCommentsSelected <= 0) { mode.finish(); }
+
+            menu.findItem(R.id.comments_cab_approve).setVisible(true);
+            menu.findItem(R.id.comments_cab_unapprove).setVisible(true);
+            menu.findItem(R.id.comments_cab_spam).setVisible(true);
+            menu.findItem(R.id.comments_cab_delete).setVisible(true);
+
+            /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
+             * following associated code should be uncommented.
+             */
+            if (numCommentsSelected >= 1) {
+                CommentStatus.clearSelectedCommentStatusTypeCount();
+                for(Comment comment : commentList.getSelectedCommentArray()) {
+                    CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
+                }
+
+                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
+                }
+                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
+                }
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
+                }*/
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
+                }*/
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
+                }*/
+
+                if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
+                    menu.findItem(R.id.comments_cab_approve).setVisible(false);
+                } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
+                    menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
+                }
+                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
+                    menu.findItem(R.id.comments_cab_spam).setVisible(false);
+                }*/
+                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
+                    menu.findItem(R.id.comments_cab_delete).setVisible(false);
+                }*/
+            }
+
+            retVal = true;
+        }
+        else { retVal = false; }
+
+        return retVal;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        boolean retVal = true;
+        int id = item.getItemId();
+
+        switch (id) {
+            // Both Single and Multi Item Select Actions
+            case R.id.comments_cab_delete:
+                commentList.deleteComments();
+                break;
+            case R.id.comments_cab_approve:
+                commentList.moderateComments(CommentStatus.APPROVED);
+                break;
+            case R.id.comments_cab_unapprove:
+                commentList.moderateComments(CommentStatus.UNAPPROVED);
+                break;
+            case R.id.comments_cab_spam:
+                commentList.moderateComments(CommentStatus.SPAM);
+                break;
+            default:
+                retVal = false;
+        }
+        return retVal;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        commentList.clearSelectedComments();
+        mActionMode = null;
     }
 }

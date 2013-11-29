@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -762,7 +764,175 @@ public class ApiHelper {
             }
         }
     }
-    
+
+    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, Boolean> {
+
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+
+        private Callback mCallback;
+        private String mNewCommentStatus;
+        private int mNumSelectedComments = -1;
+        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot = new HashMap<Integer, Map<?, ?>>();
+        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
+        private Object[] mCommentParams;
+
+        public ModerateCommentsTask(String newStatus, Map<Integer, Map<?, ?>>  allComments,
+                                    ArrayList<Integer> selectedCommentIdArray, Callback callback) {
+            mNewCommentStatus = newStatus;
+            mAllCommentsSnapshot.putAll(allComments);
+            mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
+            mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            Boolean result = false;
+
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
+
+            if (blog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+            for (int i = 0; i < mNumSelectedComments; i++) {
+                if (isCancelled())
+                    return result;
+
+                int currentCommentID = mSelectedCommentIdArraySnapshot.get(i);
+                Map<String, String> contentHash, postHash = new HashMap<String, String>();
+                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentID);
+
+                if (contentHash.get("status").equals(mNewCommentStatus)) {
+                    continue;
+                }
+
+                postHash.put("status", mNewCommentStatus);
+                postHash.put("content", contentHash.get("comment"));
+                postHash.put("author", contentHash.get("author"));
+                postHash.put("author_url", contentHash.get("url"));
+                postHash.put("author_email", contentHash.get("email"));
+
+                Object[] apiParams = {
+                        blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
+                        currentCommentID,
+                        postHash
+                };
+
+                mCommentParams = apiParams;
+
+                try {
+                    result = (Boolean) client.call("wp.editComment", mCommentParams);
+                } catch (XMLRPCException e) {
+                    Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (mCallback != null) {
+                if (result == null || !result)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean result) {
+        }
+    }
+
+    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, Boolean> {
+
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+
+        private Callback mCallback;
+        private int mNumSelectedComments = 0;
+        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot = new HashMap<Integer, Map<?, ?>>();
+        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
+
+        public DeleteCommentsTask(Map<Integer, Map<?, ?>>  allComments,
+                                  ArrayList<Integer> selectedCommentIdArray, Callback callback) {
+            mAllCommentsSnapshot.putAll(allComments);
+            mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
+            mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            Boolean result = false;
+
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
+
+            if (blog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+            for (int i = 0; i < mNumSelectedComments; i++) {
+                if (isCancelled())
+                    return result;
+
+                int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
+                Object[] apiParams = {WordPress.currentBlog.getBlogId(),
+                        WordPress.currentBlog.getUsername(),
+                        WordPress.currentBlog.getPassword(), currentCommentId};
+
+                try {
+                    result = (Boolean) client.call("wp.deleteComment", apiParams);
+                } catch (XMLRPCException e) {
+                    Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (mCallback != null) {
+                if (result == null || !result)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean result) {
+        }
+    }
+
     public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
 
         public interface Callback {
