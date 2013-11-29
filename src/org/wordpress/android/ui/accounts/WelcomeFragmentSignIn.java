@@ -173,6 +173,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         } else {
             mSignInButton.setEnabled(false);
         }
+        mPasswordEditText.setError(null);
+        mUsernameEditText.setError(null);
     }
 
     private boolean wpcomFieldsFilled() {
@@ -183,6 +185,27 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private boolean selfHostedFieldsFilled() {
         return wpcomFieldsFilled()
                 && mUrlEditText.getText().toString().trim().length() > 0;
+    }
+
+    private void showPasswordError(int messageId) {
+        mPasswordEditText.setError(getString(messageId));
+        mPasswordEditText.requestFocus();
+    }
+
+    private void showUsernameError(int messageId) {
+        mUsernameEditText.setError(getString(messageId));
+        mUsernameEditText.requestFocus();
+    }
+
+    protected boolean specificShowError(int messageId) {
+        switch (getErrorType(messageId)) {
+            case USERNAME:
+            case PASSWORD:
+                showUsernameError(messageId);
+                showPasswordError(messageId);
+                return true;
+        }
+        return false;
     }
 
     public void signInDotComUser() {
@@ -278,9 +301,17 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                             NUXDialogFragment.ACTION_OPEN_URL,
                             "https://wordpress.com/settings/security/?ssl=forced");
                 } else {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                            R.drawable.nux_icon_alert);
+                    if (mErrorMsgId == R.string.username_or_password_incorrect) {
+                        showUsernameError(mErrorMsgId);
+                        showPasswordError(mErrorMsgId);
+                        mErrorMsgId = 0;
+                        endProgress();
+                        return ;
+                    } else {
+                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                                getString(mErrorMsgId), getString(R.string.nux_tap_continue),
+                                R.drawable.nux_icon_alert);
+                    }
                 }
                 nuxAlert.show(ft, "alert");
                 mErrorMsgId = 0;
