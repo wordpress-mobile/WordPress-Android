@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -161,7 +162,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                             final SharedPreferences settings = PreferenceManager.
                                     getDefaultSharedPreferences(getActivity());
                             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            String password = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                            String password = WordPressDB.decryptPassword(settings.
+                                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                             setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username,
                                     password);
                         } catch (JSONException e) {

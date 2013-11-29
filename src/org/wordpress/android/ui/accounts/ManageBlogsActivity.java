@@ -1,34 +1,52 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.ListActivity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 import java.util.Map;
 
-public class ManageBlogsActivity extends ListActivity {
-    List<Map<String, Object>> mAccounts;
+public class ManageBlogsActivity extends SherlockListActivity {
+    private List<Map<String, Object>> mAccounts;
+    private MenuItem mRefreshMenuItem;
+    private boolean mIsRefreshing;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.blogs_visibility));
-        ListView listView = getListView();
-        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[] {"isHidden"});
-        listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        loadAccounts();
     }
 
     @Override
@@ -37,6 +55,70 @@ public class ManageBlogsActivity extends ListActivity {
         CheckedTextView checkedView = (CheckedTextView) v;
         checkedView.setChecked(!checkedView.isChecked());
         setItemChecked(position, checkedView.isChecked());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.manage_blogs, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
+        refreshBlogs();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_refresh) {
+            refreshBlogs();
+            return true;
+        } else if (itemId == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startAnimatingRefreshButton() {
+        if (mRefreshMenuItem != null && !mIsRefreshing) {
+            mIsRefreshing = true;
+            LayoutInflater inflater = (LayoutInflater) getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView) inflater.inflate(
+                    getResources().getLayout(R.layout.menu_refresh_view), null);
+            RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF,
+                    0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setInterpolator(new LinearInterpolator());
+            anim.setRepeatCount(Animation.INFINITE);
+            anim.setDuration(1400);
+            iv.startAnimation(anim);
+            mRefreshMenuItem.setActionView(iv);
+        }
+    }
+
+    private void stopAnimatingRefreshButton() {
+        mIsRefreshing = false;
+        if (mRefreshMenuItem != null) {
+            if (mRefreshMenuItem.getActionView() == null) {
+                return ;
+            }
+            mRefreshMenuItem.getActionView().clearAnimation();
+            mRefreshMenuItem.setActionView(null);
+        }
+    }
+
+    private void refreshBlogs() {
+        if (!mIsRefreshing) {
+            startAnimatingRefreshButton();
+            new SetupBlogTask().execute();
+        }
+    }
+
+    private void loadAccounts() {
+        ListView listView = getListView();
+        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[] {"isHidden"});
+        listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
     }
 
     private void setItemChecked(int position, boolean checked) {
@@ -87,6 +169,47 @@ public class ManageBlogsActivity extends ListActivity {
                 nameView.setClickable(false);
             }
             return rowView;
+        }
+    }
+
+    private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
+        private SetupBlog mSetupBlog;
+        private int mErrorMsgId;
+
+        @Override
+        protected void onPreExecute() {
+            mSetupBlog = new SetupBlog();
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                    getApplicationContext());
+            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+            String password = WordPressDB.decryptPassword(settings.
+                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
+            mSetupBlog.setUsername(username);
+            mSetupBlog.setPassword(password);
+        }
+
+        @Override
+        protected List doInBackground(Void... args) {
+            List userBlogList = mSetupBlog.getBlogList();
+            mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (userBlogList != null) {
+                // Add all blogs
+                SparseBooleanArray allBlogs = new SparseBooleanArray();
+                for (int i = 0; i < userBlogList.size(); i++) {
+                    allBlogs.put(i, true);
+                }
+                mSetupBlog.addBlogs(userBlogList, allBlogs);
+            }
+            return userBlogList;
+        }
+
+        @Override
+        protected void onPostExecute(final List<Object> userBlogList) {
+            if (mErrorMsgId != 0) {
+                ToastUtils.showToast(getBaseContext(), mErrorMsgId, ToastUtils.Duration.SHORT);
+            }
+            loadAccounts();
+            stopAnimatingRefreshButton();
         }
     }
 }

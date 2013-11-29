@@ -54,7 +54,6 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
-
     EditTextPreference taglineTextPreference;
     OnPreferenceChangeListener preferenceChangeListener;
 

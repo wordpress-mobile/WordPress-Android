@@ -104,12 +104,15 @@ public class SetupBlog {
             return userBlogsList;
         } catch (XMLRPCException e) {
             String message = e.getMessage();
-            if (message.contains("code 403"))
+            if (message.contains("code 403")) {
                 mErrorMsgId = R.string.update_credentials;
-            else if (message.contains("404"))
+            } else if (message.contains("404")) {
                 mErrorMsgId = R.string.xmlrpc_error;
-            else if (message.contains("425"))
+            } else if (message.contains("425")) {
                 mErrorMsgId = R.string.account_two_step_auth_enabled;
+            } else {
+                mErrorMsgId = R.string.no_network_message;
+            }
             return null;
         }
     }
@@ -200,7 +203,7 @@ public class SetupBlog {
     // Add selected blog(s) to the database
     public void addBlogs(List fullBlogList, SparseBooleanArray selectedBlogs) {
         for (int i = 0; i < selectedBlogs.size(); i++) {
-            if (selectedBlogs.get(selectedBlogs.keyAt(i)) == true) {
+            if (selectedBlogs.get(selectedBlogs.keyAt(i))) {
                 int rowID = selectedBlogs.keyAt(i);
                 Map blogMap = (HashMap) fullBlogList.get(rowID);
                 String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
