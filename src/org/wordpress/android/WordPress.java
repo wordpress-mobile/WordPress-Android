@@ -184,7 +184,7 @@ public class WordPress extends Application {
         PackageManager pm = getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
-            return pi.versionName;
+            return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }
