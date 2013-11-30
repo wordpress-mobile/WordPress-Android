@@ -77,9 +77,9 @@ public class WordPress extends Application {
     private static BitmapLruCache mBitmapCache;
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
+            // see http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            // Use a small slice of available memory for the image cache
-            int cacheSize = maxMemory / 32;
+            int cacheSize = maxMemory / 16;
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;

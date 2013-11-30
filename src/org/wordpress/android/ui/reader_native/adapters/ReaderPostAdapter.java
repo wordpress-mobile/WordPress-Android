@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader_native.adapters;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -14,8 +15,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -26,6 +33,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -53,6 +61,9 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
+
+    private static final int PRELOAD_OFFSET = 2;
+    private int mLastPreloadPos = -1;
 
     public ReaderPostAdapter(Context context,
                              boolean isGridView,
@@ -101,6 +112,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void clear() {
+        mLastPreloadPos = -1;
         if (!mPosts.isEmpty()) {
             mPosts.clear();
             notifyDataSetChanged();
@@ -271,6 +283,13 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
 
+            holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // nop
+                }
+            });
+
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
@@ -300,6 +319,11 @@ public class ReaderPostAdapter extends BaseAdapter {
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
+
+        // preload featured images
+        if ((mLastPreloadPos - position) <= PRELOAD_OFFSET) {
+            preloadFeaturedImage(position + PRELOAD_OFFSET);
+        }
 
         return convertView;
     }
@@ -427,9 +451,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-load avatars, featured images and pubDates in each post - these values are all
-            // cached by the post after the first time they're computed, so calling these getters
-            // here ensures the values are immediately available when called from getView()
+            // pre-calc data (avatar URLs, featured image URLs, and pubDates) in each post - these
+            // values are all cached by the post after the first time they're computed, so calling
+            // these getters ensures the values are immediately available when called from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
@@ -453,45 +477,72 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
+
     /**
-     * pre-loads featured images so they're cached before posts are displayed
+     *  preload the featured image for the post at the passed position - disabled for now since it
+     *  doesn't appear to work
      */
-    /*private class ImagePreloader {
-        private int currentIndex = -1;
-        private ArrayList<String> imageUrls = new ArrayList<String>();
+    private void preloadFeaturedImage(int position) {
+        if (position >= mPosts.size())
+            return;
 
-        ImagePreloader(final ReaderPostList posts) {
-            if (posts != null) {
-                for (ReaderPost post: posts) {
-                    if (post.hasFeaturedImage())
-                        imageUrls.add(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight));
+        mLastPreloadPos = position;
+        ReaderLog.i("preloading > " + position);
+
+        ReaderPost post = mPosts.get(position);
+        if (!post.hasFeaturedImage())
+            return;
+
+        final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
+        if (UrlUtils.isHttps(imageUrl))
+            return;
+
+        //WordPress.imageLoader.get(imageUrl, mImageListener, mPhotonWidth, mPhotonHeight);
+
+        Request<?> newRequest =
+                new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        if (response != null)
+                            WordPress.getBitmapCache().putBitmap(getCacheKey(imageUrl), response);
+                    }
+                },
+                mPhotonWidth,
+                mPhotonWidth,
+                Bitmap.Config.RGB_565,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ReaderLog.e(error);
+                    }
                 }
-            }
+        );
+        WordPress.requestQueue.add(newRequest);
+    }
+
+    /*private ImageLoader.ImageListener mImageListener = new ImageLoader.ImageListener() {
+        @Override
+        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
+            // nop
         }
 
-        void start() {
-            preloadNext();
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            // nop
         }
+    };*/
 
-        void preloadNext() {
-            currentIndex++;
-            if (currentIndex >= imageUrls.size())
-                return;
-            WordPress.imageLoader.get(imageUrls.get(currentIndex), imagePreloadListener);
-        }
-
-        ImageLoader.ImageListener imagePreloadListener = new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
-                if (imageContainer != null)
-                    ReaderLog.i("preloaded (isImmediate=" + isImmediate + ") - " + imageContainer.getRequestUrl());
-                preloadNext();
-            }
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.e(volleyError);
-                preloadNext();
-            }
-        };
-    }*/
+    /*
+     * cache key algorithm used by ImageLoader
+     */
+    private static String getCacheKey(String url, int maxWidth, int maxHeight) {
+        return new StringBuilder(url.length() + 12)
+                        .append("#W").append(maxWidth)
+                        .append("#H").append(maxHeight)
+                        .append(url)
+                        .toString();
+    }
+    private String getCacheKey(String url) {
+        return getCacheKey(url, mPhotonWidth, mPhotonHeight);
+    }
 }
