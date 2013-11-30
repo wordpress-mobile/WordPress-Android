@@ -33,7 +33,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -62,7 +61,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    private static final int PRELOAD_OFFSET = 2;
+    private static final int PRELOAD_OFFSET = 3;
     private int mLastPreloadPos = -1;
 
     public ReaderPostAdapter(Context context,
@@ -217,11 +216,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder = (PostViewHolder) convertView.getTag();
         }
 
-        if (post.hasTitle()) {
-            holder.txtTitle.setText(post.getTitle());
-        } else {
-            holder.txtTitle.setText(R.string.reader_untitled_post);
-        }
+        holder.txtTitle.setText(post.getTitle());
+        holder.txtBlogName.setText(post.getBlogName());
+        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
@@ -229,9 +226,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             holder.txtText.setVisibility(View.GONE);
         }
-
-        holder.txtBlogName.setText(post.getBlogName());
-        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         // featured image or video
         if (post.hasFeaturedImage()) {
@@ -321,7 +315,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
         // preload featured images
-        if ((mLastPreloadPos - position) <= PRELOAD_OFFSET) {
+        if (position > (mLastPreloadPos - PRELOAD_OFFSET)) {
             preloadFeaturedImage(position + PRELOAD_OFFSET);
         }
 
@@ -466,7 +460,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                boolean hasExistingPosts = (getCount() > 0);
                 mPosts = (ReaderPostList)(tmpPosts.clone());
+                if (!hasExistingPosts) {
+                    for (int i = 1; i <= PRELOAD_OFFSET; i++)
+                        preloadFeaturedImage(i);
+                }
                 notifyDataSetChanged();
             }
 
@@ -479,25 +478,20 @@ public class ReaderPostAdapter extends BaseAdapter {
 
 
     /**
-     *  preload the featured image for the post at the passed position - disabled for now since it
-     *  doesn't appear to work
+     *  preload the featured image for the post at the passed position
      */
     private void preloadFeaturedImage(int position) {
-        if (position >= mPosts.size())
+        if (position >= mPosts.size() || position < 0) {
+            ReaderLog.w("invalid preload position > " + Integer.toString(position));
             return;
+        }
 
         mLastPreloadPos = position;
-        ReaderLog.i("preloading > " + position);
-
         ReaderPost post = mPosts.get(position);
         if (!post.hasFeaturedImage())
             return;
 
         final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-        if (UrlUtils.isHttps(imageUrl))
-            return;
-
-        //WordPress.imageLoader.get(imageUrl, mImageListener, mPhotonWidth, mPhotonHeight);
 
         Request<?> newRequest =
                 new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
@@ -520,18 +514,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         WordPress.requestQueue.add(newRequest);
     }
 
-    /*private ImageLoader.ImageListener mImageListener = new ImageLoader.ImageListener() {
-        @Override
-        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
-            // nop
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            // nop
-        }
-    };*/
-
     /*
      * cache key algorithm used by ImageLoader
      */
@@ -543,6 +525,6 @@ public class ReaderPostAdapter extends BaseAdapter {
                         .toString();
     }
     private String getCacheKey(String url) {
-        return getCacheKey(url, mPhotonWidth, mPhotonHeight);
+        return getCacheKey(url, 0, 0);
     }
 }
