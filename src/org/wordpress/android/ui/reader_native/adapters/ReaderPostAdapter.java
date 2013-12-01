@@ -30,6 +30,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
@@ -54,15 +55,16 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
 
-    private final int mColorFollow;
-    private final int mColorFollowing;
+    private final int mLinkColor;
+    private final int mLinkColorActive;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    private static final int PRELOAD_OFFSET = 3;
     private int mLastPreloadPos = -1;
+    private final boolean mEnableImagePreloading;
+    private static final int PRELOAD_OFFSET = 3;
 
     public ReaderPostAdapter(Context context,
                              boolean isGridView,
@@ -92,17 +94,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
         // colors for follow text
-        mColorFollow = context.getResources().getColor(R.color.reader_hyperlink);
-        mColorFollowing = context.getResources().getColor(R.color.orange_medium);
-    }
+        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
+        mLinkColorActive = context.getResources().getColor(R.color.orange_medium);
 
-    public void setPosts(ReaderPostList posts) {
-        if (posts==null) {
-            mPosts = new ReaderPostList();
-        } else {
-            mPosts = (ReaderPostList) posts.clone();
-        }
-        notifyDataSetChanged();
+        // enable preloading of featured images on Android 4 or later (earlier devices tend not to
+        // have enough memory/heap to make this worthwhile), but only when the user is connected
+        // to WiFi (otherwise they may encounter roaming/other charges)
+        mEnableImagePreloading = (SysUtils.isGteAndroid4() && NetworkUtils.isWiFiConnected(context));
+        ReaderLog.i("reader image preloading enabled = " + Boolean.toString(mEnableImagePreloading));
     }
 
     public void setTag(String tagName) {
@@ -132,7 +131,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             public void run() {
                 mAnimateRows = false;
             }
-        }, 750);
+        }, 1000);
 
         clear();
         loadPosts();
@@ -230,7 +229,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         // featured image or video
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            if (mEnableImagePreloading && isImageCached(imageUrl)) {
+                holder.imgFeatured.setImageBitmap(WordPress.getBitmapCache().getBitmap(getCacheKey(imageUrl)));
+                ReaderLog.i("displayed cached image");
+            } else {
+                holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            }
             holder.imgFeatured.setVisibility(View.VISIBLE);
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
@@ -315,8 +319,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
         // preload featured images
-        if (position > (mLastPreloadPos - PRELOAD_OFFSET)) {
-            preloadFeaturedImage(position + PRELOAD_OFFSET);
+        if (mEnableImagePreloading) {
+            if (position > (mLastPreloadPos - PRELOAD_OFFSET))
+                preloadFeaturedImage(position + PRELOAD_OFFSET);
         }
 
         return convertView;
@@ -418,7 +423,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowedByCurrentUser) {
         txtFollow.setText(isFollowedByCurrentUser ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        txtFollow.setTextColor(isFollowedByCurrentUser ? mColorFollowing : mColorFollow);
+        txtFollow.setTextColor(isFollowedByCurrentUser ? mLinkColorActive : mLinkColor);
     }
 
     /*
@@ -460,9 +465,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                boolean hasExistingPosts = (getCount() > 0);
                 mPosts = (ReaderPostList)(tmpPosts.clone());
-                if (!hasExistingPosts) {
+                // preload featured images in the first few posts, but skip the very first (0-index)
+                // post since it will be displayed before the featured image can be cached
+                if (mEnableImagePreloading) {
                     for (int i = 1; i <= PRELOAD_OFFSET; i++)
                         preloadFeaturedImage(i);
                 }
@@ -480,7 +486,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     /**
      *  preload the featured image for the post at the passed position
      */
-    private void preloadFeaturedImage(int position) {
+    private void preloadFeaturedImage(final int position) {
         if (position >= mPosts.size() || position < 0) {
             ReaderLog.w("invalid preload position > " + Integer.toString(position));
             return;
@@ -492,11 +498,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             return;
 
         final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
+        if (isImageCached(imageUrl))
+            return;
 
         Request<?> newRequest =
                 new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
+                        //ReaderLog.i("preload ended > " + Integer.toString(position));
                         if (response != null)
                             WordPress.getBitmapCache().putBitmap(getCacheKey(imageUrl), response);
                     }
@@ -511,7 +520,15 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 }
         );
+        //ReaderLog.i("preload started > " + Integer.toString(position));
         WordPress.requestQueue.add(newRequest);
+    }
+
+    /*
+     * returns true if the passed imageUrl is in the global bitmap cache
+     */
+    private boolean isImageCached(final String imageUrl) {
+        return (imageUrl != null && WordPress.getBitmapCache().getBitmap(getCacheKey(imageUrl)) != null);
     }
 
     /*
