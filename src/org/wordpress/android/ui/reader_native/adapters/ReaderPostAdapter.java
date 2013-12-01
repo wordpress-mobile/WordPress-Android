@@ -492,9 +492,9 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         ReaderPost post = mPosts.get(position);
         if (post.hasFeaturedImage())
-            preloadImage(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), mPhotonWidth, mPhotonHeight);
+            preloadImage(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight));
         if (post.hasPostAvatar())
-            preloadImage(post.getPostAvatarForDisplay(mAvatarSz), mAvatarSz, mAvatarSz);
+            preloadImage(post.getPostAvatarForDisplay(mAvatarSz));
 
         mLastPreloadPos = position;
     }
@@ -502,10 +502,12 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * preload the passed image if it's not already cached
      */
-    private void preloadImage(final String imageUrl, int maxWidth, int maxHeight) {
-        if (WordPress.imageLoader.isCached(imageUrl, maxWidth, maxHeight))
+    private void preloadImage(final String imageUrl) {
+        if (WordPress.imageLoader.isCached(imageUrl, 0, 0)) {
+            //ReaderLog.i("image already cached");
             return;
-        WordPress.imageLoader.get(imageUrl, mImageListener, maxWidth, maxHeight);
+        }
+        WordPress.imageLoader.get(imageUrl, mImageListener);
     }
 
     private ImageLoader.ImageListener mImageListener = new ImageLoader.ImageListener() {
