@@ -713,9 +713,19 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mFooterProgress.setVisibility(View.GONE);
     }
 
+    /*
+     * detect when user starts/stops listView fling - adapter relies on this to disable image
+     * pre-load during a fling (to prevent unnecessary bandwidth hit)
+     */
+    private boolean mIsFlinging = false;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        // nop
+        boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
+        if (isFlingingNow != mIsFlinging) {
+            mIsFlinging = isFlingingNow;
+            if (hasPostAdapter())
+                getPostAdapter().setIsFlinging(mIsFlinging);
+        }
     }
 
     private int mPrevFirstVisibleItem = -1;
