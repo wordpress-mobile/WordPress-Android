@@ -116,7 +116,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private String mMediaCapturePath = "";
 
-    private int mStyleStart, mSelectionStart, mSelectionEnd, mOriginalViewBottom;
+    private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
     private int mLastPosition = -1;
     private int mCurrentActivityRequest = -1;
 
@@ -152,8 +152,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
                 // Bottom comparison is there to ensure that the keyboard is actually showing
-                if (mRootView.getBottom() < mOriginalViewBottom && !mActivity.getSupportActionBar().isShowing())
+                if (mRootView.getBottom() < mFullViewBottom && !mActivity.getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(false);
+                }
             }
         });
         mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
@@ -221,7 +222,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         public void onGlobalLayout() {
             mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            mOriginalViewBottom = mRootView.getBottom();
+            mFullViewBottom = mRootView.getBottom();
         }
     };
 
@@ -234,7 +235,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mTitleEditText.setVisibility(View.GONE);
             mActivity.setViewPagerEnabled(false);
             mFormatBar.setVisibility(View.VISIBLE);
-
         } else {
             mActivity.setViewPagerEnabled(true);
             mTitleEditText.setVisibility(View.VISIBLE);
@@ -445,7 +445,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content;
 
-        if (post.isLocalDraft() /*|| !isAutoSave*/) {
+        if (post.isLocalDraft()) {
             Editable e = mContentEditText.getText();
             if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
                 // remove suggestion spans, they cause craziness in
@@ -474,12 +474,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         Editable s = mContentEditText.getText();
 
-        // Add gallery shortcode
-        MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
-        for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-            int start = s.getSpanStart(gallerySpan);
-            s.removeSpan(gallerySpan);
-            s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+        if (!isAutoSave) {
+            // Add gallery shortcode
+            MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
+            for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                int start = s.getSpanStart(gallerySpan);
+                s.removeSpan(gallerySpan);
+                s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+            }
         }
 
         WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
@@ -547,7 +549,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        mOriginalViewBottom = mRootView.getBottom();
+        mFullViewBottom = mRootView.getBottom();
     }
 
     /**
@@ -618,7 +620,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private void verifyImage(Uri imageUri) {
-        if (MediaUtils.isPicasaImage(imageUri)) {
+        if (!MediaUtils.isLocalImage(imageUri)) {
             // Create an AsyncTask to download the file
             new DownloadImageTask().execute(imageUri);
         } else {
@@ -932,7 +934,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         //if (mFormatBar.getVisibility() == View.VISIBLE)
         //    hideFormatBar();
 
-        if (ssb != null && MediaUtils.isPicasaImage(imageUri))
+        if (ssb != null && !MediaUtils.isLocalImage(imageUri))
             imageUri = MediaUtils.downloadExternalImage(getActivity(), imageUri);
 
         if (imageUri == null) {

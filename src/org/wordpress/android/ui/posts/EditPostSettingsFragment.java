@@ -340,7 +340,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
     }
 
-    public void savePostSettings(boolean isAutoSave) {
+    public void savePostSettings() {
         Post post = mActivity.getPost();
         if (post == null)
             return;

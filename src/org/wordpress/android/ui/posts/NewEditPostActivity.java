@@ -10,6 +10,7 @@ import java.util.Locale;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -35,6 +36,9 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     public static String EXTRA_POSTID = "postId";
     public static String EXTRA_IS_PAGE = "isPage";
     public static String EXTRA_IS_NEW_POST = "isNewPost";
+
+    private static final int AUTOSAVE_INTERVAL_MILLIS = 30000;
+    private Handler mAutoSaveHandler;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -72,6 +76,9 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // Autosave handler
+        mAutoSaveHandler = new Handler();
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -89,7 +96,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
                 if (position == 2 && mEditPostPreviewFragment != null) {
-                    savePost();
+                    savePost(false);
                     mEditPostPreviewFragment.loadPost(mPost);
                 }
             }
@@ -122,9 +129,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
             try {
                 mPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
                 if (mPost == null) {
-                    // big oopsie
-                    Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
-                    finish();
+                    showPostErrorAndFinish();
                     return;
                 } else {
                     mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
@@ -139,9 +144,10 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
-                finish();
+                showPostErrorAndFinish();
             }
+        } else {
+            showPostErrorAndFinish();
         }
 
         // Check for Android share action
@@ -153,10 +159,23 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
                 || (extras != null && extras.getInt("quick-media", -1) > -1)) {
             mPost = new Post(WordPress.getCurrentBlog().getId(), false);
             if (mPost.getId() < 0) {
-                // TODO: uh oh, error
-                finish();
+                showPostErrorAndFinish();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAutoSaveHandler != null)
+            mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mAutoSaveHandler != null)
+            mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
     }
 
     @Override
@@ -178,15 +197,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_edit_post) {
-
-            savePost();
-
-                /*if (mQuickMediaType >= 0) {
-                    if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                        mPost.setQuickPostType("QuickPhoto");
-                    else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                        mPost.setQuickPostType("QuickVideo");
-                }*/
+            savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -201,16 +212,31 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         return false;
     }
 
+    private void showPostErrorAndFinish() {
+        Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private Runnable autoSaveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            savePost(true);
+            mAutoSaveHandler.postDelayed(this, AUTOSAVE_INTERVAL_MILLIS);
+        }
+    };
+
     public Post getPost() {
         return mPost;
     }
 
-    private void savePost() {
+    private void savePost(boolean isAutosave) {
+        if (isAutosave)
+            Toast.makeText(this, "AUTOSAVED", Toast.LENGTH_SHORT).show();
         // Update post content from fragment fields
         if (mEditPostContentFragment != null)
-            mEditPostContentFragment.savePostContent(false);
+            mEditPostContentFragment.savePostContent(isAutosave);
         if (mEditPostSettingsFragment != null)
-            mEditPostSettingsFragment.savePostSettings(false);
+            mEditPostSettingsFragment.savePostSettings();
     }
 
     @Override
@@ -237,7 +263,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                savePost();
+                savePost(false);
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);

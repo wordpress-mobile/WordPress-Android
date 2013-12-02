@@ -361,17 +361,13 @@ public class MediaUtils {
         is.setWidth(getMinimumImageWitdh(context, curStream));
     }
 
-    public static boolean isPicasaImage(Uri imageUri) {
-        // Check if the imageUri returned is of picasa or not
-        if (imageUri.toString().startsWith("content://com.android.gallery3d.provider")) {
-            // Use the com.google provider for devices prior to 3.0
-            imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d", "com.google.android.gallery3d"));
-        }
-
-        if (imageUri.toString().startsWith("content://com.google.android.gallery3d"))
+    public static boolean isLocalImage(Uri imageUri) {
+        // Check if the image is externally hosted (Picasa/Google Photos for example)
+        if (imageUri != null && imageUri.toString().startsWith("content://media/")) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     public static Uri downloadExternalImage(Context context, Uri imageUri) {
@@ -395,7 +391,7 @@ public class MediaUtils {
         try {
             InputStream input;
             // Download the file
-            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+            if (imageUri.toString().startsWith("content://")) {
                 input = context.getContentResolver().openInputStream(imageUri);
             } else {
                 input = new URL(imageUri.toString()).openStream();
