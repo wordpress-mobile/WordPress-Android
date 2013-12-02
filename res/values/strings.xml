@@ -56,7 +56,9 @@
     <string name="add">Add</string>
     <string name="selected_categories">Selected categories:</string>
     <string name="publish">Publish? </string>
-    <string name="add_account">Add Blog</string>
+    <string name="add_blog">Add blog</string>
+    <string name="add_self_hosted_blog">Add self-hosted blog</string>
+    <string name="manage_blogs">Manage blogs</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
@@ -477,8 +479,7 @@
 
     <!-- invalid_url -->
     <string name="invalid_url">Invalid blog URL</string>
-  <string name="invalid_url_message">Please check that the blog URL entered is valid.
-  </string>
+    <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -732,10 +733,11 @@
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
-    <string name="create_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_new_blog_wpcom">Create a WordPress.com blog</string>
     <string name="review_your_information">Review your information</string>
-    <string name="validating_user_data">Validating User Data</string>
-    <string name="validating_site_data">Validating Site Data</string>
+    <string name="validating_user_data">Validating user data</string>
+    <string name="validating_site_data">Validating site data</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
     <string name="action_finish">Finish</string>

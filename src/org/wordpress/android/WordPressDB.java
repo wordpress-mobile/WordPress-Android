@@ -358,14 +358,13 @@ public class WordPressDB {
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
-
             int id = c.getInt(0);
             String blogName = c.getString(1);
             String username = c.getString(2);
             int blogId = c.getInt(3);
             String url = c.getString(4);
             String password = c.getString(5);
-            if (!password.equals("") && id > 0) {
+            if (password != null && !password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
