@@ -28,10 +28,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 
+
 import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
@@ -106,6 +108,9 @@ public class WordPress extends Application {
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
+        WPMobileStatsUtil.initialize();
+        WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
+
         super.onCreate();
 
         //wpDB.copyDatabase();
@@ -175,7 +180,7 @@ public class WordPress extends Application {
         PackageManager pm = getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
-            return pi.versionName;
+            return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }

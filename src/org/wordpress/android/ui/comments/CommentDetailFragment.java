@@ -208,11 +208,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity())
             return;
 
-        final NetworkImageView imgAvatar = (NetworkImageView) getActivity().findViewById(R.id.image_avatar);
-        final TextView txtName = (TextView) getActivity().findViewById(R.id.text_name);
-        final TextView txtDate = (TextView) getActivity().findViewById(R.id.text_date);
-        final TextView txtContent = (TextView) getActivity().findViewById(R.id.text_content);
-        final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
+        // locate detail view, which contains all the other views - important to search for other
+        // views within this view rather than the activity itself, since the activity may contain
+        // fragments which use the same view names (ex: text_date in both the notification list
+        // and comment detail fragments)
+        final ViewGroup viewDetail = (ViewGroup) getActivity().findViewById(R.id.layout_detail);
+
+        final NetworkImageView imgAvatar = (NetworkImageView) viewDetail.findViewById(R.id.image_avatar);
+        final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
+        final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
+        final TextView txtContent = (TextView) viewDetail.findViewById(R.id.text_content);
+        final TextView txtBtnApprove = (TextView) viewDetail.findViewById(R.id.text_approve);
 
         // clear all views when comment is null
         if (mComment == null) {

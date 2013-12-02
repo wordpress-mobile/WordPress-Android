@@ -105,7 +105,7 @@ public class SetupBlog {
         } catch (XMLRPCException e) {
             String message = e.getMessage();
             if (message.contains("code 403")) {
-                mErrorMsgId = R.string.update_credentials;
+                mErrorMsgId = R.string.username_or_password_incorrect;
             } else if (message.contains("404")) {
                 mErrorMsgId = R.string.xmlrpc_error;
             } else if (message.contains("425")) {
