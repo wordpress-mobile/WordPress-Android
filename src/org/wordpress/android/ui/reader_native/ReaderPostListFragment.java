@@ -232,7 +232,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                header.setMinimumHeight(actionbarHeight);
+                header.setMinimumHeight(actionbarHeight - gridView.getItemMargin());
                 gridView.setHeaderView(header);
                 // we can't fade the ActionBar while items are scrolled because StaggeredGridView
                 // doesn't have a scroll listener, so just use a default alpha

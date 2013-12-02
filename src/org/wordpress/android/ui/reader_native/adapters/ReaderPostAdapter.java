@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader_native.adapters;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mCanRequestMorePosts = false;
     private boolean mAnimateRows = false;
     private boolean mIsFlinging = false;
+    private boolean mIsGridView;
 
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
@@ -75,6 +77,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
+        mIsGridView = isGridView;
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
 
@@ -212,6 +215,13 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnLike = (ImageView) convertView.findViewById(R.id.image_like_btn);
             holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
             holder.imgBtnReblog = (ImageView) convertView.findViewById(R.id.image_reblog_btn);
+
+            // item layout needs a white background w/o a top border when showing the grid view
+            if (mIsGridView) {
+                convertView.setBackgroundColor(Color.WHITE);
+                View borderTop = convertView.findViewById(R.id.view_border_top);
+                borderTop.setVisibility(View.GONE);
+            }
 
             convertView.setTag(holder);
         } else {
