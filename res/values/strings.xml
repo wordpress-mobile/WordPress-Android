@@ -714,6 +714,7 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
+    <string name="reader_toast_err_no_connection">Unable to connect</string>
 
     <!--
         very important that this string resource is correct for all translations, since it's

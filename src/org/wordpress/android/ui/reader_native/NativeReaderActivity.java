@@ -16,7 +16,6 @@ import net.simonvt.menudrawer.MenuDrawer;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -24,8 +23,10 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /*
  * created by nbradbury
@@ -226,7 +227,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             case R.id.menu_refresh :
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment!=null) {
-                    fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                    if (!NetworkUtils.isNetworkAvailable(this)) {
+                        ToastUtils.showToast(this, R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
+                    } else {
+                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                    }
                     return true;
                 }
                 break;
@@ -243,9 +248,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                 .beginTransaction()
                 .add(R.id.fragment_container, ReaderPostListFragment.newInstance(this), TAG_FRAGMENT_POST_LIST)
                 .commit();
-
-        // remove window background since background color is set in fragment layout (prevents overdraw)
-        getWindow().setBackgroundDrawable(null);
     }
 
     private void removePostListFragment() {
@@ -257,9 +259,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                 .beginTransaction()
                 .remove(fragment)
                 .commit();
-
-        // return window background
-        getWindow().setBackgroundDrawableResource(android.R.color.white);
     }
 
     private ReaderPostListFragment getPostListFragment() {

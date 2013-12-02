@@ -171,6 +171,8 @@
         <item name="android:scrollbars">none</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:listSelector">@drawable/reader_list_selector</item>
     </style>
     <style name="ReaderListView.NoDivider" parent="ReaderListView">
         <item name="android:divider">@null</item>

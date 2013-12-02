@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader_native.adapters;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -49,7 +47,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mCanRequestMorePosts = false;
     private boolean mAnimateRows = false;
     private boolean mIsFlinging = false;
-    private boolean mIsGridView;
 
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
@@ -61,9 +58,9 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
+    private boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
-    private final boolean mIsImagePreloadingEnabled;
-    private static final int PRELOAD_OFFSET = 3;
+    private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
                              boolean isGridView,
@@ -77,16 +74,17 @@ public class ReaderPostAdapter extends BaseAdapter {
         mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
-        mIsGridView = isGridView;
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
+        int dividerSize = context.getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
+        int cellWidth = displayWidth - (dividerSize * 2);
 
         // determine size to use when requesting images via photon - full width unless we're using
         // a grid, in which case half-width since the grid shows two columns
-        mPhotonWidth = (isGridView ? displayWidth / 2 : displayWidth);
+        mPhotonWidth = (isGridView ? cellWidth / 2 : cellWidth);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // when animating rows in, start from this y-position near the bottom using medium animation duration
@@ -99,7 +97,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         // enable preloading of images on Android 4 or later (earlier devices tend not to have
         // enough memory/heap to make this worthwhile)
-        mIsImagePreloadingEnabled = SysUtils.isGteAndroid4();
+        mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
     public void setTag(String tagName) {
@@ -133,14 +131,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         clear();
         loadPosts();
-    }
-
-    /*
-     * called from ReaderPostListFragment when user starts/stops flinging - used to disable
-     * preloading images during a fling
-     */
-    public void setIsFlinging(boolean isFlinging) {
-        mIsFlinging = isFlinging;
     }
 
     /*
@@ -216,21 +206,21 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
             holder.imgBtnReblog = (ImageView) convertView.findViewById(R.id.image_reblog_btn);
 
-            // item layout needs a white background w/o a top border when showing the grid view
-            if (mIsGridView) {
-                convertView.setBackgroundColor(Color.WHITE);
-                View borderTop = convertView.findViewById(R.id.view_border_top);
-                borderTop.setVisibility(View.GONE);
-            }
-
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
         }
 
         holder.txtTitle.setText(post.getTitle());
-        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+
+        // blog name needs to be moved down when the follow textView is hidden (which it will be
+        // for non-WP posts)
+        if (post.isWP()) {
+            holder.txtBlogName.setText(post.getBlogName());
+        } else {
+            holder.txtBlogName.setText("\n" + post.getBlogName());
+        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
@@ -289,13 +279,6 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
 
-            holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // nop
-                }
-            });
-
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
@@ -305,15 +288,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
             holder.txtFollow.setVisibility(View.GONE);
-        }
-
-        // blog name needs to be centered vertically when the follow textView is hidden (which it
-        // will be for non-WP posts)
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtBlogName.getLayoutParams();
-        if (post.isWP()) {
-            params.addRule(RelativeLayout.CENTER_VERTICAL, 0); // this removes the rule
-        } else {
-            params.addRule(RelativeLayout.CENTER_VERTICAL);
         }
 
         showCounts(holder, post);
@@ -326,12 +300,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
-        // if image preload is enabled and user isn't flinging, preload images in the post
-        // that's PRELOAD_OFFSET positions ahead of this one
-        if (mIsImagePreloadingEnabled && !mIsFlinging) {
-            if (position > (mLastPreloadPos - PRELOAD_OFFSET))
-                preloadPostImages(position + PRELOAD_OFFSET);
-        }
+        // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one
+        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET))
+            preloadPostImages(position + PRELOAD_OFFSET);
 
         return convertView;
     }
@@ -475,10 +446,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts = (ReaderPostList)(tmpPosts.clone());
-                // preload images in the first few posts, but skip the very first (0-index)
-                // post since it will be displayed before the images can be cached
-                if (mIsImagePreloadingEnabled && mPosts.size() >= PRELOAD_OFFSET) {
-                    for (int i = 1; i <= PRELOAD_OFFSET; i++)
+
+                // preload images in the first few posts
+                if (mEnableImagePreload && mPosts.size() >= PRELOAD_OFFSET) {
+                    for (int i = 0; i <= PRELOAD_OFFSET; i++)
                         preloadPostImages(i);
                 }
                 notifyDataSetChanged();
@@ -491,6 +462,13 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
+    /*
+     * called from ReaderPostListFragment when user starts/ends listview fling
+     */
+    public void setIsFlinging(boolean isFlinging) {
+        mIsFlinging = isFlinging;
+    }
+
     /**
      *  preload images for the post at the passed position
      */
@@ -500,32 +478,39 @@ public class ReaderPostAdapter extends BaseAdapter {
             return;
         }
 
+        mLastPreloadPos = position;
+
+        // skip if listview is in a fling (note that we still set mLastPreloadPos above)
+        if (mIsFlinging)
+            return;
+
         ReaderPost post = mPosts.get(position);
         if (post.hasFeaturedImage())
             preloadImage(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight));
         if (post.hasPostAvatar())
             preloadImage(post.getPostAvatarForDisplay(mAvatarSz));
-
-        mLastPreloadPos = position;
     }
 
     /*
      * preload the passed image if it's not already cached
      */
     private void preloadImage(final String imageUrl) {
-        if (WordPress.imageLoader.isCached(imageUrl, 0, 0)) {
-            //ReaderLog.i("image already cached");
+        // skip if image is already in the LRU memory cache
+        if (WordPress.imageLoader.isCached(imageUrl, 0, 0))
             return;
-        }
-        WordPress.imageLoader.get(imageUrl, mImageListener);
+
+        // skip if image is already in the disk cache
+        if (WordPress.requestQueue.getCache().get(imageUrl) != null)
+            return;
+
+        WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }
 
-    private ImageLoader.ImageListener mImageListener = new ImageLoader.ImageListener() {
+    private ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
         @Override
         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
             // nop
         }
-
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             ReaderLog.e(volleyError);

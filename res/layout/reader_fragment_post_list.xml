@@ -3,26 +3,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <View
-        android:id="@+id/view_border_left"
-        android:layout_width="@dimen/reader_margin_medium"
-        android:layout_height="wrap_content"
-        android:background="@color/reader_divider_grey"/>
-
-    <View
-        android:id="@+id/view_border_right"
-        android:layout_width="@dimen/reader_margin_medium"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@color/reader_divider_grey"/>
+    android:layout_height="match_parent"
+    android:background="@color/reader_divider_grey">
 
     <ListView
         android:id="@android:id/list"
-        style="@style/ReaderListView.NoDivider"
-        android:layout_toLeftOf="@+id/view_border_right"
-        android:layout_toRightOf="@+id/view_border_left"
+        style="@style/ReaderListView"
+        android:layout_marginLeft="@dimen/reader_divider_size"
+        android:layout_marginRight="@dimen/reader_divider_size"
+        android:divider="@color/reader_divider_grey"
+        android:dividerHeight="@dimen/reader_divider_size"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -33,6 +23,6 @@
 
     <include
         android:id="@+id/empty_view"
-        layout="@layout/reader_empty_view"/>
+        layout="@layout/reader_empty_view" />
 
 </RelativeLayout>

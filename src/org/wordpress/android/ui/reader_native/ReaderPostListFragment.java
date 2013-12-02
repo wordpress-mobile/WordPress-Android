@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
@@ -253,6 +254,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 }
             });
 
+            gridView.setSelector(R.drawable.reader_list_selector);
             gridView.setAdapter(getPostAdapter());
         } else {
             final ListView listView = (ListView) view.findViewById(android.R.id.list);
@@ -484,13 +486,14 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (TextUtils.isEmpty(tagName))
             return;
 
-        // cancel existing requests if we're already updating
-        /*if (isUpdating()) {
-            VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
-            ReaderLog.i("canceling existing update");
-        }*/
-
         unscheduleAutoUpdate();
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ReaderLog.i("network unavailable, rescheduling reader update");
+            scheduleAutoUpdate();
+            return;
+        }
+
         setIsUpdating(true, updateAction);
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
@@ -589,7 +592,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (!hasCurrentTag())
             return;
 
-        ReaderLog.d("scheduling tag auto-update");
         mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
@@ -713,10 +715,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mFooterProgress.setVisibility(View.GONE);
     }
 
-    /*
-     * detect when user starts/stops listView fling - adapter relies on this to disable image
-     * pre-load during a fling (to prevent unnecessary bandwidth hit)
-     */
     private boolean mIsFlinging = false;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {

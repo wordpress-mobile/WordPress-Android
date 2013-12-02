@@ -53,7 +53,7 @@
     <dimen name="reader_button_icon_sz">48dp</dimen>
 
     <dimen name="reader_featured_image_height">220dp</dimen>
-    <dimen name="reader_divider_size">12dp</dimen>
+    <dimen name="reader_divider_size">@dimen/reader_margin_medium</dimen>
     <dimen name="reader_video_overlay_size">48dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
