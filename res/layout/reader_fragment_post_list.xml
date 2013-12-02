@@ -5,9 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/view_border_left"
+        android:layout_width="@dimen/reader_margin_medium"
+        android:layout_height="wrap_content"
+        android:background="@color/reader_divider_grey"/>
+
+    <View
+        android:id="@+id/view_border_right"
+        android:layout_width="@dimen/reader_margin_medium"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@color/reader_divider_grey"/>
+
     <ListView
         android:id="@android:id/list"
         style="@style/ReaderListView.NoDivider"
+        android:layout_toLeftOf="@+id/view_border_right"
+        android:layout_toRightOf="@+id/view_border_left"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
