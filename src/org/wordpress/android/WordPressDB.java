@@ -11,7 +11,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -391,10 +390,10 @@ public class WordPressDB {
         if (blogName == null || blogURL == null || username == null || password == null)
             return false;
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
-                "blogName='" + addSlashes(blogName) + "' AND url='"
-                        + addSlashes(blogURL) + "'" + " AND username='"
-                        + username + "'", null, null, null, null);
+        String selection = "blogName='" + addSlashes(blogName) + "' AND url='" + addSlashes(blogURL)
+                + "'" + " AND username='" + username + "'";
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" }, selection,
+                null, null, null, null);
         int numRows = c.getCount();
 
         if (numRows > 0) {
@@ -419,9 +418,7 @@ public class WordPressDB {
         char character = iterator.current();
 
         while (character != StringCharacterIterator.DONE) {
-            if (character == '"')
-                sb.append("\\\"");
-            else if (character == '\'')
+            if (character == '\'')
                 sb.append("\'\'");
             else if (character == '\\')
                 sb.append("\\\\");
