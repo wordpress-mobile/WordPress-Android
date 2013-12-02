@@ -6,13 +6,16 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="8dp" >
+    android:gravity="center_vertical"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp">
 
     <TextView
         android:id="@+id/label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:ellipsize="end"
         android:fontFamily="sans-serif-light"
@@ -23,7 +26,7 @@
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="8dp"
         android:src="@drawable/dashboard_icon_wp"
         android:tint="#858585" />
 
