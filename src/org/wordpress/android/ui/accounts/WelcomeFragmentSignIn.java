@@ -237,11 +237,19 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         protected List doInBackground(Void... args) {
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (userBlogList != null) {
+                // Add all blogs
+                SparseBooleanArray allBlogs = new SparseBooleanArray();
+                for (int i = 0; i < userBlogList.size(); i++) {
+                    allBlogs.put(i, true);
+                }
+                mSetupBlog.addBlogs(userBlogList, allBlogs);
+            }
             return userBlogList;
         }
 
         @Override
-        protected void onPostExecute(final List<Object> usersBlogsList) {
+        protected void onPostExecute(final List<Object> userBlogList) {
             if (mHttpAuthRequired) {
                 // Prompt for http credentials
                 mHttpAuthRequired = false;
@@ -272,7 +280,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            if (usersBlogsList == null && mErrorMsgId != 0) {
+            if (userBlogList == null && mErrorMsgId != 0) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
@@ -306,13 +314,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", null, null);
             }
 
-            if (usersBlogsList != null) {
-                // Add all blogs
-                SparseBooleanArray allBlogs = new SparseBooleanArray();
-                for (int i = 0; i < usersBlogsList.size(); i++) {
-                    allBlogs.put(i, true);
-                }
-                mSetupBlog.addBlogs(usersBlogsList, allBlogs);
+            if (userBlogList != null) {
                 getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             } else {

@@ -8,13 +8,13 @@
         android:title="@string/refresh"/>
 
     <item
-        android:id="@+id/menu_select_all"
+        android:id="@+id/menu_show_all"
         android:showAsAction="never"
-        android:title="@string/select_all"/>
+        android:title="@string/show_all"/>
 
     <item
-        android:id="@+id/menu_deselect_all"
+        android:id="@+id/menu_hide_all"
         android:showAsAction="never"
-        android:title="@string/deselect_all"/>
+        android:title="@string/hide_all"/>
 
 </menu>

@@ -74,10 +74,10 @@ public class ManageBlogsActivity extends SherlockListActivity {
             case R.id.menu_refresh:
                 refreshBlogs();
                 return true;
-            case R.id.menu_select_all:
+            case R.id.menu_show_all:
                 selectAll();
                 return true;
-            case R.id.menu_deselect_all:
+            case R.id.menu_hide_all:
                 deselectAll();
                 return true;
             case android.R.id.home:
