@@ -33,8 +33,8 @@ public class WordPressDB_Test extends InstrumentationTestCase {
         String blogURL = "pouet.com";
         String username = "pouet";
         String password = "";
-
-        boolean blogExists = WordPress.wpDB.checkForExistingBlog(blogName, blogURL, username, password);
+        boolean blogExists = WordPress.wpDB.checkForExistingBlog(blogName, blogURL, username,
+                password);
         assertTrue(blogExists);
         db.close();
     }

@@ -33,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -385,17 +384,15 @@ public class WordPressDB {
     }
     
 
-    public boolean checkForExistingBlog(String blogName, String blogURL, String username, String password) {
-
+    public boolean checkForExistingBlog(String blogName, String blogURL, String username,
+                                        String password) {
         if (blogName == null || blogURL == null || username == null || password == null)
             return false;
 
-        String selection = "blogName='" + addSlashes(blogName) + "' AND url='" + addSlashes(blogURL)
-                + "'" + " AND username='" + username + "'";
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" }, selection,
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id", "blogName", "url"},
+                "blogName=? AND url=? AND username=?", new String[]{blogName, blogURL, username},
                 null, null, null, null);
         int numRows = c.getCount();
-
         if (numRows > 0) {
             // This account is already saved
             c.moveToFirst();
@@ -410,35 +407,7 @@ public class WordPressDB {
         return false;
     }
 
-    public static String addSlashes(String text) {
-        final StringBuffer sb = new StringBuffer(text.length() * 2);
-        final StringCharacterIterator iterator = new StringCharacterIterator(
-                text);
-
-        char character = iterator.current();
-
-        while (character != StringCharacterIterator.DONE) {
-            if (character == '\'')
-                sb.append("\'\'");
-            else if (character == '\\')
-                sb.append("\\\\");
-            else if (character == '\n')
-                sb.append("\\n");
-            else if (character == '{')
-                sb.append("\\{");
-            else if (character == '}')
-                sb.append("\\}");
-            else
-                sb.append(character);
-
-            character = iterator.next();
-        }
-
-        return sb.toString();
-    }
-
     public boolean saveBlog(Blog blog) {
-
         ContentValues values = new ContentValues();
         values.put("url", blog.getUrl());
         values.put("homeURL", blog.getHomeURL());
