@@ -188,8 +188,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         return false;
     }
 
+    //private int debugCnt = 0;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        /*debugCnt++;
+        if (debugCnt==1) {
+            Debug.startMethodTracing(WordPress.TAG);
+        } else if (debugCnt==40) {
+            Debug.stopMethodTracing();
+        }*/
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 

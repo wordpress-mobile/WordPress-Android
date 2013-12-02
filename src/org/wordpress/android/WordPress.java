@@ -17,6 +17,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -97,6 +98,7 @@ public class WordPress extends Application {
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
 
         // http://stackoverflow.com/a/17035814
         imageLoader.setBatchedResponseDelay(0);

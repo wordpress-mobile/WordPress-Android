@@ -16,7 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="44dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/reader_footer_bg"
+        android:background="@drawable/reader_footer_background"
         android:orientation="horizontal"
         android:weightSum="2" >
 
