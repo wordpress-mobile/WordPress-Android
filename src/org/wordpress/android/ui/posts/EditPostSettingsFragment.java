@@ -474,6 +474,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private LocationHelper.LocationResult locationResult = new LocationHelper.LocationResult() {
         @Override
         public void gotLocation(final Location location) {
+            if (getActivity() == null)
+                return;
             // note that location will be null when requesting location fails
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {

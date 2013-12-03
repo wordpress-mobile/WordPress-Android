@@ -637,7 +637,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_edit_post) {
+        if (itemId == R.id.menu_save_post) {
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
             if (savePost(false, false)) {

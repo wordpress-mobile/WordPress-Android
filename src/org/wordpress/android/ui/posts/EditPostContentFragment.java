@@ -35,6 +35,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,6 +45,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -104,6 +108,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
+    private static final int CONTENT_ANIMATION_DURATION = 250;
+
     private View mRootView;
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
@@ -111,6 +117,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private RelativeLayout mFormatBar;
+    private LinearLayout mPostContentLinearLayout, mPostSettingsLinearLayout;
+    private Button mPostSettingsButton;
     private boolean mIsBackspace;
     private boolean mScrollDetected;
 
@@ -134,6 +142,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mFormatBar = (RelativeLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
         mContentEditText = (WPEditText)rootView.findViewById(R.id.post_content);
+        mPostContentLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_content_wrapper);
+        mPostSettingsLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_settings_wrapper);
+        mPostSettingsButton = (Button)rootView.findViewById(R.id.post_settings_button);
+        mPostSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.showPostSettings();
+            }
+        });
         mBoldToggleButton = (ToggleButton) rootView.findViewById(R.id.bold);
         mEmToggleButton = (ToggleButton) rootView.findViewById(R.id.em);
         mBquoteToggleButton = (ToggleButton) rootView.findViewById(R.id.bquote);
@@ -177,6 +194,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             if (!TextUtils.isEmpty(post.getTitle())) {
                 mTitleEditText.setText(post.getTitle());
             }
+
+            mPostSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
         }
 
         // Check for Android share action
@@ -231,14 +250,51 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return;
         ActionBar actionBar = mActivity.getSupportActionBar();
         if (isVisible) {
+            Animation fadeAnimation = new AlphaAnimation(1, 0);
+            fadeAnimation.setDuration(CONTENT_ANIMATION_DURATION);
+            fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mTitleEditText.setVisibility(View.GONE);
+                    mPostSettingsLinearLayout.setVisibility(View.GONE);
+                    mFormatBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            mPostContentLinearLayout.startAnimation(fadeAnimation);
             actionBar.hide();
-            mTitleEditText.setVisibility(View.GONE);
-            mActivity.setViewPagerEnabled(false);
-            mFormatBar.setVisibility(View.VISIBLE);
         } else {
-            mActivity.setViewPagerEnabled(true);
             mTitleEditText.setVisibility(View.VISIBLE);
             mFormatBar.setVisibility(View.GONE);
+            Animation fadeAnimation = new AlphaAnimation(0, 1);
+            fadeAnimation.setDuration(CONTENT_ANIMATION_DURATION);
+            fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mPostSettingsLinearLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            mPostContentLinearLayout.startAnimation(fadeAnimation);
             mActivity.supportInvalidateOptionsMenu();
             actionBar.show();
         }
@@ -1196,12 +1252,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         mLastYPos = pos;
 
-        if (event.getAction() == MotionEvent.ACTION_UP && !mScrollDetected) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
                 setContentEditingModeVisible(true);
                 return false;
             }
+        }
 
+        if (event.getAction() == MotionEvent.ACTION_UP && !mScrollDetected) {
             Layout layout = ((TextView) v).getLayout();
             int x = (int) event.getX();
             int y = (int) event.getY();

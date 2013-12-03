@@ -4,6 +4,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import java.util.Locale;
 
@@ -31,11 +32,15 @@ import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
-public class NewEditPostActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class NewEditPostActivity extends SherlockFragmentActivity {
 
     public static String EXTRA_POSTID = "postId";
     public static String EXTRA_IS_PAGE = "isPage";
     public static String EXTRA_IS_NEW_POST = "isNewPost";
+
+    private static int PAGE_CONTENT = 0;
+    private static int PAGE_SETTINGS = 1;
+    private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 30000;
     private Handler mAutoSaveHandler;
@@ -73,7 +78,6 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // Autosave handler
@@ -87,6 +91,7 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         mViewPager = (WPViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -94,30 +99,20 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-                if (position == 2 && mEditPostPreviewFragment != null) {
+
+                supportInvalidateOptionsMenu();
+                if (position == PAGE_CONTENT) {
+                    setTitle(WordPress.getCurrentBlog().getBlogName());
+                } else if (position == PAGE_SETTINGS) {
+                    setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                } else if (position == PAGE_PREVIEW) {
+                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     savePost(false);
-                    mEditPostPreviewFragment.loadPost(mPost);
+                    if (mEditPostPreviewFragment != null)
+                        mEditPostPreviewFragment.loadPost(mPost);
                 }
             }
         });
-
-        // Add the 3 tabs for the post editor
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText(mSectionsPagerAdapter.getPageTitle(0))
-                        .setTabListener(this)
-                        .setIcon(R.drawable.tab_icon_write));
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText(mSectionsPagerAdapter.getPageTitle(1))
-                        .setTabListener(this)
-                        .setIcon(R.drawable.tab_icon_settings));
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText(mSectionsPagerAdapter.getPageTitle(2))
-                        .setTabListener(this)
-                        .setIcon(R.drawable.tab_icon_preview));
 
         setTitle(WordPress.getCurrentBlog().getBlogName());
 
@@ -192,11 +187,26 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
+        MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
+        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            previewMenuItem.setVisible(false);
+            saveMenuItem.setVisible(false);
+        } else {
+            previewMenuItem.setVisible(true);
+            saveMenuItem.setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_edit_post) {
+        if (itemId == R.id.menu_save_post) {
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
@@ -205,8 +215,15 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
             setResult(RESULT_OK, i);
             finish();
             return true;
+        } else if (itemId == R.id.menu_preview_post) {
+            mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == android.R.id.home) {
-            showCancelAlert();
+            if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+                mViewPager.setCurrentItem(PAGE_CONTENT);
+                supportInvalidateOptionsMenu();
+            } else {
+                showCancelAlert();
+            }
             return true;
         }
         return false;
@@ -230,8 +247,6 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
     }
 
     private void savePost(boolean isAutosave) {
-        if (isAutosave)
-            Toast.makeText(this, "AUTOSAVED", Toast.LENGTH_SHORT).show();
         // Update post content from fragment fields
         if (mEditPostContentFragment != null)
             mEditPostContentFragment.savePostContent(isAutosave);
@@ -241,6 +256,12 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
 
     @Override
     public void onBackPressed() {
+        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            mViewPager.setCurrentItem(PAGE_CONTENT);
+            supportInvalidateOptionsMenu();
+            return;
+        }
+
         if (getSupportActionBar() != null) {
             if (getSupportActionBar().isShowing())
                 showCancelAlert();
@@ -290,28 +311,12 @@ public class NewEditPostActivity extends SherlockFragmentActivity implements Act
         dialogBuilder.create().show();
     }
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in
-        // the ViewPager.
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    public void setViewPagerEnabled(boolean isEnabled) {
-        if (mViewPager != null)
-            mViewPager.setPagingEnabled(isEnabled);
-    }
-
     public String getStatEventEditorClosed() {
         return mStatEventEditorClosed;
+    }
+
+    public void showPostSettings() {
+        mViewPager.setCurrentItem(PAGE_SETTINGS);
     }
 
     /**
