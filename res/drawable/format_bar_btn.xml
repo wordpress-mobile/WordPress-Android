@@ -7,8 +7,8 @@
     android:top="4dp"
     android:bottom="4dp"/>
       <solid android:color="@android:color/transparent" />
-        <corners android:radius="1dp" android:bottomRightRadius="4dp" android:bottomLeftRadius="4dp" 
-     android:topLeftRadius="4dp" android:topRightRadius="4dp"/> 
+        <corners android:radius="1dp" android:bottomRightRadius="4dp" android:bottomLeftRadius="4dp"
+     android:topLeftRadius="4dp" android:topRightRadius="4dp"/>
     </shape>
   </item>
 </layer-list>

@@ -80,17 +80,17 @@
         android:layout_gravity="bottom"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
-        android:padding="4dp"
-        android:visibility="gone">
+        android:paddingTop="1dp">
 
         <HorizontalScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="34dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ToggleButton
                     android:id="@+id/bold"
@@ -106,10 +106,9 @@
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/bold"
-                    android:textOff="I "
-                    android:textOn="I "
+                    android:textOff="I"
+                    android:textOn="I"
                     android:textStyle="italic" />
 
                 <ToggleButton
@@ -117,7 +116,6 @@
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/em"
                     android:textOff="@string/underline"
                     android:textOn="@string/underline" />
@@ -127,16 +125,25 @@
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/underline"
                     android:textOff="@string/strike"
                     android:textOn="@string/strike" />
+
+                <ToggleButton
+                    android:id="@+id/bquote"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_toRightOf="@id/link"
+                    android:textOff="&quot;"
+                    android:textOn="&quot;"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
 
                 <Button
                     android:id="@+id/link"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/strike"
                     android:background="@drawable/wp_button_toggle"
                     android:paddingLeft="@dimen/format_bar_button_padding"
@@ -145,35 +152,24 @@
                     android:textColor="#21759b"
                     android:textSize="@dimen/format_bar_font_size" />
 
-                <ToggleButton
-                    android:id="@+id/bquote"
-                    style="@style/WordPress.ToggleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
-                    android:layout_toRightOf="@id/link"
-                    android:textOff="&quot;"
-                    android:textOn="&quot;"
-                    android:textStyle="bold"
-                    android:typeface="serif" />
-
                 <Button
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/bquote"
                     android:background="@drawable/wp_button_toggle"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:text="@string/more_tag"
+                    android:layout_marginLeft="6dp"
                     android:textColor="#464646"
                     android:textSize="@dimen/format_bar_font_size" />
-            </RelativeLayout>
+            </LinearLayout>
         </HorizontalScrollView>
 
         <ImageButton
             android:id="@+id/addPictureButton"
+            android:layout_marginRight="8dp"
             android:layout_width="30dp"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
