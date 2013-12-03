@@ -21,10 +21,11 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_blog_name"
         style="@style/ReaderTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/reader_margin_large"
         android:layout_toRightOf="@+id/image_avatar"
+        android:layout_marginRight="@dimen/reader_margin_large"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="text_blog_name"
