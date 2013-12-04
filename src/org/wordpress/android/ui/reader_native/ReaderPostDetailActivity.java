@@ -4,16 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -28,6 +30,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -38,6 +42,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -58,7 +63,7 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 7/8/13.
  */
-public class ReaderPostDetailActivity extends FragmentActivity {
+public class ReaderPostDetailActivity extends WPActionBarActivity {
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
 
@@ -192,18 +197,28 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
+
+        if (isTranslucentActionBarEnabled)
+            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (isTranslucentActionBarEnabled)
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(NativeReaderActivity.ALPHA_LEVEL_3, 46, 162, 204)));
+
         // remove window background since background color is set in layout (prevents overdraw)
         getWindow().setBackgroundDrawable(null);
-
-        mDecorView = getWindow().getDecorView();
 
         // set the "fake" ActionBar height to that of a real one
         final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
         final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
         layoutFakeActionBar.setMinimumHeight(actionbarHeight);
+        layoutFakeActionBar.setVisibility(View.GONE);
 
         // add a header to the listView that's the same height as the "fake" ActionBar - this moves
         // the actual content of the listView below the ActionBar, but enables it to scroll under
@@ -251,20 +266,13 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         getListView().setVisibility(View.INVISIBLE);
     }
 
-    /*@SuppressLint("NewApi")
+    @SuppressLint("NewApi")
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        // enable immersive mode on KitKat
-        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }*/
+        if (hasFocus)
+            enableImmersiveMode();
+    }
 
     @SuppressLint("NewApi")
     @Override
@@ -279,6 +287,52 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         } else {
             new ShowPostTask().execute();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home :
+                onBackPressed();
+                return true;
+            default :
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+     * KitKat immersive mode
+     * https://developer.android.com/training/system-ui/immersive.html
+     */
+    private boolean canEnableImmersiveMode() {
+        return false; // (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
+    }
+
+    @SuppressLint("NewApi")
+    private void enableImmersiveMode() {
+        if (!canEnableImmersiveMode())
+            return;
+        getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @SuppressLint("NewApi")
+    private void disableImmersiveMode() {
+        if (!canEnableImmersiveMode())
+            return;
+        getDecorView().setSystemUiVisibility(0);
+    }
+
+    @SuppressLint("NewApi")
+    private View getDecorView() {
+        if (mDecorView == null) {
+            mDecorView = getWindow().getDecorView();
+        }
+        return mDecorView;
     }
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
@@ -334,13 +388,11 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        boolean isResultOK = (resultCode== Activity.RESULT_OK);
-
         switch (requestCode) {
             case Constants.INTENT_READER_REBLOG :
                 // user just returned from reblog activity - if post was successfully reblogged,
                 // then update the local post and select the reblog button
-                if (isResultOK) {
+                if (resultCode== Activity.RESULT_OK) {
                     mPost.isRebloggedByCurrentUser = true;
                     TextView btnReblog = (TextView) findViewById(R.id.btn_reblog);
                     btnReblog.setSelected(true);
@@ -593,8 +645,10 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (mIsSubmittingComment)
             return;
 
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
+        disableImmersiveMode();
+
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final TextView btnComment = (TextView) findViewById(R.id.btn_comment);
 
         // different hint depending on whether user is replying to a comment or commenting on the post
@@ -647,8 +701,8 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (!mIsAddCommentBoxShowing)
             return;
 
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final TextView btnComment = (TextView) findViewById(R.id.btn_comment);
 
         btnComment.setSelected(false);
@@ -659,6 +713,16 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
         mIsAddCommentBoxShowing = false;
         mReplyToCommentId = 0;
+
+        // re-enable immersive mode after a short delay (to give keyboard time to disappear)
+        if (canEnableImmersiveMode()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    enableImmersiveMode();
+                }
+            }, 500);
+        }
     }
 
     private void toggleShowAddCommentBox() {
