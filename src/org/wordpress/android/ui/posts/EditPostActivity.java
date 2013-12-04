@@ -1033,6 +1033,18 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             return;
         }
 
+        // Save the current Post
+        savePost(false, true);
+
+        // Compare the current Post to the original and if no changes have been made,
+        // set the Post back to the original and go back to the previous view
+        if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            mOriginalPost.update();
+            WordPress.currentPost = mOriginalPost;
+            finish();
+            return;
+        }
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
         dialogBuilder.setTitle(getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));

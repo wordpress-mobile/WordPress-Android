@@ -429,6 +429,27 @@ public class Post {
         return quickPostType;
     }
 
+    /**
+     * Checks if this post currently has data differing from another post.
+     *
+     * @param otherPost The post to compare to this post's editable data.
+     * @return True if this post's data differs from otherPost's data, False otherwise.
+     */
+    public boolean hasChanges(Post otherPost) {
+        return(!(this.title.equals(otherPost.title) &&
+                this.description.equals(otherPost.description) &&
+                this.mt_excerpt.equals(otherPost.mt_excerpt) &&
+                this.date_created_gmt == otherPost.date_created_gmt &&
+                this.categories.equals(otherPost.categories) &&
+                this.mt_keywords.equals(otherPost.mt_keywords) &&
+                this.post_status.equals(otherPost.post_status) &&
+                this.wp_password.equals(otherPost.wp_password) &&
+                this.wp_post_format.equals(otherPost.wp_post_format) &&
+                this.latitude == otherPost.latitude &&
+                this.longitude == otherPost.longitude)
+        );
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
