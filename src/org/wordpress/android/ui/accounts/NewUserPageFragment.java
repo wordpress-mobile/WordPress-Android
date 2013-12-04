@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AlertUtil;
@@ -209,7 +210,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         final String password = mPasswordTextField.getText().toString().trim();
         final String username = mUsernameTextField.getText().toString().trim();
         final String siteName = siteUrlToSiteName(siteUrl);
-        final String language = getDeviceLanguage();
+        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
                 siteUrl, siteName, language, restClient, getActivity(), new ErrorListener(),
@@ -224,7 +225,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                                 updateProgress(getString(R.string.create_account_wpcom));
                                 break;
                             case CREATE_USER:
-                                updateProgress(getString(R.string.create_blog_wpcom));
+                                updateProgress(getString(R.string.create_first_blog_wpcom));
                                 break;
                             case CREATE_SITE: // no messages
                             case AUTHENTICATE_USER:
@@ -234,7 +235,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     }
 
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(JSONObject createSiteResponse) {
                         endProgress();
                         finishThisStuff(username);
                     }
@@ -322,51 +323,5 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         });
 
         return rootView;
-    }
-
-    private String getDeviceLanguage() {
-        Resources res = getActivity().getResources();
-        XmlResourceParser parser = res.getXml(R.xml.wpcom_languages);
-        Hashtable<String, String> entries = new Hashtable<String, String>();
-        String matchedDeviceLanguage = "en - English";
-        try {
-            int eventType = parser.getEventType();
-            String deviceLanguageCode = Locale.getDefault().getLanguage();
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    String name = parser.getName();
-                    if (name.equals("language")) {
-                        String currentID = null;
-                        boolean currentLangIsDeviceLanguage = false;
-                        int i = 0;
-                        while (i < parser.getAttributeCount()) {
-                            if (parser.getAttributeName(i).equals("id")) {
-                                currentID = parser.getAttributeValue(i);
-                            }
-                            if (parser.getAttributeName(i).equals("code") && parser.
-                                    getAttributeValue(i).equalsIgnoreCase(deviceLanguageCode)) {
-                                currentLangIsDeviceLanguage = true;
-                            }
-                            i++;
-                        }
-
-                        while (eventType != XmlPullParser.END_TAG) {
-                            if (eventType == XmlPullParser.TEXT) {
-                                entries.put(parser.getText(), currentID);
-                                if (currentLangIsDeviceLanguage) {
-                                    matchedDeviceLanguage = parser.getText();
-                                }
-                            }
-                            eventType = parser.next();
-                        }
-                    }
-                }
-                eventType = parser.next();
-            }
-        } catch (Exception e) {
-            // do nothing
-        }
-        return matchedDeviceLanguage;
     }
 }

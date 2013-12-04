@@ -17,6 +17,17 @@ public class ReaderPrefs {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
     }
 
+    /*
+     * remove all reader-related preferences
+     */
+    public static void reset() {
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.remove(PREFKEY_USER_ID);
+        editor.remove(PREFKEY_READER_TAG);
+        editor.commit();
+    }
+
+
     private static String getString(String key) {
         return getString(key, "");
     }

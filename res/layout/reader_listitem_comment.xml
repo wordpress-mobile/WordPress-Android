@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_extra_light"
+    android:descendantFocusability="blocksDescendants"
     android:paddingBottom="@dimen/reader_margin_medium"
     android:paddingLeft="@dimen/reader_margin_large"
     android:paddingRight="@dimen/reader_margin_large"
@@ -49,14 +50,16 @@
         android:layout_alignLeft="@+id/text_comment_title"
         android:layout_below="@+id/text_comment_title"
         android:layout_marginTop="@dimen/reader_margin_small"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:text="text_comment_text" />
 
     <ProgressBar
+        android:id="@+id/progress"
         style="@style/ReaderProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:id="@+id/progress"/>
+        android:visibility="gone" />
 </RelativeLayout>

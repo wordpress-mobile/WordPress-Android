@@ -28,7 +28,7 @@ public class SetupBlog {
     private String mHttpPassword = "";
     private String mXmlrpcUrl;
 
-    private int mErrorMsgId = -1;
+    private int mErrorMsgId;
     private boolean mIsCustomUrl;
     private String mSelfHostedURL;
 
@@ -105,7 +105,7 @@ public class SetupBlog {
         } catch (XMLRPCException e) {
             String message = e.getMessage();
             if (message.contains("code 403"))
-                mErrorMsgId = R.string.update_credentials;
+                mErrorMsgId = R.string.username_or_password_incorrect;
             else if (message.contains("404"))
                 mErrorMsgId = R.string.xmlrpc_error;
             else if (message.contains("425"))
@@ -174,6 +174,29 @@ public class SetupBlog {
         return xmlrpcUrl;
     }
 
+    public Blog addBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
+                        String username, String password) {
+        Blog blog = null;
+        if (!WordPress.wpDB.checkForExistingBlog(blogName, xmlRpcUrl, username, password)) {
+            // The blog isn't in the app, so let's create it
+            blog = new Blog(xmlRpcUrl, username, password);
+            blog.setHomeURL(homeUrl);
+            blog.setHttpuser(mHttpUsername);
+            blog.setHttppassword(mHttpPassword);
+            blog.setBlogName(blogName);
+            blog.setImagePlacement(""); //deprecated
+            blog.setFullSizeImage(false);
+            blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
+            blog.setMaxImageWidthId(5);
+            blog.setRunService(false); //deprecated
+            blog.setBlogId(Integer.parseInt(blogId));
+            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
+            blog.setWpVersion(""); // assigned later in getOptions call
+            blog.save(null);
+        }
+        return blog;
+    }
+
     // Add selected blog(s) to the database
     public void addBlogs(List fullBlogList, SparseBooleanArray selectedBlogs) {
         for (int i = 0; i < selectedBlogs.size(); i++) {
@@ -182,25 +205,11 @@ public class SetupBlog {
                 Map blogMap = (HashMap) fullBlogList.get(rowID);
                 String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
                 String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
-
-                if (!WordPress.wpDB.checkForExistingBlog(blogName, xmlrpcUrl, mUsername,
-                        mPassword)) {
-                    // The blog isn't in the app, so let's create it
-                    Blog blog = new Blog(xmlrpcUrl, mUsername, mPassword);
-                    blog.setHomeURL(blogMap.get("url").toString());
-                    blog.setHttpuser(mHttpUsername);
-                    blog.setHttppassword(mHttpPassword);
-                    blog.setBlogName(blogName);
-                    blog.setImagePlacement(""); //deprecated
-                    blog.setFullSizeImage(false);
-                    blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
-                    blog.setMaxImageWidthId(5);
-                    blog.setRunService(false); //deprecated
-                    blog.setBlogId(Integer.parseInt(blogMap.get("blogid").toString()));
-                    blog.setDotcomFlag(xmlrpcUrl.contains("wordpress.com"));
-                    blog.setWpVersion(""); // assigned later in getOptions call
-                    if (blog.save(null) && i == 0)
-                        WordPress.setCurrentBlog(blog.getId());
+                String homeUrl = blogMap.get("url").toString();
+                String blogId = blogMap.get("blogid").toString();
+                Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword);
+                if (blog != null && i == 0) {
+                    WordPress.setCurrentBlog(blog.getId());
                 }
             }
         }
