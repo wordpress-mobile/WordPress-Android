@@ -146,11 +146,16 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
-                        updateProgress(getString(R.string.create_new_blog_wpcom));
+                        if (getActivity() != null) {
+                            updateProgress(getString(R.string.create_new_blog_wpcom));
+                        }
                     }
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
+                        if (getActivity() == null) {
+                            return ;
+                        }
                         endProgress();
                         SetupBlog setupBlog = new SetupBlog();
                         try {
@@ -175,6 +180,9 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
                     @Override
                     public void onError(int messageId) {
+                        if (getActivity() == null) {
+                            return ;
+                        }
                         endProgress();
                         showError(getString(messageId));
                     }
