@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderCommentAdapter;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -72,7 +73,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ReaderPost mPost;
 
     private LayoutInflater mInflater;
-    private ViewGroup mLayoutLikingAvatars;
     private ViewGroup mLayoutActions;
     private ListView mListView;
     private ViewGroup mCommentFooter;
@@ -205,27 +205,23 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);
 
+        // remove window background since background color is set in layout (reduces overdraw)
+        getWindow().setBackgroundDrawable(null);
+
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (isTranslucentActionBarEnabled)
+        if (isTranslucentActionBarEnabled) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(NativeReaderActivity.ALPHA_LEVEL_3, 46, 162, 204)));
 
-        // remove window background since background color is set in layout (prevents overdraw)
-        getWindow().setBackgroundDrawable(null);
-
-        // set the "fake" ActionBar height to that of a real one
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
-        final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
-        layoutFakeActionBar.setMinimumHeight(actionbarHeight);
-        layoutFakeActionBar.setVisibility(View.GONE);
-
-        // add a header to the listView that's the same height as the "fake" ActionBar - this moves
-        // the actual content of the listView below the ActionBar, but enables it to scroll under
-        // the translucent ActionBar layout
-        RelativeLayout headerFake = new RelativeLayout(this);
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
-        getListView().addHeaderView(headerFake, null, false);
+            // add a header to the listView that's the same height as the ActionBar - this moves
+            // the actual content of the listView below the ActionBar, but enables it to scroll under
+            // the translucent ActionBar layout
+            final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
+            RelativeLayout headerFake = new RelativeLayout(this);
+            headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
+            getListView().addHeaderView(headerFake, null, false);
+        }
 
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
@@ -243,24 +239,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         mProgressFooter.setVisibility(View.INVISIBLE);
         getListView().addFooterView(mCommentFooter);
 
-        mLayoutLikingAvatars = (ViewGroup) findViewById(R.id.layout_liking_avatars);
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
-
-        ImageView imgBack = (ImageView) findViewById(R.id.image_back);
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        ImageView imgShare = (ImageView) findViewById(R.id.image_share);
-        imgShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharePage();
-            }
-        });
 
         // hide listView until post is loaded
         getListView().setVisibility(View.INVISIBLE);
@@ -401,7 +380,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * pass current web page url to chosen sharing activity
+     * TODO: needs button - pass current web page url to chosen sharing activity
      */
     private void sharePage() {
         String subject = getString(R.string.reader_share_subject, getString(R.string.app_name));
@@ -550,6 +529,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             @Override
             public void run() {
                 final TextView btnLike = (TextView) findViewById(R.id.btn_like);
+                final ViewGroup layoutLikingAvatars = (ViewGroup) findViewById(R.id.layout_liking_avatars);
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
                 final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
@@ -589,7 +569,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
                         // nothing more to do if no likes
                         if (avatars.size()==0 && mPost.numLikes==0) {
-                            mLayoutLikingAvatars.setVisibility(View.GONE);
+                            layoutLikingAvatars.setVisibility(View.GONE);
                             return;
                         }
 
@@ -599,7 +579,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                             // clicking likes view shows activity displaying all liking users - this is only set
                             // if we know there are liking avatars, otherwise tapping the likes view would show
                             // the liking users with "0 people like this"
-                            mLayoutLikingAvatars.setOnClickListener(new View.OnClickListener() {
+                            layoutLikingAvatars.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
@@ -608,20 +588,19 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
                             // skip adding liking avatars if the view's child count indicates that we've already
                             // added the max on a previous call to this routine
-                            if (forceReload || mLayoutLikingAvatars.getChildCount() < maxAvatars) {
-                                mLayoutLikingAvatars.removeAllViews();
+                            if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
+                                layoutLikingAvatars.removeAllViews();
                                 for (String url: avatars) {
-                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, mLayoutLikingAvatars, false);
-                                    mLayoutLikingAvatars.addView(imgAvatar);
+                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                                    layoutLikingAvatars.addView(imgAvatar);
                                     imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                                 }
                             }
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikingAvatars.getVisibility()!=View.VISIBLE) {
-                            //ReaderAniUtils.startAnimation(mLayoutLikingAvatars, R.anim.reader_top_bar_in);
-                            mLayoutLikingAvatars.setVisibility(View.VISIBLE);
+                        if (layoutLikingAvatars.getVisibility()!=View.VISIBLE) {
+                            layoutLikingAvatars.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -807,16 +786,16 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         new Thread() {
             @Override
             public void run() {
-                final TextView btnFollow = (TextView) findViewById(R.id.btn_follow);
+                final TextView txtFollow = (TextView) findViewById(R.id.text_follow);
                 final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
                 mHandler.post(new Runnable() {
                     public void run() {
-                        btnFollow.setText(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-                        btnFollow.setSelected(isFollowed);
-                        btnFollow.setOnClickListener(new View.OnClickListener() {
+                        txtFollow.setText(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+                        txtFollow.setSelected(isFollowed);
+                        txtFollow.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                doPostAction(btnFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
+                                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
                             }
                         });
                     }
@@ -1004,7 +983,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
-        TextView txtSource;
+        TextView txtBlogName;
+        TextView txtDate;
+        TextView txtFollow;
         WebView webView;
         TextView btnReblog;
         TextView btnComment;
@@ -1025,7 +1006,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         protected Boolean doInBackground(Void... params) {
             // locate views
             txtTitle = (TextView) findViewById(R.id.text_title);
-            txtSource = (TextView) findViewById(R.id.text_source);
+            txtBlogName = (TextView) findViewById(R.id.text_blog_name);
+            txtDate = (TextView) findViewById(R.id.text_date);
+            txtFollow = (TextView) findViewById(R.id.text_follow);
             webView = (WebView) findViewById(R.id.webView);
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
             btnReblog = (TextView) findViewById(R.id.btn_reblog);
@@ -1050,7 +1033,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                  * TODO: post couldn't be loaded, which means it should be retrieved from server
                  */
                 txtTitle.setText(R.string.reader_title_err_unable_to_load_post);
-                txtSource.setVisibility(View.GONE);
+                txtBlogName.setVisibility(View.GONE);
+                txtDate.setVisibility(View.GONE);
                 imgAvatar.setImageResource(R.drawable.ic_error);
                 return;
             }
@@ -1069,8 +1053,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 }
             });
 
-            // blog name / author name / date
-            txtSource.setText(mPost.getSource());
+            txtBlogName.setText(mPost.getBlogName());
+            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
             if (mPost.hasPostAvatar()) {
                 int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
@@ -1181,6 +1165,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             // only show action buttons for WP posts
             mLayoutActions.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            txtFollow.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
             // make sure the adapter is assigned now that we've retrieved the post and updated views
             if (!hasCommentAdapter())

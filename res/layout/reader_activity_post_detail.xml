@@ -13,58 +13,6 @@
         tools:listheader="@layout/reader_listitem_post_detail"
         tools:listitem="@layout/reader_listitem_comment" />
 
-    <!--
-        if any margins, padding or views change in this "fake" ActionBar, be sure to update
-        refreshLikes() in ReaderPostDetail so that the space for liking avatars is correctly
-        calculated
-    -->
-    <RelativeLayout
-        android:id="@+id/layout_fake_actionbar"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/reader_translucent_actionbar_light">
-
-        <ImageView
-            android:id="@+id/image_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="@drawable/reader_button_transparent_selector"
-            android:paddingLeft="@dimen/reader_margin_small"
-            android:paddingRight="@dimen/reader_margin_medium"
-            android:src="@drawable/ic_navigate_previous" />
-
-        <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <LinearLayout
-            android:id="@+id/layout_liking_avatars"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_avatar_sz_like"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/image_share"
-            android:layout_toRightOf="@+id/image_back"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/image_share"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/reader_button_transparent_selector"
-            android:paddingLeft="@dimen/reader_margin_medium"
-            android:paddingRight="@dimen/reader_margin_large"
-            android:src="@drawable/ic_share" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/reader_divider_blue" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"

@@ -25,14 +25,6 @@
             android:id="@+id/btn_comment"/>
 
     <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/btn_follow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/reader_btn_follow"
-            style="@style/ReaderTextView.ActionButton"/>
-
-    <org.wordpress.android.widgets.WPTextView
             android:id="@+id/btn_reblog"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
