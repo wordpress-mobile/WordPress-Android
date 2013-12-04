@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -261,12 +260,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
             if (userBlogList != null) {
-                // Add all blogs
-                SparseBooleanArray allBlogs = new SparseBooleanArray();
-                for (int i = 0; i < userBlogList.size(); i++) {
-                    allBlogs.put(i, true);
-                }
-                mSetupBlog.addBlogs(userBlogList, allBlogs);
+                mSetupBlog.addBlogs(userBlogList);
             }
             return userBlogList;
         }
@@ -274,6 +268,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
             if (mHttpAuthRequired) {
+                if (getActivity() == null) {
+                    return ;
+                }
                 // Prompt for http credentials
                 mHttpAuthRequired = false;
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -346,8 +343,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (userBlogList != null) {
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
+                if (getActivity() != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
             } else {
                 endProgress();
             }
