@@ -20,6 +20,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 
@@ -49,6 +50,7 @@ public class WPComXMLRPCApi {
         contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
         contentStruct.put("production", true); //production, NOT sandbox.
+        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
         
         Object[] params = {
                 settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
@@ -80,7 +82,8 @@ public class WPComXMLRPCApi {
                 WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
                 false,
-                "android"
+                "android",
+                NotificationUtils.getAppPushNotificationsName()
         };
 
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
@@ -111,7 +114,8 @@ public class WPComXMLRPCApi {
                 settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
                 WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 gcmToken,
-                "android"
+                "android",
+                NotificationUtils.getAppPushNotificationsName()
         };
 
         client.callAsync(new XMLRPCCallback() {
@@ -193,7 +197,8 @@ public class WPComXMLRPCApi {
                 WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 updatedSettings,
                 gcmToken,
-                "android"
+                "android",
+                NotificationUtils.getAppPushNotificationsName()
         };
 
         client.callAsync(new XMLRPCCallback() {

@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -71,5 +72,12 @@ public class NotificationUtils {
             return null;
         }
         return unzipped;
+    }
+    
+    public static String getAppPushNotificationsName(){
+        if (Utils.isDebugBuild())
+            return "org.wordpress.android.debug.build";
+        else
+            return "org.wordpress.android.playstore";
     }
 }
