@@ -83,32 +83,37 @@ public class EditPostActivity extends SherlockFragmentActivity {
         setTitle(WordPress.getCurrentBlog().getBlogName());
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+        String action = getIntent().getAction();
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
+                || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+            // If it is a share action, create a new post
+            mPost = new Post(WordPress.getCurrentBlog().getId(), false);
+            mIsNewPost = true;
+        } else if (extras != null) {
+            // Load post from postId passed in extras
             long postId = extras.getLong(EXTRA_POSTID, -1);
             boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
             mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-            try {
-                mPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
-                if (mPost.getId() == -1) {
-                    showPostErrorAndFinish();
-                    return;
-                } else {
-                    mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
-                }
+            mPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
+            mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
 
-                if (isPage) {
-                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
-                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
-                } else {
-                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
-                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
-                }
-
-            } catch (Exception e) {
-                showPostErrorAndFinish();
-                return;
+            if (isPage) {
+                WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
+                mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+            } else {
+                WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
+                mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
             }
         } else {
+            // A postId extra must be passed to this activity
+            showPostErrorAndFinish();
+            return;
+        }
+
+        if (mPost.getId() < 0) {
+            // Ensure we have a valid post
             showPostErrorAndFinish();
             return;
         }
@@ -146,19 +151,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 }
             }
         });
-
-        // Check for Android share action
-        // If it is a share action, create a new post
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
-                || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
-                || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
-                || (extras != null && extras.getInt("quick-media", -1) > -1)) {
-            mPost = new Post(WordPress.getCurrentBlog().getId(), false);
-            if (mPost.getId() < 0) {
-                showPostErrorAndFinish();
-            }
-        }
     }
 
     @Override
@@ -281,7 +273,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             return;
         }
 
-        savePost(false);
+        savePost(true);
 
         // Compare the current Post to the original and if no changes have been made,
         // set the Post back to the original and go back to the previous view
@@ -297,6 +289,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                savePost(false);
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);

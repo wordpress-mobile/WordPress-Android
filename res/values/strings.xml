@@ -133,6 +133,8 @@
     <string name="media_gallery_type_circles">Circles</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
     <string name="media_gallery_edit">Edit Gallery</string>
+    <string name="pick_photo">Select photo</string>
+    <string name="pick_video">Select video</string>
 
 
     <!-- Upload Media -->

@@ -545,7 +545,7 @@ public class PostsListFragment extends ListFragment {
                         i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
 
-                startActivityForResult(i2, 0);
+                getActivity().startActivityForResult(i2, PostsActivity.ACTIVITY_EDIT_POST);
                 return true;
             case MENU_ITEM_DELETE:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);

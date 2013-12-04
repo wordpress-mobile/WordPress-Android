@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -59,7 +60,7 @@ public class ViewPostFragment extends Fragment {
                             EditPostActivity.class);
                     i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
                     i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getId());
-                    startActivityForResult(i, 0);
+                    getActivity().startActivityForResult(i, PostsActivity.ACTIVITY_EDIT_POST);
                 }
 
             }

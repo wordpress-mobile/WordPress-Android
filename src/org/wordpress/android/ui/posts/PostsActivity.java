@@ -54,7 +54,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
-    private static final int ACTIVITY_EDIT_POST = 0;
+    public static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
 
     @Override
