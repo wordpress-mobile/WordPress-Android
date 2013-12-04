@@ -328,10 +328,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             // TODO: Post wasn't created, show error
             return;
         }
-        Intent i = new Intent(this, NewEditPostActivity.class);
-        i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
-        i.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, isPage);
-        i.putExtra(NewEditPostActivity.EXTRA_IS_NEW_POST, true);
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, ACTIVITY_EDIT_POST);
     }
 

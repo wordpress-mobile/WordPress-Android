@@ -24,7 +24,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.NewEditPostActivity;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -145,7 +144,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         
         if (mActionIndex == 0) { 
             // new post
-            intent = new Intent(this, NewEditPostActivity.class);
+            intent = new Intent(this, EditPostActivity.class);
         } else if (mActionIndex == 1) {
             // add to media gallery
             intent = new Intent(this, MediaBrowserActivity.class);

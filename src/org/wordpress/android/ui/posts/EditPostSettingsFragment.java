@@ -64,8 +64,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
-    private NewEditPostActivity mActivity;
-
+    private EditPostActivity mActivity;
 
     private Spinner mStatusSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
@@ -88,49 +87,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.pubDateButton) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
-            DatePickerDialog d = new DatePickerDialog(getActivity(),
-                    R.style.WordPress, mDateSetListener, mYear, mMonth, mDay);
-            d.show();
-        } else if (id == R.id.selectCategories) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", mActivity.getPost().getBlogID());
-            if (mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<String>(mCategories));
-            }
-            Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-            categoriesIntent.putExtras(bundle);
-            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-        } else if (id == R.id.categoryButton) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShowCategories);
-            onCategoryButtonClick(v);
-        } else if (id == R.id.viewMap) {
-            Double latitude = 0.0;
-            try {
-                latitude = mCurrentLocation.getLatitude();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (latitude != 0.0) {
-                WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
-                String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
-                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-            } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
-            }
-        } else if (id == R.id.updateLocation) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedUpdateLocation);
-            getLocation();
-        } else if (id == R.id.removeLocation) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
-            removeLocation();
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -148,7 +104,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         if (rootView == null)
             return null;
 
-        mActivity = (NewEditPostActivity) getActivity();
+        mActivity = (EditPostActivity) getActivity();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
@@ -176,19 +132,18 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
-            if (mActivity.getPost().getBlog().getPostFormats().equals("")) {
+            mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
+            mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
+            if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();
-                args.add(mActivity.getPost().getBlog());
+                args.add(WordPress.getCurrentBlog());
                 args.add(mActivity);
                 new ApiHelper.getPostFormatsTask().execute(args);
-                mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
             } else {
                 try {
                     Gson gson = new Gson();
-                    Type type = new TypeToken<Map<String, String>>() {
-                    }.getType();
-                    Map<String, String> jsonPostFormats = gson.fromJson(mActivity.getPost().getBlog().getPostFormats(), type);
+                    Type type = new TypeToken<Map<String, String>>() {}.getType();
+                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(), type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
                     int i = 0;
@@ -340,6 +295,49 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.pubDateButton) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
+            DatePickerDialog d = new DatePickerDialog(getActivity(),
+                    R.style.WordPress, mDateSetListener, mYear, mMonth, mDay);
+            d.show();
+        } else if (id == R.id.selectCategories) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", WordPress.getCurrentBlog().getId());
+            if (mCategories.size() > 0) {
+                bundle.putSerializable("categories", new HashSet<String>(mCategories));
+            }
+            Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+            categoriesIntent.putExtras(bundle);
+            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+        } else if (id == R.id.categoryButton) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShowCategories);
+            onCategoryButtonClick(v);
+        } else if (id == R.id.viewMap) {
+            Double latitude = 0.0;
+            try {
+                latitude = mCurrentLocation.getLatitude();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (latitude != 0.0) {
+                WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
+                String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
+                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            } else {
+                Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.updateLocation) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedUpdateLocation);
+            getLocation();
+        } else if (id == R.id.removeLocation) {
+            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
+            removeLocation();
+        }
+    }
+
     public void savePostSettings() {
         Post post = mActivity.getPost();
         if (post == null)
@@ -385,7 +383,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         Double latitude = 0.0;
         Double longitude = 0.0;
-        if (post.getBlog().isLocation()) {
+        if (WordPress.getCurrentBlog().isLocation()) {
             try {
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();

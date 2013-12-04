@@ -103,7 +103,7 @@
             android:label="@string/create_a_link"
             android:theme="@style/WordPress.Dialog" />
         <activity
-            android:name=".ui.posts.NewEditPostActivity"
+            android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>

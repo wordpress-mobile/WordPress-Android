@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.posts;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -21,14 +19,14 @@ import org.wordpress.android.util.WPHtml;
  */
 public class EditPostPreviewFragment extends SherlockFragment {
 
-    NewEditPostActivity mActivity;
+    EditPostActivity mActivity;
     WebView mWebView;
     TextView mTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mActivity = (NewEditPostActivity)getActivity();
+        mActivity = (EditPostActivity)getActivity();
 
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_preview, container, false);

@@ -37,7 +37,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -94,7 +93,7 @@ import java.util.Vector;
 public class EditPostContentFragment extends SherlockFragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
 
-    NewEditPostActivity mActivity;
+    EditPostActivity mActivity;
 
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
@@ -133,7 +132,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mActivity = (NewEditPostActivity)getActivity();
+        mActivity = (EditPostActivity)getActivity();
 
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_content, container, false);

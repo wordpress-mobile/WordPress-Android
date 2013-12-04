@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/reader_margin_large"
     android:paddingTop="@dimen/reader_margin_large"
     android:paddingBottom="@dimen/reader_margin_large"
-    tools:context=".NewEditPostActivity$PlaceholderFragment">
+    tools:context=".EditPostActivity$PlaceholderFragment">
 
     <TextView
         android:id="@+id/section_label"

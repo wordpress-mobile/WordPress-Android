@@ -80,7 +80,8 @@
         android:layout_gravity="bottom"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
-        android:paddingTop="1dp">
+        android:paddingTop="1dp"
+        android:visibility="gone">
 
         <HorizontalScrollView
             android:layout_width="fill_parent"

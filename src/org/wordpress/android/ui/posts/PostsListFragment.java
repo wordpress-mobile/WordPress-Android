@@ -536,13 +536,13 @@ public class PostsListFragment extends ListFragment {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
-                Intent i2 = new Intent(getActivity().getApplicationContext(), NewEditPostActivity.class);
-                i2.putExtra(NewEditPostActivity.EXTRA_POSTID, mSelectedID);
+                Intent i2 = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
+                i2.putExtra(EditPostActivity.EXTRA_POSTID, mSelectedID);
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, true);
+                    i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage)
-                        i2.putExtra(NewEditPostActivity.EXTRA_IS_PAGE, true);
+                        i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
 
                 startActivityForResult(i2, 0);

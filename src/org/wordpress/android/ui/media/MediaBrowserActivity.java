@@ -46,7 +46,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
-import org.wordpress.android.ui.posts.NewEditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -754,10 +753,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
-        Intent i = new Intent(this, NewEditPostActivity.class);
+        Intent i = new Intent(this, EditPostActivity.class);
         i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-        i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
-        i.putExtra(NewEditPostActivity.EXTRA_IS_NEW_POST, true);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.get(0));
         startActivity(i);
     }
@@ -790,9 +789,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (newPost.getId() < 0) {
             return;
         }
-        Intent i = new Intent(this, NewEditPostActivity.class);
-        i.putExtra(NewEditPostActivity.EXTRA_POSTID, newPost.getId());
-        i.putExtra(NewEditPostActivity.EXTRA_IS_NEW_POST, true);
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
         i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
         startActivity(i);

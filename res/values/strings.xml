@@ -56,8 +56,6 @@
     <string name="add">Add</string>
     <string name="selected_categories">Selected categories:</string>
     <string name="publish">Publish</string>
-    <string name="add_account">Add blog</string>
-    <string name="publish">Publish? </string>
     <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="manage_blogs">Manage blogs</string>
