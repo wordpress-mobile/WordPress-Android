@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.util.ToastUtils;
 
 /**
@@ -66,7 +67,8 @@ public class ReaderActivityLauncher {
         if (TextUtils.isEmpty(url))
             return;
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Intent intent = new Intent(context, NotificationsWebViewActivity.class);
+            intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
