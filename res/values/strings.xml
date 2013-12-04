@@ -824,7 +824,7 @@
     <string name="nux_dialog_success">Success!</string>
     <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
     <string name="nux_dialog_success_continue">CONTINUE</string>
-    <string name="one_blog_must_be_selected">At least one blog must be shown</string>
+    <string name="one_blog_must_be_selected">At least one blog must be visible</string>
 
     <string-array name="privacy_array">
          <item>Public</item>
