@@ -281,12 +281,22 @@ public class EditPostActivity extends SherlockFragmentActivity {
             return;
         }
 
+        savePost(false);
+
+        // Compare the current Post to the original and if no changes have been made,
+        // set the Post back to the original and go back to the previous view
+        if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            mOriginalPost.update();
+            WordPress.currentPost = mOriginalPost;
+            finish();
+            return;
+        }
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle(getString((mPost.isPage()) ? R.string.edit_page : R.string.edit_post));
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                savePost(false);
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);
@@ -295,9 +305,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
         });
         dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // When discard options is chosen, restore existing post or delete new post if it was autosaved.
+                // When discard option is chosen, restore existing post or delete new post if it was autosaved.
                 if (mOriginalPost != null) {
                     mOriginalPost.update();
+                    WordPress.currentPost = mOriginalPost;
                 } else if (mPost != null && mIsNewPost) {
                     mPost.delete();
                 }

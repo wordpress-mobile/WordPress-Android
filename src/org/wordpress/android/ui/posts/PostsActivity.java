@@ -324,10 +324,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getId(), isPage);
-        if (newPost.getId() < 0) {
-            // TODO: Post wasn't created, show error
-            return;
-        }
         Intent i = new Intent(this, EditPostActivity.class);
         i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
