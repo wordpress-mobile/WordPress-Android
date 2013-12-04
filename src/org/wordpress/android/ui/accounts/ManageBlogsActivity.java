@@ -55,7 +55,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
         checkedView.setChecked(!checkedView.isChecked());
         setItemChecked(position, checkedView.isChecked());
         if (blogShownCount() == 0) {
-            ToastUtils.showToast(this, "At least one blog must be shown");
+            ToastUtils.showToast(this, getString(R.string.one_blog_must_be_selected));
             checkedView.setChecked(true);
             setItemChecked(position, true);
         }
