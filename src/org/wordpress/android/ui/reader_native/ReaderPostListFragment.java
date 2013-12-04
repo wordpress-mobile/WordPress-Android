@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
@@ -232,7 +233,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                header.setMinimumHeight(actionbarHeight - (gridView.getItemMargin() * 2));
+                header.setMinimumHeight(actionbarHeight - gridView.getItemMargin());
                 gridView.setHeaderView(header);
                 // we can't fade the ActionBar while items are scrolled because StaggeredGridView
                 // doesn't have a scroll listener, so just use a default alpha
@@ -253,6 +254,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 }
             });
 
+            gridView.setSelector(R.drawable.reader_list_selector);
             gridView.setAdapter(getPostAdapter());
         } else {
             final ListView listView = (ListView) view.findViewById(android.R.id.list);
@@ -265,11 +267,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             listView.addFooterView(mFooterProgress);
 
             if (isTranslucentActionBarEnabled) {
-                // add a transparent header to the listView that matches the size of the ActionBar,
-                // taking the size of the listView divider into account
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
+                // add a transparent header to the listView that matches the size of the ActionBar
                 RelativeLayout header = new RelativeLayout(context);
-                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
+                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
                 listView.addHeaderView(header, null, false);
                 initListViewOverscroll(listView);
             }
@@ -486,13 +486,14 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (TextUtils.isEmpty(tagName))
             return;
 
-        // cancel existing requests if we're already updating
-        /*if (isUpdating()) {
-            VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
-            ReaderLog.i("canceling existing update");
-        }*/
-
         unscheduleAutoUpdate();
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ReaderLog.i("network unavailable, rescheduling reader update");
+            scheduleAutoUpdate();
+            return;
+        }
+
         setIsUpdating(true, updateAction);
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
@@ -591,7 +592,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (!hasCurrentTag())
             return;
 
-        ReaderLog.d("scheduling tag auto-update");
         mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
@@ -718,9 +718,15 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mFooterProgress.setVisibility(View.GONE);
     }
 
+    private boolean mIsFlinging = false;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        // nop
+        boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
+        if (isFlingingNow != mIsFlinging) {
+            mIsFlinging = isFlingingNow;
+            if (hasPostAdapter())
+                getPostAdapter().setIsFlinging(mIsFlinging);
+        }
     }
 
     private int mPrevFirstVisibleItem = -1;

@@ -148,6 +148,7 @@
         <!-- Native Reader Activities -->
         <activity
             android:name=".ui.reader_native.NativeReaderActivity"
+            android:theme="@style/WordPress.Theme.NoBackground"
             android:label="@string/app_name">
         </activity>
         <activity

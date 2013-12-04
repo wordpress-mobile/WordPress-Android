@@ -63,7 +63,7 @@ public class PhotonUtils {
         // one of them is set, otherwise no query string
         final String query;
         if (width > 0 && height > 0) {
-            query = String.format("?resize=%d,%d", width, height);
+            query = String.format("?lb=%d,%d", width, height);
         } else if (width > 0) {
             query = String.format("?w=%d", width);
         } else if (height > 0) {

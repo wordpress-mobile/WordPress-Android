@@ -18,6 +18,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -70,12 +71,22 @@ public class WordPress extends Application {
     public static WPRestClient restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static BitmapLruCache localImageCache;
 
     private static Context mContext;
 
     public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
+
+    private static BitmapLruCache mBitmapCache;
+    public static BitmapLruCache getBitmapCache() {
+        if (mBitmapCache == null) {
+            // see http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int cacheSize = maxMemory / 16;
+            mBitmapCache = new BitmapLruCache(cacheSize);
+        }
+        return mBitmapCache;
+    }
 
     @Override
     public void onCreate() {
@@ -88,13 +99,11 @@ public class WordPress extends Application {
 
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // Use a small slice of available memory for the image cache
-        int cacheSize = maxMemory / 32;
-        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
 
-        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
-        localImageCache = new BitmapLruCache(cacheSize / 2);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
@@ -103,7 +112,7 @@ public class WordPress extends Application {
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
 
-        //Uncomment this line if you want to test the app locking feature
+        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});

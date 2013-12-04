@@ -8,7 +8,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -260,7 +259,6 @@ public class ReaderPost {
                 int srcEnd = img.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
                 if (srcEnd == -1)
                     return null;
-                ReaderLog.d("found featured image");
                 return img.substring(srcStart+5, srcEnd);
             }
 
