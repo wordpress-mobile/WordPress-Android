@@ -219,7 +219,7 @@
     <string name="out_of_memory">Device out of memory.</string>
     <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
-    <string name="download">Downloading Image</string>
+    <string name="download">Downloading image</string>
     <string name="post_settings">Post Settings</string>
 
     <!-- add comment view -->

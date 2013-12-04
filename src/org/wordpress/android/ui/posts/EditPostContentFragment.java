@@ -125,7 +125,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
     private int mLastPosition = -1;
-    private int mCurrentActivityRequest = -1;
 
     private float mLastYPos = 0;
 
@@ -645,7 +644,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private void launchPictureLibrary() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
         MediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -656,20 +654,17 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             @Override
             public void onMediaCapturePathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
-                mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
                 AppLockManager.getInstance().setExtendedTimeout();
             }
         });
     }
 
     private void launchVideoLibrary() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
         MediaUtils.launchVideoLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
-        mCurrentActivityRequest = MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
         MediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -695,8 +690,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         @Override
         protected void onPreExecute() {
-            //TODO: Show a toast instead?
-            //showDialog(ID_DIALOG_DOWNLOAD);
+            Toast.makeText(getActivity(), R.string.download, Toast.LENGTH_SHORT).show();
         }
 
         protected void onPostExecute(Uri newUri) {
