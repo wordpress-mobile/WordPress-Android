@@ -56,7 +56,15 @@
     <string name="add">Add</string>
     <string name="selected_categories">Selected categories:</string>
     <string name="publish">Publish</string>
-    <string name="add_account">Add Blog</string>
+    <string name="add_account">Add blog</string>
+    <string name="publish">Publish? </string>
+    <string name="add_blog">Add blog</string>
+    <string name="add_self_hosted_blog">Add self-hosted blog</string>
+    <string name="manage_blogs">Manage blogs</string>
+    <string name="show_and_hide_blogs">Show/hide blogs</string>
+    <string name="blogs_visibility">Blogs visibility</string>
+    <string name="show_all">Show All</string>
+    <string name="hide_all">Hide All</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
@@ -479,8 +487,7 @@
 
     <!-- invalid_url -->
     <string name="invalid_url">Invalid blog URL</string>
-  <string name="invalid_url_message">Please check that the blog URL entered is valid.
-  </string>
+    <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -734,10 +741,11 @@
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
-    <string name="create_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
+    <string name="create_new_blog_wpcom">Create a WordPress.com blog</string>
     <string name="review_your_information">Review your information</string>
-    <string name="validating_user_data">Validating User Data</string>
-    <string name="validating_site_data">Validating Site Data</string>
+    <string name="validating_user_data">Validating user data</string>
+    <string name="validating_site_data">Validating site data</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
     <string name="action_finish">Finish</string>
@@ -798,7 +806,7 @@
     <string name="username_invalid">Invalid username</string>
     <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
-    <string name="update_credentials">Please update your credentials and try again.</string>
+    <string name="username_or_password_incorrect">The username or password you entered is incorrect.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_tap_learn_more">Learn More</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
@@ -820,6 +828,7 @@
     <string name="nux_dialog_success">Success!</string>
     <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
     <string name="nux_dialog_success_continue">CONTINUE</string>
+    <string name="one_blog_must_be_selected">At least one blog must be visible</string>
 
     <string-array name="privacy_array">
          <item>Public</item>

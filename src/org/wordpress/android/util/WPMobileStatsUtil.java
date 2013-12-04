@@ -121,7 +121,7 @@ public class WPMobileStatsUtil {
 
         // Register super properties
         boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
-        int numBlogs = WordPress.wpDB.getAccounts().size();
+        int numBlogs = WordPress.wpDB.getShownAccounts().size();
         try {
             JSONObject properties = new JSONObject();
             properties.put("platform", "Android");

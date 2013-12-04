@@ -61,6 +61,10 @@
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock" />
+        <activity
+            android:name=".ui.accounts.NewBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Preferences activities -->
         <activity android:name=".ui.prefs.AboutActivity" />
@@ -74,6 +78,7 @@
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock.Light" />
+        <activity android:name=".ui.accounts.ManageBlogsActivity" />
 
         <!-- Comments activities -->
         <activity

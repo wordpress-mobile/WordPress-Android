@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -13,8 +15,11 @@ import org.wordpress.android.Config;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.WPRestClient;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -22,6 +27,7 @@ public class CreateUserAndBlog {
     public enum Step {
         VALIDATE_USER, VALIDATE_SITE, CREATE_USER, AUTHENTICATE_USER, CREATE_SITE
     }
+    private enum Mode { CREATE_USER_AND_BLOG, CREATE_BLOG_ONLY }
 
     final public static int WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC = 0;
     final public static int WORDPRESS_COM_API_BLOG_VISIBILITY_PRIVATE = 1;
@@ -37,37 +43,51 @@ public class CreateUserAndBlog {
     private Callback mCallback;
     private NewAccountAbstractPageFragment.ErrorListener mErrorListener;
     private WPRestClient mRestClient;
+    private ResponseHandler mResponseHandler;
 
     public interface Callback {
         void onStepFinished(Step step);
-        void onSuccess();
+        void onSuccess(JSONObject createSiteResponse);
         void onError(int messageId);
     }
 
     private class ResponseHandler implements RestRequest.Listener {
-        private Step mCurrentStep = Step.VALIDATE_USER;
+        private Step mStep = Step.VALIDATE_USER;
+        private Mode mMode = Mode.CREATE_USER_AND_BLOG;
 
-        public ResponseHandler(Step step) {
+        public ResponseHandler() {
             super();
-            mCurrentStep = step;
+        }
+
+        public void setMode(Mode mode) {
+            mMode = mode;
+        }
+
+        public void setStep(Step step) {
+            mStep = step;
         }
 
         private void nextStep(JSONObject response) {
             try {
-                if (mCurrentStep == Step.AUTHENTICATE_USER) {
+                if (mStep == Step.AUTHENTICATE_USER) {
                     mCallback.onStepFinished(Step.AUTHENTICATE_USER);
                     createBlog();
                 } else {
-                    // Note: steps VALIDATE_USER and VALIDATE_SITE could be run simultaneously
+                    // steps VALIDATE_USER and VALIDATE_SITE could be run simultaneously in
+                    // CREATE_USER_AND_BLOG mode
                     if (response.getBoolean("success")) {
-                        switch (mCurrentStep) {
+                        switch (mStep) {
                             case VALIDATE_USER:
                                 mCallback.onStepFinished(Step.VALIDATE_USER);
                                 validateSite();
                                 break;
                             case VALIDATE_SITE:
                                 mCallback.onStepFinished(Step.VALIDATE_SITE);
-                                createUser();
+                                if (mMode == Mode.CREATE_BLOG_ONLY) {
+                                    createBlog();
+                                } else {
+                                    createUser();
+                                }
                                 break;
                             case CREATE_USER:
                                 mCallback.onStepFinished(Step.CREATE_USER);
@@ -75,7 +95,7 @@ public class CreateUserAndBlog {
                                 break;
                             case CREATE_SITE:
                                 mCallback.onStepFinished(Step.CREATE_SITE);
-                                mCallback.onSuccess();
+                                mCallback.onSuccess(response);
                                 break;
                             case AUTHENTICATE_USER:
                             default:
@@ -92,7 +112,7 @@ public class CreateUserAndBlog {
 
         @Override
         public void onResponse(JSONObject response) {
-            Log.d("REST Response", String.format("Create Account step %s", mCurrentStep.name()));
+            Log.d("REST Response", String.format("Create Account step %s", mStep.name()));
             Log.d("REST Response", String.format("OK %s", response.toString()));
             nextStep(response);
         }
@@ -113,10 +133,16 @@ public class CreateUserAndBlog {
         mContext = context;
         mErrorListener = errorListener;
         mRestClient = restClient;
+        mResponseHandler = new ResponseHandler();
     }
 
     public void startCreateUserAndBlogProcess() {
         validateUser();
+    }
+
+    public void startCreateBlogProcess() {
+        mResponseHandler.setMode(Mode.CREATE_BLOG_ONLY);
+        validateSite();
     }
 
     private void validateUser() {
@@ -128,8 +154,8 @@ public class CreateUserAndBlog {
         params.put("validate", "1");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        mRestClient.post(path, params, null,
-                new ResponseHandler(Step.VALIDATE_USER), mErrorListener);
+        mResponseHandler.setStep(Step.VALIDATE_USER);
+        mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
     private void validateSite() {
@@ -142,8 +168,8 @@ public class CreateUserAndBlog {
         params.put("validate", "1");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        mRestClient.post(path, params, null,
-                new ResponseHandler(Step.VALIDATE_SITE), mErrorListener);
+        mResponseHandler.setStep(Step.VALIDATE_SITE);
+        mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
     private void createUser() {
@@ -155,8 +181,8 @@ public class CreateUserAndBlog {
         params.put("validate", "0");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        mRestClient.post(path, params, null,
-                new ResponseHandler(Step.CREATE_USER), mErrorListener);
+        mResponseHandler.setStep(Step.CREATE_USER);
+        mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
     private void authenticateUser() {
@@ -165,9 +191,9 @@ public class CreateUserAndBlog {
         editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
         editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
         editor.commit();
+        mResponseHandler.setStep(Step.AUTHENTICATE_USER);
         // fire off a request to get an access token
-        WordPress.restClient.get("me", new ResponseHandler(Step.AUTHENTICATE_USER),
-                mErrorListener);
+        WordPress.restClient.get("me", mResponseHandler, mErrorListener);
     }
 
     private void createBlog() {
@@ -180,7 +206,52 @@ public class CreateUserAndBlog {
         params.put("validate", "0");
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
-        WordPress.restClient.post(path, params, null,
-                new ResponseHandler(Step.CREATE_SITE), mErrorListener);
+        mResponseHandler.setStep(Step.CREATE_SITE);
+        WordPress.restClient.post(path, params, null, mResponseHandler, mErrorListener);
+    }
+
+    public static String getDeviceLanguage(Resources resources) {
+        XmlResourceParser parser = resources.getXml(R.xml.wpcom_languages);
+        Hashtable<String, String> entries = new Hashtable<String, String>();
+        String matchedDeviceLanguage = "en - English";
+        try {
+            int eventType = parser.getEventType();
+            String deviceLanguageCode = Locale.getDefault().getLanguage();
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG) {
+                    String name = parser.getName();
+                    if (name.equals("language")) {
+                        String currentID = null;
+                        boolean currentLangIsDeviceLanguage = false;
+                        int i = 0;
+                        while (i < parser.getAttributeCount()) {
+                            if (parser.getAttributeName(i).equals("id")) {
+                                currentID = parser.getAttributeValue(i);
+                            }
+                            if (parser.getAttributeName(i).equals("code") && parser.
+                                    getAttributeValue(i).equalsIgnoreCase(deviceLanguageCode)) {
+                                currentLangIsDeviceLanguage = true;
+                            }
+                            i++;
+                        }
+
+                        while (eventType != XmlPullParser.END_TAG) {
+                            if (eventType == XmlPullParser.TEXT) {
+                                entries.put(parser.getText(), currentID);
+                                if (currentLangIsDeviceLanguage) {
+                                    matchedDeviceLanguage = parser.getText();
+                                }
+                            }
+                            eventType = parser.next();
+                        }
+                    }
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+        return matchedDeviceLanguage;
     }
 }

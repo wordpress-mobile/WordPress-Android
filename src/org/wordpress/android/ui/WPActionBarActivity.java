@@ -442,7 +442,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @return array of blog names
      */
     private static String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
 
         int blogCount = accounts.size();
         blogIDs = new int[blogCount];
@@ -482,7 +482,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("request", WelcomeActivity.SIGNIN_REQUEST);
+            intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
             startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
             return;
         }

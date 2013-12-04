@@ -11,10 +11,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +34,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,7 +50,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 21;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -143,6 +142,9 @@ public class WordPressDB {
     private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, " +
             "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
 
+    // add hidden flag to blog settings (accounts)
+    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = Config.DB_SECRET;
@@ -233,6 +235,9 @@ public class WordPressDB {
                     currentVersion++;
                 case 19:
                     // revision 20: create table "notes"
+                    currentVersion++;
+                case 20:
+                    db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
                     currentVersion++;
             }
             db.setVersion(DATABASE_VERSION);
@@ -338,65 +343,72 @@ public class WordPressDB {
     }
 
     public boolean deactivateAccounts() {
-
-        List<Map<String, Object>> accounts = getAccounts();
+        List<Map<String, Object>> accounts = getAllAccounts();
         for (Map<String, Object> account: accounts) {
             deleteAccount(context, (Integer) account.get("id"));
         }
-
         return true;
     }
 
-    public List<Map<String, Object>> getAccounts() {
-
-        if (db == null)
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
+        if (db == null) {
             return new Vector<Map<String, Object>>();
-        
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
-                "username", "blogId", "url", "password" }, null, null, null,
-                null, null);
-
+        }
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url",
+                "password"};
+        String[] allFields = baseFields;
+        if (extraFields != null) {
+            allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
+        }
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
-
             int id = c.getInt(0);
             String blogName = c.getString(1);
             String username = c.getString(2);
             int blogId = c.getInt(3);
             String url = c.getString(4);
             String password = c.getString(5);
-            if (!password.equals("") && id > 0) {
+            if (password != null && !password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
                 thisHash.put("username", username);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
+                if (extraFields != null) {
+                    for (int j = 0; j < extraFields.length; ++j) {
+                        thisHash.put(extraFields[j], c.getString(6 + j));
+                    }
+                }
                 accounts.add(thisHash);
             }
             c.moveToNext();
         }
         c.close();
-
         Collections.sort(accounts, Utils.BlogNameComparator);
-        
         return accounts;
     }
-    
 
-    public boolean checkForExistingBlog(String blogName, String blogURL, String username, String password) {
+    public List<Map<String, Object>> getShownAccounts() {
+        return getAccountsBy("isHidden = 0", null);
+    }
 
+    public List<Map<String, Object>> getAllAccounts() {
+        return getAccountsBy(null, null);
+    }
+
+    public boolean checkForExistingBlog(String blogName, String blogURL, String username,
+                                        String password) {
         if (blogName == null || blogURL == null || username == null || password == null)
             return false;
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
-                "blogName='" + addSlashes(blogName) + "' AND url='"
-                        + addSlashes(blogURL) + "'" + " AND username='"
-                        + username + "'", null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id", "blogName", "url"},
+                "blogName=? AND url=? AND username=?", new String[]{blogName, blogURL, username},
+                null, null, null, null);
         int numRows = c.getCount();
-
         if (numRows > 0) {
             // This account is already saved
             c.moveToFirst();
@@ -411,37 +423,7 @@ public class WordPressDB {
         return false;
     }
 
-    public static String addSlashes(String text) {
-        final StringBuffer sb = new StringBuffer(text.length() * 2);
-        final StringCharacterIterator iterator = new StringCharacterIterator(
-                text);
-
-        char character = iterator.current();
-
-        while (character != StringCharacterIterator.DONE) {
-            if (character == '"')
-                sb.append("\\\"");
-            else if (character == '\'')
-                sb.append("\'\'");
-            else if (character == '\\')
-                sb.append("\\\\");
-            else if (character == '\n')
-                sb.append("\\n");
-            else if (character == '{')
-                sb.append("\\{");
-            else if (character == '}')
-                sb.append("\\}");
-            else
-                sb.append(character);
-
-            character = iterator.next();
-        }
-
-        return sb.toString();
-    }
-
     public boolean saveBlog(Blog blog) {
-
         ContentValues values = new ContentValues();
         values.put("url", blog.getUrl());
         values.put("homeURL", blog.getHomeURL());
@@ -463,6 +445,7 @@ public class WordPressDB {
         values.put("isScaledImage", blog.isScaledImage());
         values.put("scaledImgWidth", blog.getScaledImageWidth());
         values.put("blog_options", blog.getBlogOptions());
+        values.put("isHidden", blog.isHidden());
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;
@@ -525,14 +508,13 @@ public class WordPressDB {
     }
 
     public List<Object> getBlog(int id) {
-
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
-                "username", "password", "httpuser", "httppassword",
-                "imagePlacement", "centerThumbnail", "fullSizeImage",
-                "maxImageWidth", "maxImageWidthId", "runService", "blogId",
-                "location", "dotcomFlag", "dotcom_username", "dotcom_password",
-                "api_key", "api_blogid", "wpVersion", "postFormats",
-                "lastCommentId","isScaledImage","scaledImgWidth", "homeURL", "blog_options", "isAdmin" }, "id=" + id, null, null, null, null);
+        String[] fields = new String[]{"url", "blogName", "username", "password", "httpuser",
+                "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage",
+                "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location",
+                "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid",
+                "wpVersion", "postFormats", "lastCommentId", "isScaledImage", "scaledImgWidth",
+                "homeURL", "blog_options", "isAdmin", "isHidden"};
+        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + id, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -575,6 +557,7 @@ public class WordPressDB {
                 returnVector.add(c.getString(24));
                 returnVector.add(c.getString(25));
                 returnVector.add(c.getInt(26));
+                returnVector.add(c.getInt(27));
             } else {
                 returnVector = null;
             }

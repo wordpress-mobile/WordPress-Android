@@ -16,12 +16,15 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
     
     public static final String URL_TO_LOAD = "external_url";
     
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
-        mWebView.getSettings().setDisplayZoomControls(false);
+        if (android.os.Build.VERSION.SDK_INT >= 11) { 
+            mWebView.getSettings().setDisplayZoomControls(false);
+        }
         mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
      
         ActionBar actionBar = getSupportActionBar();

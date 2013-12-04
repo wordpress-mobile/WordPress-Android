@@ -3,8 +3,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,34 +13,23 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.util.SparseBooleanArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,12 +43,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
     private ProgressBar mProgressBarSignIn;
-    private List mUsersBlogsList;
+    private RelativeLayout mUrlButtonLayout;
     private boolean mHttpAuthRequired;
     private String mHttpUsername = "";
     private String mHttpPassword = "";
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
+    private boolean mForceSelfHosted;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -76,9 +64,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         ImageView statsIcon = (ImageView) rootView.findViewById(R.id.nux_fragment_icon);
         statsIcon.setImageResource(R.drawable.nux_icon_wp);
 
-        final RelativeLayout urlButtonLayout = (RelativeLayout) rootView.
-                findViewById(R.id.url_button_layout);
-
+        mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
@@ -95,12 +81,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (urlButtonLayout.getVisibility() == View.VISIBLE) {
-                    urlButtonLayout.setVisibility(View.GONE);
+                if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
+                    mUrlButtonLayout.setVisibility(View.GONE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
                     mSelfHosted = false;
                 } else {
-                    urlButtonLayout.setVisibility(View.VISIBLE);
+                    mUrlButtonLayout.setVisibility(View.VISIBLE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
                     mSelfHosted = true;
                 }
@@ -114,7 +100,25 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
+        if (mForceSelfHosted) {
+            forceSelfHostedMode();
+        }
         return rootView;
+    }
+
+    public void setForceSelfHostedMode(boolean force) {
+        mForceSelfHosted = force;
+    }
+
+    /**
+     * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
+     * edit box
+     */
+    private void forceSelfHostedMode() {
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setVisibility(View.GONE);
+        mCreateAccountButton.setVisibility(View.GONE);
+        mSelfHosted = true;
     }
 
     private void autocorrectUsername() {
@@ -173,6 +177,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         } else {
             mSignInButton.setEnabled(false);
         }
+        mPasswordEditText.setError(null);
+        mUsernameEditText.setError(null);
     }
 
     private boolean wpcomFieldsFilled() {
@@ -183,6 +189,27 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private boolean selfHostedFieldsFilled() {
         return wpcomFieldsFilled()
                 && mUrlEditText.getText().toString().trim().length() > 0;
+    }
+
+    private void showPasswordError(int messageId) {
+        mPasswordEditText.setError(getString(messageId));
+        mPasswordEditText.requestFocus();
+    }
+
+    private void showUsernameError(int messageId) {
+        mUsernameEditText.setError(getString(messageId));
+        mUsernameEditText.requestFocus();
+    }
+
+    protected boolean specificShowError(int messageId) {
+        switch (getErrorType(messageId)) {
+            case USERNAME:
+            case PASSWORD:
+                showUsernameError(messageId);
+                showPasswordError(messageId);
+                return true;
+        }
+        return false;
     }
 
     public void signInDotComUser() {
@@ -232,12 +259,18 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         protected List doInBackground(Void... args) {
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (userBlogList != null) {
+                mSetupBlog.addBlogs(userBlogList);
+            }
             return userBlogList;
         }
 
         @Override
-        protected void onPostExecute(List<Object> usersBlogsList) {
+        protected void onPostExecute(final List<Object> userBlogList) {
             if (mHttpAuthRequired) {
+                if (getActivity() == null) {
+                    return ;
+                }
                 // Prompt for http credentials
                 mHttpAuthRequired = false;
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -267,7 +300,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            if (usersBlogsList == null && mErrorMsgId != 0) {
+            if (userBlogList == null && mErrorMsgId != 0) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
@@ -278,9 +311,17 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                             NUXDialogFragment.ACTION_OPEN_URL,
                             "https://wordpress.com/settings/security/?ssl=forced");
                 } else {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                            R.drawable.nux_icon_alert);
+                    if (mErrorMsgId == R.string.username_or_password_incorrect) {
+                        showUsernameError(mErrorMsgId);
+                        showPasswordError(mErrorMsgId);
+                        mErrorMsgId = 0;
+                        endProgress();
+                        return ;
+                    } else {
+                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                                getString(mErrorMsgId), getString(R.string.nux_tap_continue),
+                                R.drawable.nux_icon_alert);
+                    }
                 }
                 nuxAlert.show(ft, "alert");
                 mErrorMsgId = 0;
@@ -301,136 +342,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", null, null);
             }
 
-            if (usersBlogsList != null) {
-                mUsersBlogsList = usersBlogsList;
-                showBlogSelectionDialog();
+            if (userBlogList != null) {
+                if (getActivity() != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
             } else {
                 endProgress();
             }
-        }
-
-        private void showBlogSelectionDialog() {
-            if (mUsersBlogsList == null) {
-                mUsersBlogsList = new ArrayList();
-            }
-            if (mUsersBlogsList.size() == 0) {
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-                return;
-            }
-            if (mUsersBlogsList.size() == 1) {
-                // Just add the one blog and finish up
-                SparseBooleanArray oneBlogArray = new SparseBooleanArray();
-                oneBlogArray.put(0, true);
-                mSetupBlog.addBlogs(mUsersBlogsList, oneBlogArray);
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-                return;
-            }
-            if (mUsersBlogsList != null && mUsersBlogsList.size() != 0) {
-                SparseBooleanArray allBlogs = new SparseBooleanArray();
-                for (int i = 0; i < mUsersBlogsList.size(); i++) {
-                    allBlogs.put(i, true);
-                }
-                LayoutInflater inflater = (LayoutInflater) getActivity()
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final ListView listView = (ListView) inflater.inflate(R.layout.select_blogs_list,
-                        null);
-                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                listView.setItemsCanFocus(false);
-                final UsersBlogsArrayAdapter adapter = new UsersBlogsArrayAdapter(getActivity(),
-                        R.layout.blogs_row,
-                        mUsersBlogsList);
-                listView.setAdapter(adapter);
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                dialogBuilder.setTitle(R.string.select_blogs);
-                dialogBuilder.setView(listView);
-                dialogBuilder.setNegativeButton(R.string.add_selected,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                SparseBooleanArray selectedBlogs = listView.
-                                        getCheckedItemPositions();
-                                mSetupBlog.addBlogs(mUsersBlogsList, selectedBlogs);
-                                getActivity().setResult(Activity.RESULT_OK);
-                                getActivity().finish();
-                            }
-                        });
-                dialogBuilder.setPositiveButton(R.string.add_all,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                SparseBooleanArray allBlogs = new SparseBooleanArray();
-                                for (int i = 0; i < adapter.getCount(); i++) {
-                                    allBlogs.put(i, true);
-                                }
-                                if (allBlogs.size() > 0) {
-                                    mSetupBlog.addBlogs(mUsersBlogsList, allBlogs);
-                                }
-                                getActivity().setResult(Activity.RESULT_OK);
-                                getActivity().finish();
-                            }
-                        });
-                dialogBuilder.setOnKeyListener(new ProgressDialog.OnKeyListener() {
-                    @Override
-                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                        endProgress();
-                        return false;
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                AlertDialog ad = dialogBuilder.create();
-                ad.setInverseBackgroundForced(true);
-                ad.show();
-
-
-                final Button addSelected = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
-                addSelected.setEnabled(false);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                        SparseBooleanArray selectedItems = listView.getCheckedItemPositions();
-                        boolean isChecked = false;
-                        for (int i = 0; i < selectedItems.size(); i++) {
-                            if (selectedItems.get(selectedItems.keyAt(i)) == true) {
-                                isChecked = true;
-                            }
-                        }
-                        if (!isChecked) {
-                            addSelected.setEnabled(false);
-                        } else {
-                            addSelected.setEnabled(true);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    private class UsersBlogsArrayAdapter extends ArrayAdapter {
-        public UsersBlogsArrayAdapter(Context context, int resource, List<Object> list) {
-            super(context, resource, list);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            if (convertView == null) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                convertView = inflater.inflate(R.layout.blogs_row, parent, false);
-            }
-
-            Map<String, Object> blogMap = (HashMap<String, Object>) mUsersBlogsList.get(position);
-            if (blogMap != null) {
-
-                CheckedTextView blogTitleView = (CheckedTextView)
-                        convertView.findViewById(R.id.blog_title);
-                String blogTitle = blogMap.get("blogName").toString();
-                if (blogTitle != null && blogTitle.trim().length() > 0) {
-                    blogTitleView.setText(StringUtils.unescapeHTML(blogTitle));
-                } else {
-                    blogTitleView.setText(blogMap.get("url").toString());
-                }
-            }
-            return convertView;
         }
     }
 }
