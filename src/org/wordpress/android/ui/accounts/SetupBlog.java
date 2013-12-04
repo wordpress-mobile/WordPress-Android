@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
-import android.util.SparseBooleanArray;
+import android.content.Context;
+import android.util.Log;
 import android.webkit.URLUtil;
 
 import org.wordpress.android.Constants;
@@ -104,12 +105,15 @@ public class SetupBlog {
             return userBlogsList;
         } catch (XMLRPCException e) {
             String message = e.getMessage();
-            if (message.contains("code 403"))
+            if (message.contains("code 403")) {
                 mErrorMsgId = R.string.username_or_password_incorrect;
-            else if (message.contains("404"))
+            } else if (message.contains("404")) {
                 mErrorMsgId = R.string.xmlrpc_error;
-            else if (message.contains("425"))
+            } else if (message.contains("425")) {
                 mErrorMsgId = R.string.account_two_step_auth_enabled;
+            } else {
+                mErrorMsgId = R.string.no_network_message;
+            }
             return null;
         }
     }
@@ -197,20 +201,62 @@ public class SetupBlog {
         return blog;
     }
 
-    // Add selected blog(s) to the database
-    public void addBlogs(List fullBlogList, SparseBooleanArray selectedBlogs) {
-        for (int i = 0; i < selectedBlogs.size(); i++) {
-            if (selectedBlogs.get(selectedBlogs.keyAt(i)) == true) {
-                int rowID = selectedBlogs.keyAt(i);
-                Map blogMap = (HashMap) fullBlogList.get(rowID);
-                String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
-                String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
-                String homeUrl = blogMap.get("url").toString();
-                String blogId = blogMap.get("blogid").toString();
-                Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword);
-                if (blog != null && i == 0) {
-                    WordPress.setCurrentBlog(blog.getId());
-                }
+    /**
+     * Check if a blog is in a bloglist
+     *
+     * @param blogList a list of blogs (Map formatted)
+     * @param testedBlogMap a blog (Map formatted)
+     * @return true if testedBlog is in blogList
+     */
+    public boolean isBlogInList(List blogList, Map testedBlog) {
+        String blogName = testedBlog.get("blogName").toString();
+        String url = testedBlog.get("url").toString();
+        for (int i = 0; i < blogList.size(); i++) {
+            Map blogMap = (HashMap) blogList.get(i);
+            String curBlogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
+            String curUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
+            if (blogName.equals(curBlogName) && url.equals(curUrl)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remove blogs that are not in the list and add others
+     * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
+     * that by a HashSet of a specialized Blog class (that supports comparison)
+     *
+     * @param blogList
+     */
+    public void syncBlogs(Context context, List blogList) {
+        // Add all blogs from blogList
+        addBlogs(blogList);
+        // Delete blogs if not in blogList
+        List allBlogs = WordPress.wpDB.getAllAccounts();
+        for (int i = 0; i < allBlogs.size(); i++) {
+            Map blogMap = (HashMap) allBlogs.get(i);
+            if (!isBlogInList(blogList, blogMap)) {
+                WordPress.wpDB.deleteAccount(context, Integer.parseInt(blogMap.get("id").toString()));
+            }
+        }
+    }
+
+    /**
+     * Add selected blog(s) to the database
+     *
+     * @param blogList
+     */
+    public void addBlogs(List blogList) {
+        for (int i = 0; i < blogList.size(); i++) {
+            Map blogMap = (HashMap) blogList.get(i);
+            String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
+            String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
+            String homeUrl = blogMap.get("url").toString();
+            String blogId = blogMap.get("blogid").toString();
+            Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword);
+            if (blog != null && i == 0) {
+                WordPress.setCurrentBlog(blog.getId());
             }
         }
     }

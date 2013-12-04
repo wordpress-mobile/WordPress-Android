@@ -59,6 +59,10 @@
     <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="manage_blogs">Manage blogs</string>
+    <string name="show_and_hide_blogs">Show/hide blogs</string>
+    <string name="blogs_visibility">Blogs visibility</string>
+    <string name="show_all">Show All</string>
+    <string name="hide_all">Hide All</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
@@ -820,6 +824,7 @@
     <string name="nux_dialog_success">Success!</string>
     <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
     <string name="nux_dialog_success_continue">CONTINUE</string>
+    <string name="one_blog_must_be_selected">At least one blog must be visible</string>
 
     <string-array name="privacy_array">
          <item>Public</item>

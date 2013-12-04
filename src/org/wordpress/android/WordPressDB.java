@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 21;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -141,6 +142,9 @@ public class WordPressDB {
     private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, " +
             "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
 
+    // add hidden flag to blog settings (accounts)
+    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = Config.DB_SECRET;
@@ -231,6 +235,9 @@ public class WordPressDB {
                     currentVersion++;
                 case 19:
                     // revision 20: create table "notes"
+                    currentVersion++;
+                case 20:
+                    db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
                     currentVersion++;
             }
             db.setVersion(DATABASE_VERSION);
@@ -336,24 +343,24 @@ public class WordPressDB {
     }
 
     public boolean deactivateAccounts() {
-
-        List<Map<String, Object>> accounts = getAccounts();
+        List<Map<String, Object>> accounts = getAllAccounts();
         for (Map<String, Object> account: accounts) {
             deleteAccount(context, (Integer) account.get("id"));
         }
-
         return true;
     }
 
-    public List<Map<String, Object>> getAccounts() {
-
-        if (db == null)
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
+        if (db == null) {
             return new Vector<Map<String, Object>>();
-        
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
-                "username", "blogId", "url", "password" }, null, null, null,
-                null, null);
-
+        }
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url",
+                "password"};
+        String[] allFields = baseFields;
+        if (extraFields != null) {
+            allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
+        }
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
@@ -371,17 +378,27 @@ public class WordPressDB {
                 thisHash.put("username", username);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
+                if (extraFields != null) {
+                    for (int j = 0; j < extraFields.length; ++j) {
+                        thisHash.put(extraFields[j], c.getString(6 + j));
+                    }
+                }
                 accounts.add(thisHash);
             }
             c.moveToNext();
         }
         c.close();
-
         Collections.sort(accounts, Utils.BlogNameComparator);
-        
         return accounts;
     }
-    
+
+    public List<Map<String, Object>> getShownAccounts() {
+        return getAccountsBy("isHidden = 0", null);
+    }
+
+    public List<Map<String, Object>> getAllAccounts() {
+        return getAccountsBy(null, null);
+    }
 
     public boolean checkForExistingBlog(String blogName, String blogURL, String username,
                                         String password) {
@@ -428,6 +445,7 @@ public class WordPressDB {
         values.put("isScaledImage", blog.isScaledImage());
         values.put("scaledImgWidth", blog.getScaledImageWidth());
         values.put("blog_options", blog.getBlogOptions());
+        values.put("isHidden", blog.isHidden());
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;
@@ -490,14 +508,13 @@ public class WordPressDB {
     }
 
     public List<Object> getBlog(int id) {
-
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
-                "username", "password", "httpuser", "httppassword",
-                "imagePlacement", "centerThumbnail", "fullSizeImage",
-                "maxImageWidth", "maxImageWidthId", "runService", "blogId",
-                "location", "dotcomFlag", "dotcom_username", "dotcom_password",
-                "api_key", "api_blogid", "wpVersion", "postFormats",
-                "lastCommentId","isScaledImage","scaledImgWidth", "homeURL", "blog_options", "isAdmin" }, "id=" + id, null, null, null, null);
+        String[] fields = new String[]{"url", "blogName", "username", "password", "httpuser",
+                "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage",
+                "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location",
+                "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid",
+                "wpVersion", "postFormats", "lastCommentId", "isScaledImage", "scaledImgWidth",
+                "homeURL", "blog_options", "isAdmin", "isHidden"};
+        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + id, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -540,6 +557,7 @@ public class WordPressDB {
                 returnVector.add(c.getString(24));
                 returnVector.add(c.getString(25));
                 returnVector.add(c.getInt(26));
+                returnVector.add(c.getInt(27));
             } else {
                 returnVector = null;
             }

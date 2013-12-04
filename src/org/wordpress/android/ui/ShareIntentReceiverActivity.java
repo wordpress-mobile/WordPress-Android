@@ -81,7 +81,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     }
         
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
         
         if (accounts.size() > 0) {
 

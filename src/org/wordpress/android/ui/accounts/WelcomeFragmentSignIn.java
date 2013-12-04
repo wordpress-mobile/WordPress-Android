@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -260,12 +259,18 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         protected List doInBackground(Void... args) {
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (userBlogList != null) {
+                mSetupBlog.addBlogs(userBlogList);
+            }
             return userBlogList;
         }
 
         @Override
-        protected void onPostExecute(final List<Object> usersBlogsList) {
+        protected void onPostExecute(final List<Object> userBlogList) {
             if (mHttpAuthRequired) {
+                if (getActivity() == null) {
+                    return ;
+                }
                 // Prompt for http credentials
                 mHttpAuthRequired = false;
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -295,7 +300,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            if (usersBlogsList == null && mErrorMsgId != 0) {
+            if (userBlogList == null && mErrorMsgId != 0) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
@@ -337,24 +342,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", null, null);
             }
 
-            if (usersBlogsList != null) {
-                SelectBlogsDialog selectBlogsDialog = new SelectBlogsDialog(
-                        new SelectBlogsDialog.Listener() {
-                    @Override
-                    public void onSuccess(SparseBooleanArray selectedBlogs) {
-                        if (selectedBlogs != null && selectedBlogs.size() > 0) {
-                            mSetupBlog.addBlogs(usersBlogsList, selectedBlogs);
-                        }
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        endProgress();
-                    }
-                }, getActivity());
-                selectBlogsDialog.showBlogSelectionDialog(usersBlogsList);
+            if (userBlogList != null) {
+                if (getActivity() != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
             } else {
                 endProgress();
             }

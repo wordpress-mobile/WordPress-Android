@@ -32,6 +32,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -53,7 +54,6 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
-
     EditTextPreference taglineTextPreference;
     OnPreferenceChangeListener preferenceChangeListener;
 
@@ -181,9 +181,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     protected void updateBlogsPreferenceCategory() {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
-
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         int order = 0;
+
+        // Add self-hosted blog button
+        Preference addBlogPreference = new Preference(this);
+        addBlogPreference.setTitle(R.string.add_self_hosted_blog);
+        Intent intentWelcome = new Intent(this, WelcomeActivity.class);
+        intentWelcome.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
+                WelcomeActivity.ADD_SELF_HOSTED_BLOG);
+        addBlogPreference.setIntent(intentWelcome);
+        addBlogPreference.setOrder(order++);
+        blogsCategory.addPreference(addBlogPreference);
+
+        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
+        if (allAccounts.size() > 1) {
+            // Add show/hide buttons
+            Preference manageBlogPreference = new Preference(this);
+            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
+            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
+            manageBlogPreference.setIntent(intentManage);
+            manageBlogPreference.setOrder(order++);
+            blogsCategory.addPreference(manageBlogPreference);
+        }
+
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -207,13 +228,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogSettingsPreference.setOrder(order++);
             blogsCategory.addPreference(blogSettingsPreference);
         }
-
-        Preference addBlogPreference = new Preference(this);
-        addBlogPreference.setTitle(R.string.add_blog);
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        addBlogPreference.setIntent(intent);
-        addBlogPreference.setOrder(order++);
-        blogsCategory.addPreference(addBlogPreference);
     }
 
     protected int getEnabledBlogsCount() {
