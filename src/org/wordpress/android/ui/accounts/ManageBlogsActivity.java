@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +54,11 @@ public class ManageBlogsActivity extends SherlockListActivity {
         CheckedTextView checkedView = (CheckedTextView) v;
         checkedView.setChecked(!checkedView.isChecked());
         setItemChecked(position, checkedView.isChecked());
+        if (blogShownCount() == 0) {
+            ToastUtils.showToast(this, "At least one blog must be shown");
+            checkedView.setChecked(true);
+            setItemChecked(position, true);
+        }
     }
 
     @Override
@@ -182,13 +186,6 @@ public class ManageBlogsActivity extends SherlockListActivity {
             CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
             nameView.setText(MapUtils.getMapStr(getItem(position), "blogName"));
             nameView.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
-            if (blogShownCount() == 1 && nameView.isChecked()) {
-                nameView.setEnabled(false);
-                nameView.setClickable(true);
-            } else {
-                nameView.setEnabled(true);
-                nameView.setClickable(false);
-            }
             return rowView;
         }
     }
@@ -214,12 +211,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
             if (userBlogList != null) {
-                // Add all blogs
-                SparseBooleanArray allBlogs = new SparseBooleanArray();
-                for (int i = 0; i < userBlogList.size(); i++) {
-                    allBlogs.put(i, true);
-                }
-                mSetupBlog.addBlogs(userBlogList, allBlogs);
+                mSetupBlog.syncBlogs(getApplicationContext(), userBlogList);
             }
             return userBlogList;
         }
