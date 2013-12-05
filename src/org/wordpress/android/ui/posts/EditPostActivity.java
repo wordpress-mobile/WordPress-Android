@@ -145,7 +145,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePost(false);
+                    savePost(true);
                     if (mEditPostPreviewFragment != null)
                         mEditPostPreviewFragment.loadPost(mPost);
                 }
