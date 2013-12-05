@@ -229,9 +229,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
 
         // progress bar that appears when loading more posts
-        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
-
 
         if (useGridView) {
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
@@ -704,14 +703,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
      * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
     protected void showLoadingProgress() {
-        if (!hasActivity() || mProgress == null || mProgress.getVisibility() == View.VISIBLE )
-            return;
-        mProgress.setVisibility(View.VISIBLE);
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.VISIBLE);
     }
     protected void hideLoadingProgress() {
-        if (!hasActivity() || mProgress == null || mProgress.getVisibility() != View.VISIBLE )
-            return;
-        mProgress.setVisibility(View.GONE);
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.GONE);
     }
 
     private boolean mIsFlinging = false;

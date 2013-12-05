@@ -80,11 +80,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
         int dividerSize = context.getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
-        int cellWidth = displayWidth - (dividerSize * 2);
 
         // determine size to use when requesting images via photon - full width unless we're using
         // a grid, in which case half-width since the grid shows two columns
-        mPhotonWidth = (isGridView ? cellWidth / 2 : cellWidth);
+        if (isGridView) {
+            mPhotonWidth = (displayWidth / 2) - dividerSize; // dividerSize = item spacing
+        } else {
+            mPhotonWidth = displayWidth - (dividerSize * 2); // dividerSize*2 since list has left/right margin
+        }
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // when animating rows in, start from this y-position near the bottom using medium animation duration
@@ -113,14 +116,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    public void refresh() {
-        //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
-        loadPosts();
-    }
-
-    public void reload() {
-        // briefly animate the appearance of new rows when reloading - happens when the tag is
-        // changed or the user taps to view new posts
+    /*
+     * briefly animate the appearance of new rows when reloading - happens when the tag is
+     * changed, the user taps to view new posts, or a previously empty tag has new posts
+     * downloaded
+     */
+    private void enableRowAnimation() {
         mAnimateRows = true;
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -128,7 +129,18 @@ public class ReaderPostAdapter extends BaseAdapter {
                 mAnimateRows = false;
             }
         }, 1000);
+    }
 
+    public void refresh() {
+        //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
+        // animate the appearance of new rows if currently empty
+        if (isEmpty())
+            enableRowAnimation();
+        loadPosts();
+    }
+
+    public void reload() {
+        enableRowAnimation();
         clear();
         loadPosts();
     }
