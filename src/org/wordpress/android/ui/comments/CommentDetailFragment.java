@@ -2,7 +2,10 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -296,29 +299,35 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
+     * returns true if there's an active network connection, otherwise displays a toast error
+     * and returns false
+     */
+    // TODO: move this routine to NetworkUtils once that class is merged into develop
+    private boolean checkConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info != null && info.isConnected())
+            return true;
+
+        ToastUtils.showToast(getActivity(), R.string.no_network_message);
+        return false;
+    }
+
+    /*
      * approve the current comment
      */
     private void approveComment() {
         if (!hasActivity() || !hasComment() || mIsApprovingComment)
             return;
 
+        if (!checkConnection(getActivity()))
+            return;
+
         final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
         ReaderAniUtils.flyOut(txtBtnApprove);
 
-        // immediately show MessageBox saying comment has been approved - runnable below executes
-        // once MessageBar disappears
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                showReplyBox();
-            }
-        };
-        MessageBarUtils.showMessageBar(getActivity(),
-                                       getString(R.string.comment_approved),
-                                       MessageBarUtils.MessageBarType.INFO,
-                                       runnable);
-
-        mIsApprovingComment = true;
+        // immediately show MessageBox saying comment has been approved
+        MessageBarUtils.showMessageBar(getActivity(), getString(R.string.comment_approved));
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
@@ -326,17 +335,24 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsApprovingComment = false;
                 if (hasActivity()) {
                     if (succeeded) {
+                        showReplyBox();
                         mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
                         if (mChangeListener != null)
                             mChangeListener.onCommentModerated();
                     } else {
-                        hideReplyBox(true);
-                        txtBtnApprove.setVisibility(View.VISIBLE);
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                        // fly in "Approve" after we know it had enough time to fly out
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ReaderAniUtils.flyIn(txtBtnApprove);
+                            }
+                        }, 500);
                     }
                 }
             }
         };
+        mIsApprovingComment = true;
         CommentActions.moderateComment(mAccountId, mComment, CommentStatus.APPROVED, actionListener);
     }
 
@@ -345,6 +361,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     private void submitReply() {
         if (!hasActivity() || mIsSubmittingReply)
+            return;
+
+        if (!checkConnection(getActivity()))
             return;
 
         final EditText editComment = (EditText) getActivity().findViewById(R.id.edit_comment);
