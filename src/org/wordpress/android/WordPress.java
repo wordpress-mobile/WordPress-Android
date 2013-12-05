@@ -290,6 +290,10 @@ public class WordPress extends Application {
         return (currentBlog != null ? currentBlog.getBlogId() : 0);
     }
 
+    public static int getCurrentBlogAccountId() {
+        return (currentBlog != null ? currentBlog.getId() : 0);
+    }
+
     /**
      * Checks for WordPress.com credentials
      *
