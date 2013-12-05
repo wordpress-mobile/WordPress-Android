@@ -502,8 +502,6 @@
     <string name="add_account_blog_url">Blog Address</string>
     <string name="wordpress_blog">WordPress Blog</string>
     <string name="blogusername">blogusername</string>
-    <string name="column_1">Column 1</string>
-    <string name="column_2">Column 2</string>
 
     <!--  Error Messages -->
     <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
@@ -637,7 +635,6 @@
     <string name="create_new_blog_wpcom">Create a WordPress.com blog</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
-    <string name="action_next">Next</string>
     <string name="required_fields">Required Fields</string>
     <string name="required_field">Required Field</string>
     <string name="username_password_required">Please fill in all of the fields before submitting.</string>
@@ -682,11 +679,7 @@
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect.</string>
     <string name="nux_tap_continue">Continue</string>
-    <string name="nux_welcome">Welcome to WordPress</string>
-    <string name="nux_welcome_publish_title">Publish whenever inspiration strikes</string>
-    <string name="nux_welcome_publish_description">Brilliant insight? Hilarious link? Perfect pic? Capture genius as it happens and post in real time.</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
-    <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="one_blog_must_be_selected">At least one blog must be visible</string>
