@@ -337,7 +337,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 }
             }
         };
-        CommentActions.moderateComment(WordPress.currentBlog, mComment, CommentStatus.APPROVED, actionListener);
+        CommentActions.moderateComment(mAccountId, mComment, CommentStatus.APPROVED, actionListener);
     }
 
     /*
@@ -388,8 +388,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         };
 
         mIsSubmittingReply = true;
-        CommentActions.submitReplyToComment(WordPress.currentBlog,
-                                            mBlogId,
+        CommentActions.submitReplyToComment(mAccountId,
                                             mComment,
                                             replyText,
                                             actionListener);

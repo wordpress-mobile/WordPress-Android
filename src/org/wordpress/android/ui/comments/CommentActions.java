@@ -43,13 +43,13 @@ public class CommentActions {
     /**
      * reply to an individual comment
      */
-    protected static void submitReplyToComment(final Blog account,
-                                               final int blogId,
+    protected static void submitReplyToComment(final int accountId,
                                                final Comment comment,
                                                final String replyText,
                                                final CommentActionListener actionListener) {
 
-        if (account==null || comment==null || TextUtils.isEmpty(replyText)) {
+        final Blog blog = WordPress.getBlog(accountId);
+        if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
             return;
@@ -61,9 +61,9 @@ public class CommentActions {
             @Override
             public void run() {
                 XMLRPCClient client = new XMLRPCClient(
-                        account.getUrl(),
-                        account.getHttpuser(),
-                        account.getHttppassword());
+                        blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
 
                 Map<String, Object> replyHash = new HashMap<String, Object>();
                 replyHash.put("comment_parent", comment.commentID);
@@ -72,9 +72,10 @@ public class CommentActions {
                 replyHash.put("author_url", "");
                 replyHash.put("author_email", "");
 
-                Object[] params = { blogId,
-                        account.getUsername(),
-                        account.getPassword(),
+                Object[] params = {
+                        blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
                         Integer.valueOf(comment.postID),
                         replyHash };
 
@@ -89,7 +90,7 @@ public class CommentActions {
 
                 final boolean succeeded = (newCommentID >= 0);
                 if (succeeded)
-                    WordPress.wpDB.updateLatestCommentID(account.getId(), newCommentID);
+                    WordPress.wpDB.updateLatestCommentID(accountId, newCommentID);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -106,10 +107,12 @@ public class CommentActions {
     /**
      * change the status of a comment
      */
-    protected static void moderateComment(final Blog blog,
+    protected static void moderateComment(final int accountId,
                                           final Comment comment,
                                           final CommentStatus newStatus,
                                           final CommentActionListener actionListener) {
+
+        final Blog blog = WordPress.getBlog(accountId);
 
         if (blog==null || comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
             if (actionListener != null)
@@ -122,7 +125,8 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                XMLRPCClient client = new XMLRPCClient(
+                    blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
 
@@ -166,11 +170,11 @@ public class CommentActions {
     /**
      * delete (trash) a single comment
      */
-    protected static void deleteComment(final Blog account,
-                                        final int blogId,
+    protected static void deleteComment(final int accountId,
                                         final Comment comment,
                                         final CommentActionListener actionListener) {
-        if (account==null || comment==null) {
+        final Blog blog = WordPress.getBlog(accountId);
+        if (blog==null || comment==null) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
             return;
@@ -182,14 +186,14 @@ public class CommentActions {
             @Override
             public void run() {
                 XMLRPCClient client = new XMLRPCClient(
-                        account.getUrl(),
-                        account.getHttpuser(),
-                        account.getHttppassword());
+                        blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
 
                 Object[] params = {
-                        blogId,
-                        account.getUsername(),
-                        account.getPassword(),
+                        blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
                         comment.commentID };
 
                 Object result;
@@ -202,7 +206,7 @@ public class CommentActions {
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success) {
-                    WordPress.wpDB.deleteComment(account.getId(), comment.commentID);
+                    WordPress.wpDB.deleteComment(accountId, comment.commentID);
                 }
 
                 if (actionListener != null) {
