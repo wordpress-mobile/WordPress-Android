@@ -23,9 +23,9 @@
         style="@style/ReaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/reader_margin_large"
         android:layout_marginTop="@dimen/reader_margin_large"
         android:layout_toRightOf="@+id/image_avatar"
-        android:layout_marginRight="@dimen/reader_margin_large"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="text_blog_name"
@@ -102,18 +102,10 @@
             android:text="text_date" />
 
         <ImageView
-            android:id="@+id/image_like_btn"
+            android:id="@+id/image_reblog_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/reader_margin_small"
-            android:src="@drawable/reader_button_like" />
-
-        <TextView
-            android:id="@+id/text_like_count"
-            style="@style/ReaderTextView.Count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-8dp"
-            android:text="12" />
+            android:src="@drawable/reader_button_reblog" />
 
         <ImageView
             android:id="@+id/image_comment_btn"
@@ -130,10 +122,18 @@
             android:text="2" />
 
         <ImageView
-            android:id="@+id/image_reblog_btn"
+            android:id="@+id/image_like_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/reader_margin_small"
-            android:src="@drawable/reader_button_reblog" />
+            android:src="@drawable/reader_button_like" />
+
+        <TextView
+            android:id="@+id/text_like_count"
+            style="@style/ReaderTextView.Count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-8dp"
+            android:text="12" />
 
     </LinearLayout>
 
