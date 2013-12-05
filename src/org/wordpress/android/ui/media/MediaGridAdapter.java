@@ -1,10 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
@@ -29,13 +24,17 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An adapter for the media gallery listviews.
@@ -290,7 +289,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
-            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
@@ -342,7 +341,7 @@ public class MediaGridAdapter extends CursorAdapter {
                             callback.onBitmapReady(bitmap);
                         }
                         
-                        WordPress.localImageCache.put(path, bitmap);
+                        WordPress.getBitmapCache().put(path, bitmap);
                         callbacks.clear();
                         mFilePathToCallbackMap.remove(path);        
                     }

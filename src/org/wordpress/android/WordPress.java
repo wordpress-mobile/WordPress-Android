@@ -18,6 +18,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -30,8 +31,6 @@ import com.wordpress.rest.Oauth;
 
 
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.StringUtils;
@@ -45,8 +44,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -74,12 +71,22 @@ public class WordPress extends Application {
     public static WPRestClient restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static BitmapLruCache localImageCache;
 
     private static Context mContext;
 
     public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
+
+    private static BitmapLruCache mBitmapCache;
+    public static BitmapLruCache getBitmapCache() {
+        if (mBitmapCache == null) {
+            // see http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int cacheSize = maxMemory / 16;
+            mBitmapCache = new BitmapLruCache(cacheSize);
+        }
+        return mBitmapCache;
+    }
 
     @Override
     public void onCreate() {
@@ -92,13 +99,11 @@ public class WordPress extends Application {
 
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // Use a small slice of available memory for the image cache
-        int cacheSize = maxMemory / 32;
-        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
 
-        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
-        localImageCache = new BitmapLruCache(cacheSize / 2);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
@@ -107,7 +112,7 @@ public class WordPress extends Application {
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
 
-        //Uncomment this line if you want to test the app locking feature
+        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
@@ -224,7 +229,7 @@ public class WordPress extends Application {
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -256,7 +261,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
@@ -292,6 +297,10 @@ public class WordPress extends Application {
      */
     public static int getCurrentBlogId() {
         return (currentBlog != null ? currentBlog.getBlogId() : 0);
+    }
+
+    public static int getCurrentBlogAccountId() {
+        return (currentBlog != null ? currentBlog.getId() : 0);
     }
 
     /**

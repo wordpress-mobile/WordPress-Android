@@ -8,7 +8,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -76,15 +75,11 @@ public class ReaderPost {
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
-        post.published = JSONUtil.getString(json, "date");
-
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             post.authorName = JSONUtil.getString(jsonAuthor, "name");
             post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
         }
-
-        final String dateForTimestamp;
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
@@ -92,25 +87,23 @@ public class ReaderPost {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
-            // we want freshly-pressed posts to be sorted by the date they were chosen, not the date they were published
-            dateForTimestamp = JSONUtil.getString(jsonEditorial, "displayed_on");
+            // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
+            post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
         } else {
             post.featuredImage = JSONUtil.getString(json, "featured_image");
             post.blogName = JSONUtil.getStringDecoded(json, "site_name");
-            // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
-            // set it as the timestamp so posts are sorted by the date they were liked rather than the
-            // date they were published
-            String likeDate = JSONUtil.getString(json, "date_liked");
-            if (!TextUtils.isEmpty(likeDate)) {
-                dateForTimestamp = likeDate;
-            } else {
-                // date_liked doesn't exist, so set timestamp to published date
-                dateForTimestamp = post.published;
-            }
+            post.published = JSONUtil.getString(json, "date");
         }
 
-        // set the timestamp for sorting
-        post.timestamp = DateTimeUtils.iso8601ToTimestamp(dateForTimestamp);
+        // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
+        // set it as the timestamp so posts are sorted by the date they were liked rather than the
+        // date they were published (the timestamp is used to sort posts when querying)
+        String likeDate = JSONUtil.getString(json, "date_liked");
+        if (!TextUtils.isEmpty(likeDate)) {
+            post.timestamp = DateTimeUtils.iso8601ToTimestamp(likeDate);
+        } else {
+            post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
+        }
 
         // parse attachments to get the VideoPress thumbnail & url
         /*"attachments": {
@@ -260,7 +253,6 @@ public class ReaderPost {
                 int srcEnd = img.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
                 if (srcEnd == -1)
                     return null;
-                ReaderLog.d("found featured image");
                 return img.substring(srcStart+5, srcEnd);
             }
 

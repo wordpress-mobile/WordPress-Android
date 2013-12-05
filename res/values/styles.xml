@@ -25,6 +25,11 @@
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
     </style>
 
+    <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
+    <style name="WordPress.Theme.NoBackground" parent="WordPress">
+        <item name="android:windowBackground">@null</item>
+    </style>
+
     <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="icon">@drawable/ab_icon_wp</item>
         <item name="background">@color/blue_new_kid</item>
