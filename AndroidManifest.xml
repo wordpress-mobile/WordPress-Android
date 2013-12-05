@@ -78,6 +78,7 @@
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock.Light" />
+        <activity android:name=".ui.accounts.ManageBlogsActivity" />
 
         <!-- Comments activities -->
         <activity

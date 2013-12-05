@@ -46,6 +46,7 @@ public class Blog {
     private String postFormats;
     private String blogOptions;
     private boolean isAdmin;
+    private boolean isHidden;
 
     public Blog(String url, String username, String password) {
         this.url = url;
@@ -99,6 +100,8 @@ public class Blog {
                 this.blogOptions = "";
             if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
                 this.setAdmin(true);
+            if (blogVals.get(26) != null && (Integer) blogVals.get(27) > 0)
+                this.isHidden = true;
         } else {
             throw new Exception();
         }
@@ -286,6 +289,14 @@ public class Blog {
 
     public void setHttppassword(String httppassword) {
         this.httppassword = httppassword;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     public boolean save(String originalUsername) {

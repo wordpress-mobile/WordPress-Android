@@ -31,8 +31,6 @@ import com.wordpress.rest.Oauth;
 
 
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.StringUtils;
@@ -46,8 +44,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -233,7 +229,7 @@ public class WordPress extends Application {
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -265,7 +261,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
@@ -301,6 +297,10 @@ public class WordPress extends Application {
      */
     public static int getCurrentBlogId() {
         return (currentBlog != null ? currentBlog.getBlogId() : 0);
+    }
+
+    public static int getCurrentBlogAccountId() {
+        return (currentBlog != null ? currentBlog.getId() : 0);
     }
 
     /**

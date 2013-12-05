@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -145,11 +146,16 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
-                        updateProgress(getString(R.string.create_new_blog_wpcom));
+                        if (getActivity() != null) {
+                            updateProgress(getString(R.string.create_new_blog_wpcom));
+                        }
                     }
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
+                        if (getActivity() == null) {
+                            return ;
+                        }
                         endProgress();
                         SetupBlog setupBlog = new SetupBlog();
                         try {
@@ -161,7 +167,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                             final SharedPreferences settings = PreferenceManager.
                                     getDefaultSharedPreferences(getActivity());
                             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            String password = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                            String password = WordPressDB.decryptPassword(settings.
+                                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                             setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username,
                                     password);
                         } catch (JSONException e) {
@@ -173,6 +180,9 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
                     @Override
                     public void onError(int messageId) {
+                        if (getActivity() == null) {
+                            return ;
+                        }
                         endProgress();
                         showError(getString(messageId));
                     }

@@ -120,6 +120,7 @@
                     android:text="@string/create_new_blog_wpcom"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:padding="8dp"
                     android:enabled="false"/>

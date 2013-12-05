@@ -2,8 +2,10 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.util.TypedValue;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
@@ -63,4 +65,18 @@ public class Utils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
+    /*
+     * Return true if Debug build. false otherwise.
+     * 
+     * ADT (r17) or Higher => BuildConfig.java is generated automatically by Android build tools, and is placed into the gen folder.
+     *  
+     * BuildConfig containing a DEBUG constant that is automatically set according to your build type. 
+     * You can check the (BuildConfig.DEBUG) constant in your code to run debug-only functions.
+     */
+    public static boolean isDebugBuild() {
+        if (BuildConfig.DEBUG) {
+            return true;
+        }
+        return false;
+    }
 }
