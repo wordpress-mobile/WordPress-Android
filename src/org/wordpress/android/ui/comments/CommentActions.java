@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -82,6 +83,7 @@ public class CommentActions {
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
                 } catch (XMLRPCException e) {
+                    Log.e(WordPress.TAG, e.getMessage(), e);
                     newCommentID = -1;
                 }
 
@@ -141,6 +143,7 @@ public class CommentActions {
                 try {
                     result = client.call("wp.editComment", params);
                 } catch (final XMLRPCException e) {
+                    Log.e(WordPress.TAG, e.getMessage(), e);
                     result = null;
                 }
 
@@ -193,6 +196,7 @@ public class CommentActions {
                 try {
                     result = client.call("wp.deleteComment", params);
                 } catch (final XMLRPCException e) {
+                    Log.e(WordPress.TAG, e.getMessage(), e);
                     result = null;
                 }
 

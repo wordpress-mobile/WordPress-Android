@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPImageGetter;
 
 import java.util.Map;
@@ -157,12 +159,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
 
         final ViewGroup layoutReply = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        if (layoutReply == null || layoutReply.getVisibility() != View.VISIBLE)
+        if (layoutReply == null)
             return;
+
+        // showReplyBox() animation may still be happening, so clear it here
+        layoutReply.clearAnimation();
 
         if (hideImmediately) {
             layoutReply.setVisibility(View.GONE);
-        } else {
+        } else if (layoutReply.getVisibility() != View.VISIBLE) {
             ReaderAniUtils.flyOut(layoutReply);
         }
     }
@@ -454,6 +459,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 mIsRequestingComment = false;
+                Log.e(WordPress.TAG, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
                 if (hasActivity()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
