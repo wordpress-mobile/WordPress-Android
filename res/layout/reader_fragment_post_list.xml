@@ -25,4 +25,13 @@
         android:id="@+id/empty_view"
         layout="@layout/reader_empty_view" />
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

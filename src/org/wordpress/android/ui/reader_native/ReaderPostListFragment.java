@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,7 +54,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private TextView mNewPostsBar;
     private View mEmptyView;
-    private View mFooterProgress;
+    private ProgressBar mProgress;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
@@ -227,6 +228,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             mEmptyView.setPadding(0, actionbarHeight, 0, 0);
         }
 
+        // progress bar that appears when loading more posts
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mProgress.setVisibility(View.GONE);
+
+
         if (useGridView) {
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
 
@@ -240,9 +246,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 if (hasActivity() && getActivity() instanceof NativeReaderActivity)
                     ((NativeReaderActivity)getActivity()).setActionBarAlpha(NativeReaderActivity.ALPHA_LEVEL_3);
             }
-
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, gridView, false);
-            gridView.setFooterView(mFooterProgress);
 
             gridView.setOnItemClickListener(new StaggeredGridView.OnItemClickListener() {
                 @Override
@@ -261,10 +264,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
             // set the listView's scroll listeners so we can detect up/down scrolling
             listView.setOnScrollListener(this);
-
-            // add listView footer containing progress bar - appears when loading older posts
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, listView, false);
-            listView.addFooterView(mFooterProgress);
 
             if (isTranslucentActionBarEnabled) {
                 // add a transparent header to the listView that matches the size of the ActionBar
@@ -286,9 +285,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
             listView.setAdapter(getPostAdapter());
         }
-
-        mFooterProgress.setVisibility(View.GONE);
-        mFooterProgress.setBackgroundColor(context.getResources().getColor(R.color.reader_divider_grey));
 
         return view;
     }
@@ -438,9 +434,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mCurrentTag = tagName;
         ReaderPrefs.setReaderTag(tagName);
 
+        hideLoadingProgress();
         getPostAdapter().setTag(tagName);
         hideNewPostsBar();
-        hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName))
@@ -705,17 +701,17 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     /*
-     * show/hide progress bar footer in the listView
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
     protected void showLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()==View.VISIBLE )
+        if (!hasActivity() || mProgress == null || mProgress.getVisibility() == View.VISIBLE )
             return;
-        mFooterProgress.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
     }
     protected void hideLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()!=View.VISIBLE )
+        if (!hasActivity() || mProgress == null || mProgress.getVisibility() != View.VISIBLE )
             return;
-        mFooterProgress.setVisibility(View.GONE);
+        mProgress.setVisibility(View.GONE);
     }
 
     private boolean mIsFlinging = false;
