@@ -49,7 +49,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private String mHttpPassword = "";
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private boolean mForceSelfHosted;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -100,14 +99,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
-        if (mForceSelfHosted) {
-            forceSelfHostedMode();
-        }
         return rootView;
-    }
-
-    public void setForceSelfHostedMode(boolean force) {
-        mForceSelfHosted = force;
     }
 
     /**
