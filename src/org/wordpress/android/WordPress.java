@@ -118,11 +118,6 @@ public class WordPress extends Application {
 
         super.onCreate();
 
-        /*Enable the ping to the backend
-        if (android.os.Build.VERSION.SDK_INT >= 14) {
-            this.registerActivityLifecycleCallbacks(new PushNotificationsBackendMonitor());
-        }*/
-        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
             registerComponentCallbacks(pnBackendMponitor);
