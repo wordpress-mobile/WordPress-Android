@@ -325,7 +325,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
-
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
@@ -995,9 +994,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
 
-        //if (mFormatBar.getVisibility() == View.VISIBLE)
-        //    hideFormatBar();
-
         if (ssb != null && !MediaUtils.isLocalImage(imageUri))
             imageUri = MediaUtils.downloadExternalImage(getActivity(), imageUri);
 
@@ -1083,6 +1079,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            // Show the soft keyboard after adding media
+            if (mActivity != null)
+                ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
         return true;
     }
