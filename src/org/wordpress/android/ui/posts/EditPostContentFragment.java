@@ -37,6 +37,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -139,6 +140,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         mFormatBar = (RelativeLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
+        mTitleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // Go to full screen editor when 'next' button is tapped on soft keyboard
+                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar().isShowing())
+                    setContentEditingModeVisible(true);
+                return false;
+            }
+        });
         mContentEditText = (WPEditText)rootView.findViewById(R.id.post_content);
         mPostContentLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_settings_wrapper);
