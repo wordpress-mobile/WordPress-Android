@@ -53,6 +53,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private final int mLinkColor;
     private final int mLinkColorActive;
+    private final String mFollowing;
+    private final String mFollow;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -97,6 +99,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         // colors for follow text
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mLinkColorActive = context.getResources().getColor(R.color.orange_medium);
+
+        // text for follow button
+        mFollowing = context.getString(R.string.reader_btn_unfollow).toUpperCase();
+        mFollow = context.getString(R.string.reader_btn_follow).toUpperCase();
 
         // enable preloading of images on Android 4 or later (earlier devices tend not to have
         // enough memory/heap to make this worthwhile)
@@ -414,7 +420,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowedByCurrentUser) {
-        txtFollow.setText(isFollowedByCurrentUser ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        txtFollow.setText(isFollowedByCurrentUser ? mFollowing : mFollow);
         txtFollow.setTextColor(isFollowedByCurrentUser ? mLinkColorActive : mLinkColor);
     }
 

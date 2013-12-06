@@ -87,6 +87,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
 
+    private int mLinkColor;
+    private int mLinkColorActive;
+
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
 
@@ -236,6 +239,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
 
+        // colors for follow text
+        mLinkColor = getResources().getColor(R.color.reader_hyperlink);
+        mLinkColorActive = getResources().getColor(R.color.orange_medium);
+
         // hide listView until post is loaded
         getListView().setVisibility(View.INVISIBLE);
     }
@@ -285,23 +292,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    /*
-     * KitKat immersive mode
-     * https://developer.android.com/training/system-ui/immersive.html
-     * enable immersive mode:
-     *  getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-     * disable immersive mode:
-     *  getDecorView().setSystemUiVisibility(0);
-     */
-    /*private boolean canEnableImmersiveMode() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
-    }*/
 
     private void setIsFullScreen(boolean isFullScreen) {
         if (isFullScreen == mIsFullScreen)
@@ -403,24 +393,28 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             case Constants.INTENT_READER_REBLOG :
                 // user just returned from reblog activity - if post was successfully reblogged,
                 // then update the local post and select the reblog button
-                if (resultCode== Activity.RESULT_OK) {
+                ImageView imgBtnReblog = (ImageView) findViewById(R.id.image_reblog_btn);
+                if (resultCode == Activity.RESULT_OK) {
                     mPost.isRebloggedByCurrentUser = true;
-                    TextView btnReblog = (TextView) findViewById(R.id.btn_reblog);
-                    btnReblog.setSelected(true);
+                    imgBtnReblog.setSelected(true);
+                } else {
+                    imgBtnReblog.setSelected(false);
                 }
+                break;
         }
     }
 
     /*
-     * triggered when user chooses to like or follow
+     * triggered when user chooses to like or follow - actionView is the ImageView or TextView
+     * associated with the action (ex: like button)
      */
-    private void doPostAction(View btnAction, ReaderPostActions.PostAction action, ReaderPost post) {
-        boolean isSelected = btnAction.isSelected();
-        btnAction.setSelected(!isSelected);
-        ReaderAniUtils.zoomAction(btnAction);
+    private void doPostAction(View actionView, ReaderPostActions.PostAction action, ReaderPost post) {
+        boolean isSelected = actionView.isSelected();
+        actionView.setSelected(!isSelected);
+        ReaderAniUtils.zoomAction(actionView);
 
         if (!ReaderPostActions.performPostAction(this, action, post, null)) {
-            btnAction.setSelected(isSelected);
+            actionView.setSelected(isSelected);
             return;
         }
 
@@ -443,22 +437,24 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     /*
      * triggered when user chooses to reblog the post
      */
-    private void doPostReblog(View btnReblog, ReaderPost post) {
+    private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
         if (post.isRebloggedByCurrentUser) {
             ToastUtils.showToast(this, R.string.reader_toast_err_already_reblogged);
             return;
         }
-        btnReblog.setSelected(true);
-        ReaderAniUtils.zoomAction(btnReblog);
+        imgBtnReblog.setSelected(true);
+        ReaderAniUtils.zoomAction(imgBtnReblog);
         ReaderActivityLauncher.showReaderReblogForResult(this, post);
     }
 
+    /*
+     * display the standard Android share chooser to share a link to this post
+     */
     private void sharePage() {
-        String subject = getString(R.string.reader_share_subject, getString(R.string.app_name));
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.reader_share_subject, getString(R.string.app_name)));
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -850,9 +846,11 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             public void run() {
                 final TextView txtFollow = (TextView) findViewById(R.id.text_follow);
                 final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
+                final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
                 mHandler.post(new Runnable() {
                     public void run() {
-                        txtFollow.setText(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+                        txtFollow.setText(followText);
+                        txtFollow.setTextColor(isFollowed ? mLinkColorActive : mLinkColor);
                         txtFollow.setSelected(isFollowed);
                         txtFollow.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1046,13 +1044,13 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
+        TextView txtAuthorName;
         TextView txtDate;
         TextView txtFollow;
         WebView webView;
         ImageView imgBtnReblog;
         ImageView imgBtnComment;
         ImageView imgBtnLike;
-        ViewGroup layoutTitle;
         WPNetworkImageView imgAvatar;
 
         String postHtml;
@@ -1067,17 +1065,18 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            // locate views
             txtTitle = (TextView) findViewById(R.id.text_title);
             txtBlogName = (TextView) findViewById(R.id.text_blog_name);
             txtDate = (TextView) findViewById(R.id.text_date);
             txtFollow = (TextView) findViewById(R.id.text_follow);
+            txtAuthorName = (TextView) findViewById(R.id.text_author_name);
+
             webView = (WebView) findViewById(R.id.webView);
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
-            imgBtnReblog = (ImageView) findViewById(R.id.image_reblog_btn);
-            imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
-            imgBtnLike = (ImageView) findViewById(R.id.image_like_btn);
-            layoutTitle = (ViewGroup) findViewById(R.id.layout_detail_title);
+
+            imgBtnReblog = (ImageView) mLayoutActions.findViewById(R.id.image_reblog_btn);
+            imgBtnComment = (ImageView) mLayoutActions.findViewById(R.id.image_comment_btn);
+            imgBtnLike = (ImageView) mLayoutActions.findViewById(R.id.image_like_btn);
 
             // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
@@ -1114,16 +1113,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 txtTitle.setText(R.string.reader_untitled_post);
             }
 
-            // tapping title layout opens post in browser
-            layoutTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getUrl());
-                }
-            });
-
             txtBlogName.setText(mPost.getBlogName());
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
+
+            if (mPost.hasAuthorName()) {
+                txtAuthorName.setText(mPost.getAuthorName());
+                txtAuthorName.setVisibility(View.VISIBLE);
+            } else {
+                txtAuthorName.setVisibility(View.GONE);
+            }
 
             if (mPost.hasPostAvatar()) {
                 int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
@@ -1158,6 +1156,18 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 imgBtnComment.setVisibility(View.GONE);
             }
 
+            // tapping title, blog name, author name or avatar opens post in browser
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getUrl());
+                }
+            };
+            txtTitle.setOnClickListener(clickListener);
+            txtBlogName.setOnClickListener(clickListener);
+            txtAuthorName.setOnClickListener(clickListener);
+            imgAvatar.setOnClickListener(clickListener);
+
             // webView settings must be configured on main thread - note that while JavaScript is
             // required for embedded videos, it's disabled since it's a security risk:
             //    http://developer.android.com/training/articles/security-tips.html#WebView
@@ -1188,7 +1198,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 }
             });
 
-            //...but force it to appear after a few seconds to ensure user never has to be faced
+            //...but force it to appear after a short delay to ensure user never has to be faced
             // with a blank post for too long (very important on slow connections)
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1198,7 +1208,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         ReaderLog.w("forced webView to appear before page finished");
                     }
                 }
-            }, 2500);
+            }, 2000);
 
             // detect image taps so we can open images in the photo viewer activity
             webView.setOnTouchListener(new View.OnTouchListener() {

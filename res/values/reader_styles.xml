@@ -140,6 +140,18 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/grey_dark</item>
     </style>
+    <style name="ReaderTextView.Follow" parent="ReaderTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawableLeft">@drawable/note_icon_follow</item>
+        <item name="android:background">@color/grey_light</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:padding">@dimen/reader_margin_small</item>
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:text">@string/reader_btn_follow</item>
+    </style>
 
     <style name="ReaderTextView.MessageBar" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>

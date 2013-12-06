@@ -465,7 +465,7 @@ public class ReaderPost {
 
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
-     * sole purpose is cache commonly-used values for the post that speeds up using them inside
+     * sole purpose is to cache commonly-used values for the post that speeds up using them inside
      * adapters
      ****/
 
@@ -513,30 +513,5 @@ public class ReaderPost {
         if (dtPublished==null)
             dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
         return dtPublished;
-    }
-
-    /*
-     * returns "blog name | author name | date" - not cached since we want the timespan to accurately
-     * reflect the time this was called, but the dtPublished that this relies on *is* cached above
-     */
-    private static final String SOURCE_SEP = " | ";
-    public String getSource() {
-        String source;
-        if (hasBlogName() && hasAuthorName()) {
-            // skip author name if it's the same as the blog name (sometimes it's a lowercase version of the blog name)
-            if (authorName.equalsIgnoreCase(blogName)) {
-                source = blogName;
-            } else {
-                source = blogName + SOURCE_SEP + authorName;
-            }
-        } else if (hasAuthorName()) {
-            source = authorName;
-        } else if (hasBlogName()) {
-            source = blogName;
-        } else {
-            source = "";
-        }
-
-        return source + SOURCE_SEP + DateTimeUtils.javaDateToTimeSpan(getDatePublished());
     }
 }

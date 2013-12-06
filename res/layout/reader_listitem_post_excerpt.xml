@@ -34,18 +34,10 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
-        style="@style/ReaderTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ReaderTextView.Follow"
         android:layout_below="@+id/text_blog_name"
-        android:layout_toRightOf="@+id/image_avatar"
-        android:drawableLeft="@drawable/note_icon_follow"
-        android:paddingBottom="@dimen/reader_margin_small"
-        android:paddingRight="@dimen/reader_margin_medium"
-        android:paddingTop="@dimen/reader_margin_small"
-        android:text="text_follow"
-        android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/reader_text_sz_medium" />
+        android:layout_marginTop="@dimen/reader_margin_small"
+        android:layout_toRightOf="@+id/image_avatar" />
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
