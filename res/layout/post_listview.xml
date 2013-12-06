@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@color/grey_extra_light">
+        android:background="@color/background_grey">
 
         <ImageView
             android:id="@+id/empty_tags_box_top"

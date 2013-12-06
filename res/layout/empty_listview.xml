@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/grey_extra_light">
+              android:background="@color/background_grey">
 
     <TextView android:id="@id/android:empty"
               android:text="@string/empty_list_default"
