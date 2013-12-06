@@ -54,7 +54,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
-    private static final int ACTIVITY_EDIT_POST = 0;
+    public static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
 
     @Override
@@ -322,11 +322,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     public void newPost() {
         WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        // Create a new post object
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), isPage);
         Intent i = new Intent(this, EditPostActivity.class);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
-        if (isPage)
-            i.putExtra("isPage", true);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, ACTIVITY_EDIT_POST);
     }
 

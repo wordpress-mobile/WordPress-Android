@@ -163,7 +163,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             } else {
-                Uri extra = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             }
             startActivity(intent);

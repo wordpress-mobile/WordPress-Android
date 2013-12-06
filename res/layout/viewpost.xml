@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/format_bar_bg"
+        android:background="@drawable/format_bar_bg_bottom"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
         android:paddingTop="6dp" >
