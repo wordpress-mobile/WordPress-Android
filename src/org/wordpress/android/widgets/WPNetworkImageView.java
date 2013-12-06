@@ -22,7 +22,6 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
 
@@ -30,7 +29,7 @@ import org.wordpress.android.util.SysUtils;
  * Created by nbradbury on 7/30/13.
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
  *  (1) fading in downloaded images
- *  (2) manipulating images before display (ex: making avatars circular or adding a video player overlay)
+ *  (2) manipulating images before display
  *  (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
  *  (4) adding a listener to determine when image has completed downloading (or failed)
  */
@@ -175,14 +174,7 @@ public class WPNetworkImageView extends ImageView {
                         }
 
                         if (response.getBitmap() != null) {
-                            switch (mImageType) {
-                                case AVATAR:
-                                    setImageBitmap(ImageUtils.getRoundedBitmap(response.getBitmap()));
-                                    break;
-                                default :
-                                    setImageBitmap(response.getBitmap());
-                                    break;
-                            }
+                            setImageBitmap(response.getBitmap());
 
                             // fade the image in if it wasn't cached
                             if (!isImmediate)
@@ -280,23 +272,17 @@ public class WPNetworkImageView extends ImageView {
 
     private static int getErrorImageResId(ImageType imageType) {
         switch (imageType) {
-            case AVATAR:
-                return R.drawable.reader_avatar_error;
             case PHOTO_FULL :
+                // no error image for full-screen images
                 return 0;
             default :
                 return R.drawable.reader_photo_error;
         }
     }
 
-    private static Drawable mDefaultAvatar;
     private static Drawable mDefaultPhoto;
     private static Drawable getDefaultDrawable(Context context, ImageType imageType) {
         switch (imageType) {
-            case AVATAR:
-                if (mDefaultAvatar==null)
-                    mDefaultAvatar = context.getResources().getDrawable(R.drawable.reader_avatar_default);
-                return mDefaultAvatar;
             case PHOTO_FULL :
                 // no default image for full-screen images
                 return null;

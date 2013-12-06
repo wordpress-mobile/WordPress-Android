@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -33,6 +30,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment display a media item's details. 
@@ -280,7 +280,7 @@ public class MediaItemFragment extends SherlockFragment {
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
-            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
@@ -289,7 +289,7 @@ public class MediaItemFragment extends SherlockFragment {
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);
-                        WordPress.localImageCache.put(path, bitmap);
+                        WordPress.getBitmapCache().put(path, bitmap);
                     }
                 });
                 task.execute(filePath);
