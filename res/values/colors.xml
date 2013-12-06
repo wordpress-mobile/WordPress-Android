@@ -76,6 +76,7 @@
     <color name="grey_extra_dark">#222222</color>
 
     <!-- native reader colors -->
+    <color name="reader_background">@color/grey_extra_light</color>
     <color name="reader_divider_grey">@color/grey_light</color>
     <color name="reader_divider_grey_dark">#c3c3c3</color>
     <color name="reader_divider_blue">@color/blue_light</color>

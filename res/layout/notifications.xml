@@ -3,7 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="#FFFFFF" >
+  android:background="@color/grey_extra_light" >
+
   <LinearLayout
     android:id="@+id/note_fragment_container"
     android:background="#FFFFFF"
