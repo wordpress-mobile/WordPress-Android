@@ -263,12 +263,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    mTitleEditText.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    mTitleEditText.setVisibility(View.GONE);
                     mPostSettingsLinearLayout.setVisibility(View.GONE);
                     mFormatBar.setVisibility(View.VISIBLE);
                 }
