@@ -125,7 +125,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private String mMediaCapturePath = "";
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
-    private int mLastPosition = -1;
+    private int mLastPosition = -1, mQuickMediaType = -1;
 
     private float mLastYPos = 0;
 
@@ -208,30 +208,29 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         // Check for Android share action
         String action = mActivity.getIntent().getAction();
-        int quickMediaType = -1;
         if (mActivity.getIntent().getExtras() != null)
-            quickMediaType = mActivity.getIntent().getExtras().getInt("quick-media", -1);
+            mQuickMediaType = mActivity.getIntent().getExtras().getInt("quick-media", -1);
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
             setPostContentFromShareAction();
         else if (NEW_MEDIA_GALLERY.equals(action))
             prepareMediaGallery();
         else if (NEW_MEDIA_POST.equals(action))
             prepareMediaPost();
-        else if (quickMediaType >= 0) {
+        else if (mQuickMediaType >= 0) {
             // User selected a 'Quick (media type)' option in the menu drawer
-            if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
+            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
                 launchCamera();
-            else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+            else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
                 launchPictureLibrary();
-            else if (quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
+            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
                 launchVideoCamera();
-            else if (quickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                 launchVideoLibrary();
 
             if (post != null) {
-                if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+                if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
                     post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
-                else if (quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || quickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                     post.setQuickPostType(Post.QUICK_MEDIA_TYPE_VIDEO);
             }
         }
@@ -357,6 +356,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         } catch (OutOfMemoryError e) {
                             e.printStackTrace();
                         }
+                    } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
+                        // Quick Photo was cancelled, delete post and finish activity
+                        mActivity.getPost().delete();
+                        mActivity.finish();
                     }
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
@@ -369,6 +372,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(getActivity());
                         if (!addMedia(capturedVideoUri, null))
                             Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                    } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
+                        // Quick Photo was cancelled, delete post and finish activity
+                        mActivity.getPost().delete();
+                        mActivity.finish();
                     }
                     break;
                 case ACTIVITY_REQUEST_CODE_CREATE_LINK:
