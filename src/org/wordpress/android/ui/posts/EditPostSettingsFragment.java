@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -300,9 +303,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         int id = v.getId();
         if (id == R.id.pubDateButton) {
             WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
-            DatePickerDialog d = new DatePickerDialog(getActivity(),
-                    R.style.WordPress, mDateSetListener, mYear, mMonth, mDay);
-            d.show();
+            showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", WordPress.getCurrentBlog().getId());
@@ -336,6 +337,80 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
             removeLocation();
         }
+    }
+
+    private void showPostDateSelectionDialog() {
+
+        final DatePicker datePicker = new DatePicker(getActivity());
+        datePicker.init(mYear, mMonth, mDay, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            datePicker.setCalendarViewShown(false);
+        }
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.select_date)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mYear = datePicker.getYear();
+                        mMonth = datePicker.getMonth();
+                        mDay = datePicker.getDayOfMonth();
+                        showPostTimeSelectionDialog();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                            }
+                        }).setView(datePicker).show();
+
+    }
+
+    private void showPostTimeSelectionDialog() {
+        final TimePicker timePicker = new TimePicker(getActivity());
+        timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(mHour);
+        timePicker.setCurrentMinute(mMinute);
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.select_time)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mHour = timePicker.getCurrentHour();
+                        mMinute = timePicker.getCurrentMinute();
+
+                        Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+                        long timestamp = d.getTime();
+
+                        try {
+                            int flags = 0;
+                            flags |= DateUtils.FORMAT_SHOW_DATE;
+                            flags |= DateUtils.FORMAT_ABBREV_MONTH;
+                            flags |= DateUtils.FORMAT_SHOW_YEAR;
+                            flags |= DateUtils.FORMAT_SHOW_TIME;
+                            String formattedDate = DateUtils.formatDateTime(getActivity(), timestamp, flags);
+                            mCustomPubDate = timestamp;
+                            mPubDateText.setText(formattedDate);
+                            mIsCustomPubDate = true;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                            }
+                        }).setView(timePicker).show();
     }
 
     public void savePostSettings() {
@@ -654,44 +729,4 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             mSectionCategories.addView(selectCategory);
         }
     }
-
-    /**
-     * Date/Time
-     */
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            mYear = year;
-            mMonth = monthOfYear;
-            mDay = dayOfMonth;
-            TimePickerDialog tpd = new TimePickerDialog(getActivity(), mTimeSetListener, mHour, mMinute, false);
-            tpd.setTitle("");
-            tpd.show();
-        }
-    };
-
-    private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            mHour = hour;
-            mMinute = minute;
-
-            Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-            long timestamp = d.getTime();
-
-            try {
-                int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(getActivity(), timestamp, flags);
-                mCustomPubDate = timestamp;
-                mPubDateText.setText(formattedDate);
-                mIsCustomPubDate = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
 }
