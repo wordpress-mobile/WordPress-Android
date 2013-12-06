@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -372,7 +373,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
     private void showPostTimeSelectionDialog() {
         final TimePicker timePicker = new TimePicker(getActivity());
-        timePicker.setIs24HourView(true);
+        timePicker.setIs24HourView(DateFormat.is24HourFormat(getActivity()));
         timePicker.setCurrentHour(mHour);
         timePicker.setCurrentMinute(mMinute);
 
