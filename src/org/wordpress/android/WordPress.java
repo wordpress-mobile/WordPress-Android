@@ -1,15 +1,19 @@
 package org.wordpress.android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -46,6 +50,7 @@ import org.wordpress.android.util.WPRestClient;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +76,12 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static BitmapLruCache localImageCache;
-
+    
     private static Context mContext;
 
     public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
-
+    
     @Override
     public void onCreate() {
         versionName = getVersionName();
@@ -113,6 +118,17 @@ public class WordPress extends Application {
 
         super.onCreate();
 
+        /*Enable the ping to the backend
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            this.registerActivityLifecycleCallbacks(new PushNotificationsBackendMonitor());
+        }*/
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
+            registerComponentCallbacks(pnBackendMponitor);
+            registerActivityLifecycleCallbacks(pnBackendMponitor);
+         } 
+        
         //wpDB.copyDatabase();
     }
 
@@ -149,7 +165,6 @@ public class WordPress extends Application {
     }
 
     public static void registerForCloudMessaging(Context ctx) {
-
         if (WordPress.hasValidWPComCredentials(ctx)) {
             String token = null;
             try {
@@ -162,7 +177,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    new WPComXMLRPCApi().registerWPComToken(ctx, token);
+                    new WPComXMLRPCApi().registerWPComToken(ctx, token, true);
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -170,7 +185,7 @@ public class WordPress extends Application {
             }
         }
     }
-
+    
     /**
      * Get versionName from Manifest.xml
      *
@@ -538,5 +553,118 @@ public class WordPress extends Application {
 
             return stack;
         }
+    }
+    
+    /*
+     * Detect when the app goes to the background and come back to the foreground.
+     * 
+     * Turns out that when your app has no more visible UI, a callback is triggered. 
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
+     * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
+     * 
+     * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
+     * 
+     */
+    private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+        
+        private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
+        private Date lastPingDate;
+        
+        boolean background = false;
+
+        @Override
+        public void onConfigurationChanged(final Configuration newConfig) {
+        }
+
+        @Override
+        public void onLowMemory() {
+        }
+
+        @Override
+        public void onTrimMemory(final int level) {
+
+            if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+                // We're in the Background
+                background = true;
+            } else {
+                background = false;
+            }
+ 
+        }
+        
+        private boolean mustPingPushNotificationsBackend() {
+            
+            if (WordPress.hasValidWPComCredentials(mContext) == false)
+                return false;
+            
+            if( background == false )
+                return false;
+            
+            if( lastPingDate == null )
+                return false; //first startup
+
+            Date now = new Date();
+            long nowInMilliseconds = now.getTime();
+            long lastPingDateInMilliseconds = lastPingDate.getTime();
+            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
+            if (secondsPassed >= DEFAULT_TIMEOUT) {         
+                lastPingDate = now;
+                return true;
+            }
+
+            return false;
+        }
+        
+        @Override
+        public void onActivityResumed(Activity arg0) {
+            if(mustPingPushNotificationsBackend()) {
+                //uhhh ohhh!
+                
+                if (WordPress.hasValidWPComCredentials(mContext)) {
+                    String token = null;
+                    try {
+                        // Register for Google Cloud Messaging
+                        GCMRegistrar.checkDevice(mContext);
+                        GCMRegistrar.checkManifest(mContext);
+                        token = GCMRegistrar.getRegistrationId(mContext);
+                        String gcmId = Config.GCM_ID;
+                        if (gcmId == null || token == null || token.equals("") ) {
+                            Log.e("WORDPRESS", "Could not ping the PNs backend, Token or gmcID not found");
+                            return;
+                        } else {
+                            // Send the token to WP.com
+                            new WPComXMLRPCApi().registerWPComToken(mContext, token, false);
+                        }
+                    } catch (Exception e) {
+                        Log.e("WORDPRESS", "Could not ping the PNs backend: " + e.getMessage());
+                    }
+                }
+                
+            }
+        }
+
+        @Override
+        public void onActivityCreated(Activity arg0, Bundle arg1) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity arg0) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity arg0) {
+            lastPingDate = new Date();
+        }
+        @Override
+        public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity arg0) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity arg0) {
+        }    
     }
 }
