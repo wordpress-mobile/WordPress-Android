@@ -104,6 +104,8 @@
         <item name="android:background">@drawable/wp_button_toggle</item>
         <item name="android:minWidth">@dimen/format_bar_height</item>
         <item name="android:minHeight">@dimen/format_bar_height</item>
+        <item name="android:textOn">""</item>
+        <item name="android:textOff">""</item>
     </style>
 
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">

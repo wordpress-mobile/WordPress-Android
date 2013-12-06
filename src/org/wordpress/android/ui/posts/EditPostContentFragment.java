@@ -116,8 +116,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private EditText mTitleEditText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
-    private RelativeLayout mFormatBar;
-    private LinearLayout mPostContentLinearLayout, mPostSettingsLinearLayout;
+    private LinearLayout mFormatBar, mPostContentLinearLayout, mPostSettingsLinearLayout;
     private Button mPostSettingsButton;
     private boolean mIsBackspace;
     private boolean mScrollDetected;
@@ -138,7 +137,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 .inflate(R.layout.fragment_edit_post_content, container, false);
 
 
-        mFormatBar = (RelativeLayout) rootView.findViewById(R.id.format_bar);
+        mFormatBar = (LinearLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
         mTitleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -165,8 +164,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mUnderlineToggleButton = (ToggleButton) rootView.findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) rootView.findViewById(R.id.strike);
         mAddPictureButton = (ImageButton) rootView.findViewById(R.id.addPictureButton);
-        Button linkButton = (Button) rootView.findViewById(R.id.link);
-        Button moreButton = (Button) rootView.findViewById(R.id.more);
+        ImageButton linkButton = (ImageButton) rootView.findViewById(R.id.link);
+        ImageButton moreButton = (ImageButton) rootView.findViewById(R.id.more);
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
