@@ -52,7 +52,7 @@ public class MessageBarUtils {
 
         txtMessageBar.setText(message);
 
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_in);
+        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_in);
         txtMessageBar.setVisibility(View.VISIBLE);
 
         new Handler().postDelayed(new Runnable() {
@@ -93,6 +93,6 @@ public class MessageBarUtils {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_bottom_bar_out, listener);
+        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_out, listener);
     }
 }

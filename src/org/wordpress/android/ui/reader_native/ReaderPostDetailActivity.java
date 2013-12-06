@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -305,16 +307,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (isFullScreen == mIsFullScreen)
             return;
 
-        if (mPost.isWP()) {
-            mLayoutActions.clearAnimation();
-            if (isFullScreen && mLayoutActions.getVisibility() == View.VISIBLE) {
-                ReaderAniUtils.startAnimation(mLayoutActions, R.anim.reader_bottom_bar_out);
-                mLayoutActions.setVisibility(View.GONE);
-            } else if (!isFullScreen && mLayoutActions.getVisibility() != View.VISIBLE) {
-                ReaderAniUtils.startAnimation(mLayoutActions, R.anim.reader_bottom_bar_in);
-                mLayoutActions.setVisibility(View.VISIBLE);
-            }
-        }
+        if (mPost.isWP())
+            animateActionBar(!isFullScreen);
 
         if (isFullScreen) {
             getSupportActionBar().hide();
@@ -323,6 +317,33 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         }
 
         mIsFullScreen = isFullScreen;
+    }
+
+    /*
+     * animate in/out the reblog/comment/like actions
+     */
+    private void animateActionBar(boolean isAnimatingIn) {
+        if (isAnimatingIn && mLayoutActions.getVisibility() == View.VISIBLE)
+            return;
+        if (!isAnimatingIn && mLayoutActions.getVisibility() != View.VISIBLE)
+            return;
+
+        final Animation animation;
+        if (isAnimatingIn) {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        } else {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+        }
+
+        animation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+
+        mLayoutActions.clearAnimation();
+        mLayoutActions.startAnimation(animation);
+        mLayoutActions.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";

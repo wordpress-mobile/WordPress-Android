@@ -17,6 +17,8 @@ import org.wordpress.android.R;
 
 public class ReaderAniUtils {
 
+    public static enum Duration { DEFAULT, SHORT, MEDIUM, LONG }
+
     private ReaderAniUtils() {
         throw new AssertionError();
     }
@@ -25,7 +27,7 @@ public class ReaderAniUtils {
         fadeIn(target, null);
     }
     public static void fadeIn(View target, AnimationListener listener) {
-        startAnimation(target, android.R.anim.fade_in, listener);
+        startAnimation(target, android.R.anim.fade_in, listener, Duration.DEFAULT);
         if (target.getVisibility() != View.VISIBLE)
             target.setVisibility(View.VISIBLE);
     }
@@ -34,7 +36,7 @@ public class ReaderAniUtils {
         fadeOut(target, null);
     }
     public static void fadeOut(View target, AnimationListener listener) {
-        startAnimation(target, android.R.anim.fade_out, listener);
+        startAnimation(target, android.R.anim.fade_out, listener, Duration.DEFAULT);
         if (target.getVisibility() != View.GONE)
             target.setVisibility(View.GONE);
     }
@@ -45,21 +47,6 @@ public class ReaderAniUtils {
     public static void zoomAction(final View target) {
         startAnimation(target, R.anim.reader_zoom_action);
     }
-
-    public static void startAnimation(View target, int aniResId) {
-        startAnimation(target, aniResId, null);
-    }
-    public static void startAnimation(View target, int aniResId, AnimationListener listener) {
-        if (target==null)
-            return;
-        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
-        if (animation==null)
-            return;
-        if (listener!=null)
-            animation.setAnimationListener(listener);
-        target.startAnimation(animation);
-    }
-
 
     public static void flyIn(View target) {
         flyIn(target, null);
@@ -93,7 +80,7 @@ public class ReaderAniUtils {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        startAnimation(target, R.anim.reader_flyout, listener);
+        startAnimation(target, R.anim.reader_flyout, listener, Duration.DEFAULT);
     }
 
     /*
@@ -116,6 +103,48 @@ public class ReaderAniUtils {
             animation.setAnimationListener(listener);
 
         listItem.startAnimation(animation);
+    }
+
+    public static void startAnimation(View target, int aniResId) {
+        startAnimation(target, aniResId, null, Duration.DEFAULT);
+    }
+    public static void startAnimation(View target, int aniResId, Duration duration) {
+        startAnimation(target, aniResId, null, Duration.DEFAULT);
+    }
+    public static void startAnimation(View target, int aniResId, AnimationListener listener) {
+        startAnimation(target, aniResId, listener, Duration.DEFAULT);
+    }
+    public static void startAnimation(View target,
+                                      int aniResId,
+                                      AnimationListener listener,
+                                      Duration duration) {
+        if (target==null)
+            return;
+        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
+        if (animation==null)
+            return;
+        if (listener!=null)
+            animation.setAnimationListener(listener);
+
+        // set duration if we're not using the default (default = duration defined in animation resource)
+        if (duration != Duration.DEFAULT) {
+            Context context = target.getContext();
+            final long durationMillis;
+            switch (duration) {
+                case LONG:
+                    durationMillis = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                    break;
+                case MEDIUM:
+                    durationMillis = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                    break;
+                default :
+                    durationMillis = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+                    break;
+            }
+            animation.setDuration(durationMillis);
+        }
+
+        target.startAnimation(animation);
     }
 
 }
