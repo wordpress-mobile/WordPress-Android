@@ -484,7 +484,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
             startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
-            return;
         }
     }
 

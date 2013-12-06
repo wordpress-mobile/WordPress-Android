@@ -114,7 +114,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    private void forceSelfHostedMode() {
+    public void forceSelfHostedMode() {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
