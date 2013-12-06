@@ -8,36 +8,9 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/layout_likes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <LinearLayout
-            android:id="@+id/layout_liking_avatars"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_avatar_sz_like"
-            android:layout_marginBottom="@dimen/reader_margin_medium"
-            android:layout_marginLeft="@dimen/reader_margin_medium"
-            android:layout_marginTop="@dimen/reader_margin_medium"
-            android:gravity="center"
-            android:orientation="horizontal" />
-
-        <View
-            android:id="@+id/divider_top"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/layout_liking_avatars"
-            android:background="@color/reader_divider_grey" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_likes"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_large"
         android:layout_marginTop="@dimen/reader_margin_large"
@@ -56,6 +29,7 @@
             android:layout_toLeftOf="@+id/text_follow"
             android:layout_toRightOf="@+id/image_avatar"
             android:text="text_author_name"
+            android:maxLines="1"
             android:textSize="@dimen/reader_text_sz_medium" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -67,6 +41,7 @@
             android:layout_toLeftOf="@+id/text_follow"
             android:layout_toRightOf="@+id/image_avatar"
             android:text="text_blog_name"
+            android:maxLines="2"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/reader_text_sz_medium" />
 
@@ -83,8 +58,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_follow"
             style="@style/ReaderTextView.Follow"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/text_blog_name" />
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
@@ -107,11 +81,41 @@
         android:layout_marginTop="@dimen/reader_margin_large"
         android:visibility="invisible" />
 
+    <RelativeLayout
+        android:id="@+id/layout_likes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/webView"
+        android:layout_marginBottom="@dimen/reader_margin_medium"
+        android:layout_marginLeft="@dimen/reader_margin_large"
+        android:layout_marginRight="@dimen/reader_margin_large"
+        android:layout_marginTop="@dimen/reader_margin_medium"
+        android:visibility="gone">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_like_count"
+            style="@style/ReaderTextView.Label.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text_like_count" />
+
+        <!-- liking avatars are inserted into this LinearLayout at runtime -->
+        <LinearLayout
+            android:id="@+id/layout_liking_avatars"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/reader_avatar_sz_like"
+            android:layout_below="@+id/text_like_count"
+            android:layout_marginTop="@dimen/reader_margin_medium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+
+    </RelativeLayout>
+
     <View
         android:id="@+id/divider_comments"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_margin_large"
-        android:layout_below="@+id/webView"
+        android:layout_below="@+id/layout_likes"
         android:layout_marginTop="@dimen/reader_margin_large"
         android:background="@color/grey_extra_light"
         android:visibility="gone" />

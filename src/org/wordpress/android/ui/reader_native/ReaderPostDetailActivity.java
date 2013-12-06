@@ -97,6 +97,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private float mLastMotionY;
     private boolean mIsMoving;
 
+    private static final int MOVE_MIN_DIFF = 6;
+
     private ListView getListView() {
         if (mListView==null) {
             mListView = (ListView) findViewById(android.R.id.list);
@@ -112,6 +114,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 }
             });
 
+            // enable full screen when user scrolls down, disable full screen when user scrolls up
             mListView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -123,11 +126,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                     switch (action) {
                         case MotionEvent.ACTION_MOVE :
                             if (mIsMoving) {
-                                // enable full screen when user scrolls down, disable full screen when user scrolls up
-                                if (yDiff < 0 && !mIsFullScreen) {
+                                if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
                                     setIsFullScreen(true);
                                     return true;
-                                } else if (yDiff > 0 && mIsFullScreen) {
+                                } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
                                     setIsFullScreen(false);
                                     return true;
                                 }
@@ -596,7 +598,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             @Override
             public void run() {
                 final ImageView imgBtnLike = (ImageView) findViewById(R.id.image_like_btn);
-                final ViewGroup layoutLikingAvatars = (ViewGroup) findViewById(R.id.layout_liking_avatars);
+                final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+                final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
                 final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
@@ -614,15 +617,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 mHandler.post(new Runnable() {
                     public void run() {
                         // set the like count text
-                        /*if (mPost.isLikedByCurrentUser) {
+                        if (mPost.isLikedByCurrentUser) {
                             if (mPost.numLikes==1) {
                                 txtLikeCount.setText(R.string.reader_likes_only_you);
                             } else {
-                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one_short) : getString(R.string.reader_likes_you_and_multi_short, mPost.numLikes-1));
+                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes-1));
                             }
                         } else {
                             txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
-                        }*/
+                        }
 
                         imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
@@ -665,10 +668,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikes.getVisibility()!=View.VISIBLE) {
-                            ReaderAniUtils.startAnimation(mLayoutLikes, R.anim.reader_top_bar_in);
+                        if (mLayoutLikes.getVisibility()!=View.VISIBLE)
                             mLayoutLikes.setVisibility(View.VISIBLE);
-                        }
                     }
                 });
             }
