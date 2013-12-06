@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#FF464646</item>
-    </style>
-
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
         <item name="android:singleLine">true</item>
         <item name="android:shadowColor">#BB000000</item>

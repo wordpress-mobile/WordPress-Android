@@ -18,10 +18,6 @@
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
-        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
-        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
-        <item name="android:editTextStyle">@style/WordPressEditTextStyle</item>
-        <item name="android:checkboxStyle">@style/WordPressCheckBoxStyle</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
         
         <item name="android:activatedBackgroundIndicator">@drawable/list_bg_selector</item>
