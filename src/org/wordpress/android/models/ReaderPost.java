@@ -12,7 +12,10 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -29,6 +32,7 @@ public class ReaderPost {
     private String blogName;
     private String blogUrl;
     private String postAvatar;
+    private String tags;          // comma-separated list of tags
 
     public long timestamp;        // used for sorting
     public String published;
@@ -179,6 +183,23 @@ public class ReaderPost {
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt())
             post.title = extractTitle(post.excerpt, 50);
+
+        // extract comma-separated list of tags
+        JSONObject jsonTags = json.optJSONObject("tags");
+        if (jsonTags != null) {
+            StringBuilder sbTags = new StringBuilder();
+            Iterator<String> it = jsonTags.keys();
+            boolean isFirst = true;
+            while (it.hasNext()) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sbTags.append(",");
+                }
+                sbTags.append(it.next());
+            }
+            post.setTags(sbTags.toString());
+        }
 
         return post;
     }
@@ -416,6 +437,31 @@ public class ReaderPost {
     }
     public void setPublished(String published) {
         this.published = StringUtils.notNullStr(published);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    /*
+     * comma-separated tags
+     */
+    public String getTags() {
+        return StringUtils.notNullStr(tags);
+    }
+    public void setTags(String tags) {
+        this.tags = StringUtils.notNullStr(tags);
+    }
+    public boolean hasTags() {
+        return !TextUtils.isEmpty(tags);
+    }
+
+    public List<String> getTagList() {
+        return Arrays.asList(getTags().split(","));
+    }
+    public String getFirstTag() {
+        List<String> tags = getTagList();
+        if (tags == null || tags.size() == 0)
+            return "";
+        return tags.get(0);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -661,9 +661,6 @@
 
     <!-- menu text-->
     <string name="reader_menu_tags">Tags</string>
-    <string name="reader_menu_log">View Log</string>
-    <string name="reader_menu_refresh">Refresh</string>
-    <string name="reader_menu_signout">Sign Out</string>
 
     <!-- button text -->
     <string name="reader_btn_yes">Yes</string>
@@ -726,7 +723,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the plus icon to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
     <string name="reader_empty_posts_liked">You have not liked any posts.</string>
 
     <!-- NUX strings -->

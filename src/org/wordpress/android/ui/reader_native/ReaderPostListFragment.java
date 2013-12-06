@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader_native;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -183,13 +181,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         return (displayMetrics.densityDpi >= DisplayMetrics.DENSITY_HIGH);
     }
 
-    @SuppressLint("NewApi")
-    private void initListViewOverscroll(ListView listView) {
-        // setOverScrollMode requires API 9
-        if (listView!=null && Build.VERSION.SDK_INT >= 9)
-            listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final boolean useGridView = useGridView();
@@ -269,7 +260,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
                 listView.addHeaderView(header, null, false);
-                initListViewOverscroll(listView);
+                listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -309,8 +300,15 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
         int title, description = -1;
         int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
-        ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
-        String tagId = tag.getStringIdFromEndpoint();
+
+        final String tagId;
+        if (tagIndex > -1) {
+            ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+            tagId = tag.getStringIdFromEndpoint();
+        } else {
+            tagId = "";
+        }
+
         if (tagId.equals("following")) {
             title = R.string.reader_empty_followed_blogs_title;
             description = R.string.reader_empty_followed_blogs_description;
@@ -381,6 +379,21 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     };
 
     /*
+     * called by post adapter when user taps a single tag
+     */
+    ReaderActions.TagClickListener mTagListener = new ReaderActions.TagClickListener() {
+        @Override
+        public void onTagClick(String tagName) {
+            if (ReaderTagTable.tagExists(tagName)) {
+                setCurrentTag(tagName);
+                return;
+            }
+            // show tag editor if this tag doesn't exist yet
+            ReaderActivityLauncher.showReaderTagsForResult(getActivity(), tagName);
+        }
+    };
+
+    /*
      * called by post adapter when user requests to reblog a post
      */
     ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
@@ -395,6 +408,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (mPostAdapter==null)
             mPostAdapter = new ReaderPostAdapter(getActivity(),
                                                  useGridView(),
+                                                 mTagListener,
                                                  mReblogListener,
                                                  mDataLoadedListener,
                                                  mDataRequestedListener);
@@ -604,7 +618,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * make sure the passed tag is the one selected in the actionbar
      */
-    @SuppressLint("NewApi")
     private void selectTagInActionBar(String tagName) {
         if (!hasActivity())
             return;
@@ -624,7 +637,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         actionBar.setSelectedNavigationItem(position);
     }
 
-    @SuppressLint("NewApi")
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
         if (actionBar==null)
@@ -661,9 +673,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         return mActionBarAdapter;
     }
 
-    private boolean hasActionBarAdapter() {
-        return (mActionBarAdapter != null);
-    }
     /*
      * refresh the list of tags shown in the ActionBar
      */

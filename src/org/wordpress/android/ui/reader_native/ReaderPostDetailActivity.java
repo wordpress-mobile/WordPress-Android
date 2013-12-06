@@ -199,7 +199,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
         if (isTranslucentActionBarEnabled)
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+            NativeReaderActivity.enableTranslucentActionBar(this);
 
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);

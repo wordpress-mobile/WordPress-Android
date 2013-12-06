@@ -40,7 +40,8 @@ public class ReaderPostTable {
           + "is_reblogged,"         // 21
           + "is_external,"          // 22
           + "is_private,"           // 23
-          + "is_videopress";        // 24
+          + "is_videopress,"        // 24
+          + "tag_list";             // 25
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -69,6 +70,7 @@ public class ReaderPostTable {
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
+                + " tag_list            TEXT,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
@@ -255,7 +257,7 @@ public class ReaderPostTable {
 
         SQLiteStatement stmtPosts = db.compileStatement("INSERT OR REPLACE INTO tbl_posts ("
                                                         + COLUMN_NAMES
-                                                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)");
+                                                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)");
 
         SQLiteStatement stmtTags = db.compileStatement("INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
@@ -264,7 +266,7 @@ public class ReaderPostTable {
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
-                stmtPosts.bindString(3,  post.getPseudoId());
+                stmtPosts.bindString(3, post.getPseudoId());
                 stmtPosts.bindString(4,  post.getAuthorName());
                 stmtPosts.bindString(5,  post.getTitle());
                 stmtPosts.bindString(6,  post.getText());
@@ -275,9 +277,9 @@ public class ReaderPostTable {
                 stmtPosts.bindString(11, post.getFeaturedImage());
                 stmtPosts.bindString(12, post.getFeaturedVideo());
                 stmtPosts.bindString(13, post.getPostAvatar());
-                stmtPosts.bindLong  (14, post.timestamp);
+                stmtPosts.bindLong(14, post.timestamp);
                 stmtPosts.bindString(15, post.getPublished());
-                stmtPosts.bindLong  (16, post.numReplies);
+                stmtPosts.bindLong(16, post.numReplies);
                 stmtPosts.bindLong  (17, post.numLikes);
                 stmtPosts.bindLong  (18, SqlUtils.boolToSql(post.isLikedByCurrentUser));
                 stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
@@ -286,6 +288,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindString(25, post.getTags());
                 stmtPosts.execute();
                 stmtPosts.clearBindings();
             }
@@ -376,6 +379,7 @@ public class ReaderPostTable {
     private static int COL_IS_EXTERNAL;
     private static int COL_IS_PRIVATE;
     private static int COL_IS_VIDEOPRESS;
+    private static int COL_TAGLIST;
 
     /*
      * should be called whenever a cursor is returned above so that column indexes are known - this avoids
@@ -406,6 +410,7 @@ public class ReaderPostTable {
         COL_IS_EXTERNAL = c.getColumnIndex("is_external");
         COL_IS_PRIVATE = c.getColumnIndex("is_private");
         COL_IS_VIDEOPRESS = c.getColumnIndex("is_videopress");
+        COL_TAGLIST = c.getColumnIndex("tag_list");
     }
 
     /*
@@ -446,6 +451,8 @@ public class ReaderPostTable {
         post.isExternal = SqlUtils.sqlToBool(c.getInt(COL_IS_EXTERNAL));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(COL_IS_PRIVATE));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(COL_IS_VIDEOPRESS));
+
+        post.setTags(c.getString(COL_TAGLIST));
 
         return post;
     }
