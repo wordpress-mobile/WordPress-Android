@@ -664,7 +664,6 @@
     <string name="reader_menu_log">View Log</string>
     <string name="reader_menu_refresh">Refresh</string>
     <string name="reader_menu_signout">Sign Out</string>
-    <string name="reader_menu_about">About</string>
 
     <!-- button text -->
     <string name="reader_btn_yes">Yes</string>
@@ -693,13 +692,7 @@
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
 
-    <!-- like/comment counts in post list -->
-    <string name="reader_label_like_count_singular">1 like</string>
-    <string name="reader_label_like_count_plural">%d likes</string>
-    <string name="reader_label_comment_count_singular">1 comment</string>
-    <string name="reader_label_comment_count_plural">%d comments</string>
-
-    <!-- like counts in post detail and liking users activity-->
+    <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%d people like this</string>
     <string name="reader_likes_only_you">You like this</string>

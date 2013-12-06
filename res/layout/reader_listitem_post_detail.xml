@@ -9,9 +9,36 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/layout_likes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <!-- liking avatars are inserted into this LinearLayout at runtime -->
+        <LinearLayout
+            android:id="@+id/layout_liking_avatars"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/reader_avatar_sz_like"
+            android:layout_marginBottom="@dimen/reader_margin_medium"
+            android:layout_marginLeft="@dimen/reader_margin_medium"
+            android:layout_marginTop="@dimen/reader_margin_medium"
+            android:gravity="center"
+            android:orientation="horizontal" />
+
+        <View
+            android:id="@+id/divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/layout_liking_avatars"
+            android:background="@color/reader_divider_blue" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/layout_detail_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_likes"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_large"
         android:layout_marginTop="@dimen/reader_margin_large"
@@ -59,29 +86,20 @@
             android:drawableLeft="@drawable/note_icon_follow"
             android:paddingBottom="@dimen/reader_margin_small"
             android:paddingLeft="@dimen/reader_margin_medium"
+            android:paddingRight="@dimen/reader_margin_small"
             android:paddingTop="@dimen/reader_margin_small"
             android:text="text_follow"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/reader_text_sz_medium" />
 
     </RelativeLayout>
 
-    <!-- liking avatars are inserted into this LinearLayout at runtime -->
-    <LinearLayout
-        android:id="@+id/layout_liking_avatars"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_avatar_sz_like"
-        android:layout_below="@+id/layout_detail_title"
-        android:layout_marginTop="@dimen/reader_margin_large"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone" />
 
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_liking_avatars"
+        android:layout_below="@+id/layout_detail_title"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_large"
         android:layout_marginTop="@dimen/reader_margin_large"
