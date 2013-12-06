@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -45,6 +44,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader_native.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -219,7 +219,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             getListView().addHeaderView(headerFake, null, false);
         }
 
-
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
 
@@ -283,7 +282,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_browse :
-                ReaderActivityLauncher.openUrl(this, mPost.getUrl());
+                ReaderActivityLauncher.openUrl(this, mPost.getUrl(), OpenUrlType.EXTERNAL);
                 return true;
             case R.id.menu_share :
                 sharePage();
