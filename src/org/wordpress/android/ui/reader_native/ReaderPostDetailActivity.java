@@ -1044,13 +1044,19 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         TextView txtAuthorName;
         TextView txtDate;
         TextView txtFollow;
+
         WebView webView;
+
         ImageView imgBtnReblog;
         ImageView imgBtnComment;
         ImageView imgBtnLike;
+
         WPNetworkImageView imgAvatar;
+        WPNetworkImageView imgFeatured;
 
         String postHtml;
+        String featuredImageUrl;
+        boolean showFeaturedImage;
 
         @Override
         protected void onPreExecute() {
@@ -1070,6 +1076,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             webView = (WebView) findViewById(R.id.webView);
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
+            imgFeatured = (WPNetworkImageView) findViewById(R.id.image_featured);
 
             imgBtnReblog = (ImageView) mLayoutActions.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutActions.findViewById(R.id.image_comment_btn);
@@ -1081,6 +1088,19 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 return false;
 
             postHtml = getPostHtml(mPost);
+
+            // if the post has a featured image that's not in the content, show it between the
+            // post's title and its content (but skip mshots)
+            if (mPost.hasFeaturedImage()
+                    && !mPost.getText().contains(mPost.getFeaturedImage())
+                    && !mPost.getFeaturedImage().contains("/mshots/"))
+            {
+                showFeaturedImage = true;
+                int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+                featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
+            } else {
+                showFeaturedImage = false;
+            }
 
             return true;
         }
@@ -1096,6 +1116,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 txtBlogName.setVisibility(View.GONE);
                 txtDate.setVisibility(View.GONE);
                 imgAvatar.setImageResource(R.drawable.ic_error);
+                imgFeatured.setVisibility(View.GONE);
                 return;
             }
 
@@ -1126,6 +1147,13 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
+            }
+
+            if (showFeaturedImage) {
+                imgFeatured.setVisibility(View.VISIBLE);
+                imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
+            } else {
+                imgFeatured.setVisibility(View.GONE);
             }
 
             // enable reblogging wp posts
