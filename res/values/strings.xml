@@ -55,7 +55,7 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="selected_categories">Selected categories:</string>
-    <string name="publish">Publish? </string>
+    <string name="publish">Publish</string>
     <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="manage_blogs">Manage blogs</string>
@@ -133,6 +133,8 @@
     <string name="media_gallery_type_circles">Circles</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
     <string name="media_gallery_edit">Edit Gallery</string>
+    <string name="pick_photo">Select photo</string>
+    <string name="pick_video">Select video</string>
 
 
     <!-- Upload Media -->
@@ -198,6 +200,7 @@
     <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
     <string name="pages_empty_list">No Pages Yet. Why not create one?</string>
     <string name="page_id">Page</string>
+    <string name="page_settings">Page Settings</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -218,7 +221,8 @@
     <string name="out_of_memory">Device out of memory.</string>
     <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
-    <string name="download">Downloading Image</string>
+    <string name="download">Downloading image</string>
+    <string name="post_settings">Post Settings</string>
 
     <!-- add comment view -->
     <string name="add_comment_enter">Enter comment:</string>
@@ -273,7 +277,7 @@
 
     <!-- page actions -->
     <string name="page_actions">Page Actions</string>
-    <string name="preview_page">View Page</string>
+    <string name="preview_page">Preview Page</string>
     <string name="delete_page">Delete Page</string>
     <string name="page_deleted">Page Deleted Successfully</string>
     <string name="delete_sure_page">Are you sure you want to delete the page</string>
@@ -281,7 +285,7 @@
 
     <!-- post actions -->
     <string name="post_actions">Post Actions</string>
-    <string name="preview_post">View Post</string>
+    <string name="preview_post">Preview Post</string>
     <string name="delete_post">Delete Post</string>
     <string name="post_deleted">Post Deleted Successfully</string>
     <string name="comment_added">Comment Added Successfully</string>
@@ -510,6 +514,10 @@
     <string name="edit">Edit</string>
     <string name="post_format">Post Format</string>
     <string name="log_in">Sign In</string>
+
+    <!-- post date selection -->
+    <string name="select_date">Select date</string>
+    <string name="select_time">Select time</string>
 
     <!-- notifications -->
     <string name="notifications">Notifications</string>

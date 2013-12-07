@@ -536,20 +536,16 @@ public class PostsListFragment extends ListFragment {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-
+                Intent i2 = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
+                i2.putExtra(EditPostActivity.EXTRA_POSTID, mSelectedID);
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra("isPage", true);
+                    i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage)
-                        i2.putExtra("isPage", true);
-                    i2.putExtra("localDraft", true);
+                        i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
 
-                startActivityForResult(i2, 0);
+                getActivity().startActivityForResult(i2, PostsActivity.ACTIVITY_EDIT_POST);
                 return true;
             case MENU_ITEM_DELETE:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);
