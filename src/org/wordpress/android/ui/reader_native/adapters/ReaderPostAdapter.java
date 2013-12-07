@@ -463,13 +463,13 @@ public class ReaderPostAdapter extends BaseAdapter {
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-calc data (avatar URLs, featured image URLs, and pubDates) in each post - these
+            // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
             // values are all cached by the post after the first time they're computed, so calling
             // these getters ensures the values are immediately available when called from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                // not used directly by getView(), but is used by post.getSource() which getView() uses
+                post.getFirstTag();
                 post.getDatePublished();
             }
 

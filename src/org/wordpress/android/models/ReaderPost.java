@@ -457,12 +457,6 @@ public class ReaderPost {
     public List<String> getTagList() {
         return Arrays.asList(getTags().split(","));
     }
-    public String getFirstTag() {
-        List<String> tags = getTagList();
-        if (tags == null || tags.size() == 0)
-            return "";
-        return tags.get(0);
-    }
 
     // --------------------------------------------------------------------------------------------
 
@@ -560,4 +554,18 @@ public class ReaderPost {
             dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
         return dtPublished;
     }
+
+    private transient String firstTag;
+    public String getFirstTag() {
+        if (firstTag == null) {
+            List<String> tags = getTagList();
+            if (tags != null && tags.size() > 0) {
+                firstTag = tags.get(0);
+            } else {
+                firstTag = "";
+            }
+        }
+        return firstTag;
+    }
+
 }
