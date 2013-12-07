@@ -66,7 +66,8 @@ public class ReaderUserListActivity extends FragmentActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+                        //int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+                        int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
                         boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
                         final String title;
                         if (isLikedByCurrentUser) {

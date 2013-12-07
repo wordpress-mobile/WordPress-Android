@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/reader_margin_large"
         android:layout_toRightOf="@+id/image_avatar"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="1"
         android:text="text_blog_name"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/reader_text_sz_medium" />
@@ -112,13 +112,13 @@
 
         <ImageView
             android:id="@+id/image_reblog_btn"
-            style="@style/ReaderImageView.ButtonIcon"
+            style="@style/ReaderImageView.ButtonIcon.Small"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_reblog" />
 
         <ImageView
             android:id="@+id/image_comment_btn"
-            style="@style/ReaderImageView.ButtonIcon"
+            style="@style/ReaderImageView.ButtonIcon.Small"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_comment" />
 
@@ -132,7 +132,7 @@
 
         <ImageView
             android:id="@+id/image_like_btn"
-            style="@style/ReaderImageView.ButtonIcon"
+            style="@style/ReaderImageView.ButtonIcon.Small"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_like" />
 

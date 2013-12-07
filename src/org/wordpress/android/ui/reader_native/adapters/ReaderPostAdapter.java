@@ -67,7 +67,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
-                             boolean isGridView,
                              ReaderActions.TagClickListener tagListener,
                              ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
@@ -85,15 +84,9 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
-        int dividerSize = context.getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
 
-        // determine size to use when requesting images via photon - full width unless we're using
-        // a grid, in which case half-width since the grid shows two columns
-        if (isGridView) {
-            mPhotonWidth = (displayWidth / 2) - dividerSize; // dividerSize = item spacing
-        } else {
-            mPhotonWidth = displayWidth - (dividerSize * 2); // dividerSize*2 since list has left/right margin
-        }
+        int listMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+        mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // when animating rows in, start from this y-position near the bottom using medium animation duration

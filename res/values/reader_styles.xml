@@ -146,7 +146,7 @@
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
         <item name="android:gravity">center</item>
         <item name="android:drawableLeft">@drawable/note_icon_follow</item>
-        <item name="android:background">@color/grey_light</item>
+        <item name="android:background">@color/grey_extra_light</item>
         <item name="android:textColor">@color/reader_hyperlink</item>
         <item name="android:paddingLeft">@dimen/reader_margin_small</item>
         <item name="android:paddingTop">@dimen/reader_margin_small</item>
@@ -250,8 +250,12 @@
         <item name="android:layout_height">@dimen/reader_avatar_sz_large</item>
     </style>
     <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/reader_button_icon_sz</item>
-        <item name="android:layout_height">@dimen/reader_button_icon_sz</item>
+        <item name="android:layout_width">@dimen/reader_button_icon</item>
+        <item name="android:layout_height">@dimen/reader_button_icon</item>
+    </style>
+    <style name="ReaderImageView.ButtonIcon.Small" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/reader_button_icon_small</item>
+        <item name="android:layout_height">@dimen/reader_button_icon_small</item>
     </style>
 
     <!-- progress bars -->

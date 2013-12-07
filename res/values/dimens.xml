@@ -32,13 +32,17 @@
     <!--
         native reader dimens
     -->
-    <!-- all margins/padding in reader layouts rely on these values -->
     <dimen name="reader_margin_extra_small">2dp</dimen>
     <dimen name="reader_margin_small">4dp</dimen>
     <dimen name="reader_margin_medium">8dp</dimen>
     <dimen name="reader_margin_large">12dp</dimen>
 
-    <dimen name="actionbar_refresh_margin">12dp</dimen>
+    <!-- left/right margin for posts in both list and detail views -->
+    <dimen name="reader_list_margin_normal">8dp</dimen>
+    <dimen name="reader_list_margin_landscape">48dp</dimen>
+    <dimen name="reader_list_margin_tablet">48dp</dimen>
+    <dimen name="reader_list_margin_landscape_tablet">96dp</dimen>
+    <dimen name="reader_list_margin">@dimen/reader_list_margin_normal</dimen>
 
     <dimen name="reader_text_sz_small">12sp</dimen>
     <dimen name="reader_text_sz_medium">14sp</dimen>
@@ -50,11 +54,12 @@
     <dimen name="reader_avatar_sz_like">28dp</dimen>
     <dimen name="reader_avatar_sz_large">96dp</dimen>
 
-    <dimen name="reader_button_icon_sz">48dp</dimen>
+    <dimen name="reader_button_icon">48dp</dimen>
+    <dimen name="reader_button_icon_small">40dp</dimen>
 
     <dimen name="reader_featured_image_height">220dp</dimen>
-    <dimen name="reader_divider_size">@dimen/reader_margin_medium</dimen>
     <dimen name="reader_video_overlay_size">48dp</dimen>
+    <dimen name="actionbar_refresh_margin">12dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">@dimen/reader_avatar_sz_small</dimen>
