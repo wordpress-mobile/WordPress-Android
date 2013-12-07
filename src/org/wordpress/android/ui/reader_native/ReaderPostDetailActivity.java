@@ -163,10 +163,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    // show divider between post detail and comments, and footer below comments, when
-                    // comments exist
-                    final View commentDivider = findViewById(R.id.divider_comments);
-                    commentDivider.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                    // show footer below comments when comments exist
                     mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
                 }
             };

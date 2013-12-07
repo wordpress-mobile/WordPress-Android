@@ -5,7 +5,8 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/reader_margin_large">
 
     <RelativeLayout
         android:id="@+id/layout_detail_header"
@@ -112,14 +113,5 @@
             android:orientation="horizontal" />
 
     </RelativeLayout>
-
-    <View
-        android:id="@+id/divider_comments"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_margin_large"
-        android:layout_below="@+id/layout_likes"
-        android:layout_marginTop="@dimen/reader_margin_large"
-        android:background="@color/grey_extra_light"
-        android:visibility="gone" />
 
 </RelativeLayout>

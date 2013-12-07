@@ -52,7 +52,7 @@
     <dimen name="reader_text_sz_extra_large">22sp</dimen>
 
     <dimen name="reader_avatar_sz_medium">48dp</dimen>
-    <dimen name="reader_avatar_sz_small">38dp</dimen>
+    <dimen name="reader_avatar_sz_small">36dp</dimen>
     <dimen name="reader_avatar_sz_like">28dp</dimen>
     <dimen name="reader_avatar_sz_large">96dp</dimen>
 

@@ -228,15 +228,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(post.getTitle());
+        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-
-        // blog name needs to be moved down when the follow textView is hidden (which it will be
-        // for non-WP posts)
-        if (post.isWP()) {
-            holder.txtBlogName.setText(post.getBlogName());
-        } else {
-            holder.txtBlogName.setText("\n" + post.getBlogName());
-        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);

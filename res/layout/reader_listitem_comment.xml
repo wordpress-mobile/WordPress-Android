@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/grey_extra_light"
     android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="@dimen/reader_margin_medium"
+    android:paddingBottom="@dimen/reader_margin_small"
     android:paddingLeft="@dimen/reader_list_margin"
     android:paddingRight="@dimen/reader_list_margin"
-    android:paddingTop="@dimen/reader_margin_medium">
+    android:paddingTop="@dimen/reader_margin_large">
 
     <!-- spacer width and visibility set at run-time based on comment indent level -->
     <View
@@ -20,6 +20,7 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
         style="@style/ReaderImageView.Avatar.Small"
+        android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_small"
         android:layout_toRightOf="@+id/spacer" />
 
