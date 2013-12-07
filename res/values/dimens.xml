@@ -42,6 +42,8 @@
     <dimen name="reader_list_margin_landscape">48dp</dimen>
     <dimen name="reader_list_margin_tablet">48dp</dimen>
     <dimen name="reader_list_margin_landscape_tablet">96dp</dimen>
+    <dimen name="reader_list_margin_tablet_large">96dp</dimen>
+    <dimen name="reader_list_margin_landscape_tablet_large">192dp</dimen>
     <dimen name="reader_list_margin">@dimen/reader_list_margin_normal</dimen>
 
     <dimen name="reader_text_sz_small">12sp</dimen>
