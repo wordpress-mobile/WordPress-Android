@@ -14,7 +14,6 @@
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_title"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/reader_margin_large"
         android:paddingRight="@dimen/reader_margin_medium"

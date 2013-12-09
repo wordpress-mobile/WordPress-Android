@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    landscape tablet version of post list
+    landscape two-column version of post list
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:staggered="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/reader_divider_grey">
 
     <org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/reader_divider_grey"
-        staggered:drawSelectorOnTop="false"
+        staggered:drawSelectorOnTop="true"
         staggered:itemMargin="@dimen/reader_divider_size"
         staggered:numColumns="2" />
 
@@ -33,7 +33,17 @@
         android:text="@string/reader_empty_posts_in_tag"
         android:visibility="gone" />
 
-    <include android:id="@+id/empty_view"
-        layout="@layout/reader_empty_view"/>
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/reader_empty_view" />
+
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/ReaderProgressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/reader_margin_medium" />
 
 </RelativeLayout>

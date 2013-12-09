@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,6 +26,8 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.MediaUploadService;
+
+import java.util.List;
 
 /**
  * An invisible fragment in charge of launching the right intents to camera, video, and image library.
@@ -132,8 +132,20 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             
         }
     }
-    
-    private String getRealPathFromURI(Uri contentUri) {
+
+    private String getRealPathFromURI(Uri uri) {
+        String path;
+        if ("content".equals(uri.getScheme())) {
+            path = getRealPathFromContentURI(uri);
+        } else if ("file".equals(uri.getScheme())) {
+            path = uri.getPath();
+        } else {
+            path = uri.toString();
+        }
+        return path;
+    }
+
+    private String getRealPathFromContentURI(Uri contentUri) {
         if (contentUri == null)
             return null;
         
@@ -213,7 +225,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
         startMediaUploadService();
     }
-    
+
     public void uploadList(List<Uri> uriList) {
         String path;
         for (Uri uri : uriList) {
@@ -221,5 +233,4 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             queueFileForUpload(path);
         }
     }
-    
 }

@@ -27,7 +27,6 @@
 
         <TextView
             android:id="@+id/media_listitem_details_caption"
-            style="@style/WordPressTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
