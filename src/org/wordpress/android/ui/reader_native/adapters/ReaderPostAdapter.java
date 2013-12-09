@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,14 +57,12 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
-    private ReaderActions.TagClickListener mTagListener;
 
     private boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
-                             ReaderActions.TagClickListener tagListener,
                              ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
@@ -73,7 +70,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         mInflater = LayoutInflater.from(context);
 
-        mTagListener = tagListener;
         mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
@@ -204,7 +200,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtBlogName = (TextView) convertView.findViewById(R.id.text_blog_name);
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
             holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-            holder.txtTag = (TextView) convertView.findViewById(R.id.text_tag);
 
             holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
             holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
@@ -249,7 +244,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
         }
 
-        final String firstTag = post.getFirstTag();
+        /*final String firstTag = post.getFirstTag();
         if (!TextUtils.isEmpty(firstTag)) {
             holder.txtTag.setVisibility(View.VISIBLE);
             holder.txtTag.setText(firstTag);
@@ -263,7 +258,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             holder.txtTag.setVisibility(View.GONE);
             holder.txtTag.setOnClickListener(null);
-        }
+        }*/
 
         // likes, comments & reblogging
         if (post.isWP()) {
@@ -367,7 +362,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         TextView txtBlogName;
         TextView txtDate;
         TextView txtFollow;
-        TextView txtTag;
 
         TextView txtLikeCount;
         TextView txtCommentCount;
@@ -460,7 +454,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                post.getFirstTag();
+                //post.getFirstTag();
                 post.getDatePublished();
             }
 

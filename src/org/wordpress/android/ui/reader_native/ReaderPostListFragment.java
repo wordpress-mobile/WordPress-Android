@@ -295,21 +295,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     };
 
     /*
-     * called by post adapter when user taps a single tag
-     */
-    ReaderActions.TagClickListener mTagListener = new ReaderActions.TagClickListener() {
-        @Override
-        public void onTagClick(String tagName) {
-            if (ReaderTagTable.tagExists(tagName)) {
-                setCurrentTag(tagName);
-                return;
-            }
-            // show tag editor if this tag doesn't exist yet
-            ReaderActivityLauncher.showReaderTagsForResult(getActivity(), tagName);
-        }
-    };
-
-    /*
      * called by post adapter when user requests to reblog a post
      */
     ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
@@ -323,7 +308,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter==null)
             mPostAdapter = new ReaderPostAdapter(getActivity(),
-                                                 mTagListener,
                                                  mReblogListener,
                                                  mDataLoadedListener,
                                                  mDataRequestedListener);

@@ -68,10 +68,4 @@ public class ReaderActions {
         public void onRequestReblog(ReaderPost post);
     }
 
-    /*
-     * used by post adapter when user taps a single tag
-     */
-    public interface TagClickListener {
-        public void onTagClick(String tagName);
-    }
 }
