@@ -46,9 +46,7 @@ import org.wordpress.android.WordPress;
  */
 public class StatsCursorTreeFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
 
-    private static final int MAX_ITEMS = 10;
     private static final int LOADER_URI_GROUP_INDEX = -1;
-    
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
     private static final String ARGS_CHILDREN_URI = "ARGS_CHILDREN_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
@@ -175,8 +173,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
 
             // start loaders on children
-            for (int i = 0; i < Math.min(data.getCount(), MAX_ITEMS); i++) {
-                data.moveToPosition(i);
+            while (data.moveToNext()) {
+                //data.moveToPosition(i);
                 String groupId = data.getString(data.getColumnIndex("groupId"));
                 long date = data.getLong(data.getColumnIndex("date"));
 
@@ -234,7 +232,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         mLinearLayout.removeAllViews();
         
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int groupCount = Math.min(mAdapter.getGroupCount(), MAX_ITEMS);
+        int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
             
             boolean isExpanded = mGroupIdToExpandedMap.get(i);

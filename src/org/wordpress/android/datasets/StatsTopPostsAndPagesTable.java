@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import org.wordpress.android.models.StatsTopPostsAndPages;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 /**
@@ -79,7 +80,7 @@ public class StatsTopPostsAndPagesTable extends SQLTable {
 
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String sort = NAME + "." + Columns.VIEWS + " DESC, " + NAME + "." + Columns.TITLE + " ASC";
+        String sort = NAME + "." + Columns.VIEWS + " DESC, " + NAME + "." + Columns.TITLE + " ASC LIMIT " + StatsActivity.STATS_GROUP_MAX_ITEMS;
         
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
