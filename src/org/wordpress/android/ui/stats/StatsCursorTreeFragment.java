@@ -174,7 +174,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
             // start loaders on children
             while (data.moveToNext()) {
-                //data.moveToPosition(i);
                 String groupId = data.getString(data.getColumnIndex("groupId"));
                 long date = data.getLong(data.getColumnIndex("date"));
 
