@@ -1,8 +1,10 @@
 package org.wordpress.android.datasets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.ReaderLog;
@@ -50,31 +52,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         getDatabase().reset(db);
     }
 
-    /*
-     * used during development to copy database to SD card so we can access it via DDMS
-     * MUST be commented out in release
-     */
-    /*public static void copyDatabase() {
-        String copyFrom = getReadableDb().getPath();
-        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DB_NAME;
-
-        try {
-            InputStream input = new FileInputStream(copyFrom);
-            OutputStream output = new FileOutputStream(copyTo);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = input.read(buffer)) > 0)
-                output.write(buffer, 0, length);
-
-            output.flush();
-            output.close();
-            input.close();
-        } catch (IOException e) {
-            ReaderLog.e(e);
-        }
-    }*/
-
     public ReaderDatabase(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -89,6 +66,14 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         // for now just reset the db when upgrading, future versions may want to avoid this
         // and modify table structures, etc., on upgrade while preserving data
         ReaderLog.i("Upgrading database from version " + oldVersion + " to version " + newVersion);
+        reset(db);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        super.onDowngrade(db, oldVersion, newVersion);
+        ReaderLog.i("Downgrading database from version " + oldVersion + " to version " + newVersion);
         reset(db);
     }
 

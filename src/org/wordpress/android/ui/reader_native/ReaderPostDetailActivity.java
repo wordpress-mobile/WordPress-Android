@@ -1114,6 +1114,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 return;
             }
 
+            // set the activity title to the post's title
+            ReaderPostDetailActivity.this.setTitle(mPost.getTitle());
+
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
