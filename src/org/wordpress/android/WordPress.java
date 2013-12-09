@@ -592,10 +592,12 @@ public class WordPress extends Application {
             if (WordPress.hasValidWPComCredentials(mContext) == false)
                 return false;
             
-            if( background == false )
+            if (background == false)
                 return false;
             
-            if( lastPingDate == null )
+            background = false;
+            
+            if (lastPingDate == null)
                 return false; //first startup
 
             Date now = new Date();
