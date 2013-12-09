@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -59,6 +60,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
 
+    private static final String LIST_STATE = "list_state";
+    private Parcelable mListState = null;
+
     protected interface OnFirstVisibleItemChangeListener {
         void onFirstVisibleItemChanged(int firstVisibleItem);
     }
@@ -99,6 +103,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (savedInstanceState!=null) {
             mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
+            mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
 
         // get list of tags from server if it hasn't already been done this session
@@ -118,15 +123,23 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnFirstVisibleItemChangeListener");
         }
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
+
+        // retain list state so we can return to this position
+        // http://stackoverflow.com/a/5694441/1673548
+        if (hasActivity()) {
+            final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
+            if (listView.getFirstVisiblePosition() > 0)
+                outState.putParcelable(LIST_STATE, listView.onSaveInstanceState());
+        }
     }
 
     @Override
@@ -273,6 +286,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
+                // restore listView state - this returns to the previously scrolled-to item
+                if (mListState != null) {
+                    final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
+                    listView.onRestoreInstanceState(mListState);
+                    mListState = null;
+                }
             }
         }
     };
