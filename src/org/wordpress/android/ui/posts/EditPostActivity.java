@@ -27,6 +27,7 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -34,9 +35,11 @@ import org.wordpress.android.util.WPViewPager;
 
 public class EditPostActivity extends SherlockFragmentActivity {
 
-    public static String EXTRA_POSTID = "postId";
-    public static String EXTRA_IS_PAGE = "isPage";
-    public static String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_POSTID = "postId";
+    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
+    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -80,14 +83,18 @@ public class EditPostActivity extends SherlockFragmentActivity {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        setTitle(WordPress.getCurrentBlog().getBlogName());
-
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                 || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
                 || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                 || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+            if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
+                // QuickPress might want to use a different blog than the current blog
+                int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
+                WordPress.setCurrentBlog(blogId);
+            }
             // If it is a share action, create a new post
             mPost = new Post(WordPress.getCurrentBlog().getId(), false);
             mIsNewPost = true;
@@ -111,6 +118,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
             showPostErrorAndFinish();
             return;
         }
+
+        setTitle(WordPress.getCurrentBlog().getBlogName());
 
         if (mPost.getId() < 0) {
             // Ensure we have a valid post

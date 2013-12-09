@@ -142,10 +142,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     Intent shortcutIntent = new Intent(AddQuickPressShortcutActivity.this, EditPostActivity.class);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    shortcutIntent.putExtra("id", accountIDs[position]);
-                    shortcutIntent.putExtra("isQuickPress", true);
-                    shortcutIntent.putExtra("accountName", StringUtils.unescapeHTML(accountNames.get(position)));
-                    shortcutIntent.putExtra("isNew", true);
+                    shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, accountIDs[position]);
+                    shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
 
                     Intent addIntent = new Intent();
                     addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
