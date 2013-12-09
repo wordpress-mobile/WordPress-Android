@@ -14,6 +14,7 @@
     <color name="pressed_wordpress">#CC78C8E6</color>
     <color name="list_row_bg">#FFFFFF</color>
     <color name="list_row_selected">#78c8e6</color>
+    <color name="background_grey">@color/grey_extra_light</color>
 
     <!-- Colors for menu drawer. -->
     <color name="md__defaultBackground">#222222</color>
@@ -75,6 +76,7 @@
     <color name="grey_extra_dark">#222222</color>   <!-- "big eddie grey" -->
 
     <!-- native reader colors -->
+    <color name="reader_background">@color/grey_extra_light</color>
     <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_divider_blue">@color/blue_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
