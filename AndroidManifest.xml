@@ -208,9 +208,6 @@
         <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.reader.ReaderActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
