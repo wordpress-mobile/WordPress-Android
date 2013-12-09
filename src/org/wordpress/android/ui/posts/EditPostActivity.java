@@ -19,6 +19,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -83,21 +84,35 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
                 || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                 || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+
             if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                 // QuickPress might want to use a different blog than the current blog
                 int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                WordPress.setCurrentBlog(blogId);
+                try {
+                    Blog quickPressBlog = new Blog(blogId);
+                    if (quickPressBlog.isHidden()) {
+                        // Don't continue if blog is hidden
+                        showErrorAndFinish(R.string.error_blog_hidden);
+                        return;
+                    }
+                    WordPress.currentBlog = quickPressBlog;
+                } catch (Exception e) {
+                    // QuickPress Blog not found
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
             }
-            // If it is a share action, create a new post
-            mPost = new Post(WordPress.getCurrentBlog().getId(), false);
+
+            // Create a new post for share intents and QuickPress
+            mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
             mIsNewPost = true;
         } else if (extras != null) {
-            // Load post from postId passed in extras
+            // Load post from the postId passed in extras
             long postId = extras.getLong(EXTRA_POSTID, -1);
             boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
             mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-            mPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
-            mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
+            mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+            mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
 
             if (isPage) {
                 WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
@@ -108,17 +123,23 @@ public class EditPostActivity extends SherlockFragmentActivity {
             }
         } else {
             // A postId extra must be passed to this activity
-            showPostErrorAndFinish();
+            showErrorAndFinish(R.string.post_not_found);
+            return;
+        }
+
+        // Ensure we have a valid blog
+        if (WordPress.getCurrentBlog() == null) {
+            showErrorAndFinish(R.string.blog_not_found);
+            return;
+        }
+
+        // Ensure we have a valid post
+        if (mPost.getId() < 0) {
+            showErrorAndFinish(R.string.post_not_found);
             return;
         }
 
         setTitle(WordPress.getCurrentBlog().getBlogName());
-
-        if (mPost.getId() < 0) {
-            // Ensure we have a valid post
-            showPostErrorAndFinish();
-            return;
-        }
 
         // Autosave handler
         mAutoSaveHandler = new Handler();
@@ -225,8 +246,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
         return false;
     }
 
-    private void showPostErrorAndFinish() {
-        Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
+    private void showErrorAndFinish(int errorMessageId) {
+        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
         finish();
     }
 
