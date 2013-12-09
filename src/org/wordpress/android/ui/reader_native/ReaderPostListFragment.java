@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
@@ -52,7 +54,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private TextView mNewPostsBar;
     private View mEmptyView;
-    private View mFooterProgress;
+    private ProgressBar mProgress;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
@@ -226,22 +228,23 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             mEmptyView.setPadding(0, actionbarHeight, 0, 0);
         }
 
+        // progress bar that appears when loading more posts
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
+        mProgress.setVisibility(View.GONE);
+
         if (useGridView) {
             final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
 
             if (isTranslucentActionBarEnabled) {
                 RelativeLayout header = new RelativeLayout(context);
                 header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                header.setMinimumHeight(actionbarHeight - (gridView.getItemMargin() * 2));
+                header.setMinimumHeight(actionbarHeight - gridView.getItemMargin());
                 gridView.setHeaderView(header);
                 // we can't fade the ActionBar while items are scrolled because StaggeredGridView
                 // doesn't have a scroll listener, so just use a default alpha
                 if (hasActivity() && getActivity() instanceof NativeReaderActivity)
                     ((NativeReaderActivity)getActivity()).setActionBarAlpha(NativeReaderActivity.ALPHA_LEVEL_3);
             }
-
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, gridView, false);
-            gridView.setFooterView(mFooterProgress);
 
             gridView.setOnItemClickListener(new StaggeredGridView.OnItemClickListener() {
                 @Override
@@ -253,6 +256,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 }
             });
 
+            gridView.setSelector(R.drawable.reader_list_selector);
             gridView.setAdapter(getPostAdapter());
         } else {
             final ListView listView = (ListView) view.findViewById(android.R.id.list);
@@ -260,16 +264,10 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             // set the listView's scroll listeners so we can detect up/down scrolling
             listView.setOnScrollListener(this);
 
-            // add listView footer containing progress bar - appears when loading older posts
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, listView, false);
-            listView.addFooterView(mFooterProgress);
-
             if (isTranslucentActionBarEnabled) {
-                // add a transparent header to the listView that matches the size of the ActionBar,
-                // taking the size of the listView divider into account
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
+                // add a transparent header to the listView that matches the size of the ActionBar
                 RelativeLayout header = new RelativeLayout(context);
-                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
+                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
                 listView.addHeaderView(header, null, false);
                 initListViewOverscroll(listView);
             }
@@ -286,9 +284,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
             listView.setAdapter(getPostAdapter());
         }
-
-        mFooterProgress.setVisibility(View.GONE);
-        mFooterProgress.setBackgroundColor(context.getResources().getColor(R.color.reader_divider_grey));
 
         return view;
     }
@@ -438,9 +433,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mCurrentTag = tagName;
         ReaderPrefs.setReaderTag(tagName);
 
+        hideLoadingProgress();
         getPostAdapter().setTag(tagName);
         hideNewPostsBar();
-        hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName))
@@ -486,13 +481,14 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (TextUtils.isEmpty(tagName))
             return;
 
-        // cancel existing requests if we're already updating
-        /*if (isUpdating()) {
-            VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
-            ReaderLog.i("canceling existing update");
-        }*/
-
         unscheduleAutoUpdate();
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ReaderLog.i("network unavailable, rescheduling reader update");
+            scheduleAutoUpdate();
+            return;
+        }
+
         setIsUpdating(true, updateAction);
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
@@ -591,7 +587,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (!hasCurrentTag())
             return;
 
-        ReaderLog.d("scheduling tag auto-update");
         mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
@@ -705,22 +700,26 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     /*
-     * show/hide progress bar footer in the listView
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
     protected void showLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()==View.VISIBLE )
-            return;
-        mFooterProgress.setVisibility(View.VISIBLE);
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.VISIBLE);
     }
     protected void hideLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()!=View.VISIBLE )
-            return;
-        mFooterProgress.setVisibility(View.GONE);
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.GONE);
     }
 
+    private boolean mIsFlinging = false;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        // nop
+        boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
+        if (isFlingingNow != mIsFlinging) {
+            mIsFlinging = isFlingingNow;
+            if (hasPostAdapter())
+                getPostAdapter().setIsFlinging(mIsFlinging);
+        }
     }
 
     private int mPrevFirstVisibleItem = -1;

@@ -82,26 +82,19 @@ public class PostsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
+        return inflater.inflate(R.layout.post_listview, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        TextView textview = (TextView) getListView().getEmptyView();
+        TextView textview = (TextView) getActivity().findViewById(R.id.title_empty);
         if (textview != null) {
             if (isPage) {
                 textview.setText(getText(R.string.pages_empty_list));
             } else {
                 textview.setText(getText(R.string.posts_empty_list));
             }
-            textview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mParentActivity.newPost();
-                }
-            });
         }
         createSwitcher();
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), true);
@@ -543,20 +536,16 @@ public class PostsListFragment extends ListFragment {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-
+                Intent i2 = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
+                i2.putExtra(EditPostActivity.EXTRA_POSTID, mSelectedID);
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra("isPage", true);
+                    i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage)
-                        i2.putExtra("isPage", true);
-                    i2.putExtra("localDraft", true);
+                        i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
 
-                startActivityForResult(i2, 0);
+                getActivity().startActivityForResult(i2, PostsActivity.ACTIVITY_EDIT_POST);
                 return true;
             case MENU_ITEM_DELETE:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);

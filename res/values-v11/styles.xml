@@ -13,19 +13,18 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
-        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
-        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
-        <item name="android:editTextStyle">@style/WordPressEditTextStyle</item>
-        <item name="android:checkboxStyle">@style/WordPressCheckBoxStyle</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
         
         <item name="android:activatedBackgroundIndicator">@drawable/list_bg_selector</item>
         <item name="activatedBackgroundIndicator">@drawable/list_bg_selector</item>
     </style>
+
+    <style name="WordPress.Dialog" parent="@android:style/Theme.Holo.Light.Dialog"></style>
 
     <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:icon">@drawable/ab_icon_wp</item>

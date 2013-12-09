@@ -252,8 +252,7 @@ public class CommentsActivity extends WPActionBarActivity
              */
             showDialog(ID_DIALOG_DELETING);
             CommentActions.deleteComment(
-                    WordPress.currentBlog,
-                    WordPress.getCurrentBlogId(),
+                    WordPress.getCurrentBlogAccountId(),
                     WordPress.currentComment,
                     new CommentActions.CommentActionListener() {
                         @Override
@@ -288,7 +287,7 @@ public class CommentsActivity extends WPActionBarActivity
                     return true;
             }
 
-            CommentActions.moderateComment(WordPress.currentBlog,
+            CommentActions.moderateComment(WordPress.getCurrentBlogAccountId(),
                                            WordPress.currentComment,
                                            status,
                     new CommentActions.CommentActionListener() {

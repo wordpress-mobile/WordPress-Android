@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item background in reader post list
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <stroke
+        android:width="@dimen/reader_margin_medium"
+        android:color="@color/reader_divider_grey" />
+    <solid android:color="@color/white" />
+</shape>
