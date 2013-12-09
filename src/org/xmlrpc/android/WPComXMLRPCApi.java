@@ -34,7 +34,7 @@ public class WPComXMLRPCApi {
 
     private XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
 
-    public void registerWPComToken(final Context ctx, String token) {
+    public void registerWPComToken(final Context ctx, String token, final boolean loadSettings) {
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString("wp_pref_notifications_uuid", null);
@@ -61,11 +61,12 @@ public class WPComXMLRPCApi {
         
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
         /*client.setAuthorizationHeader(WordPress.getWPComAuthToken(ctx));*/    
-
+        
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
-                Log.v("WORDPRESS", "Successfully registered device on WP.com");
-                getNotificationSettings(null, ctx); 
+                Log.v("WORDPRESS", "Successfully registered device on WP.com"); 
+                if (loadSettings)
+                    getNotificationSettings(null, ctx); 
             }
 
             public void onFailure(long id, XMLRPCException error) {
