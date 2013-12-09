@@ -202,6 +202,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);
 
+        // hide listView until post is loaded
+        getListView().setVisibility(View.INVISIBLE);
+
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -235,9 +238,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
-
-        // hide listView until post is loaded
-        getListView().setVisibility(View.INVISIBLE);
     }
 
     private boolean hasPost() {
@@ -1201,7 +1201,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             webView.getSettings().setJavaScriptEnabled(false);
             webView.getSettings().setUserAgentString(Constants.USER_AGENT);
 
-            // webView is hidden at design time, don't show it until the page finishes loading so it
+            // webView is invisible at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
             webView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -1284,7 +1284,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 mHasAlreadyUpdatedPost = true;
             }
 
-            // show the listView now that post has loaded and views have been updated
+            // show listView now that post is loaded
             getListView().setVisibility(View.VISIBLE);
         }
     }
