@@ -1,9 +1,5 @@
 package org.wordpress.android.ui;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -31,9 +27,13 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
@@ -117,7 +117,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcutActivity.this, NewAccountActivity.class);
+            Intent i = new Intent(AddQuickPressShortcutActivity.this, WelcomeActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }
