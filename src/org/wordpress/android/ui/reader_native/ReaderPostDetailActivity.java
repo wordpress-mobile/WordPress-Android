@@ -833,28 +833,23 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        new Thread() {
+        final TextView txtFollow = (TextView) findViewById(R.id.text_follow);
+        final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
+        showFollowedStatus(txtFollow, isFollowed);
+    }
+
+    private void showFollowedStatus(final TextView txtFollow, boolean isFollowed) {
+        final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
+        txtFollow.setText(followText);
+        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+        txtFollow.setSelected(isFollowed);
+        txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                final TextView txtFollow = (TextView) findViewById(R.id.text_follow);
-                final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
-                final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        txtFollow.setText(followText);
-                        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-                        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-                        txtFollow.setSelected(isFollowed);
-                        txtFollow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
-                            }
-                        });
-                    }
-                });
+            public void onClick(View view) {
+                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
             }
-        }.start();
+        });
     }
 
     /*
@@ -1117,6 +1112,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             // set the activity title to the post's title
             ReaderPostDetailActivity.this.setTitle(mPost.getTitle());
 
+            showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
+
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
@@ -1273,13 +1270,11 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             // only show action buttons for WP posts
             mLayoutActions.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            txtFollow.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
             // make sure the adapter is assigned now that we've retrieved the post and updated views
             if (!hasCommentAdapter())
                 getListView().setAdapter(getCommentAdapter());
 
-            refreshFollowed();
             refreshLikes(false);
             refreshComments();
 

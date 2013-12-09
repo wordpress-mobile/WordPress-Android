@@ -187,7 +187,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
@@ -260,23 +260,22 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTag.setOnClickListener(null);
         }*/
 
-        // likes, comments & reblogging
+        // follow/following - supported by both wp and non-wp (rss) posts
+        showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+        holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFollow(holder, position, post);
+            }
+        });
+
+        // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
-            final int pos = position;
-
-            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow(holder, pos, post);
-                }
-            });
-
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(holder, pos, post);
+                    toggleLike(holder, position, post);
                 }
             });
 
@@ -295,12 +294,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
-            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            holder.txtFollow.setVisibility(View.GONE);
         }
 
         showCounts(holder, post);

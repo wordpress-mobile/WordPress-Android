@@ -15,8 +15,7 @@
         style="@style/ReaderImageView.Avatar"
         android:layout_marginLeft="@dimen/reader_margin_large"
         android:layout_marginRight="@dimen/reader_margin_medium"
-        android:layout_marginTop="@dimen/reader_margin_large"
-        android:background="@color/grey_extra_light" />
+        android:layout_marginTop="@dimen/reader_margin_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_blog_name"
