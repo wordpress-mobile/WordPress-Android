@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,7 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -650,7 +652,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                                     ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
                                 }
                             };
-                            layoutLikingAvatars.setOnClickListener(clickListener);
+                            mLayoutLikes.setOnClickListener(clickListener);
 
                             // skip adding liking avatars if the view's child count indicates that we've already
                             // added the max on a previous call to this routine
@@ -848,6 +850,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                     public void run() {
                         txtFollow.setText(followText);
                         txtFollow.setTextColor(isFollowed ? mLinkColorActive : mLinkColor);
+                        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+                        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
                         txtFollow.setSelected(isFollowed);
                         txtFollow.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1089,17 +1093,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             postHtml = getPostHtml(mPost);
 
-            // if the post has a featured image that's not in the content, show it between the
-            // post's title and its content (but skip mshots)
-            if (mPost.hasFeaturedImage()
-                    && !mPost.getText().contains(mPost.getFeaturedImage())
-                    && !mPost.getFeaturedImage().contains("/mshots/"))
-            {
-                showFeaturedImage = true;
-                int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
-                featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
-            } else {
-                showFeaturedImage = false;
+            // detect whether the post has a featured image that's not in the content - if so,
+            // it will be shown between the post's title and its content (but skip mshots)
+            if (mPost.hasFeaturedImage() && !mPost.getFeaturedImage().contains("/mshots/")) {
+                Uri uri = Uri.parse(mPost.getFeaturedImage());
+                if (!mPost.getText().contains(StringUtils.notNullStr(uri.getLastPathSegment()))) {
+                    showFeaturedImage = true;
+                    int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
+                }
             }
 
             return true;
@@ -1134,7 +1136,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             txtBlogName.setText(mPost.getBlogName());
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
-            if (mPost.hasAuthorName()) {
+            // show author name if it exists and is different than the blog name
+            if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
                 txtAuthorName.setText(mPost.getAuthorName());
                 txtAuthorName.setVisibility(View.VISIBLE);
             } else {
@@ -1152,6 +1155,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             if (showFeaturedImage) {
                 imgFeatured.setVisibility(View.VISIBLE);
                 imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPhotoViewer(mPost.getFeaturedImage());
+                    }
+                });
             } else {
                 imgFeatured.setVisibility(View.GONE);
             }

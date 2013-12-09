@@ -427,9 +427,11 @@ public class ReaderPostAdapter extends BaseAdapter {
         showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
     }
 
-    private void showFollowStatus(TextView txtFollow, boolean isFollowedByCurrentUser) {
-        txtFollow.setText(isFollowedByCurrentUser ? mFollowing : mFollow);
-        txtFollow.setTextColor(isFollowedByCurrentUser ? mLinkColorActive : mLinkColor);
+    private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
+        txtFollow.setText(isFollowed ? mFollowing : mFollow);
+        txtFollow.setTextColor(isFollowed ? mLinkColorActive : mLinkColor);
+        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
     /*

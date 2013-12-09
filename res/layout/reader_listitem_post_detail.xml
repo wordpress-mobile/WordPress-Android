@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/reader_margin_large"
+        android:layout_marginTop="@dimen/reader_margin_medium"
         android:background="@drawable/reader_button_transparent_selector">
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -99,6 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/webView"
         android:layout_marginBottom="@dimen/reader_margin_medium"
+        android:background="@drawable/reader_list_selector"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/reader_margin_medium"
