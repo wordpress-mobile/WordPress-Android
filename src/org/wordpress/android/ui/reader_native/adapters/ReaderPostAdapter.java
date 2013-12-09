@@ -52,8 +52,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
 
-    private final int mLinkColor;
-    private final int mLinkColorActive;
     private final String mFollowing;
     private final String mFollow;
 
@@ -92,10 +90,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         // when animating rows in, start from this y-position near the bottom using medium animation duration
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
-
-        // colors for follow text
-        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mLinkColorActive = context.getResources().getColor(R.color.orange_medium);
 
         // text for follow button
         mFollowing = context.getString(R.string.reader_btn_unfollow).toUpperCase();
@@ -238,7 +232,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtText.setVisibility(View.GONE);
         }
 
-        // featured image or video
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
             holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
@@ -428,8 +421,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
+        if (isFollowed == txtFollow.isSelected())
+            return;
+
+        txtFollow.setSelected(isFollowed);
         txtFollow.setText(isFollowed ? mFollowing : mFollow);
-        txtFollow.setTextColor(isFollowed ? mLinkColorActive : mLinkColor);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }

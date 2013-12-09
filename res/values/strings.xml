@@ -689,8 +689,6 @@
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="label_toggle_show">SHOW</string>
-    <string name="label_toggle_hide">HIDE</string>
     <string name="reader_label_new_posts_one">One new article</string>
     <string name="reader_label_new_posts_multi">%d new articles</string>
     <string name="reader_label_added_tag">Added %s</string>

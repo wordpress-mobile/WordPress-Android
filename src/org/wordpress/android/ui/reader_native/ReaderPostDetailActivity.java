@@ -89,9 +89,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
 
-    private int mLinkColor;
-    private int mLinkColorActive;
-
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
 
@@ -238,10 +235,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
-
-        // colors for follow text
-        mLinkColor = getResources().getColor(R.color.reader_hyperlink);
-        mLinkColorActive = getResources().getColor(R.color.orange_medium);
 
         // hide listView until post is loaded
         getListView().setVisibility(View.INVISIBLE);
@@ -849,7 +842,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 mHandler.post(new Runnable() {
                     public void run() {
                         txtFollow.setText(followText);
-                        txtFollow.setTextColor(isFollowed ? mLinkColorActive : mLinkColor);
                         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
                         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
                         txtFollow.setSelected(isFollowed);

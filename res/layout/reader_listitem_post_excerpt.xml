@@ -112,13 +112,13 @@
 
         <ImageView
             android:id="@+id/image_reblog_btn"
-            style="@style/ReaderImageView.ButtonIcon.Small"
+            style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_reblog" />
 
         <ImageView
             android:id="@+id/image_comment_btn"
-            style="@style/ReaderImageView.ButtonIcon.Small"
+            style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_comment" />
 
@@ -132,7 +132,7 @@
 
         <ImageView
             android:id="@+id/image_like_btn"
-            style="@style/ReaderImageView.ButtonIcon.Small"
+            style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/reader_margin_small"
             android:src="@drawable/reader_button_like" />
 

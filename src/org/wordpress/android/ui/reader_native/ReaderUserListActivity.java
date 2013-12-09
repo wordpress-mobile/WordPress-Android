@@ -76,10 +76,10 @@ public class ReaderUserListActivity extends FragmentActivity {
                                     title = getString(R.string.reader_likes_only_you);
                                     break;
                                 case 2 :
-                                    title = getString(R.string.reader_likes_you_and_one_long);
+                                    title = getString(R.string.reader_likes_you_and_one);
                                     break;
                                 default :
-                                    title = getString(R.string.reader_likes_you_and_multi_long, numLikes-1);
+                                    title = getString(R.string.reader_likes_you_and_multi, numLikes-1);
                                     break;
                             }
                         } else {

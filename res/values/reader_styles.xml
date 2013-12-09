@@ -147,7 +147,7 @@
         <item name="android:gravity">center</item>
         <item name="android:drawableLeft">@drawable/note_icon_follow</item>
         <item name="android:background">@color/grey_extra_light</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:textColor">@color/reader_button</item>
         <item name="android:paddingLeft">@dimen/reader_margin_small</item>
         <item name="android:paddingTop">@dimen/reader_margin_small</item>
         <item name="android:paddingBottom">@dimen/reader_margin_small</item>
@@ -198,33 +198,6 @@
         <item name="android:dividerHeight">1dp</item>
     </style>
 
-    <!-- buttons -->
-    <style name="ReaderButton" parent="@android:style/Widget.Button">
-        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
-    </style>
-    <style name="ReaderButton.Blue" parent="ReaderButton">
-        <item name="android:paddingLeft">@dimen/reader_margin_large</item>
-        <item name="android:paddingRight">@dimen/reader_margin_large</item>
-        <item name="android:paddingTop">@dimen/reader_margin_medium</item>
-        <item name="android:paddingBottom">@dimen/reader_margin_medium</item>
-        <item name="android:background">@drawable/reader_button_blue_selector</item>
-        <item name="android:textColor">@color/blue_medium</item>
-    </style>
-    <style name="ReaderButton.Blue.Small" parent="ReaderButton.Blue">
-        <item name="android:paddingLeft">@dimen/reader_margin_medium</item>
-        <item name="android:paddingRight">@dimen/reader_margin_medium</item>
-        <item name="android:paddingTop">@dimen/reader_margin_small</item>
-        <item name="android:paddingBottom">@dimen/reader_margin_small</item>
-        <item name="android:textSize">@dimen/reader_text_sz_small</item>
-    </style>
-    <style name="ReaderButton.Action" parent="@android:style/Widget.Button.Small">
-        <item name="android:background">@drawable/reader_button_action_selector</item>
-        <item name="android:textColor">@color/blue_medium</item>
-        <item name="android:layout_marginLeft">@dimen/reader_margin_extra_small</item>
-        <item name="android:layout_marginRight">@dimen/reader_margin_extra_small</item>
-        <item name="android:layout_marginTop">@dimen/reader_margin_extra_small</item>
-        <item name="android:layout_marginBottom">@dimen/reader_margin_extra_small</item>
-    </style>
 
     <!-- images -->
     <style name="ReaderImageView" />
@@ -252,10 +225,6 @@
     <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_button_icon</item>
         <item name="android:layout_height">@dimen/reader_button_icon</item>
-    </style>
-    <style name="ReaderImageView.ButtonIcon.Small" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/reader_button_icon_small</item>
-        <item name="android:layout_height">@dimen/reader_button_icon_small</item>
     </style>
 
     <!-- progress bars -->
