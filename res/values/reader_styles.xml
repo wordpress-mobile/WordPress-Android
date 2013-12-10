@@ -49,7 +49,7 @@
         <item name="android:gravity">center</item>
     </style>
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
         <item name="android:textColor">@color/grey_dark</item>
@@ -78,7 +78,7 @@
         <item name="android:textColor">@color/grey_medium</item>
     </style>
     <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/reader_hyperlink</item>
         <item name="android:maxLines">2</item>
@@ -118,6 +118,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
+        <item name="android:minWidth">90dp</item>
         <item name="android:gravity">center</item>
         <item name="android:drawableLeft">@drawable/note_icon_follow</item>
         <item name="android:background">@drawable/reader_follow_background</item>

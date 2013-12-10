@@ -27,6 +27,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_author"
         style="@style/ReaderTextView.Comment.Author"
+        android:background="@drawable/reader_transparent_selector"
         android:layout_alignTop="@+id/image_avatar"
         android:layout_marginBottom="@dimen/reader_margin_extra_small"
         android:layout_marginLeft="@dimen/reader_margin_medium"
