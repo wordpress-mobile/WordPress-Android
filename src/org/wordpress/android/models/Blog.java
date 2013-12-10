@@ -12,11 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class Blog {
+public class Blog implements Serializable {
 
     private int id;
     private String url;

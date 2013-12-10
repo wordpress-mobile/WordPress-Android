@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -13,7 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
-public class Post {
+public class Post implements Serializable {
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
     public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
