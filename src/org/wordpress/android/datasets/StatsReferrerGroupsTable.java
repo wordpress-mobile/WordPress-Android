@@ -1,15 +1,16 @@
 package org.wordpress.android.datasets;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import org.wordpress.android.models.StatsReferrerGroup;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A database table to represent groups in the stats for referrers.
@@ -88,7 +89,7 @@ public class StatsReferrerGroupsTable extends SQLTable {
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         
-        String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC";
+        String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC LIMIT " + StatsActivity.STATS_GROUP_MAX_ITEMS;
         
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
