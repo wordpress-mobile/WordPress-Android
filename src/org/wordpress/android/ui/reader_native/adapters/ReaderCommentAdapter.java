@@ -191,6 +191,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (content.contains("icon_"))
             content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
 
+        // skip performance hit of html conversion if content doesn't contain html
+        if (!content.contains("<") && !content.contains("&")) {
+            textView.setText(content.trim());
+            return;
+        }
+
         // now convert to HTML with an image getter that enforces a max image size
         final SpannableStringBuilder html;
         if (content.contains("<img")) {
