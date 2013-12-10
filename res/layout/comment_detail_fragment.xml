@@ -43,7 +43,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_date"
-                style="@style/ReaderTextView.Source.Large"
+                style="@style/ReaderTextView.Date.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"

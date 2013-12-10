@@ -25,14 +25,14 @@
         android:layout_toRightOf="@+id/spacer" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_comment_title"
-        style="@style/ReaderTextView.Comment.Title"
+        android:id="@+id/text_comment_author"
+        style="@style/ReaderTextView.Comment.Author"
         android:layout_alignTop="@+id/image_avatar"
         android:layout_marginBottom="@dimen/reader_margin_extra_small"
         android:layout_marginLeft="@dimen/reader_margin_medium"
         android:layout_toLeftOf="@+id/text_comment_date"
         android:layout_toRightOf="@+id/image_avatar"
-        android:text="text_comment_title" />
+        android:text="text_comment_author" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_date"
@@ -48,8 +48,8 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_text"
         style="@style/ReaderTextView.Comment.Text"
-        android:layout_alignLeft="@+id/text_comment_title"
-        android:layout_below="@+id/text_comment_title"
+        android:layout_alignLeft="@+id/text_comment_author"
+        android:layout_below="@+id/text_comment_author"
         android:layout_marginTop="@dimen/reader_margin_small"
         android:focusable="false"
         android:focusableInTouchMode="false"

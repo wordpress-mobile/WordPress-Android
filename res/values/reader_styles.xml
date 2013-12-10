@@ -33,17 +33,6 @@
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
         <item name="android:textSize">@dimen/reader_text_sz_large</item>
     </style>
-    <style name="ReaderTextView.Source" parent="ReaderTextView">
-        <item name="android:textColor">@color/grey_medium</item>
-        <item name="android:textSize">@dimen/reader_text_sz_small</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">middle</item>
-        <!-- don't remove this - see https://code.google.com/p/android/issues/detail?id=33868 -->
-        <item name="android:singleLine">true</item>
-    </style>
-    <style name="ReaderTextView.Source.Large" parent="ReaderTextView.Source">
-        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
-    </style>
     <style name="ReaderTextView.DialogTitle" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -84,10 +73,14 @@
         <item name="android:textSize">@dimen/reader_text_sz_small</item>
         <item name="android:textColor">@color/grey_medium</item>
     </style>
-    <style name="ReaderTextView.Comment.Title" parent="ReaderTextView">
+    <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:textColor">@color/grey_medium</item>
+    </style>
+    <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/blue_extra_dark</item>
+        <item name="android:textColor">@color/grey_medium_dark</item>
         <item name="android:maxLines">2</item>
         <item name="android:textSize">@dimen/reader_text_sz_medium</item>
     </style>

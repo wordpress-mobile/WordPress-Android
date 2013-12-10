@@ -111,7 +111,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
             holder = new CommentViewHolder();
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.text_comment_title);
+            holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
@@ -122,7 +122,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder = (CommentViewHolder) convertView.getTag();
         }
 
-        holder.txtTitle.setText(comment.getAuthorName());
+        holder.txtAuthor.setText(comment.getAuthorName());
         displayComment(comment.getText(), holder.txtText);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
@@ -208,7 +208,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     private static class CommentViewHolder {
-        private TextView txtTitle;
+        private TextView txtAuthor;
         private TextView txtText;
         private TextView txtDate;
         private WPNetworkImageView imgAvatar;
