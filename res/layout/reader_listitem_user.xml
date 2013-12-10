@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/reader_margin_medium"
     android:paddingLeft="@dimen/reader_margin_large"
     android:paddingRight="@dimen/reader_margin_large"
@@ -10,22 +12,18 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
-        style="@style/ReaderImageView.Avatar.Small"
-        android:layout_centerVertical="true" />
+        style="@style/ReaderImageView.Avatar.Small" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_margin_medium"
         android:layout_marginRight="@dimen/reader_margin_medium"
-        android:layout_toLeftOf="@+id/text_follow"
-        android:layout_toRightOf="@+id/image_avatar">
+        android:layout_weight="1">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="text_name"
@@ -38,9 +36,10 @@
         -->
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_url"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_name"
+            android:background="@drawable/reader_transparent_selector"
             android:ellipsize="middle"
             android:maxLines="1"
             android:singleLine="true"
@@ -53,7 +52,5 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
         style="@style/ReaderTextView.Follow"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:text="@string/reader_btn_follow" />
-</RelativeLayout>
+</LinearLayout>
