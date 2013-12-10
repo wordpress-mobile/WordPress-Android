@@ -47,6 +47,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private int mBgColorNormal;
     private int mBgColorHighlight;
+    private int mLinkColor;
+    private int mNoLinkColor;
 
     private ReaderCommentList mComments = new ReaderCommentList();
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -67,6 +69,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
     }
 
     @SuppressLint("NewApi")
@@ -130,21 +134,23 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (comment.hasAvatar()) {
             holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            holder.imgAvatar.setVisibility(View.VISIBLE);
-
-            // tapping avatar opens blog in browser
-            if (comment.hasAuthorUrl()) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(v.getContext(), comment.getAuthorUrl());
-                    }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
         } else {
-            holder.imgAvatar.setVisibility(View.GONE);
+            holder.imgAvatar.setImageResource(R.drawable.placeholder);
+        }
+
+        // tapping avatar or author name opens blog in browser
+        if (comment.hasAuthorUrl()) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.openUrl(view.getContext(), comment.getAuthorUrl());
+                }
+            };
+            holder.imgAvatar.setOnClickListener(listener);
+            holder.txtAuthor.setOnClickListener(listener);
+            holder.txtAuthor.setTextColor(mLinkColor);
+        } else {
+            holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
         // show spacer and indent it based on comment level

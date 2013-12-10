@@ -82,6 +82,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
+    private WebView mWebView;
 
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
@@ -97,6 +98,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsMoving;
 
     private static final int MOVE_MIN_DIFF = 6;
+    private static final long WEBVIEW_DELAY_MS = 2000L;
 
     private ListView getListView() {
         if (mListView==null) {
@@ -238,6 +240,41 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
+
+
+        // setup the webView - note that JavaScript is disabled since it's a security risk:
+        //    http://developer.android.com/training/articles/security-tips.html#WebView
+        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView.getSettings().setJavaScriptEnabled(false);
+        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+
+        // detect image taps so we can open images in the photo viewer activity
+        mWebView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction()==MotionEvent.ACTION_UP) {
+                    HitTestResult hr = ((WebView)v).getHitTestResult();
+                    if (hr!=null && (hr.getType()==HitTestResult.IMAGE_TYPE || hr.getType()==HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                        String imageUrl = hr.getExtra();
+                        if (imageUrl==null)
+                            return false;
+                        // skip if image is a file: reference - this will be the video overlay, ie:
+                        // file:///android_res/drawable/ic_reader_video_overlay.png
+                        if (imageUrl.startsWith("file:"))
+                            return false;
+                        // skip if image is a video thumbnail (see processVideos)
+                        if (mVideoThumbnailUrls.contains(imageUrl))
+                            return false;
+                        // skip if image is a VideoPress thumbnail (anchor around thumbnail will
+                        // take user to actual video - see ReaderPost.cleanupVideoPress)
+                        if (imageUrl.contains("videos.files."))
+                            return false;
+                        showPhotoViewer(imageUrl);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private boolean hasPost() {
@@ -608,17 +645,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
                 mHandler.post(new Runnable() {
                     public void run() {
-                        // set the like count text
-                        if (mPost.isLikedByCurrentUser) {
-                            if (mPost.numLikes==1) {
-                                txtLikeCount.setText(R.string.reader_likes_only_you);
-                            } else {
-                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes-1));
-                            }
-                        } else {
-                            txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
-                        }
-
                         imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -631,6 +657,17 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         if (avatars.size()==0 && mPost.numLikes==0) {
                             mLayoutLikes.setVisibility(View.GONE);
                             return;
+                        }
+
+                        // set the like count text
+                        if (mPost.isLikedByCurrentUser) {
+                            if (mPost.numLikes==1) {
+                                txtLikeCount.setText(R.string.reader_likes_only_you);
+                            } else {
+                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes-1));
+                            }
+                        } else {
+                            txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
                         }
 
                         // at this point it's possible that we know the post has likes but we haven't retrieved liking users yet, so
@@ -660,8 +697,22 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikes.getVisibility()!=View.VISIBLE)
-                            mLayoutLikes.setVisibility(View.VISIBLE);
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+                            // if the webView hasn't been made visible yet (ie: it hasn't loaded),
+                            // delay the appearance of the likes view (otherwise it may appear before
+                            // the webView content appears, causing it to be pushed down once the
+                            // content loads)
+                            if (mWebView.getVisibility() == View.VISIBLE) {
+                                mLayoutLikes.setVisibility(View.VISIBLE);
+                            } else {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mLayoutLikes.setVisibility(View.VISIBLE);
+                                    }
+                                }, WEBVIEW_DELAY_MS);
+                            }
+                        }
                     }
                 });
             }
@@ -1036,8 +1087,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         TextView txtDate;
         TextView txtFollow;
 
-        WebView webView;
-
         ImageView imgBtnReblog;
         ImageView imgBtnComment;
         ImageView imgBtnLike;
@@ -1065,7 +1114,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             txtFollow = (TextView) findViewById(R.id.text_follow);
             txtAuthorName = (TextView) findViewById(R.id.text_author_name);
 
-            webView = (WebView) findViewById(R.id.webView);
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) findViewById(R.id.image_featured);
 
@@ -1194,20 +1242,13 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             txtAuthorName.setOnClickListener(clickListener);
             imgAvatar.setOnClickListener(clickListener);
 
-            // webView settings must be configured on main thread - note that while JavaScript is
-            // required for embedded videos, it's disabled since it's a security risk:
-            //    http://developer.android.com/training/articles/security-tips.html#WebView
-            // note: even with JavaScript enabled video embeds are unreliable (some work, some don't)
-            webView.getSettings().setJavaScriptEnabled(false);
-            webView.getSettings().setUserAgentString(Constants.USER_AGENT);
-
             // webView is invisible at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
-            webView.setWebViewClient(new WebViewClient() {
+            mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
-                    if (webView.getVisibility()!=View.VISIBLE)
-                        webView.setVisibility(View.VISIBLE);
+                    if (mWebView.getVisibility()!=View.VISIBLE)
+                        mWebView.setVisibility(View.VISIBLE);
                 }
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -1229,44 +1270,16 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (webView.getVisibility()!=View.VISIBLE) {
-                        webView.setVisibility(View.VISIBLE);
+                    if (mWebView.getVisibility()!=View.VISIBLE) {
+                        mWebView.setVisibility(View.VISIBLE);
                         ReaderLog.w("forced webView to appear before page finished");
                     }
                 }
-            }, 2000);
-
-            // detect image taps so we can open images in the photo viewer activity
-            webView.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction()==MotionEvent.ACTION_UP) {
-                        HitTestResult hr = ((WebView)v).getHitTestResult();
-                        if (hr!=null && (hr.getType()==HitTestResult.IMAGE_TYPE || hr.getType()==HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                            String imageUrl = hr.getExtra();
-                            if (imageUrl==null)
-                                return false;
-                            // skip if image is a file: reference - this will be the video overlay, ie:
-                            // file:///android_res/drawable/ic_reader_video_overlay.png
-                            if (imageUrl.startsWith("file:"))
-                                return false;
-                            // skip if image is a video thumbnail (see processVideos)
-                            if (mVideoThumbnailUrls.contains(imageUrl))
-                                return false;
-                            // skip if image is a VideoPress thumbnail (anchor around thumbnail will
-                            // take user to actual video - see ReaderPost.cleanupVideoPress)
-                            if (imageUrl.contains("videos.files."))
-                                return false;
-                            showPhotoViewer(imageUrl);
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
+            }, WEBVIEW_DELAY_MS);
 
             // IMPORTANT: must use loadDataWithBaseURL() rather than loadData() since the latter often fails
             // https://code.google.com/p/android/issues/detail?id=4401
-            webView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
             mLayoutActions.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
