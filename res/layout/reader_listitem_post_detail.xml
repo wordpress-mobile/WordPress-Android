@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/reader_margin_medium">
+        android:layout_marginTop="@dimen/reader_margin_small">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
