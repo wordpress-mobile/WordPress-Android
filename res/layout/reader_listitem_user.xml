@@ -52,7 +52,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
-        style="@style/ReaderTextView.ActionButton"
+        style="@style/ReaderTextView.Follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

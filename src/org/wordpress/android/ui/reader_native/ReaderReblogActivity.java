@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -41,7 +42,7 @@ public class ReaderReblogActivity extends FragmentActivity {
     private ReaderPost mPost;
 
     private ReaderReblogAdapter mAdapter;
-    private TextView mTxtBtnReblog;
+    private Button mBtnReblog;
     private EditText mEditComment;
     private ProgressBar mProgress;
     private Spinner mSpinner;
@@ -74,8 +75,8 @@ public class ReaderReblogActivity extends FragmentActivity {
 
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mEditComment = (EditText) findViewById(R.id.edit_comment);
-        mTxtBtnReblog = (TextView) findViewById(R.id.btn_reblog);
-        mTxtBtnReblog.setOnClickListener(new View.OnClickListener() {
+        mBtnReblog = (Button) findViewById(R.id.btn_reblog);
+        mBtnReblog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitReblog();
@@ -111,12 +112,12 @@ public class ReaderReblogActivity extends FragmentActivity {
         mIsSubmittingReblog = value;
         if (mIsSubmittingReblog) {
             mProgress.setVisibility(View.VISIBLE);
-            mTxtBtnReblog.setVisibility(View.INVISIBLE);
+            mBtnReblog.setVisibility(View.INVISIBLE);
             mEditComment.setEnabled(false);
             mSpinner.setEnabled(false);
         } else {
             mProgress.setVisibility(View.INVISIBLE);
-            mTxtBtnReblog.setVisibility(View.VISIBLE);
+            mBtnReblog.setVisibility(View.VISIBLE);
             mEditComment.setEnabled(true);
             mSpinner.setEnabled(true);
         }
