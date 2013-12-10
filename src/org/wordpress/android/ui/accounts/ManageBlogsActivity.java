@@ -27,6 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -37,10 +38,12 @@ public class ManageBlogsActivity extends SherlockListActivity {
     private List<Map<String, Object>> mAccounts;
     private MenuItem mRefreshMenuItem;
     private boolean mIsRefreshing;
+    private ListScrollPositionManager mListScrollPositionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
         setTitle(getString(R.string.blogs_visibility));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -221,7 +224,9 @@ public class ManageBlogsActivity extends SherlockListActivity {
             if (mErrorMsgId != 0) {
                 ToastUtils.showToast(getBaseContext(), mErrorMsgId, ToastUtils.Duration.SHORT);
             }
+            mListScrollPositionManager.saveScrollOffset();
             loadAccounts();
+            mListScrollPositionManager.restoreScrollOffset();
             stopAnimatingRefreshButton();
         }
     }
