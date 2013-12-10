@@ -1,42 +1,39 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import java.util.Locale;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
+import java.util.Locale;
+
 public class EditPostActivity extends SherlockFragmentActivity {
 
-    public static String EXTRA_POSTID = "postId";
-    public static String EXTRA_IS_PAGE = "isPage";
-    public static String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_POSTID = "postId";
+    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
+    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -80,24 +77,42 @@ public class EditPostActivity extends SherlockFragmentActivity {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        setTitle(WordPress.getCurrentBlog().getBlogName());
-
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                 || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
                 || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                 || (extras != null && extras.getInt("quick-media", -1) > -1)) {
-            // If it is a share action, create a new post
-            mPost = new Post(WordPress.getCurrentBlog().getId(), false);
+
+            if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
+                // QuickPress might want to use a different blog than the current blog
+                int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
+                try {
+                    Blog quickPressBlog = new Blog(blogId);
+                    if (quickPressBlog.isHidden()) {
+                        // Don't continue if blog is hidden
+                        showErrorAndFinish(R.string.error_blog_hidden);
+                        return;
+                    }
+                    WordPress.currentBlog = quickPressBlog;
+                } catch (Exception e) {
+                    // QuickPress Blog not found
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
+            }
+
+            // Create a new post for share intents and QuickPress
+            mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
             mIsNewPost = true;
         } else if (extras != null) {
-            // Load post from postId passed in extras
+            // Load post from the postId passed in extras
             long postId = extras.getLong(EXTRA_POSTID, -1);
             boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
             mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-            mPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
-            mOriginalPost = new Post(WordPress.getCurrentBlog().getId(), postId, isPage);
+            mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+            mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
 
             if (isPage) {
                 WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
@@ -108,15 +123,23 @@ public class EditPostActivity extends SherlockFragmentActivity {
             }
         } else {
             // A postId extra must be passed to this activity
-            showPostErrorAndFinish();
+            showErrorAndFinish(R.string.post_not_found);
             return;
         }
 
-        if (mPost.getId() < 0) {
-            // Ensure we have a valid post
-            showPostErrorAndFinish();
+        // Ensure we have a valid blog
+        if (WordPress.getCurrentBlog() == null) {
+            showErrorAndFinish(R.string.blog_not_found);
             return;
         }
+
+        // Ensure we have a valid post
+        if (mPost.getId() < 0) {
+            showErrorAndFinish(R.string.post_not_found);
+            return;
+        }
+
+        setTitle(WordPress.getCurrentBlog().getBlogName());
 
         // Autosave handler
         mAutoSaveHandler = new Handler();
@@ -223,8 +246,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
         return false;
     }
 
-    private void showPostErrorAndFinish() {
-        Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
+    private void showErrorAndFinish(int errorMessageId) {
+        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
         finish();
     }
 

@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +26,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -48,9 +46,7 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsCursorTreeFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
 
-    private static final int MAX_ITEMS_ON_TABLET = 10;
     private static final int LOADER_URI_GROUP_INDEX = -1;
-    
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
     private static final String ARGS_CHILDREN_URI = "ARGS_CHILDREN_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
@@ -175,19 +171,19 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
-            
+
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
                 long date = data.getLong(data.getColumnIndex("date"));
-                
+
                 Bundle bundle = new Bundle();
                 bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupId);
                 bundle.putLong(StatsCursorLoaderCallback.BUNDLE_DATE, date);
-                
+
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
-        
+
 
             mCallback.onCursorLoaded(getGroupUri(), data);
             
@@ -235,7 +231,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         mLinearLayout.removeAllViews();
         
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int groupCount = Math.min(mAdapter.getGroupCount(), MAX_ITEMS_ON_TABLET);
+        int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
             
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
