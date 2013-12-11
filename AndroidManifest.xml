@@ -157,7 +157,7 @@
         </activity>
         <activity
             android:name=".ui.reader_native.ReaderPostDetailActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
+            android:theme="@style/WordPress.Theme.NoBackground"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader_native.ReaderLogViewerActivity"
@@ -210,9 +210,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.reader.ReaderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >

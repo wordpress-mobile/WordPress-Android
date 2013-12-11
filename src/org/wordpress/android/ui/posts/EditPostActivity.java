@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -34,6 +35,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
+    public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -79,52 +82,61 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
-                || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
-                || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
-                || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
-                || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+        if (savedInstanceState == null) {
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
+                    || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
+                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
 
-            if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
-                // QuickPress might want to use a different blog than the current blog
-                int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                try {
-                    Blog quickPressBlog = new Blog(blogId);
-                    if (quickPressBlog.isHidden()) {
-                        // Don't continue if blog is hidden
-                        showErrorAndFinish(R.string.error_blog_hidden);
+                if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
+                    // QuickPress might want to use a different blog than the current blog
+                    int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
+                    try {
+                        Blog quickPressBlog = new Blog(blogId);
+                        if (quickPressBlog.isHidden()) {
+                            // Don't continue if blog is hidden
+                            showErrorAndFinish(R.string.error_blog_hidden);
+                            return;
+                        }
+                        WordPress.currentBlog = quickPressBlog;
+                    } catch (Exception e) {
+                        // QuickPress Blog not found
+                        showErrorAndFinish(R.string.blog_not_found);
                         return;
                     }
-                    WordPress.currentBlog = quickPressBlog;
-                } catch (Exception e) {
-                    // QuickPress Blog not found
-                    showErrorAndFinish(R.string.blog_not_found);
-                    return;
                 }
-            }
 
-            // Create a new post for share intents and QuickPress
-            mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
-            mIsNewPost = true;
-        } else if (extras != null) {
-            // Load post from the postId passed in extras
-            long postId = extras.getLong(EXTRA_POSTID, -1);
-            boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
-            mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-            mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
-            mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+                // Create a new post for share intents and QuickPress
+                mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
+                mIsNewPost = true;
+            } else if (extras != null) {
+                // Load post from the postId passed in extras
+                long postId = extras.getLong(EXTRA_POSTID, -1);
+                boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
+                mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+                mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
 
-            if (isPage) {
-                WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
-                mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+                if (isPage) {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+                } else {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
+                }
             } else {
-                WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
-                mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
+                // A postId extra must be passed to this activity
+                showErrorAndFinish(R.string.post_not_found);
+                return;
             }
-        } else {
-            // A postId extra must be passed to this activity
-            showErrorAndFinish(R.string.post_not_found);
-            return;
+        } else if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+            try {
+                mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+            } catch (ClassCastException e) {
+                mPost = null;
+            }
         }
 
         // Ensure we have a valid blog
@@ -134,18 +146,13 @@ public class EditPostActivity extends SherlockFragmentActivity {
         }
 
         // Ensure we have a valid post
-        if (mPost.getId() < 0) {
+        if (mPost == null || mPost.getId() < 0) {
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
 
         setTitle(WordPress.getCurrentBlog().getBlogName());
 
-        // Autosave handler
-        mAutoSaveHandler = new Handler();
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -174,6 +181,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 }
             }
         });
+
+        // Autosave handler
+        mAutoSaveHandler = new Handler();
     }
 
     @Override
@@ -194,6 +204,15 @@ public class EditPostActivity extends SherlockFragmentActivity {
     protected void onDestroy() {
         WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saves both post objects so we can restore them in onCreate()
+        savePost(true);
+        outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
+        outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
     }
 
     @Override
@@ -224,6 +243,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
+            if (mPost.isUploaded()) {
+                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedUpdate);
+            } else {
+                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
+            }
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
@@ -363,15 +387,29 @@ public class EditPostActivity extends SherlockFragmentActivity {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    mEditPostContentFragment = new EditPostContentFragment();
-                    return mEditPostContentFragment;
+                    return new EditPostContentFragment();
                 case 1:
-                    mEditPostSettingsFragment = new EditPostSettingsFragment();
-                    return mEditPostSettingsFragment;
+                    return new EditPostSettingsFragment();
                 default:
-                    mEditPostPreviewFragment = new EditPostPreviewFragment();
-                    return mEditPostPreviewFragment;
+                    return new EditPostPreviewFragment();
             }
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            switch (position) {
+                case 0:
+                    mEditPostContentFragment = (EditPostContentFragment)fragment;
+                    break;
+                case 1:
+                    mEditPostSettingsFragment = (EditPostSettingsFragment)fragment;
+                    break;
+                case 2:
+                    mEditPostPreviewFragment = (EditPostPreviewFragment)fragment;
+                    break;
+            }
+            return fragment;
         }
 
         @Override

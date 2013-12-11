@@ -51,8 +51,8 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
 
-    private final int mLinkColor;
-    private final int mLinkColorActive;
+    private final String mFollowing;
+    private final String mFollow;
 
     private ReaderActions.RequestReblogListener mReblogListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -63,7 +63,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
-                             boolean isGridView,
                              ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
@@ -79,24 +78,18 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
-        int dividerSize = context.getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
 
-        // determine size to use when requesting images via photon - full width unless we're using
-        // a grid, in which case half-width since the grid shows two columns
-        if (isGridView) {
-            mPhotonWidth = (displayWidth / 2) - dividerSize; // dividerSize = item spacing
-        } else {
-            mPhotonWidth = displayWidth - (dividerSize * 2); // dividerSize*2 since list has left/right margin
-        }
+        int listMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+        mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // when animating rows in, start from this y-position near the bottom using medium animation duration
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
-        // colors for follow text
-        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mLinkColorActive = context.getResources().getColor(R.color.orange_medium);
+        // text for follow button
+        mFollowing = context.getString(R.string.reader_btn_unfollow).toUpperCase();
+        mFollow = context.getString(R.string.reader_btn_follow).toUpperCase();
 
         // enable preloading of images on Android 4 or later (earlier devices tend not to have
         // enough memory/heap to make this worthwhile)
@@ -194,7 +187,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
@@ -224,15 +217,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(post.getTitle());
+        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-
-        // blog name needs to be moved down when the follow textView is hidden (which it will be
-        // for non-WP posts)
-        if (post.isWP()) {
-            holder.txtBlogName.setText(post.getBlogName());
-        } else {
-            holder.txtBlogName.setText("\n" + post.getBlogName());
-        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
@@ -241,7 +227,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtText.setVisibility(View.GONE);
         }
 
-        // featured image or video
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
             holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
@@ -259,23 +244,38 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
         }
 
-        // likes, comments & reblogging
-        if (post.isWP()) {
-            final int pos = position;
-
-            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+        /*final String firstTag = post.getFirstTag();
+        if (!TextUtils.isEmpty(firstTag)) {
+            holder.txtTag.setVisibility(View.VISIBLE);
+            holder.txtTag.setText(firstTag);
+            holder.txtTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollow(holder, pos, post);
+                    if (mTagListener != null)
+                        mTagListener.onTagClick(firstTag);
                 }
             });
+        } else {
+            holder.txtTag.setVisibility(View.GONE);
+            holder.txtTag.setOnClickListener(null);
+        }*/
 
+        // follow/following - supported by both wp and non-wp (rss) posts
+        showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+        holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFollow(holder, position, post);
+            }
+        });
+
+        // likes, comments & reblogging - supported by wp posts only
+        if (post.isWP()) {
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(holder, pos, post);
+                    toggleLike(holder, position, post);
                 }
             });
 
@@ -294,12 +294,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
-            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            holder.txtFollow.setVisibility(View.GONE);
         }
 
         showCounts(holder, post);
@@ -413,9 +411,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
     }
 
-    private void showFollowStatus(TextView txtFollow, boolean isFollowedByCurrentUser) {
-        txtFollow.setText(isFollowedByCurrentUser ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        txtFollow.setTextColor(isFollowedByCurrentUser ? mLinkColorActive : mLinkColor);
+    private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
+        if (isFollowed == txtFollow.isSelected())
+            return;
+
+        txtFollow.setSelected(isFollowed);
+        txtFollow.setText(isFollowed ? mFollowing : mFollow);
+        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
     /*
@@ -442,13 +445,13 @@ public class ReaderPostAdapter extends BaseAdapter {
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-calc data (avatar URLs, featured image URLs, and pubDates) in each post - these
+            // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
             // values are all cached by the post after the first time they're computed, so calling
             // these getters ensures the values are immediately available when called from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                // not used directly by getView(), but is used by post.getSource() which getView() uses
+                //post.getFirstTag();
                 post.getDatePublished();
             }
 

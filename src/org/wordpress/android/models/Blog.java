@@ -12,11 +12,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class Blog {
+public class Blog implements Serializable {
+
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
 
     private int id;
     private String url;
