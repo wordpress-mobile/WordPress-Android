@@ -400,6 +400,12 @@ public class WordPressDB {
         return getAccountsBy(null, null);
     }
 
+    public int setAllDotComAccountsVisibility(boolean visible) {
+        ContentValues values = new ContentValues();
+        values.put("isHidden", !visible);
+        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
+    }
+
     public boolean checkForExistingBlog(String blogName, String blogURL, String username,
                                         String password) {
         if (blogName == null || blogURL == null || username == null || password == null)

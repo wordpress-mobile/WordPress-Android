@@ -62,6 +62,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
             checkedView.setChecked(true);
             setItemChecked(position, true);
         }
+        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -96,16 +97,22 @@ public class ManageBlogsActivity extends SherlockListActivity {
 
     private void selectAll() {
         for (int i = 0; i < mAccounts.size(); ++i) {
-            setItemChecked(i, true);
+            Map<String, Object> item = mAccounts.get(i);
+            item.put("isHidden", false);
         }
+        WordPress.wpDB.setAllDotComAccountsVisibility(true);
+        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void deselectAll() {
         // force one item selected
-        setItemChecked(0, true);
-        for (int i = 1; i < mAccounts.size(); ++i) {
-            setItemChecked(i, false);
+        for (int i = 0; i < mAccounts.size(); ++i) {
+            Map<String, Object> item = mAccounts.get(i);
+            item.put("isHidden", true);
         }
+        WordPress.wpDB.setAllDotComAccountsVisibility(false);
+        setItemChecked(0, true);
+        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void startAnimatingRefreshButton() {
@@ -152,15 +159,14 @@ public class ManageBlogsActivity extends SherlockListActivity {
     private void setItemChecked(int position, boolean checked) {
         int blogId = MapUtils.getMapInt(mAccounts.get(position), "id");
         Blog blog = WordPress.getBlog(blogId);
-        if (blog == null) {
+        if (blog != null) {
+            blog.setHidden(!checked);
+            blog.save();
+        } else {
             Log.e(WordPress.TAG, "Error, blog id not found: " + blogId);
-            return ;
         }
-        blog.setHidden(!checked);
-        blog.save();
         Map<String, Object> item = mAccounts.get(position);
         item.put("isHidden", checked ? "0" : "1");
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private int blogShownCount() {

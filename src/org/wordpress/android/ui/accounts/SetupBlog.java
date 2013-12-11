@@ -214,8 +214,6 @@ public class SetupBlog {
      * Remove blogs that are not in the list and add others
      * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
      * that by a HashSet of a specialized Blog class (that supports comparison)
-     *
-     * @param newBlogList
      */
     public void syncBlogs(Context context, List<Map<String, Object>> newBlogList) {
         // Add all blogs from blogList
@@ -235,8 +233,6 @@ public class SetupBlog {
 
     /**
      * Add selected blog(s) to the database
-     *
-     * @param blogList
      */
     public void addBlogs(List<Map<String, Object>> blogList) {
         for (int i = 0; i < blogList.size(); i++) {
