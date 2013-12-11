@@ -193,7 +193,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
         }
     }
 
-    private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
+    private class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object>>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
 
@@ -210,8 +210,8 @@ public class ManageBlogsActivity extends SherlockListActivity {
         }
 
         @Override
-        protected List doInBackground(Void... args) {
-            List userBlogList = mSetupBlog.getBlogList();
+        protected List<Map<String, Object>> doInBackground(Void... args) {
+            List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
             if (userBlogList != null) {
                 mSetupBlog.syncBlogs(getApplicationContext(), userBlogList);
@@ -220,7 +220,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
         }
 
         @Override
-        protected void onPostExecute(final List<Object> userBlogList) {
+        protected void onPostExecute(final List<Map<String, Object>> userBlogList) {
             if (mErrorMsgId != 0) {
                 ToastUtils.showToast(getBaseContext(), mErrorMsgId, ToastUtils.Duration.SHORT);
             }

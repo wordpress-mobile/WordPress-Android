@@ -15,10 +15,12 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
@@ -74,7 +76,7 @@ public class SetupBlog {
         this.mSelfHostedURL = mSelfHostedURL;
     }
 
-    public List getBlogList() {
+    public List<Map<String, Object>> getBlogList() {
         if (mSelfHostedURL != null && mSelfHostedURL.length() != 0) {
             mXmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedURL);
         } else {
@@ -101,8 +103,15 @@ public class SetupBlog {
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
             Arrays.sort(userBlogs, Utils.BlogNameComparator);
-            List<Object> userBlogsList = Arrays.asList(userBlogs);
-            return userBlogsList;
+            List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
+            for (Object blog : userBlogs) {
+                try {
+                    userBlogList.add((Map<String, Object>) blog);
+                } catch (ClassCastException e) {
+                    Log.e(WordPress.TAG, "invalid date received from XMLRPC call wp.getUsersBlogs");
+                }
+            }
+            return userBlogList;
         } catch (XMLRPCException e) {
             String message = e.getMessage();
             if (message.contains("code 403")) {
@@ -202,42 +211,24 @@ public class SetupBlog {
     }
 
     /**
-     * Check if a blog is in a bloglist
-     *
-     * @param blogList a list of blogs (Map formatted)
-     * @param testedBlogMap a blog (Map formatted)
-     * @return true if testedBlog is in blogList
-     */
-    public boolean isBlogInList(List blogList, Map testedBlog) {
-        String blogName = testedBlog.get("blogName").toString();
-        String url = testedBlog.get("url").toString();
-        for (int i = 0; i < blogList.size(); i++) {
-            Map blogMap = (HashMap) blogList.get(i);
-            String curBlogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
-            String curUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
-            if (blogName.equals(curBlogName) && url.equals(curUrl)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Remove blogs that are not in the list and add others
      * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
      * that by a HashSet of a specialized Blog class (that supports comparison)
      *
-     * @param blogList
+     * @param newBlogList
      */
-    public void syncBlogs(Context context, List blogList) {
+    public void syncBlogs(Context context, List<Map<String, Object>> newBlogList) {
         // Add all blogs from blogList
-        addBlogs(blogList);
+        addBlogs(newBlogList);
         // Delete blogs if not in blogList
-        List allBlogs = WordPress.wpDB.getAllAccounts();
-        for (int i = 0; i < allBlogs.size(); i++) {
-            Map blogMap = (HashMap) allBlogs.get(i);
-            if (!isBlogInList(blogList, blogMap)) {
-                WordPress.wpDB.deleteAccount(context, Integer.parseInt(blogMap.get("id").toString()));
+        List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
+        Set<String> newBlogURLs = new HashSet<String>();
+        for (Map<String, Object> blog : newBlogList) {
+            newBlogURLs.add(blog.get("xmlrpc").toString());
+        }
+        for (Map<String, Object> blog : allBlogs) {
+            if (!newBlogURLs.contains(blog.get("url").toString())) {
+                WordPress.wpDB.deleteAccount(context, Integer.parseInt(blog.get("id").toString()));
             }
         }
     }
@@ -247,9 +238,9 @@ public class SetupBlog {
      *
      * @param blogList
      */
-    public void addBlogs(List blogList) {
+    public void addBlogs(List<Map<String, Object>> blogList) {
         for (int i = 0; i < blogList.size(); i++) {
-            Map blogMap = (HashMap) blogList.get(i);
+            Map<String, Object> blogMap = blogList.get(i);
             String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
             String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
             String homeUrl = blogMap.get("url").toString();
