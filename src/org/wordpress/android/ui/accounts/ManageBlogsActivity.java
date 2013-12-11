@@ -29,6 +29,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
@@ -193,7 +194,12 @@ public class ManageBlogsActivity extends SherlockListActivity {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(mResource, parent, false);
             CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
-            nameView.setText(MapUtils.getMapStr(getItem(position), "blogName"));
+            String name = MapUtils.getMapStr(getItem(position), "blogName");
+            if (name.trim().length() == 0) {
+                name = MapUtils.getMapStr(getItem(position), "url");
+                name = StringUtils.getHost(name);
+            }
+            nameView.setText(name);
             nameView.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
             return rowView;
         }
