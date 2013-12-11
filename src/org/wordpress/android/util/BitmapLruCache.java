@@ -2,7 +2,6 @@
 package org.wordpress.android.util;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
@@ -17,18 +16,8 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
     protected int sizeOf(String key, Bitmap value) {
         // The cache size will be measured in kilobytes rather than
         // number of items.
-        
-        int bytes = 0;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-            bytes = (value.getRowBytes() * value.getHeight());
-        } else {
-            bytes = value.getByteCount();
-        }
-        
-        if (bytes!=0)
-            bytes = bytes / 1024;
-        
-        return bytes;
+        int bytes = (value.getRowBytes() * value.getHeight());
+        return (bytes / 1024); //value.getByteCount() introduced in HONEYCOMB_MR1 or higher.
     }
 
     @Override

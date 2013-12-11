@@ -598,11 +598,9 @@ public class WordPress extends Application {
                 background = false;
             }
             
-            //Levels that we need to consider are  TRIM_MEMORY_UI_HIDDEN = 20; - TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10;
+            //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
-                int maxMemory = (int) (Runtime.getRuntime().freeMemory() / 1024);
-                int cacheSize = maxMemory / 16;
-                mBitmapCache.trimToSize(cacheSize);
+                mBitmapCache.evictAll();
             }
  
         }
