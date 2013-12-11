@@ -206,6 +206,18 @@ public class ReaderPost {
             post.setTags(sbTags.toString());
         }
 
+        // the single-post sites/$site/posts/$post endpoint returns site metadata if ?meta=site is
+        // added to the request, without this we wouldn't get the blog id, name or url
+        if (post.blogId == 0) {
+            JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
+            if (jsonSite != null) {
+                post.blogId = jsonSite.optInt("ID");
+                post.blogName = JSONUtil.getString(jsonSite, "name");
+                post.blogUrl = JSONUtil.getString(jsonSite, "URL");
+                post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            }
+        }
+
         return post;
     }
 

@@ -190,7 +190,7 @@ public class ReaderPostActions {
      * get the latest version of this post
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId;
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -264,19 +264,12 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
-        String path = "sites/" + blogId + "/posts/" + postId;
+        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
-                // posts retrieved from the /sites/ endpoint don't have site_ID (blogId), so set it here.
-                // note that the post will also be missing these values, which we can't set here:
-                //      blog name / site_name
-                //      site_URL (url of the blog)
-                //      is_external
-                //      site_is_private
-                post.blogId = blogId;
                 ReaderPostTable.addOrUpdatePost(post);
                 if (actionListener!=null)
                     actionListener.onActionResult(true);
