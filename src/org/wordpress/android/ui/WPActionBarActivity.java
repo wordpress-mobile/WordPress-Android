@@ -462,6 +462,28 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return blogNames;
     }
 
+    private int getBlogCount() {
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+        return accounts.size();
+    }
+
+    private boolean isSignedIn() {
+        if (WordPress.hasValidWPComCredentials(WPActionBarActivity.this)) {
+            return true;
+        }
+        return getBlogCount() != 0;
+    }
+
+    private void askToSignInIfNot() {
+        if (!isSignedIn()) {
+            Log.d(TAG, "No accounts configured.  Sending user to set up an account");
+            mShouldFinish = false;
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
+            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+        }
+    }
+
     /**
      * Setup the global state tracking which blog is currently active.
      * <p>
@@ -473,17 +495,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * the user to setup a blog.
      */
     public void setupCurrentBlog() {
-        Blog currentBlog = WordPress.getCurrentBlog();
-
-        // TODO: separate both condition (signed out OR no blog)
-        // No blogs are configured or user has signed out, so display new account activity
-        if (currentBlog == null || getBlogNames().length == 0) {
-            Log.d(TAG, "No accounts configured.  Sending user to set up an account");
-            mShouldFinish = false;
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
-            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
-        }
+        WordPress.getCurrentBlog();
+        askToSignInIfNot();
     }
 
     @Override
@@ -699,7 +712,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
-        
     }
 
     private class PostsMenuItem extends MenuDrawerItem {
@@ -722,6 +734,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
+        }
     }
 
     private class MediaMenuItem extends MenuDrawerItem {
@@ -739,6 +755,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(WPActionBarActivity.this, MediaBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
+        }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
         }
     }
     
@@ -760,6 +780,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
+        }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
         }
     }
 
@@ -795,6 +819,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
                 bagdeTextView.setText(String.valueOf(commentCount));
             }
+        }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
         }
     }
     
@@ -843,6 +871,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
+        }
     }
 
     private class QuickPhotoMenuItem extends MenuDrawerItem {
@@ -859,6 +891,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.putExtra("isNew", true);
             startActivityWithDelay(intent);
         }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
+        }
     }
 
     private class QuickVideoMenuItem extends MenuDrawerItem {
@@ -874,6 +910,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     : Constants.QUICK_POST_VIDEO_LIBRARY);
             intent.putExtra("isNew", true);
             startActivityWithDelay(intent);
+        }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
         }
     }
 
@@ -892,6 +932,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
+        }
+        @Override
+        public Boolean isVisible() {
+            return getBlogCount() != 0;
         }
     }
 
