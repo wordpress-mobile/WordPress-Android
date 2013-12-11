@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
@@ -84,9 +85,10 @@ public class WordPress extends Application {
 
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
-            // see http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+            // The cache size will be measured in kilobytes rather than
+            // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 16;
+            int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
@@ -572,6 +574,7 @@ public class WordPress extends Application {
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
      * 
      */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
@@ -595,6 +598,11 @@ public class WordPress extends Application {
                 background = true;
             } else {
                 background = false;
+            }
+            
+            //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
+            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
+                mBitmapCache.evictAll();
             }
  
         }
