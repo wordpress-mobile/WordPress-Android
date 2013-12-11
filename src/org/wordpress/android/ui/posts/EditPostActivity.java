@@ -130,10 +130,12 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 showErrorAndFinish(R.string.post_not_found);
                 return;
             }
-        } else {
-            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-                mPost = (Post)savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                mOriginalPost = (Post)savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+        } else if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+            try {
+                mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+            } catch (ClassCastException e) {
+                mPost = null;
             }
         }
 

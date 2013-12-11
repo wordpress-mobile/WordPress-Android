@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,9 +11,12 @@ import org.json.JSONException;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPHtml;
 
 public class Post implements Serializable {
+
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
     public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
@@ -472,17 +474,20 @@ public class Post implements Serializable {
         return result;
     }
 
-    @Override    
+    @Override
     public boolean equals(Object other) {
-        if (other == this) return true;
-        if (other == null) return false;
-        if (getClass() != other.getClass()) return false;
-        Post otherPost = (Post)other;
-        return (this.id == otherPost.id && 
-                this.isPage == otherPost.isPage &&
-                this.blogID == otherPost.blogID
-                );
-      }
+        if (other == this)
+            return true;
+        if (other instanceof Post) {
+            Post otherPost = (Post) other;
+            return (this.id == otherPost.id &&
+                    this.isPage == otherPost.isPage &&
+                    this.blogID == otherPost.blogID
+            );
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Get the entire post content

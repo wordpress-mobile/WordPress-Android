@@ -19,6 +19,10 @@ import java.util.Map;
 
 public class Blog implements Serializable {
 
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
+
     private int id;
     private String url;
     private String homeURL;
