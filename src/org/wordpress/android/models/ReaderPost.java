@@ -206,8 +206,9 @@ public class ReaderPost {
             post.setTags(sbTags.toString());
         }
 
-        // the single-post sites/$site/posts/$post endpoint returns site metadata if ?meta=site is
-        // added to the request, without this we wouldn't get the blog id, name or url
+        // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
+        // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
+        // added to the request) - check for this metadata if the blogId wasn't set above
         if (post.blogId == 0) {
             JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
             if (jsonSite != null) {
