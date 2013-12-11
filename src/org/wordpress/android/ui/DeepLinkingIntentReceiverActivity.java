@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
@@ -21,33 +23,55 @@ import org.wordpress.android.util.ToastUtils;
  * @todo make sure this works for logged out users
  */
 public class DeepLinkingIntentReceiverActivity extends Activity {
-    
+    private static final int INTENT_WELCOME = 0;
+
+    private String mBlogId;
+    private String mPostId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        //read the parameters and launch the Reader Activity
-        Intent intent = getIntent();
+
         String action = getIntent().getAction();
-        Uri uri = intent.getData();
+        Uri uri = getIntent().getData();
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            String strBlogId = uri.getQueryParameter("blogId");
-            String strPostId = uri.getQueryParameter("postId");
+            mBlogId = uri.getQueryParameter("blogId");
+            mPostId = uri.getQueryParameter("postId");
 
-            if (!TextUtils.isEmpty(strBlogId) && !TextUtils.isEmpty(strPostId)) {
-                ReaderLog.i(String.format("opening blogId %s, postId %s", strBlogId, strPostId));
-                try {
-                    ReaderActivityLauncher.showReaderPostDetail(this, Long.parseLong(strBlogId), Long.parseLong(strPostId));
-                } catch (NumberFormatException e) {
-                    ReaderLog.e(e);
-                }
+            // if user is logged in, show the post right away - otherwise show welcome activity
+            // and then show the post once the user has logged in
+            if (WordPress.hasValidWPComCredentials(this)) {
+                showPost();
             } else {
-                ToastUtils.showToast(this, R.string.error_generic);
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                startActivityForResult(intent, INTENT_WELCOME);
             }
+        } else {
+            finish();
         }
-        
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // show the post if user is returning from successful login
+        if (requestCode == INTENT_WELCOME && resultCode == RESULT_OK)
+            showPost();
+    }
+
+    private void showPost() {
+        if (!TextUtils.isEmpty(mBlogId) && !TextUtils.isEmpty(mPostId)) {
+            try {
+                ReaderActivityLauncher.showReaderPostDetail(this, Long.parseLong(mBlogId), Long.parseLong(mPostId));
+            } catch (NumberFormatException e) {
+                ReaderLog.e(e);
+            }
+        } else {
+            ToastUtils.showToast(this, R.string.error_generic);
+        }
+
         finish();
     }
     
