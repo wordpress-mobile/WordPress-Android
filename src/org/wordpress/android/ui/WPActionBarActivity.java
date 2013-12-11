@@ -499,6 +499,23 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         askToSignInIfNot();
     }
 
+    private void showReader() {
+        int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
+        Intent intent;
+        intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
+        intent.putExtra("id", readerBlogID);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        //startActivityWithDelay(intent);
+    }
+
+    protected void showReaderIfNoBlog() {
+        // If logged in without blog, redirect to the Reader view
+        if (getBlogCount() == 0) {
+            showReader();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -513,6 +530,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     initMenuDrawer();
                     mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
+                    // If logged in without blog, redirect to the Reader view
+                    if (getBlogCount() == 0) {
+                        showReader();
+                    }
                 } else {
                     finish();
                 }
