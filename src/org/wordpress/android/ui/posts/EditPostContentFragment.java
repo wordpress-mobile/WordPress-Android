@@ -46,7 +46,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -503,12 +502,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         if (post == null)
             return;
-
-        if (post.isUploaded()) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedUpdate);
-        } else {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
-        }
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content;
@@ -1510,7 +1503,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     @Override
     public void onSelectionChanged() {
-        if (!mActivity.getPost().isLocalDraft())
+        if (mActivity.getPost() == null || !mActivity.getPost().isLocalDraft())
             return;
 
         final Spannable s = mContentEditText.getText();

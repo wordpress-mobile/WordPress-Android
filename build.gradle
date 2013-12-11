@@ -32,10 +32,12 @@ dependencies {
     compile 'org.wordpress:slidinguppanel:1.0.0'
     compile 'org.wordpress:android-passcodelock:0.0.4'
     compile 'org.wordpress:commons-lang:2.6'
-    compile 'org.wordpress:emailchecker:0.1'
+    releaseCompile 'org.wordpress:emailchecker:0.1'
+    debugCompile 'org.wordpress:emailchecker-debug:0.1'
+
+    // Local dependencies
     compile files('libs/MixpanelAPI.jar')
     compile files('libs/QuantcastAndroidSdk.jar')
-
 }
 
 project.archivesBaseName="WordPress-Android"

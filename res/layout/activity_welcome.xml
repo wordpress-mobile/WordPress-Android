@@ -6,35 +6,10 @@
     android:orientation="vertical"
     android:baselineAligned="true">
 
-    <FrameLayout
+    <fragment
+        android:name="org.wordpress.android.ui.accounts.WelcomeFragmentSignIn"
+        android:id="@+id/sign_in_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" >
-
-        <org.wordpress.android.util.WPViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        
-        <org.wordpress.android.util.LinePageIndicator 
-            android:id="@+id/pageIndicator"
-            android:layout_width="fill_parent"
-			android:layout_height="wrap_content"  
-			android:paddingBottom="16dp"
-			android:layout_gravity="bottom"          
-            />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:text="@string/dont_have_account"
-            android:visibility="gone"
-            android:background="@drawable/selectable_background_wordpress"
-            />
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

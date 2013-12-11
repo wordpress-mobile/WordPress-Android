@@ -2,8 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -74,7 +72,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ViewGroup mSectionCategories;
-    private RelativeLayout mLocationRelativeLayout;
 
     private ArrayList<String> mCategories;
 

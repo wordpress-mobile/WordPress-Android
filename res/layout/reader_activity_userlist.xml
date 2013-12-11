@@ -27,6 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider"
-        tools:listitem="@layout/listitem_reader_user" />
+        tools:listitem="@layout/reader_listitem_user" />
 
 </RelativeLayout>

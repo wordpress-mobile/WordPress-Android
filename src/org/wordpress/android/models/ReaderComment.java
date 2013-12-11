@@ -1,13 +1,9 @@
 package org.wordpress.android.models;
 
-import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.Emoticons;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
@@ -140,4 +136,5 @@ public class ReaderComment {
 
     public boolean hasAuthorUrl() {
         return !TextUtils.isEmpty(authorUrl);
-    }}
+    }
+}

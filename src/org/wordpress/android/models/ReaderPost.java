@@ -12,7 +12,10 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -29,6 +32,7 @@ public class ReaderPost {
     private String blogName;
     private String blogUrl;
     private String postAvatar;
+    private String tags;          // comma-separated list of tags
 
     public long timestamp;        // used for sorting
     public String published;
@@ -179,6 +183,23 @@ public class ReaderPost {
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt())
             post.title = extractTitle(post.excerpt, 50);
+
+        // extract comma-separated list of tags
+        JSONObject jsonTags = json.optJSONObject("tags");
+        if (jsonTags != null) {
+            StringBuilder sbTags = new StringBuilder();
+            Iterator<String> it = jsonTags.keys();
+            boolean isFirst = true;
+            while (it.hasNext()) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sbTags.append(",");
+                }
+                sbTags.append(it.next());
+            }
+            post.setTags(sbTags.toString());
+        }
 
         return post;
     }
@@ -420,6 +441,25 @@ public class ReaderPost {
 
     // --------------------------------------------------------------------------------------------
 
+    /*
+     * comma-separated tags
+     */
+    public String getTags() {
+        return StringUtils.notNullStr(tags);
+    }
+    public void setTags(String tags) {
+        this.tags = StringUtils.notNullStr(tags);
+    }
+    public boolean hasTags() {
+        return !TextUtils.isEmpty(tags);
+    }
+
+    public List<String> getTagList() {
+        return Arrays.asList(getTags().split(","));
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
     }
@@ -465,7 +505,7 @@ public class ReaderPost {
 
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
-     * sole purpose is cache commonly-used values for the post that speeds up using them inside
+     * sole purpose is to cache commonly-used values for the post that speeds up using them inside
      * adapters
      ****/
 
@@ -515,28 +555,17 @@ public class ReaderPost {
         return dtPublished;
     }
 
-    /*
-     * returns "blog name | author name | date" - not cached since we want the timespan to accurately
-     * reflect the time this was called, but the dtPublished that this relies on *is* cached above
-     */
-    private static final String SOURCE_SEP = " | ";
-    public String getSource() {
-        String source;
-        if (hasBlogName() && hasAuthorName()) {
-            // skip author name if it's the same as the blog name (sometimes it's a lowercase version of the blog name)
-            if (authorName.equalsIgnoreCase(blogName)) {
-                source = blogName;
+    private transient String firstTag;
+    public String getFirstTag() {
+        if (firstTag == null) {
+            List<String> tags = getTagList();
+            if (tags != null && tags.size() > 0) {
+                firstTag = tags.get(0);
             } else {
-                source = blogName + SOURCE_SEP + authorName;
+                firstTag = "";
             }
-        } else if (hasAuthorName()) {
-            source = authorName;
-        } else if (hasBlogName()) {
-            source = blogName;
-        } else {
-            source = "";
         }
-
-        return source + SOURCE_SEP + DateTimeUtils.javaDateToTimeSpan(getDatePublished());
+        return firstTag;
     }
+
 }

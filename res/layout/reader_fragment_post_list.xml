@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/reader_divider_grey">
+    android:background="@color/reader_background">
 
     <ListView
         android:id="@android:id/list"
         style="@style/ReaderListView"
-        android:layout_marginLeft="@dimen/reader_divider_size"
-        android:layout_marginRight="@dimen/reader_divider_size"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
         android:divider="@color/reader_divider_grey"
-        android:dividerHeight="@dimen/reader_divider_size"
+        android:dividerHeight="@dimen/reader_margin_large"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
