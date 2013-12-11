@@ -66,7 +66,8 @@ public class ReaderUserListActivity extends FragmentActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+                        //int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+                        int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
                         boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
                         final String title;
                         if (isLikedByCurrentUser) {
@@ -75,10 +76,10 @@ public class ReaderUserListActivity extends FragmentActivity {
                                     title = getString(R.string.reader_likes_only_you);
                                     break;
                                 case 2 :
-                                    title = getString(R.string.reader_likes_you_and_one_long);
+                                    title = getString(R.string.reader_likes_you_and_one);
                                     break;
                                 default :
-                                    title = getString(R.string.reader_likes_you_and_multi_long, numLikes-1);
+                                    title = getString(R.string.reader_likes_you_and_multi, numLikes-1);
                                     break;
                             }
                         } else {

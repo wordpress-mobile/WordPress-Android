@@ -1,4 +1,3 @@
 <resources>
-    <!-- native reader - smaller featured image height for landscape (two-column) -->
-    <dimen name="reader_featured_image_height">180dp</dimen>
+    <dimen name="reader_list_margin">@dimen/reader_list_margin_landscape</dimen>
 </resources>

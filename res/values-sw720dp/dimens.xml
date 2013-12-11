@@ -14,4 +14,6 @@
     <dimen name="format_bar_height">50dp</dimen>
     <dimen name="theme_details_dialog_min_width">650dp</dimen>
     <dimen name="theme_details_dialog_height">500dp</dimen>
+
+    <dimen name="reader_list_margin">@dimen/reader_list_margin_tablet_large</dimen>
 </resources>

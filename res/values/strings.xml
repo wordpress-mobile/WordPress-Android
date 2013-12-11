@@ -670,10 +670,6 @@
 
     <!-- menu text-->
     <string name="reader_menu_tags">Tags</string>
-    <string name="reader_menu_log">View Log</string>
-    <string name="reader_menu_refresh">Refresh</string>
-    <string name="reader_menu_signout">Sign Out</string>
-    <string name="reader_menu_about">About</string>
 
     <!-- button text -->
     <string name="reader_btn_yes">Yes</string>
@@ -694,28 +690,18 @@
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="label_toggle_show">SHOW</string>
-    <string name="label_toggle_hide">HIDE</string>
     <string name="reader_label_new_posts_one">One new article</string>
     <string name="reader_label_new_posts_multi">%d new articles</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
 
-    <!-- like/comment counts in post list -->
-    <string name="reader_label_like_count_singular">1 like</string>
-    <string name="reader_label_like_count_plural">%d likes</string>
-    <string name="reader_label_comment_count_singular">1 comment</string>
-    <string name="reader_label_comment_count_plural">%d comments</string>
-
-    <!-- like counts in post detail and liking users activity-->
+    <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
-    <string name="reader_likes_you_and_one_short">You and one other</string>
-    <string name="reader_likes_you_and_multi_short">You and %d others</string>
-    <string name="reader_likes_you_and_one_long">You and one other like this</string>
-    <string name="reader_likes_you_and_multi_long">You and %d others like this</string>
+    <string name="reader_likes_you_and_one">You and one other like this</string>
+    <string name="reader_likes_you_and_multi">You and %d others like this</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
@@ -742,7 +728,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the plus icon to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
     <string name="reader_empty_posts_liked">You have not liked any posts.</string>
 
     <!-- NUX strings -->

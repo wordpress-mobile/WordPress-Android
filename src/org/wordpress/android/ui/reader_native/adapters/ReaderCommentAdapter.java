@@ -47,6 +47,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private int mBgColorNormal;
     private int mBgColorHighlight;
+    private int mLinkColor;
+    private int mNoLinkColor;
 
     private ReaderCommentList mComments = new ReaderCommentList();
     private ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -67,6 +69,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
     }
 
     @SuppressLint("NewApi")
@@ -111,7 +115,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
             holder = new CommentViewHolder();
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.text_comment_title);
+            holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
@@ -122,7 +126,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder = (CommentViewHolder) convertView.getTag();
         }
 
-        holder.txtTitle.setText(comment.getAuthorName());
+        holder.txtAuthor.setText(comment.getAuthorName());
         displayComment(comment.getText(), holder.txtText);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
@@ -130,21 +134,23 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (comment.hasAvatar()) {
             holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            holder.imgAvatar.setVisibility(View.VISIBLE);
-
-            // tapping avatar opens blog in browser
-            if (comment.hasAuthorUrl()) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(v.getContext(), comment.getAuthorUrl());
-                    }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
         } else {
-            holder.imgAvatar.setVisibility(View.GONE);
+            holder.imgAvatar.setImageResource(R.drawable.placeholder);
+        }
+
+        // tapping avatar or author name opens blog in browser
+        if (comment.hasAuthorUrl()) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.openUrl(view.getContext(), comment.getAuthorUrl());
+                }
+            };
+            holder.imgAvatar.setOnClickListener(listener);
+            holder.txtAuthor.setOnClickListener(listener);
+            holder.txtAuthor.setTextColor(mLinkColor);
+        } else {
+            holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
         // show spacer and indent it based on comment level
@@ -185,6 +191,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (content.contains("icon_"))
             content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
 
+        // skip performance hit of html conversion if content doesn't contain html
+        if (!content.contains("<") && !content.contains("&")) {
+            textView.setText(content.trim());
+            return;
+        }
+
         // now convert to HTML with an image getter that enforces a max image size
         final SpannableStringBuilder html;
         if (content.contains("<img")) {
@@ -208,7 +220,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     private static class CommentViewHolder {
-        private TextView txtTitle;
+        private TextView txtAuthor;
         private TextView txtText;
         private TextView txtDate;
         private WPNetworkImageView imgAvatar;

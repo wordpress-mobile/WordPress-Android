@@ -30,6 +30,10 @@ public class ReaderTagActions {
         throw new AssertionError();
     }
 
+    public static String getReadEndpointForTag(final String tagName) {
+        return String.format("/read/tags/%s/posts", sanitizeTitle(tagName));
+    }
+
     /**
      * perform the passed action on the passed tag - this is optimistic (returns before API call completes)
      **/
