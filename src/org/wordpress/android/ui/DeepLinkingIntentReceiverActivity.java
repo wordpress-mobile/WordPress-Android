@@ -19,8 +19,6 @@ import org.wordpress.android.util.ToastUtils;
  * wordpress://viewpost?blogId={blogId}&postId={postId}
  * 
  * Redirects users to the reader activity along with IDs passed in the intent
- * 
- * @todo make sure this works for logged out users
  */
 public class DeepLinkingIntentReceiverActivity extends Activity {
     private static final int INTENT_WELCOME = 0;
