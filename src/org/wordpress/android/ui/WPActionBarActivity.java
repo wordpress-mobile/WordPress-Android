@@ -45,6 +45,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -69,6 +70,7 @@ import java.util.Map;
  * Base class for Activities that include a standard action bar and menu drawer.
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity {
+    public static final int NEW_BLOG_CANCELED = 10;
 
     private static final String TAG = "WPActionBarActivity";
 
@@ -112,6 +114,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private boolean mIsXLargeDevice;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
+    private boolean mNewBlogActivityRunning;
 
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
@@ -475,31 +478,42 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void setupCurrentBlog() {
         Blog currentBlog = WordPress.getCurrentBlog();
 
-        // TODO: separate both condition (signed out OR no blog)
-        // No blogs are configured or user has signed out, so display new account activity
         if (currentBlog == null || getBlogNames().length == 0) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
-            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+            if (WordPress.hasValidWPComCredentials(WPActionBarActivity.this)) {
+                // Ugly workaround to prevent onResume to call this a second time
+                if (!mNewBlogActivityRunning) {
+                    mNewBlogActivityRunning = true;
+                    Intent intent = new Intent(this, NewBlogActivity.class);
+                    intent.putExtra(NewBlogActivity.KEY_START_MODE,
+                            NewBlogActivity.CREATE_BLOG_LOGOUT_ON_CANCEL);
+                    startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+                }
+            } else {
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                intent.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
+                        WelcomeActivity.SIGN_IN_REQUEST);
+                startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
+                mNewBlogActivityRunning = false;
                 if (resultCode == RESULT_OK) {
-                    // new blog has been added, so rebuild cache of blogs and
-                    // setup current blog
+                    // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();
                     mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
+                } else if (resultCode == NEW_BLOG_CANCELED) {
+                    // Do nothing and don't finish(), this will start a WelcomeActivity
                 } else {
                     finish();
                 }
