@@ -77,7 +77,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ReaderPost mPost;
 
     private LayoutInflater mInflater;
-    private ViewGroup mLayoutActions;
+    private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
     private ListView mListView;
     private ViewGroup mCommentFooter;
@@ -116,37 +116,39 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             });
 
             // enable full screen when user scrolls down, disable full screen when user scrolls up
-            mListView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction() & MotionEvent.ACTION_MASK;
-                    final float y = event.getY();
-                    final int yDiff = (int) (y - mLastMotionY);
-                    mLastMotionY = y;
+            if (isFullScreenSupported()) {
+                mListView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        int action = event.getAction() & MotionEvent.ACTION_MASK;
+                        final float y = event.getY();
+                        final int yDiff = (int) (y - mLastMotionY);
+                        mLastMotionY = y;
 
-                    switch (action) {
-                        case MotionEvent.ACTION_MOVE :
-                            if (mIsMoving) {
-                                if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
-                                    setIsFullScreen(true);
-                                    return true;
-                                } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
-                                    setIsFullScreen(false);
+                        switch (action) {
+                            case MotionEvent.ACTION_MOVE :
+                                if (mIsMoving) {
+                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
+                                        setIsFullScreen(true);
+                                        return true;
+                                    } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                        setIsFullScreen(false);
+                                        return true;
+                                    }
+                                } else {
+                                    mIsMoving = true;
                                     return true;
                                 }
-                            } else {
-                                mIsMoving = true;
-                                return true;
-                            }
-                            break;
-                        default :
-                            mIsMoving = false;
-                            break;
+                                break;
+                            default :
+                                mIsMoving = false;
+                                break;
 
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            }
         }
 
         return mListView;
@@ -238,7 +240,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         mProgressFooter.setVisibility(View.INVISIBLE);
         getListView().addFooterView(mCommentFooter);
 
-        mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
+        mLayoutIcons = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
 
 
@@ -315,12 +317,24 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         }
     }
 
+    /*
+     * auto-hiding the ActionBar and icon bar is jittery/buggy when the translucent ActionBar
+     * isn't enabled (which it won't be on pre-ICS devices), so disable full-screen mode
+     * when the translucent ActionBar isn't enabled
+     */
+    private boolean isFullScreenSupported() {
+        return NativeReaderActivity.isTranslucentActionBarEnabled();
+    }
+
+    /*
+     * full-screen mode hides the ActionBar and icon bar
+     */
     private void setIsFullScreen(boolean isFullScreen) {
-        if (isFullScreen == mIsFullScreen)
+        if (isFullScreen == mIsFullScreen || !isFullScreenSupported())
             return;
 
         if (mPost.isWP())
-            animateActionBar(!isFullScreen);
+            animateIconBar(!isFullScreen);
 
         if (isFullScreen) {
             getSupportActionBar().hide();
@@ -332,12 +346,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * animate in/out the reblog/comment/like actions
+     * animate in/out the layout containing the reblog/comment/like icons
      */
-    private void animateActionBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutActions.getVisibility() == View.VISIBLE)
+    private void animateIconBar(boolean isAnimatingIn) {
+        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE)
             return;
-        if (!isAnimatingIn && mLayoutActions.getVisibility() != View.VISIBLE)
+        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE)
             return;
 
         final Animation animation;
@@ -353,9 +367,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         animation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
 
-        mLayoutActions.clearAnimation();
-        mLayoutActions.startAnimation(animation);
-        mLayoutActions.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
+        mLayoutIcons.clearAnimation();
+        mLayoutIcons.startAnimation(animation);
+        mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
@@ -726,8 +740,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         // don't show comment box if a comment is currently being submitted
         if (mIsSubmittingComment)
             return;
-
-        //setIsFullScreen(false);
 
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
@@ -1155,9 +1167,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) findViewById(R.id.image_featured);
 
-            imgBtnReblog = (ImageView) mLayoutActions.findViewById(R.id.image_reblog_btn);
-            imgBtnComment = (ImageView) mLayoutActions.findViewById(R.id.image_comment_btn);
-            imgBtnLike = (ImageView) mLayoutActions.findViewById(R.id.image_like_btn);
+            imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
+            imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
+            imgBtnLike = (ImageView) mLayoutIcons.findViewById(R.id.image_like_btn);
 
             // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
@@ -1316,7 +1328,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
-            mLayoutActions.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
             // make sure the adapter is assigned now that we've retrieved the post and updated views
             if (!hasCommentAdapter())

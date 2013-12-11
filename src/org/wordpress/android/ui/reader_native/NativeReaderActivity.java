@@ -55,7 +55,7 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     private boolean mHasPerformedPurge = false;
 
     /*
-     * enable translucent ActionBar on ICS+
+     * enable translucent ActionBar on ICS+ (buggy/unsupported on older versions)
      */
     protected static boolean isTranslucentActionBarEnabled() {
         return (SysUtils.isGteAndroid4());
