@@ -599,7 +599,7 @@ public class WordPress extends Application {
             }
             
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
-            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
  
