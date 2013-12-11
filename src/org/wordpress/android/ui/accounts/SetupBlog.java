@@ -190,7 +190,7 @@ public class SetupBlog {
     public Blog addBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                         String username, String password) {
         Blog blog = null;
-        if (!WordPress.wpDB.checkForExistingBlog(blogName, xmlRpcUrl, username, password)) {
+        if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
             blog = new Blog(xmlRpcUrl, username, password);
             blog.setHomeURL(homeUrl);
@@ -206,6 +206,19 @@ public class SetupBlog {
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
             blog.save(null);
+        } else {
+            // Update blog name
+            int accountId = WordPress.wpDB.getAccountIdForBlogIdAndXmlRpcUrl(
+                    Integer.parseInt(blogId), xmlRpcUrl);
+            try {
+                blog = new Blog(accountId);
+                if (!blogName.equals(blog.getBlogName())) {
+                    blog.setBlogName(blogName);
+                    blog.save();
+                }
+            } catch (Exception e) {
+                Log.e(WordPress.TAG, "accountId: " + accountId + " not found");
+            }
         }
         return blog;
     }
@@ -222,10 +235,10 @@ public class SetupBlog {
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
         for (Map<String, Object> blog : newBlogList) {
-            newBlogURLs.add(blog.get("xmlrpc").toString());
+            newBlogURLs.add(blog.get("xmlrpc").toString() + blog.get("blogid").toString());
         }
         for (Map<String, Object> blog : allBlogs) {
-            if (!newBlogURLs.contains(blog.get("url").toString())) {
+            if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
                 WordPress.wpDB.deleteAccount(context, Integer.parseInt(blog.get("id").toString()));
             }
         }

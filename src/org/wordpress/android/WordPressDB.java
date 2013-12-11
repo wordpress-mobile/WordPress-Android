@@ -406,9 +406,9 @@ public class WordPressDB {
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
     }
 
-    public boolean isBlogInDatabase(String xmlRpcUrl, int blogId) {
+    public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
         Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
-                new String[]{String.valueOf(blogId), xmlRpcUrl}, null, null, null, null);
+                new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);
         boolean result =  c.getCount() > 0;
         c.close();
         return result;
@@ -437,6 +437,7 @@ public class WordPressDB {
         values.put("scaledImgWidth", blog.getScaledImageWidth());
         values.put("blog_options", blog.getBlogOptions());
         values.put("isHidden", blog.isHidden());
+        values.put("blogName", blog.getBlogName());
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;
@@ -657,6 +658,11 @@ public class WordPressDB {
      */
     public int getAccountIdForBlogId(int blogId) {
         return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
+    }
+
+    public int getAccountIdForBlogIdAndXmlRpcUrl(int blogId, String xmlRpcUrl) {
+        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
+                new String[]{Integer.toString(blogId), xmlRpcUrl});
     }
 
     public void updateNotificationFlag(int id, boolean flag) {
