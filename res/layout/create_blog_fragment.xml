@@ -145,5 +145,22 @@
                 android:gravity="center|top"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/WordPress.NUXWhiteButtonNoBg"
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/cancel"
+                android:gravity="center|top"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
