@@ -7,6 +7,7 @@
     android:id="@+id/layout_progress_footer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
     android:visibility="gone">
 
     <ProgressBar
@@ -15,6 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/reader_margin_small"
-        android:layout_marginTop="@dimen/reader_margin_small" />
+        android:layout_marginBottom="@dimen/reader_margin_extra_small"
+        android:layout_marginTop="@dimen/reader_margin_extra_small" />
 </RelativeLayout>

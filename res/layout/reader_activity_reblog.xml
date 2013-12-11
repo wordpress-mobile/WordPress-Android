@@ -64,9 +64,8 @@
             android:gravity="top"
             android:padding="@dimen/reader_margin_medium" />
 
-        <org.wordpress.android.widgets.WPTextView
+        <Button
             android:id="@+id/btn_reblog"
-            style="@style/ReaderTextView.ActionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_comment"

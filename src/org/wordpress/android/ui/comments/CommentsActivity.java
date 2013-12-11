@@ -25,7 +25,7 @@ import org.wordpress.android.util.ToastUtils;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
-                   CommentDetailFragment.OnCommentChangeListener,
+                   CommentActions.OnCommentChangeListener,
                    OnAnimateRefreshButtonListener {
 
     protected int id;
@@ -67,7 +67,7 @@ public class CommentsActivity extends WPActionBarActivity
 
         attemptToSelectComment();
         if (fromNotification)
-            commentList.refreshComments();
+            refreshCommentList();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -76,7 +76,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        commentList.refreshComments();
+        refreshCommentList();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
             attemptToSelectComment();
-            commentList.refreshComments();
+            refreshCommentList();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -132,7 +132,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (WordPress.currentBlog != null) {
             boolean commentsLoaded = commentList.loadComments(false, false);
             if (!commentsLoaded)
-                commentList.refreshComments();
+                refreshCommentList();
         }
     }
 
@@ -180,19 +180,56 @@ public class CommentsActivity extends WPActionBarActivity
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
-                f.setComment(comment);
+                f.setComment(WordPress.getCurrentBlogId(), comment);
             }
         }
     }
 
+    /*
+     * refresh the comment in the detail view if it's showing
+     */
+    private void refreshCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+
+        fragment.refreshComment();
+    }
 
     /*
-     * called from CommentDetailFragment when comment is moderated - replace the
-     * existing comment in the list with the passed one
+     * clear the comment in the detail view if it's showing
+     */
+    private void clearCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+        fragment.clearComment();
+    }
+
+    private void refreshCommentList() {
+        if (commentList != null)
+            commentList.refreshComments();
+    }
+
+    /**
+     * these three methods implement OnCommentChangedListener and are triggered from this activity,
+     * the list fragment, and the detail fragment whenever a comment is changed
      */
     @Override
-    public void onCommentModerated(Comment comment) {
-        commentList.replaceComment(comment);
+    public void onCommentAdded() {
+        refreshCommentList();
+    }
+    @Override
+    public void onCommentDeleted() {
+        refreshCommentList();
+        clearCommentDetail();
+    }
+    @Override
+    public void onCommentModerated() {
+        refreshCommentList();
+        refreshCommentDetail();
     }
 
     /*
@@ -214,14 +251,15 @@ public class CommentsActivity extends WPActionBarActivity
              * fire background action to delete this comment
              */
             showDialog(ID_DIALOG_DELETING);
-            CommentActions.deleteComment(WordPress.currentBlog,
+            CommentActions.deleteComment(
+                    WordPress.getCurrentBlogAccountId(),
                     WordPress.currentComment,
                     new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {
                             dismissDialog(ID_DIALOG_DELETING);
                             if (succeeded) {
-                                commentList.refreshComments();
+                                onCommentDeleted();
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
                             } else {
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
@@ -249,7 +287,7 @@ public class CommentsActivity extends WPActionBarActivity
                     return true;
             }
 
-            CommentActions.moderateComment(WordPress.currentBlog,
+            CommentActions.moderateComment(WordPress.getCurrentBlogAccountId(),
                                            WordPress.currentComment,
                                            status,
                     new CommentActions.CommentActionListener() {
@@ -257,7 +295,7 @@ public class CommentsActivity extends WPActionBarActivity
                         public void onActionResult(boolean succeeded) {
                             dismissDialog(ID_DIALOG_MODERATING);
                             if (succeeded) {
-                                commentList.refreshComments();
+                                onCommentModerated();
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
                             } else {
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
@@ -268,15 +306,6 @@ public class CommentsActivity extends WPActionBarActivity
             return true;
         }
     }
-
-    /*
-     * called from CommentDetailFragment when comment is replied to (adding a new comment)
-     */
-    @Override
-    public void onCommentAdded() {
-        commentList.refreshComments();
-    }
-
 
     @Override
     public void onAnimateRefreshButton(boolean start) {

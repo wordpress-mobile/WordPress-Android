@@ -7,6 +7,7 @@ import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 import android.util.Log;
 import org.wordpress.android.TestUtils;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
     // This test reproduces #134 (crash when not fixed)
     public void testAddNote_issue134() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
-        WordPressDB wpdb = new WordPressDB(targetContext);
+        WordPressDB wpdb = WordPress.wpDB;
         Note note = createEmptyNote();
         wpdb.addNote(note, true);
         db.close();
@@ -46,7 +47,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
 
     public void testGenerateNoteId() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
-        WordPressDB wpdb = new WordPressDB(targetContext);
+        WordPressDB wpdb = WordPress.wpDB;
 
         wpdb.generateIdFor(null);
         Note note = createEmptyNote();
@@ -57,7 +58,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
 
     public void testGetNoteById() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
-        WordPressDB wpdb = new WordPressDB(targetContext);
+        WordPressDB wpdb = WordPress.wpDB;
 
         Note note = wpdb.getNoteById(12123);
 
@@ -66,7 +67,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
 
     public void testGetNoteById2() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
-        WordPressDB wpdb = new WordPressDB(targetContext);
+        WordPressDB wpdb = WordPress.wpDB;
 
         Note note = createEmptyNote();
         wpdb.addNote(note, true);
@@ -79,7 +80,7 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
 
     public void testAddNoteClearNotes() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
-        WordPressDB wpdb = new WordPressDB(targetContext);
+        WordPressDB wpdb = WordPress.wpDB;
 
         Note note = createEmptyNote();
         wpdb.addNote(note, true);

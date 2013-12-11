@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader_native;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,8 +24,10 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /*
  * created by nbradbury
@@ -38,11 +41,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
 
     // ActionBar alpha
     protected static final int ALPHA_NONE = 0;
-    protected static final int ALPHA_LEVEL_1 = 230;
-    protected static final int ALPHA_LEVEL_2 = 210;
-    protected static final int ALPHA_LEVEL_3 = 190;
-    protected static final int ALPHA_LEVEL_4 = 170;
-    protected static final int ALPHA_LEVEL_5 = 150;
+    protected static final int ALPHA_LEVEL_1 = 245;
+    protected static final int ALPHA_LEVEL_2 = 230;
+    protected static final int ALPHA_LEVEL_3 = 215;
+    protected static final int ALPHA_LEVEL_4 = 200;
+    protected static final int ALPHA_LEVEL_5 = 185;
 
     private int mCurrentActionBarAlpha = 0;
     private int mPrevActionBarAlpha = 0;
@@ -58,13 +61,18 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         return (SysUtils.isGteAndroid4());
     }
 
+    @SuppressLint("NewApi")
+    protected static void enableTranslucentActionBar(Activity activity) {
+        activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         boolean isTranslucentActionBarEnabled = isTranslucentActionBarEnabled();
         if (isTranslucentActionBarEnabled)
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+            enableTranslucentActionBar(this);
 
         setContentView(R.layout.reader_activity_main);
 
@@ -95,12 +103,17 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             });
         }
 
-        if (savedInstanceState==null) {
-            showPostListFragment();
-        } else {
+        if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getPostListFragment() == null)
+            showPostListFragment();
     }
 
     @Override
@@ -220,18 +233,31 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(this);
+                ReaderActivityLauncher.showReaderTagsForResult(this, null);
                 return true;
             case R.id.menu_refresh :
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment!=null) {
-                    fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                    if (!NetworkUtils.isNetworkAvailable(this)) {
+                        ToastUtils.showToast(this, R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
+                    } else {
+                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                    }
                     return true;
                 }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSignout() {
+        super.onSignout();
+        // reader database will have been cleared by the time this is called, but the fragment must
+        // be removed or else it will continue to show the same articles - onResume() will take care
+        // of re-displaying the fragment if necessary
+        removePostListFragment();
     }
 
     /*
@@ -242,9 +268,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                 .beginTransaction()
                 .add(R.id.fragment_container, ReaderPostListFragment.newInstance(this), TAG_FRAGMENT_POST_LIST)
                 .commit();
-
-        // remove window background since background color is set in fragment layout (prevents overdraw)
-        getWindow().setBackgroundDrawable(null);
     }
 
     private void removePostListFragment() {
@@ -256,9 +279,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                 .beginTransaction()
                 .remove(fragment)
                 .commit();
-
-        // return window background
-        getWindow().setBackgroundDrawableResource(android.R.color.white);
     }
 
     private ReaderPostListFragment getPostListFragment() {
@@ -298,11 +318,11 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
             return;
 
         // solid background if no alpha, otherwise create color drawable with alpha applied
-        // (source color is based on ab_stacked_solid_wordpress.9.png)
+        // (source color is based on R.color.blue_new_kid)
          if (alpha==ALPHA_NONE) {
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_wordpress));
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_new_kid));
         } else {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 20, 103, 145)));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 46, 162, 204)));
         }
         mCurrentActionBarAlpha = alpha;
     }

@@ -7,13 +7,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_detail"
     android:background="@color/grey_extra_light">
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_title"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/reader_margin_large"
         android:paddingRight="@dimen/reader_margin_medium"
@@ -43,7 +43,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_date"
-                style="@style/ReaderTextView.Source.Large"
+                style="@style/ReaderTextView.Date.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -91,7 +91,7 @@
             android:id="@+id/text_approve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/reader_button_transparent_selector"
+            android:background="@drawable/reader_transparent_selector"
             android:drawableLeft="@drawable/moderate_approve"
             android:padding="@dimen/reader_margin_large"
             android:text="@string/approve"

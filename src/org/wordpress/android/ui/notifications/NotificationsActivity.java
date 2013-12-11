@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
                                             IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
+    private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -95,6 +97,20 @@ public class NotificationsActivity extends WPActionBarActivity {
         fragmentDetectors.add(new FragmentDetector() {
             @Override
             public Fragment getFragment(Note note) {
+                if (note.isMultiLineListTemplate()){
+                    Fragment fragment = null;
+                    if (note.isCommentLikeType())
+                        fragment = new NoteCommentLikeFragment();
+                    else if (note.isAutomattcherType())
+                        fragment = new NoteMatcherFragment();
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
                 if (note.isSingleLineListTemplate()) {
                     Fragment fragment = new SingleLineListFragment();
                     return fragment;
@@ -116,9 +132,12 @@ public class NotificationsActivity extends WPActionBarActivity {
         
         GCMIntentService.activeNotificationsMap.clear();
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             launchWithNoteId();
-
+        } else {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+        }
+        
         refreshNotificationsListFragment(notes);
 
         if (savedInstanceState != null)
@@ -155,6 +174,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
+    private boolean mHasPerformedInitialUpdate;
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
@@ -521,6 +541,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.remove(NOTE_ID_EXTRA);
         super.onSaveInstanceState(outState);
     }
@@ -535,5 +556,14 @@ public class NotificationsActivity extends WPActionBarActivity {
     public void onResume() {
         super.onResume();
         registerReceiver(mBroadcastReceiver, new IntentFilter(NOTIFICATION_ACTION));
+    }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
+            ReaderAuthActions.updateCookies(this);
+        }
     }
 }

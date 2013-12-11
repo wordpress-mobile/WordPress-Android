@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:textColor="#777777"
             android:textSize="12sp"
-            android:text="@string/publish"
             android:gravity="right" />
     </LinearLayout>
 

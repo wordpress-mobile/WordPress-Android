@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/post_content_wrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/post_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="22sp"
+                android:hint="@string/title"
+                android:inputType="textCapSentences|textAutoCorrect" />
+
+            <org.wordpress.android.util.WPEditText
+                android:id="@+id/post_content"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:layout_weight="1"
+                android:hint="@string/post_content"
+                android:background="@null"
+                android:lineSpacingExtra="4dp"
+                android:textSize="18sp"
+                android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+                android:imeOptions="flagNoExtractUi"
+                android:textColorLink="#21759b" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/post_settings_wrapper"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/list_divider" />
+
+        <Button
+            android:id="@+id/post_settings_button"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textSize="18sp"
+            android:drawableLeft="@drawable/ic_post_settings"
+            android:background="@drawable/selectable_background_wordpress"
+            android:text="@string/post_settings"
+            android:drawablePadding="6dp"
+            android:layout_gravity="bottom"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/format_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/format_bar_height"
+        android:layout_gravity="bottom"
+        android:background="@drawable/format_bar_bg"
+        android:orientation="horizontal"
+        android:paddingTop="1dp"
+        android:visibility="gone">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:id="@+id/bold"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_format_bold" />
+
+                <ToggleButton
+                    android:id="@+id/em"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_format_italic" />
+
+                <ToggleButton
+                    android:id="@+id/underline"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_format_underline" />
+
+                <ToggleButton
+                    android:id="@+id/strike"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_format_strikethrough" />
+
+                <ToggleButton
+                    android:id="@+id/bquote"
+                    style="@style/WordPress.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_format_quote" />
+
+                <ImageButton
+                    android:id="@+id/link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:minWidth="@dimen/format_bar_height"
+                    android:src="@drawable/icon_format_link"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:contentDescription="@string/create_a_link"/>
+
+                <ImageButton
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:minWidth="@dimen/format_bar_height"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:src="@drawable/icon_format_more"
+                    android:contentDescription="@string/more_tag"
+                    />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <ImageButton
+            android:id="@+id/addPictureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:minWidth="@dimen/format_bar_height"
+            android:background="@drawable/selectable_background_wordpress"
+            android:contentDescription="@string/content_description_add_media"
+            android:src="@drawable/icon_format_media" />
+    </LinearLayout>
+
+</LinearLayout>

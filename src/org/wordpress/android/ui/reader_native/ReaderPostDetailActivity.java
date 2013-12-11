@@ -4,17 +4,20 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -29,6 +32,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuInflater;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -39,16 +44,20 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader_native.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderCommentAdapter;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -59,7 +68,7 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 7/8/13.
  */
-public class ReaderPostDetailActivity extends FragmentActivity {
+public class ReaderPostDetailActivity extends WPActionBarActivity {
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
 
@@ -68,11 +77,12 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     private ReaderPost mPost;
 
     private LayoutInflater mInflater;
-    private ViewGroup mLayoutLikingAvatars;
     private ViewGroup mLayoutActions;
+    private ViewGroup mLayoutLikes;
     private ListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
+    private WebView mWebView;
 
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
@@ -81,34 +91,64 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     private boolean mIsPostChanged = false;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
-    private View mDecorView;
     private final Handler mHandler = new Handler();
+
+    private boolean mIsFullScreen;
+    private float mLastMotionY;
+    private boolean mIsMoving;
+
+    private static final int MOVE_MIN_DIFF = 6;
+    private static final long WEBVIEW_DELAY_MS = 2000L;
 
     private ListView getListView() {
         if (mListView==null) {
             mListView = (ListView) findViewById(android.R.id.list);
 
-            // enable replying to an individual comment when the user long clicks it - this is done
-            // instead of setting an OnItemClickListener for two reasons:
-            //   1. OnItemClickListener won't fire for comments that contain links (due
-            //      to the comment text using autoLink="web")
-            //   2. It's too easy to accidentally cause OnItemClickListener to fire while
-            //      scrolling/flinging through the list, whereas OnItemLongClickListener
-            //      is a more deliberate action
-            mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            // enable replying to an individual comment when the user taps it
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    // id will be the id of the tapped comment - note that it will be -1 when the
-                    // post detail header is long clicked, which we want to ignore
-                    if (id > 0) {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // id is the commentId of the tapped comment - note that it will be -1 when the
+                    // post detail header is tapped, which we want to ignore
+                    if (id > 0)
                         showAddCommentBox(id);
-                        return true;
-                    } else {
-                        return false;
+                }
+            });
+
+            // enable full screen when user scrolls down, disable full screen when user scrolls up
+            mListView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction() & MotionEvent.ACTION_MASK;
+                    final float y = event.getY();
+                    final int yDiff = (int) (y - mLastMotionY);
+                    mLastMotionY = y;
+
+                    switch (action) {
+                        case MotionEvent.ACTION_MOVE :
+                            if (mIsMoving) {
+                                if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
+                                    setIsFullScreen(true);
+                                    return true;
+                                } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                    setIsFullScreen(false);
+                                    return true;
+                                }
+                            } else {
+                                mIsMoving = true;
+                                return true;
+                            }
+                            break;
+                        default :
+                            mIsMoving = false;
+                            break;
+
                     }
+                    return false;
                 }
             });
         }
+
         return mListView;
     }
 
@@ -124,10 +164,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    // show divider between post detail and comments, and footer below comments, when
-                    // comments exist
-                    final View commentDivider = findViewById(R.id.divider_comments);
-                    commentDivider.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                    // show footer below comments when comments exist
                     mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
                 }
             };
@@ -156,71 +193,34 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         return (mAdapter==null || mAdapter.isEmpty());
     }
 
-    /*
-     * triggered when user chooses to like or follow
-     */
-    private void doPostAction(View btnAction, ReaderPostActions.PostAction action, ReaderPost post) {
-        boolean isSelected = btnAction.isSelected();
-        btnAction.setSelected(!isSelected);
-        ReaderAniUtils.zoomAction(btnAction);
-
-        if (!ReaderPostActions.performPostAction(this, action, post, null)) {
-            btnAction.setSelected(isSelected);
-            return;
-        }
-
-        // get the post again, since it has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-        mIsPostChanged = true;
-
-        // call returns before api completes, but local version of post will have been changed
-        // so refresh to show those changes
-        switch (action) {
-            case TOGGLE_LIKE:
-                refreshLikes(true);
-                break;
-            case TOGGLE_FOLLOW:
-                refreshFollowed();
-                break;
-        }
-    }
-
-    /*
-     * triggered when user chooses to reblog the post
-     */
-    private void doPostReblog(View btnReblog, ReaderPost post) {
-        if (post.isRebloggedByCurrentUser) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_already_reblogged);
-            return;
-        }
-        btnReblog.setSelected(true);
-        ReaderAniUtils.zoomAction(btnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(this, post);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
+        if (isTranslucentActionBarEnabled)
+            NativeReaderActivity.enableTranslucentActionBar(this);
+
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);
 
-        // remove window background since background color is set in layout (prevents overdraw)
-        getWindow().setBackgroundDrawable(null);
+        // hide listView until post is loaded
+        getListView().setVisibility(View.INVISIBLE);
 
-        mDecorView = getWindow().getDecorView();
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // set the "fake" ActionBar height to that of a real one
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
-        final ViewGroup layoutFakeActionBar = (ViewGroup) findViewById(R.id.layout_fake_actionbar);
-        layoutFakeActionBar.setMinimumHeight(actionbarHeight);
+        if (isTranslucentActionBarEnabled) {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(NativeReaderActivity.ALPHA_LEVEL_3, 46, 162, 204)));
 
-        // add a header to the listView that's the same height as the "fake" ActionBar - this moves
-        // the actual content of the listView below the ActionBar, but enables it to scroll under
-        // the translucent ActionBar layout
-        RelativeLayout headerFake = new RelativeLayout(this);
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
-        getListView().addHeaderView(headerFake, null, false);
+            // add a header to the listView that's the same height as the ActionBar - this moves
+            // the actual content of the listView below the ActionBar, but enables it to scroll under
+            // the translucent ActionBar layout
+            final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
+            RelativeLayout headerFake = new RelativeLayout(this);
+            headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
+            getListView().addHeaderView(headerFake, null, false);
+        }
 
         mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
@@ -238,57 +238,132 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         mProgressFooter.setVisibility(View.INVISIBLE);
         getListView().addFooterView(mCommentFooter);
 
-        mLayoutLikingAvatars = (ViewGroup) findViewById(R.id.layout_liking_avatars);
         mLayoutActions = (ViewGroup) findViewById(R.id.layout_actions);
+        mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
 
-        ImageView imgBack = (ImageView) findViewById(R.id.image_back);
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
+
+        // setup the webView - note that JavaScript is disabled since it's a security risk:
+        //    http://developer.android.com/training/articles/security-tips.html#WebView
+        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView.getSettings().setJavaScriptEnabled(false);
+        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+
+        // detect image taps so we can open images in the photo viewer activity
+        mWebView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction()==MotionEvent.ACTION_UP) {
+                    HitTestResult hr = ((WebView)v).getHitTestResult();
+                    if (hr!=null && (hr.getType()==HitTestResult.IMAGE_TYPE || hr.getType()==HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                        String imageUrl = hr.getExtra();
+                        if (imageUrl==null)
+                            return false;
+                        // skip if image is a file: reference - this will be the video overlay, ie:
+                        // file:///android_res/drawable/ic_reader_video_overlay.png
+                        if (imageUrl.startsWith("file:"))
+                            return false;
+                        // skip if image is a video thumbnail (see processVideos)
+                        if (mVideoThumbnailUrls.contains(imageUrl))
+                            return false;
+                        // skip if image is a VideoPress thumbnail (anchor around thumbnail will
+                        // take user to actual video - see ReaderPost.cleanupVideoPress)
+                        if (imageUrl.contains("videos.files."))
+                            return false;
+                        showPhotoViewer(imageUrl);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
-
-        ImageView imgShare = (ImageView) findViewById(R.id.image_share);
-        imgShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharePage();
-            }
-        });
-
-        // hide listView until post is loaded
-        getListView().setVisibility(View.INVISIBLE);
     }
 
-    /*@SuppressLint("NewApi")
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        // enable immersive mode on KitKat
-        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }*/
+    private boolean hasPost() {
+        return (mPost != null);
+    }
 
     @SuppressLint("NewApi")
     @Override
     protected void onStart() {
         super.onStart();
 
-        if (mIsPostTaskRunning)
-            ReaderLog.w("post task already running");
+        if (!hasPost()) {
+            if (mIsPostTaskRunning)
+                ReaderLog.w("post task already running");
 
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new ShowPostTask().execute();
+            if (SysUtils.canUseExecuteOnExecutor()) {
+                new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                new ShowPostTask().execute();
+            }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.reader_native_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home :
+                onBackPressed();
+                return true;
+            case R.id.menu_browse :
+                ReaderActivityLauncher.openUrl(this, mPost.getUrl(), OpenUrlType.EXTERNAL);
+                return true;
+            case R.id.menu_share :
+                sharePage();
+                return true;
+            default :
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setIsFullScreen(boolean isFullScreen) {
+        if (isFullScreen == mIsFullScreen)
+            return;
+
+        if (mPost.isWP())
+            animateActionBar(!isFullScreen);
+
+        if (isFullScreen) {
+            getSupportActionBar().hide();
+        } else {
+            getSupportActionBar().show();
+        }
+
+        mIsFullScreen = isFullScreen;
+    }
+
+    /*
+     * animate in/out the reblog/comment/like actions
+     */
+    private void animateActionBar(boolean isAnimatingIn) {
+        if (isAnimatingIn && mLayoutActions.getVisibility() == View.VISIBLE)
+            return;
+        if (!isAnimatingIn && mLayoutActions.getVisibility() != View.VISIBLE)
+            return;
+
+        final Animation animation;
+        if (isAnimatingIn) {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        } else {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+        }
+
+        animation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+
+        mLayoutActions.clearAnimation();
+        mLayoutActions.startAnimation(animation);
+        mLayoutActions.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
@@ -344,35 +419,79 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        boolean isResultOK = (resultCode== Activity.RESULT_OK);
-
         switch (requestCode) {
             case Constants.INTENT_READER_REBLOG :
                 // user just returned from reblog activity - if post was successfully reblogged,
                 // then update the local post and select the reblog button
-                if (isResultOK) {
+                ImageView imgBtnReblog = (ImageView) findViewById(R.id.image_reblog_btn);
+                if (resultCode == Activity.RESULT_OK) {
                     mPost.isRebloggedByCurrentUser = true;
-                    TextView btnReblog = (TextView) findViewById(R.id.btn_reblog);
-                    btnReblog.setSelected(true);
+                    imgBtnReblog.setSelected(true);
+                } else {
+                    imgBtnReblog.setSelected(false);
                 }
+                break;
         }
     }
 
     /*
-     * pass current web page url to chosen sharing activity
+     * triggered when user chooses to like or follow - actionView is the ImageView or TextView
+     * associated with the action (ex: like button)
+     */
+    private void doPostAction(View actionView, ReaderPostActions.PostAction action, ReaderPost post) {
+        boolean isSelected = actionView.isSelected();
+        actionView.setSelected(!isSelected);
+        ReaderAniUtils.zoomAction(actionView);
+
+        if (!ReaderPostActions.performPostAction(this, action, post, null)) {
+            actionView.setSelected(isSelected);
+            return;
+        }
+
+        // get the post again, since it has changed
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mIsPostChanged = true;
+
+        // call returns before api completes, but local version of post will have been changed
+        // so refresh to show those changes
+        switch (action) {
+            case TOGGLE_LIKE:
+                refreshLikes(true);
+                break;
+            case TOGGLE_FOLLOW:
+                refreshFollowed();
+                break;
+        }
+    }
+
+    /*
+     * triggered when user chooses to reblog the post
+     */
+    private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
+        if (post.isRebloggedByCurrentUser) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_already_reblogged);
+            return;
+        }
+        imgBtnReblog.setSelected(true);
+        ReaderAniUtils.zoomAction(imgBtnReblog);
+        ReaderActivityLauncher.showReaderReblogForResult(this, post);
+    }
+
+    /*
+     * display the standard Android share chooser to share a link to this post
      */
     private void sharePage() {
-        String subject = getString(R.string.reader_share_subject, getString(R.string.app_name));
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.reader_share_subject, getString(R.string.app_name)));
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(this, R.string.reader_toast_err_share_intent);
         }
     }
+
     /*
      * get the latest version of this post
      */
@@ -507,17 +626,18 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         new Thread() {
             @Override
             public void run() {
-                final TextView btnLike = (TextView) findViewById(R.id.btn_like);
+                final ImageView imgBtnLike = (ImageView) findViewById(R.id.image_like_btn);
+                final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+                final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
                 final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-                final int actionBarIconSz = DisplayUtils.getActionBarHeight(ReaderPostDetailActivity.this); // <-- fudging it here, but it works
                 final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_like);
                 final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
 
-                // determine how many avatars will fit the space (takes the two ActionBar icons into account)
+                // determine how many avatars will fit the space
                 final int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderPostDetailActivity.this);
-                final int spaceForAvatars = displayWidth - (actionBarIconSz * NUM_ACTIONBAR_ICONS) - (marginLarge * NUM_ACTIONBAR_ICONS);
+                final int spaceForAvatars = displayWidth - (marginLarge * 2);
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatars of liking users up to the max
@@ -525,30 +645,29 @@ public class ReaderPostDetailActivity extends FragmentActivity {
 
                 mHandler.post(new Runnable() {
                     public void run() {
-                        // set the like text
-                        /*if (mPost.isLikedByCurrentUser) {
-                            if (mPost.numLikes==1) {
-                                txtLikes.setText(R.string.reader_likes_only_you);
-                            } else {
-                                txtLikes.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one_short) : getString(R.string.reader_likes_you_and_multi_short, mPost.numLikes-1));
-                            }
-                        } else {
-                            txtLikes.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
-                        }*/
-
-                        btnLike.setText(mPost.isLikedByCurrentUser ? R.string.reader_btn_unlike : R.string.reader_btn_like);
-                        btnLike.setSelected(mPost.isLikedByCurrentUser);
-                        btnLike.setOnClickListener(new View.OnClickListener() {
+                        imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
+                        imgBtnLike.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                doPostAction(btnLike, ReaderPostActions.PostAction.TOGGLE_LIKE, mPost);
+                                doPostAction(imgBtnLike, ReaderPostActions.PostAction.TOGGLE_LIKE, mPost);
                             }
                         });
 
                         // nothing more to do if no likes
                         if (avatars.size()==0 && mPost.numLikes==0) {
-                            mLayoutLikingAvatars.setVisibility(View.GONE);
+                            mLayoutLikes.setVisibility(View.GONE);
                             return;
+                        }
+
+                        // set the like count text
+                        if (mPost.isLikedByCurrentUser) {
+                            if (mPost.numLikes==1) {
+                                txtLikeCount.setText(R.string.reader_likes_only_you);
+                            } else {
+                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes-1));
+                            }
+                        } else {
+                            txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
                         }
 
                         // at this point it's possible that we know the post has likes but we haven't retrieved liking users yet, so
@@ -557,29 +676,42 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                             // clicking likes view shows activity displaying all liking users - this is only set
                             // if we know there are liking avatars, otherwise tapping the likes view would show
                             // the liking users with "0 people like this"
-                            mLayoutLikingAvatars.setOnClickListener(new View.OnClickListener() {
+                            View.OnClickListener clickListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
                                 }
-                            });
+                            };
+                            mLayoutLikes.setOnClickListener(clickListener);
 
                             // skip adding liking avatars if the view's child count indicates that we've already
                             // added the max on a previous call to this routine
-                            if (forceReload || mLayoutLikingAvatars.getChildCount() < maxAvatars) {
-                                mLayoutLikingAvatars.removeAllViews();
+                            if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
+                                layoutLikingAvatars.removeAllViews();
                                 for (String url: avatars) {
-                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, mLayoutLikingAvatars, false);
-                                    mLayoutLikingAvatars.addView(imgAvatar);
+                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                                    layoutLikingAvatars.addView(imgAvatar);
                                     imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                                 }
                             }
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikingAvatars.getVisibility()!=View.VISIBLE) {
-                            //ReaderAniUtils.startAnimation(mLayoutLikingAvatars, R.anim.reader_top_bar_in);
-                            mLayoutLikingAvatars.setVisibility(View.VISIBLE);
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+                            // if the webView hasn't been made visible yet (ie: it hasn't loaded),
+                            // delay the appearance of the likes view (otherwise it may appear before
+                            // the webView content appears, causing it to be pushed down once the
+                            // content loads)
+                            if (mWebView.getVisibility() == View.VISIBLE) {
+                                mLayoutLikes.setVisibility(View.VISIBLE);
+                            } else {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mLayoutLikes.setVisibility(View.VISIBLE);
+                                    }
+                                }, WEBVIEW_DELAY_MS);
+                            }
                         }
                     }
                 });
@@ -603,14 +735,16 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (mIsSubmittingComment)
             return;
 
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
+        //setIsFullScreen(false);
+
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        final TextView btnComment = (TextView) findViewById(R.id.btn_comment);
+        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
+        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
 
         // different hint depending on whether user is replying to a comment or commenting on the post
         editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
-        btnComment.setSelected(true);
+        imgBtnComment.setSelected(true);
         ReaderAniUtils.flyIn(layoutCommentBox);
 
         editComment.requestFocus();
@@ -657,11 +791,11 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         if (!mIsAddCommentBoxShowing)
             return;
 
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        final TextView btnComment = (TextView) findViewById(R.id.btn_comment);
+        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
+        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
 
-        btnComment.setSelected(false);
+        imgBtnComment.setSelected(false);
         ReaderAniUtils.flyOut(layoutCommentBox);
         EditTextUtils.hideSoftInput(editComment);
 
@@ -750,25 +884,23 @@ public class ReaderPostDetailActivity extends FragmentActivity {
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        new Thread() {
+        final TextView txtFollow = (TextView) findViewById(R.id.text_follow);
+        final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
+        showFollowedStatus(txtFollow, isFollowed);
+    }
+
+    private void showFollowedStatus(final TextView txtFollow, boolean isFollowed) {
+        final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
+        txtFollow.setText(followText);
+        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+        txtFollow.setSelected(isFollowed);
+        txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                final TextView btnFollow = (TextView) findViewById(R.id.btn_follow);
-                final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        btnFollow.setText(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-                        btnFollow.setSelected(isFollowed);
-                        btnFollow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                doPostAction(btnFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
-                            }
-                        });
-                    }
-                });
+            public void onClick(View view) {
+                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
             }
-        }.start();
+        });
     }
 
     /*
@@ -950,14 +1082,21 @@ public class ReaderPostDetailActivity extends FragmentActivity {
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
-        TextView txtSource;
-        WebView webView;
-        TextView btnReblog;
-        TextView btnComment;
-        ViewGroup layoutTitle;
+        TextView txtBlogName;
+        TextView txtAuthorName;
+        TextView txtDate;
+        TextView txtFollow;
+
+        ImageView imgBtnReblog;
+        ImageView imgBtnComment;
+        ImageView imgBtnLike;
+
         WPNetworkImageView imgAvatar;
+        WPNetworkImageView imgFeatured;
 
         String postHtml;
+        String featuredImageUrl;
+        boolean showFeaturedImage;
 
         @Override
         protected void onPreExecute() {
@@ -969,14 +1108,18 @@ public class ReaderPostDetailActivity extends FragmentActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            // locate views
             txtTitle = (TextView) findViewById(R.id.text_title);
-            txtSource = (TextView) findViewById(R.id.text_source);
-            webView = (WebView) findViewById(R.id.webView);
+            txtBlogName = (TextView) findViewById(R.id.text_blog_name);
+            txtDate = (TextView) findViewById(R.id.text_date);
+            txtFollow = (TextView) findViewById(R.id.text_follow);
+            txtAuthorName = (TextView) findViewById(R.id.text_author_name);
+
             imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
-            btnReblog = (TextView) findViewById(R.id.btn_reblog);
-            btnComment = (TextView) findViewById(R.id.btn_comment);
-            layoutTitle = (ViewGroup) findViewById(R.id.layout_detail_title);
+            imgFeatured = (WPNetworkImageView) findViewById(R.id.image_featured);
+
+            imgBtnReblog = (ImageView) mLayoutActions.findViewById(R.id.image_reblog_btn);
+            imgBtnComment = (ImageView) mLayoutActions.findViewById(R.id.image_comment_btn);
+            imgBtnLike = (ImageView) mLayoutActions.findViewById(R.id.image_like_btn);
 
             // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
@@ -984,6 +1127,17 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 return false;
 
             postHtml = getPostHtml(mPost);
+
+            // detect whether the post has a featured image that's not in the content - if so,
+            // it will be shown between the post's title and its content (but skip mshots)
+            if (mPost.hasFeaturedImage() && !mPost.getFeaturedImage().contains("/mshots/")) {
+                Uri uri = Uri.parse(mPost.getFeaturedImage());
+                if (!mPost.getText().contains(StringUtils.notNullStr(uri.getLastPathSegment()))) {
+                    showFeaturedImage = true;
+                    int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
+                }
+            }
 
             return true;
         }
@@ -996,10 +1150,22 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                  * TODO: post couldn't be loaded, which means it should be retrieved from server
                  */
                 txtTitle.setText(R.string.reader_title_err_unable_to_load_post);
-                txtSource.setVisibility(View.GONE);
+                txtBlogName.setVisibility(View.GONE);
+                txtDate.setVisibility(View.GONE);
                 imgAvatar.setImageResource(R.drawable.ic_error);
+                imgFeatured.setVisibility(View.GONE);
                 return;
             }
+
+            // set the activity title to the post's title
+            ReaderPostDetailActivity.this.setTitle(mPost.getTitle());
+
+            showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
+
+            // if we know refreshLikes() is going to show the liking layout, force it to take up
+            // space right now
+            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
+                mLayoutLikes.setVisibility(View.INVISIBLE);
 
             if (mPost.hasTitle()) {
                 txtTitle.setText(mPost.getTitle());
@@ -1007,16 +1173,16 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 txtTitle.setText(R.string.reader_untitled_post);
             }
 
-            // tapping title layout opens post in browser
-            layoutTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getUrl());
-                }
-            });
+            txtBlogName.setText(mPost.getBlogName());
+            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
-            // blog name / author name / date
-            txtSource.setText(mPost.getSource());
+            // show author name if it exists and is different than the blog name
+            if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
+                txtAuthorName.setText(mPost.getAuthorName());
+                txtAuthorName.setVisibility(View.VISIBLE);
+            } else {
+                txtAuthorName.setVisibility(View.GONE);
+            }
 
             if (mPost.hasPostAvatar()) {
                 int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
@@ -1026,45 +1192,63 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 imgAvatar.setVisibility(View.GONE);
             }
 
+            if (showFeaturedImage) {
+                imgFeatured.setVisibility(View.VISIBLE);
+                imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPhotoViewer(mPost.getFeaturedImage());
+                    }
+                });
+            } else {
+                imgFeatured.setVisibility(View.GONE);
+            }
+
             // enable reblogging wp posts
-            btnReblog.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            btnReblog.setSelected(mPost.isRebloggedByCurrentUser);
+            imgBtnReblog.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
             if (mPost.isWP()) {
-                btnReblog.setOnClickListener(new View.OnClickListener() {
+                imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        doPostReblog(btnReblog, mPost);
+                        doPostReblog(imgBtnReblog, mPost);
                     }
                 });
             }
 
             // enable adding a comment if comments are open on this post
             if (mPost.isWP() && mPost.isCommentsOpen) {
-                btnComment.setVisibility(View.VISIBLE);
-                btnComment.setOnClickListener(new View.OnClickListener() {
+                imgBtnComment.setVisibility(View.VISIBLE);
+                imgBtnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         toggleShowAddCommentBox();
                     }
                 });
             } else {
-                btnComment.setVisibility(View.GONE);
+                imgBtnComment.setVisibility(View.GONE);
             }
 
-            // webView settings must be configured on main thread - note that while JavaScript is
-            // required for embedded videos, it's disabled since it's a security risk:
-            //    http://developer.android.com/training/articles/security-tips.html#WebView
-            // note: even with JavaScript enabled video embeds are unreliable (some work, some don't)
-            webView.getSettings().setJavaScriptEnabled(false);
-            webView.getSettings().setUserAgentString(Constants.USER_AGENT);
+            // tapping title, blog name, author name or avatar opens post in browser
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getUrl());
+                }
+            };
+            txtTitle.setOnClickListener(clickListener);
+            txtBlogName.setOnClickListener(clickListener);
+            txtAuthorName.setOnClickListener(clickListener);
+            imgAvatar.setOnClickListener(clickListener);
 
-            // webView is hidden at design time, don't show it until the page finishes loading so it
+            // webView is invisible at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
-            webView.setWebViewClient(new WebViewClient() {
+            mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
-                    if (webView.getVisibility()!=View.VISIBLE)
-                        webView.setVisibility(View.VISIBLE);
+                    if (mWebView.getVisibility()!=View.VISIBLE)
+                        mWebView.setVisibility(View.VISIBLE);
                 }
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -1081,49 +1265,21 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 }
             });
 
-            //...but force it to appear after a few seconds to ensure user never has to be faced
+            //...but force it to appear after a short delay to ensure user never has to be faced
             // with a blank post for too long (very important on slow connections)
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (webView.getVisibility()!=View.VISIBLE) {
-                        webView.setVisibility(View.VISIBLE);
+                    if (mWebView.getVisibility()!=View.VISIBLE) {
+                        mWebView.setVisibility(View.VISIBLE);
                         ReaderLog.w("forced webView to appear before page finished");
                     }
                 }
-            }, 2500);
-
-            // detect image taps so we can open images in the photo viewer activity
-            webView.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction()==MotionEvent.ACTION_UP) {
-                        HitTestResult hr = ((WebView)v).getHitTestResult();
-                        if (hr!=null && (hr.getType()==HitTestResult.IMAGE_TYPE || hr.getType()==HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                            String imageUrl = hr.getExtra();
-                            if (imageUrl==null)
-                                return false;
-                            // skip if image is a file: reference - this will be the video overlay, ie:
-                            // file:///android_res/drawable/ic_reader_video_overlay.png
-                            if (imageUrl.startsWith("file:"))
-                                return false;
-                            // skip if image is a video thumbnail (see processVideos)
-                            if (mVideoThumbnailUrls.contains(imageUrl))
-                                return false;
-                            // skip if image is a VideoPress thumbnail (anchor around thumbnail will
-                            // take user to actual video - see ReaderPost.cleanupVideoPress)
-                            if (imageUrl.contains("videos.files."))
-                                return false;
-                            showPhotoViewer(imageUrl);
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
+            }, WEBVIEW_DELAY_MS);
 
             // IMPORTANT: must use loadDataWithBaseURL() rather than loadData() since the latter often fails
             // https://code.google.com/p/android/issues/detail?id=4401
-            webView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
             mLayoutActions.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
@@ -1132,7 +1288,6 @@ public class ReaderPostDetailActivity extends FragmentActivity {
             if (!hasCommentAdapter())
                 getListView().setAdapter(getCommentAdapter());
 
-            refreshFollowed();
             refreshLikes(false);
             refreshComments();
 
@@ -1142,7 +1297,7 @@ public class ReaderPostDetailActivity extends FragmentActivity {
                 mHasAlreadyUpdatedPost = true;
             }
 
-            // show the listView now that post has loaded and views have been updated
+            // show listView now that post is loaded
             getListView().setVisibility(View.VISIBLE);
         }
     }

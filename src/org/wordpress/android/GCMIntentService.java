@@ -65,6 +65,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onMessage(Context context, Intent intent) {
         Log.v("WORDPRESS", "Received Message");
 
+        if (!WordPress.hasValidWPComCredentials(context))
+            return;
+        
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
@@ -294,7 +297,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 editor.commit();
             }
 
-            new WPComXMLRPCApi().registerWPComToken(context, regId);
+            new WPComXMLRPCApi().registerWPComToken(context, regId, true);
         }
     }
 

@@ -1,72 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/WordPressListRowBackground"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-    <ImageView
-            android:id="@+id/note_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+    style="@style/WordPressListRowBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/reader_margin_medium"
+    android:paddingLeft="@dimen/reader_margin_small"
+    android:paddingRight="@dimen/reader_margin_large"
+    android:paddingTop="@dimen/reader_margin_medium">
 
     <TextView
-            android:id="@+id/unread_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:layout_alignTop="@id/note_icon"
-            android:layout_marginRight="3dp"
-            android:layout_marginTop="-3dp"
-            android:layout_toLeftOf="@id/note_icon"
-            android:shadowColor="#FFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="1.0"
-            android:text="&#8226;"
-            android:textColor="#008EBE"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+        android:id="@+id/unread_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="1.0"
+        android:text="&#8226;"
+        android:textColor="@color/blue_medium"
+        android:textSize="@dimen/reader_text_sz_extra_large"
+        android:textStyle="bold" />
 
     <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/note_avatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="8dp"/>
+        android:id="@+id/note_avatar"
+        android:layout_width="@dimen/note_avatar_sz"
+        android:layout_height="@dimen/note_avatar_sz"
+        android:layout_marginLeft="@dimen/reader_margin_small"
+        android:layout_marginRight="@dimen/reader_margin_medium"
+        android:layout_toRightOf="@+id/unread_indicator" />
 
-    <TextView
-            android:id="@+id/note_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/note_avatar"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="-2dp"
-            android:layout_toRightOf="@id/note_avatar"
-            android:textSize="16sp"/>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/note_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/reader_margin_large"
+        android:layout_toLeftOf="@+id/text_date"
+        android:layout_toRightOf="@+id/note_avatar"
+        android:textSize="@dimen/reader_text_sz_medium" />
 
-    <TextView
-            android:id="@+id/note_detail"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/note_label"
-            android:layout_below="@+id/note_label"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:maxLines="3"
-            android:textColor="#777777"
-            android:textSize="16sp"
-            android:visibility="gone"/>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/note_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/note_label"
+        android:layout_alignRight="@+id/note_label"
+        android:layout_below="@+id/note_label"
+        android:layout_marginTop="@dimen/reader_margin_small"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/reader_text_sz_medium"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/note_icon"
+        android:layout_width="@dimen/note_icon_sz"
+        android:layout_height="@dimen/note_icon_sz"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="-3dp" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/note_icon"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/reader_text_sz_small" />
+
     <ProgressBar
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:id="@+id/placeholder_loading"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"/>
+        android:id="@+id/placeholder_loading"
+        android:layout_width="@dimen/note_icon_sz"
+        android:layout_height="@dimen/note_icon_sz"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

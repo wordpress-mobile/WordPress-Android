@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,11 +10,11 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.View;
@@ -38,26 +29,34 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.ManageBlogsActivity;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.DeviceUtils;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
-
     EditTextPreference taglineTextPreference;
     OnPreferenceChangeListener preferenceChangeListener;
-    
-    private Object[] mTypeList;
+
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
@@ -182,9 +181,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     protected void updateBlogsPreferenceCategory() {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
-
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         int order = 0;
+
+        // Add self-hosted blog button
+        Preference addBlogPreference = new Preference(this);
+        addBlogPreference.setTitle(R.string.add_self_hosted_blog);
+        Intent intentWelcome = new Intent(this, WelcomeActivity.class);
+        intentWelcome.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
+                WelcomeActivity.ADD_SELF_HOSTED_BLOG);
+        addBlogPreference.setIntent(intentWelcome);
+        addBlogPreference.setOrder(order++);
+        blogsCategory.addPreference(addBlogPreference);
+
+        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
+        if (allAccounts.size() > 1) {
+            // Add show/hide buttons
+            Preference manageBlogPreference = new Preference(this);
+            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
+            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
+            manageBlogPreference.setIntent(intentManage);
+            manageBlogPreference.setOrder(order++);
+            blogsCategory.addPreference(manageBlogPreference);
+        }
+
+        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -208,14 +228,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogSettingsPreference.setOrder(order++);
             blogsCategory.addPreference(blogSettingsPreference);
         }
-
-        Preference addBlogPreference = new Preference(this);
-        addBlogPreference.setTitle(R.string.add_account);
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra(WelcomeActivity.SKIP_WELCOME, true);
-        addBlogPreference.setIntent(intent);
-        addBlogPreference.setOrder(order++);
-        blogsCategory.addPreference(addBlogPreference);
     }
 
     protected int getEnabledBlogsCount() {
@@ -407,9 +419,15 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
-            
             wpcomCategory.addPreference(usernamePref);
-            
+
+            Preference createWPComBlogPref = new Preference(this);
+            createWPComBlogPref.setTitle(getString(R.string.create_new_blog_wpcom));
+            Intent intent = new Intent(this, NewBlogActivity.class);
+            createWPComBlogPref.setIntent(intent);
+            wpcomCategory.addPreference(createWPComBlogPref);
+
+
             loadNotifications();
         } else {
             Preference signInPref = new Preference(this);
@@ -466,8 +484,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
                 mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
                 Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
-                               
-                mTypeList = mNotificationSettings.keySet().toArray();
+
+                Object[] mTypeList = mNotificationSettings.keySet().toArray();
                 
                 for (int i = 0; i < mTypeList.length; i++) {
                     if (!mTypeList[i].equals("muted_blogs") && !mTypeList[i].equals("mute_until")) {
@@ -514,14 +532,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
-            i.putExtra(WelcomeActivity.SKIP_WELCOME, true);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
             return true;
         }
     };
-    
+
     private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
 
         @Override

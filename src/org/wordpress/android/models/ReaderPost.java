@@ -8,12 +8,14 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -30,6 +32,7 @@ public class ReaderPost {
     private String blogName;
     private String blogUrl;
     private String postAvatar;
+    private String tags;          // comma-separated list of tags
 
     public long timestamp;        // used for sorting
     public String published;
@@ -76,15 +79,11 @@ public class ReaderPost {
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
-        post.published = JSONUtil.getString(json, "date");
-
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             post.authorName = JSONUtil.getString(jsonAuthor, "name");
             post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
         }
-
-        final String dateForTimestamp;
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
@@ -92,25 +91,23 @@ public class ReaderPost {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
-            // we want freshly-pressed posts to be sorted by the date they were chosen, not the date they were published
-            dateForTimestamp = JSONUtil.getString(jsonEditorial, "displayed_on");
+            // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
+            post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
         } else {
             post.featuredImage = JSONUtil.getString(json, "featured_image");
             post.blogName = JSONUtil.getStringDecoded(json, "site_name");
-            // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
-            // set it as the timestamp so posts are sorted by the date they were liked rather than the
-            // date they were published
-            String likeDate = JSONUtil.getString(json, "date_liked");
-            if (!TextUtils.isEmpty(likeDate)) {
-                dateForTimestamp = likeDate;
-            } else {
-                // date_liked doesn't exist, so set timestamp to published date
-                dateForTimestamp = post.published;
-            }
+            post.published = JSONUtil.getString(json, "date");
         }
 
-        // set the timestamp for sorting
-        post.timestamp = DateTimeUtils.iso8601ToTimestamp(dateForTimestamp);
+        // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
+        // set it as the timestamp so posts are sorted by the date they were liked rather than the
+        // date they were published (the timestamp is used to sort posts when querying)
+        String likeDate = JSONUtil.getString(json, "date_liked");
+        if (!TextUtils.isEmpty(likeDate)) {
+            post.timestamp = DateTimeUtils.iso8601ToTimestamp(likeDate);
+        } else {
+            post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
+        }
 
         // parse attachments to get the VideoPress thumbnail & url
         /*"attachments": {
@@ -187,6 +184,23 @@ public class ReaderPost {
         if (!post.hasTitle() && post.hasExcerpt())
             post.title = extractTitle(post.excerpt, 50);
 
+        // extract comma-separated list of tags
+        JSONObject jsonTags = json.optJSONObject("tags");
+        if (jsonTags != null) {
+            StringBuilder sbTags = new StringBuilder();
+            Iterator<String> it = jsonTags.keys();
+            boolean isFirst = true;
+            while (it.hasNext()) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sbTags.append(",");
+                }
+                sbTags.append(it.next());
+            }
+            post.setTags(sbTags.toString());
+        }
+
         return post;
     }
 
@@ -260,7 +274,6 @@ public class ReaderPost {
                 int srcEnd = img.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
                 if (srcEnd == -1)
                     return null;
-                ReaderLog.d("found featured image");
                 return img.substring(srcStart+5, srcEnd);
             }
 
@@ -428,6 +441,25 @@ public class ReaderPost {
 
     // --------------------------------------------------------------------------------------------
 
+    /*
+     * comma-separated tags
+     */
+    public String getTags() {
+        return StringUtils.notNullStr(tags);
+    }
+    public void setTags(String tags) {
+        this.tags = StringUtils.notNullStr(tags);
+    }
+    public boolean hasTags() {
+        return !TextUtils.isEmpty(tags);
+    }
+
+    public List<String> getTagList() {
+        return Arrays.asList(getTags().split(","));
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
     }
@@ -473,7 +505,7 @@ public class ReaderPost {
 
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
-     * sole purpose is cache commonly-used values for the post that speeds up using them inside
+     * sole purpose is to cache commonly-used values for the post that speeds up using them inside
      * adapters
      ****/
 
@@ -523,28 +555,17 @@ public class ReaderPost {
         return dtPublished;
     }
 
-    /*
-     * returns "blog name | author name | date" - not cached since we want the timespan to accurately
-     * reflect the time this was called, but the dtPublished that this relies on *is* cached above
-     */
-    private static final String SOURCE_SEP = " | ";
-    public String getSource() {
-        String source;
-        if (hasBlogName() && hasAuthorName()) {
-            // skip author name if it's the same as the blog name (sometimes it's a lowercase version of the blog name)
-            if (authorName.equalsIgnoreCase(blogName)) {
-                source = blogName;
+    private transient String firstTag;
+    public String getFirstTag() {
+        if (firstTag == null) {
+            List<String> tags = getTagList();
+            if (tags != null && tags.size() > 0) {
+                firstTag = tags.get(0);
             } else {
-                source = blogName + SOURCE_SEP + authorName;
+                firstTag = "";
             }
-        } else if (hasAuthorName()) {
-            source = authorName;
-        } else if (hasBlogName()) {
-            source = blogName;
-        } else {
-            source = "";
         }
-
-        return source + SOURCE_SEP + DateTimeUtils.javaDateToTimeSpan(getDatePublished());
+        return firstTag;
     }
+
 }

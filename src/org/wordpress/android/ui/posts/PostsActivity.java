@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -47,13 +48,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     private PostsListFragment postList;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
-    public  static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
+    public  static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4, POST_VIEW = 5;
     public ProgressDialog loadingDialog;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
-    private static final int ACTIVITY_EDIT_POST = 0;
+    public static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
 
     @Override
@@ -144,6 +145,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         if (savedInstanceState != null)
             popPostDetail();
+
+        WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
     
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
@@ -294,6 +297,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     @Override
+    protected void onDestroy() {
+        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(statEventForViewClosing());
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
@@ -312,11 +321,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     public void newPost() {
+        WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        // Create a new post object
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), isPage);
         Intent i = new Intent(this, EditPostActivity.class);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
-        if (isPage)
-            i.putExtra("isPage", true);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, ACTIVITY_EDIT_POST);
     }
 
@@ -348,11 +359,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 if (data.getBooleanExtra("shouldRefresh", false))
                     postList.loadPosts(false);
             } else if (requestCode == ACTIVITY_ADD_COMMENT) {
-                
                 Bundle extras = data.getExtras();
-                
                 final String returnText = extras.getString("commentText");
-
                 if (!returnText.equals("CANCEL")) {
                     // Add comment to the server if user didn't cancel.
                     final String postID = extras.getString("postID");
@@ -440,6 +448,18 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
 
         return super.onCreateDialog(id);
+    }
+
+    protected String statEventForViewOpening() {
+        return WPMobileStatsUtil.StatsEventPostsOpened;
+    }
+
+    protected String statEventForViewClosing() {
+        return WPMobileStatsUtil.StatsEventPostsClosed;
+    }
+
+    protected String statEventForNewPost() {
+        return WPMobileStatsUtil.StatsEventPostsClickedNewPost;
     }
 
     public class deletePostTask extends AsyncTask<Post, Void, Boolean> {
@@ -691,16 +711,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                             || (!isPage && !"publish".equals(contentHash.get(
                                     "post_status").toString()))) {
                         if (isPage) {
-                            errorMsg = getResources().getText(
-                                    R.string.page_not_published).toString();
+                            errorMsg = getString(R.string.page_not_published);
                         } else {
-                            errorMsg = getResources().getText(
-                                    R.string.post_not_published).toString();
+                            errorMsg = getString(R.string.post_not_published);
                         }
                         return null;
                     } else {
-                        String postURL = contentHash.get("permaLink")
-                                .toString();
+                        String postURL = contentHash.get("permaLink").toString();
                         String shortlink = getShortlinkTagHref(postURL);
                         if (shortlink == null) {
                             result = postURL;
@@ -775,6 +792,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
         
         if (action == POST_DELETE) {
+            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedDelete);
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
@@ -843,6 +861,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             }
         } else if (action == POST_SHARE) {
             new shareURLTask().execute(post);
+            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShare);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
@@ -851,9 +870,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 f.clearContent();
             }
         } else if (action == POST_COMMENT) {
+            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedComment);
+
             Intent i = new Intent(PostsActivity.this, AddCommentActivity.class);
             i.putExtra("postID", post.getPostid());
             startActivityForResult(i, ACTIVITY_ADD_COMMENT);
+        } else if (action == POST_EDIT) {
+            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedEdit);
+        } else if (action == POST_VIEW) {
+            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPreview);
         }
     }
 

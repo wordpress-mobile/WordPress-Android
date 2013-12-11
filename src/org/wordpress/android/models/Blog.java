@@ -8,15 +8,20 @@ import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
-public class Blog {
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+
+public class Blog implements Serializable {
+
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
 
     private int id;
     private String url;
@@ -46,6 +51,7 @@ public class Blog {
     private String postFormats;
     private String blogOptions;
     private boolean isAdmin;
+    private boolean isHidden;
 
     public Blog(String url, String username, String password) {
         this.url = url;
@@ -99,6 +105,8 @@ public class Blog {
                 this.blogOptions = "";
             if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
                 this.setAdmin(true);
+            if (blogVals.get(26) != null && (Integer) blogVals.get(27) > 0)
+                this.isHidden = true;
         } else {
             throw new Exception();
         }
@@ -286,6 +294,14 @@ public class Blog {
 
     public void setHttppassword(String httppassword) {
         this.httppassword = httppassword;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     public boolean save(String originalUsername) {

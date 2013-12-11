@@ -62,8 +62,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name=".ui.accounts.TutorialActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.accounts.NewBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Preferences activities -->
         <activity android:name=".ui.prefs.AboutActivity" />
@@ -77,6 +78,7 @@
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock.Light" />
+        <activity android:name=".ui.accounts.ManageBlogsActivity" />
 
         <!-- Comments activities -->
         <activity
@@ -99,18 +101,22 @@
         <activity
             android:name=".ui.posts.EditLinkActivity"
             android:label="@string/create_a_link"
-            android:theme="@style/WordPress.Dialog" />
+            android:theme="@style/WordPress.Dialog"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -163,17 +169,19 @@
         <!-- Native Reader Activities -->
         <activity
             android:name=".ui.reader_native.NativeReaderActivity"
-            android:label="@string/reader_title_main"/>
+            android:theme="@style/WordPress.Theme.NoBackground"
+            android:label="@string/app_name">
+        </activity>
         <activity
             android:name=".ui.reader_native.ReaderPostDetailActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
+            android:theme="@style/WordPress.Theme.NoBackground"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader_native.ReaderLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader_native.ReaderUserListActivity"
-            android:theme="@style/ReaderTheme.Popup" />
+            android:theme="@style/ReaderTheme.Popup" />tal
         <activity
             android:name=".ui.reader_native.ReaderTagActivity"
             android:theme="@style/ReaderTheme.Popup"
@@ -220,9 +228,6 @@
         <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.reader.ReaderActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
@@ -232,6 +237,9 @@
             android:name=".ui.notifications.NotificationsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
 
+        <activity
+            android:name=".ui.notifications.NotificationsWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"

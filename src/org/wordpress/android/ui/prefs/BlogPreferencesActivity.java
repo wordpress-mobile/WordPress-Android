@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -49,6 +50,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     private CheckBox mLocationCB;
     private Spinner mImageWidthSpinner;
     private EditText mScaledImageWidthET;
+    private Button mRemoveBlogButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,13 +79,14 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mScaledCB = (CheckBox) findViewById(R.id.scaledImage);
         mLocationCB = (CheckBox) findViewById(R.id.location);
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
+        mRemoveBlogButton = (Button) findViewById(R.id.remove_account);
         
         if (blog.isDotcomFlag()) {
             // Hide credentials section
             RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
+            mRemoveBlogButton.setVisibility(View.GONE);
         }
-        
         loadSettingsForBlog();
     }
 

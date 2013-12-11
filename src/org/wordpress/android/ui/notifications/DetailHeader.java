@@ -3,17 +3,14 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.view.View;
-import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.provider.Browser;
-import android.net.Uri;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.passcodelock.AppLockManager;
 
 public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context){
@@ -40,12 +37,10 @@ public class DetailHeader extends LinearLayout {
             setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    Uri uri = Uri.parse(url);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     Context context = getContext();
-                    intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                    Intent intent = new Intent(context, NotificationsWebViewActivity.class);
+                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
                     context.startActivity(intent);
-                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             });
         }
