@@ -59,9 +59,10 @@
             android:layout_below="@+id/text_comment_label"
             android:layout_marginBottom="@dimen/reader_margin_large"
             android:layout_marginTop="@dimen/reader_margin_small"
-            android:minLines="3"
             android:background="@drawable/reader_edittext_frame"
             android:gravity="top"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="3"
             android:padding="@dimen/reader_margin_medium" />
 
         <Button
