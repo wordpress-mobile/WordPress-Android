@@ -149,6 +149,11 @@ public class ReaderPostTable {
         }
     }
 
+    public static void deletePost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
+    }
+
     /*
      * returns a count of which posts in the passed list don't already exist in the db for the passed tag
      */

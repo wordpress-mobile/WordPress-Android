@@ -1072,24 +1072,36 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      *  called when the post doesn't exist in local db, need to get it from server
      */
     private void requestPost() {
-        final TextView txtTitle = (TextView) findViewById(R.id.text_title);
-        txtTitle.setText(R.string.loading);
-        txtTitle.setVisibility(View.VISIBLE);
+        final ProgressBar progress = (ProgressBar)findViewById(R.id.progress_loading);
+        progress.setVisibility(View.VISIBLE);
+        progress.bringToFront();
 
-        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result != ReaderActions.UpdateResult.FAILED) {
+            public void onActionResult(boolean succeeded) {
+                progress.setVisibility(View.GONE);
+                if (succeeded) {
                     showPost();
                 } else {
-                    ToastUtils.showToast(ReaderPostDetailActivity.this, R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
-                    ReaderPostDetailActivity.this.finish();
+                    postFailed();
                 }
             }
         };
-        ReaderPostActions.requestPost(mBlogId, mPostId, resultListener);
+        ReaderPostActions.requestPost(mBlogId, mPostId, actionListener);
     }
 
+    /*
+     * called when post couldn't be loaded and failed to be returned from server
+     */
+    private void postFailed() {
+        ToastUtils.showToast(this, R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ReaderPostDetailActivity.this.finish();
+            }
+        }, 1500);
+    }
 
     /*
      * AsyncTask to retrieve & display this post
@@ -1173,14 +1185,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             if (!result) {
                 /*
-                 * post couldn't be loaded, which means it doesn't exist locally - so hide the UI
-                 * and request it from the server
+                 * post couldn't be loaded, which means it doesn't exist in db - so request it from the server
                  */
-                txtTitle.setVisibility(View.GONE);
-                txtBlogName.setVisibility(View.GONE);
-                txtDate.setVisibility(View.GONE);
-                imgAvatar.setImageResource(R.drawable.ic_error);
-                imgFeatured.setVisibility(View.GONE);
                 requestPost();
                 return;
             }

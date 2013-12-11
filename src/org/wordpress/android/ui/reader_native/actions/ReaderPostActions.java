@@ -260,55 +260,39 @@ public class ReaderPostActions {
         }.start();
     }
 
-    /*
+    /**
      * similar to updatePost, but used when post doesn't already exist in local db
-     */
-
-    public static void requestPost(long blogId, long postId, final ReaderActions.UpdateResultListener resultListener) {
+     **/
+    public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
         String path = "sites/" + blogId + "/posts/" + postId;
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleRequestPostResponse(jsonObject, resultListener);
+                ReaderPost post = ReaderPost.fromJson(jsonObject);
+                // posts retrieved from the /sites/ endpoint don't have site_ID (blogId), so set it here.
+                // note that the post will also be missing these values, which we can't set here:
+                //      blog name / site_name
+                //      site_URL (url of the blog)
+                //      is_external
+                //      site_is_private
+                post.blogId = blogId;
+                ReaderPostTable.addOrUpdatePost(post);
+                if (actionListener!=null)
+                    actionListener.onActionResult(true);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 ReaderLog.e(volleyError);
-                if (resultListener!=null)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                if (actionListener!=null)
+                    actionListener.onActionResult(false);
 
             }
         };
         ReaderLog.d("requesting post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
-    }
-    private static void handleRequestPostResponse(final JSONObject jsonObject,
-                                                  final ReaderActions.UpdateResultListener resultListener) {
-        if (jsonObject==null) {
-            if (resultListener!=null)
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            return;
-        }
-
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderPost post = ReaderPost.fromJson(jsonObject);
-                ReaderPostTable.addOrUpdatePost(post);
-                if (resultListener!=null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
-                        }
-                    });
-                }
-            }
-        }.start();
     }
 
     /**
