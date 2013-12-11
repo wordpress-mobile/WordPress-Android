@@ -211,6 +211,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 position -= listView.getHeaderViewsCount();
                 ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                 ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
+                //ReaderActivityLauncher.openUrl(getActivity(), "wordpress://viewpost?blogId=" + post.blogId + "&postId=" + post.postId, ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             }
         });
 

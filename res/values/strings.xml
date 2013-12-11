@@ -660,7 +660,6 @@
     <string name="reader_title_followed_tags">Followed Tags</string>
     <string name="reader_title_popular_tags">Popular Tags</string>
     <string name="reader_title_reblog">Reblog</string>
-    <string name="reader_title_err_unable_to_load_post">Unable to load post</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share Link</string>
@@ -715,6 +714,7 @@
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_no_connection">Unable to connect</string>
+    <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 
     <!--
         very important that this string resource is correct for all translations, since it's

@@ -60,7 +60,12 @@ public class ReaderPost {
 
         post.postId = json.optLong("ID");
         post.blogId = json.optLong("site_ID");
-        post.pseudoId = JSONUtil.getString(json, "pseudo_ID");
+
+        if (json.has("pseudo_ID")) {
+            post.pseudoId = JSONUtil.getString(json, "pseudo_ID");  // read/ endpoint
+        } else {
+            post.pseudoId = JSONUtil.getString(json, "global_ID");  // sites/ endpoint
+        }
 
         // remove HTML from the excerpt
         post.excerpt = HtmlUtils.fastStripHtml(JSONUtil.getString(json, "excerpt"));

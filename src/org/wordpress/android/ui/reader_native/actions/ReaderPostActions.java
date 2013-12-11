@@ -190,9 +190,6 @@ public class ReaderPostActions {
      * get the latest version of this post
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        if (post.blogId==0)
-            ReaderLog.w("updating post with no blogId");
-
         String path = "sites/" + post.blogId + "/posts/" + post.postId;
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -213,6 +210,7 @@ public class ReaderPostActions {
         ReaderLog.d("updating post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
+
     private static void handleUpdatePostResponse(final ReaderPost post,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
@@ -260,6 +258,41 @@ public class ReaderPostActions {
                 }
             }
         }.start();
+    }
+
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
+        String path = "sites/" + blogId + "/posts/" + postId;
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderPost post = ReaderPost.fromJson(jsonObject);
+                // posts retrieved from the /sites/ endpoint don't have site_ID (blogId), so set it here.
+                // note that the post will also be missing these values, which we can't set here:
+                //      blog name / site_name
+                //      site_URL (url of the blog)
+                //      is_external
+                //      site_is_private
+                post.blogId = blogId;
+                ReaderPostTable.addOrUpdatePost(post);
+                if (actionListener!=null)
+                    actionListener.onActionResult(true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.e(volleyError);
+                if (actionListener!=null)
+                    actionListener.onActionResult(false);
+
+            }
+        };
+        ReaderLog.d("requesting post");
+        WordPress.restClient.get(path, null, null, listener, errorListener);
     }
 
     /**
