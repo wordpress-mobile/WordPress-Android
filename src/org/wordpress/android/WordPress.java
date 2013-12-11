@@ -33,21 +33,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 
-
 import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPMobileStatsUtil;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.WPComXMLRPCApi;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -130,9 +128,7 @@ public class WordPress extends Application {
             PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
-         } 
-        
-        //wpDB.copyDatabase();
+         }
     }
 
     public static Context getContext() {

@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.text.TextUtils;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderActivity;
-import org.wordpress.android.ui.reader_native.NativeReaderActivity;
+import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
+import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * An activity to handle deep linking. 
@@ -18,7 +18,7 @@ import org.wordpress.android.ui.reader_native.NativeReaderActivity;
  * 
  * Redirects users to the reader activity along with IDs passed in the intent
  * 
- * @todo make sure this works work logged out users
+ * @todo make sure this works for logged out users
  */
 public class DeepLinkingIntentReceiverActivity extends Activity {
     
@@ -29,33 +29,22 @@ public class DeepLinkingIntentReceiverActivity extends Activity {
         //read the parameters and launch the Reader Activity
         Intent intent = getIntent();
         String action = getIntent().getAction();
-        
+        Uri uri = intent.getData();
+
         // check if this intent is started via custom scheme link
-        if (Intent.ACTION_VIEW.equals(action)) {
-            Uri uri = intent.getData();
-            
-            String blogId = uri.getQueryParameter("blogId");
-            String postId = uri.getQueryParameter("postId"); 
-            
-            if ( blogId != null && blogId.isEmpty() == false && postId != null && postId.isEmpty() == false ) {
-                Bundle bundle = new Bundle();
-                bundle.putString("blogID", blogId);
-                bundle.putString("postID", postId);
-                
-                Intent newIntent;
-                if (Constants.ENABLE_NATIVE_READER) {
-                    newIntent = new Intent(this, NativeReaderActivity.class);
-                } else {
-                    newIntent = new Intent(this, ReaderActivity.class);
+        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+            String strBlogId = uri.getQueryParameter("blogId");
+            String strPostId = uri.getQueryParameter("postId");
+
+            if (!TextUtils.isEmpty(strBlogId) && !TextUtils.isEmpty(strPostId)) {
+                ReaderLog.i(String.format("opening blogId %s, postId %s", strBlogId, strPostId));
+                try {
+                    ReaderActivityLauncher.showReaderPostDetail(this, Long.parseLong(strBlogId), Long.parseLong(strPostId));
+                } catch (NumberFormatException e) {
+                    ReaderLog.e(e);
                 }
-               
-                newIntent.putExtras(bundle);
-                startActivity(newIntent);
             } else {
-                Toast.makeText(
-                        this,
-                        getResources().getText(R.string.error_generic),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(this, R.string.error_generic);
             }
         }
         

@@ -190,9 +190,6 @@ public class ReaderPostActions {
      * get the latest version of this post
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        if (post.blogId==0)
-            ReaderLog.w("updating post with no blogId");
-
         String path = "sites/" + post.blogId + "/posts/" + post.postId;
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -213,6 +210,7 @@ public class ReaderPostActions {
         ReaderLog.d("updating post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
+
     private static void handleUpdatePostResponse(final ReaderPost post,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
@@ -255,6 +253,57 @@ public class ReaderPostActions {
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /*
+     * similar to updatePost, but used when post doesn't already exist in local db
+     */
+
+    public static void requestPost(long blogId, long postId, final ReaderActions.UpdateResultListener resultListener) {
+        String path = "sites/" + blogId + "/posts/" + postId;
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleRequestPostResponse(jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.e(volleyError);
+                if (resultListener!=null)
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+
+            }
+        };
+        ReaderLog.d("requesting post");
+        WordPress.restClient.get(path, null, null, listener, errorListener);
+    }
+    private static void handleRequestPostResponse(final JSONObject jsonObject,
+                                                  final ReaderActions.UpdateResultListener resultListener) {
+        if (jsonObject==null) {
+            if (resultListener!=null)
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            return;
+        }
+
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderPost post = ReaderPost.fromJson(jsonObject);
+                ReaderPostTable.addOrUpdatePost(post);
+                if (resultListener!=null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
                         }
                     });
                 }

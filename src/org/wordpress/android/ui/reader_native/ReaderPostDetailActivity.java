@@ -69,8 +69,8 @@ import java.util.ArrayList;
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailActivity extends WPActionBarActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    public static final String ARG_BLOG_ID = "blog_id";
+    public static final String ARG_POST_ID = "post_id";
 
     private long mPostId;
     private long mBlogId;
@@ -281,21 +281,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         return (mPost != null);
     }
 
-    @SuppressLint("NewApi")
     @Override
     protected void onStart() {
         super.onStart();
 
-        if (!hasPost()) {
-            if (mIsPostTaskRunning)
-                ReaderLog.w("post task already running");
-
-            if (SysUtils.canUseExecuteOnExecutor()) {
-                new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                new ShowPostTask().execute();
-            }
-        }
+        if (!hasPost() && !mIsPostTaskRunning)
+            showPost();
     }
 
     @Override
@@ -313,7 +304,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_browse :
-                ReaderActivityLauncher.openUrl(this, mPost.getUrl(), OpenUrlType.EXTERNAL);
+                if (hasPost())
+                    ReaderActivityLauncher.openUrl(this, mPost.getUrl(), OpenUrlType.EXTERNAL);
                 return true;
             case R.id.menu_share :
                 sharePage();
@@ -493,10 +485,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * get the latest version of this post
+     * get the latest version of this post - used to get latest like/comment counts
      */
     private void updatePost() {
-        if (mPost==null || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP())
             return;
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
@@ -545,7 +537,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * request comments for this post
      */
     private void updateComments() {
-        if (mPost==null || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP())
             return;
 
         if (mIsUpdatingComments)
@@ -590,7 +582,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * get the latest likes for this post
      */
     private void updateLikes() {
-        if (mPost==null || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP())
             return;
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
@@ -620,7 +612,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      */
     private static final int NUM_ACTIONBAR_ICONS = 2;
     private void refreshLikes(final boolean forceReload) {
-        if (mPost==null || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP())
             return;
 
         new Thread() {
@@ -1077,8 +1069,42 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
+     *  called when the post doesn't exist in local db, need to get it from server
+     */
+    private void requestPost() {
+        final TextView txtTitle = (TextView) findViewById(R.id.text_title);
+        txtTitle.setText(R.string.loading);
+        txtTitle.setVisibility(View.VISIBLE);
+
+        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (result != ReaderActions.UpdateResult.FAILED) {
+                    showPost();
+                } else {
+                    ToastUtils.showToast(ReaderPostDetailActivity.this, R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+                    ReaderPostDetailActivity.this.finish();
+                }
+            }
+        };
+        ReaderPostActions.requestPost(mBlogId, mPostId, resultListener);
+    }
+
+
+    /*
      * AsyncTask to retrieve & display this post
      */
+    @SuppressLint("NewApi")
+    private void showPost() {
+        if (mIsPostTaskRunning)
+            ReaderLog.w("post task already running");
+
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new ShowPostTask().execute();
+        }
+    }
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
@@ -1147,13 +1173,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             if (!result) {
                 /*
-                 * TODO: post couldn't be loaded, which means it should be retrieved from server
+                 * post couldn't be loaded, which means it doesn't exist locally - so hide the UI
+                 * and request it from the server
                  */
-                txtTitle.setText(R.string.reader_title_err_unable_to_load_post);
+                txtTitle.setVisibility(View.GONE);
                 txtBlogName.setVisibility(View.GONE);
                 txtDate.setVisibility(View.GONE);
                 imgAvatar.setImageResource(R.drawable.ic_error);
                 imgFeatured.setVisibility(View.GONE);
+                requestPost();
                 return;
             }
 
