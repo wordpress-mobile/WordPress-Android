@@ -455,8 +455,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             String name;
             if (account.get("blogName") != null) {
                 name = StringUtils.unescapeHTML(account.get("blogName").toString());
+                if (name.trim().length() == 0) {
+                    name = StringUtils.getHost(account.get("url").toString());
+                }
             } else {
-                name = account.get("url").toString();
+                name = StringUtils.getHost(account.get("url").toString());
             }
             blogNames[i] = name;
             blogIDs[i] = Integer.valueOf(account.get("id").toString());
