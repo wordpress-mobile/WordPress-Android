@@ -49,8 +49,8 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.5.1"
-        versionCode 85
+        versionName "2.6 Beta 1"
+        versionCode 86
         minSdkVersion 9
         targetSdkVersion 19
     }
