@@ -406,27 +406,12 @@ public class WordPressDB {
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
     }
 
-    public boolean checkForExistingBlog(String blogName, String blogURL, String username,
-                                        String password) {
-        if (blogName == null || blogURL == null || username == null || password == null)
-            return false;
-
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id", "blogName", "url"},
-                "blogName=? AND url=? AND username=?", new String[]{blogName, blogURL, username},
-                null, null, null, null);
-        int numRows = c.getCount();
-        if (numRows > 0) {
-            // This account is already saved
-            c.moveToFirst();
-            long blogID = c.getLong(0);
-            ContentValues values = new ContentValues();
-            values.put("password", encryptPassword(password));
-            db.update(SETTINGS_TABLE, values, "id=" + blogID, null);
-            return true;
-        }
-
+    public boolean isBlogInDatabase(String xmlRpcUrl, int blogId) {
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
+                new String[]{String.valueOf(blogId), xmlRpcUrl}, null, null, null, null);
+        boolean result =  c.getCount() > 0;
         c.close();
-        return false;
+        return result;
     }
 
     public boolean saveBlog(Blog blog) {
@@ -1389,7 +1374,6 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
-
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
                 null, null);
