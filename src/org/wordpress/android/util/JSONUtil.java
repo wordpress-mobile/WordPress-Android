@@ -194,4 +194,38 @@ public class JSONUtil {
             return false;
         return true;
     }
+
+    /*
+     * returns the JSONObject child of the passed parent that matches the passed query
+     * this is basically an "optJSONObject" that supports nested queries, for example:
+     *
+     *  getJSONChild("meta/data/site")
+     *
+     * would find this:
+     *
+     *  "meta": {
+     *       "data": {
+     *           "site": {
+     *                "ID": 3584907,
+     *                "name": "WordPress.com News",
+     *           }
+     *       }
+     *   }
+     */
+    public static JSONObject getJSONChild(final JSONObject jsonParent, final String query) {
+        if (jsonParent == null || TextUtils.isEmpty(query))
+            return null;
+        String[] names = query.split("/");
+        JSONObject jsonChild = null;
+        for (int i = 0; i < names.length; i++) {
+            if (jsonChild == null) {
+                jsonChild = jsonParent.optJSONObject(names[i]);
+            } else {
+                jsonChild = jsonChild.optJSONObject(names[i]);
+            }
+            if (jsonChild == null)
+                return null;
+        }
+        return jsonChild;
+    }
 }
