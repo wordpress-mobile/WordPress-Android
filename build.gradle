@@ -14,35 +14,22 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
-dependencies {
-    // Provided by maven central
-    compile 'com.google.code.gson:gson:2.2.2'
-    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v4:18.0.+'
-
-    // These are provided by the WordPress-Android Repository
-    compile 'org.wordpress:actionbarsherlock:4.4.0'
-    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
-    compile 'org.wordpress:gcm:1.0.0'
-    compile 'org.wordpress:volley:wp-0.0.1'
-    compile 'com.automattic:wordpresscom-rest:0.0.3'
-    compile 'org.wordpress:httpmime:4.1.2'
-    compile 'org.wordpress:graphview:3.1.1'
-    compile 'org.wordpress:drag-sort-listview:0.6.1'
-    compile 'org.wordpress:slidinguppanel:1.0.0'
-    compile 'org.wordpress:android-passcodelock:0.0.4'
-    compile 'org.wordpress:commons-lang:2.6'
-    releaseCompile 'org.wordpress:emailchecker:0.1'
-    debugCompile 'org.wordpress:emailchecker-debug:0.1'
-
-    // Local dependencies
-    compile files('libs/MixpanelAPI.jar')
-    compile files('libs/QuantcastAndroidSdk.jar')
-}
-
 project.archivesBaseName="WordPress-Android"
 
 android {
+
+	buildTypes {
+	    release {
+            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.playstore\";"
+        }
+        debug {
+            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.debug.build\";"
+        }
+	    betagroup.initWith(buildTypes.release)
+        betagroup {
+            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.beta.build\";"
+        }
+	}
 
     compileSdkVersion 19
     buildToolsVersion "19"
@@ -54,6 +41,33 @@ android {
         minSdkVersion 9
         targetSdkVersion 19
     }
+
+	dependencies {
+	    // Provided by maven central
+	    compile 'com.google.code.gson:gson:2.2.2'
+	    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+	    compile 'com.android.support:support-v4:18.0.+'
+	
+	    // These are provided by the WordPress-Android Repository
+	    compile 'org.wordpress:actionbarsherlock:4.4.0'
+	    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
+	    compile 'org.wordpress:gcm:1.0.0'
+	    compile 'org.wordpress:volley:wp-0.0.1'
+	    compile 'com.automattic:wordpresscom-rest:0.0.3'
+	    compile 'org.wordpress:httpmime:4.1.2'
+	    compile 'org.wordpress:graphview:3.1.1'
+	    compile 'org.wordpress:drag-sort-listview:0.6.1'
+	    compile 'org.wordpress:slidinguppanel:1.0.0'
+	    compile 'org.wordpress:android-passcodelock:0.0.4'
+	    compile 'org.wordpress:commons-lang:2.6'
+	    releaseCompile 'org.wordpress:emailchecker:0.1'
+	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
+	    betagroupCompile 'org.wordpress:emailchecker:0.1'
+	   
+	    // Local dependencies
+	    compile files('libs/MixpanelAPI.jar')
+	    compile files('libs/QuantcastAndroidSdk.jar')
+	}
 
     sourceSets {
         main {
@@ -68,7 +82,6 @@ android {
 
         instrumentTest.setRoot('tests')
     }
-
 }
 
 // Generates the Config.java class using properties defined in gradle.properties
