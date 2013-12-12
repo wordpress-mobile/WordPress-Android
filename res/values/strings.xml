@@ -41,9 +41,6 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
-    <string name="selected_categories">Selected categories:</string>
-    <string name="publish">Publish</string>
-    <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="show_and_hide_blogs">Show/hide blogs</string>
     <string name="blogs_visibility">Blogs visibility</string>
@@ -66,7 +63,6 @@
     <string name="categories_refreshed">Categories refreshed</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="empty_fields">No Content Found</string>
-    <string name="title_post_required">Please enter some post content or attach a media item.</string>
     <string name="cancel_edit">Cancel Edit</string>
     <string name="upload_full_size_image">Upload and link to full image</string>
     <string name="upload_scaled_image">Upload and link to scaled image</string>
@@ -141,6 +137,7 @@
     <string name="tab_stats">Stats</string>
 
     <!-- themes -->
+    <string name="themes_live_preview">Live Preview</string>
     <string name="themes_details_label">Details</string>
     <string name="themes_features_label">Features</string>
     <string name="theme_activate_button">Activate</string>
@@ -255,12 +252,11 @@
     <string name="share_url_page">Share Page</string>
     <string name="share_link">Share Link</string>
     <string name="attempting_fetch_url">Attempting to fetch URL</string>
-    <string name="post_not_published">Post status is not published</string>
-    <string name="page_not_published">Page status is not published</string>
     <string name="view_in_browser">View in Browser</string>
     <string name="post_signature">Post signature</string>
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
+    <string name="preview">Preview</string>
 
     <!-- comment actions -->
     <string name="comment_actions">Comment Actions</string>
@@ -411,11 +407,9 @@
 
 
     <!-- post status -->
-    <string name="publish_post">Publish</string>
     <string name="pending_review">Pending Review</string>
     <string name="draft">Draft</string>
     <string name="post_private">Private</string>
-    <string name="published">Published</string>
     <string name="scheduled">Scheduled</string>
 
     <!-- QuickPress -->
@@ -431,7 +425,6 @@
     <string name="http_authorization_required">Authorization Required</string>
 
     <!-- post scheduling and password -->
-    <string name="publish_date">Publish</string>
     <string name="edit">Edit</string>
     <string name="post_format">Post Format</string>
 
@@ -449,7 +442,6 @@
     <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
     <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
     <string name="tap_to_reply">Tap to Reply</string>
-    <string name="note_reply_successful">Reply published</string>
     <string name="follow">Follow</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
@@ -499,7 +491,6 @@
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
     <string name="app_title_blackberry">WordPress for BlackBerry</string>
-    <string name="publisher">Publisher: Automattic, Inc</string>
     <string name="copyright">©2013 Automattic, Inc</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
@@ -556,7 +547,6 @@
        ***
     -->
 
-    <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="reader_timespan_now">now</string>
 
     <!-- title shown for untitled posts -->
@@ -568,7 +558,6 @@
     <string name="reader_title_followed_tags">Followed Tags</string>
     <string name="reader_title_popular_tags">Popular Tags</string>
     <string name="reader_title_reblog">Reblog</string>
-    <string name="reader_title_err_unable_to_load_post">Unable to load post</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share Link</string>
@@ -585,7 +574,6 @@
     <string name="reader_btn_like">Like</string>
     <string name="reader_btn_unlike">Liked</string>
     <string name="reader_btn_reblog">Reblog</string>
-    <string name="reader_btn_reblogged">Reblogged</string>
     <string name="reader_btn_follow">Follow</string>
 
     <!-- EditText hints -->
@@ -601,18 +589,10 @@
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
 
-    <!-- like/comment counts in post list -->
-    <string name="reader_label_like_count_singular">1 like</string>
-    <string name="reader_label_like_count_plural">%d likes</string>
-    <string name="reader_label_comment_count_singular">1 comment</string>
-    <string name="reader_label_comment_count_plural">%d comments</string>
-
-    <!-- like counts in post detail and liking users activity-->
+    <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
-    <string name="reader_likes_you_and_one_long">You and one other like this</string>
-    <string name="reader_likes_you_and_multi_long">You and %d others like this</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
@@ -639,7 +619,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the plus icon to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
     <string name="reader_empty_posts_liked">You have not liked any posts.</string>
 
     <!-- NUX strings -->
@@ -696,10 +676,4 @@
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="one_blog_must_be_selected">At least one blog must be visible</string>
-
-    <string-array name="privacy_array">
-         <item>Public</item>
-         <item>Hidden</item>
-         <item>Private</item>
-    </string-array>
 </resources>
