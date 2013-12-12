@@ -17,14 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. 
@@ -41,7 +39,6 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int MAX_ITEMS_ON_TABLET = 10;
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
@@ -164,7 +161,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mLinearLayout.removeAllViews();
         
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int count = Math.min(mAdapter.getCount(), MAX_ITEMS_ON_TABLET);
+        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < count; i++) {
             View view = mAdapter.getView(i, null, mLinearLayout);
             if (i % 2 == 1)

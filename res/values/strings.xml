@@ -48,7 +48,6 @@
     <string name="hide_all">Hide All</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
-    <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -64,8 +63,6 @@
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="empty_fields">No Content Found</string>
     <string name="cancel_edit">Cancel Edit</string>
-    <string name="upload_full_size_image">Upload and link to full image</string>
-    <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Please enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
     <string name="load_more">Load More</string>
@@ -112,7 +109,6 @@
 
 
     <!-- Upload Media -->
-    <string name="media_upload_clear_uploaded">Clear Uploaded</string>
     <string name="media_no_video_title">VideoPress unavailable</string>
     <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 
@@ -151,10 +147,6 @@
     <string name="theme_premium_theme">Premium Theme</string>
     <string name="theme_no_search_result_found">No results found.</string>
 
-    <!-- link view -->
-    <string name="link_enter_url">URL</string>
-    <string name="link_enter_url_text">Link Text (optional)</string>
-    <string name="create_a_link">Create a Link</string>
 
     <!-- page view -->
     <string name="title">Title</string>
@@ -250,7 +242,6 @@
     <string name="attempt_delete_post">Attempting to delete post</string>
     <string name="share_url">Share Post</string>
     <string name="share_url_page">Share Page</string>
-    <string name="share_link">Share Link</string>
     <string name="attempting_fetch_url">Attempting to fetch URL</string>
     <string name="view_in_browser">View in Browser</string>
     <string name="post_signature">Post signature</string>
@@ -392,8 +383,6 @@
     <!-- stats: empty list strings -->
     <string name="stats_empty_geoviews">No posts viewed.</string>
     <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages found yet.</b> This view shows your most viewed posts and pages.]]></string>
-    <string name="stats_empty_referrers"><![CDATA[<b>No referrers.</b> A referrer is a click from another site that links to yours.]]></string>
-    <string name="stats_empty_clicks"><![CDATA[<b>No clicks recorded.</b> "Clicks" are viewers clicking outbound links on your site.]]></string>
     <string name="stats_empty_top_authors">No posts viewed.</string>
     <string name="stats_empty_video">No videos have been played yet.</string>
     <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
@@ -401,9 +390,6 @@
     <string name="stats_bar_graph_empty">No stats available.</string>
 
     <!-- editor button -->
-    <string name="strike"><strike>ABC</strike></string>
-    <string name="link"><u>link</u></string>
-    <string name="underline"><u>U</u></string>
 
 
     <!-- post status -->
@@ -453,7 +439,6 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
-    <string name="topics">Topics</string>
 
     <!-- Post Formats -->
     <string-array name="post_formats_array">
@@ -515,6 +500,7 @@
     <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
     <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
+    <string name="error_blog_hidden">Sorry, this blog is hidden and could not be loaded. Please enable it again in Settings and try again.</string>
     <string name="fatal_db_error">So sorry, but an error occurred while attempting to create the app database. Please try reinstalling the app.</string>
 
     <!--  Image Descriptions for Accessibility -->
@@ -560,7 +546,6 @@
     <string name="reader_title_reblog">Reblog</string>
 
     <!-- share dialog title when sharing a reader url -->
-    <string name="reader_share_link">Share Link</string>
 
     <!-- subject line when sharing a reader url -->
     <string name="reader_share_subject">Shared from %s</string>
@@ -570,9 +555,6 @@
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
-    <string name="reader_btn_comment">Comment</string>
-    <string name="reader_btn_like">Like</string>
-    <string name="reader_btn_unlike">Liked</string>
     <string name="reader_btn_reblog">Reblog</string>
     <string name="reader_btn_follow">Follow</string>
 
@@ -593,6 +575,8 @@
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
+    <string name="reader_likes_you_and_one">You and one other like this</string>
+    <string name="reader_likes_you_and_multi">You and %d others like this</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
@@ -606,6 +590,7 @@
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_no_connection">Unable to connect</string>
+    <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 
     <!--
         very important that this string resource is correct for all translations, since it's
@@ -639,7 +624,6 @@
     <string name="agree_terms_of_service">By creating an account you agree to the %1$sTerms of Service%2$s.</string>
     <string name="username_email">Username or Email</string>
     <string name="site_address">Your Self-Hosted Address (URL)</string>
-    <string name="dont_have_account">Don\'t have an account? %1$sCreate one!%2$s</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Sorry, usernames can only contain lowercase letters (a-z) and numbers.</string>
     <string name="username_required">Please enter a username.</string>

@@ -3,7 +3,7 @@
     android:id="@+id/comments"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#F4F4F4"
+    android:background="@color/background_grey"
     android:orientation="vertical"
     android:padding="0px">
 

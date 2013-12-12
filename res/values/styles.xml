@@ -111,6 +111,7 @@
         <item name="android:minHeight">@dimen/format_bar_height</item>
         <item name="android:textOn">""</item>
         <item name="android:textOff">""</item>
+        <item name="android:paddingTop">@dimen/format_bar_button_padding</item>
     </style>
 
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">

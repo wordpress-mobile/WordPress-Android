@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader_native;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,13 +61,18 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         return (SysUtils.isGteAndroid4());
     }
 
+    @SuppressLint("NewApi")
+    protected static void enableTranslucentActionBar(Activity activity) {
+        activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         boolean isTranslucentActionBarEnabled = isTranslucentActionBarEnabled();
         if (isTranslucentActionBarEnabled)
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+            enableTranslucentActionBar(this);
 
         setContentView(R.layout.reader_activity_main);
 
@@ -227,7 +233,7 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(this);
+                ReaderActivityLauncher.showReaderTagsForResult(this, null);
                 return true;
             case R.id.menu_refresh :
                 ReaderPostListFragment fragment = getPostListFragment();

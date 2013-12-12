@@ -54,6 +54,9 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsActivity extends WPActionBarActivity {
 
+    // Max number of rows to show in a stats fragment
+    public static final int STATS_GROUP_MAX_ITEMS = 10;
+
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;

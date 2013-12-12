@@ -109,11 +109,8 @@ public class ReaderUserAdapter extends BaseAdapter {
             });
 
             // since the user has a blog url, enable following/unfollowing it
-            holder.txtFollow.setVisibility(View.VISIBLE);
-            if (holder.txtFollow.isSelected()!=user.isFollowed) {
-                holder.txtFollow.setSelected(user.isFollowed);
-                holder.txtFollow.setText(user.isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-            }
+            if (holder.txtFollow.isSelected() != user.isFollowed)
+                showFollowStatus(holder.txtFollow, user.isFollowed);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,6 +118,7 @@ public class ReaderUserAdapter extends BaseAdapter {
                     toggleFollowUser(user, holder.txtFollow);
                 }
             });
+            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
             // no blog url, so can't follow
             holder.txtUrl.setVisibility(View.GONE);
@@ -149,10 +147,14 @@ public class ReaderUserAdapter extends BaseAdapter {
             user.isFollowed = false;
         }
 
-        if (txtFollow!=null) {
-            txtFollow.setText(isAskingToFollow ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-            txtFollow.setSelected(isAskingToFollow);
-        }
+        showFollowStatus(txtFollow, isAskingToFollow);
+    }
+
+    private void showFollowStatus(TextView txtFollow, boolean isFollowing) {
+        txtFollow.setText(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        int drawableId = (isFollowing ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+        txtFollow.setSelected(isFollowing);
     }
 
     private static class UserViewHolder {

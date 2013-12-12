@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -28,7 +29,9 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     private EditText mSiteTitleTextField;
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
+    private WPTextView mCancelButton;
     private ProgressBar mProgressBarSignIn;
+    private boolean mSignoutOnCancelMode;
 
     public NewBlogFragment() {
     }
@@ -47,6 +50,27 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
             mSignupButton.setEnabled(true);
         } else {
             mSignupButton.setEnabled(false);
+        }
+    }
+
+    public void setSignoutOnCancelMode(boolean mode) {
+        mSignoutOnCancelMode = mode;
+        mCancelButton.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isSignoutOnCancelMode() {
+        return mSignoutOnCancelMode;
+    }
+
+    public void onBackPressed() {
+        signoutAndFinish();
+    }
+
+    private void signoutAndFinish() {
+        if (mSignoutOnCancelMode) {
+            WordPress.signOut(getActivity());
+            getActivity().setResult(WPActionBarActivity.NEW_BLOG_CANCELED);
+            getActivity().finish();
         }
     }
 
@@ -114,13 +138,6 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
         return true;
     }
-
-    OnClickListener signupClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            validateAndCreateUserAndBlog();
-        }
-    };
 
     private String titleToUrl(String siteUrl) {
         return siteUrl.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
@@ -201,6 +218,9 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mSignupButton.setOnClickListener(signupClickListener);
         mSignupButton.setEnabled(false);
 
+        mCancelButton = (WPTextView) rootView.findViewById(R.id.cancel_button);
+        mCancelButton.setOnClickListener(cancelClickListener);
+
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
         mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
@@ -224,7 +244,21 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
             public void afterTextChanged(Editable s) {
             }
         });
-
         return rootView;
     }
+
+
+    OnClickListener signupClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            validateAndCreateUserAndBlog();
+        }
+    };
+
+    OnClickListener cancelClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            signoutAndFinish();
+        }
+    };
 }

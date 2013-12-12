@@ -49,7 +49,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private String mHttpPassword = "";
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private boolean mForceSelfHosted;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -100,21 +99,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
-        if (mForceSelfHosted) {
-            forceSelfHostedMode();
-        }
         return rootView;
-    }
-
-    public void setForceSelfHostedMode(boolean force) {
-        mForceSelfHosted = force;
     }
 
     /**
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    private void forceSelfHostedMode() {
+    public void forceSelfHostedMode() {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);

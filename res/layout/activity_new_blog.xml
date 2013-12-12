@@ -7,7 +7,7 @@
 
     <fragment
         android:name="org.wordpress.android.ui.accounts.NewBlogFragment"
-        android:id="@+id/new_user_page_fragment"
+        android:id="@+id/new_blog_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
