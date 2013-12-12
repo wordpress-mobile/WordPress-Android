@@ -153,4 +153,5 @@ if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.ha
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
+    android.buildTypes.betagroup.signingConfig = android.signingConfigs.release
 }
