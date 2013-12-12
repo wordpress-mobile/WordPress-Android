@@ -60,7 +60,12 @@ public class ReaderPost {
 
         post.postId = json.optLong("ID");
         post.blogId = json.optLong("site_ID");
-        post.pseudoId = JSONUtil.getString(json, "pseudo_ID");
+
+        if (json.has("pseudo_ID")) {
+            post.pseudoId = JSONUtil.getString(json, "pseudo_ID");  // read/ endpoint
+        } else {
+            post.pseudoId = JSONUtil.getString(json, "global_ID");  // sites/ endpoint
+        }
 
         // remove HTML from the excerpt
         post.excerpt = HtmlUtils.fastStripHtml(JSONUtil.getString(json, "excerpt"));
@@ -199,6 +204,19 @@ public class ReaderPost {
                 sbTags.append(it.next());
             }
             post.setTags(sbTags.toString());
+        }
+
+        // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
+        // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
+        // added to the request) - check for this metadata if the blogId wasn't set above
+        if (post.blogId == 0) {
+            JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
+            if (jsonSite != null) {
+                post.blogId = jsonSite.optInt("ID");
+                post.blogName = JSONUtil.getString(jsonSite, "name");
+                post.blogUrl = JSONUtil.getString(jsonSite, "URL");
+                post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            }
         }
 
         return post;

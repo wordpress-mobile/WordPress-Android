@@ -400,27 +400,18 @@ public class WordPressDB {
         return getAccountsBy(null, null);
     }
 
-    public boolean checkForExistingBlog(String blogName, String blogURL, String username,
-                                        String password) {
-        if (blogName == null || blogURL == null || username == null || password == null)
-            return false;
+    public int setAllDotComAccountsVisibility(boolean visible) {
+        ContentValues values = new ContentValues();
+        values.put("isHidden", !visible);
+        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
+    }
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id", "blogName", "url"},
-                "blogName=? AND url=? AND username=?", new String[]{blogName, blogURL, username},
-                null, null, null, null);
-        int numRows = c.getCount();
-        if (numRows > 0) {
-            // This account is already saved
-            c.moveToFirst();
-            long blogID = c.getLong(0);
-            ContentValues values = new ContentValues();
-            values.put("password", encryptPassword(password));
-            db.update(SETTINGS_TABLE, values, "id=" + blogID, null);
-            return true;
-        }
-
+    public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
+                new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);
+        boolean result =  c.getCount() > 0;
         c.close();
-        return false;
+        return result;
     }
 
     public boolean saveBlog(Blog blog) {
@@ -446,6 +437,7 @@ public class WordPressDB {
         values.put("scaledImgWidth", blog.getScaledImageWidth());
         values.put("blog_options", blog.getBlogOptions());
         values.put("isHidden", blog.isHidden());
+        values.put("blogName", blog.getBlogName());
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;
@@ -666,6 +658,11 @@ public class WordPressDB {
      */
     public int getAccountIdForBlogId(int blogId) {
         return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
+    }
+
+    public int getAccountIdForBlogIdAndXmlRpcUrl(int blogId, String xmlRpcUrl) {
+        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
+                new String[]{Integer.toString(blogId), xmlRpcUrl});
     }
 
     public void updateNotificationFlag(int id, boolean flag) {
@@ -1383,7 +1380,6 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
-
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
                 null, null);

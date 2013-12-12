@@ -45,6 +45,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -69,6 +70,7 @@ import java.util.Map;
  * Base class for Activities that include a standard action bar and menu drawer.
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity {
+    public static final int NEW_BLOG_CANCELED = 10;
 
     private static final String TAG = "WPActionBarActivity";
 
@@ -112,6 +114,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private boolean mIsXLargeDevice;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
+    private boolean mNewBlogActivityRunning;
 
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
@@ -452,8 +455,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             String name;
             if (account.get("blogName") != null) {
                 name = StringUtils.unescapeHTML(account.get("blogName").toString());
+                if (name.trim().length() == 0) {
+                    name = StringUtils.getHost(account.get("url").toString());
+                }
             } else {
-                name = account.get("url").toString();
+                name = StringUtils.getHost(account.get("url").toString());
             }
             blogNames[i] = name;
             blogIDs[i] = Integer.valueOf(account.get("id").toString());
@@ -519,12 +525,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
+                mNewBlogActivityRunning = false;
                 if (resultCode == RESULT_OK) {
-                    // new blog has been added, so rebuild cache of blogs and
-                    // setup current blog
+                    // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();

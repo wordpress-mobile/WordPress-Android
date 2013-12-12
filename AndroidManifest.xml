@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
-    
+
     <!-- GCM configuration -->
     <permission
         android:name="org.wordpress.android.permission.C2D_MESSAGE"
@@ -134,19 +134,36 @@
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
         </activity>
-        
+
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
         </activity>
 
         <activity android:name=".ui.media.MediaGalleryActivity">
         </activity>
-        
+
         <activity android:name=".ui.media.MediaGalleryPickerActivity">
         </activity>
-        
+
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
+        </activity>
+
+        <!-- Deep Linking Activity -->
+        <activity
+            android:name=".ui.DeepLinkingIntentReceiverActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="viewpost"
+                    android:scheme="wordpress" >
+                </data>
+            </intent-filter>
         </activity>
 
         <!-- Native Reader Activities -->
@@ -193,7 +210,7 @@
             </intent-filter>
         </activity>
 
-                
+
         <activity android:name=".ui.stats.WPComLoginActivity" android:theme="@style/FloatingActivityTheme">
         </activity>
         <activity
@@ -214,7 +231,7 @@
         <activity android:name=".ui.ViewSiteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
-        
+
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsActivity"
@@ -240,13 +257,13 @@
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-		
+
 		<!-- Services -->
         <service
             android:name=".util.PostUploadService"
             android:label="Post Upload Service" >
         </service>
-        
+
         <service
             android:name=".util.MediaUploadService"
             android:label="Media Upload Service" >
@@ -256,7 +273,7 @@
             android:name=".util.MediaDeleteService"
             android:label="Media Delete Service" >
         </service>
-                
+
         <service android:name="org.wordpress.android.GCMIntentService" />
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
@@ -268,7 +285,7 @@
                 <category android:name="org.wordpress.android" />
             </intent-filter>
         </receiver>
-            
+
         <provider
             android:name=".providers.StatsContentProvider"
             android:authorities="org.wordpress.android.providers.StatsContentProvider"

@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 
 /**
  * Created by nbradbury on 6/19/13.
@@ -26,6 +25,13 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderPostDetailActivity.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderPostDetailActivity.ARG_POST_ID, post.postId);
         activity.startActivityForResult(intent, Constants.INTENT_READER_POST_DETAIL);
+    }
+
+    public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        Intent intent = new Intent(context, ReaderPostDetailActivity.class);
+        intent.putExtra(ReaderPostDetailActivity.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderPostDetailActivity.ARG_POST_ID, postId);
+        context.startActivity(intent);
     }
 
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
