@@ -35,7 +35,7 @@
     <dimen name="reader_margin_large">12dp</dimen>
 
     <!-- left/right margin for posts in both list and detail views -->
-    <dimen name="reader_list_margin_normal">4dp</dimen>
+    <dimen name="reader_list_margin_normal">8dp</dimen>
     <dimen name="reader_list_margin_landscape">48dp</dimen>
     <dimen name="reader_list_margin_tablet">48dp</dimen>
     <dimen name="reader_list_margin_landscape_tablet">96dp</dimen>
