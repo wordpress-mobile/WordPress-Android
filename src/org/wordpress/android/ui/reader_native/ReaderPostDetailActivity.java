@@ -1276,17 +1276,26 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 imgBtnComment.setVisibility(View.GONE);
             }
 
-            // tapping title, blog name, author name or avatar opens post in browser
-            View.OnClickListener clickListener = new View.OnClickListener() {
+            // tapping title opens post in browser
+            txtTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getUrl());
                 }
-            };
-            txtTitle.setOnClickListener(clickListener);
-            txtBlogName.setOnClickListener(clickListener);
-            txtAuthorName.setOnClickListener(clickListener);
-            imgAvatar.setOnClickListener(clickListener);
+            });
+
+            // tapping blog name, author name or avatar opens blog home page in browser
+            if (mPost.hasBlogUrl()) {
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.openUrl(ReaderPostDetailActivity.this, mPost.getBlogUrl());
+                    }
+                };
+                txtBlogName.setOnClickListener(clickListener);
+                txtAuthorName.setOnClickListener(clickListener);
+                imgAvatar.setOnClickListener(clickListener);
+            }
 
             // webView is invisible at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
