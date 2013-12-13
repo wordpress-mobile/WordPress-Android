@@ -112,12 +112,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private View mRootView;
     private WPEditText mContentEditText;
-    private ImageButton mAddPictureButton;
+    private Button mAddPictureButton;
     private EditText mTitleEditText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private LinearLayout mFormatBar, mPostContentLinearLayout, mPostSettingsLinearLayout;
-    private Button mPostSettingsButton;
     private boolean mIsBackspace;
     private boolean mScrollDetected;
 
@@ -151,8 +150,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mContentEditText = (WPEditText)rootView.findViewById(R.id.post_content);
         mPostContentLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_settings_wrapper);
-        mPostSettingsButton = (Button)rootView.findViewById(R.id.post_settings_button);
-        mPostSettingsButton.setOnClickListener(new View.OnClickListener() {
+        Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
+        postSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActivity.showPostSettings();
@@ -163,9 +162,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mBquoteToggleButton = (ToggleButton) rootView.findViewById(R.id.bquote);
         mUnderlineToggleButton = (ToggleButton) rootView.findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) rootView.findViewById(R.id.strike);
-        mAddPictureButton = (ImageButton) rootView.findViewById(R.id.addPictureButton);
-        ImageButton linkButton = (ImageButton) rootView.findViewById(R.id.link);
-        ImageButton moreButton = (ImageButton) rootView.findViewById(R.id.more);
+        mAddPictureButton = (Button) rootView.findViewById(R.id.addPictureButton);
+        Button linkButton = (Button) rootView.findViewById(R.id.link);
+        Button moreButton = (Button) rootView.findViewById(R.id.more);
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
@@ -202,7 +201,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 mTitleEditText.setText(post.getTitle());
             }
 
-            mPostSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
+            postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
         }
 
         // Check for Android share action
