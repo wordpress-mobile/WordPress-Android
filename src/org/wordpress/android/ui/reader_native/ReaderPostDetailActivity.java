@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -199,9 +200,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
-        if (isTranslucentActionBarEnabled)
-            NativeReaderActivity.enableTranslucentActionBar(this);
+        boolean isFullScreenSupported = isFullScreenSupported();
+        if (isFullScreenSupported)
+            enableActionBarOverlay();
 
         mInflater = getLayoutInflater();
         setContentView(R.layout.reader_activity_post_detail);
@@ -212,12 +213,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (isTranslucentActionBarEnabled) {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(NativeReaderActivity.ALPHA_LEVEL_3, 46, 162, 204)));
-
-            // add a header to the listView that's the same height as the ActionBar - this moves
-            // the actual content of the listView below the ActionBar, but enables it to scroll under
-            // the translucent ActionBar layout
+        if (isFullScreenSupported) {
+            // add a header to the listView that's the same height as the ActionBar
             final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
             RelativeLayout headerFake = new RelativeLayout(this);
             headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
@@ -242,7 +239,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         mLayoutIcons = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
-
 
         // setup the webView - note that JavaScript is disabled since it's a security risk:
         //    http://developer.android.com/training/articles/security-tips.html#WebView
@@ -318,12 +314,16 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * auto-hiding the ActionBar and icon bar is jittery/buggy when the translucent ActionBar
-     * isn't enabled (which it won't be on pre-ICS devices), so disable full-screen mode
-     * when the translucent ActionBar isn't enabled
+     * auto-hiding the ActionBar and icon bar is jittery/buggy on Gingerbread (and probably other
+     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
      */
     private boolean isFullScreenSupported() {
-        return NativeReaderActivity.isTranslucentActionBarEnabled();
+        return (SysUtils.isGteAndroid4());
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    protected void enableActionBarOverlay() {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 
     /*
