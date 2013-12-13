@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentListFragment.CommentAsyncModerationReturnListener;
 import org.wordpress.android.ui.comments.CommentListFragment.CommentListFragmentListener;
 import org.wordpress.android.ui.comments.CommentListFragment.OnAnimateRefreshButtonListener;
+import org.wordpress.android.util.MessageBarUtils;
 
 import java.util.List;
 
@@ -243,6 +244,7 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
                 || commentModerationStatusType == CommentStatus.TRASH) {
             if (mActionMode != null) { mActionMode.finish(); }
         }
+        MessageBarUtils.hideMessageBar(this, null, false);
     }
 
     @Override
@@ -260,6 +262,7 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         } else {
             //TODO: JCO (Resolve by 12/13/13) This would be a programming error. Possibly server?
         }
+        MessageBarUtils.hideMessageBar(this, null, false);
     }
 
     @Override

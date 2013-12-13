@@ -31,6 +31,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -190,11 +191,20 @@ public class CommentListFragment extends SherlockListFragment {
         ApiHelper.ModerateCommentsTask task = new ApiHelper.ModerateCommentsTask(newStatus,
                 allComments, selectedCommentIds,
                 new ApiHelper.ModerateCommentsTask.Callback() {
+                    String messageBarText;
+
                     @Override
                     public void onSuccess(SparseBooleanArray moderatedComments) {
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
                         mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+
+                        if (moderatedComments.size() == 1) {
+                            messageBarText = getActivity().getString(R.string.comment_moderated);
+                        } else {
+                            messageBarText = getActivity().getString(R.string.comments_moderated);
+                        }
+                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                     }
                     @Override
                     public void onCancelled(SparseBooleanArray moderatedComments) {
@@ -202,6 +212,13 @@ public class CommentListFragment extends SherlockListFragment {
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
                         mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+
+                        if (moderatedComments.size() == 1) {
+                            messageBarText = getActivity().getString(R.string.comment_moderated);
+                        } else {
+                            messageBarText = getActivity().getString(R.string.comments_moderated);
+                        }
+                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                     }
                     @Override
                     public void onFailure() {
@@ -212,6 +229,7 @@ public class CommentListFragment extends SherlockListFragment {
                            status' did not change. For now we will refresh the data from the server. */
                         mCommentsUpdating = false;
                         refreshComments();
+                        MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
                     }
                 });
 
@@ -219,6 +237,15 @@ public class CommentListFragment extends SherlockListFragment {
         apiArgs.add(WordPress.getCurrentBlog());
 
         if(!mCommentsUpdating) {
+            String messageBarText;
+
+            if (selectedCommentIds.size() == 1) {
+                messageBarText = getActivity().getString(R.string.moderating_comment);
+            } else {
+                messageBarText = getActivity().getString(R.string.moderating_comments);
+            }
+            MessageBarUtils.showMessageBar(this.getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
+
             mCommentsUpdating = true;
             task.execute(apiArgs);
         }
@@ -228,20 +255,32 @@ public class CommentListFragment extends SherlockListFragment {
      * TODO: JCO - Add javadoc
      */
     public void deleteComments() {
-        final ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIdArray();
+        final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
 
         ApiHelper.DeleteCommentsTask task = new ApiHelper.DeleteCommentsTask(allComments,
-                selectedCommentIdArray,
+                selectedCommentIds,
                 new ApiHelper.DeleteCommentsTask.Callback() {
+                    String messageBarText;
+
                     @Override
                     public void onSuccess() {
                         //TODO: JCO - Need to update the model/view
                         mCommentsUpdating = false;
+
+                        if (selectedCommentIds.size() == 1) {
+                            messageBarText =
+                                    getActivity().getString(R.string.comment_moderated);
+                        } else {
+                            messageBarText =
+                                    getActivity().getString(R.string.comments_moderated);
+                        }
+                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                     }
                     @Override
                     public void onFailure() {
                         //TODO: JCO - Need to update the model/view
                         mCommentsUpdating = false;
+                        MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
                     }
                 });
 
@@ -249,6 +288,14 @@ public class CommentListFragment extends SherlockListFragment {
         apiArgs.add(WordPress.getCurrentBlog());
 
         if(!mCommentsUpdating) {
+            String messageBarText;
+
+            if (selectedCommentIds.size() == 1) {
+                messageBarText = getActivity().getString(R.string.deleting_comment);
+            } else {
+                messageBarText = getActivity().getString(R.string.deleting_comments);
+            }
+            MessageBarUtils.showMessageBar(this.getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
             mCommentsUpdating = true;
             task.execute(apiArgs);
         }
@@ -636,7 +683,6 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
-
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
             if (!isCancelled()) {
                 if (commentsResult == null) {

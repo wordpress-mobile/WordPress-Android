@@ -26,4 +26,11 @@
         android:dividerHeight="1px"
         android:scrollingCache="true"
         android:textColor="#444444" />
+
+    <include
+        android:id="@+id/text_message_bar"
+        layout="@layout/message_bar_include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@android:id/list" />
 </RelativeLayout>
