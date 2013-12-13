@@ -78,9 +78,8 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
-        android:background="@drawable/format_bar_bg"
+        android:background="@color/grey_extra_light"
         android:orientation="horizontal"
-        android:paddingTop="1dp"
         android:visibility="gone">
 
         <HorizontalScrollView
@@ -98,65 +97,58 @@
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_format_bold" />
+                    android:background="@drawable/format_bar_button_bold_selector" />
 
                 <ToggleButton
                     android:id="@+id/em"
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_format_italic" />
+                    android:background="@drawable/format_bar_button_italic_selector" />
 
                 <ToggleButton
                     android:id="@+id/underline"
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_format_underline" />
+                    android:background="@drawable/format_bar_button_underline_selector" />
 
                 <ToggleButton
                     android:id="@+id/strike"
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_format_strikethrough" />
+                    android:background="@drawable/format_bar_button_strike_selector" />
 
                 <ToggleButton
                     android:id="@+id/bquote"
                     style="@style/WordPress.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_format_quote" />
+                    android:background="@drawable/format_bar_button_quote_selector" />
 
-                <ImageButton
+                <Button
                     android:id="@+id/link"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/format_bar_height"
-                    android:src="@drawable/icon_format_link"
-                    android:background="@drawable/selectable_background_wordpress"
-                    android:contentDescription="@string/create_a_link"/>
+                    android:background="@drawable/format_bar_button_link_selector" />
 
-                <ImageButton
+                <Button
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/format_bar_height"
-                    android:background="@drawable/selectable_background_wordpress"
-                    android:src="@drawable/icon_format_more"
-                    android:contentDescription="@string/more_tag"
-                    />
+                    android:background="@drawable/format_bar_button_more_selector" />
             </LinearLayout>
         </HorizontalScrollView>
 
-        <ImageButton
+        <Button
             android:id="@+id/addPictureButton"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:minWidth="@dimen/format_bar_height"
-            android:background="@drawable/selectable_background_wordpress"
-            android:contentDescription="@string/content_description_add_media"
-            android:src="@drawable/icon_format_media" />
+            android:background="@drawable/format_bar_button_media_selector" />
     </LinearLayout>
 
 </LinearLayout>

@@ -75,7 +75,6 @@
     <string name="uploading">Uploading</string>
     <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
     <string name="refresh">Refresh</string>
-    <string name="more_tag">More</string>
     <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
     <string name="wpcom">WordPress.com</string>
@@ -421,8 +420,6 @@
     <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
     <string name="stats_empty_comments">No comments yet.</string>
     <string name="stats_bar_graph_empty">No stats available.</string>
-
-    <!-- editor button -->
 
     <!-- invalid_url -->
     <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>

@@ -44,9 +44,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mProgressTextSignIn;
     private ProgressBar mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
-    private boolean mHttpAuthRequired;
-    private String mHttpUsername = "";
-    private String mHttpPassword = "";
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
@@ -233,9 +230,19 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
 
+        private void setHttpCredentials(String username, String password) {
+            if (mSetupBlog == null) {
+                mSetupBlog = new SetupBlog();
+            }
+            mSetupBlog.setHttpUsername(username);
+            mSetupBlog.setHttpPassword(password);
+        }
+
         @Override
         protected void onPreExecute() {
-            mSetupBlog = new SetupBlog();
+            if (mSetupBlog == null) {
+                mSetupBlog = new SetupBlog();
+            }
             mSetupBlog.setUsername(mUsernameEditText.getText().toString().trim());
             mSetupBlog.setPassword(mPasswordEditText.getText().toString().trim());
             if (mSelfHosted) {
@@ -259,12 +266,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
-            if (mHttpAuthRequired) {
+            if (mSetupBlog.isHttpAuthRequired()) {
                 if (getActivity() == null) {
                     return ;
                 }
                 // Prompt for http credentials
-                mHttpAuthRequired = false;
+                mSetupBlog.setHttpAuthRequired(false);
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 alert.setTitle(R.string.http_authorization_required);
 
@@ -272,12 +279,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
                 final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
                 alert.setView(httpAuth);
-
+                final SetupBlogTask self = this;
                 alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        mSetupBlog.setHttpUsername(usernameEditText.getText().toString());
-                        mSetupBlog.setHttpPassword(passwordEditText.getText().toString());
-                        new SetupBlogTask().execute();
+                        SetupBlogTask setupBlogTask = new SetupBlogTask();
+                        setupBlogTask.setHttpCredentials(usernameEditText.getText().toString(),
+                                passwordEditText.getText().toString());
+                        setupBlogTask.execute();
                     }
                 });
 
