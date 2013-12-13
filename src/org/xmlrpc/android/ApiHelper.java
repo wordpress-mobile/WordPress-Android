@@ -872,7 +872,8 @@ public class ApiHelper {
         protected void onPostExecute(SparseBooleanArray moderatedCommentIds) {
             if (mCallback != null) {
                 if (moderatedCommentIds.indexOfValue(true) == -1)
-                    mCallback.onFailure(); //TODO: JCO - Might not use as this only indicates that no comments were updated. Modify to pass on XML/RPC errors ... as it helped for developing against a server issue.
+                    //TODO: Might not use as this only indicates that no comments were updated. Modify to pass XML/RPC errors ... as it helped for developing against a server issue.
+                    mCallback.onFailure();
                 else
                     mCallback.onSuccess(moderatedCommentIds);
             }
@@ -886,23 +887,25 @@ public class ApiHelper {
         }
     }
 
-    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, Boolean> {
+    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, SparseBooleanArray> {
+        private Callback mCallback;
+        private int mNumSelectedComments = 0;
+        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
+        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
+        private SparseBooleanArray mDeletedCommentIds;
 
         public interface Callback {
-            public void onSuccess();
+            public void onSuccess(SparseBooleanArray deletedCommentIds);
+            public void onCancelled(SparseBooleanArray deletedCommentIds);
             public void onFailure();
         }
 
-        private Callback mCallback;
-        private int mNumSelectedComments = 0;
-        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot = new HashMap<Integer, Map<?, ?>>();
-        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
-
         public DeleteCommentsTask(Map<Integer, Map<?, ?>>  allComments,
                                   ArrayList<Integer> selectedCommentIdArray, Callback callback) {
-            mAllCommentsSnapshot.putAll(allComments);
+            mAllCommentsSnapshot = allComments;
             mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
             mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
+            mDeletedCommentIds = new SparseBooleanArray(selectedCommentIdArray.size());
             mCallback = callback;
         }
 
@@ -911,8 +914,8 @@ public class ApiHelper {
         }
 
         @Override
-        protected Boolean doInBackground(List<?>... params) {
-            Boolean result = false;
+        protected SparseBooleanArray doInBackground(List<?>... params) {
+            Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
@@ -927,35 +930,42 @@ public class ApiHelper {
 
             for (int i = 0; i < mNumSelectedComments; i++) {
                 if (isCancelled())
-                    return result;
+                    return mDeletedCommentIds;
 
+                rpcCallStatus = false;
                 int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
                 Object[] apiParams = {WordPress.currentBlog.getBlogId(),
                         WordPress.currentBlog.getUsername(),
                         WordPress.currentBlog.getPassword(), currentCommentId};
 
+                Object result;
                 try {
-                    result = (Boolean) client.call("wp.deleteComment", apiParams);
+                    result = client.call("wp.deleteComment", apiParams);
+                    rpcCallStatus = Boolean.parseBoolean(result.toString());
                 } catch (XMLRPCException e) {
                     Log.e("WordPress", "XMLRPCException: " + e.getMessage());
                 }
-            }
 
-            return result;
+                mDeletedCommentIds.put(currentCommentId, rpcCallStatus);
+            }
+            return mDeletedCommentIds;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(SparseBooleanArray deletedCommentIds) {
             if (mCallback != null) {
-                if (result == null || !result)
+                if (deletedCommentIds.indexOfValue(true) == -1)
                     mCallback.onFailure();
                 else
-                    mCallback.onSuccess();
+                    mCallback.onSuccess(deletedCommentIds);
             }
         }
 
         @Override
-        protected void onCancelled(Boolean result) {
+        protected void onCancelled(SparseBooleanArray deletedCommentIds) {
+            if (mCallback != null) {
+                mCallback.onCancelled(deletedCommentIds);
+            }
         }
     }
 

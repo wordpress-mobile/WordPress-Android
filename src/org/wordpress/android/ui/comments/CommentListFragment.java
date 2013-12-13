@@ -158,6 +158,16 @@ public class CommentListFragment extends SherlockListFragment {
         return v;
     }
 
+    private int getNumberOfTrueValues(SparseBooleanArray sparseBooleanArray) {
+        int numberOfTrueValues = 0;
+        for(int i=0; i< sparseBooleanArray.size(); i++) {
+            if(sparseBooleanArray.valueAt(i)) {
+                numberOfTrueValues++;
+            }
+        }
+        return numberOfTrueValues;
+    }
+
     /**
      * This function is used to update the local data models and views after completion of some RPC
      * server action.
@@ -181,7 +191,7 @@ public class CommentListFragment extends SherlockListFragment {
     /**
      * Start an AsyncTask to moderate the current comment selection set
      *
-     * @param commentStatus The status to moderate the currently selected comments as
+     * @param commentStatus The status to moderate the currently selected comment set type
      */
     public void moderateComments(final CommentStatus commentStatus) {
         final String newStatus = CommentStatus.toString(commentStatus);
@@ -192,6 +202,7 @@ public class CommentListFragment extends SherlockListFragment {
                 allComments, selectedCommentIds,
                 new ApiHelper.ModerateCommentsTask.Callback() {
                     String messageBarText;
+                    int numCommentsModerated = 0;
 
                     @Override
                     public void onSuccess(SparseBooleanArray moderatedComments) {
@@ -199,7 +210,8 @@ public class CommentListFragment extends SherlockListFragment {
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
 
                         if (getActivity() != null) {
-                            if (moderatedComments.size() == 1) {
+                            numCommentsModerated = getNumberOfTrueValues(moderatedComments);
+                            if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
                                 messageBarText = getActivity().getString(R.string.comments_moderated);
@@ -215,7 +227,8 @@ public class CommentListFragment extends SherlockListFragment {
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
 
                         if (getActivity() != null) {
-                            if (moderatedComments.size() == 1) {
+                            numCommentsModerated = getNumberOfTrueValues(moderatedComments);
+                            if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
                                 messageBarText = getActivity().getString(R.string.comments_moderated);
@@ -266,12 +279,32 @@ public class CommentListFragment extends SherlockListFragment {
                 selectedCommentIds,
                 new ApiHelper.DeleteCommentsTask.Callback() {
                     String messageBarText;
+                    int numCommentsDeleted = 0;
 
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(SparseBooleanArray deletedCommentIds) {
                         mCommentsUpdating = false;
+
                         if (getActivity() != null) {
-                            if (selectedCommentIds.size() == 1) {
+                            numCommentsDeleted = getNumberOfTrueValues(deletedCommentIds);
+                            if (numCommentsDeleted == 1) {
+                                messageBarText =
+                                        getActivity().getString(R.string.comment_moderated);
+                            } else {
+                                messageBarText =
+                                        getActivity().getString(R.string.comments_moderated);
+                            }
+                            MessageBarUtils.showMessageBar(getActivity(), messageBarText);
+                        }
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
+                    }
+                    @Override
+                    public void onCancelled(SparseBooleanArray deletedCommentIds) {
+                        mCommentsUpdating = false;
+
+                        if (getActivity() != null) {
+                            numCommentsDeleted = getNumberOfTrueValues(deletedCommentIds);
+                            if (numCommentsDeleted == 1) {
                                 messageBarText =
                                         getActivity().getString(R.string.comment_moderated);
                             } else {
@@ -288,7 +321,7 @@ public class CommentListFragment extends SherlockListFragment {
                         if (getActivity() != null) {
                             MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnFailure(CommentStatus.TRASH);
                     }
                 });
 
