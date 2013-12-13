@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class CommentsActivity extends WPActionBarActivity implements CommentAsyncModerationReturnListener,
         CommentListFragmentListener, OnAnimateRefreshButtonListener,
-        CommentDetailFragment.OnCommentChangeListener, ActionMode.Callback {
+        CommentActions.OnCommentChangeListener, ActionMode.Callback {
 
     protected int id;
 
@@ -72,9 +72,46 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
     }
 
     @Override
-    public void onBlogChanged() {
-        super.onBlogChanged();
-        commentList.refreshComments();
+    protected void onPostResume() {
+        super.onPostResume();
+        if (WordPress.currentBlog != null) {
+            boolean commentsLoaded = commentList.loadComments(false, false);
+            if (!commentsLoaded)
+                commentList.refreshComments();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (commentList.getCommentsTask != null)
+            commentList.getCommentsTask.cancel(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            boolean fromNotification = false;
+            fromNotification = extras.getBoolean("fromNotification");
+            if (fromNotification) {
+                try {
+                    WordPress.currentBlog = new Blog(extras.getInt("id"));
+                } catch (Exception e) {
+                    Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        }
     }
 
     @Override
@@ -109,82 +146,12 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         return super.onOptionsItemSelected(item);
     }
 
-    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
-        public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-        }
-    };
-
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
         }
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if (WordPress.currentBlog != null) {
-            boolean commentsLoaded = commentList.loadComments(false, false);
-            if (!commentsLoaded)
-                commentList.refreshComments();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (commentList.getCommentsTask != null)
-            commentList.getCommentsTask.cancel(true);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            boolean fromNotification = false;
-            fromNotification = extras.getBoolean("fromNotification");
-            if (fromNotification) {
-                try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"));
-                } catch (Exception e) {
-                    Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
-    }
-
-    /*
-     * called from CommentDetailFragment when comment is moderated - replace the
-     * existing comment in the list with the passed one
-     */
-    @Override
-    public void onCommentModerated(Comment comment) {
-        commentList.replaceComment(comment);
-    }
-
-    /*
-     * called from CommentDetailFragment when comment is replied to (adding a new comment)
-     */
-    @Override
-    public void onCommentAdded() {
-        commentList.refreshComments();
-    }
-
-    @Override
-    public void onAnimateRefreshButton(boolean start) {
-        if (start) {
-            shouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(refreshMenuItem);
-        } else {
-            this.stopAnimatingRefreshButton(refreshMenuItem);
-        }
-
     }
 
     private void attemptToSelectComment() {
@@ -196,12 +163,74 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
+    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
-        super.onSaveInstanceState(outState);
+    };
+
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        commentList.refreshComments();
+    }
+
+    /**
+     * these three methods implement OnCommentChangedListener and are triggered from this activity,
+     * the list fragment, and the detail fragment whenever a comment is changed
+     */
+    @Override
+    public void onCommentAdded() {
+        refreshCommentList();
+    }
+
+    @Override
+    public void onCommentDeleted() {
+        refreshCommentList();
+        clearCommentDetail();
+    }
+    @Override
+    public void onCommentModerated() {
+        refreshCommentList();
+        refreshCommentDetail();
+    }
+
+    /*
+     * refresh the comment in the detail view if it's showing
+     */
+    private void refreshCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+        fragment.refreshComment();
+    }
+
+    /*
+     * clear the comment in the detail view if it's showing
+     */
+    private void clearCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+        fragment.clearComment();
+    }
+
+    private void refreshCommentList() {
+        if (commentList != null)
+            commentList.refreshComments();
+    }
+
+    @Override
+    public void onAnimateRefreshButton(boolean start) {
+        if (start) {
+            shouldAnimateRefreshButton = true;
+            this.startAnimatingRefreshButton(refreshMenuItem);
+        } else {
+            this.stopAnimatingRefreshButton(refreshMenuItem);
+        }
     }
 
     @Override
@@ -216,7 +245,21 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
     }
 
     @Override
-    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) { }
+    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED
+                || commentModerationStatusType == CommentStatus.SPAM) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        } else if (commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        } else {
+            //TODO: JCO (Resolve by 12/13/13) This would be a programming error. Possibly server?
+        }
+    }
 
     @Override
     public void onCommentClicked(Comment comment) {
@@ -241,53 +284,6 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         }
     }
 
-    /*
-     * refresh the comment in the detail view if it's showing
-     */
-    private void refreshCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (fragment == null)
-            return;
-
-        fragment.refreshComment();
-    }
-
-    /*
-     * clear the comment in the detail view if it's showing
-     */
-    private void clearCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (fragment == null)
-            return;
-        fragment.clearComment();
-    }
-
-    private void refreshCommentList() {
-        if (commentList != null)
-            commentList.refreshComments();
-    }
-
-    /**
-     * these three methods implement OnCommentChangedListener and are triggered from this activity,
-     * the list fragment, and the detail fragment whenever a comment is changed
-     */
-    @Override
-    public void onCommentAdded() {
-        refreshCommentList();
-    }
-
-    @Override
-    public void onCommentDeleted() {
-        refreshCommentList();
-        clearCommentDetail();
-    }
-    @Override
-    public void onCommentModerated() {
-        refreshCommentList();
-        refreshCommentDetail();
-    }
     @Override
     public void onCommentSelected(int selectedCommentCount) {
         // Check the cases when we are entering/exiting into/out of multi-select mode
@@ -297,17 +293,13 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
             mActionMode.finish();
         }
 
-        // update contextual action bar title + action items
+        // Update the title to display the number of selected comments then update the CAB action items
         if (mActionMode != null) {
-            if (selectedCommentCount == 1) {
-                mActionMode.setTitle(getString(R.string.reader_label_comment_count_singular));
-            } else {
-                mActionMode.setTitle(getString(R.string.reader_label_comment_count_plural,
-                        selectedCommentCount));
-            }
+            mActionMode.setTitle(Integer.toString(selectedCommentCount));
             mActionMode.invalidate();
         }
     }
+
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -326,52 +318,58 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         int selectedCommentStatusTypeBitMask = 0;
 
         if (mActionMode != null) {
-            if (numCommentsSelected <= 0) { mode.finish(); }
+            if (numCommentsSelected <= 0) {
+                mode.finish();
+                retVal = false;
+            } else {
+                menu.findItem(R.id.comments_cab_approve).setVisible(true);
+                menu.findItem(R.id.comments_cab_unapprove).setVisible(true);
+                menu.findItem(R.id.comments_cab_spam).setVisible(true);
+                menu.findItem(R.id.comments_cab_delete).setVisible(true);
 
-            menu.findItem(R.id.comments_cab_approve).setVisible(true);
-            menu.findItem(R.id.comments_cab_unapprove).setVisible(true);
-            menu.findItem(R.id.comments_cab_spam).setVisible(true);
-            menu.findItem(R.id.comments_cab_delete).setVisible(true);
+                /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
+                 * following associated code should be uncommented. */
+                if (numCommentsSelected >= 1) {
+                    CommentStatus.clearSelectedCommentStatusTypeCount();
+                    for(Comment comment : commentList.getSelectedCommentArray()) {
+                        CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
+                    }
 
-            /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
-             * following associated code should be uncommented.
-             */
-            if (numCommentsSelected >= 1) {
-                CommentStatus.clearSelectedCommentStatusTypeCount();
-                for(Comment comment : commentList.getSelectedCommentArray()) {
-                    CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
-                }
+                    /* Build a bit "set" representing which types of comments are selected.
+                     * This was done so many different context permutations can be identified
+                     * in the future. */
+                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
+                    }
+                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
+                    }
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
+                    }*/
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
+                    }*/
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
+                    }*/
 
-                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
+                    /* Compare the bit set to the bit masks to see if they are equal. Currently we
+                     * do not show an Action Icon if comments of the same status type are selected. */
+                    if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
+                        menu.findItem(R.id.comments_cab_approve).setVisible(false);
+                    } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
+                        menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
+                    }
+                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
+                        menu.findItem(R.id.comments_cab_spam).setVisible(false);
+                    }*/
+                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
+                        menu.findItem(R.id.comments_cab_delete).setVisible(false);
+                    }*/
                 }
-                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
-                }
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
-                }*/
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
-                }*/
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
-                }*/
-
-                if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
-                    menu.findItem(R.id.comments_cab_approve).setVisible(false);
-                } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
-                    menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
-                }
-                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
-                    menu.findItem(R.id.comments_cab_spam).setVisible(false);
-                }*/
-                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
-                    menu.findItem(R.id.comments_cab_delete).setVisible(false);
-                }*/
+                retVal = true;
             }
-
-            retVal = true;
         }
         else { retVal = false; }
 

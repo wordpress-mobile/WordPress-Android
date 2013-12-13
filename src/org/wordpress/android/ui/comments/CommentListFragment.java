@@ -14,8 +14,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,6 +52,7 @@ public class CommentListFragment extends SherlockListFragment {
                selectedPosition,
                scrollPosition = 0,
                scrollPositionTop = 0;
+    public ProgressDialog progressDialog;
     public getRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
@@ -65,7 +64,6 @@ public class CommentListFragment extends SherlockListFragment {
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
     private CommentListFragmentListener mOnCommentListFragmentListener;
     private CommentAsyncModerationReturnListener  mCommentAsyncModerationReturnListener;
-    private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
     private SparseBooleanArray mSavedSelectedCommentPositions = null;
 
@@ -138,16 +136,15 @@ public class CommentListFragment extends SherlockListFragment {
                 .getApplicationContext(), R.layout.list_footer_btn, null);
         footer.setText(getResources().getText(R.string.load_more) + " "
                 + getResources().getText(R.string.tab_comments));
-
+        footer.setFocusable(false);
+        footer.setFocusableInTouchMode(false);
+        footer.setLongClickable(false);
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 switcher.showNext();
                 refreshComments(true);
             }
         });
-
-        mFooterSpacer = new View(getActivity());
-        mFooterSpacer.setLayoutParams(new AbsListView.LayoutParams(10, 0));
 
         View progress = View.inflate(getActivity().getApplicationContext(),
                 R.layout.list_footer_progress, null);
@@ -160,60 +157,75 @@ public class CommentListFragment extends SherlockListFragment {
         return v;
     }
 
-    //TODO: JCO - Remove if a common use between del/mod Comments()
-    private void setCommentsUpdating(boolean updating) {
-        mCommentsUpdating = updating;
+    /**
+     * This function is used to update the local data models and views after completion of some RPC
+     * server action.
+     */
+    private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, SparseBooleanArray moderatedComments, String newStatusStr) {
+        int currentCommentId;
 
-        if (!updating) {
-            //TODO: JCO. getSherlockActivity().invalidateOptionsMenu();
-            //((CommentAdapter) getListAdapter()).notifyDataSetInvalidated();
+        if (moderatedComments.indexOfValue(true) != -1) {
+            for(Comment currentComment : selectedCommentsSnapshot) {
+                currentCommentId = currentComment.commentID;
+                if (moderatedComments.get(currentCommentId, false)) {
+                    currentComment.setStatus(newStatusStr);
+                    replaceComment(currentComment);
+                    WordPress.wpDB.updateCommentStatus(WordPress.getCurrentBlogId(), currentCommentId, newStatusStr);
+                }
+            }
+            getListView().invalidateViews();
         }
     }
 
-    private boolean commentsUpdating() {
-        return mCommentsUpdating;
-    }
-
     /**
-     * TODO: JCO - Add javadoc
-     * @param commentStatus
+     * Start an AsyncTask to moderate the current comment selection set
+     *
+     * @param commentStatus The status to moderate the currently selected comments as
      */
     public void moderateComments(final CommentStatus commentStatus) {
-        final String newStatus =
-                CommentStatus.toString(commentStatus, CommentStatus.ApiFormat.XMLRPC);
+        final String newStatus = CommentStatus.toString(commentStatus);
         final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
+        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
 
         ApiHelper.ModerateCommentsTask task = new ApiHelper.ModerateCommentsTask(newStatus,
                 allComments, selectedCommentIds,
                 new ApiHelper.ModerateCommentsTask.Callback() {
                     @Override
-                    public void onSuccess() {
-                        setCommentsUpdating(false);
-                        refreshComments(commentStatus);
-                        //mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+                    public void onSuccess(SparseBooleanArray moderatedComments) {
+                        mCommentsUpdating = false;
+                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+                    }
+                    @Override
+                    public void onCancelled(SparseBooleanArray moderatedComments) {
+                        // For the time being we will update any comments that were changed on the server
+                        mCommentsUpdating = false;
+                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onFailure() {
-                        getSherlockActivity().invalidateOptionsMenu();
-                        ((CommentAdapter) getListAdapter()).notifyDataSetInvalidated();
-                        setCommentsUpdating(false);
-                        // TODO: JCO - Housekeeping + Inform user of failure (failure callback)
+                        /* The server calls resulted in no changes but if two clients were modifying
+                           the data and this local client had tried to mod the comment status to what
+                           the other client had successfully completed the local client's model would
+                           appear out of sync. Locally the view/model would show that the comments
+                           status' did not change. For now we will refresh the data from the server. */
+                        mCommentsUpdating = false;
+                        refreshComments();
                     }
                 });
 
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
 
-        if(!commentsUpdating()) {
-            setCommentsUpdating(true);
+        if(!mCommentsUpdating) {
+            mCommentsUpdating = true;
             task.execute(apiArgs);
         }
     }
 
     /**
-     * TODO: JCO - We can prob. either call moderateComments() from this function or do away with deleteComments() (reduce code duplication)
      * TODO: JCO - Add javadoc
-     *
      */
     public void deleteComments() {
         final ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIdArray();
@@ -223,23 +235,21 @@ public class CommentListFragment extends SherlockListFragment {
                 new ApiHelper.DeleteCommentsTask.Callback() {
                     @Override
                     public void onSuccess() {
-                        setCommentsUpdating(false);
-                        refreshComments(CommentStatus.TRASH);
-                        //mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
+                        //TODO: JCO - Need to update the model/view
+                        mCommentsUpdating = false;
                     }
                     @Override
                     public void onFailure() {
-                        setCommentsUpdating(false);
-                        // TODO: JCO - Housekeeping + Inform user of failure (failure callback)
+                        //TODO: JCO - Need to update the model/view
+                        mCommentsUpdating = false;
                     }
                 });
 
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
 
-        if(!commentsUpdating()) {
-            // TODO: JCO - Need to animate?!
-            setCommentsUpdating(true);
+        if(!mCommentsUpdating) {
+            mCommentsUpdating = true;
             task.execute(apiArgs);
         }
     }
@@ -337,26 +347,15 @@ public class CommentListFragment extends SherlockListFragment {
         ListView listView = getListView();
 
         listView.removeFooterView(switcher);
-        listView.removeFooterView(mFooterSpacer);
 
         if (showSwitcher) {
-            listView.addFooterView(switcher);
+            listView.addFooterView(switcher, null, false);
         }
-        listView.addFooterView(mFooterSpacer);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                /* TODO: JCO - Part 1/2: There is a case here where we press "Load More Comments", let it load,
-                 * leave/pause the app and then when we come back if we try and select the ViewSwitcher
-                 * button (which is constantly animating) we will get back and INVALID_ITEM_ID from the framework
-                 * of -1. Putting in a temp. check for right now. Will fix by 12/13/13.
-                 */
-                if (position != -1) {
-                    onListItemCheck(position);
-                }
-
+                onListItemCheck(position);
                 return true;
             }
         });
@@ -387,7 +386,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * TODO: JCO - Moved non-item specific methods out of the Adapter and into the fragment
+     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
      * @return
      */
     public ArrayList<Integer> getSelectedCommentIdArray() {
@@ -403,7 +402,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * TODO: JCO - Moved non-item specific methods out of the Adapter and into the fragment
+     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
      * @return
      */
     public ArrayList<Comment> getSelectedCommentArray() {
@@ -420,7 +419,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * TODO: JCO - Moved non-item specific methods out of the Adapter and into the fragment
+     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
      * @return
      */
     public int getSelectedCommentCount() {
@@ -439,33 +438,38 @@ public class CommentListFragment extends SherlockListFragment {
      * @param position
      */
     public void toggleCommentSelected(int position) {
-        /* TODO: JCO - Part 2/2: There is a case here where we press "Load More Comments", let it load,
-         * leave/pause the app and then when we come back if we try and long select the ViewSwitcher
-         * button (which is constantly animating) we will get back and, sometimes, from the framework
-         * an index of 30 when the model has only 30 elements. I think I know the issue here as opposed to 1/2.
-         * Putting in a temp. check for right now. Will fix by 12/13/13.
-         */
-        if (position >= model.size()) { return; }
-
         SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
-
-        Comment comment = model.get(position);
-        int currentId = comment.commentID;
         boolean isSelected = true;
+        Comment comment;
+        int commentId;
 
-        if (selectedCommentPositions.indexOfKey(currentId) == -1) {
-            selectedCommentPositions.put(currentId, isSelected);
+        try {
+            comment = model.get(position);
+        } catch (IndexOutOfBoundsException e) {
+           //TODO: JCO - REMOVE TESTING
+           e.printStackTrace(System.out);
+            return;
+        }
+
+        commentId = comment.commentID;
+
+        if (selectedCommentPositions.indexOfKey(commentId) == -1) {
+            selectedCommentPositions.put(commentId, isSelected);
         } else {
-            isSelected = selectedCommentPositions.get(currentId);
-            selectedCommentPositions.put(currentId, !isSelected);
+            isSelected = !selectedCommentPositions.get(commentId);
+            selectedCommentPositions.put(commentId, isSelected);
         }
 
         if (isSelected) {
             WordPress.currentComment = comment;
-        } else {
+        }
+        /*
+        else {
             WordPress.currentComment = null;
         }
-        ((CommentAdapter) getListAdapter()).notifyDataSetChanged(); //TODO: JCO - Do I need to redraw the entire visible row set or can I just draw the row/background in question?
+        */
+
+        ((CommentAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     /**
@@ -475,7 +479,7 @@ public class CommentListFragment extends SherlockListFragment {
         CommentAdapter commentListAdapter = ((CommentAdapter) getListAdapter());
         commentListAdapter.mSelectedCommentPositions.clear();
         if (mSavedSelectedCommentPositions != null) { mSavedSelectedCommentPositions.clear(); }
-        commentListAdapter.notifyDataSetChanged(); //TODO: JCO - Do I need to redraw the entire visible row set or can I just set the set of row background in question?
+        commentListAdapter.notifyDataSetChanged();
     }
 
     public class CommentAdapter extends ArrayAdapter<Comment> {
@@ -580,16 +584,6 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
-    // TODO: JCO - Need to find where I removed this call and check the functionality
-    private void setFooterSpacerVisible(boolean visible) {
-        LayoutParams params = (LayoutParams) mFooterSpacer.getLayoutParams();
-        if (visible)
-            params.height = getResources().getDimensionPixelSize(R.dimen.comments_moderation_bar_height);
-        else
-            params.height = 0;
-        mFooterSpacer.setLayoutParams(params);
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -599,31 +593,13 @@ public class CommentListFragment extends SherlockListFragment {
      * TODO: JCO
      */
     public void refreshComments() {
-        refreshComments(false, CommentStatus.UNKNOWN);
+        refreshComments(false);
     }
-
     /**
      * TODO: JCO
      * @param loadMore
      */
     public void refreshComments(boolean loadMore) {
-        refreshComments(loadMore, CommentStatus.UNKNOWN);
-    }
-
-    /**
-     * TODO: JCO
-     * @param newlyModeratedCommentStatus
-     */
-    public void refreshComments(CommentStatus newlyModeratedCommentStatus) {
-        refreshComments(false, newlyModeratedCommentStatus);
-    }
-
-    /**
-     * TODO: JCO
-     * @param loadMore
-     * @param newlyModeratedCommentStatus
-     */
-    public void refreshComments(boolean loadMore, CommentStatus newlyModeratedCommentStatus) {
         mListScrollPositionManager.saveScrollOffset();
 
         if (!loadMore) {
@@ -650,7 +626,7 @@ public class CommentListFragment extends SherlockListFragment {
                 WordPress.currentBlog.getPassword(), hPost };
 
         mCommentParams = params;
-        getCommentsTask = new getRecentCommentsTask(newlyModeratedCommentStatus);
+        getCommentsTask = new getRecentCommentsTask();
         getCommentsTask.execute();
     }
 
@@ -660,11 +636,6 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
-        private final CommentStatus mNewlyModeratedCommentStatus;
-
-        getRecentCommentsTask(CommentStatus newlyModeratedCommentStatus) {
-           mNewlyModeratedCommentStatus = newlyModeratedCommentStatus;
-        }
 
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
             if (!isCancelled()) {
@@ -690,7 +661,13 @@ public class CommentListFragment extends SherlockListFragment {
                     }
                 } else {
 
-                     if (commentsResult.size() > 0) {
+                    // TODO: JCO - Review
+                    if (commentsResult.size() == 0) {
+                        // no comments found
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } else {
                         allComments.putAll(commentsResult);
                         if (!doInBackground) {
                             loadComments(refreshOnly, loadMore);
@@ -703,11 +680,6 @@ public class CommentListFragment extends SherlockListFragment {
                         switcher.showPrevious();
                     }
                 }
-            }
-
-            // TODO: JCO - FYI ... I do not like this. I need to break up refreshComments or spawn a listener to see when refreshRecentComments' onPostExecute completes ... so I can make the callback
-            if (mNewlyModeratedCommentStatus != CommentStatus.UNKNOWN) {
-                mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(mNewlyModeratedCommentStatus);
             }
         }
 
@@ -738,7 +710,6 @@ public class CommentListFragment extends SherlockListFragment {
             Comment thisComment = model.get(i);
             if (thisComment.commentID==comment.commentID && thisComment.postID==comment.postID) {
                 model.set(i, comment);
-                getListView().invalidateViews();
                 return;
             }
         }
