@@ -557,6 +557,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 if (mediaFile.getMediaId() != null) {
                     updateMediaFileOnServer(wpIS);
                 } else {
+                    mediaFile.setFileName(wpIS.getImageSource().toString());
                     mediaFile.setFilePath(wpIS.getImageSource().toString());
                     mediaFile.save();
                 }
@@ -1366,10 +1367,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                                 for (WPImageSpan verifySpan : click_spans) {
                                                     if (verifySpan != span) {
                                                         MediaFile verifySpanMediaFile = verifySpan.getMediaFile();
-                                                        if (mediaFile != null){
-                                                            verifySpanMediaFile.setFeatured(false);
-                                                            verifySpanMediaFile.setFeaturedInPost(false);
-                                                        }
+                                                        verifySpanMediaFile.setFeatured(false);
+                                                        verifySpanMediaFile.setFeaturedInPost(false);
                                                     }
                                                 }
                                             }
