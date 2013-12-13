@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -778,26 +779,28 @@ public class ApiHelper {
         }
     }
 
-    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, Boolean> {
+    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, SparseBooleanArray> {
+        private Callback mCallback;
+        private SparseBooleanArray mModeratedCommentIds;
+        private String mNewCommentStatus;
+        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
+        private ArrayList<Integer> mSelectedCommentIdsSnapshot;
+        private Object[] mCommentParams;
+        private int mNumSelectedComments = -1;
 
         public interface Callback {
-            public void onSuccess();
+            public void onSuccess(SparseBooleanArray moderatedCommentIds);
+            public void onCancelled(SparseBooleanArray moderatedCommentIds);
             public void onFailure();
         }
 
-        private Callback mCallback;
-        private String mNewCommentStatus;
-        private int mNumSelectedComments = -1;
-        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot = new HashMap<Integer, Map<?, ?>>();
-        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
-        private Object[] mCommentParams;
-
         public ModerateCommentsTask(String newStatus, Map<Integer, Map<?, ?>>  allComments,
-                                    ArrayList<Integer> selectedCommentIdArray, Callback callback) {
+                                    ArrayList<Integer> selectedCommentIds, Callback callback) {
             mNewCommentStatus = newStatus;
-            mAllCommentsSnapshot.putAll(allComments);
-            mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
-            mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
+            mAllCommentsSnapshot = allComments;
+            mSelectedCommentIdsSnapshot = selectedCommentIds;
+            mModeratedCommentIds = new SparseBooleanArray(selectedCommentIds.size());
+            mNumSelectedComments = mSelectedCommentIdsSnapshot.size();
             mCallback = callback;
         }
 
@@ -806,8 +809,8 @@ public class ApiHelper {
         }
 
         @Override
-        protected Boolean doInBackground(List<?>... params) {
-            Boolean result = false;
+        protected SparseBooleanArray doInBackground(List<?>... params) {
+            Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
@@ -822,11 +825,12 @@ public class ApiHelper {
 
             for (int i = 0; i < mNumSelectedComments; i++) {
                 if (isCancelled())
-                    return result;
+                    return mModeratedCommentIds;
 
-                int currentCommentID = mSelectedCommentIdArraySnapshot.get(i);
+                rpcCallStatus = false;
+                int currentCommentId = mSelectedCommentIdsSnapshot.get(i);
                 Map<String, String> contentHash, postHash = new HashMap<String, String>();
-                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentID);
+                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId);
 
                 if (contentHash.get("status").equals(mNewCommentStatus)) {
                     continue;
@@ -842,34 +846,43 @@ public class ApiHelper {
                         blog.getBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        currentCommentID,
+                        currentCommentId,
                         postHash
                 };
 
                 mCommentParams = apiParams;
 
+                Object result;
                 try {
-                    result = (Boolean) client.call("wp.editComment", mCommentParams);
+                    result = client.call("wp.editComment", mCommentParams);
+                    rpcCallStatus = Boolean.parseBoolean(result.toString());
                 } catch (XMLRPCException e) {
                     Log.e("WordPress", "XMLRPCException: " + e.getMessage());
                 }
-            }
 
-            return result;
+                if (rpcCallStatus) {
+                    contentHash.put("status", mNewCommentStatus);
+                }
+                mModeratedCommentIds.put(currentCommentId, rpcCallStatus);
+            }
+            return mModeratedCommentIds;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(SparseBooleanArray moderatedCommentIds) {
             if (mCallback != null) {
-                if (result == null || !result)
-                    mCallback.onFailure();
+                if (moderatedCommentIds.indexOfValue(true) == -1)
+                    mCallback.onFailure(); //TODO: JCO - Might not use as this only indicates that no comments were updated. Modify to pass on XML/RPC errors ... as it helped for developing against a server issue.
                 else
-                    mCallback.onSuccess();
+                    mCallback.onSuccess(moderatedCommentIds);
             }
         }
 
         @Override
-        protected void onCancelled(Boolean result) {
+        protected void onCancelled(SparseBooleanArray moderatedCommentIds) {
+           if (mCallback != null) {
+               mCallback.onCancelled(moderatedCommentIds);
+           }
         }
     }
 
