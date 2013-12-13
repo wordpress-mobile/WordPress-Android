@@ -62,11 +62,11 @@ public class CommentListFragment extends SherlockListFragment {
     private boolean loadMore = false, doInBackground = false, refreshOnly = false,
             mCommentsUpdating = false;
     private Object[] mCommentParams;
+    private SparseBooleanArray mSavedSelectedCommentPositions = null;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
     private CommentListFragmentListener mOnCommentListFragmentListener;
     private CommentAsyncModerationReturnListener  mCommentAsyncModerationReturnListener;
     private ListScrollPositionManager mListScrollPositionManager;
-    private SparseBooleanArray mSavedSelectedCommentPositions = null;
 
     public interface CommentListFragmentListener {
         public void onCommentClicked(Comment comment);
@@ -158,7 +158,7 @@ public class CommentListFragment extends SherlockListFragment {
         return v;
     }
 
-    private int getNumberOfTrueValues(SparseBooleanArray sparseBooleanArray) {
+    private static int getNumberOfToggledValues(SparseBooleanArray sparseBooleanArray) {
         int numberOfTrueValues = 0;
         for(int i=0; i< sparseBooleanArray.size(); i++) {
             if(sparseBooleanArray.valueAt(i)) {
@@ -210,7 +210,7 @@ public class CommentListFragment extends SherlockListFragment {
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
 
                         if (getActivity() != null) {
-                            numCommentsModerated = getNumberOfTrueValues(moderatedComments);
+                            numCommentsModerated = getNumberOfToggledValues(moderatedComments);
                             if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
@@ -227,7 +227,7 @@ public class CommentListFragment extends SherlockListFragment {
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
 
                         if (getActivity() != null) {
-                            numCommentsModerated = getNumberOfTrueValues(moderatedComments);
+                            numCommentsModerated = getNumberOfToggledValues(moderatedComments);
                             if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
@@ -270,7 +270,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * TODO: JCO - Add javadoc
+     * Start an AsyncTask to delete the current comment selection set.
      */
     public void deleteComments() {
         final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
@@ -286,7 +286,7 @@ public class CommentListFragment extends SherlockListFragment {
                         mCommentsUpdating = false;
 
                         if (getActivity() != null) {
-                            numCommentsDeleted = getNumberOfTrueValues(deletedCommentIds);
+                            numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
                             if (numCommentsDeleted == 1) {
                                 messageBarText =
                                         getActivity().getString(R.string.comment_moderated);
@@ -303,7 +303,7 @@ public class CommentListFragment extends SherlockListFragment {
                         mCommentsUpdating = false;
 
                         if (getActivity() != null) {
-                            numCommentsDeleted = getNumberOfTrueValues(deletedCommentIds);
+                            numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
                             if (numCommentsDeleted == 1) {
                                 messageBarText =
                                         getActivity().getString(R.string.comment_moderated);
@@ -435,10 +435,7 @@ public class CommentListFragment extends SherlockListFragment {
         ListView listView = getListView();
 
         listView.removeFooterView(switcher);
-
-        if (showSwitcher) {
-            listView.addFooterView(switcher, null, false);
-        }
+        if (showSwitcher) { listView.addFooterView(switcher, null, false); }
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -473,10 +470,6 @@ public class CommentListFragment extends SherlockListFragment {
         mOnCommentListFragmentListener.onCommentSelected(selectedCommentCount);
     }
 
-    /**
-     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
-     * @return
-     */
     public ArrayList<Integer> getSelectedCommentIdArray() {
         SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
         ArrayList<Integer> selectedCommentIdArray = new ArrayList<Integer>();
@@ -489,10 +482,6 @@ public class CommentListFragment extends SherlockListFragment {
         return selectedCommentIdArray;
     }
 
-    /**
-     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
-     * @return
-     */
     public ArrayList<Comment> getSelectedCommentArray() {
         ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIdArray();
         ArrayList<Comment> selectedCommentArray = new ArrayList<Comment>();
@@ -506,10 +495,6 @@ public class CommentListFragment extends SherlockListFragment {
         return selectedCommentArray;
     }
 
-    /**
-     * TODO: JCO - Document * TODO: JCO - This does not need to be recalculated. Re-do
-     * @return
-     */
     public int getSelectedCommentCount() {
         SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
         int size = 0;
@@ -521,24 +506,13 @@ public class CommentListFragment extends SherlockListFragment {
         return size;
     }
 
-    /**
-     * TODO: JCO - Document
-     * @param position
-     */
     public void toggleCommentSelected(int position) {
         SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
         boolean isSelected = true;
         Comment comment;
         int commentId;
 
-        try {
-            comment = model.get(position);
-        } catch (IndexOutOfBoundsException e) {
-           //TODO: JCO - REMOVE TESTING
-           e.printStackTrace(System.out);
-            return;
-        }
-
+        comment = model.get(position);
         commentId = comment.commentID;
 
         if (selectedCommentPositions.indexOfKey(commentId) == -1) {
@@ -550,12 +524,7 @@ public class CommentListFragment extends SherlockListFragment {
 
         if (isSelected) {
             WordPress.currentComment = comment;
-        }
-        /*
-        else {
-            WordPress.currentComment = null;
-        }
-        */
+        } else { }
 
         ((CommentAdapter) getListAdapter()).notifyDataSetChanged();
     }
@@ -672,21 +641,40 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
+    /**
+     * Replace existing comment with the passed in value
+     * @param comment The comment with the same postID and commentID that is to be replaced in the
+     *                model
+     */
+    protected void replaceComment(Comment comment) {
+        if (comment==null || model==null)
+            return;
+        for (int i=0; i < model.size(); i++) {
+            Comment thisComment = model.get(i);
+            if (thisComment.commentID==comment.commentID && thisComment.postID==comment.postID) {
+                model.set(i, comment);
+                return;
+            }
+        }
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     /**
-     * TODO: JCO
+     * Calling this function will update data from the server, update the local database and update
+     * the data model. Use sparingly as it is not cheap.
      */
     public void refreshComments() {
         refreshComments(false);
     }
-    /**
-     * TODO: JCO
-     * @param loadMore
-     */
     public void refreshComments(boolean loadMore) {
         mListScrollPositionManager.saveScrollOffset();
 
@@ -716,11 +704,6 @@ public class CommentListFragment extends SherlockListFragment {
         mCommentParams = params;
         getCommentsTask = new getRecentCommentsTask();
         getCommentsTask.execute();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
@@ -784,21 +767,6 @@ public class CommentListFragment extends SherlockListFragment {
             }
 
             return commentsResult;
-        }
-    }
-
-    /*
-     * replace existing comment with the passed one and refresh list to show changes
-     */
-    protected void replaceComment(Comment comment) {
-        if (comment==null || model==null)
-            return;
-        for (int i=0; i < model.size(); i++) {
-            Comment thisComment = model.get(i);
-            if (thisComment.commentID==comment.commentID && thisComment.postID==comment.postID) {
-                model.set(i, comment);
-                return;
-            }
         }
     }
 }
