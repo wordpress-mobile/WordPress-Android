@@ -471,7 +471,14 @@ public class ImageHelper {
         }
     }
 
-    public Bitmap getResizedImageThumbnail(Context ctx, byte[] bytes, String orientation) {
+    /**
+     * Resizes an image to be placed in the Post Content Editor
+     * @param ctx
+     * @param bytes
+     * @param orientation
+     * @return resized bitmap
+     */
+    public Bitmap getThumbnailForWPImageSpan(Context ctx, byte[] bytes, String orientation) {
         Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
@@ -482,10 +489,10 @@ public class ImageHelper {
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
 
-        float conversionFactor = 0.25f;
+        float conversionFactor = 0.40f;
 
         if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.40f;
+            conversionFactor = 0.70f;
 
         byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
                 orientation, true);

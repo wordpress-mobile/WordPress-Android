@@ -20,7 +20,7 @@ public class MediaFile {
     protected int horizontalAlignment; //0 = none, 1 = left, 2 = center, 3 = right
     protected boolean verticalAligment = false; //false = bottom, true = top
     protected int width = 500, height;
-    protected String MIMEType = ""; //do not store this value
+    protected String mimeType = "";
     protected String videoPressShortCode = null;
     protected boolean featured = false;
     protected boolean isVideo = false;
@@ -49,7 +49,7 @@ public class MediaFile {
         
         String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
-        setMIMEType(mimeType);
+        setMimeType(mimeType);
         
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
@@ -193,12 +193,12 @@ public class MediaFile {
         this.fileName = fileName;
     }
 
-    public String getMIMEType() {
-        return MIMEType;
+    public String getMimeType() {
+        return mimeType;
     }
 
-    public void setMIMEType(String type) {
-        MIMEType = type;
+    public void setMimeType(String type) {
+        mimeType = type;
     }
 
     public String getVideoPressShortCode() {

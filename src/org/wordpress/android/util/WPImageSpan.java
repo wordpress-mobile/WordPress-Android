@@ -4,171 +4,87 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.text.style.ImageSpan;
-//import android.util.Log;
+
+import org.wordpress.android.R;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WPImageSpan extends ImageSpan {
 
-        private Uri imageSource = null;
+    private Context mContext;
 
-        private int width = 500;
-        private String title = "";
-        private String description = "";
-        private String caption = "";
-        private int horizontalAlignment = 0;
-        private boolean isVideo;
-        private boolean featured = false;
-        private boolean featuredInPost = false;
-        private String mediaId;
-        private int height;
-        private String mimeType;
-        private String thumbnailURL;
-        private boolean networkImageLoaded = false;
+    private Uri mImageSource = null;
+    private boolean mNetworkImageLoaded = false;
+    private boolean mIsInPostEditor;
 
-        private String fileName;
+    private MediaFile mMediaFile;
 
-        private long date_created_gmt;
+    public WPImageSpan(Context context, Bitmap b, Uri src) {
+        super(context, b);
+        this.mImageSource = src;
+        mContext = context;
+        mMediaFile = new MediaFile();
+        if (mContext instanceof EditPostActivity)
+            mIsInPostEditor = true;
+    }
 
-        public WPImageSpan(Context context, Bitmap b, Uri src) {
-            super(context, b);
-            this.imageSource = src;
-        }
+    public WPImageSpan(Context context, int resId, Uri src) {
+        super(context, resId);
+        this.mImageSource = src;
+        mContext = context;
+        mMediaFile = new MediaFile();
+        if (mContext instanceof EditPostActivity)
+            mIsInPostEditor = true;
+    }
 
-        public WPImageSpan(Context context, int resId, Uri src) {
-            super(context, resId);
-            this.imageSource = src;
-        }
-        
-        public String getTitle() {
-            return title;
-        }
+    public MediaFile getMediaFile() {
+        return mMediaFile;
+    }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
+    public void setMediaFile(MediaFile mMediaFile) {
+        this.mMediaFile = mMediaFile;
+    }
 
-        public String getDescription() {
-            return description;
-        }
+    public void setImageSource(Uri mImageSource) {
+        this.mImageSource = mImageSource;
+    }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+    public Uri getImageSource() {
+        return mImageSource;
+    }
 
-        public int getHorizontalAlignment() {
-            return horizontalAlignment;
-        }
+    public boolean isNetworkImageLoaded() {
+        return mNetworkImageLoaded;
+    }
 
-        public void setHorizontalAlignment(int horizontalAlignment) {
-            this.horizontalAlignment = horizontalAlignment;
-        }
+    public void setNetworkImageLoaded(boolean networkImageLoaded) {
+        this.mNetworkImageLoaded = networkImageLoaded;
+    }
 
-        public void setImageSource(Uri imageSource) {
-            this.imageSource = imageSource;
-        }
+    @Override
+    public void draw(Canvas canvas, CharSequence text,
+                     int start, int end, float x,
+                     int top, int y, int bottom, Paint paint) {
+        super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        public Uri getImageSource() {
-                return imageSource;
+        if (mIsInPostEditor) {
+            // Add 'edit' icon at bottom right of image
+            int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
+            Bitmap editIconBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ab_icon_edit);
+            float editIconXPosition = (x + width) - editIconBitmap.getWidth();
+            float editIconYPosition = bottom - editIconBitmap.getHeight();
+            // Add a black background with a bit of alpha
+            Paint bgPaint = new Paint();
+            bgPaint.setColor(Color.argb(200, 0, 0, 0));
+            canvas.drawRect(editIconXPosition, editIconYPosition, editIconXPosition + editIconBitmap.getWidth(), editIconYPosition + editIconBitmap.getHeight(), bgPaint);
+            // Add the icon to the canvas
+            canvas.drawBitmap(editIconBitmap, editIconXPosition, editIconYPosition, paint);
         }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        public String getCaption() {
-            return caption;
-        }
-
-        public void setCaption(String caption) {
-            this.caption = caption;
-        }
-
-        public boolean isFeatured() {
-            return featured;
-        }
-
-        public void setFeatured(boolean featured) {
-            this.featured = featured;
-        }
-
-        public boolean isFeaturedInPost() {
-            return featuredInPost;
-        }
-
-        public void setFeaturedInPost(boolean featuredInPost) {
-            this.featuredInPost = featuredInPost;
-        }
-
-        public boolean isVideo() {
-            return isVideo;
-        }
-
-        public void setVideo(boolean isVideo) {
-            this.isVideo = isVideo;
-        }
-
-        // methods below for use when WPImageSpan uses media files from the server
-        
-        public String getMediaId() {
-            return mediaId;
-        }
-
-        public void setMediaId(String mediaId) {
-            this.mediaId = mediaId;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
-        
-        public int getHeight() {
-            return height;
-        }
-
-        public void setMimeType(String mimeType) {
-            this.mimeType = mimeType;
-        }
-        
-        public String getMimeType() {
-            return mimeType;
-        }
-
-        public String getThumbnailURL() {
-            return thumbnailURL;
-        }
-
-        public void setThumbnailURL(String thumbnailURL) {
-            this.thumbnailURL = thumbnailURL;
-        }
-
-        public boolean isNetworkImageLoaded() {
-            return networkImageLoaded;
-        }
-
-        public void setNetworkImageLoaded(boolean networkImageLoaded) {
-            this.networkImageLoaded = networkImageLoaded;
-        }
-        
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
-        }
-
-        public String getFileName() {
-            return fileName;
-        }
-
-        public void setDateCreatedGMT(long date) {
-            this.date_created_gmt = date;
-        }
-        
-        public long getDateCreatedGMT() {
-            return date_created_gmt;
-        }
-        
-        // -- end of methods for media files from the server
+    }
 }

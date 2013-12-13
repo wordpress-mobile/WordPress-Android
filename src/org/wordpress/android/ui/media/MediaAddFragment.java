@@ -187,7 +187,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setHeight(bfo.outHeight);
         }
         
-        mediaFile.setMIMEType(mimeType);
+        mediaFile.setMimeType(mimeType);
         mediaFile.save();
         
         mCallback.onMediaAdded(mediaFile.getMediaId());

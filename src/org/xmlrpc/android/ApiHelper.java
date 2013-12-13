@@ -656,7 +656,7 @@ public class ApiHelper {
          
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
-            data.put("type", mMediaFile.getMIMEType());
+            data.put("type", mMediaFile.getMimeType());
             data.put("bits", mMediaFile);
             data.put("overwrite", true);
             
