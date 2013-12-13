@@ -573,6 +573,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                     }
                 }
+
+                if (post.isLocalDraft())
+                    content = WPHtml.toHtml(s);
+                else
+                    content = s.toString();
             }
         }
 
