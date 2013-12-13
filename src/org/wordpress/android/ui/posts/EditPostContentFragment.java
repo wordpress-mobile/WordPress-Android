@@ -504,20 +504,21 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
-        String content;
+        String content = "";
+
+        Editable postContentEditable = mContentEditText.getText();
 
         if (post.isLocalDraft()) {
-            Editable e = mContentEditText.getText();
-            if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
+            if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
                 // remove suggestion spans, they cause craziness in
                 // WPHtml.toHTML().
-                CharacterStyle[] characterStyles = e.getSpans(0, e.length(), CharacterStyle.class);
+                CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
                 for (CharacterStyle characterStyle : characterStyles) {
                     if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan"))
-                        e.removeSpan(characterStyle);
+                        postContentEditable.removeSpan(characterStyle);
                 }
             }
-            content = WPHtml.toHtml(e);
+            content = WPHtml.toHtml(postContentEditable);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -526,59 +527,49 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
                     .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
         } else {
-            content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
+            //content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
+            WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
+            if (imageSpans.length != 0) {
+
+                for (WPImageSpan wpIS : imageSpans) {
+                    //images += wpIS.getImageSource().toString() + ",";
+                    MediaFile mediaFile = wpIS.getMediaFile();
+                    if (mediaFile == null)
+                        continue;
+                    if (mediaFile.getMediaId() != null) {
+                        updateMediaFileOnServer(wpIS);
+                    } else {
+                        mediaFile.setFileName(wpIS.getImageSource().toString());
+                        mediaFile.setFilePath(wpIS.getImageSource().toString());
+                        mediaFile.save();
+                    }
+
+                    int tagStart = postContentEditable.getSpanStart(wpIS);
+                    if (!isAutoSave) {
+                        postContentEditable.removeSpan(wpIS);
+
+                        // network image has a mediaId
+                        if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
+                            postContentEditable.insert(tagStart, WPHtml.getContent(wpIS));
+
+                        } else { // local image for upload
+                            postContentEditable.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                        }
+                    }
+                }
+
+                content = postContentEditable.toString();
+            }
         }
-
-        String images = "";
-        // update the images
-        post.deleteMediaFiles();
-
-        Editable s = mContentEditText.getText();
 
         if (!isAutoSave) {
             // Add gallery shortcode
-            MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
+            MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(), MediaGalleryImageSpan.class);
             for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                int start = s.getSpanStart(gallerySpan);
-                s.removeSpan(gallerySpan);
-                s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                int start = postContentEditable.getSpanStart(gallerySpan);
+                postContentEditable.removeSpan(gallerySpan);
+                postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
             }
-        }
-
-        WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
-        if (imageSpans.length != 0) {
-
-            for (WPImageSpan wpIS : imageSpans) {
-                images += wpIS.getImageSource().toString() + ",";
-                MediaFile mediaFile = wpIS.getMediaFile();
-                if (mediaFile == null)
-                    continue;
-                if (mediaFile.getMediaId() != null) {
-                    updateMediaFileOnServer(wpIS);
-                } else {
-                    mediaFile.setFileName(wpIS.getImageSource().toString());
-                    mediaFile.setFilePath(wpIS.getImageSource().toString());
-                    mediaFile.save();
-                }
-
-                int tagStart = s.getSpanStart(wpIS);
-                if (!isAutoSave) {
-                    s.removeSpan(wpIS);
-
-                    // network image has a mediaId
-                    if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
-                        s.insert(tagStart, WPHtml.getContent(wpIS));
-
-                    } else { // local image for upload
-                        s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
-                    }
-                }
-            }
-
-            if (post.isLocalDraft())
-                content = WPHtml.toHtml(s);
-            else
-                content = s.toString();
         }
 
         String moreTag = "<!--more-->";
@@ -592,7 +583,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             post.setDescription(content);
             post.setMt_text_more("");
         }
-        post.setMediaPaths(images);
+
         if (!post.isLocalDraft())
             post.setLocalChange(true);
         post.update();
@@ -974,16 +965,17 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (resizedBitmap == null)
             return false;
 
-        if (ssb != null) {
-            WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
-            MediaFile mediaFile = is.getMediaFile();
-            mediaFile.setPostID(mActivity.getPost().getId());
-            mediaFile.setTitle((String) mediaData.get("title"));
-            MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
+        WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
+        MediaFile mediaFile = is.getMediaFile();
+        mediaFile.setPostID(mActivity.getPost().getId());
+        mediaFile.setTitle((String) mediaData.get("title"));
+        mediaFile.setFilePath(is.getImageSource().toString());
+        MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
+        if (imageUri.getEncodedPath() != null)
+            mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
+        mediaFile.save();
 
-            is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath() != null)
-                mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
+        if (ssb != null) {
             ssb.append(" ");
             ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
@@ -1003,15 +995,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             Editable s = mContentEditText.getText();
             if (s == null)
                 return false;
-            WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
-            MediaFile mediaFile = is.getMediaFile();
-            mediaFile.setPostID(mActivity.getPost().getId());
-            mediaFile.setTitle((String) mediaData.get("title"));
-            MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
-
-            is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath() != null)
-                mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
 
             int line, column = 0;
             if (mContentEditText.getLayout() != null) {
@@ -1042,11 +1025,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // Show the soft keyboard after adding media
-            if (mActivity != null)
-                ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
+        // Show the soft keyboard after adding media
+        if (mActivity != null && !mActivity.getSupportActionBar().isShowing())
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         return true;
     }
 

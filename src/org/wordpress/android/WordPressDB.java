@@ -912,7 +912,6 @@ public class WordPressDB {
             }
 
             values.put("localDraft", post.isLocalDraft());
-            values.put("mediaPaths", post.getMediaPaths());
             values.put("mt_keywords", post.getMt_keywords());
             values.put("wp_password", post.getWP_password());
             values.put("post_status", post.getPost_status());
@@ -1540,7 +1539,7 @@ public class WordPressDB {
             }
             
             if (result == 0 && !isMarkedForDelete) {
-                result = db.update(MEDIA_TABLE, values, null, null);
+                result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?", new String[]{ String.valueOf(mf.getPostID()), mf.getFilePath() });
                 if (result == 0)
                     db.insert(MEDIA_TABLE, null, values);
             }
