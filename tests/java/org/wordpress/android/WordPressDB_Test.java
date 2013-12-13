@@ -21,21 +21,5 @@ public class WordPressDB_Test extends InstrumentationTestCase {
         targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(),
                 "test_");
         testContext = getInstrumentation().getContext();
-        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
-                "string-escaping-test.sql");
-    }
-
-    // This test failed before fixing #387
-    public void testEscaping() {
-        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
-                "string-escaping-test.sql");
-        String blogName = "say: \"pouet\"";
-        String blogURL = "pouet.com";
-        String username = "pouet";
-        String password = "";
-        boolean blogExists = WordPress.wpDB.checkForExistingBlog(blogName, blogURL, username,
-                password);
-        assertTrue(blogExists);
-        db.close();
     }
 }

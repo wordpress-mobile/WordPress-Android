@@ -4,18 +4,12 @@
     <string name="app_name">WordPress</string>
 
     <!-- account setup -->
-    <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
     <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
-    <string name="no_blogs_found">No Blogs Found</string>
-    <string name="no_blogs_message">No %s blogs were found for that account.</string>
-    <string name="additional">additional</string>
     <string name="add_all">Add All</string>
     <string name="add_selected">Add Selected</string>
     <string name="select_blogs">Select Blogs</string>
-    <string name="enable_blogs">Enable blogs</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
-    <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="please_sign_in">Please sign in again.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
@@ -23,17 +17,10 @@
 
     <!-- form labels -->
     <string name="select_categories">Select Categories</string>
-    <string name="tags_and_categories">Tags &amp; Categories</string>
     <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
     <string name="post_content">Content (tap to add text and media)</string>
-    <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
     <string name="max_thumbnail_px_width">Default image width</string>
     <string name="password">Password</string>
-    <string name="get_free_blog">Get a free blog at WordPress.com</string>
-    <string name="tagline">Start blogging in seconds.</string>
-    <string name="i_have_wp_blog">Add blog hosted at WordPress.com</string>
-    <string name="i_have_blog">Add self-hosted WordPress blog</string>
-    <string name="new_to_wp">Start a new blog at WordPress.com</string>
     <string name="blogs">Blogs</string>
     <string name="account_details">Account Details</string>
     <string name="status">Status</string>
@@ -54,11 +41,7 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
-    <string name="selected_categories">Selected categories:</string>
-    <string name="publish">Publish</string>
-    <string name="add_blog">Add blog</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
-    <string name="manage_blogs">Manage blogs</string>
     <string name="show_and_hide_blogs">Show/hide blogs</string>
     <string name="blogs_visibility">Blogs visibility</string>
     <string name="show_all">Show All</string>
@@ -77,15 +60,11 @@
     <string name="refreshing_categories">Refreshing Categories</string>
     <string name="attempting_categories_refresh">Attempting to refresh categories</string>
     <string name="connection_error">Connection Error</string>
-    <string name="connection_error_occured">A connection error has occurred. Please try again later.</string>
     <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="empty_fields">No Content Found</string>
-    <string name="title_post_required">Please enter some post content or attach a media item.</string>
     <string name="cancel_edit">Cancel Edit</string>
-    <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
-    <string name="new_account">New Account</string>
     <string name="upload_full_size_image">Upload and link to full image</string>
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Please enter a valid scaled width value</string>
@@ -94,10 +73,8 @@
     <string name="load_settings">Load settings now?</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
-    <string name="uploading_media_item">Uploading media item #</string>
     <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
     <string name="refresh">Refresh</string>
-    <string name="home">Home</string>
     <string name="more_tag">More</string>
     <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
@@ -110,8 +87,6 @@
     <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custome date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="please_wait_refresh_done">Please wait, loading items.</string>
-    <string name="please_wait_uploading_done">Please wait, uploading item.</string>
-    <string name="info">Info</string>
     <string name="learn_more">Learn More</string>
 
     <!-- Media Gallery Action Bar -->
@@ -138,15 +113,6 @@
 
 
     <!-- Upload Media -->
-    <string name="media_upload_title">Upload New Media</string>
-    <string name="media_upload_image_button">Image</string>
-    <string name="media_upload_video_button">Video</string>
-    <string name="media_upload_other_button">Other</string>
-    <string name="media_upload_clear_uploaded">Clear Uploaded</string>
-    <string name="media_upload_edit_button">edit</string>
-    <string name="media_upload_queued_button">queued</string>
-    <string name="media_upload_retry_button">retry</string>
-    <string name="media_upload_uploading_button">uploading</string>
     <string name="media_no_video_title">VideoPress unavailable</string>
     <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 
@@ -157,8 +123,6 @@
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
     <string name="media_edit_description_hint">Enter a description here</string>
-    <string name="media_edit_show_likes">Show Likes</string>
-    <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
 
@@ -197,7 +161,6 @@
     <!-- page view -->
     <string name="title">Title</string>
     <string name="content">Tap to add text and media</string>
-    <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
     <string name="pages_empty_list">No Pages Yet. Why not create one?</string>
     <string name="page_id">Page</string>
     <string name="page_settings">Page Settings</string>
@@ -205,7 +168,6 @@
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local Draft</string>
-    <string name="local_drafts">Local Drafts</string>
     <string name="posts_empty_list">No Posts Yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
@@ -245,13 +207,10 @@
     <string name="spam">Spam</string>
     <string name="moderating_comment">Moderating comment</string>
     <string name="moderating_comments">Moderating comments</string>
-    <string name="replying_comment">Replying to comment</string>
     <string name="deleting_comment">Deleting comment</string>
     <string name="deleting_comments">Deleting comments</string>
     <string name="comment_moderated">Comment Moderated Successfully</string>
     <string name="comments_moderated">Comments Moderated Successfully</string>
-    <string name="reply_added">Reply Added Successfully</string>
-    <string name="view_comment_from">Comment from</string>
     <string name="edit_comment">Edit Comment</string>
     <string name="comments_empty_list">No comments.</string>
     <string name="comment_approved">Comment approved</string>
@@ -314,26 +273,20 @@
     <string name="delete">Delete</string>
     <string name="approve">Approve</string>
     <string name="unapprove">Unapprove</string>
-    <string name="confirm_delete">Confirm Deletion</string>
-    <string name="confirm_delete_data">Are you sure you want to delete this comment?</string>
 
     <!-- new account view -->
-    <string name="account_setup">Account Setup</string>
     <string name="attempting_configure">Signing in&#8230;</string>
     <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
     <!-- drafts -->
-    <string name="cancel_draft">Cancel Draft</string>
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
-    <string name="media_remove_from_queue">Remove from queue</string>
     <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
-    <string name="category">Category</string>
     <string name="add_new_category">Add New Category</string>
     <string name="category_name">Category Name</string>
     <string name="category_slug">Category Slug (optional)</string>
@@ -357,7 +310,6 @@
     <string name="no_account">No WordPress account found, please add an account and try again.</string>
 
     <!-- file errors -->
-    <string name="file_error_encountered">An error occurred while setting up the captured media.</string>
     <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
 
     <!-- SD Card errors -->
@@ -374,7 +326,6 @@
     <string name="remove_location">Remove</string>
 
     <!-- preferences -->
-    <string name="preferences">Preferences</string>
     <string name="open_source_licenses">Open Source Licenses</string>
 
     <!-- stats -->
@@ -383,10 +334,6 @@
     <string name="stats_username">Username</string>
     <string name="stats_password">Password</string>
     <string name="invalid_login">Incorrect Login</string>
-    <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
-    <string name="site_not_found">or site not found.</string>
-    <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
-    <string name="view_stats_login">WordPress.com login</string>
     <string name="view_stats_full_site">View full site</string>
 
     <!-- stats: labels for the views -->
@@ -405,11 +352,6 @@
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
-    <string name="stats_timeframe_week">Week</string>
-    <string name="stats_timeframe_month">Month</string>
-    <string name="stats_timeframe_quarter">Quarter</string>
-    <string name="stats_timeframe_year">Year</string>
-    <string name="stats_timeframe_all_time">All Time</string>
     <string name="stats_timeframe_days">Days</string>
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
@@ -481,12 +423,8 @@
     <string name="stats_bar_graph_empty">No stats available.</string>
 
     <!-- editor button -->
-    <string name="strike"><strike>ABC</strike></string>
-    <string name="link"><u>link</u></string>
-    <string name="underline"><u>U</u></string>
 
     <!-- invalid_url -->
-    <string name="invalid_url">Invalid blog URL</string>
     <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
 
     <!-- post status -->
@@ -513,7 +451,6 @@
     <string name="publish_date">Publish</string>
     <string name="edit">Edit</string>
     <string name="post_format">Post Format</string>
-    <string name="log_in">Sign In</string>
 
     <!-- post date selection -->
     <string name="select_date">Select date</string>
@@ -529,13 +466,10 @@
     <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
     <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
     <string name="tap_to_reply">Tap to Reply</string>
-    <string name="notification_replying">Publishing reply</string>
     <string name="note_reply_successful">Reply published</string>
     <string name="follow">Follow</string>
-    <string name="unfollow">Unfollow</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
-    <string name="tap_to_view">Tap to view.</string>
     <string name="moderate_comment">Moderate comment</string>
     <string name="tooltip_follow">Follow or unfollow this blog</string>
     <string name="retry_reply">Reply failed. Tap to retry.</string>
@@ -545,7 +479,6 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
-    <string name="topics">Topics</string>
 
     <!-- Post Formats -->
     <string-array name="post_formats_array">
@@ -568,7 +501,6 @@
     <string name="menu_search">Search</string>
     <string name="quick_photo">Quick Photo</string>
     <string name="quick_video">Quick Video</string>
-    <string name="wp_admin">Dashboard</string>
     <string name="view_site">View Site</string>
     <string name="view_admin">View Admin</string>
 
@@ -599,8 +531,6 @@
     <string name="add_account_blog_url">Blog Address</string>
     <string name="wordpress_blog">WordPress Blog</string>
     <string name="blogusername">blogusername</string>
-    <string name="column_1">Column 1</string>
-    <string name="column_2">Column 2</string>
 
     <!--  Error Messages -->
     <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
@@ -609,18 +539,15 @@
     <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
     <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
     <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
-    <string name="error_following_blog">Sorry, an error occurred while attempting to follow the blog. Please try again later.</string>
     <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">Sorry, this blog is hidden and could not be loaded. Please enable it again in Settings and try again.</string>
-    <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
     <string name="fatal_db_error">So sorry, but an error occurred while attempting to create the app database. Please try reinstalling the app.</string>
 
     <!--  Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Sorry, could not load the comment. Please try again.</string>
     <string name="manage">Manage</string>
-    <string name="dashboard_tip">Tap the back key to return to the app.</string>
     <string name="discard">Discard</string>
     <string name="prompt_save_changes">Would you like to save your changes?</string>
     <string name="error_downloading_image">Error downloading image. Please try again.</string>
@@ -654,7 +581,6 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
-    <string name="reader_title_main">Reader</string>
     <string name="reader_title_applog">Application Log</string>
     <string name="reader_title_userlist_default">People</string>
     <string name="reader_title_followed_tags">Followed Tags</string>
@@ -671,14 +597,8 @@
     <string name="reader_menu_tags">Tags</string>
 
     <!-- button text -->
-    <string name="reader_btn_yes">Yes</string>
-    <string name="reader_btn_no">No</string>
     <string name="reader_btn_share">Share</string>
-    <string name="reader_btn_comment">Comment</string>
-    <string name="reader_btn_like">Like</string>
-    <string name="reader_btn_unlike">Liked</string>
     <string name="reader_btn_reblog">Reblog</string>
-    <string name="reader_btn_reblogged">Reblogged</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
 
@@ -735,38 +655,19 @@
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
     <string name="create_new_blog_wpcom">Create a WordPress.com blog</string>
-    <string name="review_your_information">Review your information</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
-    <string name="action_previous">Previous</string>
-    <string name="action_next">Next</string>
-    <string name="action_finish">Finish</string>
-    <string name="title_template_step">Step %s</string>
     <string name="required_fields">Required Fields</string>
     <string name="required_field">Required Field</string>
     <string name="username_password_required">Please fill in all of the fields before submitting.</string>
-    <string name="invalid_email_title">Invalid email</string>
     <string name="invalid_email_message">Your email address is not valid.</string>
-    <string name="invalid_password_title">Invalid password</string>
     <string name="invalid_password_message">Password must contain at least 4 characters.</string>
-    <string name="passwords_do_not_match_message">Passwords don\'t match.</string>
-    <string name="invalid_username_title">Invalid username</string>
     <string name="invalid_username_too_short">Username must be longer than 4 characters.</string>
     <string name="invalid_username_too_long">Username must be shorter than 61 characters.</string>
     <string name="email_hint">Email Address</string>
-    <string name="password_hint">Password</string>
-    <string name="confirm_password_hint">Confirm password</string>
-    <string name="blog_address_required">Blog address is required.</string>
-    <string name="signup_label">Sign Up</string>
-    <string name="signin_label">Sign In</string>
-    <string name="signing_up">Signing up…</string>
-    <string name="signing_in">Signing in…</string>
-    <string name="dont_yet_have_an_account">Do not have an account yet?</string>
-    <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="agree_terms_of_service">By creating an account you agree to the %1$sTerms of Service%2$s.</string>
     <string name="username_email">Username or Email</string>
     <string name="site_address">Your Self-Hosted Address (URL)</string>
-    <string name="dont_have_account">Don\'t have an account? %1$sCreate one!%2$s</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Sorry, usernames can only contain lowercase letters (a-z) and numbers.</string>
     <string name="username_required">Please enter a username.</string>
@@ -796,35 +697,13 @@
     <string name="blog_name_invalid">Invalid Site Address</string>
     <string name="blog_title_invalid">Invalid Site Title</string>
     <string name="username_invalid">Invalid username</string>
-    <string name="unknown_error">Unknown error</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect.</string>
     <string name="nux_tap_continue">Continue</string>
-    <string name="nux_tap_learn_more">Learn More</string>
     <string name="nux_cannot_log_in">Sorry, we can\'t log you in.</string>
-    <string name="nux_welcome">Welcome to WordPress</string>
-    <string name="nux_welcome_description">Hold the web in the palm of your hand. Full publishing power in a pint-sized package.</string>
-    <string name="nux_welcome_publish_title">Publish whenever inspiration strikes</string>
-    <string name="nux_welcome_publish_description">Brilliant insight? Hilarious link? Perfect pic? Capture genius as it happens and post in real time.</string>
-    <string name="nux_tutorial_stats_title">Track your site\'s statistics</string>
-    <string name="nux_tutorial_stats_description">Learn what your visitors respond to so you can give them more of it.</string>
-    <string name="nux_tutorial_reader_title">Explore the WordPress.com Reader</string>
-    <string name="nux_tutorial_reader_description">Browse the entire WordPress ecosystem. Thousands of topics at the flick of a finger.</string>
-    <string name="nux_tutorial_notifications_title">Get real-time comment notifications</string>
-    <string name="nux_tutorial_notifications_description">Keep the conversation going with notifications on the go. No need for a desktop to nurture the dialogue.</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
-    <string name="nux_tutorial_tap_to_start">Start using WordPress</string>
-    <string name="nux_dialog_success">Success!</string>
-    <string name="nux_dialog_success_message">You have successfully signed in to your WordPress account.</string>
-    <string name="nux_dialog_success_continue">CONTINUE</string>
     <string name="one_blog_must_be_selected">At least one blog must be visible</string>
-
-    <string-array name="privacy_array">
-         <item>Public</item>
-         <item>Hidden</item>
-         <item>Private</item>
-    </string-array>
 </resources>
