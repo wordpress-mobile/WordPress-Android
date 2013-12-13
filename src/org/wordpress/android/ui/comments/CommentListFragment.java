@@ -197,28 +197,32 @@ public class CommentListFragment extends SherlockListFragment {
                     public void onSuccess(SparseBooleanArray moderatedComments) {
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
 
-                        if (moderatedComments.size() == 1) {
-                            messageBarText = getActivity().getString(R.string.comment_moderated);
-                        } else {
-                            messageBarText = getActivity().getString(R.string.comments_moderated);
+                        if (getActivity() != null) {
+                            if (moderatedComments.size() == 1) {
+                                messageBarText = getActivity().getString(R.string.comment_moderated);
+                            } else {
+                                messageBarText = getActivity().getString(R.string.comments_moderated);
+                            }
+                            MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onCancelled(SparseBooleanArray moderatedComments) {
                         // For the time being we will update any comments that were changed on the server
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
 
-                        if (moderatedComments.size() == 1) {
-                            messageBarText = getActivity().getString(R.string.comment_moderated);
-                        } else {
-                            messageBarText = getActivity().getString(R.string.comments_moderated);
+                        if (getActivity() != null) {
+                            if (moderatedComments.size() == 1) {
+                                messageBarText = getActivity().getString(R.string.comment_moderated);
+                            } else {
+                                messageBarText = getActivity().getString(R.string.comments_moderated);
+                            }
+                            MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onFailure() {
@@ -228,8 +232,10 @@ public class CommentListFragment extends SherlockListFragment {
                            appear out of sync. Locally the view/model would show that the comments
                            status' did not change. For now we will refresh the data from the server. */
                         mCommentsUpdating = false;
+                        if (getActivity() != null) {
+                            MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
+                        }
                         refreshComments();
-                        MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
                     }
                 });
 
@@ -244,8 +250,7 @@ public class CommentListFragment extends SherlockListFragment {
             } else {
                 messageBarText = getActivity().getString(R.string.moderating_comments);
             }
-            MessageBarUtils.showMessageBar(this.getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
-
+            MessageBarUtils.showMessageBar(getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
             mCommentsUpdating = true;
             task.execute(apiArgs);
         }
@@ -264,23 +269,26 @@ public class CommentListFragment extends SherlockListFragment {
 
                     @Override
                     public void onSuccess() {
-                        //TODO: JCO - Need to update the model/view
                         mCommentsUpdating = false;
-
-                        if (selectedCommentIds.size() == 1) {
-                            messageBarText =
-                                    getActivity().getString(R.string.comment_moderated);
-                        } else {
-                            messageBarText =
-                                    getActivity().getString(R.string.comments_moderated);
+                        if (getActivity() != null) {
+                            if (selectedCommentIds.size() == 1) {
+                                messageBarText =
+                                        getActivity().getString(R.string.comment_moderated);
+                            } else {
+                                messageBarText =
+                                        getActivity().getString(R.string.comments_moderated);
+                            }
+                            MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        MessageBarUtils.showMessageBar(getActivity(), messageBarText);
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
                     public void onFailure() {
-                        //TODO: JCO - Need to update the model/view
                         mCommentsUpdating = false;
-                        MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
+                        if (getActivity() != null) {
+                            MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
+                        }
+                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                 });
 
@@ -289,13 +297,13 @@ public class CommentListFragment extends SherlockListFragment {
 
         if(!mCommentsUpdating) {
             String messageBarText;
-
             if (selectedCommentIds.size() == 1) {
                 messageBarText = getActivity().getString(R.string.deleting_comment);
             } else {
                 messageBarText = getActivity().getString(R.string.deleting_comments);
             }
-            MessageBarUtils.showMessageBar(this.getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
+            MessageBarUtils.showMessageBar(getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
+
             mCommentsUpdating = true;
             task.execute(apiArgs);
         }
