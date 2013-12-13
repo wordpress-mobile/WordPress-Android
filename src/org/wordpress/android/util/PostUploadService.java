@@ -260,7 +260,6 @@ public class PostUploadService extends Service {
                         }
                     }
                 }
-                
             }
 
             // If media file upload failed, let's stop here and prompt the user

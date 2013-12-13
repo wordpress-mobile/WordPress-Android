@@ -73,7 +73,7 @@ public class WPImageSpan extends ImageSpan {
                      int top, int y, int bottom, Paint paint) {
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        if (mIsInPostEditor) {
+        if (mIsInPostEditor && !mMediaFile.isVideo()) {
             // Add 'edit' icon at bottom right of image
             int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
             Bitmap editIconBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ab_icon_edit);
