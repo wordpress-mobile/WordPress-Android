@@ -1180,7 +1180,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
             // detect whether the post has a featured image that's not in the content - if so,
             // it will be shown between the post's title and its content (but skip mshots)
-            if (mPost.hasFeaturedImage() && !mPost.getFeaturedImage().contains("/mshots/")) {
+            if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
                 Uri uri = Uri.parse(mPost.getFeaturedImage());
                 if (!mPost.getText().contains(StringUtils.notNullStr(uri.getLastPathSegment()))) {
                     showFeaturedImage = true;
