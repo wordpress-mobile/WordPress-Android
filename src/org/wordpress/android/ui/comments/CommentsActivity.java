@@ -241,9 +241,11 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
             if (mActionMode != null) { mActionMode.invalidate(); }
         } else if (commentModerationStatusType == CommentStatus.SPAM
                 || commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) { mActionMode.finish(); }
+            if (mActionMode != null) {
+                mActionMode.finish();
+                onCommentDeleted(); //TODO: JCO - Need to hook up a callback for displaying a user message
+            }
         }
-        MessageBarUtils.hideMessageBar(this, null, false);
     }
 
     @Override
@@ -261,7 +263,6 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         } else {
             //TODO: JCO (Resolve by 12/13/13) This would be a programming error. Possibly server?
         }
-        MessageBarUtils.hideMessageBar(this, null, false);
     }
 
     @Override
