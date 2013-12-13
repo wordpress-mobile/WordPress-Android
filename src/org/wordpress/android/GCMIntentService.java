@@ -297,7 +297,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 editor.commit();
             }
 
-            new WPComXMLRPCApi().registerWPComToken(context, regId, true);
+            NotificationUtils.registerPushNotificationsToken(context, regId, true);
         }
     }
 

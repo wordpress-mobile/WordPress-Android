@@ -4,12 +4,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.InflaterInputStream;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
+import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -19,6 +27,8 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.ReaderLog;
 
 public class NotificationUtils {
     public static void refreshNotifications(final RestRequest.Listener listener,
@@ -75,6 +85,101 @@ public class NotificationUtils {
             return null;
         }
         return unzipped;
+    }
+    
+    
+    public static void getPushNotificationSettings(Context context, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
+        String gcmToken = GCMRegistrar.getRegistrationId(context);
+        if (gcmToken == null)
+            return;
+
+        if (!WordPress.hasValidWPComCredentials(context))
+            return;
+        
+        Map<String, String> contentStruct = new HashMap<String, String>();
+        contentStruct.put("device_token", gcmToken);
+        contentStruct.put("device_family", "android");
+        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
+        contentStruct.put("testing", "io non dovrei essere qua");
+        WordPress.restClient.post("/push/settings", contentStruct, null, listener, errorListener);
+        
+        return;
+    }
+    
+    public static void registerPushNotificationsToken(final Context ctx, String token, final boolean loadSettings) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String uuid = settings.getString("wp_pref_notifications_uuid", null);
+        if (uuid == null)
+            return;
+
+        String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
+        Map<String, String> contentStruct = new HashMap<String, String>();
+        contentStruct.put("device_token", token);
+        contentStruct.put("device_family", "android");
+        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
+        contentStruct.put("device_name", deviceName);
+        contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
+        contentStruct.put("app_version", WordPress.versionName);
+        contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
+        contentStruct.put("device_uuid", uuid);
+        contentStruct.put("testing", "io non dovrei essere qua");
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderLog.d("Register token action succeeded");
+                if (loadSettings) { //load notification settings if necessary
+                    com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            ReaderLog.d("token action succeeded");
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                            Editor editor = settings.edit();
+                            try {
+                                JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                                editor.putString("wp_pref_notification_settings", settingsJSON.toString());
+                                editor.commit();
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+
+                    NotificationUtils.getPushNotificationSettings(ctx, listener, null);
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.w("Register token action failed");
+                ReaderLog.e(volleyError);
+            }
+        };
+        WordPress.restClient.post("/push/register", contentStruct, null, listener, errorListener);
+    }
+    
+    public static void unregisterPushNotificationsToken(Context ctx, String token) {
+        Map<String, String> contentStruct = new HashMap<String, String>();
+        contentStruct.put("device_token", token);
+        contentStruct.put("device_family", "android");
+        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
+   
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderLog.d("Unregister token action succeeded");
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.w("Unregister token action failed");
+                ReaderLog.e(volleyError);
+            }
+        };
+        WordPress.restClient.post("/push/unregister", contentStruct, null, listener, errorListener);
     }
     
     public static String getAppPushNotificationsName(){

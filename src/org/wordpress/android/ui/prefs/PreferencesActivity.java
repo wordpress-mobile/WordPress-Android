@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -25,9 +27,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.VolleyError;
+import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
+import com.wordpress.rest.RestRequest;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -35,9 +40,14 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -107,15 +117,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String settingsJson = mSettings.getString("wp_pref_notification_settings", null);
             if (settingsJson == null) {
-                new WPComXMLRPCApi().getNotificationSettings(new XMLRPCCallback() {
-                    public void onSuccess(long id, Object result) {
+                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        ReaderLog.d("token action succeeded");
+                        Editor editor = mSettings.edit();
+                        try {
+                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                            editor.putString("wp_pref_notification_settings", settingsJSON.toString());
+                            editor.commit();
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         refreshWPComAuthCategory();
                     }
-
-                    public void onFailure(long id, XMLRPCException error) {
-                        // prompt?
+                };
+                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        ReaderLog.w("blog action failed");
+                        ReaderLog.e(volleyError);
                     }
-                }, this);
+                };
+                NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }
         }
         
