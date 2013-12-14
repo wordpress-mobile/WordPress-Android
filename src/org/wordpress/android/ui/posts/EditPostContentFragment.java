@@ -557,9 +557,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         }
                     }
                 }
-
-                content = postContentEditable.toString();
             }
+            content = postContentEditable.toString();
         }
 
         if (!isAutoSave) {
