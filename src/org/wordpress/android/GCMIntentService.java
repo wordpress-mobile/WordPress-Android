@@ -4,9 +4,11 @@ package org.wordpress.android;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,25 +23,20 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
 import android.util.Base64;
 import android.util.Log;
+
 import com.google.android.gcm.GCMBaseIntentService;
 import com.wordpress.rest.RestRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.StringUtils;
-import org.xmlrpc.android.WPComXMLRPCApi;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
