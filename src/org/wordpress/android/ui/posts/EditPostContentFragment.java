@@ -506,7 +506,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
         String content = "";
 
-        Editable postContentEditable = mContentEditText.getText();
+        Editable postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
 
         if (post.isLocalDraft()) {
             if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
