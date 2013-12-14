@@ -245,8 +245,9 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         } else if (commentModerationStatusType == CommentStatus.SPAM
                 || commentModerationStatusType == CommentStatus.TRASH) {
             if (mActionMode != null) {
+                refreshCommentList();
+                clearCommentDetail();
                 mActionMode.finish();
-                onCommentDeleted(); //TODO: JCO - Need to hook up a callback for displaying a user message in a more timely fashion
             }
         }
     }

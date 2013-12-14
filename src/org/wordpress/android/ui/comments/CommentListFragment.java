@@ -104,7 +104,10 @@ public class CommentListFragment extends SherlockListFragment {
          * account for changes from another client, on the server regardless of our local data. */
         /* TODO: JCO - Eventually replace with the work to compare the expected change set w/ the set
          * of comments actually changed (server + view). */
-         refreshComments();
+
+         /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create
+          * life cycle */
+          refreshComments();
     }
 
     public void onAttach(Activity activity) {
@@ -191,7 +194,7 @@ public class CommentListFragment extends SherlockListFragment {
                 if (moderatedComments.get(currentCommentId, false)) {
                     currentComment.setStatus(newStatusStr);
                     replaceComment(currentComment);
-                    WordPress.wpDB.updateCommentStatus(WordPress.getCurrentBlogId(), currentCommentId, newStatusStr);
+                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
                 }
             }
         }
@@ -279,13 +282,31 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
+     * This function is used to update the local data models and views after completion of some RPC
+     * server action.
+     */
+    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, SparseBooleanArray moderatedComments) {
+        int currentCommentId;
+
+        if (moderatedComments.indexOfValue(true) != -1) {
+            for(Comment currentComment : selectedCommentsSnapshot) {
+                currentCommentId = currentComment.commentID;
+                if (moderatedComments.get(currentCommentId, false)) {
+                    deleteComment(currentComment);
+                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
+                }
+            }
+        }
+    }
+
+    /**
      * Start an AsyncTask to delete the current comment selection set.
      */
     public void deleteComments() {
         final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
+        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
 
-        ApiHelper.DeleteCommentsTask task = new ApiHelper.DeleteCommentsTask(allComments,
-                selectedCommentIds,
+        ApiHelper.DeleteCommentsTask task = new ApiHelper.DeleteCommentsTask(selectedCommentIds,
                 new ApiHelper.DeleteCommentsTask.Callback() {
                     String messageBarText;
                     int numCommentsDeleted = 0;
@@ -293,6 +314,7 @@ public class CommentListFragment extends SherlockListFragment {
                     @Override
                     public void onSuccess(SparseBooleanArray deletedCommentIds) {
                         mCommentsUpdating = false;
+                        deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
                         if (getActivity() != null) {
                             numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
@@ -310,6 +332,7 @@ public class CommentListFragment extends SherlockListFragment {
                     @Override
                     public void onCancelled(SparseBooleanArray deletedCommentIds) {
                         mCommentsUpdating = false;
+                        deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
                         if (getActivity() != null) {
                             numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
@@ -662,6 +685,23 @@ public class CommentListFragment extends SherlockListFragment {
             Comment thisComment = model.get(i);
             if (thisComment.commentID==comment.commentID && thisComment.postID==comment.postID) {
                 model.set(i, comment);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Delete the comment from the model
+     * @param comment The comment with the same postID and commentID that is to be replaced in the
+     *                model
+     */
+    protected void deleteComment(Comment comment) {
+        if (comment==null || model==null)
+            return;
+        for (int i=0; i < model.size(); i++) {
+            Comment thisComment = model.get(i);
+            if (thisComment.commentID==comment.commentID) {
+                model.remove(i);
                 return;
             }
         }

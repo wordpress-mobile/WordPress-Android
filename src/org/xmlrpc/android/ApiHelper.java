@@ -859,7 +859,7 @@ public class ApiHelper {
         protected void onPostExecute(SparseBooleanArray moderatedCommentIds) {
             if (mCallback != null) {
                 if (moderatedCommentIds.indexOfValue(true) == -1)
-                    mCallback.onFailure(); // TODO: All this currently indicates is that no commentes were moderated
+                    mCallback.onFailure(); // TODO: All this currently indicates is that no comments were moderated
                 else
                     mCallback.onSuccess(moderatedCommentIds);
             }
@@ -876,7 +876,6 @@ public class ApiHelper {
     public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, SparseBooleanArray> {
         private Callback mCallback;
         private int mNumSelectedComments = 0;
-        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
         private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
         private SparseBooleanArray mDeletedCommentIds;
 
@@ -886,12 +885,10 @@ public class ApiHelper {
             public void onFailure();
         }
 
-        public DeleteCommentsTask(Map<Integer, Map<?, ?>>  allComments,
-                                  ArrayList<Integer> selectedCommentIdArray, Callback callback) {
-            mAllCommentsSnapshot = allComments;
+        public DeleteCommentsTask(ArrayList<Integer> selectedCommentIdArray, Callback callback) {
             mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
             mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
-            mDeletedCommentIds = new SparseBooleanArray(selectedCommentIdArray.size());
+            mDeletedCommentIds = new SparseBooleanArray(mNumSelectedComments);
             mCallback = callback;
         }
 
@@ -919,10 +916,10 @@ public class ApiHelper {
                     return mDeletedCommentIds;
 
                 rpcCallStatus = false;
+
                 int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
-                Object[] apiParams = {WordPress.currentBlog.getBlogId(),
-                        WordPress.currentBlog.getUsername(),
-                        WordPress.currentBlog.getPassword(), currentCommentId};
+                Object[] apiParams = {blog.getBlogId(),
+                        blog.getUsername(), blog.getPassword(), currentCommentId};
 
                 Object result;
                 try {
@@ -931,7 +928,6 @@ public class ApiHelper {
                 } catch (XMLRPCException e) {
                     Log.e("WordPress", "XMLRPCException: " + e.getMessage());
                 }
-
                 mDeletedCommentIds.put(currentCommentId, rpcCallStatus);
             }
             return mDeletedCommentIds;
