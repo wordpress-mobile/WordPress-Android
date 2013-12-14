@@ -859,8 +859,7 @@ public class ApiHelper {
         protected void onPostExecute(SparseBooleanArray moderatedCommentIds) {
             if (mCallback != null) {
                 if (moderatedCommentIds.indexOfValue(true) == -1)
-                    //TODO: Might not use as this only indicates that no comments were updated. Modify to pass XML/RPC errors ... as it helped for developing against a server issue.
-                    mCallback.onFailure();
+                    mCallback.onFailure(); // TODO: All this currently indicates is that no commentes were moderated
                 else
                     mCallback.onSuccess(moderatedCommentIds);
             }
