@@ -95,6 +95,16 @@ public class CommentListFragment extends SherlockListFragment {
             textview.setText(getText(R.string.comments_empty_list));
         }
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
+
+        /* TODO: JCO - Need to weigh the pros and cons checking the view versus the model as it is
+         * not always the case that we need to redraw a comment nor fetch it from the server as
+         * even though the activity may have been destroyed, the fragment + data was added to the
+         * BackStack and we should use said data as we can avoid needless redraw(s), if done correctly.
+         * TODO: JCO - Note: In the case of the server data vs. the local database we still need to
+         * account for changes from another client, on the server regardless of our local data. */
+        /* TODO: JCO - Eventually replace with the work to compare the expected change set w/ the set
+         * of comments actually changed (server + view). */
+         refreshComments();
     }
 
     public void onAttach(Activity activity) {
@@ -184,7 +194,6 @@ public class CommentListFragment extends SherlockListFragment {
                     WordPress.wpDB.updateCommentStatus(WordPress.getCurrentBlogId(), currentCommentId, newStatusStr);
                 }
             }
-            getListView().invalidateViews();
         }
     }
 
@@ -751,6 +760,11 @@ public class CommentListFragment extends SherlockListFragment {
                     }
                 }
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            onAnimateRefreshButton.onAnimateRefreshButton(false);
         }
 
         @Override

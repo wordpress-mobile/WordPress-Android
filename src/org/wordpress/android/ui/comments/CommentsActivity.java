@@ -238,7 +238,11 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
     public void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
         if (commentModerationStatusType == CommentStatus.APPROVED
                 || commentModerationStatusType == CommentStatus.UNAPPROVED) {
-            if (mActionMode != null) { mActionMode.invalidate(); }
+            if (mActionMode != null) {
+                refreshCommentList();
+                refreshCommentDetail();
+                mActionMode.invalidate();
+            }
         } else if (commentModerationStatusType == CommentStatus.SPAM
                 || commentModerationStatusType == CommentStatus.TRASH) {
             if (mActionMode != null) {
