@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,6 +132,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
             holder.imgReply = (ImageView) convertView.findViewById(R.id.image_reply);
             convertView.setTag(holder);
+
+            // this is necessary in order for anchor tags in the comment text to be clickable
+            holder.txtText.setLinksClickable(true);
+            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
