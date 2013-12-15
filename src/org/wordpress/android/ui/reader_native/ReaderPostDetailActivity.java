@@ -25,7 +25,6 @@ import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -105,17 +104,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (mListView==null) {
             mListView = (ListView) findViewById(android.R.id.list);
 
-            // enable replying to an individual comment when the user taps it
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // id is the commentId of the tapped comment - note that it will be -1 when the
-                    // post detail header is tapped, which we want to ignore
-                    if (id > 0)
-                        showAddCommentBox(id);
-                }
-            });
-
             // enable full screen when user scrolls down, disable full screen when user scrolls up
             if (isFullScreenSupported()) {
                 mListView.setOnTouchListener(new View.OnTouchListener() {
@@ -172,6 +160,18 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 }
             };
 
+            // adapter calls this when user taps reply icon
+            ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
+                @Override
+                public void onRequestReply(long commentId) {
+                    if (!mIsAddCommentBoxShowing) {
+                        showAddCommentBox(commentId);
+                    } else {
+                        hideAddCommentBox();
+                    }
+                }
+            };
+
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
             ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
@@ -183,7 +183,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                     updateComments();
                 }
             };
-            mAdapter = new ReaderCommentAdapter(this, mPost, dataLoadedListener, dataRequestedListener);
+            mAdapter = new ReaderCommentAdapter(this, mPost, replyListener, dataLoadedListener, dataRequestedListener);
         }
         return mAdapter;
     }
