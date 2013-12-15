@@ -45,7 +45,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -480,29 +479,25 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return getBlogCount() != 0;
     }
 
-    private void askToSignInIfNot() {
+    private boolean askToSignInIfNot() {
         if (!isSignedIn()) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
             startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+            return false;
         }
+        return true;
     }
 
     /**
-     * Setup the global state tracking which blog is currently active.
-     * <p>
-     * If the global state is not already set, try and determine the last active
-     * blog from the last time the application was used. If we're not able to
-     * determine the last active blog, just select the first one.
-     * <p>
-     * If no blogs are configured, display the "new account" activity to allow
-     * the user to setup a blog.
+     * Setup the global state tracking which blog is currently active if the user is signed in.q
      */
     public void setupCurrentBlog() {
-        WordPress.getCurrentBlog();
-        askToSignInIfNot();
+        if (askToSignInIfNot()) {
+            WordPress.getCurrentBlog();
+        }
     }
 
     private void showReader() {
@@ -512,7 +507,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         intent.putExtra("id", readerBlogID);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-        //startActivityWithDelay(intent);
     }
 
     protected void showReaderIfNoBlog() {
