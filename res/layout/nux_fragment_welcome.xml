@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:gravity="center">
 
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
@@ -119,7 +120,7 @@
                 android:layout_marginRight="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXThirdButton"
+                    style="@style/WordPress.NUXPrimaryButton"
                     android:id="@+id/nux_sign_in_button"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
@@ -134,7 +135,7 @@
                     android:id="@+id/nux_sign_in_progress_bar"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    style="@style/WordPress.NUXThirdButton"
+                    style="@style/WordPress.NUXPrimaryButton"
                     android:enabled="false"
                     android:visibility="gone" />
 
