@@ -23,6 +23,10 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import org.wordpress.android.R;
@@ -65,26 +69,18 @@ public class CommentListFragment extends SherlockListFragment {
     private SparseBooleanArray mSavedSelectedCommentPositions = null;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
     private CommentListFragmentListener mOnCommentListFragmentListener;
-    private CommentAsyncModerationReturnListener  mCommentAsyncModerationReturnListener;
     private ListScrollPositionManager mListScrollPositionManager;
+    private CommentAdapter mAdapter;
+    private ActionMode mActionMode;
+
 
     public interface CommentListFragmentListener {
         public void onCommentClicked(Comment comment);
-        public void onCommentSelected(int selectedCommentCount);
+        //public void onCommentSelected(int selectedCommentCount);
     }
 
     public interface OnAnimateRefreshButtonListener {
         public void onAnimateRefreshButton(boolean start);
-    }
-
-    public interface CommentAsyncModerationReturnListener {
-        public void onAsyncModerationReturnSuccess(CommentStatus commentStatus);
-        public void onAsyncModerationReturnFailure(CommentStatus commentStatus);
-    }
-
-    @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
     }
 
     @Override
@@ -96,18 +92,8 @@ public class CommentListFragment extends SherlockListFragment {
         }
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
 
-        /* TODO: JCO - Need to weigh the pros and cons checking the view versus the model as it is
-         * not always the case that we need to redraw a comment nor fetch it from the server as
-         * even though the activity may have been destroyed, the fragment + data was added to the
-         * BackStack and we should use said data as we can avoid needless redraw(s), if done correctly.
-         * TODO: JCO - Note: In the case of the server data vs. the local database we still need to
-         * account for changes from another client, on the server regardless of our local data. */
-        /* TODO: JCO - Eventually replace with the work to compare the expected change set w/ the set
-         * of comments actually changed (server + view). */
-
-         /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create
-          * life cycle */
-          refreshComments();
+        /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create life cycle */
+        //refreshComments();
     }
 
     public void onAttach(Activity activity) {
@@ -115,7 +101,7 @@ public class CommentListFragment extends SherlockListFragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentListFragmentListener = (CommentListFragmentListener) activity;
-            mCommentAsyncModerationReturnListener = (CommentAsyncModerationReturnListener) activity;
+            //mCommentAsyncModerationReturnListener = (CommentAsyncModerationReturnListener) activity;
             onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
 
         } catch (ClassCastException e) {
@@ -129,7 +115,8 @@ public class CommentListFragment extends SherlockListFragment {
     public void onPause() {
         super.onPause();
         mListScrollPositionManager.saveScrollOffset();
-        mSavedSelectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
+        //TODO: Most Likely the selection state is not maintained on detach, re-enable.
+        //mSavedSelectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
     }
 
     @Override
@@ -171,27 +158,16 @@ public class CommentListFragment extends SherlockListFragment {
         return v;
     }
 
-    private static int getNumberOfToggledValues(SparseBooleanArray sparseBooleanArray) {
-        int numberOfTrueValues = 0;
-        for(int i=0; i< sparseBooleanArray.size(); i++) {
-            if(sparseBooleanArray.valueAt(i)) {
-                numberOfTrueValues++;
-            }
-        }
-        return numberOfTrueValues;
-    }
-
     /**
-     * This function is used to update the local data models and views after completion of some RPC
-     * server action.
+     * Updates the local data models and views after completion of some RPC server action.
      */
-    private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, SparseBooleanArray moderatedComments, String newStatusStr) {
-        int currentCommentId;
+    private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Long> moderatedComments, String newStatusStr) {
+        Integer currentCommentId;
 
-        if (moderatedComments.indexOfValue(true) != -1) {
+        if (moderatedComments.size() > 0) {
             for(Comment currentComment : selectedCommentsSnapshot) {
                 currentCommentId = currentComment.commentID;
-                if (moderatedComments.get(currentCommentId, false)) {
+                if (moderatedComments.contains(currentCommentId.longValue())) {
                     currentComment.setStatus(newStatusStr);
                     replaceComment(currentComment);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
@@ -207,7 +183,7 @@ public class CommentListFragment extends SherlockListFragment {
      */
     public void moderateComments(final CommentStatus commentStatus) {
         final String newStatus = CommentStatus.toString(commentStatus);
-        final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
+        final ArrayList<Long> selectedCommentIds = getSelectedCommentIds();
         final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
 
         ApiHelper.ModerateCommentsTask task = new ApiHelper.ModerateCommentsTask(newStatus,
@@ -217,12 +193,12 @@ public class CommentListFragment extends SherlockListFragment {
                     int numCommentsModerated = 0;
 
                     @Override
-                    public void onSuccess(SparseBooleanArray moderatedComments) {
+                    public void onSuccess(ArrayList<Long> moderatedCommentIds) {
                         mCommentsUpdating = false;
-                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
+                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedCommentIds, newStatus);
 
                         if (getActivity() != null) {
-                            numCommentsModerated = getNumberOfToggledValues(moderatedComments);
+                            numCommentsModerated = moderatedCommentIds.size();
                             if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
@@ -230,16 +206,16 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+                        onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
-                    public void onCancelled(SparseBooleanArray moderatedComments) {
+                    public void onCancelled(ArrayList<Long> moderatedCommentIds) {
                         // For the time being we will update any comments that were changed on the server
                         mCommentsUpdating = false;
-                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedComments, newStatus);
+                        updateChangedCommentSet(selectedCommentsSnapshot, moderatedCommentIds, newStatus);
 
                         if (getActivity() != null) {
-                            numCommentsModerated = getNumberOfToggledValues(moderatedComments);
+                            numCommentsModerated = moderatedCommentIds.size();
                             if (numCommentsModerated == 1) {
                                 messageBarText = getActivity().getString(R.string.comment_moderated);
                             } else {
@@ -247,7 +223,7 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(commentStatus);
+                        onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onFailure() {
@@ -285,13 +261,13 @@ public class CommentListFragment extends SherlockListFragment {
      * This function is used to update the local data models and views after completion of some RPC
      * server action.
      */
-    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, SparseBooleanArray moderatedComments) {
-        int currentCommentId;
+    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Long> moderatedComments) {
+        Integer currentCommentId;
 
-        if (moderatedComments.indexOfValue(true) != -1) {
+        if (moderatedComments.size() > 0) {
             for(Comment currentComment : selectedCommentsSnapshot) {
                 currentCommentId = currentComment.commentID;
-                if (moderatedComments.get(currentCommentId, false)) {
+                if (moderatedComments.contains(currentCommentId.longValue())) {
                     deleteComment(currentComment);
                     WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
                 }
@@ -303,7 +279,7 @@ public class CommentListFragment extends SherlockListFragment {
      * Start an AsyncTask to delete the current comment selection set.
      */
     public void deleteComments() {
-        final ArrayList<Integer> selectedCommentIds = getSelectedCommentIdArray();
+        final ArrayList<Long> selectedCommentIds = getSelectedCommentIds();
         final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
 
         ApiHelper.DeleteCommentsTask task = new ApiHelper.DeleteCommentsTask(selectedCommentIds,
@@ -312,12 +288,12 @@ public class CommentListFragment extends SherlockListFragment {
                     int numCommentsDeleted = 0;
 
                     @Override
-                    public void onSuccess(SparseBooleanArray deletedCommentIds) {
+                    public void onSuccess(ArrayList<Long> deletedCommentIds) {
                         mCommentsUpdating = false;
                         deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
                         if (getActivity() != null) {
-                            numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
+                            numCommentsDeleted = deletedCommentIds.size();
                             if (numCommentsDeleted == 1) {
                                 messageBarText =
                                         getActivity().getString(R.string.comment_moderated);
@@ -327,15 +303,15 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
+                        onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
-                    public void onCancelled(SparseBooleanArray deletedCommentIds) {
+                    public void onCancelled(ArrayList<Long> deletedCommentIds) {
                         mCommentsUpdating = false;
                         deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
                         if (getActivity() != null) {
-                            numCommentsDeleted = getNumberOfToggledValues(deletedCommentIds);
+                            numCommentsDeleted = deletedCommentIds.size();
                             if (numCommentsDeleted == 1) {
                                 messageBarText =
                                         getActivity().getString(R.string.comment_moderated);
@@ -345,7 +321,7 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnSuccess(CommentStatus.TRASH);
+                        onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
                     public void onFailure() {
@@ -353,7 +329,7 @@ public class CommentListFragment extends SherlockListFragment {
                         if (getActivity() != null) {
                             MessageBarUtils.showMessageBar(getActivity(), getActivity().getString(R.string.error_moderate_comment));
                         }
-                        mCommentAsyncModerationReturnListener.onAsyncModerationReturnFailure(CommentStatus.TRASH);
+                        onAsyncModerationReturnFailure(CommentStatus.TRASH);
                     }
                 });
 
@@ -371,6 +347,38 @@ public class CommentListFragment extends SherlockListFragment {
 
             mCommentsUpdating = true;
             task.execute(apiArgs);
+        }
+    }
+
+    public void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
+            if (mActionMode != null) {
+                //refreshCommentList();
+                //refreshCommentDetail();
+                mActionMode.invalidate();
+            }
+        } else if (commentModerationStatusType == CommentStatus.SPAM
+                || commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                //refreshCommentList();
+                //clearCommentDetail();
+                mActionMode.finish();
+            }
+        }
+    }
+
+    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED
+                || commentModerationStatusType == CommentStatus.SPAM) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        } else if (commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
         }
     }
 
@@ -452,8 +460,8 @@ public class CommentListFragment extends SherlockListFragment {
             mListScrollPositionManager.restoreScrollOffset();
 
             if (mSavedSelectedCommentPositions != null) {
-                ((CommentAdapter) getListAdapter()).mSelectedCommentPositions =
-                        mSavedSelectedCommentPositions;
+                //TODO: Most Likely the selection state is not maintained on detach, re-enable.
+                //((CommentAdapter) getListAdapter()).mSelectedCommentPositions = mSavedSelectedCommentPositions;
             }
 
             return true;
@@ -463,122 +471,49 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
-    private void setUpListView(boolean showSwitcher) {
-        ListView listView = getListView();
+    public ArrayList<Long> getSelectedCommentIds() {
+        long [] selectedCommentIds = getListView().getCheckedItemIds();
+        ArrayList<Long> selectedCommentIdArray = new ArrayList<Long>(selectedCommentIds.length);
 
-        listView.removeFooterView(switcher);
-        if (showSwitcher) { listView.addFooterView(switcher, null, false); }
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                onListItemCheck(position);
-                return true;
-            }
-        });
-        setListAdapter(new CommentAdapter(getSherlockActivity(), model));
-    }
-
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        int selectedCommentCount = getSelectedCommentCount();
-
-        if(selectedCommentCount == 0) {
-            Comment comment = model.get((int) id);
-            mOnCommentListFragmentListener.onCommentClicked(comment);
-            getListView().invalidateViews();
-        } else {
-            onListItemCheck((int) id);
+        for(int i=0; i<selectedCommentIdArray.size(); i++) {
+            selectedCommentIdArray.add(selectedCommentIds[i]);
         }
-    }
-
-    private void onListItemCheck(int id) {
-        int selectedCommentCount;
-
-        toggleCommentSelected(id);
-        mSavedSelectedCommentPositions =
-                ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
-        selectedCommentCount = getSelectedCommentCount();
-        mOnCommentListFragmentListener.onCommentSelected(selectedCommentCount);
-    }
-
-    public ArrayList<Integer> getSelectedCommentIdArray() {
-        SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
-        ArrayList<Integer> selectedCommentIdArray = new ArrayList<Integer>();
-
-        for(int i=0; i<selectedCommentPositions.size(); i++) {
-            if (selectedCommentPositions.valueAt(i))
-                selectedCommentIdArray.add(selectedCommentPositions.keyAt(i));
-        }
-
         return selectedCommentIdArray;
     }
 
     public ArrayList<Comment> getSelectedCommentArray() {
-        ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIdArray();
+        ArrayList<Long> selectedCommentIdArray = getSelectedCommentIds();
         ArrayList<Comment> selectedCommentArray = new ArrayList<Comment>();
 
         for(Comment comment : model) {
-            if (selectedCommentIdArray.contains(comment.commentID)) {
+            if (selectedCommentIdArray.contains(Integer.valueOf(comment.commentID).longValue())) {
                 selectedCommentArray.add(comment);
             }
         }
-
         return selectedCommentArray;
     }
 
-    public int getSelectedCommentCount() {
-        SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
+    public int getSelectedPositionCount(SparseBooleanArray selectedPositionArray) {
         int size = 0;
-        for (int i=0; i<selectedCommentPositions.size(); i++) {
-            if (selectedCommentPositions.valueAt(i)) {
-                size++;
-            }
+        for (int i=0; i<selectedPositionArray.size(); i++) {
+            if (selectedPositionArray.valueAt(i)) { size++; }
         }
         return size;
-    }
-
-    public void toggleCommentSelected(int position) {
-        SparseBooleanArray selectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
-        boolean isSelected = true;
-        Comment comment;
-        int commentId;
-
-        comment = model.get(position);
-        commentId = comment.commentID;
-
-        if (selectedCommentPositions.indexOfKey(commentId) == -1) {
-            selectedCommentPositions.put(commentId, isSelected);
-        } else {
-            isSelected = !selectedCommentPositions.get(commentId);
-            selectedCommentPositions.put(commentId, isSelected);
-        }
-
-        if (isSelected) {
-            WordPress.currentComment = comment;
-        } else { }
-
-        ((CommentAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     /**
      * Clears the selected comment list as well as the saved set of selected comments.
      */
     public void clearSelectedComments() {
-        CommentAdapter commentListAdapter = ((CommentAdapter) getListAdapter());
-        commentListAdapter.mSelectedCommentPositions.clear();
-        if (mSavedSelectedCommentPositions != null) { mSavedSelectedCommentPositions.clear(); }
-        commentListAdapter.notifyDataSetChanged();
+        getListView().clearChoices();
     }
 
     public class CommentAdapter extends ArrayAdapter<Comment> {
         final LayoutInflater mInflater;
-        SparseBooleanArray mSelectedCommentPositions;
         boolean detailViewVisible = false;
 
         public CommentAdapter(Context context, ArrayList<Comment> objs) {
             super(context, R.layout.comment_row, objs);
-            mSelectedCommentPositions = new SparseBooleanArray();
             mInflater = getActivity().getLayoutInflater();
 
             FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -602,9 +537,7 @@ public class CommentListFragment extends SherlockListFragment {
             }
 
             Comment commentEntry = getItem(position);
-            wrapper.populateFrom(commentEntry, position);
-            row.setBackgroundColor(mSelectedCommentPositions.get(commentEntry.commentID, false)?
-                    getResources().getColor(R.color.blue_extra_light) : Color.TRANSPARENT);
+            wrapper.populateFrom(commentEntry, commentEntry.commentID);
 
             return row;
         }
@@ -631,7 +564,7 @@ public class CommentListFragment extends SherlockListFragment {
             imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
         }
 
-        void populateFrom(Comment comment, final int position) {
+        void populateFrom(Comment comment, final int id) {
             txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : getString(R.string.anonymous));
             txtComment.setText(comment.comment);
             txtPostTitle.setText(getResources().getText(R.string.on) + " " + comment.postTitle);
@@ -641,7 +574,7 @@ public class CommentListFragment extends SherlockListFragment {
             txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
             txtEmailURL.setText(fEmailURL);
 
-            row.setId(Integer.valueOf(comment.commentID));
+            row.setId(id);
 
             final String status;
             final String textColor;
@@ -676,9 +609,9 @@ public class CommentListFragment extends SherlockListFragment {
     /**
      * Replace existing comment with the passed in value
      * @param comment The comment with the same postID and commentID that is to be replaced in the
-     *                model
+     *                model.
      */
-    protected void replaceComment(Comment comment) {
+    private void replaceComment(Comment comment) {
         if (comment==null || model==null)
             return;
         for (int i=0; i < model.size(); i++) {
@@ -693,9 +626,9 @@ public class CommentListFragment extends SherlockListFragment {
     /**
      * Delete the comment from the model
      * @param comment The comment with the same postID and commentID that is to be replaced in the
-     *                model
+     *                model.
      */
-    protected void deleteComment(Comment comment) {
+    private void deleteComment(Comment comment) {
         if (comment==null || model==null)
             return;
         for (int i=0; i < model.size(); i++) {
@@ -717,10 +650,6 @@ public class CommentListFragment extends SherlockListFragment {
         super.onDestroy();
     }
 
-    /**
-     * Calling this function will update data from the server, update the local database and update
-     * the data model. Use sparingly as it is not cheap.
-     */
     public void refreshComments() {
         refreshComments(false);
     }
@@ -779,8 +708,6 @@ public class CommentListFragment extends SherlockListFragment {
                         moderateErrorMsg = "";
                     }
                 } else {
-
-                    // TODO: JCO - Review
                     if (commentsResult.size() == 0) {
                         // no comments found
                         if (progressDialog.isShowing()) {
@@ -792,7 +719,6 @@ public class CommentListFragment extends SherlockListFragment {
                             loadComments(refreshOnly, loadMore);
                         }
                     }
-
                     onAnimateRefreshButton.onAnimateRefreshButton(false);
 
                     if (loadMore) {
@@ -821,6 +747,163 @@ public class CommentListFragment extends SherlockListFragment {
             }
 
             return commentsResult;
+        }
+    }
+
+    private void setUpListView(boolean showSwitcher) {
+        ListView listView = getListView();
+
+        listView.removeFooterView(switcher);
+        if (showSwitcher) { listView.addFooterView(switcher, null, false); }
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                boolean checked = getListView().getCheckedItemPositions().valueAt(position);
+                int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
+                if (mActionMode == null) {
+                    mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
+                    getListView().setItemChecked(position, true);
+                    mActionMode.setTitle(Integer.toString(checkedItemCount));
+                    return true;
+                }
+
+                if (checkedItemCount == 0) {
+                    mActionMode.finish();
+                }
+                else {
+                    mActionMode.setTitle(Integer.toString(checkedItemCount));
+                    mActionMode.invalidate();
+                }
+
+                return true;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode == null) {
+                    Comment comment = mAdapter.getItem(position);
+                    //getListView().setItemChecked(position, false);
+                    mOnCommentListFragmentListener.onCommentClicked(comment);
+                } else {
+                    boolean checked = getListView().getCheckedItemPositions().valueAt(position);
+                    getListView().setItemChecked(position, !checked);
+
+                    int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
+                    if (checkedItemCount == 0) {
+                        mActionMode.finish();
+                    }
+                    else {
+                        mActionMode.setTitle(Integer.toString(checkedItemCount));
+                        mActionMode.invalidate();
+                    }
+                }
+            }
+        });
+
+        mAdapter = new CommentAdapter(getActivity(), model);
+        setListAdapter(mAdapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getSherlockActivity().getSupportMenuInflater();
+            inflater.inflate(R.menu.comments_multiselect, menu);
+            mActionMode = mode;
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            boolean retVal = true;
+            int selectedCommentStatusTypeBitMask = 0;
+
+            if (mActionMode != null) {
+                menu.findItem(R.id.comments_cab_approve).setVisible(true);
+                menu.findItem(R.id.comments_cab_unapprove).setVisible(true);
+                menu.findItem(R.id.comments_cab_spam).setVisible(true);
+                menu.findItem(R.id.comments_cab_delete).setVisible(true);
+
+                /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
+                 * following associated code should be uncommented. */
+                    CommentStatus.clearSelectedCommentStatusTypeCount();
+                    for(Comment comment : getSelectedCommentArray()) {
+                        CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
+                    }
+
+                    /* Build a bit "set" representing which types of comments are selected.
+                     * This was done so many different context permutations can be identified
+                     * in the future. */
+                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
+                    }
+                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
+                    }
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
+                    }*/
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
+                    }*/
+                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
+                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
+                    }*/
+
+                    /* Compare the bit set to the bit masks to see if they are equal. Currently we
+                     * do not show an Action Icon if comments of the same status type are selected. */
+                    if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
+                        menu.findItem(R.id.comments_cab_approve).setVisible(false);
+                    } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
+                        menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
+                    }
+                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
+                        menu.findItem(R.id.comments_cab_spam).setVisible(false);
+                    }*/
+                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
+                        menu.findItem(R.id.comments_cab_delete).setVisible(false);
+                    }*/
+
+            } else {
+               retVal = false;
+            }
+            return retVal;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            boolean retVal = true;
+            int id = item.getItemId();
+
+            switch (id) {
+                case R.id.comments_cab_delete:
+                    deleteComments();
+                    break;
+                case R.id.comments_cab_approve:
+                    moderateComments(CommentStatus.APPROVED);
+                    break;
+                case R.id.comments_cab_unapprove:
+                    moderateComments(CommentStatus.UNAPPROVED);
+                    break;
+                case R.id.comments_cab_spam:
+                    moderateComments(CommentStatus.SPAM);
+                    break;
+                default:
+                    retVal = false;
+            }
+            return retVal;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            clearSelectedComments();
+            mActionMode = null;
         }
     }
 }
