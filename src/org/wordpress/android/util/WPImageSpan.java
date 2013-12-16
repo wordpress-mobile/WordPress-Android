@@ -30,8 +30,12 @@ public class WPImageSpan extends ImageSpan {
         this.mImageSource = src;
         mContext = context;
         mMediaFile = new MediaFile();
-        if (mContext instanceof EditPostActivity)
-            mIsInPostEditor = true;
+        if (mContext instanceof EditPostActivity) {
+            EditPostActivity editPostActivity = (EditPostActivity)mContext;
+            if (editPostActivity.isEditingPostContent())
+                mIsInPostEditor = true;
+        }
+
     }
 
     public WPImageSpan(Context context, int resId, Uri src) {

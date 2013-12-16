@@ -417,19 +417,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
             // Show 3 total pages.
             return 3;
         }
+    }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return "WRITE";
-                case 1:
-                    return getString(R.string.settings).toUpperCase(l);
-                case 2:
-                    return getString(R.string.preview).toUpperCase(l);
-            }
-            return null;
-        }
+    public boolean isEditingPostContent() {
+        return (mViewPager.getCurrentItem() == PAGE_CONTENT);
     }
 }
