@@ -44,7 +44,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -68,6 +67,7 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.StringUtils;
@@ -503,20 +503,20 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
-        String content;
+        String content = "";
+
+        Editable postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
 
         if (post.isLocalDraft()) {
-            Editable e = mContentEditText.getText();
-            if (android.os.Build.VERSION.SDK_INT >= 14 && e != null) {
-                // remove suggestion spans, they cause craziness in
-                // WPHtml.toHTML().
-                CharacterStyle[] characterStyles = e.getSpans(0, e.length(), CharacterStyle.class);
+            if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
+                // remove suggestion spans, they cause craziness in WPHtml.toHTML().
+                CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
                 for (CharacterStyle characterStyle : characterStyles) {
                     if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan"))
-                        e.removeSpan(characterStyle);
+                        postContentEditable.removeSpan(characterStyle);
                 }
             }
-            content = WPHtml.toHtml(e);
+            content = WPHtml.toHtml(postContentEditable);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -525,62 +525,47 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
                     .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
         } else {
-            content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
+            //content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
+            WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
+            if (imageSpans.length != 0) {
+
+                for (WPImageSpan wpIS : imageSpans) {
+                    //images += wpIS.getImageSource().toString() + ",";
+                    MediaFile mediaFile = wpIS.getMediaFile();
+                    if (mediaFile == null)
+                        continue;
+                    if (mediaFile.getMediaId() != null) {
+                        updateMediaFileOnServer(wpIS);
+                    } else {
+                        mediaFile.setFileName(wpIS.getImageSource().toString());
+                        mediaFile.setFilePath(wpIS.getImageSource().toString());
+                        mediaFile.save();
+                    }
+
+                    int tagStart = postContentEditable.getSpanStart(wpIS);
+                    if (!isAutoSave) {
+                        postContentEditable.removeSpan(wpIS);
+
+                        // network image has a mediaId
+                        if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
+                            postContentEditable.insert(tagStart, WPHtml.getContent(wpIS));
+
+                        } else { // local image for upload
+                            postContentEditable.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                        }
+                    }
+                }
+            }
+            content = postContentEditable.toString();
         }
-
-        String images = "";
-        // update the images
-        post.deleteMediaFiles();
-
-        Editable s = mContentEditText.getText();
 
         if (!isAutoSave) {
             // Add gallery shortcode
-            MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
+            MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(), MediaGalleryImageSpan.class);
             for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                int start = s.getSpanStart(gallerySpan);
-                s.removeSpan(gallerySpan);
-                s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
-            }
-        }
-
-        WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
-        if (imageSpans.length != 0) {
-
-            for (WPImageSpan wpIS : imageSpans) {
-                images += wpIS.getImageSource().toString() + ",";
-
-                if (wpIS.getMediaId() != null) {
-                    updateMediaFileOnServer(wpIS);
-                } else {
-                    MediaFile mf = new MediaFile();
-                    mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-                    mf.setPostID(post.getId());
-                    mf.setTitle(wpIS.getTitle());
-                    mf.setCaption(wpIS.getCaption());
-                    // mf.setDescription(wpIS.getDescription());
-                    mf.setFeatured(wpIS.isFeatured());
-                    mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                    mf.setFileName(wpIS.getImageSource().toString());
-                    mf.setFilePath(wpIS.getImageSource().toString());
-                    mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                    mf.setWidth(wpIS.getWidth());
-                    mf.setVideo(wpIS.isVideo());
-                    mf.save();
-                }
-
-                int tagStart = s.getSpanStart(wpIS);
-                if (!isAutoSave) {
-                    s.removeSpan(wpIS);
-
-                    // network image has a mediaId
-                    if (wpIS.getMediaId() != null && wpIS.getMediaId().length() > 0) {
-                        s.insert(tagStart, WPHtml.getContent(wpIS));
-
-                    } else { // local image for upload
-                        s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
-                    }
-                }
+                int start = postContentEditable.getSpanStart(gallerySpan);
+                postContentEditable.removeSpan(gallerySpan);
+                postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
             }
         }
 
@@ -595,7 +580,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             post.setDescription(content);
             post.setMt_text_more("");
         }
-        post.setMediaPaths(images);
+
         if (!post.isLocalDraft())
             post.setLocalChange(true);
         post.update();
@@ -784,7 +769,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (currentBlog == null || wpIS == null)
             return;
 
-        MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
+        MediaFile mf = wpIS.getMediaFile();
 
         final String mediaId = mf.getMediaId();
         final String title = mf.getTitle();
@@ -812,31 +797,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         task.execute(apiArgs);
     }
 
-    private MediaFile getMediaFileFromWPImageSpan(WPImageSpan wpIS) {
-        MediaFile mf = new MediaFile();
-        mf.setMediaId(wpIS.getMediaId());
-        if (mActivity.getPost() != null)
-            mf.setPostID(mActivity.getPost().getId());
-        mf.setMIMEType(wpIS.getMimeType());
-        mf.setHeight(wpIS.getHeight());
-        mf.setFileName(wpIS.getFileName());
-        mf.setTitle(wpIS.getTitle());
-        mf.setCaption(wpIS.getCaption());
-        mf.setDescription(wpIS.getDescription());
-        mf.setFeatured(wpIS.isFeatured());
-        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-        mf.setWidth(wpIS.getWidth());
-        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-        mf.setDateCreatedGMT(wpIS.getDateCreatedGMT());
-        mf.save();
-        return mf;
-    }
-
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final String mediaId = imageSpan.getMediaId();
-        String imageUrl = imageSpan.getThumbnailURL();
+        MediaFile mediaFile = imageSpan.getMediaFile();
+        if (mediaFile == null)
+            return;
+        final String mediaId = mediaFile.getMediaId();
+        String imageUrl = mediaFile.getThumbnailURL();
         if (imageUrl == null || mediaId == null)
             return;
 
@@ -862,7 +829,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] bitmapByteArray = stream.toByteArray();
-                    Bitmap resizedBitmap = ih.getResizedImageThumbnail(getActivity(), bitmapByteArray, null);
+                    Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), bitmapByteArray, null);
                     if (resizedBitmap == null)
                         return;
                     Editable s = mContentEditText.getText();
@@ -871,26 +838,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
                     if (spans.length != 0) {
                         for (WPImageSpan is : spans) {
-                            if (mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
+                            MediaFile mediaFile = is.getMediaFile();
+                            if (mediaFile == null)
+                                continue;
+                            if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
 
                                 // replace the existing span with a new one with the correct image, re-add it to the same position.
                                 int spanStart = s.getSpanStart(is);
                                 int spanEnd = s.getSpanEnd(is);
                                 WPImageSpan imageSpan = new WPImageSpan(getActivity(), resizedBitmap, is.getImageSource());
-                                imageSpan.setCaption(is.getCaption());
-                                imageSpan.setDescription(is.getDescription());
-                                imageSpan.setFeatured(is.isFeatured());
-                                imageSpan.setFeaturedInPost(is.isFeaturedInPost());
-                                imageSpan.setHeight(is.getHeight());
-                                imageSpan.setHorizontalAlignment(is.getHorizontalAlignment());
-                                imageSpan.setMediaId(is.getMediaId());
-                                imageSpan.setMimeType(is.getMimeType());
-                                imageSpan.setTitle(is.getTitle());
-                                imageSpan.setVideo(is.isVideo());
-                                imageSpan.setWidth(is.getWidth());
-                                imageSpan.setFileName(is.getFileName());
-                                imageSpan.setThumbnailURL(is.getThumbnailURL());
-                                imageSpan.setDateCreatedGMT(is.getDateCreatedGMT());
+                                imageSpan.setMediaFile(is.getMediaFile());
                                 imageSpan.setNetworkImageLoaded(true);
                                 s.removeSpan(is);
                                 s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1001,19 +958,21 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return false;
         }
 
-        Bitmap resizedBitmap = ih.getResizedImageThumbnail(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
         if (resizedBitmap == null)
             return false;
 
+        WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
+        MediaFile mediaFile = is.getMediaFile();
+        mediaFile.setPostID(mActivity.getPost().getId());
+        mediaFile.setTitle((String) mediaData.get("title"));
+        mediaFile.setFilePath(is.getImageSource().toString());
+        MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
+        if (imageUri.getEncodedPath() != null)
+            mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
+        mediaFile.save();
+
         if (ssb != null) {
-            WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
-
-            MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
-
-            is.setTitle((String) mediaData.get("title"));
-            is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath() != null)
-                is.setVideo(imageUri.getEncodedPath().contains("video"));
             ssb.append(" ");
             ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
@@ -1033,14 +992,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             Editable s = mContentEditText.getText();
             if (s == null)
                 return false;
-            WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
-
-            MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
-
-            is.setTitle((String) mediaData.get("title"));
-            is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath() != null)
-                is.setVideo(imageUri.getEncodedPath().contains("video"));
 
             int line, column = 0;
             if (mContentEditText.getLayout() != null) {
@@ -1071,11 +1022,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // Show the soft keyboard after adding media
-            if (mActivity != null)
-                ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
+        // Show the soft keyboard after adding media
+        if (mActivity != null && !mActivity.getSupportActionBar().isShowing())
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         return true;
     }
 
@@ -1246,7 +1196,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mLastYPos = pos;
 
         if (event.getAction() > 1) {
-            if (((mLastYPos - pos) > 2.0f) || ((pos - mLastYPos) > 2.0f))
+            int scrollThreshold = DisplayUtils.dpToPx(getActivity(), 2);
+            if (((mLastYPos - pos) > scrollThreshold) || ((pos - mLastYPos) > scrollThreshold))
                 mScrollDetected = true;
         }
 
@@ -1270,7 +1221,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 int line = layout.getLineForVertical(y);
                 int charPosition = layout.getOffsetForHorizontal(line, x);
 
-                final Spannable s = mContentEditText.getText();
+                Spannable s = mContentEditText.getText();
                 if (s == null)
                     return false;
                 // check if image span was tapped
@@ -1278,15 +1229,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                 if (image_spans.length != 0) {
                     final WPImageSpan span = image_spans[0];
-                    if (!span.isVideo()) {
+                    MediaFile mediaFile = span.getMediaFile();
+                    if (mediaFile == null)
+                        return false;
+                    if (!mediaFile.isVideo()) {
                         LayoutInflater factory = LayoutInflater.from(getActivity());
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
                         if (alertView == null)
                             return false;
                         final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
-                        // final EditText descText = (EditText)
-                        // alertView.findViewById(R.id.description);
                         final EditText caption = (EditText) alertView.findViewById(R.id.caption);
                         final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
                         final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
@@ -1316,26 +1268,25 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         alignmentSpinner.setAdapter(adapter);
 
-                        imageWidthText.setText(String.valueOf(span.getWidth()) + "px");
-                        seekBar.setProgress(span.getWidth());
-                        titleText.setText(span.getTitle());
-                        // descText.setText(span.getDescription());
-                        caption.setText(span.getCaption());
-                        featuredCheckBox.setChecked(span.isFeatured());
+                        imageWidthText.setText(String.valueOf(mediaFile.getWidth()) + "px");
+                        seekBar.setProgress(mediaFile.getWidth());
+                        titleText.setText(mediaFile.getTitle());
+                        caption.setText(mediaFile.getCaption());
+                        featuredCheckBox.setChecked(mediaFile.isFeatured());
 
-                        if (span.isFeatured())
+                        if (mediaFile.isFeatured())
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         else
                             featuredInPostCheckBox.setVisibility(View.GONE);
 
-                        featuredInPostCheckBox.setChecked(span.isFeaturedInPost());
+                        featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
 
-                        alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
+                        alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWitdh(getActivity(), span.getImageSource());
+                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), span.getImageSource());
                         seekBar.setMax(maxWidth / 10);
-                        if (span.getWidth() != 0)
-                            seekBar.setProgress(span.getWidth() / 10);
+                        if (mediaFile.getWidth() != 0)
+                            seekBar.setProgress(mediaFile.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                             @Override
@@ -1381,29 +1332,33 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
                                 .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-
                                         String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
-                                        span.setTitle(title);
-                                        // span.setDescription(descText.getText().toString());
-                                        span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
+                                        MediaFile mediaFile = span.getMediaFile();
+                                        if (mediaFile == null)
+                                            return;
+                                        mediaFile.setTitle(title);
+                                        mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
+                                        mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
                                         String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
-                                        span.setCaption(captionText);
-                                        span.setFeatured(featuredCheckBox.isChecked());
+                                        mediaFile.setCaption(captionText);
+                                        mediaFile.setFeatured(featuredCheckBox.isChecked());
                                         if (featuredCheckBox.isChecked()) {
-                                            // remove featured flag from all
-                                            // other images
-                                            WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                                            if (click_spans.length > 1) {
-                                                for (WPImageSpan verifySpan : click_spans) {
-                                                    if (verifySpan != span) {
-                                                        verifySpan.setFeatured(false);
-                                                        verifySpan.setFeaturedInPost(false);
+                                            // remove featured flag from all other images
+                                            Spannable contentSpannable = mContentEditText.getText();
+                                            WPImageSpan[] postImageSpans = contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
+                                            if (postImageSpans.length > 1) {
+                                                for (WPImageSpan postImageSpan : postImageSpans) {
+                                                    if (postImageSpan != span) {
+                                                        MediaFile postMediaFile = postImageSpan.getMediaFile();
+                                                        postMediaFile.setFeatured(false);
+                                                        postMediaFile.setFeaturedInPost(false);
+                                                        postMediaFile.save();
                                                     }
                                                 }
                                             }
                                         }
-                                        span.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                                        mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                                        mediaFile.save();
                                     }
                                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {

@@ -116,7 +116,7 @@ public class MediaUploadService extends Service {
         mediaFile.setBlogId(blogIdStr);
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(filePath);
-        mediaFile.setMIMEType(mimeType);
+        mediaFile.setMimeType(mimeType);
 
         ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile, new Callback() {
             

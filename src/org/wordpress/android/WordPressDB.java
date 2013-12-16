@@ -918,7 +918,6 @@ public class WordPressDB {
             }
 
             values.put("localDraft", post.isLocalDraft());
-            values.put("mediaPaths", post.getMediaPaths());
             values.put("mt_keywords", post.getMt_keywords());
             values.put("wp_password", post.getWP_password());
             values.put("post_status", post.getPost_status());
@@ -1517,7 +1516,7 @@ public class WordPressDB {
         values.put("horizontalAlignment", mf.getHorizontalAlignment());
         values.put("width", mf.getWidth());
         values.put("height", mf.getHeight());
-        values.put("mimeType", mf.getMIMEType());
+        values.put("mimeType", mf.getMimeType());
         values.put("featured", mf.isFeatured());
         values.put("isVideo", mf.isVideo());
         values.put("isFeaturedInPost", mf.isFeaturedInPost());
@@ -1545,47 +1544,13 @@ public class WordPressDB {
                     result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{ mf.getBlogId(), mf.getMediaId()});
             }
             
-            if (result == 0 && !isMarkedForDelete)
-                db.insert(MEDIA_TABLE, null, values);
+            if (result == 0 && !isMarkedForDelete) {
+                result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?", new String[]{ String.valueOf(mf.getPostID()), mf.getFilePath() });
+                if (result == 0)
+                    db.insert(MEDIA_TABLE, null, values);
+            }
         }
 
-    }
-
-    public MediaFile[] getMediaFilesForPost(Post p) {
-
-        Cursor c = db.query(MEDIA_TABLE, null, "postID=" + p.getId(), null,
-                null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        MediaFile[] mediaFiles = new MediaFile[numRows];
-        for (int i = 0; i < numRows; i++) {
-
-            MediaFile mf = new MediaFile();
-            mf.setPostID(c.getInt(1));
-            mf.setFilePath(c.getString(2));
-            mf.setFileName(c.getString(3));
-            mf.setTitle(c.getString(4));
-            mf.setDescription(c.getString(5));
-            mf.setCaption(c.getString(6));
-            mf.setHorizontalAlignment(c.getInt(7));
-            mf.setWidth(c.getInt(8));
-            mf.setHeight(c.getInt(9));
-            mf.setMIMEType(c.getString(10));
-            mf.setFeatured(c.getInt(11) > 0);
-            mf.setVideo(c.getInt(12) > 0);
-            mf.setFeaturedInPost(c.getInt(13) > 0);
-            mf.setFileURL(c.getString(14));
-            mf.setThumbnailURL(c.getString(15));
-            mf.setMediaId(c.getString(16));
-            mf.setBlogId(c.getString(17));
-            mf.setDateCreatedGMT(c.getLong(18));
-            mf.setUploadState(c.getString(19));
-            mediaFiles[i] = mf;
-            c.moveToNext();
-        }
-        c.close();
-
-        return mediaFiles;
     }
     
     /** For a given blogId, get the first media files **/
@@ -1661,11 +1626,6 @@ public class WordPressDB {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[] { blogId , String.valueOf(startDate), String.valueOf(endDate) });
     }
     
-    /** For a given blogId, get all the media files for upload **/
-    public Cursor getMediaFilesForUpload(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
-    }
-    
     public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
         
         if (mediaIds == null || mediaIds.size() == 0)
@@ -1678,20 +1638,6 @@ public class WordPressDB {
         mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
         
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[] { blogId });
-    }
-    
-    public boolean deleteMediaFile(MediaFile mf) {
-
-        boolean returnValue = false;
-
-        int result = 0;
-        result = db.delete(MEDIA_TABLE, "blogId='" + mf.getBlogId() + "' AND id=" + mf.getId(), null);
-
-        if (result == 1) {
-            returnValue = true;
-        }
-
-        return returnValue;
     }
 
     public MediaFile getMediaFile(String src, Post post) {
@@ -1711,7 +1657,7 @@ public class WordPressDB {
             mf.setHorizontalAlignment(c.getInt(7));
             mf.setWidth(c.getInt(8));
             mf.setHeight(c.getInt(9));
-            mf.setMIMEType(c.getString(10));
+            mf.setMimeType(c.getString(10));
             mf.setFeatured(c.getInt(11) > 0);
             mf.setVideo(c.getInt(12) > 0);
             mf.setFeaturedInPost(c.getInt(13) > 0);

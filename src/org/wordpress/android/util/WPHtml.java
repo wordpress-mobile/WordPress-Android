@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -54,11 +53,10 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
-import android.view.Display;
-import android.view.WindowManager;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -344,7 +342,7 @@ public class WPHtml {
                 }
                 if (style[j] instanceof MediaGalleryImageSpan) {
                     out.append(getGalleryShortcode((MediaGalleryImageSpan) style[j]));
-                } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaId() != null) {
+                } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaFile().getMediaId() != null) {
                     out.append(getContent((WPImageSpan) style[j]));
                 } else if (style[j] instanceof ImageSpan) {
                     out.append("<img src=\"");
@@ -455,23 +453,25 @@ public class WPHtml {
         // based on PostUploadService
         
         String content = "";
-        
-        String mediaId = imageSpan.getMediaId();
+        MediaFile mediaFile = imageSpan.getMediaFile();
+        if (mediaFile == null)
+            return content;
+        String mediaId = mediaFile.getMediaId();
         if (mediaId == null || mediaId.length() == 0)
             return content;
         
-        boolean isVideo = imageSpan.isVideo();
+        boolean isVideo = mediaFile.isVideo();
         String url = imageSpan.getImageSource().toString();
         
         if (isVideo) {
-            int xRes = imageSpan.getWidth();
-            int yRes = imageSpan.getHeight();
-            String mimeType = imageSpan.getMimeType();
+            int xRes = mediaFile.getWidth();
+            int yRes = mediaFile.getHeight();
+            String mimeType = mediaFile.getMimeType();
             content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
                     xRes, yRes, url, mimeType, url);
         } else {
             String alignment = "";
-            switch (imageSpan.getHorizontalAlignment()) {
+            switch (mediaFile.getHorizontalAlignment()) {
             case 0:
                 alignment = "alignnone";
                 break;
@@ -486,9 +486,9 @@ public class WPHtml {
                 break;
             }
             String alignmentCSS = "class=\"" + alignment + " size-full\" ";
-            String title = imageSpan.getTitle();
-            String caption = imageSpan.getCaption();
-            int width = imageSpan.getWidth();
+            String title = mediaFile.getTitle();
+            String caption = mediaFile.getCaption();
+            int width = mediaFile.getWidth();
             
             content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
@@ -832,38 +832,13 @@ class HtmlToSpannedConverter implements ContentHandler {
     private static void startImg(SpannableStringBuilder text,
             Attributes attributes, WPHtml.ImageGetter img) {
         String src = attributes.getValue("android-uri");
-        Bitmap resizedBitmap = null;
-        Display display = ((WindowManager) ctx
-                .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        if (width > height)
-            width = height;
         ImageHelper ih = new ImageHelper();
 
         Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
         if (mediaData != null) {
+            Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
 
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inJustDecodeBounds = true;
-            byte[] bytes = (byte[]) mediaData.get("bytes");
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-            float conversionFactor = 0.25f;
-
-            if (opts.outWidth > opts.outHeight)
-                conversionFactor = 0.40f;
-
-            byte[] finalBytes = ih.createThumbnail(
-                    (byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
-                    (String) mediaData.get("orientation"), true);
-
-            if (finalBytes == null)
-                return;
-
-            resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
-                    finalBytes.length);
             int len = text.length();
             text.append("\uFFFC");
 
@@ -878,15 +853,8 @@ class HtmlToSpannedConverter implements ContentHandler {
             // get the MediaFile data from db
             MediaFile mf = WordPress.wpDB.getMediaFile(src, post);
             if (mf != null) {
-                is.setTitle(mf.getTitle());
-                is.setDescription(mf.getDescription());
-                is.setCaption(mf.getCaption());
-                is.setFeatured(mf.isFeatured());
-                is.setFeaturedInPost(mf.isFeaturedInPost());
-                is.setHorizontalAlignment(mf.getHorizontalAlignment());
+                is.setMediaFile(mf);
                 is.setImageSource(curStream);
-                is.setWidth(mf.getWidth());
-                is.setVideo(mf.isVideo());
                 text.setSpan(is, len, text.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 AlignmentSpan.Standard as = new AlignmentSpan.Standard(

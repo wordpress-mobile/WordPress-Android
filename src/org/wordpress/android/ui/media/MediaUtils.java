@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 
+import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
@@ -272,29 +273,26 @@ public class MediaUtils {
 
         Uri uri = Uri.parse(url);
         WPImageSpan imageSpan = new WPImageSpan(context, R.drawable.remote_image, uri);
-        imageSpan.setMediaId(mediaId);
-        imageSpan.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
-        imageSpan.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-        imageSpan.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
-        imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
-        imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
-        imageSpan.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        imageSpan.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-        imageSpan.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-
-        boolean isVideo = false;
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        if (mimeType != null && mimeType.contains("video"))
-            isVideo = true;
-        imageSpan.setVideo(isVideo);
+        MediaFile mediaFile = imageSpan.getMediaFile();
+        mediaFile.setMediaId(mediaId);
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+        mediaFile.setVideo(mediaFile.getMimeType().contains("video"));
+        mediaFile.save();
         cursor.close();
 
         return imageSpan;
     }
 
     // Calculate the minimun width between the blog setting and picture real width
-    public static int getMinimumImageWitdh(Context context, Uri curStream) {
+    public static int getMinimumImageWidth(Context context, Uri curStream) {
         String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
 
@@ -318,7 +316,9 @@ public class MediaUtils {
     }
 
     public static void setWPImageSpanWidth(Context context, Uri curStream, WPImageSpan is) {
-        is.setWidth(getMinimumImageWitdh(context, curStream));
+        MediaFile mediaFile = is.getMediaFile();
+        if (mediaFile != null)
+            mediaFile.setWidth(getMinimumImageWidth(context, curStream));
     }
 
     public static boolean isLocalImage(Uri imageUri) {

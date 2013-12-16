@@ -169,7 +169,7 @@ public class ViewPostFragment extends Fragment {
             viewPostButton.setVisibility(View.GONE);
             addCommentButton.setVisibility(View.GONE);
 
-            tv.setText(WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity().getBaseContext(), post));
+            tv.setText(WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post));
         } else {
             tv.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
