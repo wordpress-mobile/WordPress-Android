@@ -689,8 +689,8 @@
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="reader_label_new_posts_one">One new article</string>
-    <string name="reader_label_new_posts_multi">%d new articles</string>
+    <string name="reader_label_new_posts_one">One new post</string>
+    <string name="reader_label_new_posts_multi">%d new posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
@@ -723,8 +723,8 @@
     <string name="reader_default_tag_name">Freshly Pressed</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_topic">No articles in this topic.</string>
-    <string name="reader_empty_posts_in_topic_updating">Fetching articles…</string>
+    <string name="reader_empty_posts_in_topic">No post in this topic.</string>
+    <string name="reader_empty_posts_in_topic_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags.</string>
     <string name="reader_empty_popular_tags">No popular tags.</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
