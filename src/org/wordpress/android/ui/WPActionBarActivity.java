@@ -341,7 +341,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     protected void startActivityWithDelay(final Intent i) {
-
         if (mIsXLargeDevice && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Tablets in landscape don't need a delay because the menu drawer doesn't close
             startActivity(i);
@@ -472,7 +471,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return accounts.size();
     }
 
-    private boolean isSignedIn() {
+    protected boolean isSignedIn() {
         if (WordPress.hasValidWPComCredentials(WPActionBarActivity.this)) {
             return true;
         }

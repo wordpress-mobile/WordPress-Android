@@ -60,7 +60,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showReaderIfNoBlog();
         // Special check for a null database (see #507)
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
@@ -273,6 +272,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     protected void onResume() {
         super.onResume();
+        if (isSignedIn()) {
+            showReaderIfNoBlog();
+        }
         if (postList.getListView().getCount() == 0)
             postList.loadPosts(false);
         if (WordPress.postsShouldRefresh) {
