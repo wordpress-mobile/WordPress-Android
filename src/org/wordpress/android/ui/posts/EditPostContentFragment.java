@@ -510,8 +510,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         if (post.isLocalDraft()) {
             if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
-                // remove suggestion spans, they cause craziness in
-                // WPHtml.toHTML().
+                // remove suggestion spans, they cause craziness in WPHtml.toHTML().
                 CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
                 for (CharacterStyle characterStyle : characterStyles) {
                     if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan"))
@@ -1223,7 +1222,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 int line = layout.getLineForVertical(y);
                 int charPosition = layout.getOffsetForHorizontal(line, x);
 
-                final Spannable s = mContentEditText.getText();
+                Spannable s = mContentEditText.getText();
                 if (s == null)
                     return false;
                 // check if image span was tapped
@@ -1334,7 +1333,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
                                 .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-
                                         String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
                                         MediaFile mediaFile = span.getMediaFile();
                                         if (mediaFile == null)
@@ -1347,18 +1345,21 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                         mediaFile.setFeatured(featuredCheckBox.isChecked());
                                         if (featuredCheckBox.isChecked()) {
                                             // remove featured flag from all other images
-                                            WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                                            if (click_spans.length > 1) {
-                                                for (WPImageSpan verifySpan : click_spans) {
-                                                    if (verifySpan != span) {
-                                                        MediaFile verifySpanMediaFile = verifySpan.getMediaFile();
-                                                        verifySpanMediaFile.setFeatured(false);
-                                                        verifySpanMediaFile.setFeaturedInPost(false);
+                                            Spannable contentSpannable = mContentEditText.getText();
+                                            WPImageSpan[] postImageSpans = contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
+                                            if (postImageSpans.length > 1) {
+                                                for (WPImageSpan postImageSpan : postImageSpans) {
+                                                    if (postImageSpan != span) {
+                                                        MediaFile postMediaFile = postImageSpan.getMediaFile();
+                                                        postMediaFile.setFeatured(false);
+                                                        postMediaFile.setFeaturedInPost(false);
+                                                        postMediaFile.save();
                                                     }
                                                 }
                                             }
                                         }
                                         mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                                        mediaFile.save();
                                     }
                                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
