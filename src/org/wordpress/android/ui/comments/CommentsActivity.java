@@ -16,24 +16,18 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentListFragment.CommentAsyncModerationReturnListener;
 import org.wordpress.android.ui.comments.CommentListFragment.CommentListFragmentListener;
 import org.wordpress.android.ui.comments.CommentListFragment.OnAnimateRefreshButtonListener;
 
-import java.util.ArrayList;
-
-public class CommentsActivity extends WPActionBarActivity implements CommentAsyncModerationReturnListener,
-        CommentListFragmentListener, OnAnimateRefreshButtonListener,
-        CommentActions.OnCommentChangeListener, ActionMode.Callback {
+public class CommentsActivity extends WPActionBarActivity implements CommentListFragmentListener,
+        OnAnimateRefreshButtonListener, CommentActions.OnCommentChangeListener {
 
     protected int id;
 
     private CommentListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
-    private ActionMode mActionMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -234,40 +228,6 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
     }
 
     @Override
-    public void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
-            if (mActionMode != null) {
-                refreshCommentList();
-                refreshCommentDetail();
-                mActionMode.invalidate();
-            }
-        } else if (commentModerationStatusType == CommentStatus.SPAM
-                || commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                refreshCommentList();
-                clearCommentDetail();
-                mActionMode.finish();
-            }
-        }
-    }
-
-    @Override
-    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED
-                || commentModerationStatusType == CommentStatus.SPAM) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        } else if (commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        }
-    }
-
-    @Override
     public void onCommentClicked(Comment comment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
@@ -290,127 +250,5 @@ public class CommentsActivity extends WPActionBarActivity implements CommentAsyn
         }
     }
 
-    @Override
-    public void onCommentSelected(int selectedCommentCount) {
-        // Check the cases when we are entering/exiting into/out of multi-select mode
-        if (selectedCommentCount > 0 && mActionMode == null) {
-            mActionMode = getSherlock().startActionMode(this);
-        } else if (selectedCommentCount == 0 && mActionMode != null) {
-            mActionMode.finish();
-        }
 
-        // Update the title to display the number of selected comments then update the CAB action items
-        if (mActionMode != null) {
-            mActionMode.setTitle(Integer.toString(selectedCommentCount));
-            mActionMode.invalidate();
-        }
-    }
-
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.comments_multiselect, menu);
-        mActionMode = mode;
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        boolean retVal;
-        ArrayList<Comment> selectedCommentList = commentList.getSelectedCommentArray();
-        int numCommentsSelected = selectedCommentList.size();
-        int selectedCommentStatusTypeBitMask = 0;
-
-        if (mActionMode != null) {
-            if (numCommentsSelected <= 0) {
-                mode.finish();
-                retVal = false;
-            } else {
-                menu.findItem(R.id.comments_cab_approve).setVisible(true);
-                menu.findItem(R.id.comments_cab_unapprove).setVisible(true);
-                menu.findItem(R.id.comments_cab_spam).setVisible(true);
-                menu.findItem(R.id.comments_cab_delete).setVisible(true);
-
-                /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
-                 * following associated code should be uncommented. */
-                if (numCommentsSelected >= 1) {
-                    CommentStatus.clearSelectedCommentStatusTypeCount();
-                    for(Comment comment : commentList.getSelectedCommentArray()) {
-                        CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
-                    }
-
-                    /* Build a bit "set" representing which types of comments are selected.
-                     * This was done so many different context permutations can be identified
-                     * in the future. */
-                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
-                    }
-                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
-                    }
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
-                    }*/
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
-                    }*/
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
-                    }*/
-
-                    /* Compare the bit set to the bit masks to see if they are equal. Currently we
-                     * do not show an Action Icon if comments of the same status type are selected. */
-                    if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
-                        menu.findItem(R.id.comments_cab_approve).setVisible(false);
-                    } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
-                        menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
-                    }
-                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
-                        menu.findItem(R.id.comments_cab_spam).setVisible(false);
-                    }*/
-                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
-                        menu.findItem(R.id.comments_cab_delete).setVisible(false);
-                    }*/
-                }
-                retVal = true;
-            }
-        }
-        else { retVal = false; }
-
-        return retVal;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        boolean retVal = true;
-        int id = item.getItemId();
-
-        switch (id) {
-            // Both Single and Multi Item Select Actions
-            case R.id.comments_cab_delete:
-                commentList.deleteComments();
-                break;
-            case R.id.comments_cab_approve:
-                commentList.moderateComments(CommentStatus.APPROVED);
-                break;
-            case R.id.comments_cab_unapprove:
-                commentList.moderateComments(CommentStatus.UNAPPROVED);
-                break;
-            case R.id.comments_cab_spam:
-                commentList.moderateComments(CommentStatus.SPAM);
-                break;
-            default:
-                retVal = false;
-        }
-        return retVal;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        commentList.clearSelectedComments();
-        mActionMode = null;
-    }
 }

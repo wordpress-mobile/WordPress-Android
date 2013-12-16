@@ -11,36 +11,21 @@ public enum CommentStatus {
     TRASH (5);
 
     public static enum ApiFormat {XMLRPC, REST}
-    private static int[] sSelectedCommentStatusTypeCountArray = new int[CommentStatus.values().length - 1];
+    private static int[] sSelectedCommentStatusTypeCountArray = new int[CommentStatus.values().length];
     private final int mOffset;
 
     CommentStatus(int offset) { mOffset = offset; }
 
-    /**
-     * TODO: JCO
-     * @return
-     */
     public int getOffset() { return mOffset; }
 
-    /**
-     * TODO: JCO
-     * @param commentStatus
-     */
     public static void incrementSelectedCommentStatusTypeCount(CommentStatus commentStatus) {
         sSelectedCommentStatusTypeCountArray[commentStatus.ordinal()] += 1;
     }
 
-    /**
-     * TODO: JCO
-     * @param commentStatus
-     */
     public static int getSelectedCommentStatusTypeCount(CommentStatus commentStatus) {
         return sSelectedCommentStatusTypeCountArray[commentStatus.ordinal()];
     }
 
-    /**
-     * TODO: JCO
-     */
     public static void clearSelectedCommentStatusTypeCount() {
         for(int i=0; i<sSelectedCommentStatusTypeCountArray.length; i++) {
             sSelectedCommentStatusTypeCountArray[i] = 0;

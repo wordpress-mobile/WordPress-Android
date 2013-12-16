@@ -2,6 +2,7 @@
     style="@style/WordPressListRowBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/list_bg_selector"
     android:paddingLeft="@dimen/reader_margin_large"
     android:paddingRight="@dimen/reader_margin_large"
     android:paddingTop="@dimen/reader_margin_medium"

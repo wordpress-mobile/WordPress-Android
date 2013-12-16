@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.util.SparseIntArray;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -766,27 +764,27 @@ public class ApiHelper {
         }
     }
 
-    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, SparseBooleanArray> {
+    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Long>> {
         private Callback mCallback;
-        private SparseBooleanArray mModeratedCommentIds;
+        private ArrayList<Long> mModeratedCommentIds;
         private String mNewCommentStatus;
         private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
-        private ArrayList<Integer> mSelectedCommentIdsSnapshot;
+        private ArrayList<Long> mSelectedCommentIdsSnapshot;
         private Object[] mCommentParams;
         private int mNumSelectedComments = -1;
 
         public interface Callback {
-            public void onSuccess(SparseBooleanArray moderatedCommentIds);
-            public void onCancelled(SparseBooleanArray moderatedCommentIds);
+            public void onSuccess(ArrayList<Long> moderatedCommentIds);
+            public void onCancelled(ArrayList<Long> moderatedCommentIds);
             public void onFailure();
         }
 
         public ModerateCommentsTask(String newStatus, Map<Integer, Map<?, ?>>  allComments,
-                                    ArrayList<Integer> selectedCommentIds, Callback callback) {
+                                    ArrayList<Long> selectedCommentIds, Callback callback) {
             mNewCommentStatus = newStatus;
             mAllCommentsSnapshot = allComments;
             mSelectedCommentIdsSnapshot = selectedCommentIds;
-            mModeratedCommentIds = new SparseBooleanArray(selectedCommentIds.size());
+            mModeratedCommentIds = new ArrayList<Long>(selectedCommentIds.size());
             mNumSelectedComments = mSelectedCommentIdsSnapshot.size();
             mCallback = callback;
         }
@@ -796,7 +794,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected SparseBooleanArray doInBackground(List<?>... params) {
+        protected ArrayList<Long> doInBackground(List<?>... params) {
             Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
@@ -815,9 +813,9 @@ public class ApiHelper {
                     return mModeratedCommentIds;
 
                 rpcCallStatus = false;
-                int currentCommentId = mSelectedCommentIdsSnapshot.get(i);
+                Long currentCommentId = mSelectedCommentIdsSnapshot.get(i);
                 Map<String, String> contentHash, postHash = new HashMap<String, String>();
-                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId);
+                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId.intValue());
 
                 if (contentHash.get("status").equals(mNewCommentStatus)) {
                     continue;
@@ -829,15 +827,13 @@ public class ApiHelper {
                 postHash.put("author_url", contentHash.get("url"));
                 postHash.put("author_email", contentHash.get("email"));
 
-                Object[] apiParams = {
+                Object[] mCommentParams = {
                         blog.getBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         currentCommentId,
                         postHash
                 };
-
-                mCommentParams = apiParams;
 
                 Object result;
                 try {
@@ -849,46 +845,46 @@ public class ApiHelper {
 
                 if (rpcCallStatus) {
                     contentHash.put("status", mNewCommentStatus);
+                    mModeratedCommentIds.add(currentCommentId);
                 }
-                mModeratedCommentIds.put(currentCommentId, rpcCallStatus);
             }
             return mModeratedCommentIds;
         }
 
         @Override
-        protected void onPostExecute(SparseBooleanArray moderatedCommentIds) {
+        protected void onPostExecute(ArrayList<Long> moderatedCommentIds) {
             if (mCallback != null) {
-                if (moderatedCommentIds.indexOfValue(true) == -1)
-                    mCallback.onFailure(); // TODO: All this currently indicates is that no comments were moderated
+                if (moderatedCommentIds.size() == 0)
+                    mCallback.onFailure();
                 else
                     mCallback.onSuccess(moderatedCommentIds);
             }
         }
 
         @Override
-        protected void onCancelled(SparseBooleanArray moderatedCommentIds) {
+        protected void onCancelled(ArrayList<Long> moderatedCommentIds) {
            if (mCallback != null) {
                mCallback.onCancelled(moderatedCommentIds);
            }
         }
     }
 
-    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, SparseBooleanArray> {
+    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Long>> {
         private Callback mCallback;
         private int mNumSelectedComments = 0;
-        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
-        private SparseBooleanArray mDeletedCommentIds;
+        private ArrayList<Long> mSelectedCommentIdArraySnapshot;
+        private ArrayList<Long> mDeletedCommentIds;
 
         public interface Callback {
-            public void onSuccess(SparseBooleanArray deletedCommentIds);
-            public void onCancelled(SparseBooleanArray deletedCommentIds);
+            public void onSuccess(ArrayList<Long> deletedCommentIds);
+            public void onCancelled(ArrayList<Long> deletedCommentIds);
             public void onFailure();
         }
 
-        public DeleteCommentsTask(ArrayList<Integer> selectedCommentIdArray, Callback callback) {
+        public DeleteCommentsTask(ArrayList<Long> selectedCommentIdArray, Callback callback) {
             mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
             mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
-            mDeletedCommentIds = new SparseBooleanArray(mNumSelectedComments);
+            mDeletedCommentIds = new ArrayList<Long>(mNumSelectedComments);
             mCallback = callback;
         }
 
@@ -897,7 +893,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected SparseBooleanArray doInBackground(List<?>... params) {
+        protected ArrayList<Long> doInBackground(List<?>... params) {
             Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
@@ -917,7 +913,7 @@ public class ApiHelper {
 
                 rpcCallStatus = false;
 
-                int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
+                long currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
                 Object[] apiParams = {blog.getBlogId(),
                         blog.getUsername(), blog.getPassword(), currentCommentId};
 
@@ -928,15 +924,18 @@ public class ApiHelper {
                 } catch (XMLRPCException e) {
                     Log.e("WordPress", "XMLRPCException: " + e.getMessage());
                 }
-                mDeletedCommentIds.put(currentCommentId, rpcCallStatus);
+
+                if (rpcCallStatus) {
+                    mDeletedCommentIds.add(currentCommentId);
+                }
             }
             return mDeletedCommentIds;
         }
 
         @Override
-        protected void onPostExecute(SparseBooleanArray deletedCommentIds) {
+        protected void onPostExecute(ArrayList<Long> deletedCommentIds) {
             if (mCallback != null) {
-                if (deletedCommentIds.indexOfValue(true) == -1)
+                if (deletedCommentIds.size() == 0)
                     mCallback.onFailure();
                 else
                     mCallback.onSuccess(deletedCommentIds);
@@ -944,7 +943,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onCancelled(SparseBooleanArray deletedCommentIds) {
+        protected void onCancelled(ArrayList<Long> deletedCommentIds) {
             if (mCallback != null) {
                 mCallback.onCancelled(deletedCommentIds);
             }
