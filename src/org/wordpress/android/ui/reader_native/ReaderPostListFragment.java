@@ -27,6 +27,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -545,7 +546,13 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     selectTagInActionBar(mCurrentTag);
                 }
             };
-            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), dataListener);
+            final boolean isStaticMenuDrawer;
+            if (getActivity() instanceof WPActionBarActivity) {
+                isStaticMenuDrawer = ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
+            } else {
+                isStaticMenuDrawer = false;
+            }
+            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
         }
         return mActionBarAdapter;
     }

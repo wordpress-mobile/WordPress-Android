@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader_native.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
@@ -25,10 +27,21 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
+    private int mPaddingForStaticDrawer;
+    private boolean mIsStaticMenuDrawer;
 
-    public ReaderActionBarTagAdapter(Context context, ReaderActions.DataLoadedListener dataListener) {
+    public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderActions.DataLoadedListener dataListener) {
         mDataListener = dataListener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        // if the menu drawer is static (which it is for landscape tablets) add extra left padding
+        // so that the list of tags appears flush left with the fragment (ie: to the right of the
+        // menu drawer). without this, the tag list will be all the way to the left where it's not
+        // obvious to the user that it changes the reader's view
+        mIsStaticMenuDrawer = isStaticMenuDrawer;
+        mPaddingForStaticDrawer = context.getResources().getDimensionPixelOffset(R.dimen.menu_drawer_width)
+                                - DisplayUtils.dpToPx(context, 32); // 32dp is the size of the ActionBar home icon
+
         refreshTags();
     }
 
@@ -75,6 +88,8 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         view = mInflater.inflate(R.layout.reader_actionbar_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
         txtName.setText(tag.getCapitalizedTagName());
+        if (mIsStaticMenuDrawer)
+            txtName.setPadding(mPaddingForStaticDrawer, 0, 0, 0);
         return view;
     }
 
@@ -84,6 +99,8 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, null);
         TextView txtName = (TextView) view.findViewById(R.id.text);
         txtName.setText(tag.getCapitalizedTagName());
+        if (mIsStaticMenuDrawer)
+            txtName.setGravity(Gravity.RIGHT);
         return view;
     }
 
