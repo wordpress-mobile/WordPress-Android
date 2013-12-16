@@ -27,6 +27,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
@@ -196,29 +197,30 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     private void setEmptyTitleAndDecriptionForCurrentTag() {
-        boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
-        int title, description = -1;
-        int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
-
-        final String tagId;
-        if (tagIndex > -1) {
-            ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
-            tagId = tag.getStringIdFromEndpoint();
-        } else {
-            tagId = "";
+        if (!isPostAdapterEmpty()) {
+            return ;
         }
-
-        if (tagId.equals("following")) {
-            title = R.string.reader_empty_followed_blogs_title;
-            description = R.string.reader_empty_followed_blogs_description;
+        int title, description = -1;
+        if (isUpdating()) {
+            title = R.string.reader_empty_posts_in_topic_updating;
         } else {
-            if (tagId.equals("liked")) {
-                title = R.string.reader_empty_posts_liked;
+            int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+
+            final String tagId;
+            if (tagIndex > -1) {
+                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+                tagId = tag.getStringIdFromEndpoint();
             } else {
-                if (hasTagEverUpdated) {
-                    title = R.string.reader_empty_posts_in_tag;
+                tagId = "";
+            }
+            if (tagId.equals("following")) {
+                title = R.string.reader_empty_followed_blogs_title;
+                description = R.string.reader_empty_followed_blogs_description;
+            } else {
+                if (tagId.equals("liked")) {
+                    title = R.string.reader_empty_posts_liked;
                 } else {
-                    title = R.string.reader_empty_posts_in_tag_never_updated;
+                    title = R.string.reader_empty_posts_in_topic;
                 }
             }
         }
@@ -381,6 +383,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
 
         setIsUpdating(true, updateAction);
+        // update empty view title and description if the the post list is empty
+        setEmptyTitleAndDecriptionForCurrentTag();
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
             @Override
@@ -398,6 +402,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     } else {
                         refreshPosts();
                     }
+                } else {
+                    // update empty view title and description if the the post list is empty
+                    setEmptyTitleAndDecriptionForCurrentTag();
                 }
                 // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
@@ -409,12 +416,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     protected boolean isUpdating() {
         return mIsUpdating;
     }
+
     protected void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
         if (mIsUpdating==isUpdating)
             return;
         if (!hasActivity())
             return;
-
         mIsUpdating = isUpdating;
         switch (updateAction) {
             case LOAD_NEWER:
@@ -545,7 +552,13 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     selectTagInActionBar(mCurrentTag);
                 }
             };
-            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), dataListener);
+            final boolean isStaticMenuDrawer;
+            if (getActivity() instanceof WPActionBarActivity) {
+                isStaticMenuDrawer = ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
+            } else {
+                isStaticMenuDrawer = false;
+            }
+            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
         }
         return mActionBarAdapter;
     }
