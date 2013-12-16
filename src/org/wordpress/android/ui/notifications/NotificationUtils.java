@@ -25,12 +25,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
@@ -158,13 +155,11 @@ public class NotificationUtils {
                 mutedBlogsList.add(userBlog);
             }
         }
-
-        if (mutedBlogsList.size() > 0) {
-            updatedSettings.put("muted_blogs", mutedBlogsList);
-        }
-
-        if (updatedSettings.size() == 0)
+     
+        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
             return;
+        
+        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignement.
         
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);
@@ -173,7 +168,6 @@ public class NotificationUtils {
         contentStruct.put("testing", "io non dovrei essere qua");
         contentStruct.put("settings", gson.toJson(updatedSettings));
         WordPress.restClient.post("/push/settings/new", contentStruct, null, null, null);
-
     }
     
     public static void registerPushNotificationsToken(final Context ctx, String token, final boolean loadSettings) {
@@ -258,7 +252,7 @@ public class NotificationUtils {
                 return "org.wordpress.android.beta.build";
         if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.debug.build"))
             return "org.wordpress.android.debug.build";
-                
+              
         return "org.wordpress.android.playstore";        
     }
 }
