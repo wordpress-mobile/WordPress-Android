@@ -284,19 +284,15 @@ public class MediaUtils {
         mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
         mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-
-        boolean isVideo = false;
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        if (mimeType != null && mimeType.contains("video"))
-            isVideo = true;
-        mediaFile.setVideo(isVideo);
+        mediaFile.setVideo(mediaFile.getMimeType().contains("video"));
+        mediaFile.save();
         cursor.close();
 
         return imageSpan;
     }
 
     // Calculate the minimun width between the blog setting and picture real width
-    public static int getMinimumImageWitdh(Context context, Uri curStream) {
+    public static int getMinimumImageWidth(Context context, Uri curStream) {
         String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
 
@@ -322,7 +318,7 @@ public class MediaUtils {
     public static void setWPImageSpanWidth(Context context, Uri curStream, WPImageSpan is) {
         MediaFile mediaFile = is.getMediaFile();
         if (mediaFile != null)
-            mediaFile.setWidth(getMinimumImageWitdh(context, curStream));
+            mediaFile.setWidth(getMinimumImageWidth(context, curStream));
     }
 
     public static boolean isLocalImage(Uri imageUri) {

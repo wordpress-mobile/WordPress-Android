@@ -44,7 +44,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -1284,7 +1283,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWitdh(getActivity(), span.getImageSource());
+                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), span.getImageSource());
                         seekBar.setMax(maxWidth / 10);
                         if (mediaFile.getWidth() != 0)
                             seekBar.setProgress(mediaFile.getWidth() / 10);
