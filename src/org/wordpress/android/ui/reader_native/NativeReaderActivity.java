@@ -1,19 +1,13 @@
 package org.wordpress.android.ui.reader_native;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.Window;
 
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import net.simonvt.menudrawer.MenuDrawer;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -26,7 +20,6 @@ import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /*
@@ -34,45 +27,18 @@ import org.wordpress.android.util.ToastUtils;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class NativeReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnFirstVisibleItemChangeListener {
+public class NativeReaderActivity extends WPActionBarActivity {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
-
-    // ActionBar alpha
-    protected static final int ALPHA_NONE = 0;
-    protected static final int ALPHA_LEVEL_1 = 245;
-    protected static final int ALPHA_LEVEL_2 = 230;
-    protected static final int ALPHA_LEVEL_3 = 215;
-    protected static final int ALPHA_LEVEL_4 = 200;
-    protected static final int ALPHA_LEVEL_5 = 185;
-
-    private int mCurrentActionBarAlpha = 0;
-    private int mPrevActionBarAlpha = 0;
 
     private MenuItem mRefreshMenuItem;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
 
-    /*
-     * enable translucent ActionBar on ICS+
-     */
-    protected static boolean isTranslucentActionBarEnabled() {
-        return (SysUtils.isGteAndroid4());
-    }
-
-    @SuppressLint("NewApi")
-    protected static void enableTranslucentActionBar(Activity activity) {
-        activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        boolean isTranslucentActionBarEnabled = isTranslucentActionBarEnabled();
-        if (isTranslucentActionBarEnabled)
-            enableTranslucentActionBar(this);
 
         setContentView(R.layout.reader_activity_main);
 
@@ -80,28 +46,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         setSupportProgressBarVisibility(false);
 
         createMenuDrawer(R.layout.reader_activity_main);
-
-        if (isTranslucentActionBarEnabled && super.mMenuDrawer!=null) {
-            // disable ActionBar translucency when drawer is opening, restore it when closing
-            super.mMenuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
-                @Override
-                public void onDrawerStateChange(int oldState, int newState) {
-                    switch (newState) {
-                        case MenuDrawer.STATE_OPENING :
-                            mPrevActionBarAlpha = mCurrentActionBarAlpha;
-                            setActionBarAlpha(ALPHA_NONE);
-                            break;
-                        case MenuDrawer.STATE_CLOSING:
-                            setActionBarAlpha(mPrevActionBarAlpha);
-                            break;
-                    }
-                }
-                @Override
-                public void onDrawerSlide(float openRatio, int offsetPixels) {
-                    // nop
-                }
-            });
-        }
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
@@ -168,21 +112,6 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
                         readerFragment.setCurrentTag(lastAddedTopic);
                 }
                 break;
-
-            // user just returned from the login screen
-            /*case ReaderConst.INTENT_LOGIN :
-                if (isResultOK) {
-                    if (readerFragment!=null) {
-                        readerFragment.updateTagList();
-                        readerFragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
-                    } else {
-                        showPostListFragment();
-                    }
-                } else {
-                    // login failed, so app is done
-                    finish();
-                }
-                break;*/
 
             // user just returned from post detail, reload the displayed post if it changed (will
             // only be RESULT_OK if changed)
@@ -286,44 +215,5 @@ public class NativeReaderActivity extends WPActionBarActivity implements ReaderP
         if (fragment==null)
             return null;
         return ((ReaderPostListFragment) fragment);
-    }
-
-    /*
-     * called from post list - makes the ActionBar increasingly translucent as user scrolls
-     * through the first few posts in the list
-     */
-    @Override
-    public void onFirstVisibleItemChanged(int firstVisibleItem) {
-        switch (firstVisibleItem) {
-            case 0:
-                setActionBarAlpha(ALPHA_LEVEL_1);
-                break;
-            case 1:
-                setActionBarAlpha(ALPHA_LEVEL_2);
-                break;
-            case 2 :
-                setActionBarAlpha(ALPHA_LEVEL_3);
-                break;
-            case 3 :
-                setActionBarAlpha(ALPHA_LEVEL_4);
-                break;
-            default:
-                setActionBarAlpha(ALPHA_LEVEL_5);
-                break;
-        }
-    }
-
-    protected void setActionBarAlpha(int alpha) {
-        if (alpha==mCurrentActionBarAlpha || !isTranslucentActionBarEnabled())
-            return;
-
-        // solid background if no alpha, otherwise create color drawable with alpha applied
-        // (source color is based on R.color.blue_new_kid)
-         if (alpha==ALPHA_NONE) {
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.blue_new_kid));
-        } else {
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 46, 162, 204)));
-        }
-        mCurrentActionBarAlpha = alpha;
     }
 }

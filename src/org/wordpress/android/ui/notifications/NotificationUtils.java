@@ -1,21 +1,24 @@
 package org.wordpress.android.ui.notifications;
 
-import android.util.Log;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Note;
-import org.wordpress.android.util.Utils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.InflaterInputStream;
+
+import android.util.Log;
+
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.BuildConfig;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Note;
 
 public class NotificationUtils {
     public static void refreshNotifications(final RestRequest.Listener listener,
@@ -75,9 +78,12 @@ public class NotificationUtils {
     }
     
     public static String getAppPushNotificationsName(){
-        if (Utils.isDebugBuild())
+        //white listing only few keys.
+        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.beta.build"))
+                return "org.wordpress.android.beta.build";
+        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.debug.build"))
             return "org.wordpress.android.debug.build";
-        else
-            return "org.wordpress.android.playstore";
+                
+        return "org.wordpress.android.playstore";        
     }
 }

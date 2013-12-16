@@ -76,6 +76,14 @@ public class SetupBlog {
         this.mSelfHostedURL = mSelfHostedURL;
     }
 
+    public void setHttpAuthRequired(boolean mHttpAuthRequired) {
+        this.mHttpAuthRequired = mHttpAuthRequired;
+    }
+
+    public boolean isHttpAuthRequired() {
+        return mHttpAuthRequired;
+    }
+
     public List<Map<String, Object>> getBlogList() {
         if (mSelfHostedURL != null && mSelfHostedURL.length() != 0) {
             mXmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedURL);
