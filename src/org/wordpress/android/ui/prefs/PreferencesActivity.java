@@ -139,6 +139,16 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
     }
 
+    private void hideNotificationBlogsCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen)
+                findPreference("wp_pref_notifications");
+        PreferenceCategory blogs = (PreferenceCategory)
+                findPreference("wp_pref_notification_blogs");
+        if (preferenceScreen != null && blogs != null) {
+            preferenceScreen.removePreference(blogs);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -246,6 +256,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         // Post signature
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             hidePostSignatureCategory();
+            hideNotificationBlogsCategory();
         } else {
             if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
                 if (DeviceUtils.getInstance().isBlackBerry()) {
