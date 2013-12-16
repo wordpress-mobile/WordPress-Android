@@ -392,9 +392,15 @@ public class WordPressDB {
         return accounts;
     }
 
-    public List<Map<String, Object>> getShownAccounts() {
+    public List<Map<String, Object>> getVisibleAccounts() {
         return getAccountsBy("isHidden = 0", null);
     }
+
+    public int getNumVisibleAccounts() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE
+                + " WHERE isHidden = 0", null);
+    }
+
 
     public List<Map<String, Object>> getAllAccounts() {
         return getAccountsBy(null, null);

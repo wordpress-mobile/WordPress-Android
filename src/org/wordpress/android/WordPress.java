@@ -236,7 +236,7 @@ public class WordPress extends Application {
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -268,7 +268,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {

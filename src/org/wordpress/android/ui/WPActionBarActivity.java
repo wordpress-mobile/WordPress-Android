@@ -442,7 +442,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @return array of blog names
      */
     private static String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int blogCount = accounts.size();
         blogIDs = new int[blogCount];
@@ -466,16 +466,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return blogNames;
     }
 
-    private int getBlogCount() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
-        return accounts.size();
+    private int getNumVisibleAccounts() {
+        return WordPress.wpDB.getNumVisibleAccounts();
     }
 
     protected boolean isSignedIn() {
         if (WordPress.hasValidWPComCredentials(WPActionBarActivity.this)) {
             return true;
         }
-        return getBlogCount() != 0;
+        return getNumVisibleAccounts() != 0;
     }
 
     private boolean askToSignInIfNot() {
@@ -500,17 +499,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private void showReader() {
-        int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
         Intent intent;
         intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
-        intent.putExtra("id", readerBlogID);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
     protected void showReaderIfNoBlog() {
         // If logged in without blog, redirect to the Reader view
-        if (getBlogCount() == 0) {
+        if (getNumVisibleAccounts() == 0) {
             showReader();
         }
     }
@@ -529,9 +526,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
-                    if (getBlogCount() == 0) {
-                        showReader();
-                    }
+                    showReaderIfNoBlog();
                 } else {
                     finish();
                 }
@@ -724,10 +719,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
-            int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
             Intent intent;
             intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
-            intent.putExtra("id", readerBlogID);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -755,7 +748,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
@@ -777,7 +770,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
     
@@ -802,7 +795,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
@@ -841,7 +834,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
     
@@ -892,7 +885,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
@@ -912,7 +905,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
@@ -932,7 +925,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
@@ -954,7 +947,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getBlogCount() != 0;
+            return getNumVisibleAccounts() != 0;
         }
     }
 
