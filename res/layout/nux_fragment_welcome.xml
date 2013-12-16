@@ -131,13 +131,19 @@
                     android:padding="8dp"
                     android:enabled="false"/>
 
-                <ProgressBar
+                <RelativeLayout
                     android:id="@+id/nux_sign_in_progress_bar"
+                    style="@style/WordPress.NUXPrimaryButton"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    style="@style/WordPress.NUXPrimaryButton"
-                    android:enabled="false"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:enabled="false">
+
+                    <ProgressBar
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
