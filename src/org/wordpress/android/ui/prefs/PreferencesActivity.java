@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -31,7 +30,6 @@ import com.google.gson.internal.StringMap;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
@@ -74,14 +72,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        if (WordPress.currentBlog == null) {
-            try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
-            } catch (Exception e) {
-                Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
         addPreferencesFromResource(R.xml.preferences);
         
         mNotificationsGroup = (PreferenceGroup)findPreference("wp_pref_notifications_category");
@@ -139,6 +129,24 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
         
         displayPreferences();
+    }
+
+    private void hidePostSignatureCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_root");
+        PreferenceCategory postSignature = (PreferenceCategory) findPreference("wp_post_signature");
+        if (preferenceScreen != null && postSignature != null) {
+            preferenceScreen.removePreference(postSignature);
+        }
+    }
+
+    private void hideNotificationBlogsCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen)
+                findPreference("wp_pref_notifications");
+        PreferenceCategory blogs = (PreferenceCategory)
+                findPreference("wp_pref_notification_blogs");
+        if (preferenceScreen != null && blogs != null) {
+            preferenceScreen.removePreference(blogs);
+        }
     }
 
     @Override
@@ -204,7 +212,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogsCategory.addPreference(manageBlogPreference);
         }
 
-        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -242,21 +250,25 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        
         // WordPress.com auth area and notifications
         refreshWPComAuthCategory();
-        
+
         // Post signature
-        if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
-            if (DeviceUtils.getInstance().isBlackBerry()) {
-                taglineTextPreference.setSummary(R.string.posted_from_blackberry);
-                taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
-            } else {
-                taglineTextPreference.setSummary(R.string.posted_from);
-                taglineTextPreference.setText(getString(R.string.posted_from));
-            }
+        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
+            hidePostSignatureCategory();
+            hideNotificationBlogsCategory();
         } else {
-            taglineTextPreference.setSummary(taglineTextPreference.getText());
+            if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
+                if (DeviceUtils.getInstance().isBlackBerry()) {
+                    taglineTextPreference.setSummary(R.string.posted_from_blackberry);
+                    taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
+                } else {
+                    taglineTextPreference.setSummary(R.string.posted_from);
+                    taglineTextPreference.setText(getString(R.string.posted_from));
+                }
+            } else {
+                taglineTextPreference.setSummary(taglineTextPreference.getText());
+            }
         }
          
         if (DeviceUtils.getInstance().isBlackBerry()) {

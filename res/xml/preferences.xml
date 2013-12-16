@@ -46,7 +46,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/post_signature" >
+        android:title="@string/post_signature"
+        android:key="wp_post_signature">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wp_pref_signature_enabled"
