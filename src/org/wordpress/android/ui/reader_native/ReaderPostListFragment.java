@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader_native;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -35,7 +33,6 @@ import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
@@ -56,18 +53,13 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private String mCurrentTag;
     private boolean mIsUpdating = false;
     private boolean mAlreadyUpdatedTagList = false;
+    private boolean mIsFlinging = false;
 
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
 
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
-
-    protected interface OnFirstVisibleItemChangeListener {
-        void onFirstVisibleItemChanged(int firstVisibleItem);
-    }
-
-    private OnFirstVisibleItemChangeListener mFirstVisibleItemChangeListener;
 
     protected static ReaderPostListFragment newInstance(Context context) {
         ReaderLog.d("post list newInstance");
@@ -114,18 +106,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // activity is assumed to implement OnFirstVisibleItemChangeListener
-        try {
-            mFirstVisibleItemChangeListener = (OnFirstVisibleItemChangeListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFirstVisibleItemChangeListener");
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -158,11 +138,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final Context context = container.getContext();
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-        final boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
-
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+        final ListView listView = (ListView) view.findViewById(android.R.id.list);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -178,32 +155,14 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
 
-        // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
-        if (isTranslucentActionBarEnabled) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            if (params != null) {
-                params.setMargins(0, actionbarHeight, 0, 0);
-            }
-            mEmptyView.setPadding(0, actionbarHeight, 0, 0);
-        }
-
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        final ListView listView = (ListView) view.findViewById(android.R.id.list);
-
         // set the listView's scroll listeners so we can detect up/down scrolling
         listView.setOnScrollListener(this);
 
-        if (isTranslucentActionBarEnabled) {
-            // add a transparent header to the listView that matches the size of the ActionBar
-            RelativeLayout header = new RelativeLayout(context);
-            header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
-            listView.addHeaderView(header, null, false);
-            listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        }
-
+        // tapping a post opens the detail view
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -211,7 +170,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 position -= listView.getHeaderViewsCount();
                 ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                 ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
-                //ReaderActivityLauncher.openUrl(getActivity(), "wordpress://viewpost?blogId=" + post.blogId + "&postId=" + post.postId, ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             }
         });
 
@@ -645,7 +603,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             mProgress.setVisibility(View.GONE);
     }
 
-    private boolean mIsFlinging = false;
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
         boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
@@ -656,16 +613,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
     }
 
-    private int mPrevFirstVisibleItem = -1;
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (visibleItemCount==0 || !hasActivity())
-            return;
-        if (firstVisibleItem != mPrevFirstVisibleItem && mFirstVisibleItemChangeListener != null) {
-            // this tells NativeReaderActivity to make the ActionBar more translucent as the user
-            // scrolls through the list
-            mFirstVisibleItemChangeListener.onFirstVisibleItemChanged(firstVisibleItem);
-            mPrevFirstVisibleItem = firstVisibleItem;
-        }
+        // nop
     }
 }
