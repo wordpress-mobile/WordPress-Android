@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
@@ -42,7 +41,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
-    private ProgressBar mProgressBarSignIn;
+    private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
@@ -68,7 +67,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
-        mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
+        mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
 
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
