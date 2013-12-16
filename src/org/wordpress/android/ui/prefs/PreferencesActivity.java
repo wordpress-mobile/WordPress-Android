@@ -131,6 +131,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         displayPreferences();
     }
 
+    private void hidePostSignatureCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_root");
+        PreferenceCategory postSignature = (PreferenceCategory) findPreference("wp_post_signature");
+        if (preferenceScreen != null && postSignature != null) {
+            preferenceScreen.removePreference(postSignature);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -194,7 +202,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogsCategory.addPreference(manageBlogPreference);
         }
 
-        List<Map<String, Object>> accounts = WordPress.wpDB.getShownAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -232,21 +240,24 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        
         // WordPress.com auth area and notifications
         refreshWPComAuthCategory();
-        
+
         // Post signature
-        if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
-            if (DeviceUtils.getInstance().isBlackBerry()) {
-                taglineTextPreference.setSummary(R.string.posted_from_blackberry);
-                taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
-            } else {
-                taglineTextPreference.setSummary(R.string.posted_from);
-                taglineTextPreference.setText(getString(R.string.posted_from));
-            }
+        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
+            hidePostSignatureCategory();
         } else {
-            taglineTextPreference.setSummary(taglineTextPreference.getText());
+            if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
+                if (DeviceUtils.getInstance().isBlackBerry()) {
+                    taglineTextPreference.setSummary(R.string.posted_from_blackberry);
+                    taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
+                } else {
+                    taglineTextPreference.setSummary(R.string.posted_from);
+                    taglineTextPreference.setText(getString(R.string.posted_from));
+                }
+            } else {
+                taglineTextPreference.setSummary(taglineTextPreference.getText());
+            }
         }
          
         if (DeviceUtils.getInstance().isBlackBerry()) {
