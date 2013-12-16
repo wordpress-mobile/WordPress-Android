@@ -72,8 +72,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        super.onDowngrade(db, oldVersion, newVersion);
-        ReaderLog.i("Downgrading database from version " + oldVersion + " to version " + newVersion);
+        // IMPORTANT: do NOT call super() here - doing so throws a SQLiteException
+        ReaderLog.w("Downgrading database from version " + oldVersion + " to version " + newVersion);
         reset(db);
     }
 
