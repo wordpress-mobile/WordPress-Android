@@ -424,6 +424,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
 
         setIsUpdating(true, updateAction);
+        // update empty view title and description if the the post list is empty
+        setEmptyTitleAndDecriptionForCurrentTag();
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
             @Override
@@ -441,6 +443,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     } else {
                         refreshPosts();
                     }
+                } else {
+                    // update empty view title and description if the the post list is empty
+                    setEmptyTitleAndDecriptionForCurrentTag();
                 }
                 // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
@@ -474,8 +479,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 }
                 break;
         }
-        // update empty view title and description if the the post list is empty
-        setEmptyTitleAndDecriptionForCurrentTag();
     }
 
     private void showNewPostsBar(int numNewPosts) {
