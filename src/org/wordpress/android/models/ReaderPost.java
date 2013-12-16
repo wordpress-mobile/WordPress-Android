@@ -313,6 +313,13 @@ public class ReaderPost {
         if (TextUtils.isEmpty(featuredImageUrl))
             return null;
 
+        // if this is an mshots image, return the actual url without the query string (?h=n&w=n),
+        // and change it from https: to http: so it can be cached (it's only https because it's
+        // being returned by an authenticated REST endpoint - these images are found only in
+        // FP posts so they don't require https)
+        if (PhotonUtils.isMshotsUrl(featuredImageUrl))
+            return UrlUtils.removeQuery(featuredImageUrl).replaceFirst("https", "http");
+
         if (featuredImageUrl.contains("imgpress")) {
             // parse the url parameter
             String actualImageUrl = Uri.parse(featuredImageUrl).getQueryParameter("url");
@@ -337,7 +344,7 @@ public class ReaderPost {
     }
 
     /*
-     * This gawdawful hack is necessary to get VideoPress videos to work in the Reader since the v1
+     * This is necessary to get VideoPress videos to work in the Reader since the v1
      * REST API returns VideoPress videos in a script block that relies on jQuery - which obviously
      * fails on mobile - here we extract the video thumbnail and insert a DIV at the top of the
      * post content which links the thumbnail IMG to the video so the user can tap the thumb to

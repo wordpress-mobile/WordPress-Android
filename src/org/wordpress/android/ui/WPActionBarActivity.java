@@ -112,6 +112,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean shouldAnimateRefreshButton;
     protected boolean mShouldFinish;
     private boolean mIsXLargeDevice;
+    private boolean mIsStaticMenuDrawer;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
@@ -217,26 +218,26 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Set to be a static drawer if on a landscape x-large device
      */
     private MenuDrawer attachMenuDrawer() {
-        MenuDrawer menuDrawer = null;
-        if (mIsXLargeDevice) {
-            // on a x-large screen device
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else {
-                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                menuDrawer.setDrawerIndicatorEnabled(true);
-            }
+        mIsStaticMenuDrawer = mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        final MenuDrawer menuDrawer;
+        if (mIsStaticMenuDrawer) {
+            menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             menuDrawer.setDrawerIndicatorEnabled(true);
         }
+
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
         menuDrawer.setDropShadowSize(shadowSizeInPixels);
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
         menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
         return menuDrawer;
+    }
+
+    public boolean isStaticMenuDrawer() {
+        return mIsStaticMenuDrawer;
     }
 
     /*

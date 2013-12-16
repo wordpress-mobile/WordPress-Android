@@ -32,6 +32,13 @@ public class PhotonUtils {
     }
 
     /*
+    * returns true if the passed url is an obvious "mshots" url
+    */
+    public static boolean isMshotsUrl(final String imageUrl) {
+        return (imageUrl != null && imageUrl.contains("/mshots/"));
+    }
+
+    /*
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
@@ -56,7 +63,7 @@ public class PhotonUtils {
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
         // (these are screenshots of the blog that often appear in freshly pressed posts)
         // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
-        if (imageUrl.contains("/mshots/"))
+        if (isMshotsUrl(imageUrl))
             return imageUrl + String.format("?w=%d&h=%d", width, height);
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just

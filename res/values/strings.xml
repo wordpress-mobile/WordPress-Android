@@ -5,9 +5,6 @@
 
     <!-- account setup -->
     <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
-    <string name="add_all">Add All</string>
-    <string name="add_selected">Add Selected</string>
-    <string name="select_blogs">Select Blogs</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
@@ -160,15 +157,15 @@
     <!-- page view -->
     <string name="title">Title</string>
     <string name="content">Tap to add text and media</string>
-    <string name="pages_empty_list">No Pages Yet. Why not create one?</string>
+    <string name="pages_empty_list">No Pages Yet. Why not create&#160;one?</string>
     <string name="page_id">Page</string>
     <string name="page_settings">Page Settings</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local Draft</string>
-    <string name="posts_empty_list">No Posts Yet. Why not create one?</string>
-    <string name="empty_list_default">This list is empty</string>
+    <string name="posts_empty_list">No Posts Yet. Why not create&#160;one?</string>
+    <string name="empty_list_default">This list is empty.</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
@@ -606,8 +603,8 @@
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="reader_label_new_posts_one">One new article</string>
-    <string name="reader_label_new_posts_multi">%d new articles</string>
+    <string name="reader_label_new_posts_one">One new post</string>
+    <string name="reader_label_new_posts_multi">%d new posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
@@ -640,18 +637,18 @@
     <string name="reader_default_tag_name">Freshly Pressed</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_tag">No articles with this tag</string>
-    <string name="reader_empty_posts_in_tag_never_updated">No articles with this tag yet</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
-    <string name="reader_empty_popular_tags">No popular tags</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet.</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
-    <string name="reader_empty_posts_liked">You have not liked any posts.</string>
+    <string name="reader_empty_posts_in_topic">No post in this&#160;topic.</string>
+    <string name="reader_empty_posts_in_topic_updating">Fetching posts…</string>
+    <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags.</string>
+    <string name="reader_empty_popular_tags">No popular tags.</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet.</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
+    <string name="reader_empty_posts_liked">You have not liked any&#160;posts.</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
-    <string name="create_new_blog_wpcom">Create a WordPress.com blog</string>
+    <string name="create_new_blog_wpcom">Create a WordPress.com&#160;blog</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
     <string name="required_fields">Required Fields</string>

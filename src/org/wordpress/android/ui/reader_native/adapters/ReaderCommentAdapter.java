@@ -5,10 +5,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,15 +52,22 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private int mLinkColor;
     private int mNoLinkColor;
 
+    public interface RequestReplyListener {
+        void onRequestReply(long commentId);
+    }
+
     private ReaderCommentList mComments = new ReaderCommentList();
+    private RequestReplyListener mReplyListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,
+                                RequestReplyListener replyListener,
                                 ReaderActions.DataLoadedListener dataLoadedListener,
                                 ReaderActions.DataRequestedListener dataRequestedListener) {
         mPost = post;
+        mReplyListener = replyListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
 
@@ -121,7 +130,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
             holder.spacer = convertView.findViewById(R.id.spacer);
             holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
+            holder.imgReply = (ImageView) convertView.findViewById(R.id.image_reply);
             convertView.setTag(holder);
+
+            // this is necessary in order for anchor tags in the comment text to be clickable
+            holder.txtText.setLinksClickable(true);
+            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
@@ -170,6 +184,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
         } else {
             convertView.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
+        }
+
+        // tapping reply icon tells activity to show reply box
+        if (mReplyListener != null) {
+            holder.imgReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mReplyListener.onRequestReply(comment.commentId);
+                }
+            });
         }
 
         // if we're nearing the end of the comments and we know more exist on the server,
@@ -226,6 +250,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private WPNetworkImageView imgAvatar;
         private View spacer;
         private ProgressBar progress;
+        private ImageView imgReply;
     }
 
     /*
