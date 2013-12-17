@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -60,10 +61,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
-    private TextView mTxtBtnModerate;
-    private TextView mTxtBtnSpam;
+    private TextView mBtnModerate;
+    private TextView mBtnSpam;
     private TextView mTxtStatus;
     private ViewGroup mLayoutReply;
+    private ViewGroup mLayoutButtons;
     private EditText mEditReply;
     private ImageView mImgSubmitReply;
 
@@ -95,16 +97,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
-        mTxtBtnModerate = (TextView) view.findViewById(R.id.text_btn_moderate);
-        mTxtBtnSpam = (TextView) view.findViewById(R.id.text_btn_spam);
+        mBtnModerate = (TextView) view.findViewById(R.id.text_btn_moderate);
+        mBtnSpam = (TextView) view.findViewById(R.id.text_btn_spam);
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
+        mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide moderation buttons until updateModerationButtons() is called
-        mTxtBtnModerate.setVisibility(View.GONE);
-        mTxtBtnSpam.setVisibility(View.GONE);
+        mLayoutButtons.setVisibility(View.GONE);
 
         mEditReply.setHint(R.string.reader_hint_comment_on_comment);
         mEditReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -123,7 +125,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mTxtBtnSpam.setOnClickListener(new View.OnClickListener() {
+        mBtnSpam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moderateComment(CommentStatus.SPAM);
@@ -226,8 +228,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtDate.setText(null);
             txtContent.setText(null);
             mTxtStatus.setText(null);
-            mTxtBtnModerate.setVisibility(View.GONE);
-            mTxtBtnSpam.setVisibility(View.GONE);
+            mBtnModerate.setVisibility(View.GONE);
+            mBtnSpam.setVisibility(View.GONE);
             mLayoutReply.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
@@ -309,16 +311,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!checkConnection(getActivity()))
             return;
 
-        // animate out the associated button
-        if (newStatus == CommentStatus.SPAM && mTxtBtnSpam.getVisibility() == View.VISIBLE) {
-            ReaderAniUtils.flyOut(mTxtBtnSpam);
-        } else if (newStatus != CommentStatus.SPAM && mTxtBtnModerate.getVisibility() == View.VISIBLE) {
-            ReaderAniUtils.flyOut(mTxtBtnModerate);
-        }
+        // animate the buttons out (updateStatusViews will re-display them when request completes)
+        mLayoutButtons.clearAnimation();
+        ReaderAniUtils.flyOut(mLayoutButtons);
 
-        // disable buttons while moderating
-        mTxtBtnModerate.setEnabled(false);
-        mTxtBtnSpam.setEnabled(false);
+        // hide status (updateStatusViews will un-hide it)
+        ReaderAniUtils.fadeOut(mTxtStatus);
 
         // immediately show message bar displaying new status
         final int msgResId;
@@ -330,7 +328,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
             case UNAPPROVED:
                 msgResId = R.string.comment_unapproved;
-                msgType = MessageBarType.INFO;
+                msgType = MessageBarType.ALERT;
                 break;
             case SPAM:
                 msgResId = R.string.comment_spammed;
@@ -349,8 +347,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsModeratingComment = false;
                 if (!hasActivity())
                     return;
-                mTxtBtnModerate.setEnabled(true);
-                mTxtBtnSpam.setEnabled(true);
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(newStatus));
                     if (mChangeListener != null)
@@ -420,8 +416,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * update the text, drawable & click listener for mTxtBtnModerate based on
-     * the current status of the comment, show mTxtBtnSpam if the comment isn't
+     * update the text, drawable & click listener for mBtnModerate based on
+     * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
      */
     private void updateStatusViews() {
@@ -442,7 +438,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 newStatus = CommentStatus.UNAPPROVED;
                 showSpamButton = true;
                 statusTextResId = R.string.approved;
-                statusColor = getActivity().getResources().getColor(R.color.blue_dark);
+                statusColor = getActivity().getResources().getColor(R.color.blue_extra_dark);
                 break;
             case UNAPPROVED:
                 btnTextResId = R.string.approve;
@@ -466,25 +462,26 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mTxtStatus.setText(getString(statusTextResId).toUpperCase());
         mTxtStatus.setTextColor(statusColor);
+        if (mTxtStatus.getVisibility() != View.VISIBLE) {
+            mTxtStatus.clearAnimation();
+            ReaderAniUtils.fadeIn(mTxtStatus);
+        }
 
-        mTxtBtnModerate.setText(btnTextResId);
-        mTxtBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
-        mTxtBtnModerate.setOnClickListener(new View.OnClickListener() {
+        mBtnModerate.setText(btnTextResId);
+        mBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
+        mBtnModerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moderateComment(newStatus);
             }
         });
-        if (mTxtBtnModerate.getVisibility() != View.VISIBLE)
-            ReaderAniUtils.flyIn(mTxtBtnModerate);
+        mBtnModerate.setVisibility(View.VISIBLE);
 
-        boolean isSpamButtonShowing = (mTxtBtnSpam.getVisibility() == View.VISIBLE);
-        if (showSpamButton && !isSpamButtonShowing) {
-            mTxtBtnSpam.clearAnimation();
-            ReaderAniUtils.flyIn(mTxtBtnSpam);
-        } else if (!showSpamButton && isSpamButtonShowing) {
-            mTxtBtnSpam.clearAnimation();
-            ReaderAniUtils.flyOut(mTxtBtnSpam);
+        mBtnSpam.setVisibility(showSpamButton ? View.VISIBLE : View.GONE);
+
+        if (mLayoutButtons.getVisibility() != View.VISIBLE) {
+            mLayoutButtons.clearAnimation();
+            ReaderAniUtils.flyIn(mLayoutButtons);
         }
     }
 

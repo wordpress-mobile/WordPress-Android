@@ -192,10 +192,6 @@
         <item name="android:layout_width">@dimen/reader_avatar_sz_like</item>
         <item name="android:layout_height">@dimen/reader_avatar_sz_like</item>
     </style>
-    <style name="ReaderImageView.Avatar.Large" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/reader_avatar_sz_large</item>
-        <item name="android:layout_height">@dimen/reader_avatar_sz_large</item>
-    </style>
     <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_button_icon</item>
         <item name="android:layout_height">@dimen/reader_button_icon</item>

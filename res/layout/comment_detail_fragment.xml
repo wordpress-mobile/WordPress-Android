@@ -21,14 +21,13 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_avatar"
+            android:layout_gravity="center_vertical"
             android:layout_width="@dimen/reader_avatar_sz_large"
-            android:layout_height="@dimen/reader_avatar_sz_large"
-            android:layout_gravity="center_vertical" />
+            android:layout_height="@dimen/reader_avatar_sz_large" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/reader_margin_large"
             android:orientation="vertical">
 
@@ -90,17 +89,20 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_btn_moderate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/reader_transparent_selector"
+                android:layout_weight="1"
+                android:background="@drawable/moderate_button_selector"
                 android:drawableLeft="@drawable/moderate_approve"
+                android:gravity="center"
                 android:padding="@dimen/reader_margin_large"
                 android:text="@string/approve"
                 android:textColor="@color/reader_hyperlink"
@@ -108,16 +110,18 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_btn_spam"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/reader_transparent_selector"
+                android:layout_weight="1"
+                android:background="@drawable/moderate_button_selector"
                 android:drawableLeft="@drawable/moderate_spam"
+                android:gravity="center"
                 android:padding="@dimen/reader_margin_large"
                 android:text="@string/spam"
                 android:textColor="@color/reader_hyperlink"
                 android:textSize="@dimen/reader_text_sz_extra_large" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <include
             android:id="@+id/layout_comment_box"
