@@ -99,7 +99,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         holder.txtName.setText(user.getDisplayName());
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
-            holder.txtUrl.setText(UrlUtils.getDomainFromUrl(user.getUrl()));
+            holder.txtUrl.setText(user.getUrlDomain());
             // tapping anywhere in the view shows the user's blog
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,12 +188,13 @@ public class ReaderUserAdapter extends BaseAdapter {
             if (tmpUsers==null)
                 return false;
 
-            // flag followed users & set avatar urls for use with photon - avoids having to do
-            // this for each user when getView() is called
+            // flag followed users, set avatar urls for use with photon, and pre-load user domains
+            // so we can avoid having to do this for each user when getView() is called
             ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
             for (ReaderUser user: tmpUsers) {
                 user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
                 user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
+                user.getUrlDomain();
             }
 
             return true;
