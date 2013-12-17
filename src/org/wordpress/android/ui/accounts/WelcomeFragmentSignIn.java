@@ -21,16 +21,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
-import org.wordpress.android.ui.stats.WPComLoginActivity;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
 

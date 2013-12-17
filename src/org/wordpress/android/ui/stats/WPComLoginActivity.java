@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
