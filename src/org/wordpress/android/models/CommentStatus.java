@@ -7,7 +7,7 @@ public enum CommentStatus {
     UNKNOWN,
     UNAPPROVED,
     APPROVED,
-    TRASH,
+    TRASH,  // <-- REST only
     SPAM;
 
     /*

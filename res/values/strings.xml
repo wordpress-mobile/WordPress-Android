@@ -210,6 +210,8 @@
     <string name="edit_comment">Edit Comment</string>
     <string name="comments_empty_list">No comments.</string>
     <string name="comment_approved">Comment approved</string>
+    <string name="comment_unapproved">Comment unapproved</string>
+    <string name="comment_spammed">Comment marked as spam</string>
 
     <!-- edit comment view -->
     <string name="author_name">Name</string>

@@ -2,14 +2,15 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
+import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -58,8 +60,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
+    private TextView mTxtBtnModerate;
+    private TextView mTxtBtnSpam;
+    private TextView mTxtStatus;
+    private ViewGroup mLayoutReply;
+    private EditText mEditReply;
+    private ImageView mImgSubmitReply;
+
     private boolean mIsSubmittingReply = false;
-    private boolean mIsApprovingComment = false;
+    private boolean mIsModeratingComment = false;
     private boolean mIsRequestingComment = false;
 
     private CommentActions.OnCommentChangeListener mChangeListener;
@@ -85,6 +94,42 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
+
+        mTxtBtnModerate = (TextView) view.findViewById(R.id.text_btn_moderate);
+        mTxtBtnSpam = (TextView) view.findViewById(R.id.text_btn_spam);
+        mTxtStatus = (TextView) view.findViewById(R.id.text_status);
+        mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
+        mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
+        mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+
+        // hide moderation buttons until updateModerationButtons() is called
+        mTxtBtnModerate.setVisibility(View.GONE);
+        mTxtBtnSpam.setVisibility(View.GONE);
+
+        mEditReply.setHint(R.string.reader_hint_comment_on_comment);
+        mEditReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)
+                    submitReply();
+                return false;
+            }
+        });
+
+        mImgSubmitReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitReply();
+            }
+        });
+
+        mTxtBtnSpam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moderateComment(CommentStatus.SPAM);
+            }
+        });
+
         return view;
     }
 
@@ -123,58 +168,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         showComment();
     }
 
-    /*
-     * enable replying to this comment
-     */
-    private void showReplyBox() {
-        if (!hasActivity())
-            return;
-
-        final ViewGroup layoutReply = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        if (layoutReply == null || layoutReply.getVisibility()==View.VISIBLE)
-            return;
-
-        final EditText editReply = (EditText) layoutReply.findViewById(R.id.edit_comment);
-        final ImageView imgSubmit = (ImageView) getActivity().findViewById(R.id.image_post_comment);
-
-        editReply.setHint(R.string.reply_to_comment);
-        editReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId==EditorInfo.IME_ACTION_DONE || actionId==EditorInfo.IME_ACTION_SEND)
-                    submitReply();
-                return false;
-            }
-        });
-
-        imgSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitReply();
-            }
-        });
-
-        ReaderAniUtils.flyIn(layoutReply);
-    }
-
-    private void hideReplyBox(boolean hideImmediately) {
-        if (!hasActivity())
-            return;
-
-        final ViewGroup layoutReply = (ViewGroup) getActivity().findViewById(R.id.layout_comment_box);
-        if (layoutReply == null)
-            return;
-
-        // showReplyBox() animation may still be happening, so clear it here
-        layoutReply.clearAnimation();
-
-        if (hideImmediately) {
-            layoutReply.setVisibility(View.GONE);
-        } else if (layoutReply.getVisibility() != View.VISIBLE) {
-            ReaderAniUtils.flyOut(layoutReply);
-        }
-    }
-
     private boolean hasActivity() {
         return (getActivity() != null);
     }
@@ -208,7 +201,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setComment(0, null);
     }
 
-
     /*
      * display the current comment
      */
@@ -226,16 +218,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
         final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
         final TextView txtContent = (TextView) viewDetail.findViewById(R.id.text_content);
-        final TextView txtBtnApprove = (TextView) viewDetail.findViewById(R.id.text_approve);
 
-        // clear all views when comment is null
+        // hide all views when comment is null
         if (mComment == null) {
             imgAvatar.setImageDrawable(null);
             txtName.setText(null);
             txtDate.setText(null);
             txtContent.setText(null);
-            txtBtnApprove.setVisibility(View.GONE);
-            hideReplyBox(true);
+            mTxtStatus.setText(null);
+            mTxtBtnModerate.setVisibility(View.GONE);
+            mTxtBtnSpam.setVisibility(View.GONE);
+            mLayoutReply.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
             if (mNote != null && !mIsRequestingComment)
@@ -246,6 +239,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.name));
         txtDate.setText(mComment.dateCreatedFormatted);
+
+        // this is necessary in order for anchor tags in the comment text to be clickable
+        txtContent.setLinksClickable(true);
+        txtContent.setMovementMethod(LinkMovementMethod.getInstance());
 
         // convert emoticons in content first so their images won't be downloaded, then convert to HTML
         String content = StringUtils.notNullStr(mComment.comment);
@@ -269,21 +266,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
         }
 
-        // approve button only appears when comment hasn't already been approved,
-        // reply box only appears for approved comments
-        if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
-            txtBtnApprove.setVisibility(View.GONE);
-            showReplyBox();
-        } else {
-            txtBtnApprove.setVisibility(View.VISIBLE);
-            txtBtnApprove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    approveComment();
-                }
-            });
-            hideReplyBox(true);
-        }
+        updateStatusViews();
 
         // navigate to author's home page when avatar or name clicked
         if (!TextUtils.isEmpty(mComment.authorURL)) {
@@ -296,6 +279,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
         }
+
+        // make sure reply box is showing
+        if (mLayoutReply.getVisibility() != View.VISIBLE)
+            ReaderAniUtils.flyIn(mLayoutReply);
     }
 
     /*
@@ -309,51 +296,73 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (info != null && info.isConnected())
             return true;
 
-        ToastUtils.showToast(getActivity(), R.string.no_network_message);
+        ToastUtils.showToast(context, R.string.no_network_message);
         return false;
     }
 
     /*
-     * approve the current comment
+     * approve or unapprove the current comment
      */
-    private void approveComment() {
-        if (!hasActivity() || !hasComment() || mIsApprovingComment)
+    private void moderateComment(final CommentStatus newStatus) {
+        if (!hasActivity() || !hasComment() || mIsModeratingComment)
             return;
-
         if (!checkConnection(getActivity()))
             return;
 
-        final TextView txtBtnApprove = (TextView) getActivity().findViewById(R.id.text_approve);
-        ReaderAniUtils.flyOut(txtBtnApprove);
+        // animate out the associated button
+        if (newStatus == CommentStatus.SPAM && mTxtBtnSpam.getVisibility() == View.VISIBLE) {
+            ReaderAniUtils.flyOut(mTxtBtnSpam);
+        } else if (newStatus != CommentStatus.SPAM && mTxtBtnModerate.getVisibility() == View.VISIBLE) {
+            ReaderAniUtils.flyOut(mTxtBtnModerate);
+        }
 
-        // immediately show MessageBox saying comment has been approved
-        MessageBarUtils.showMessageBar(getActivity(), getString(R.string.comment_approved));
+        // disable buttons while moderating
+        mTxtBtnModerate.setEnabled(false);
+        mTxtBtnSpam.setEnabled(false);
+
+        // immediately show message bar displaying new status
+        final int msgResId;
+        final MessageBarType msgType;
+        switch (newStatus) {
+            case APPROVED:
+                msgResId = R.string.comment_approved;
+                msgType = MessageBarType.INFO;
+                break;
+            case UNAPPROVED:
+                msgResId = R.string.comment_unapproved;
+                msgType = MessageBarType.INFO;
+                break;
+            case SPAM:
+                msgResId = R.string.comment_spammed;
+                msgType = MessageBarType.ALERT;
+                break;
+            default :
+                msgResId = R.string.comment_moderated;
+                msgType = MessageBarType.INFO;
+                break;
+        }
+        MessageBarUtils.showMessageBar(getActivity(), getString(msgResId), msgType, null);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                mIsApprovingComment = false;
-                if (hasActivity()) {
-                    if (succeeded) {
-                        showReplyBox();
-                        mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
-                        if (mChangeListener != null)
-                            mChangeListener.onCommentModerated();
-                    } else {
-                        ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
-                        // fly in "Approve" after we know it had enough time to fly out
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ReaderAniUtils.flyIn(txtBtnApprove);
-                            }
-                        }, 500);
-                    }
+                mIsModeratingComment = false;
+                if (!hasActivity())
+                    return;
+                mTxtBtnModerate.setEnabled(true);
+                mTxtBtnSpam.setEnabled(true);
+                if (succeeded) {
+                    mComment.setStatus(CommentStatus.toString(newStatus));
+                    if (mChangeListener != null)
+                        mChangeListener.onCommentModerated();
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                 }
+                updateStatusViews();
             }
         };
-        mIsApprovingComment = true;
-        CommentActions.moderateComment(mAccountId, mComment, CommentStatus.APPROVED, actionListener);
+        mIsModeratingComment = true;
+        CommentActions.moderateComment(mAccountId, mComment, newStatus, actionListener);
     }
 
     /*
@@ -366,18 +375,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!checkConnection(getActivity()))
             return;
 
-        final EditText editComment = (EditText) getActivity().findViewById(R.id.edit_comment);
         final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
-        final ImageView imgSubmit = (ImageView) getActivity().findViewById(R.id.image_post_comment);
-
-        final String replyText = EditTextUtils.getText(editComment);
+        final String replyText = EditTextUtils.getText(mEditReply);
         if (TextUtils.isEmpty(replyText))
             return;
 
         // disable editor, hide soft keyboard, hide submit icon, and show progress spinner while submitting
-        editComment.setEnabled(false);
-        EditTextUtils.hideSoftInput(editComment);
-        imgSubmit.setVisibility(View.GONE);
+        mEditReply.setEnabled(false);
+        EditTextUtils.hideSoftInput(mEditReply);
+        mImgSubmitReply.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
@@ -386,21 +392,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsSubmittingReply = false;
 
                 if (hasActivity()) {
-                    editComment.setEnabled(true);
-                    imgSubmit.setVisibility(View.VISIBLE);
+                    mEditReply.setEnabled(true);
+                    mImgSubmitReply.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
 
                     if (succeeded) {
                         if (mChangeListener != null)
                             mChangeListener.onCommentAdded();
                         MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
-                        editComment.setText(null);
+                        mEditReply.setText(null);
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard
-                        editComment.requestFocus();
+                        mEditReply.requestFocus();
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(editComment, InputMethodManager.SHOW_IMPLICIT);
+                        imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
                     }
                 }
             }
@@ -408,9 +414,78 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
         CommentActions.submitReplyToComment(mAccountId,
-                                            mComment,
-                                            replyText,
-                                            actionListener);
+                mComment,
+                replyText,
+                actionListener);
+    }
+
+    /*
+     * update the text, drawable & click listener for mTxtBtnModerate based on
+     * the current status of the comment, show mTxtBtnSpam if the comment isn't
+     * already marked as spam, and show the current status of the comment
+     */
+    private void updateStatusViews() {
+        if (!hasActivity() || !hasComment())
+            return;
+
+        final int btnTextResId;         // string resource id for moderation button
+        final int btnDrawResId;         // drawable resource id for moderation button
+        final CommentStatus newStatus;  // status to apply when moderation button is tapped
+        final int statusTextResId;      // string resource id for status text
+        final int statusColor;          // color for status text
+        final boolean showSpamButton;
+
+        switch (mComment.getStatusEnum()) {
+            case APPROVED:
+                btnTextResId = R.string.unapprove;
+                btnDrawResId = R.drawable.moderate_unapprove;
+                newStatus = CommentStatus.UNAPPROVED;
+                showSpamButton = true;
+                statusTextResId = R.string.approved;
+                statusColor = getActivity().getResources().getColor(R.color.blue_dark);
+                break;
+            case UNAPPROVED:
+                btnTextResId = R.string.approve;
+                btnDrawResId = R.drawable.moderate_approve;
+                newStatus = CommentStatus.APPROVED;
+                showSpamButton = true;
+                statusTextResId = R.string.unapproved;
+                statusColor = getActivity().getResources().getColor(R.color.orange_medium);
+                break;
+            case SPAM:
+                btnTextResId = R.string.approve;
+                btnDrawResId = R.drawable.moderate_approve;
+                newStatus = CommentStatus.APPROVED;
+                showSpamButton = false;
+                statusTextResId = R.string.spam;
+                statusColor = Color.RED;
+                break;
+            default:
+                return;
+        }
+
+        mTxtStatus.setText(getString(statusTextResId).toUpperCase());
+        mTxtStatus.setTextColor(statusColor);
+
+        mTxtBtnModerate.setText(btnTextResId);
+        mTxtBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
+        mTxtBtnModerate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moderateComment(newStatus);
+            }
+        });
+        if (mTxtBtnModerate.getVisibility() != View.VISIBLE)
+            ReaderAniUtils.flyIn(mTxtBtnModerate);
+
+        boolean isSpamButtonShowing = (mTxtBtnSpam.getVisibility() == View.VISIBLE);
+        if (showSpamButton && !isSpamButtonShowing) {
+            mTxtBtnSpam.clearAnimation();
+            ReaderAniUtils.flyIn(mTxtBtnSpam);
+        } else if (!showSpamButton && isSpamButtonShowing) {
+            mTxtBtnSpam.clearAnimation();
+            ReaderAniUtils.flyOut(mTxtBtnSpam);
+        }
     }
 
     /*
