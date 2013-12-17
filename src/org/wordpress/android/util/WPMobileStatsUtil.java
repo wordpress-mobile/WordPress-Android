@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -182,7 +182,7 @@ public class WPMobileStatsUtil {
     public static void resumeSession(Context context) {
         String userId = "";
         try {
-            String wpcomId = String.format("%d%n", ReaderPrefs.getCurrentUserId());
+            String wpcomId = String.format("%d%n", UserPrefs.getCurrentUserId());
             userId = new String(MessageDigest.getInstance("md5").digest(wpcomId.getBytes()));
         } catch( NoSuchAlgorithmException e) {
             e.printStackTrace();

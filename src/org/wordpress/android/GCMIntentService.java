@@ -30,7 +30,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.WPComXMLRPCApi;
@@ -71,7 +71,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        long wpcomUserID = ReaderPrefs.getCurrentUserId();
+        long wpcomUserID = UserPrefs.getCurrentUserId();
         if( wpcomUserID <= 0) {
             //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
             //If they have never used the Reader, then they won't have a userId.

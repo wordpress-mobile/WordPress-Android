@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUser;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.ReaderLog;
 
 /**
@@ -48,7 +48,7 @@ public class ReaderUserActions {
             } else {
                 // add logged in user to user table and store the userId in prefs
                 ReaderUserTable.addOrUpdateUser(serverUser);
-                ReaderPrefs.setCurrentUserId(serverUser.userId);
+                UserPrefs.setCurrentUserId(serverUser.userId);
                 result = ReaderActions.UpdateResult.CHANGED;
             }
         } else {

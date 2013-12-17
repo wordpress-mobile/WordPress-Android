@@ -39,7 +39,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -467,7 +467,7 @@ public class WordPress extends Application {
         currentBlog = null;
 
         // reset all reader-related prefs & data
-        ReaderPrefs.reset();
+        UserPrefs.reset();
         ReaderDatabase.reset();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
