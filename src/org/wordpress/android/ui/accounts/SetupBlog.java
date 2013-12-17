@@ -15,6 +15,8 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.net.URI;
+import java.net.IDN;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -141,6 +143,16 @@ public class SetupBlog {
     // 3: Finally, just guess as to what the xmlrpc url should be
     private String getSelfHostedXmlrpcUrl(String url) {
         String xmlrpcUrl = null;
+
+		// Convert IDN names to punycode if necessary
+        if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
+			if (url.toLowerCase().startsWith("http://")) {
+				url = "http://" + IDN.toASCII(url.substring(7));
+			} else if (url.toLowerCase().startsWith("https://")) {
+				url = "https://" + IDN.toASCII(url.substring(8));
+			}
+		}
+
         // Add http to the beginning of the URL if needed
         if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
             url = "http://" + url; // default to http
