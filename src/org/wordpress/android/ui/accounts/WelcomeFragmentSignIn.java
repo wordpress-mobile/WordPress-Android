@@ -21,11 +21,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.reader_native.actions.ReaderActions;
+import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.ui.stats.WPComLoginActivity;
+import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
+
+import org.json.JSONObject;
 import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.List;
@@ -338,7 +347,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         WordPressDB.encryptPassword(mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
-                WordPress.restClient.get("me", null, null);
+                WordPress.restClient.get("me", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        ReaderUserActions.updateCurrentUser(jsonObject);
+                    }
+                }, null);
             }
 
             if (userBlogList != null) {

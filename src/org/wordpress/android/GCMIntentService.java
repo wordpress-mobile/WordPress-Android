@@ -30,6 +30,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.WPComXMLRPCApi;
@@ -75,6 +76,17 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
+        long wpcomUserID = ReaderPrefs.getCurrentUserId();
+        if( wpcomUserID <= 0) {
+            Log.v("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
+            return;
+        }
+        String userIDFromPN = extras.getString("user");
+        if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+            Log.v("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+            return;
+        }
+        
         String title = extras.getString("title");
         if (title == null)
             title = "WordPress";

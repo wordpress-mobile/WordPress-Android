@@ -15,26 +15,12 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderUserActions {
 
-    public static void updateCurrentUser(final ReaderActions.UpdateResultListener resultListener) {
-        final ReaderUser localUser = ReaderUserTable.getCurrentUser();
+    public static void updateCurrentUserWithNetworkCall(final ReaderActions.UpdateResultListener resultListener) {
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                final ReaderActions.UpdateResult result;
-                ReaderUser serverUser = ReaderUser.fromJson(jsonObject);
-                if (serverUser!=null) {
-                    if (serverUser.isSameUser(localUser)) {
-                        result = ReaderActions.UpdateResult.UNCHANGED;
-                    } else {
-                        // add logged in user to user table and store the userId in prefs
-                        ReaderUserTable.addOrUpdateUser(serverUser);
-                        ReaderPrefs.setCurrentUserId(serverUser.userId);
-                        result = ReaderActions.UpdateResult.CHANGED;
-                    }
-                } else {
-                    result = ReaderActions.UpdateResult.FAILED;
-                }
+                final ReaderActions.UpdateResult result = ReaderUserActions.updateCurrentUser(jsonObject);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(result);
             }
@@ -50,5 +36,24 @@ public class ReaderUserActions {
         };
 
         WordPress.restClient.get("me", listener, errorListener);
+    }
+    
+    public static ReaderActions.UpdateResult updateCurrentUser(final JSONObject jsonObject) {
+        final ReaderUser localUser = ReaderUserTable.getCurrentUser();
+        final ReaderActions.UpdateResult result;
+        ReaderUser serverUser = ReaderUser.fromJson(jsonObject);
+        if (serverUser!=null) {
+            if (serverUser.isSameUser(localUser)) {
+                result = ReaderActions.UpdateResult.UNCHANGED;
+            } else {
+                // add logged in user to user table and store the userId in prefs
+                ReaderUserTable.addOrUpdateUser(serverUser);
+                ReaderPrefs.setCurrentUserId(serverUser.userId);
+                result = ReaderActions.UpdateResult.CHANGED;
+            }
+        } else {
+            result = ReaderActions.UpdateResult.FAILED;
+        }
+        return result;
     }
 }
