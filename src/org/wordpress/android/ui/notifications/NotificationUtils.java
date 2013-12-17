@@ -103,7 +103,6 @@ public class NotificationUtils {
         contentStruct.put("device_token", gcmToken);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
-        contentStruct.put("testing", "io non dovrei essere qua");
         WordPress.restClient.post("/push/settings", contentStruct, null, listener, errorListener);
         
         return;
@@ -165,7 +164,6 @@ public class NotificationUtils {
         contentStruct.put("device_token", gcmToken);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
-        contentStruct.put("testing", "io non dovrei essere qua");
         contentStruct.put("settings", gson.toJson(updatedSettings));
         WordPress.restClient.post("/push/settings/new", contentStruct, null, null, null);
     }
@@ -186,7 +184,6 @@ public class NotificationUtils {
         contentStruct.put("app_version", WordPress.versionName);
         contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
-        contentStruct.put("testing", "io non dovrei essere qua");
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
