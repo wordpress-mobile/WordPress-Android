@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * Created by nbradbury on 6/22/13.
@@ -79,6 +80,21 @@ public class ReaderUser {
 
     public boolean hasUrl() {
         return !TextUtils.isEmpty(url);
+    }
+
+    /*
+     * not stored - used by ReaderUserAdapter for performance
+     */
+    private transient String urlDomain;
+    public String getUrlDomain() {
+        if (urlDomain == null) {
+            if (hasUrl()) {
+                urlDomain = UrlUtils.getDomainFromUrl(getUrl());
+            } else {
+                urlDomain = "";
+            }
+        }
+        return urlDomain;
     }
 
     public boolean isSameUser(ReaderUser user) {

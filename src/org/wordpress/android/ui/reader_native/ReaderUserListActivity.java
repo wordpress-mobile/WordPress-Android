@@ -8,7 +8,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader_native.adapters.ReaderUserAdapter;
