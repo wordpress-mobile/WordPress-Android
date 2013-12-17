@@ -412,6 +412,12 @@ public class WordPressDB {
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
     }
 
+    public int setDotComAccountsVisibility(int id, boolean visible) {
+        ContentValues values = new ContentValues();
+        values.put("isHidden", !visible);
+        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
+    }
+
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
         Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
                 new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);

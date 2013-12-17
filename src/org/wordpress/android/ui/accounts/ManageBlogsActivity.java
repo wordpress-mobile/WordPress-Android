@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
@@ -38,7 +36,7 @@ import java.util.Map;
 public class ManageBlogsActivity extends SherlockListActivity {
     private List<Map<String, Object>> mAccounts;
     private MenuItem mRefreshMenuItem;
-    private boolean mIsRefreshing;
+    private static boolean mIsRefreshing;
     private ListScrollPositionManager mListScrollPositionManager;
 
     @Override
@@ -58,12 +56,6 @@ public class ManageBlogsActivity extends SherlockListActivity {
         CheckedTextView checkedView = (CheckedTextView) v;
         checkedView.setChecked(!checkedView.isChecked());
         setItemChecked(position, checkedView.isChecked());
-        if (blogShownCount() == 0) {
-            ToastUtils.showToast(this, getString(R.string.one_blog_must_be_selected));
-            checkedView.setChecked(true);
-            setItemChecked(position, true);
-        }
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -106,19 +98,16 @@ public class ManageBlogsActivity extends SherlockListActivity {
     }
 
     private void deselectAll() {
-        // force one item selected
         for (int i = 0; i < mAccounts.size(); ++i) {
             Map<String, Object> item = mAccounts.get(i);
             item.put("isHidden", true);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(false);
-        setItemChecked(0, true);
         ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void startAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null && !mIsRefreshing) {
-            mIsRefreshing = true;
+        if (mRefreshMenuItem != null && mIsRefreshing) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             ImageView iv = (ImageView) inflater.inflate(
@@ -146,6 +135,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
 
     private void refreshBlogs() {
         if (!mIsRefreshing) {
+            mIsRefreshing = true;
             startAnimatingRefreshButton();
             new SetupBlogTask().execute();
         }
@@ -159,25 +149,9 @@ public class ManageBlogsActivity extends SherlockListActivity {
 
     private void setItemChecked(int position, boolean checked) {
         int blogId = MapUtils.getMapInt(mAccounts.get(position), "id");
-        Blog blog = WordPress.getBlog(blogId);
-        if (blog != null) {
-            blog.setHidden(!checked);
-            blog.save();
-        } else {
-            Log.e(WordPress.TAG, "Error, blog id not found: " + blogId);
-        }
+        WordPress.wpDB.setDotComAccountsVisibility(blogId, checked);
         Map<String, Object> item = mAccounts.get(position);
         item.put("isHidden", checked ? "0" : "1");
-    }
-
-    private int blogShownCount() {
-        int nChecked = 0;
-        for (Map<String, Object> account : mAccounts) {
-            if (!MapUtils.getMapBool(account, "isHidden")) {
-                nChecked += 1;
-            }
-        }
-        return nChecked;
     }
 
     private class BlogsAdapter extends ArrayAdapter<Map<String, Object>> {
