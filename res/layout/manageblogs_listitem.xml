@@ -8,4 +8,4 @@
     android:id="@+id/blog_name"
     android:gravity="center_vertical"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-    android:padding="@dimen/settings_padding" />
+    android:padding="@dimen/settings_list_item_padding" />
