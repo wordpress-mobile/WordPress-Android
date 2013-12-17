@@ -184,13 +184,15 @@
         <item name="android:layout_height">@dimen/reader_avatar_sz_medium</item>
         <item name="android:background">@color/grey_extra_light</item>
     </style>
-    <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView.Avatar">
+    <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_avatar_sz_small</item>
         <item name="android:layout_height">@dimen/reader_avatar_sz_small</item>
+        <item name="android:background">@color/grey_extra_light</item>
     </style>
-    <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView.Avatar">
+    <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_avatar_sz_like</item>
         <item name="android:layout_height">@dimen/reader_avatar_sz_like</item>
+        <item name="android:background">@color/grey_extra_light</item>
     </style>
     <style name="ReaderImageView.Avatar.Large" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_avatar_sz_large</item>
