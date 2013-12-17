@@ -752,11 +752,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
             s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             s.insert(selectionEnd + 1, "\n\n");
-            try {
-                mContentEditText.setSelection(s.length());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         // load image from server
@@ -934,11 +929,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
@@ -1017,11 +1007,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
             s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             s.insert(selectionEnd + 1, "\n\n");
-            try {
-                mContentEditText.setSelection(s.length());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         // Show the soft keyboard after adding media
         if (mActivity != null && !mActivity.getSupportActionBar().isShowing())
