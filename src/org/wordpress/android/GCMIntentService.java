@@ -67,19 +67,23 @@ public class GCMIntentService extends GCMBaseIntentService {
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
-            Log.v("WORDPRESS", "Hrm. No notification message content received. Aborting.");
+            Log.e("WORDPRESS", "Hrm. No notification message content received. Aborting.");
             return;
         }
 
         long wpcomUserID = ReaderPrefs.getCurrentUserId();
         if( wpcomUserID <= 0) {
-            Log.v("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
-            return;
-        }
-        String userIDFromPN = extras.getString("user");
-        if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-            Log.v("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-            return;
+            //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
+            //If they have never used the Reader, then they won't have a userId.
+            //Code for next release is below:
+           /* Log.e("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
+            return;*/
+        } else {
+            String userIDFromPN = extras.getString("user");
+            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+                Log.e("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                return;
+            }
         }
         
         String title = extras.getString("title");
