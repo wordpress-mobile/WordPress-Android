@@ -335,8 +335,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
-                .getThemedContext(),
-                R.layout.sherlock_spinner_dropdown_item, blogNames);
+                .getThemedContext(), R.layout.sherlock_spinner_dropdown_item, blogNames);
         mBlogSpinner.setAdapter(mSpinnerAdapter);
         mListView.addHeaderView(spinnerWrapper);
     }
@@ -533,29 +532,28 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
                 break;
             case SETTINGS_REQUEST:
-                if (resultCode == RESULT_OK) {
-                    if (mMenuDrawer != null) {
-                        updateMenuDrawer();
-                        String[] blogNames = getBlogNames();
-                        // If we need to add or remove the blog spinner, init the drawer again
-                        if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0)
-                                || blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
-                            this.initMenuDrawer();
-                        else if (blogNames.length > 1 && mBlogSpinner != null) {
-                            SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
-                                    getSupportActionBar()
-                                            .getThemedContext(),
-                                    R.layout.sherlock_spinner_dropdown_item, blogNames);
-                            mBlogSpinner.setAdapter(mSpinnerAdapter);
-                        }
-                        
-                        if (blogNames.length >= 1) {
-                            setupCurrentBlog();
-                            onBlogChanged();
-                        }
-                        WordPress.registerForCloudMessaging(this);
+                if (mMenuDrawer != null) {
+                    updateMenuDrawer();
+                    String[] blogNames = getBlogNames();
+                    // If we need to add or remove the blog spinner, init the drawer again
+                    if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0)
+                            || (blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
+                            || blogNames.length == 0) {
+                        this.initMenuDrawer();
+                    } else if (blogNames.length > 1 && mBlogSpinner != null) {
+                        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
+                                getSupportActionBar().getThemedContext(),
+                                R.layout.sherlock_spinner_dropdown_item, blogNames);
+                        mBlogSpinner.setAdapter(mSpinnerAdapter);
                     }
+
+                    if (blogNames.length >= 1) {
+                        setupCurrentBlog();
+                        onBlogChanged();
+                    }
+                    WordPress.registerForCloudMessaging(this);
                 }
+
                 break;
             case AUTHENTICATE_REQUEST:
                 if (resultCode == RESULT_CANCELED) {
