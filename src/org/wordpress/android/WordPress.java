@@ -470,6 +470,9 @@ public class WordPress extends Application {
         ReaderPrefs.reset();
         ReaderDatabase.reset();
 
+        //Delete all the Notes
+        WordPress.wpDB.clearNotes();
+        
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
