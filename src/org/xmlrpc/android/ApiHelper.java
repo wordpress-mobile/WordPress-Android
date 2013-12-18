@@ -843,7 +843,6 @@ public class ApiHelper {
                 }
 
                 if (rpcCallStatus) {
-                    contentHash.put("status", mNewCommentStatus);
                     mModeratedCommentIds.add(currentCommentId);
                 }
             }
