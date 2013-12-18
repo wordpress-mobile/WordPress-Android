@@ -337,8 +337,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (succeeded) {
                         showReplyBox();
                         mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
+
                         if (mChangeListener != null)
-                            mChangeListener.onCommentModerated();
+                            mChangeListener.onCommentModerated(mComment, mNote);
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                         // fly in "Approve" after we know it had enough time to fly out

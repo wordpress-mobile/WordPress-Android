@@ -286,7 +286,7 @@ public class CommentsListFragment extends ListFragment {
                     Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
-                    mOnCommentChangeListener.onCommentModerated();
+                    mOnCommentChangeListener.onCommentModerated(null, null);
 
                     // update the comment counter on the menu drawer 
                     ((WPActionBarActivity) getActivity()).updateMenuDrawer();

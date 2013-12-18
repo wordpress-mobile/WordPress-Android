@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
@@ -227,7 +228,7 @@ public class CommentsActivity extends WPActionBarActivity
         clearCommentDetail();
     }
     @Override
-    public void onCommentModerated() {
+    public void onCommentModerated(final Comment comment, final Note note) {
         refreshCommentList();
         refreshCommentDetail();
     }
@@ -295,7 +296,7 @@ public class CommentsActivity extends WPActionBarActivity
                         public void onActionResult(boolean succeeded) {
                             dismissDialog(ID_DIALOG_MODERATING);
                             if (succeeded) {
-                                onCommentModerated();
+                                onCommentModerated(WordPress.currentComment, null);
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
                             } else {
                                 ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
