@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 
+import org.wordpress.android.R;
+
 /**
  * Created by nbradbury on 11/30/13.
  * requires android.permission.ACCESS_NETWORK_STATE
@@ -65,5 +67,16 @@ public class NetworkUtils {
             return Settings.Global.getInt(context.getContentResolver(),
                     Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
         }
+    }
+
+    /**
+     * returns true if there's an active network connection, otherwise displays a toast error
+     * and returns false
+     **/
+    public static boolean checkConnection(Context context) {
+        if (isNetworkAvailable(context))
+            return true;
+        ToastUtils.showToast(context, R.string.no_network_message);
+        return false;
     }
 }

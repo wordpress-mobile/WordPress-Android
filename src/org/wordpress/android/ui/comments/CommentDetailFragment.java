@@ -3,8 +3,6 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -41,6 +39,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.MessageBarUtils.MessageBarType;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -289,27 +288,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * returns true if there's an active network connection, otherwise displays a toast error
-     * and returns false
-     */
-    // TODO: move this routine to NetworkUtils once that class is merged into develop
-    private boolean checkConnection(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        if (info != null && info.isConnected())
-            return true;
-
-        ToastUtils.showToast(context, R.string.no_network_message);
-        return false;
-    }
-
-    /*
      * approve or unapprove the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
         if (!hasActivity() || !hasComment() || mIsModeratingComment)
             return;
-        if (!checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity()))
             return;
 
         // disable buttons during request
@@ -376,7 +360,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity() || mIsSubmittingReply)
             return;
 
-        if (!checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity()))
             return;
 
         final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
