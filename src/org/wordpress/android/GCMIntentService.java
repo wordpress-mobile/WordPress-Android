@@ -74,17 +74,19 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         long wpcomUserID = UserPrefs.getCurrentUserId();
-        if( wpcomUserID <= 0) {
-            //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
-            //If they have never used the Reader, then they won't have a userId.
-            //Code for next release is below:
-           /* Log.e("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
-            return;*/
-        } else {
-            String userIDFromPN = extras.getString("user");
-            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                Log.e("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                return;
+        String userIDFromPN = extras.getString("user");
+        if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
+            if (wpcomUserID <= 0) {
+                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
+                //If they have never used the Reader, then they won't have a userId.
+                //Code for next release is below:
+               /* Log.e("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
+                return;*/
+            } else {
+                if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+                    Log.e("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                    return;
+                }
             }
         }
         
