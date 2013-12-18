@@ -187,7 +187,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private boolean hasActivity() {
-        return (getActivity() != null);
+        return (getActivity() != null && !isRemoving());
     }
 
     private boolean hasComment() {
