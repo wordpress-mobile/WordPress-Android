@@ -426,6 +426,11 @@ public class WordPressDB {
         return result;
     }
 
+    public boolean isBlogIdInDatabase(int blogId) {
+        String[] args = {Integer.toString(blogId)};
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE blogId=?", args);
+    }
+
     public boolean saveBlog(Blog blog) {
         ContentValues values = new ContentValues();
         values.put("url", blog.getUrl());

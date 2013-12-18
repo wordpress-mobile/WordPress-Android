@@ -73,6 +73,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
     private boolean mIsRequestingComment = false;
+    private boolean mIsUsersBlog = false;
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -149,6 +150,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mComment = comment;
         mBlogId = blogId;
         mAccountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+
+        // is this comment on one of the user's blogs? it won't be if this was displayed from a
+        // notification about a reply to a comment this user posted on someone else's blog
+        mIsUsersBlog = (comment != null && WordPress.wpDB.isBlogIdInDatabase(mBlogId));
+
         if (hasActivity())
             showComment();
     }
@@ -314,7 +320,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         ReaderAniUtils.flyOut(mLayoutButtons);
 
         // hide status (updateStatusViews will un-hide it)
-        ReaderAniUtils.fadeOut(mTxtStatus);
+        if (mTxtStatus.getVisibility() == View.VISIBLE)
+            ReaderAniUtils.fadeOut(mTxtStatus);
 
         // immediately show message bar displaying new status
         final int msgResId;
@@ -463,11 +470,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return;
         }
 
-        mTxtStatus.setText(getString(statusTextResId).toUpperCase());
-        mTxtStatus.setTextColor(statusColor);
-        if (mTxtStatus.getVisibility() != View.VISIBLE) {
-            mTxtStatus.clearAnimation();
-            ReaderAniUtils.fadeIn(mTxtStatus);
+        // comment status is only shown if this comment is from one of this user's blogs
+        if (mIsUsersBlog) {
+            mTxtStatus.setText(getString(statusTextResId).toUpperCase());
+            mTxtStatus.setTextColor(statusColor);
+            if (mTxtStatus.getVisibility() != View.VISIBLE) {
+                mTxtStatus.clearAnimation();
+                ReaderAniUtils.fadeIn(mTxtStatus);
+            }
+        } else {
+            mTxtStatus.setVisibility(View.GONE);
         }
 
         if (isModerationEnabled()) {
