@@ -282,7 +282,7 @@ public class WordPressDB {
                             c.getLong(4), c.getString(5),
                             c.getString(6), c.getString(7),
                             c.getString(8), c.getDouble(9),
-                            c.getDouble(10), false, "", false, false);
+                            c.getDouble(10), false, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     savePost(post, c.getInt(0));
@@ -306,7 +306,7 @@ public class WordPressDB {
                     Post post = new Post(c.getInt(0), c.getString(1),
                             c.getString(2), "", c.getString(3),
                             c.getLong(4), c.getString(5), "", "",
-                            c.getString(6), 0, 0, true, "", false, false);
+                            c.getString(6), 0, 0, true, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     post.setIsPage(true);
