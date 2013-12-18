@@ -251,6 +251,4 @@ public class CommentsActivity extends WPActionBarActivity implements CommentList
             }
         }
     }
-
-
 }

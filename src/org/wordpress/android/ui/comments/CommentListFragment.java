@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -66,13 +67,13 @@ public class CommentListFragment extends SherlockListFragment {
     private boolean loadMore = false, doInBackground = false, refreshOnly = false,
             mCommentsUpdating = false;
     private Object[] mCommentParams;
-    private SparseBooleanArray mSavedSelectedCommentPositions = null;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
     private CommentListFragmentListener mOnCommentListFragmentListener;
     private ListScrollPositionManager mListScrollPositionManager;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
-
+    private Map<Integer, Boolean> mPriorCheckedCommentPositions = new HashMap<Integer, Boolean>();
+    private Parcelable mSavedListViewState;
 
     public interface CommentListFragmentListener {
         public void onCommentClicked(Comment comment);
@@ -86,11 +87,12 @@ public class CommentListFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        TextView textview = (TextView) getListView().getEmptyView();
+        ListView listView = getListView();
+        TextView textview = (TextView) listView.getEmptyView();
         if (textview != null) {
             textview.setText(getText(R.string.comments_empty_list));
         }
-        mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
+        mListScrollPositionManager = new ListScrollPositionManager(listView, false);
 
         /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create life cycle */
         //refreshComments();
@@ -101,7 +103,6 @@ public class CommentListFragment extends SherlockListFragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentListFragmentListener = (CommentListFragmentListener) activity;
-            //mCommentAsyncModerationReturnListener = (CommentAsyncModerationReturnListener) activity;
             onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
 
         } catch (ClassCastException e) {
@@ -115,8 +116,7 @@ public class CommentListFragment extends SherlockListFragment {
     public void onPause() {
         super.onPause();
         mListScrollPositionManager.saveScrollOffset();
-        //TODO: Most Likely the selection state is not maintained on detach, re-enable.
-        //mSavedSelectedCommentPositions = ((CommentAdapter) getListAdapter()).mSelectedCommentPositions;
+        mSavedListViewState = getListView().onSaveInstanceState();
     }
 
     @Override
@@ -161,13 +161,13 @@ public class CommentListFragment extends SherlockListFragment {
     /**
      * Updates the local data models and views after completion of some RPC server action.
      */
-    private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Long> moderatedComments, String newStatusStr) {
+    private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments, String newStatusStr) {
         Integer currentCommentId;
 
         if (moderatedComments.size() > 0) {
             for(Comment currentComment : selectedCommentsSnapshot) {
                 currentCommentId = currentComment.commentID;
-                if (moderatedComments.contains(currentCommentId.longValue())) {
+                if (moderatedComments.contains(currentCommentId)) {
                     currentComment.setStatus(newStatusStr);
                     replaceComment(currentComment);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
@@ -182,9 +182,10 @@ public class CommentListFragment extends SherlockListFragment {
      * @param commentStatus The status to moderate the currently selected comment set type
      */
     public void moderateComments(final CommentStatus commentStatus) {
+        ListView listView = getListView();
         final String newStatus = CommentStatus.toString(commentStatus);
-        final ArrayList<Long> selectedCommentIds = getSelectedCommentIds();
-        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
+        final ArrayList<Integer> selectedCommentIds = getSelectedCommentIds(listView.getCheckedItemPositions());
+        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray(listView.getCheckedItemPositions());
 
         ApiHelper.ModerateCommentsTask task = new ApiHelper.ModerateCommentsTask(newStatus,
                 allComments, selectedCommentIds,
@@ -193,7 +194,7 @@ public class CommentListFragment extends SherlockListFragment {
                     int numCommentsModerated = 0;
 
                     @Override
-                    public void onSuccess(ArrayList<Long> moderatedCommentIds) {
+                    public void onSuccess(ArrayList<Integer> moderatedCommentIds) {
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedCommentIds, newStatus);
 
@@ -209,7 +210,7 @@ public class CommentListFragment extends SherlockListFragment {
                         onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
-                    public void onCancelled(ArrayList<Long> moderatedCommentIds) {
+                    public void onCancelled(ArrayList<Integer> moderatedCommentIds) {
                         // For the time being we will update any comments that were changed on the server
                         mCommentsUpdating = false;
                         updateChangedCommentSet(selectedCommentsSnapshot, moderatedCommentIds, newStatus);
@@ -261,13 +262,13 @@ public class CommentListFragment extends SherlockListFragment {
      * This function is used to update the local data models and views after completion of some RPC
      * server action.
      */
-    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Long> moderatedComments) {
+    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments) {
         Integer currentCommentId;
 
         if (moderatedComments.size() > 0) {
             for(Comment currentComment : selectedCommentsSnapshot) {
                 currentCommentId = currentComment.commentID;
-                if (moderatedComments.contains(currentCommentId.longValue())) {
+                if (moderatedComments.contains(currentCommentId)) {
                     deleteComment(currentComment);
                     WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
                 }
@@ -278,9 +279,10 @@ public class CommentListFragment extends SherlockListFragment {
     /**
      * Start an AsyncTask to delete the current comment selection set.
      */
-    public void deleteComments() {
-        final ArrayList<Long> selectedCommentIds = getSelectedCommentIds();
-        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray();
+    private void deleteComments() {
+        ListView listView = getListView();
+        final ArrayList<Integer> selectedCommentIds = getSelectedCommentIds(listView.getCheckedItemPositions());
+        final ArrayList<Comment> selectedCommentsSnapshot = getSelectedCommentArray(listView.getCheckedItemPositions());
 
         ApiHelper.DeleteCommentsTask task = new ApiHelper.DeleteCommentsTask(selectedCommentIds,
                 new ApiHelper.DeleteCommentsTask.Callback() {
@@ -288,7 +290,7 @@ public class CommentListFragment extends SherlockListFragment {
                     int numCommentsDeleted = 0;
 
                     @Override
-                    public void onSuccess(ArrayList<Long> deletedCommentIds) {
+                    public void onSuccess(ArrayList<Integer> deletedCommentIds) {
                         mCommentsUpdating = false;
                         deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
@@ -306,7 +308,7 @@ public class CommentListFragment extends SherlockListFragment {
                         onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
-                    public void onCancelled(ArrayList<Long> deletedCommentIds) {
+                    public void onCancelled(ArrayList<Integer> deletedCommentIds) {
                         mCommentsUpdating = false;
                         deleteCommentSet(selectedCommentsSnapshot, deletedCommentIds);
 
@@ -350,25 +352,24 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
-    public void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
+    private void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
         if (commentModerationStatusType == CommentStatus.APPROVED
                 || commentModerationStatusType == CommentStatus.UNAPPROVED) {
             if (mActionMode != null) {
-                //refreshCommentList();
-                //refreshCommentDetail();
+                mAdapter.notifyDataSetChanged();
                 mActionMode.invalidate();
             }
         } else if (commentModerationStatusType == CommentStatus.SPAM
                 || commentModerationStatusType == CommentStatus.TRASH) {
             if (mActionMode != null) {
-                //refreshCommentList();
-                //clearCommentDetail();
+                mAdapter.notifyDataSetChanged();
+                refreshComments();
                 mActionMode.finish();
             }
         }
     }
 
-    public void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
+    private void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
         if (commentModerationStatusType == CommentStatus.APPROVED
                 || commentModerationStatusType == CommentStatus.UNAPPROVED
                 || commentModerationStatusType == CommentStatus.SPAM) {
@@ -442,167 +443,26 @@ public class CommentListFragment extends SherlockListFragment {
                 if (model != null) {
                     if (model.size() > 0) {
                         selectedPosition = 0;
-                        Comment aComment = model.get(0);
-                        mOnCommentListFragmentListener.onCommentClicked(aComment);
+                        Comment firstComment = model.get(0);
+                        mOnCommentListFragmentListener.onCommentClicked(firstComment);
                     }
                 }
                 shouldSelectAfterLoad = false;
             }
 
             if (loadMore && scrollPosition > 0) {
-                ListView listView = this.getListView();
                 try {
-                    listView.setSelectionFromTop(scrollPosition, scrollPositionTop);
+                    getListView().setSelectionFromTop(scrollPosition, scrollPositionTop);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             mListScrollPositionManager.restoreScrollOffset();
 
-            if (mSavedSelectedCommentPositions != null) {
-                //TODO: Most Likely the selection state is not maintained on detach, re-enable.
-                //((CommentAdapter) getListAdapter()).mSelectedCommentPositions = mSavedSelectedCommentPositions;
-            }
-
             return true;
         } else {
             setUpListView(false);
             return false;
-        }
-    }
-
-    public ArrayList<Long> getSelectedCommentIds() {
-        long [] selectedCommentIds = getListView().getCheckedItemIds();
-        ArrayList<Long> selectedCommentIdArray = new ArrayList<Long>(selectedCommentIds.length);
-
-        for(int i=0; i<selectedCommentIdArray.size(); i++) {
-            selectedCommentIdArray.add(selectedCommentIds[i]);
-        }
-        return selectedCommentIdArray;
-    }
-
-    public ArrayList<Comment> getSelectedCommentArray() {
-        ArrayList<Long> selectedCommentIdArray = getSelectedCommentIds();
-        ArrayList<Comment> selectedCommentArray = new ArrayList<Comment>();
-
-        for(Comment comment : model) {
-            if (selectedCommentIdArray.contains(Integer.valueOf(comment.commentID).longValue())) {
-                selectedCommentArray.add(comment);
-            }
-        }
-        return selectedCommentArray;
-    }
-
-    public int getSelectedPositionCount(SparseBooleanArray selectedPositionArray) {
-        int size = 0;
-        for (int i=0; i<selectedPositionArray.size(); i++) {
-            if (selectedPositionArray.valueAt(i)) { size++; }
-        }
-        return size;
-    }
-
-    /**
-     * Clears the selected comment list as well as the saved set of selected comments.
-     */
-    public void clearSelectedComments() {
-        getListView().clearChoices();
-    }
-
-    public class CommentAdapter extends ArrayAdapter<Comment> {
-        final LayoutInflater mInflater;
-        boolean detailViewVisible = false;
-
-        public CommentAdapter(Context context, ArrayList<Comment> objs) {
-            super(context, R.layout.comment_row, objs);
-            mInflater = getActivity().getLayoutInflater();
-
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-            if (f != null && f.isInLayout())
-                detailViewVisible = true;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            CommentEntryWrapper wrapper;
-
-            if (row == null) {
-                row = mInflater.inflate(R.layout.comment_row, null);
-                NetworkImageView avatar = (NetworkImageView)row.findViewById(R.id.avatar);
-                avatar.setDefaultImageResId(R.drawable.placeholder);
-                wrapper = new CommentEntryWrapper(row);
-                row.setTag(wrapper);
-            } else {
-                wrapper = (CommentEntryWrapper) row.getTag();
-            }
-
-            Comment commentEntry = getItem(position);
-            wrapper.populateFrom(commentEntry, commentEntry.commentID);
-
-            return row;
-        }
-    }
-
-    class CommentEntryWrapper {
-        private TextView txtName;
-        private TextView txtEmailURL;
-        private TextView txtComment;
-        private TextView txtStatus;
-        private TextView txtPostTitle;
-        private NetworkImageView imgAvatar;
-        private View row;
-
-        CommentEntryWrapper(View row) {
-            this.row = row;
-
-            // locate views
-            txtName = (TextView) row.findViewById(R.id.name);
-            txtEmailURL = (TextView) row.findViewById(R.id.email_url);
-            txtComment = (TextView) row.findViewById(R.id.comment);
-            txtStatus = (TextView) row.findViewById(R.id.status); // setTextSize(12)
-            txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
-            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
-        }
-
-        void populateFrom(Comment comment, final int id) {
-            txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : getString(R.string.anonymous));
-            txtComment.setText(comment.comment);
-            txtPostTitle.setText(getResources().getText(R.string.on) + " " + comment.postTitle);
-
-            // use the email address if the commenter didn't add a url
-            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.emailURL : comment.authorURL);
-            txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
-            txtEmailURL.setText(fEmailURL);
-
-            row.setId(id);
-
-            final String status;
-            final String textColor;
-
-            switch (comment.getStatusEnum()) {
-                case SPAM :
-                    status = getResources().getText(R.string.spam).toString();
-                    textColor = "#FF0000";
-                    break;
-                case UNAPPROVED:
-                    status = getResources().getText(R.string.unapproved).toString();
-                    textColor = "#D54E21";
-                    break;
-                default :
-                    status = getResources().getText(R.string.approved).toString();
-                    textColor = getResources().getString(R.color.grey_medium);
-                    break;
-            }
-
-            txtStatus.setText(status);
-            txtStatus.setTextColor(Color.parseColor(textColor));
-
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            if (comment.hasProfileImageUrl()) {
-                imgAvatar.setImageUrl(comment.getProfileImageUrl(), WordPress.imageLoader);
-            } else {
-                imgAvatar.setImageResource(R.drawable.placeholder);
-            }
         }
     }
 
@@ -665,7 +525,7 @@ public class CommentListFragment extends SherlockListFragment {
 
         Map<String, Object> hPost = new HashMap<String, Object>();
         if (loadMore) {
-            ListView listView = this.getListView();
+            ListView listView = getListView();
             scrollPosition = listView.getFirstVisiblePosition();
             View firstVisibleView = listView.getChildAt(0);
             scrollPositionTop = (firstVisibleView == null) ? 0
@@ -752,26 +612,45 @@ public class CommentListFragment extends SherlockListFragment {
 
     private void setUpListView(boolean showSwitcher) {
         ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         listView.removeFooterView(switcher);
         if (showSwitcher) { listView.addFooterView(switcher, null, false); }
 
+        mAdapter = new CommentAdapter(getActivity(), model);
+        setListAdapter(mAdapter);
+
+        if (mSavedListViewState != null) {
+            listView.onRestoreInstanceState(mSavedListViewState);
+            mSavedListViewState = null;
+        }
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                boolean checked = getListView().getCheckedItemPositions().valueAt(position);
-                int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
                 if (mActionMode == null) {
-                    mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
                     getListView().setItemChecked(position, true);
-                    mActionMode.setTitle(Integer.toString(checkedItemCount));
+                    mPriorCheckedCommentPositions.put(position, true);
+                    mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
+                    mActionMode.setTitle("1");
                     return true;
                 }
 
+                Boolean checkedPrevious = mPriorCheckedCommentPositions.get(position);
+                if (checkedPrevious == null) { checkedPrevious = false; }
+
+                if (!checkedPrevious) {
+                    getListView().setItemChecked(position, true);
+                } else {
+                    getListView().setItemChecked(position, false);
+                }
+
+                int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
+                mPriorCheckedCommentPositions.put(position, !checkedPrevious);
+
                 if (checkedItemCount == 0) {
                     mActionMode.finish();
-                }
-                else {
+                } else {
                     mActionMode.setTitle(Integer.toString(checkedItemCount));
                     mActionMode.invalidate();
                 }
@@ -785,27 +664,166 @@ public class CommentListFragment extends SherlockListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mActionMode == null) {
                     Comment comment = mAdapter.getItem(position);
-                    //getListView().setItemChecked(position, false);
                     mOnCommentListFragmentListener.onCommentClicked(comment);
+                    getListView().clearChoices();
                 } else {
-                    boolean checked = getListView().getCheckedItemPositions().valueAt(position);
-                    getListView().setItemChecked(position, !checked);
+
+                    Boolean checkedPrevious = mPriorCheckedCommentPositions.get(position);
+                    if (checkedPrevious == null) { checkedPrevious = false; }
+
+                    if (!checkedPrevious) {
+                        getListView().setItemChecked(position, true);
+                    } else {
+                        getListView().setItemChecked(position, false);
+                    }
 
                     int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
+                    mPriorCheckedCommentPositions.put(position, !checkedPrevious);
+
                     if (checkedItemCount == 0) {
                         mActionMode.finish();
-                    }
-                    else {
+                    } else {
                         mActionMode.setTitle(Integer.toString(checkedItemCount));
                         mActionMode.invalidate();
                     }
                 }
             }
         });
+    }
 
-        mAdapter = new CommentAdapter(getActivity(), model);
-        setListAdapter(mAdapter);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    /* Start CommentAdapter Helper Functions */
+    private ArrayList<Integer> getSelectedCommentIds(SparseBooleanArray checkedPositionArray) {
+        ArrayList<Integer> selectedCommentIdArray = new ArrayList<Integer>(checkedPositionArray.size());
+
+        for(int i=0; i<checkedPositionArray.size(); i++) {
+            if (checkedPositionArray.valueAt(i)) {
+                selectedCommentIdArray.add(model.get(checkedPositionArray.keyAt(i)).commentID);
+                selectedCommentIdArray.add(mAdapter.getItem(checkedPositionArray.keyAt(i)).commentID);
+            }
+        }
+        return selectedCommentIdArray;
+    }
+
+    private ArrayList<Comment> getSelectedCommentArray(SparseBooleanArray checkedPositionArray) {
+        ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIds(checkedPositionArray);
+        ArrayList<Comment> selectedCommentArray = new ArrayList<Comment>();
+
+        for(int i=0; i<selectedCommentIdArray.size(); i++) {
+            selectedCommentArray.add(mAdapter.getItem(i));
+        }
+        return selectedCommentArray;
+    }
+
+    private int getSelectedPositionCount(SparseBooleanArray checkedPositionArray) {
+        int size = 0;
+
+        for (int i=0; i<checkedPositionArray.size(); i++) {
+            if (checkedPositionArray.valueAt(i)) { size++; }
+        }
+        return size;
+    }
+    /* End CommentAdapter Helper Functions */
+
+    private class CommentAdapter extends ArrayAdapter<Comment> {
+        final LayoutInflater mInflater;
+        boolean detailViewVisible = false;
+
+        public CommentAdapter(Context context, ArrayList<Comment> objs) {
+            super(context, R.layout.comment_row, objs);
+            mInflater = getActivity().getLayoutInflater();
+
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+            if (f != null && f.isInLayout())
+                detailViewVisible = true;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            CommentEntryWrapper wrapper;
+
+            if (row == null) {
+                row = mInflater.inflate(R.layout.comment_row, null);
+                NetworkImageView avatar = (NetworkImageView)row.findViewById(R.id.avatar);
+                avatar.setDefaultImageResId(R.drawable.placeholder);
+                wrapper = new CommentEntryWrapper(row);
+                row.setTag(wrapper);
+            } else {
+                wrapper = (CommentEntryWrapper) row.getTag();
+            }
+
+            Comment commentEntry = getItem(position);
+            wrapper.populateFrom(commentEntry, position);
+
+            row.setBackgroundColor(getListView().getCheckedItemPositions().get(position, false)?
+                    getResources().getColor(R.color.blue_extra_light) : Color.TRANSPARENT);
+
+            return row;
+        }
+    }
+
+    class CommentEntryWrapper {
+        private TextView txtName;
+        private TextView txtEmailURL;
+        private TextView txtComment;
+        private TextView txtStatus;
+        private TextView txtPostTitle;
+        private NetworkImageView imgAvatar;
+        private View row;
+
+        CommentEntryWrapper(View row) {
+            this.row = row;
+
+            // locate views
+            txtName = (TextView) row.findViewById(R.id.name);
+            txtEmailURL = (TextView) row.findViewById(R.id.email_url);
+            txtComment = (TextView) row.findViewById(R.id.comment);
+            txtStatus = (TextView) row.findViewById(R.id.status); // setTextSize(12)
+            txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
+            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
+
+        }
+
+        void populateFrom(Comment comment, final int position) {
+            txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : getString(R.string.anonymous));
+            txtComment.setText(comment.comment);
+            txtPostTitle.setText(getResources().getText(R.string.on) + " " + comment.postTitle);
+
+            // use the email address if the commenter didn't add a url
+            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.emailURL : comment.authorURL);
+            txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
+            txtEmailURL.setText(fEmailURL);
+
+            row.setId(position);
+
+            final String status;
+            final String textColor;
+
+            switch (comment.getStatusEnum()) {
+                case SPAM :
+                    status = getResources().getText(R.string.spam).toString();
+                    textColor = "#FF0000";
+                    break;
+                case UNAPPROVED:
+                    status = getResources().getText(R.string.unapproved).toString();
+                    textColor = "#D54E21";
+                    break;
+                default :
+                    status = getResources().getText(R.string.approved).toString();
+                    textColor = getResources().getString(R.color.grey_medium);
+                    break;
+            }
+
+            txtStatus.setText(status);
+            txtStatus.setTextColor(Color.parseColor(textColor));
+
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
+            if (comment.hasProfileImageUrl()) {
+                imgAvatar.setImageUrl(comment.getProfileImageUrl(), WordPress.imageLoader);
+            } else {
+                imgAvatar.setImageResource(R.drawable.placeholder);
+            }
+        }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
@@ -830,48 +848,55 @@ public class CommentListFragment extends SherlockListFragment {
                 menu.findItem(R.id.comments_cab_spam).setVisible(true);
                 menu.findItem(R.id.comments_cab_delete).setVisible(true);
 
-                /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
-                 * following associated code should be uncommented. */
-                    CommentStatus.clearSelectedCommentStatusTypeCount();
-                    for(Comment comment : getSelectedCommentArray()) {
+               /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
+                * following associated code should be uncommented. */
+                CommentStatus.clearSelectedCommentStatusTypeCount();
+                SparseBooleanArray checkedItemPositions = getListView().getCheckedItemPositions();
+                Comment comment;
+                for(int i=0; i<checkedItemPositions.size(); i++) {
+                    if (checkedItemPositions.valueAt(i)) {
+                        comment = (Comment) getListAdapter().getItem(checkedItemPositions.keyAt(i));
                         CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
                     }
+                }
 
-                    /* Build a bit "set" representing which types of comments are selected.
-                     * This was done so many different context permutations can be identified
-                     * in the future. */
-                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
-                    }
-                    if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
-                    }
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
-                    }*/
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
-                    }*/
-                    /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
-                        selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
-                    }*/
+                /* Build a bit "set" representing which types of comments are selected.
+                 * This was done so many different context permutations can be identified
+                 * in the future. */
+                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
+                }
+                if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
+                }
 
-                    /* Compare the bit set to the bit masks to see if they are equal. Currently we
-                     * do not show an Action Icon if comments of the same status type are selected. */
-                    if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
-                        menu.findItem(R.id.comments_cab_approve).setVisible(false);
-                    } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
-                        menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
-                    }
-                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
-                        menu.findItem(R.id.comments_cab_spam).setVisible(false);
-                    }*/
-                    /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
-                        menu.findItem(R.id.comments_cab_delete).setVisible(false);
-                    }*/
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
+                }*/
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
+                }*/
+                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
+                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
+                }*/
+
+                /* Compare the bit set to the bit masks to see if they are equal. Currently we
+                 * do not show an Action Icon if comments of the same status type are selected. */
+                if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.APPROVED.getOffset()) {
+                    menu.findItem(R.id.comments_cab_approve).setVisible(false);
+                } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
+                    menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
+                }
+
+                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
+                    menu.findItem(R.id.comments_cab_spam).setVisible(false);
+                }*/
+                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
+                    menu.findItem(R.id.comments_cab_delete).setVisible(false);
+                }*/
 
             } else {
-               retVal = false;
+                retVal = false;
             }
             return retVal;
         }
@@ -902,7 +927,10 @@ public class CommentListFragment extends SherlockListFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            clearSelectedComments();
+            ListView listView = getListView();
+            listView.clearChoices();
+            listView.invalidateViews();
+            mPriorCheckedCommentPositions.clear();
             mActionMode = null;
         }
     }
