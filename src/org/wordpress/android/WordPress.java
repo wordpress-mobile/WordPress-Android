@@ -39,14 +39,14 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.prefs.ReaderPrefs;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPRestClient;
 import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -178,7 +178,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    new WPComXMLRPCApi().registerWPComToken(ctx, token, true);
+                    NotificationUtils.registerPushNotificationsToken(ctx, token, true);
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -447,7 +447,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        new WPComXMLRPCApi().unregisterWPComToken(
+        NotificationUtils.unregisterPushNotificationsToken(
                 context,
                 GCMRegistrar.getRegistrationId(context));
         try {
@@ -467,9 +467,12 @@ public class WordPress extends Application {
         currentBlog = null;
 
         // reset all reader-related prefs & data
-        UserPrefs.reset();
+        ReaderPrefs.reset();
         ReaderDatabase.reset();
 
+        //Delete all the Notes
+        WordPress.wpDB.clearNotes();
+        
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
@@ -646,7 +649,7 @@ public class WordPress extends Application {
                             return;
                         } else {
                             // Send the token to WP.com
-                            new WPComXMLRPCApi().registerWPComToken(mContext, token, false);
+                            NotificationUtils.registerPushNotificationsToken(mContext, token, false);
                         }
                     } catch (Exception e) {
                         Log.e("WORDPRESS", "Could not ping the PNs backend: " + e.getMessage());

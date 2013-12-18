@@ -65,6 +65,7 @@ public class DashboardActivity extends SherlockActivity {
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
         mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         Bundle extras = getIntent().getExtras();

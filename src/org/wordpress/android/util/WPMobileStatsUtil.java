@@ -1,26 +1,21 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.Config;
-import org.wordpress.android.Constants;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.prefs.UserPrefs;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.quantcast.measurement.service.QuantcastClient;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.wordpress.android.Config;
+import org.wordpress.android.Constants;
+import org.wordpress.android.WordPress;
+
 import java.util.HashMap;
 
 
@@ -170,41 +165,6 @@ public class WPMobileStatsUtil {
         String statsURL = String.format("%s%s%s%s%d", Constants.readerURL_v3, "&template=stats&stats_name=", statName, "&rnd=", rnd );
         StringRequest req = new StringRequest(Request.Method.GET, statsURL, null, errorListener);
         WordPress.requestQueue.add(req);
-    }
-
-    // Quantcast
-
-    /*
-        Begin tracking an activity.  This should be called from an activity's onStart method.
-
-        @param context The activity being tracked.
-     */
-    public static void resumeSession(Context context) {
-        String userId = "";
-        try {
-            String wpcomId = String.format("%d%n", UserPrefs.getCurrentUserId());
-            userId = new String(MessageDigest.getInstance("md5").digest(wpcomId.getBytes()));
-        } catch( NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        QuantcastClient.activityStart(context, Config.QUANTCAST_KEY, userId, null);
-    }
-
-    /*
-        Stop tracking an activity.
-     */
-    public static void endSession() {
-        QuantcastClient.activityStop();
-    }
-
-    /*
-        Log an activities event. resumeSession must be called prior to calling logQuantCastEvent.
-
-        @param event  The name of the event to log.
-     */
-    public static void logQuantcastEvent(String event) {
-        QuantcastClient.logEvent(event);
     }
 
     // Generic
