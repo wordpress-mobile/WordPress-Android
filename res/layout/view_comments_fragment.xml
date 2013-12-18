@@ -16,7 +16,6 @@
         android:layout_height="fill_parent"
         android:background="@color/list_row_bg"
         android:cacheColorHint="#00000000"
-        android:choiceMode="singleChoice"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1px"
         android:scrollingCache="true"

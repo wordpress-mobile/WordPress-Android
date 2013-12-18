@@ -764,27 +764,26 @@ public class ApiHelper {
         }
     }
 
-    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Long>> {
+    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Integer>> {
         private Callback mCallback;
-        private ArrayList<Long> mModeratedCommentIds;
+        private ArrayList<Integer> mModeratedCommentIds;
         private String mNewCommentStatus;
         private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
-        private ArrayList<Long> mSelectedCommentIdsSnapshot;
-        private Object[] mCommentParams;
+        private ArrayList<Integer> mSelectedCommentIdsSnapshot;
         private int mNumSelectedComments = -1;
 
         public interface Callback {
-            public void onSuccess(ArrayList<Long> moderatedCommentIds);
-            public void onCancelled(ArrayList<Long> moderatedCommentIds);
+            public void onSuccess(ArrayList<Integer> moderatedCommentIds);
+            public void onCancelled(ArrayList<Integer> moderatedCommentIds);
             public void onFailure();
         }
 
         public ModerateCommentsTask(String newStatus, Map<Integer, Map<?, ?>>  allComments,
-                                    ArrayList<Long> selectedCommentIds, Callback callback) {
+                                    ArrayList<Integer> selectedCommentIds, Callback callback) {
             mNewCommentStatus = newStatus;
             mAllCommentsSnapshot = allComments;
             mSelectedCommentIdsSnapshot = selectedCommentIds;
-            mModeratedCommentIds = new ArrayList<Long>(selectedCommentIds.size());
+            mModeratedCommentIds = new ArrayList<Integer>(selectedCommentIds.size());
             mNumSelectedComments = mSelectedCommentIdsSnapshot.size();
             mCallback = callback;
         }
@@ -794,7 +793,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected ArrayList<Long> doInBackground(List<?>... params) {
+        protected ArrayList<Integer> doInBackground(List<?>... params) {
             Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
@@ -813,9 +812,9 @@ public class ApiHelper {
                     return mModeratedCommentIds;
 
                 rpcCallStatus = false;
-                Long currentCommentId = mSelectedCommentIdsSnapshot.get(i);
+                int currentCommentId = mSelectedCommentIdsSnapshot.get(i);
                 Map<String, String> contentHash, postHash = new HashMap<String, String>();
-                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId.intValue());
+                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId);
 
                 if (contentHash.get("status").equals(mNewCommentStatus)) {
                     continue;
@@ -827,7 +826,7 @@ public class ApiHelper {
                 postHash.put("author_url", contentHash.get("url"));
                 postHash.put("author_email", contentHash.get("email"));
 
-                Object[] mCommentParams = {
+                Object[] apiParams = {
                         blog.getBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
@@ -837,7 +836,7 @@ public class ApiHelper {
 
                 Object result;
                 try {
-                    result = client.call("wp.editComment", mCommentParams);
+                    result = client.call("wp.editComment", apiParams);
                     rpcCallStatus = Boolean.parseBoolean(result.toString());
                 } catch (XMLRPCException e) {
                     Log.e("WordPress", "XMLRPCException: " + e.getMessage());
@@ -852,39 +851,39 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Long> moderatedCommentIds) {
+        protected void onPostExecute(ArrayList<Integer> moderatedCommentIds) {
             if (mCallback != null) {
                 if (moderatedCommentIds.size() == 0)
-                    mCallback.onFailure();
+                    mCallback.onFailure(); // TODO: All this currently indicates is that no comments were moderated
                 else
                     mCallback.onSuccess(moderatedCommentIds);
             }
         }
 
         @Override
-        protected void onCancelled(ArrayList<Long> moderatedCommentIds) {
+        protected void onCancelled(ArrayList<Integer> moderatedCommentIds) {
            if (mCallback != null) {
                mCallback.onCancelled(moderatedCommentIds);
            }
         }
     }
 
-    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Long>> {
+    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Integer>> {
         private Callback mCallback;
         private int mNumSelectedComments = 0;
-        private ArrayList<Long> mSelectedCommentIdArraySnapshot;
-        private ArrayList<Long> mDeletedCommentIds;
+        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
+        private ArrayList<Integer> mDeletedCommentIds;
 
         public interface Callback {
-            public void onSuccess(ArrayList<Long> deletedCommentIds);
-            public void onCancelled(ArrayList<Long> deletedCommentIds);
+            public void onSuccess(ArrayList<Integer> deletedCommentIds);
+            public void onCancelled(ArrayList<Integer> deletedCommentIds);
             public void onFailure();
         }
 
-        public DeleteCommentsTask(ArrayList<Long> selectedCommentIdArray, Callback callback) {
+        public DeleteCommentsTask(ArrayList<Integer> selectedCommentIdArray, Callback callback) {
             mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
             mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
-            mDeletedCommentIds = new ArrayList<Long>(mNumSelectedComments);
+            mDeletedCommentIds = new ArrayList<Integer>(mNumSelectedComments);
             mCallback = callback;
         }
 
@@ -893,7 +892,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected ArrayList<Long> doInBackground(List<?>... params) {
+        protected ArrayList<Integer> doInBackground(List<?>... params) {
             Boolean rpcCallStatus;
 
             List<?> arguments = params[0];
@@ -913,7 +912,7 @@ public class ApiHelper {
 
                 rpcCallStatus = false;
 
-                long currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
+                int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
                 Object[] apiParams = {blog.getBlogId(),
                         blog.getUsername(), blog.getPassword(), currentCommentId};
 
@@ -933,7 +932,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Long> deletedCommentIds) {
+        protected void onPostExecute(ArrayList<Integer> deletedCommentIds) {
             if (mCallback != null) {
                 if (deletedCommentIds.size() == 0)
                     mCallback.onFailure();
@@ -943,7 +942,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onCancelled(ArrayList<Long> deletedCommentIds) {
+        protected void onCancelled(ArrayList<Integer> deletedCommentIds) {
             if (mCallback != null) {
                 mCallback.onCancelled(deletedCommentIds);
             }
