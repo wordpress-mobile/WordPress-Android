@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +99,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public void setTag(String tagName) {
         mCurrentTag = tagName;
-        reload();
+        reload(false);
     }
 
     private void clear() {
@@ -110,9 +111,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * briefly animate the appearance of new rows when reloading - happens when the tag is
-     * changed, the user taps to view new posts, or a previously empty tag has new posts
-     * downloaded
+     * briefly animate the appearance of new rows when reloading
      */
     private void enableRowAnimation() {
         mAnimateRows = true;
@@ -126,14 +125,12 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public void refresh() {
         //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
-        // animate the appearance of new rows if currently empty
-        if (isEmpty())
-            enableRowAnimation();
         loadPosts();
     }
 
-    public void reload() {
-        enableRowAnimation();
+    public void reload(boolean animate) {
+        if (animate)
+            enableRowAnimation();
         clear();
         loadPosts();
     }
