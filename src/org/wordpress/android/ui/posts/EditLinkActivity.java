@@ -15,7 +15,7 @@ public class EditLinkActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.link);
+        setContentView(R.layout.alert_create_link);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
