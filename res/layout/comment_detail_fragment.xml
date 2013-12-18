@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/reader_margin_large"
-        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingRight="@dimen/reader_margin_large"
         android:paddingTop="@dimen/reader_margin_large">
 
         <com.android.volley.toolbox.NetworkImageView
@@ -70,7 +70,7 @@
         android:fillViewport="true"
         android:paddingBottom="@dimen/reader_margin_small"
         android:paddingLeft="@dimen/reader_margin_large"
-        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingRight="@dimen/reader_margin_large"
         android:paddingTop="@dimen/reader_margin_medium">
 
         <org.wordpress.android.widgets.WPTextView

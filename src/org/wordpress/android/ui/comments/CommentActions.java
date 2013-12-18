@@ -4,10 +4,15 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -102,6 +107,41 @@ public class CommentActions {
                 }
             }
         }.start();
+    }
+
+    /**
+     * reply to an individual comment that came from a notification - this differs from
+     * submitReplyToComment() in that it enables responding to a reply to a comment this
+     * user made on someone else's blog
+     */
+    protected static void submitReplyToCommentNote(final Note note,
+                                                   final String replyText,
+                                                   final CommentActionListener actionListener) {
+        if (note == null || TextUtils.isEmpty(replyText)) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (actionListener != null)
+                    actionListener.onActionResult(true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError != null)
+                    Log.e(WordPress.TAG, volleyError.getMessage(), volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+            }
+        };
+
+        Note.Reply reply = note.buildReply(replyText);
+        WordPress.restClient.replyToComment(reply, listener, errorListener);
     }
 
     /**

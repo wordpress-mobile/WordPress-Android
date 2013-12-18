@@ -9,6 +9,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.QuoteSpan;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPHtmlTagHandler;
 
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -37,9 +39,17 @@ public class Note {
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
     public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
     public static final String BIG_BADGE_TEMPLATE="big-badge";
-    // JSON keys and values for looking up values
-    private static final String NOTE_ACTION_REPLY="replyto-comment";
-    private static final String REPLY_CONTENT_PARAM_KEY="content";
+
+    // JSON action keys
+    private static final String ACTION_KEY_REPLY = "replyto-comment";
+    private static final String ACTION_KEY_APPROVE = "approve-comment";
+    private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
+    private static final String ACTION_KEY_SPAM = "spam-comment";
+
+    public static enum EnabledActions {ACTION_REPLY,
+                                       ACTION_APPROVE,
+                                       ACTION_UNAPPROVE,
+                                       ACTION_SPAM}
 
     // FIXME: add other types
     private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
@@ -214,7 +224,7 @@ public class Note {
         }
     }
     public Reply buildReply(String content){
-        JSONObject replyAction = getActions().get(NOTE_ACTION_REPLY);
+        JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         Log.d(TAG, String.format("Search actions %s", restPath));
         Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
@@ -273,6 +283,25 @@ public class Note {
             }
         }
         return mActions;
+    }
+
+    /*
+     * returns the actions allowed on this note, assumes it's a comment notification
+     */
+    public EnumSet<EnabledActions> getEnabledActions() {
+        EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
+        Map<String,JSONObject> jsonActions = getActions();
+        if (jsonActions == null || jsonActions.size() == 0)
+            return actions;
+        if (jsonActions.containsKey(ACTION_KEY_REPLY))
+            actions.add(EnabledActions.ACTION_REPLY);
+        if (jsonActions.containsKey(ACTION_KEY_APPROVE))
+            actions.add(EnabledActions.ACTION_APPROVE);
+        if (jsonActions.containsKey(ACTION_KEY_UNAPPROVE))
+            actions.add(EnabledActions.ACTION_UNAPPROVE);
+        if (jsonActions.containsKey(ACTION_KEY_SPAM))
+            actions.add(EnabledActions.ACTION_SPAM);
+        return actions;
     }
 
     /**

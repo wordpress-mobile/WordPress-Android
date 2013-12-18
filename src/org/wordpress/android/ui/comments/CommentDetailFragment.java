@@ -32,6 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.util.EditTextUtils;
@@ -46,6 +47,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPImageGetter;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 /**
@@ -71,6 +73,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
     private boolean mIsRequestingComment = false;
+
+    /*
+     * these determine which actions (moderation, replying, marking as spam) to enable
+     * for this comment - all actions are enabled when opened from the comment list, only
+     * changed when opened from a notification
+     */
+    private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
 
     private CommentActions.OnCommentChangeListener mChangeListener;
 
@@ -222,7 +231,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
         final TextView txtContent = (TextView) viewDetail.findViewById(R.id.text_content);
 
-        // hide all views when comment is null
+        // hide all views when comment is null (will happen when opened from a notification)
         if (mComment == null) {
             imgAvatar.setImageDrawable(null);
             txtName.setText(null);
@@ -283,7 +292,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // make sure reply box is showing
-        if (mLayoutReply.getVisibility() != View.VISIBLE)
+        if (mLayoutReply.getVisibility() != View.VISIBLE && isReplyingEnabled())
             ReaderAniUtils.flyIn(mLayoutReply);
     }
 
@@ -363,7 +372,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
 
-        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
         final String replyText = EditTextUtils.getText(mEditReply);
         if (TextUtils.isEmpty(replyText))
             return;
@@ -372,39 +380,42 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
         mImgSubmitReply.setVisibility(View.GONE);
+        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsSubmittingReply = false;
+                if (!hasActivity())
+                    return;
 
-                if (hasActivity()) {
-                    mEditReply.setEnabled(true);
-                    mImgSubmitReply.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
+                mEditReply.setEnabled(true);
+                mImgSubmitReply.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
 
-                    if (succeeded) {
-                        if (mChangeListener != null)
-                            mChangeListener.onCommentAdded();
-                        MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
-                        mEditReply.setText(null);
-                    } else {
-                        ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
-                        // refocus editor on failure and show soft keyboard
-                        mEditReply.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
-                    }
+                if (succeeded) {
+                    if (mChangeListener != null)
+                        mChangeListener.onCommentAdded();
+                    MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
+                    mEditReply.setText(null);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                    // refocus editor on failure and show soft keyboard
+                    mEditReply.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
                 }
             }
         };
 
         mIsSubmittingReply = true;
-        CommentActions.submitReplyToComment(mAccountId,
-                mComment,
-                replyText,
-                actionListener);
+
+        if (mNote != null) {
+            CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
+        } else {
+            CommentActions.submitReplyToComment(mAccountId, mComment, replyText, actionListener);
+        }
     }
 
     /*
@@ -459,22 +470,42 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             ReaderAniUtils.fadeIn(mTxtStatus);
         }
 
-        mBtnModerate.setText(btnTextResId);
-        mBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
-        mBtnModerate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moderateComment(newStatus);
-            }
-        });
+        if (isModerationEnabled()) {
+            mBtnModerate.setText(btnTextResId);
+            mBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
+            mBtnModerate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moderateComment(newStatus);
+                }
+            });
+            mBtnModerate.setVisibility(View.VISIBLE);
+        } else {
+            mBtnModerate.setVisibility(View.GONE);
+        }
 
-        mBtnSpam.setVisibility(showSpamButton ? View.VISIBLE : View.GONE);
+        mBtnSpam.setVisibility(isMarkSpamEnabled() && showSpamButton ? View.VISIBLE : View.GONE);
 
         // animate the buttons in if they're not visible
-        if (mLayoutButtons.getVisibility() != View.VISIBLE) {
+        if (mLayoutButtons.getVisibility() != View.VISIBLE && (isMarkSpamEnabled() || isModerationEnabled())) {
             mLayoutButtons.clearAnimation();
             ReaderAniUtils.flyIn(mLayoutButtons);
         }
+    }
+
+    private boolean isModerationEnabled() {
+        if (mEnabledActions == null)
+            return false;
+        return (mEnabledActions.contains(EnabledActions.ACTION_APPROVE)
+             || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
+    }
+
+    private boolean isMarkSpamEnabled() {
+        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_SPAM));
+    }
+
+    private boolean isReplyingEnabled() {
+        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_REPLY));
     }
 
     /*
@@ -482,9 +513,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     private void showCommentForNote(Note note) {
         /*
+         * determine which actions to enable for this comment - if the comment is from this user's
+         * blog then all actions will be enabled, but they won't be if it's a reply to a comment
+         * this user made on someone else's blog
+         */
+        mEnabledActions = note.getEnabledActions();
+
+        /*
          * in order to get the actual comment from a notification we need to extract the
          * blogId/postId/commentId from the notification, and this info is buried in the
-         * "actions" array of the note's JSON. each action entry contains a "params"
+         * actions array of the note's JSON. each action entry contains a "params"
          * array which contains these IDs, so find the first action then extract the IDs
          * from its params
          */
@@ -496,6 +534,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (jsonParams != null) {
                 int blogId = jsonParams.optInt("blog_id");
                 int commentId = jsonParams.optInt("comment_id");
+
+                // note that the account won't be found if the comment is from someone else's blog
                 int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
 
                 // first try to get from local db, if that fails request it from the server
@@ -507,6 +547,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     requestComment(blogId, commentId, note.getIconURL());
                 }
             }
+        } else {
+            if (hasActivity())
+                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
         }
     }
 
@@ -545,7 +588,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (hasActivity()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
-                    ToastUtils.showToast(getActivity(), R.string.connection_error, ToastUtils.Duration.LONG);
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
                 }
             }
         };

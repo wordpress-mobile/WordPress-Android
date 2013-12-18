@@ -631,6 +631,7 @@
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_no_connection">Unable to connect</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
+    <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
     <!--
         very important that this string resource is correct for all translations, since it's
