@@ -159,7 +159,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * Updates the local data models and views after completion of some RPC server action.
+     * Updates, all comments, model and the local database for a set of Comments changed server side.
      */
     private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments, String newStatusStr) {
         Integer currentCommentId;
@@ -171,6 +171,15 @@ public class CommentListFragment extends SherlockListFragment {
                     currentComment.setStatus(newStatusStr);
                     replaceComment(currentComment);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
+
+                    if (mAdapter != null) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    Map<String, String> contentHash;
+                    contentHash = (Map<String, String>) allComments.get(currentCommentId);
+                    contentHash.put("status", newStatusStr);
+                    allComments.put(currentCommentId, contentHash);
                 }
             }
         }
@@ -258,9 +267,8 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
-    /**
-     * This function is used to update the local data models and views after completion of some RPC
-     * server action.
+     /**
+     * Updates, all comments, model and the local database for a set of Comments changed server side.
      */
     private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments) {
         Integer currentCommentId;
@@ -271,6 +279,12 @@ public class CommentListFragment extends SherlockListFragment {
                 if (moderatedComments.contains(currentCommentId)) {
                     deleteComment(currentComment);
                     WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
+
+                    if (mAdapter != null) {
+                        mAdapter.remove(currentComment);
+                    }
+
+                    allComments.remove(currentCommentId);
                 }
             }
         }
@@ -356,14 +370,11 @@ public class CommentListFragment extends SherlockListFragment {
         if (commentModerationStatusType == CommentStatus.APPROVED
                 || commentModerationStatusType == CommentStatus.UNAPPROVED) {
             if (mActionMode != null) {
-                mAdapter.notifyDataSetChanged();
                 mActionMode.invalidate();
             }
         } else if (commentModerationStatusType == CommentStatus.SPAM
                 || commentModerationStatusType == CommentStatus.TRASH) {
             if (mActionMode != null) {
-                mAdapter.notifyDataSetChanged();
-                refreshComments();
                 mActionMode.finish();
             }
         }
@@ -697,19 +708,20 @@ public class CommentListFragment extends SherlockListFragment {
 
         for(int i=0; i<checkedPositionArray.size(); i++) {
             if (checkedPositionArray.valueAt(i)) {
-                selectedCommentIdArray.add(model.get(checkedPositionArray.keyAt(i)).commentID);
-                selectedCommentIdArray.add(mAdapter.getItem(checkedPositionArray.keyAt(i)).commentID);
+                int key = checkedPositionArray.keyAt(i);
+                selectedCommentIdArray.add(mAdapter.getItem(key).commentID);
             }
         }
         return selectedCommentIdArray;
     }
 
     private ArrayList<Comment> getSelectedCommentArray(SparseBooleanArray checkedPositionArray) {
-        ArrayList<Integer> selectedCommentIdArray = getSelectedCommentIds(checkedPositionArray);
         ArrayList<Comment> selectedCommentArray = new ArrayList<Comment>();
 
-        for(int i=0; i<selectedCommentIdArray.size(); i++) {
-            selectedCommentArray.add(mAdapter.getItem(i));
+        for(int i=0; i<checkedPositionArray.size(); i++) {
+            if (checkedPositionArray.valueAt(i)) {
+                selectedCommentArray.add(mAdapter.getItem(checkedPositionArray.keyAt(i)));
+            }
         }
         return selectedCommentArray;
     }
