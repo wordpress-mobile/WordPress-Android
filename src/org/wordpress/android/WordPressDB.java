@@ -778,18 +778,11 @@ public class WordPressDB {
     }
 
     public boolean deletePost(Post post) {
+        int result = db.delete(POSTS_TABLE,
+                "blogID=? AND id=?",
+                new String[]{String.valueOf(post.getBlogID()), String.valueOf(post.getId())});
 
-        boolean returnValue = false;
-
-        int result = 0;
-        result = db.delete(POSTS_TABLE, "blogID=" + post.getBlogID()
-                + " AND id=" + post.getId(), null);
-
-        if (result == 1) {
-            returnValue = true;
-        }
-
-        return returnValue;
+        return (result == 1);
     }
 
     public boolean savePosts(List<?> postValues, int blogID, boolean isPage) {
