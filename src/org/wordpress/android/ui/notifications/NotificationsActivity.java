@@ -386,7 +386,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
 
     /**
-     * these three methods implement OnCommentChangedListener and are triggered from the comment details fragment whenever a comment is changed
+     * these four methods implement OnCommentChangedListener and are triggered from the comment details fragment whenever a comment is changed
      */
     @Override
     public void onCommentAdded() {

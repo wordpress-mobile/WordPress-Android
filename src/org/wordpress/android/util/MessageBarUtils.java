@@ -20,7 +20,7 @@ import org.wordpress.android.R;
  */
 
 public class MessageBarUtils {
-    private static final long DELAY_MILLIS = 1500;
+    private static final long DELAY_MILLIS = 2000;
     public static enum MessageBarType { INFO, ALERT };
 
     public static void showMessageBar(final Activity activity, final String message) {
