@@ -5,11 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
@@ -85,7 +84,7 @@ public class ReaderUserTable {
         // make sure current user's avatar is returned if the passed list contains them - this is
         // important since it may not otherwise be returned when a "max" is passed, and we want
         // the current user to appear first in post detail when they like a post
-        long currentUserId = ReaderPrefs.getCurrentUserId();
+        long currentUserId = UserPrefs.getCurrentUserId();
         boolean containsCurrentUser = userIds.contains(currentUserId);
         if (containsCurrentUser)
             sb.append(currentUserId);
@@ -124,7 +123,7 @@ public class ReaderUserTable {
     }
 
     public static ReaderUser getCurrentUser() {
-        return getUser(ReaderPrefs.getCurrentUserId());
+        return getUser(UserPrefs.getCurrentUserId());
     }
 
     public static ReaderUser getUser(long userId) {

@@ -9,7 +9,7 @@ import org.wordpress.android.WordPress;
 /**
  * Created by nbradbury on 6/21/13.
  */
-public class ReaderPrefs {
+public class UserPrefs {
     private static final String PREFKEY_USER_ID    = "wp_userid";       // id of the current user
     private static final String PREFKEY_READER_TAG = "reader_tag";    // last selected tag in the reader
 
@@ -48,7 +48,6 @@ public class ReaderPrefs {
         prefs().edit().remove(key).commit();
     }
 
-    // TODO: WPAndroid should store the current user's ID at login and clear it at logout
     public static long getCurrentUserId() {
         try {
             String value = getString(PREFKEY_USER_ID);

@@ -28,7 +28,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
@@ -66,7 +66,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         ReaderLog.d("post list newInstance");
 
         // restore the previously-chosen tag, revert to default if not set or doesn't exist
-        String tagName = ReaderPrefs.getReaderTag();
+        String tagName = UserPrefs.getReaderTag();
         if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
             tagName = context.getString(R.string.reader_default_tag_name);
 
@@ -324,7 +324,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             return;
 
         mCurrentTag = tagName;
-        ReaderPrefs.setReaderTag(tagName);
+        UserPrefs.setReaderTag(tagName);
 
         hideLoadingProgress();
         getPostAdapter().setTag(tagName);

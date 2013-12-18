@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.WPRestClient;
 import org.xmlpull.v1.XmlPullParser;
 
@@ -98,6 +99,7 @@ public class CreateUserAndBlog {
                                 mCallback.onSuccess(response);
                                 break;
                             case AUTHENTICATE_USER:
+                                ReaderUserActions.updateCurrentUser(response);
                             default:
                                 break;
                         }
