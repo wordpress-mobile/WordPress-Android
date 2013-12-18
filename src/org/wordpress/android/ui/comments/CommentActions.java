@@ -8,10 +8,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,8 +37,9 @@ public class CommentActions {
         public void onActionResult(boolean succeeded);
     }
 
-    protected interface OnCommentChangeListener {
-        public void onCommentModerated();
+    public interface OnCommentChangeListener {
+        public void onCommentModerated(final Comment comment, final Note note);
+        public void onCommentsModerated(final List<Comment> comments);
         public void onCommentAdded();
         public void onCommentDeleted();
     }
