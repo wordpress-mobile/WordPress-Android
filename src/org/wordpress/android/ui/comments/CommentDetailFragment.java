@@ -61,13 +61,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
-    private TextView mBtnModerate;
-    private TextView mBtnSpam;
+    private Button mBtnModerate;
+    private Button mBtnSpam;
     private TextView mTxtStatus;
-    private ViewGroup mLayoutReply;
-    private ViewGroup mLayoutButtons;
     private EditText mEditReply;
     private ImageView mImgSubmitReply;
+    private ViewGroup mLayoutReply;
+    private ViewGroup mLayoutButtons;
 
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
@@ -97,13 +97,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
-        mBtnModerate = (TextView) view.findViewById(R.id.text_btn_moderate);
-        mBtnSpam = (TextView) view.findViewById(R.id.text_btn_spam);
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
+
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
-        mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+
+        mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+        mBtnModerate = (Button) mLayoutButtons.findViewById(R.id.text_btn_moderate);
+        mBtnSpam = (Button) mLayoutButtons.findViewById(R.id.text_btn_spam);
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
@@ -228,8 +230,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtDate.setText(null);
             txtContent.setText(null);
             mTxtStatus.setText(null);
-            mBtnModerate.setVisibility(View.GONE);
-            mBtnSpam.setVisibility(View.GONE);
+            mLayoutButtons.setVisibility(View.GONE);
             mLayoutReply.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
@@ -311,6 +312,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!checkConnection(getActivity()))
             return;
 
+        // disable buttons during request
+        mBtnModerate.setEnabled(false);
+        mBtnSpam.setEnabled(false);
+
         // animate the buttons out (updateStatusViews will re-display them when request completes)
         mLayoutButtons.clearAnimation();
         ReaderAniUtils.flyOut(mLayoutButtons);
@@ -347,6 +352,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsModeratingComment = false;
                 if (!hasActivity())
                     return;
+                mBtnModerate.setEnabled(true);
+                mBtnSpam.setEnabled(true);
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(newStatus));
                     if (mChangeListener != null)
@@ -354,6 +361,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                 }
+                // note this MUST come after mComment.setStatus
                 updateStatusViews();
             }
         };
@@ -475,10 +483,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 moderateComment(newStatus);
             }
         });
-        mBtnModerate.setVisibility(View.VISIBLE);
 
         mBtnSpam.setVisibility(showSpamButton ? View.VISIBLE : View.GONE);
 
+        // animate the buttons in if they're not visible
         if (mLayoutButtons.getVisibility() != View.VISIBLE) {
             mLayoutButtons.clearAnimation();
             ReaderAniUtils.flyIn(mLayoutButtons);
