@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- TODO: JCO - We still need unapprove and spam icons ... note that GMail App/Webclient use the "warning" icon to mark spam. I know on WP.com we use a flag -->
+    <item
+        android:id="@+id/comments_cab_approve"
+        android:icon="@drawable/ab_icon_approve"
+        android:showAsAction="ifRoom"
+        android:checkable="false"
+        android:title="@string/approve"/>
+    <item
+        android:id="@+id/comments_cab_unapprove"
+        android:icon="@drawable/moderate_unapprove"
+        android:showAsAction="ifRoom"
+        android:checkable="false"
+        android:title="@string/unapprove"/>
+    <item
+        android:id="@+id/comments_cab_spam"
+        android:icon="@drawable/moderate_spam"
+        android:showAsAction="ifRoom"
+        android:checkable="false"
+        android:title="@string/mark_spam"/>
+    <item
+        android:id="@+id/comments_cab_delete"
+        android:icon="@drawable/ab_icon_trash"
+        android:showAsAction="ifRoom"
+        android:checkable="false"
+        android:title="@string/delete"/>
+</menu>

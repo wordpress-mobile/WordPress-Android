@@ -2,6 +2,7 @@
     style="@style/WordPressListRowBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/comment_row_bg_selector"
     android:paddingLeft="@dimen/reader_margin_large"
     android:paddingRight="@dimen/reader_margin_large"
     android:paddingTop="@dimen/reader_margin_medium"
@@ -40,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/reader_hyperlink"
@@ -52,7 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/email_url"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/grey_medium"
@@ -64,20 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/postTitle"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:maxLines="4"
         android:paddingTop="@dimen/reader_margin_small"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/reader_text_sz_medium" />
-
-    <CheckBox
-        android:id="@+id/bulkCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/comment"
-        android:focusable="false"
-        android:padding="@dimen/reader_margin_small" />
 
 </RelativeLayout>

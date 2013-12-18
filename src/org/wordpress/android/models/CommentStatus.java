@@ -4,11 +4,33 @@ package org.wordpress.android.models;
  * Created by nbradbury on 11/14/13.
  */
 public enum CommentStatus {
-    UNKNOWN,
-    UNAPPROVED,
-    APPROVED,
-    TRASH,
-    SPAM;
+    UNKNOWN (1),
+    APPROVED (2),
+    UNAPPROVED (3),
+    SPAM (4),
+    TRASH (5);
+
+    public static enum ApiFormat {XMLRPC, REST}
+    private static int[] sSelectedCommentStatusTypeCountArray = new int[CommentStatus.values().length];
+    private final int mOffset;
+
+    CommentStatus(int offset) { mOffset = offset; }
+
+    public int getOffset() { return mOffset; }
+
+    public static void incrementSelectedCommentStatusTypeCount(CommentStatus commentStatus) {
+        sSelectedCommentStatusTypeCountArray[commentStatus.ordinal()] += 1;
+    }
+
+    public static int getSelectedCommentStatusTypeCount(CommentStatus commentStatus) {
+        return sSelectedCommentStatusTypeCountArray[commentStatus.ordinal()];
+    }
+
+    public static void clearSelectedCommentStatusTypeCount() {
+        for(int i=0; i<sSelectedCommentStatusTypeCountArray.length; i++) {
+            sSelectedCommentStatusTypeCountArray[i] = 0;
+        }
+    }
 
     /*
      * returns the string representation of the passed status, as used by the XMLRPC API

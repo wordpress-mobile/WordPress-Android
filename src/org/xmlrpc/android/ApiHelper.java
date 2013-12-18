@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -762,7 +763,191 @@ public class ApiHelper {
             }
         }
     }
-    
+
+    public static class ModerateCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Integer>> {
+        private Callback mCallback;
+        private ArrayList<Integer> mModeratedCommentIds;
+        private String mNewCommentStatus;
+        private Map<Integer, Map<?, ?>> mAllCommentsSnapshot;
+        private ArrayList<Integer> mSelectedCommentIdsSnapshot;
+        private int mNumSelectedComments = -1;
+
+        public interface Callback {
+            public void onSuccess(ArrayList<Integer> moderatedCommentIds);
+            public void onCancelled(ArrayList<Integer> moderatedCommentIds);
+            public void onFailure();
+        }
+
+        public ModerateCommentsTask(String newStatus, Map<Integer, Map<?, ?>>  allComments,
+                                    ArrayList<Integer> selectedCommentIds, Callback callback) {
+            mNewCommentStatus = newStatus;
+            mAllCommentsSnapshot = allComments;
+            mSelectedCommentIdsSnapshot = selectedCommentIds;
+            mModeratedCommentIds = new ArrayList<Integer>(selectedCommentIds.size());
+            mNumSelectedComments = mSelectedCommentIdsSnapshot.size();
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected ArrayList<Integer> doInBackground(List<?>... params) {
+            Boolean rpcCallStatus;
+
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
+
+            if (blog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+            for (int i = 0; i < mNumSelectedComments; i++) {
+                if (isCancelled())
+                    return mModeratedCommentIds;
+
+                rpcCallStatus = false;
+                int currentCommentId = mSelectedCommentIdsSnapshot.get(i);
+                Map<String, String> contentHash, postHash = new HashMap<String, String>();
+                contentHash = (Map<String, String>) mAllCommentsSnapshot.get(currentCommentId);
+
+                if (contentHash.get("status").equals(mNewCommentStatus)) {
+                    continue;
+                }
+
+                postHash.put("status", mNewCommentStatus);
+                postHash.put("content", contentHash.get("comment"));
+                postHash.put("author", contentHash.get("author"));
+                postHash.put("author_url", contentHash.get("url"));
+                postHash.put("author_email", contentHash.get("email"));
+
+                Object[] apiParams = {
+                        blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
+                        currentCommentId,
+                        postHash
+                };
+
+                Object result;
+                try {
+                    result = client.call("wp.editComment", apiParams);
+                    rpcCallStatus = Boolean.parseBoolean(result.toString());
+                } catch (XMLRPCException e) {
+                    Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                }
+
+                if (rpcCallStatus) {
+                    mModeratedCommentIds.add(currentCommentId);
+                }
+            }
+            return mModeratedCommentIds;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Integer> moderatedCommentIds) {
+            if (mCallback != null) {
+                if (moderatedCommentIds.size() == 0)
+                    mCallback.onFailure(); // TODO: All this currently indicates is that no comments were moderated
+                else
+                    mCallback.onSuccess(moderatedCommentIds);
+            }
+        }
+
+        @Override
+        protected void onCancelled(ArrayList<Integer> moderatedCommentIds) {
+           if (mCallback != null) {
+               mCallback.onCancelled(moderatedCommentIds);
+           }
+        }
+    }
+
+    public static class DeleteCommentsTask extends AsyncTask<List<?>, Void, ArrayList<Integer>> {
+        private Callback mCallback;
+        private int mNumSelectedComments = 0;
+        private ArrayList<Integer> mSelectedCommentIdArraySnapshot;
+        private ArrayList<Integer> mDeletedCommentIds;
+
+        public interface Callback {
+            public void onSuccess(ArrayList<Integer> deletedCommentIds);
+            public void onCancelled(ArrayList<Integer> deletedCommentIds);
+            public void onFailure();
+        }
+
+        public DeleteCommentsTask(ArrayList<Integer> selectedCommentIdArray, Callback callback) {
+            mSelectedCommentIdArraySnapshot = selectedCommentIdArray;
+            mNumSelectedComments = mSelectedCommentIdArraySnapshot.size();
+            mDeletedCommentIds = new ArrayList<Integer>(mNumSelectedComments);
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected ArrayList<Integer> doInBackground(List<?>... params) {
+            Boolean rpcCallStatus;
+
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
+
+            if (blog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+            for (int i = 0; i < mNumSelectedComments; i++) {
+                if (isCancelled())
+                    return mDeletedCommentIds;
+
+                rpcCallStatus = false;
+
+                int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
+                Object[] apiParams = {blog.getBlogId(),
+                        blog.getUsername(), blog.getPassword(), currentCommentId};
+
+                Object result;
+                try {
+                    result = client.call("wp.deleteComment", apiParams);
+                    rpcCallStatus = Boolean.parseBoolean(result.toString());
+                } catch (XMLRPCException e) {
+                    Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                }
+
+                if (rpcCallStatus) {
+                    mDeletedCommentIds.add(currentCommentId);
+                }
+            }
+            return mDeletedCommentIds;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Integer> deletedCommentIds) {
+            if (mCallback != null) {
+                if (deletedCommentIds.size() == 0)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess(deletedCommentIds);
+            }
+        }
+
+        @Override
+        protected void onCancelled(ArrayList<Integer> deletedCommentIds) {
+            if (mCallback != null) {
+                mCallback.onCancelled(deletedCommentIds);
+            }
+        }
+    }
+
     public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
 
         public interface Callback {
