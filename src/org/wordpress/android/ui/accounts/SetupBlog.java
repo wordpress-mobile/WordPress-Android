@@ -144,14 +144,16 @@ public class SetupBlog {
     private String getSelfHostedXmlrpcUrl(String url) {
         String xmlrpcUrl = null;
 
-		// Convert IDN names to punycode if necessary
+        // Convert IDN names to punycode if necessary
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
-			if (url.toLowerCase().startsWith("http://")) {
-				url = "http://" + IDN.toASCII(url.substring(7));
-			} else if (url.toLowerCase().startsWith("https://")) {
-				url = "https://" + IDN.toASCII(url.substring(8));
-			}
-		}
+            if (url.toLowerCase().startsWith("http://")) {
+                url = "http://" + IDN.toASCII(url.substring(7));
+            } else if (url.toLowerCase().startsWith("https://")) {
+                url = "https://" + IDN.toASCII(url.substring(8));
+            } else {
+                url = IDN.toASCII(url);
+            }
+        }
 
         // Add http to the beginning of the URL if needed
         if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
