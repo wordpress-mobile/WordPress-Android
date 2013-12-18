@@ -339,6 +339,7 @@ public class WordPressDB {
         values.put("blogId", blog.getBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
         values.put("wpVersion", blog.getWpVersion());
+        values.put("isAdmin", blog.isAdmin());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
@@ -450,6 +451,7 @@ public class WordPressDB {
         values.put("blog_options", blog.getBlogOptions());
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
+        values.put("isAdmin", blog.isAdmin());
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
                 null) > 0;

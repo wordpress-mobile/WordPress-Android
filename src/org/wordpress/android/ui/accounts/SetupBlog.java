@@ -8,6 +8,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
@@ -210,7 +211,7 @@ public class SetupBlog {
     }
 
     public Blog addBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
-                        String username, String password) {
+                        String username, String password, boolean isAdmin) {
         Blog blog = null;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -227,6 +228,7 @@ public class SetupBlog {
             blog.setBlogId(Integer.parseInt(blogId));
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
+            blog.setAdmin(isAdmin);
             blog.save(null);
         } else {
             // Update blog name
@@ -276,7 +278,8 @@ public class SetupBlog {
             String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
             String homeUrl = blogMap.get("url").toString();
             String blogId = blogMap.get("blogid").toString();
-            Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword);
+            boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
+            Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
             if (blog != null && i == 0) {
                 WordPress.setCurrentBlog(blog.getId());
             }
