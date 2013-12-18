@@ -419,7 +419,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         };
         WordPress.restClient.getNotifications(params, handler, handler);
     }
-    
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
+    }
+        
     public void refreshNotificationsListFragment(List<Note> notes) {
         final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
         adapter.clear();

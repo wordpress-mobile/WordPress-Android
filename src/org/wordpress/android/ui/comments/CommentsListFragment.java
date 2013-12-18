@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -230,6 +231,7 @@ public class CommentsListFragment extends ListFragment {
 
         // handles bulk moderation
         Iterator it= selectedCommentPositions.iterator();
+        final List<Comment> commentsUpdatedList = new LinkedList<Comment>();
         while (it.hasNext()) {
             int i = (Integer) it.next();
             client = new XMLRPCClient(
@@ -271,6 +273,7 @@ public class CommentsListFragment extends ListFragment {
                     contentHash.put("status", newStatusStr);
                     model.set(i, listRow);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), listRow.commentID, newStatusStr);
+                    commentsUpdatedList.add(WordPress.wpDB.getComment(WordPress.currentBlog.getId(), listRow.commentID));
                 }
             } catch (XMLRPCException e) {
                 moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
@@ -286,7 +289,7 @@ public class CommentsListFragment extends ListFragment {
                     Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
-                    mOnCommentChangeListener.onCommentModerated(null, null);
+                    mOnCommentChangeListener.onCommentsModerated(commentsUpdatedList);
 
                     // update the comment counter on the menu drawer 
                     ((WPActionBarActivity) getActivity()).updateMenuDrawer();

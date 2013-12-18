@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.comments;
 
+import java.util.List;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -232,7 +234,12 @@ public class CommentsActivity extends WPActionBarActivity
         refreshCommentList();
         refreshCommentDetail();
     }
-
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
+        refreshCommentList();
+        refreshCommentDetail();
+    }
+    
     /*
      * called from CommentListFragment after user selects from ListView's context menu
      */

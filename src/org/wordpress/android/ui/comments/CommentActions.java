@@ -14,6 +14,7 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +39,7 @@ public class CommentActions {
 
     public interface OnCommentChangeListener {
         public void onCommentModerated(final Comment comment, final Note note);
+        public void onCommentsModerated(final List<Comment> comments);
         public void onCommentAdded();
         public void onCommentDeleted();
     }
