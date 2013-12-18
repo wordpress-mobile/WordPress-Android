@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,10 +16,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentListFragment.CommentListFragmentListener;
+import org.wordpress.android.ui.comments.CommentListFragment.CommentListListener;
 import org.wordpress.android.ui.comments.CommentListFragment.OnAnimateRefreshButtonListener;
 
-public class CommentsActivity extends WPActionBarActivity implements CommentListFragmentListener,
+public class CommentsActivity extends WPActionBarActivity implements CommentListListener,
         OnAnimateRefreshButtonListener, CommentActions.OnCommentChangeListener {
 
     protected int id;

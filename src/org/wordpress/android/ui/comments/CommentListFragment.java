@@ -68,16 +68,15 @@ public class CommentListFragment extends SherlockListFragment {
             mCommentsUpdating = false;
     private Object[] mCommentParams;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
-    private CommentListFragmentListener mOnCommentListFragmentListener;
+    private CommentListListener mOnCommentListListener;
     private ListScrollPositionManager mListScrollPositionManager;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
-    private Map<Integer, Boolean> mPriorCheckedCommentPositions = new HashMap<Integer, Boolean>();
+    private Map<Integer, Boolean> mPriorCheckedCommentPositions;
     private Parcelable mSavedListViewState;
 
-    public interface CommentListFragmentListener {
+    public interface CommentListListener {
         public void onCommentClicked(Comment comment);
-        //public void onCommentSelected(int selectedCommentCount);
     }
 
     public interface OnAnimateRefreshButtonListener {
@@ -93,16 +92,18 @@ public class CommentListFragment extends SherlockListFragment {
             textview.setText(getText(R.string.comments_empty_list));
         }
         mListScrollPositionManager = new ListScrollPositionManager(listView, false);
+        mPriorCheckedCommentPositions = new HashMap<Integer, Boolean>();
 
         /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create life cycle */
         //refreshComments();
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            mOnCommentListFragmentListener = (CommentListFragmentListener) activity;
+            mOnCommentListListener = (CommentListListener) activity;
             onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
 
         } catch (ClassCastException e) {
@@ -158,23 +159,57 @@ public class CommentListFragment extends SherlockListFragment {
         return v;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
+            if (mActionMode != null) {
+                mActionMode.invalidate();
+            }
+        } else if (commentModerationStatusType == CommentStatus.SPAM
+                || commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        }
+    }
+
+    private void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED
+                || commentModerationStatusType == CommentStatus.SPAM) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        } else if (commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        }
+    }
+
     /**
      * Updates, all comments, model and the local database for a set of Comments changed server side.
      */
     private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments, String newStatusStr) {
-        Integer currentCommentId;
-
         if (moderatedComments.size() > 0) {
             for(Comment currentComment : selectedCommentsSnapshot) {
-                currentCommentId = currentComment.commentID;
+                Integer currentCommentId = currentComment.commentID;
                 if (moderatedComments.contains(currentCommentId)) {
                     currentComment.setStatus(newStatusStr);
-                    replaceComment(currentComment);
+                    replaceCommentInModel(currentComment);
                     WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
 
-                    if (mAdapter != null) {
-                        mAdapter.notifyDataSetChanged();
-                    }
+                    if (mAdapter != null) { mAdapter.notifyDataSetChanged(); }
 
                     Map<String, String> contentHash;
                     contentHash = (Map<String, String>) allComments.get(currentCommentId);
@@ -186,11 +221,30 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
+     * Updates, all comments, model and the local database for a set of Comments changed server side.
+     */
+    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments) {
+        if (moderatedComments.size() > 0) {
+            for(Comment currentComment : selectedCommentsSnapshot) {
+                Integer currentCommentId = currentComment.commentID;
+                if (moderatedComments.contains(currentCommentId)) {
+                    deleteCommentInModel(currentComment);
+                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
+
+                    if (mAdapter != null) { mAdapter.remove(currentComment); }
+
+                    allComments.remove(currentCommentId);
+                }
+            }
+        }
+    }
+
+    /**
      * Start an AsyncTask to moderate the current comment selection set
      *
      * @param commentStatus The status to moderate the currently selected comment set type
      */
-    public void moderateComments(final CommentStatus commentStatus) {
+    private void moderateComments(final CommentStatus commentStatus) {
         ListView listView = getListView();
         final String newStatus = CommentStatus.toString(commentStatus);
         final ArrayList<Integer> selectedCommentIds = getSelectedCommentIds(listView.getCheckedItemPositions());
@@ -264,29 +318,6 @@ public class CommentListFragment extends SherlockListFragment {
             MessageBarUtils.showMessageBar(getActivity(), messageBarText, MessageBarUtils.MessageBarType.INFO, null);
             mCommentsUpdating = true;
             task.execute(apiArgs);
-        }
-    }
-
-     /**
-     * Updates, all comments, model and the local database for a set of Comments changed server side.
-     */
-    private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments) {
-        Integer currentCommentId;
-
-        if (moderatedComments.size() > 0) {
-            for(Comment currentComment : selectedCommentsSnapshot) {
-                currentCommentId = currentComment.commentID;
-                if (moderatedComments.contains(currentCommentId)) {
-                    deleteComment(currentComment);
-                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
-
-                    if (mAdapter != null) {
-                        mAdapter.remove(currentComment);
-                    }
-
-                    allComments.remove(currentCommentId);
-                }
-            }
         }
     }
 
@@ -366,34 +397,6 @@ public class CommentListFragment extends SherlockListFragment {
         }
     }
 
-    private void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
-            if (mActionMode != null) {
-                mActionMode.invalidate();
-            }
-        } else if (commentModerationStatusType == CommentStatus.SPAM
-                || commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        }
-    }
-
-    private void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED
-                || commentModerationStatusType == CommentStatus.SPAM) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        } else if (commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        }
-    }
-
     public boolean loadComments(boolean refresh, boolean loadMore) {
         refreshOnly = refresh;
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
@@ -455,7 +458,7 @@ public class CommentListFragment extends SherlockListFragment {
                     if (model.size() > 0) {
                         selectedPosition = 0;
                         Comment firstComment = model.get(0);
-                        mOnCommentListFragmentListener.onCommentClicked(firstComment);
+                        mOnCommentListListener.onCommentClicked(firstComment);
                     }
                 }
                 shouldSelectAfterLoad = false;
@@ -482,7 +485,7 @@ public class CommentListFragment extends SherlockListFragment {
      * @param comment The comment with the same postID and commentID that is to be replaced in the
      *                model.
      */
-    private void replaceComment(Comment comment) {
+    private void replaceCommentInModel(Comment comment) {
         if (comment==null || model==null)
             return;
         for (int i=0; i < model.size(); i++) {
@@ -499,7 +502,7 @@ public class CommentListFragment extends SherlockListFragment {
      * @param comment The comment with the same postID and commentID that is to be replaced in the
      *                model.
      */
-    private void deleteComment(Comment comment) {
+    private void deleteCommentInModel(Comment comment) {
         if (comment==null || model==null)
             return;
         for (int i=0; i < model.size(); i++) {
@@ -509,16 +512,6 @@ public class CommentListFragment extends SherlockListFragment {
                 return;
             }
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     public void refreshComments() {
@@ -665,7 +658,6 @@ public class CommentListFragment extends SherlockListFragment {
                     mActionMode.setTitle(Integer.toString(checkedItemCount));
                     mActionMode.invalidate();
                 }
-
                 return true;
             }
         });
@@ -673,10 +665,10 @@ public class CommentListFragment extends SherlockListFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Comment comment = mAdapter.getItem(position);
                 if (mActionMode == null) {
-                    Comment comment = mAdapter.getItem(position);
-                    mOnCommentListFragmentListener.onCommentClicked(comment);
                     getListView().clearChoices();
+                    mOnCommentListListener.onCommentClicked(comment);
                 } else {
 
                     Boolean checkedPrevious = mPriorCheckedCommentPositions.get(position);
@@ -852,7 +844,6 @@ public class CommentListFragment extends SherlockListFragment {
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             boolean retVal = true;
-            int selectedCommentStatusTypeBitMask = 0;
 
             if (mActionMode != null) {
                 menu.findItem(R.id.comments_cab_approve).setVisible(true);
@@ -860,14 +851,11 @@ public class CommentListFragment extends SherlockListFragment {
                 menu.findItem(R.id.comments_cab_spam).setVisible(true);
                 menu.findItem(R.id.comments_cab_delete).setVisible(true);
 
-               /* JCO - 12/10/2013 - If we start displaying a "SPAM" or "TRASH" comment list then the
-                * following associated code should be uncommented. */
                 CommentStatus.clearSelectedCommentStatusTypeCount();
                 SparseBooleanArray checkedItemPositions = getListView().getCheckedItemPositions();
-                Comment comment;
                 for(int i=0; i<checkedItemPositions.size(); i++) {
                     if (checkedItemPositions.valueAt(i)) {
-                        comment = (Comment) getListAdapter().getItem(checkedItemPositions.keyAt(i));
+                        Comment comment = (Comment) getListAdapter().getItem(checkedItemPositions.keyAt(i));
                         CommentStatus.incrementSelectedCommentStatusTypeCount(comment.getStatusEnum());
                     }
                 }
@@ -875,22 +863,13 @@ public class CommentListFragment extends SherlockListFragment {
                 /* Build a bit "set" representing which types of comments are selected.
                  * This was done so many different context permutations can be identified
                  * in the future. */
+                int selectedCommentStatusTypeBitMask = 0;
                 if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.APPROVED) > 0) {
                     selectedCommentStatusTypeBitMask |= 1 << CommentStatus.APPROVED.getOffset();
                 }
                 if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNAPPROVED) > 0) {
                     selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNAPPROVED.getOffset();
                 }
-
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.SPAM) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.SPAM.getOffset();
-                }*/
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.TRASH) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.TRASH.getOffset();
-                }*/
-                /*if (CommentStatus.getSelectedCommentStatusTypeCount(CommentStatus.UNKNOWN) > 0) {
-                    selectedCommentStatusTypeBitMask |= 1 << CommentStatus.UNKNOWN.getOffset();
-                }*/
 
                 /* Compare the bit set to the bit masks to see if they are equal. Currently we
                  * do not show an Action Icon if comments of the same status type are selected. */
@@ -899,13 +878,6 @@ public class CommentListFragment extends SherlockListFragment {
                 } else if (selectedCommentStatusTypeBitMask == 1 << CommentStatus.UNAPPROVED.getOffset()) {
                     menu.findItem(R.id.comments_cab_unapprove).setVisible(false);
                 }
-
-                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.SPAM.getOffset()) {
-                    menu.findItem(R.id.comments_cab_spam).setVisible(false);
-                }*/
-                /*else if (selectedCommentStatusTypeBitMask == CommentStatus.TRASH.getOffset()) {
-                    menu.findItem(R.id.comments_cab_delete).setVisible(false);
-                }*/
 
             } else {
                 retVal = false;
