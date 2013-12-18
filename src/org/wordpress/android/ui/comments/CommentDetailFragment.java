@@ -357,7 +357,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(newStatus));
                     if (mChangeListener != null)
-                        mChangeListener.onCommentModerated();
+                        mChangeListener.onCommentModerated(mComment, mNote);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                 }
