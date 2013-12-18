@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;
@@ -36,13 +37,18 @@ public class ReaderUserAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ReaderUserList mUsers = new ReaderUserList();
     private ReaderUserListType mListType = ReaderUserListType.UNKNOWN;
+    private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderPost mPost;
     private int mAvatarSz;
 
-    public ReaderUserAdapter(Context context, ReaderUserListType listType, ReaderPost post) {
+    public ReaderUserAdapter(Context context,
+                             ReaderUserListType listType,
+                             ReaderPost post,
+                             ReaderActions.DataLoadedListener dataLoadedListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mListType = listType;
+        mDataLoadedListener = dataLoadedListener;
         mPost = post;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
         loadUsers();
@@ -207,6 +213,9 @@ public class ReaderUserAdapter extends BaseAdapter {
                 mUsers = (ReaderUserList)(tmpUsers.clone());
                 notifyDataSetChanged();
             }
+
+            if (mDataLoadedListener!=null)
+                mDataLoadedListener.onDataLoaded(isEmpty());
 
             mIsTaskRunning = false;
         }
