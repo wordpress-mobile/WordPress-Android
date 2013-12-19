@@ -1028,6 +1028,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
         int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
+        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);
@@ -1071,10 +1072,13 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
 
         // tiled mosaic galleries have hard-coded DIV sizes which make them look bad on mobile, correct for
-        // this by resetting their height/width to auto and make their images full-width
+        // this by resetting their height/width to auto and make their images full-width with top/bottom margins
         if (content.contains("gallery-")) {
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                  .append("  div.tiled-gallery-item img { width: 100% !important; height: auto !important; }")
+                  .append("  div.tiled-gallery-item img { width: 100% !important; height: auto !important;")
+                  .append("     margin-top: ").append(marginExtraSmall).append("px; ")
+                  .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
+                  .append(" }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
 
         }
