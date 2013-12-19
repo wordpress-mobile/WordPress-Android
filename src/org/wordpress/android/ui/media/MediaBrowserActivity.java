@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -36,12 +33,11 @@ import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -49,9 +45,15 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main activity in which the user can browse their media.
@@ -236,15 +238,19 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String title = getString(R.string.media_no_video_title);
         String message = getString(R.string.media_no_video_message);
-        WPAlertDialogFragment.newInstance(message, title, false).show(ft, "alert");
-    };
+        String infoTitle = getString(R.string.learn_more);
+        String infoURL = Constants.videoPressURL;
+
+        WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL)
+                .show(ft, "alert");
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
-    };
+    }
 
     /** Get the feature set for a wordpress.com hosted blog **/
     private void getFeatureSet() {
@@ -740,13 +746,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaGridFragment == null)
             return;
 
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        if (newPost.getId() < 0) {
+            return;
+        }
+
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
         Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostActivity.NEW_MEDIA_POST);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
-        i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.get(0));
+        i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.get(0));
         startActivity(i);
     }
 
@@ -774,11 +785,15 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
+        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        if (newPost.getId() < 0) {
+            return;
+        }
         Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-        i.putExtra("id", WordPress.currentBlog.getId());
-        i.putExtra("isNew", true);
-        i.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
+        i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
         startActivity(i);
     }
 }

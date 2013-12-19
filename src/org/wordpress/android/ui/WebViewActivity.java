@@ -1,6 +1,8 @@
 
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -10,6 +12,7 @@ import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.util.SysUtils;
 
 /**
  * Basic activity for displaying a WebView.
@@ -41,6 +44,31 @@ public class WebViewActivity extends WPActionBarActivity {
         if (url != null) {
             loadUrl(url);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Flash video may keep playing if the webView isn't paused here
+        pauseWebView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resumeWebView();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void pauseWebView() {
+        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            mWebView.onPause();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void resumeWebView() {
+        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            mWebView.onResume();
     }
 
     /**

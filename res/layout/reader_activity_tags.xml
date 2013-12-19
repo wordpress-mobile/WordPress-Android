@@ -38,12 +38,12 @@
         android:layout_below="@+id/divider_title"
         tools:listitem="@layout/reader_listitem_tag" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <include
         android:id="@+id/text_message_bar"
-        style="@style/ReaderTextView.MessageBar"
+        layout="@layout/message_bar_include"
         android:layout_alignBottom="@id/android:list"
-        android:text="@string/reader_label_added_tag"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <View
         android:id="@+id/divider_list"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/reader_button_transparent_selector"
+            android:background="@drawable/reader_transparent_selector"
             android:src="@drawable/ic_content_new" />
 
     </RelativeLayout>

@@ -67,4 +67,5 @@ public class ReaderActions {
     public interface RequestReblogListener {
         public void onRequestReblog(ReaderPost post);
     }
+
 }

@@ -15,7 +15,8 @@ public class Constants {
     public static String wpcomLoginURL = "https://wordpress.com/wp-login.php";
 
     public static final String URL_TOS = "http://en.wordpress.com/tos";
-    
+    public static String videoPressURL = "http://videopress.com";
+
     public static int QUICK_POST_PHOTO_CAMERA = 0;
     public static int QUICK_POST_PHOTO_LIBRARY = 1;
     public static int QUICK_POST_VIDEO_CAMERA = 2;
@@ -35,9 +36,6 @@ public class Constants {
     public static final int READER_MAX_COMMENTS_TO_REQUEST = READER_MAX_POSTS_TO_REQUEST; // max #comments to request when updating comments
     public static final int READER_MAX_USERS_TO_DISPLAY    = 500;                         // max #users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 15;                       // 15 minute delay between automatic updates
-
-    // set this to false to revert to the old hybrid reader
-    public static final boolean ENABLE_NATIVE_READER = true;
 
     // Reader intent IDs
     public static final int INTENT_READER_POST_DETAIL = 1000;

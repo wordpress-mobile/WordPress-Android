@@ -1,9 +1,5 @@
 package org.wordpress.android.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,8 +22,12 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * An activity to handle share intents, since there are multiple actions possible. 
+ * An activity to handle share intents, since there are multiple actions possible.
  * If there are multiple blogs, it lets the user choose which blog to share to.
  * It lists what actions that the user can perform and redirects them to the activity,
  * along with the content passed in the intent
@@ -39,20 +39,20 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     private int mAccountIDs[];
     private TextView mBlogSpinnerTitle;
     private int mActionIndex;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-  
-        setContentView(R.layout.share_intent_receiver_dialog);     
+
+        setContentView(R.layout.share_intent_receiver_dialog);
         Context themedContext = getSupportActionBar().getThemedContext();
-        
+
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (IcsSpinner) findViewById(R.id.blog_spinner);
-        
+
         String[] blogNames = getBlogNames();
         if (blogNames != null) {
-            
+
             if (blogNames.length == 1) {
                 // one blog
                 mBlogSpinner.setVisibility(View.GONE);
@@ -62,34 +62,39 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 mBlogSpinner.setAdapter(adapter);
                 mBlogSpinner.setOnItemSelectedListener(this);
             }
-            
+
         }
-        
-        String[] actions = new String[] { getString(R.string.share_action_post), getString(R.string.share_action_media) };
+
+        // If type is text/plain hide Media Gallery option
         mActionSpinner = (IcsSpinner) findViewById(R.id.action_spinner);
-        ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext, R.layout.sherlock_spinner_dropdown_item, actions);
-        mActionSpinner.setAdapter(actionAdapter);
-        mActionSpinner.setOnItemSelectedListener(this);
-        
+        if ("text/plain".equals(getIntent().getType())) {
+            mActionSpinner.setVisibility(View.GONE);
+            findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
+        } else {
+            String[] actions = new String[]{getString(R.string.share_action_post), getString(R.string.share_action_media)};
+            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext, R.layout.sherlock_spinner_dropdown_item, actions);
+            mActionSpinner.setAdapter(actionAdapter);
+            mActionSpinner.setOnItemSelectedListener(this);
+        }
         getSupportActionBar().hide();
     }
-    
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
     }
-        
+
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+
         if (accounts.size() > 0) {
 
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];
 
             Blog blog;
-            
+
             for (int i = 0; i < accounts.size(); i++) {
 
                 Map<String, Object> curHash = accounts.get(i);
@@ -131,38 +136,34 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 showBlogErrorAndFinish();
             }
             WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-        } else if (parent.getId() == R.id.action_spinner){
+        } else if (parent.getId() == R.id.action_spinner) {
             mActionIndex = position;
         }
     }
-    
-    public void onShareClicked (View view) {
 
+    public void onShareClicked(View view) {
         String action = getIntent().getAction();
-        
-        Intent intent = null; 
-        
-        if (mActionIndex == 0) { 
+        Intent intent = null;
+        if (mActionIndex == 0) {
             // new post
             intent = new Intent(this, EditPostActivity.class);
         } else if (mActionIndex == 1) {
             // add to media gallery
             intent = new Intent(this, MediaBrowserActivity.class);
         }
-
         if (intent != null) {
             intent.setAction(action);
             intent.setType(getIntent().getType());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            
+
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
-            
+
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             } else {
-                Uri extra = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra(Intent.EXTRA_STREAM, extra);
             }
             startActivity(intent);
@@ -173,6 +174,6 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     @Override
     public void onNothingSelected(IcsAdapterView<?> parent) {
         // TODO Auto-generated method stub
-        
+
     }
 }

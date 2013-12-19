@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
@@ -18,13 +21,12 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -35,13 +37,18 @@ public class ReaderUserAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ReaderUserList mUsers = new ReaderUserList();
     private ReaderUserListType mListType = ReaderUserListType.UNKNOWN;
+    private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderPost mPost;
     private int mAvatarSz;
 
-    public ReaderUserAdapter(Context context, ReaderUserListType listType, ReaderPost post) {
+    public ReaderUserAdapter(Context context,
+                             ReaderUserListType listType,
+                             ReaderPost post,
+                             ReaderActions.DataLoadedListener dataLoadedListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mListType = listType;
+        mDataLoadedListener = dataLoadedListener;
         mPost = post;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
         loadUsers();
@@ -90,7 +97,8 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtName = (TextView) convertView.findViewById(R.id.text_name);
             holder.txtUrl = (TextView) convertView.findViewById(R.id.text_url);
             holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
+            holder.imgAvatar = (NetworkImageView) convertView.findViewById(R.id.image_avatar);
+            holder.imgAvatar.setDefaultImageResId(R.drawable.reader_photo_default);
             convertView.setTag(holder);
         } else {
             holder = (UserViewHolder) convertView.getTag();
@@ -99,7 +107,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         holder.txtName.setText(user.getDisplayName());
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
-            holder.txtUrl.setText(UrlUtils.getDomainFromUrl(user.getUrl()));
+            holder.txtUrl.setText(user.getUrlDomain());
             // tapping anywhere in the view shows the user's blog
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,11 +117,8 @@ public class ReaderUserAdapter extends BaseAdapter {
             });
 
             // since the user has a blog url, enable following/unfollowing it
-            holder.txtFollow.setVisibility(View.VISIBLE);
-            if (holder.txtFollow.isSelected()!=user.isFollowed) {
-                holder.txtFollow.setSelected(user.isFollowed);
-                holder.txtFollow.setText(user.isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-            }
+            if (holder.txtFollow.isSelected() != user.isFollowed)
+                showFollowStatus(holder.txtFollow, user.isFollowed);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,6 +126,7 @@ public class ReaderUserAdapter extends BaseAdapter {
                     toggleFollowUser(user, holder.txtFollow);
                 }
             });
+            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
             // no blog url, so can't follow
             holder.txtUrl.setVisibility(View.GONE);
@@ -128,7 +134,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             convertView.setOnClickListener(null);
         }
 
-        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WordPress.imageLoader);
 
         return convertView;
     }
@@ -149,17 +155,21 @@ public class ReaderUserAdapter extends BaseAdapter {
             user.isFollowed = false;
         }
 
-        if (txtFollow!=null) {
-            txtFollow.setText(isAskingToFollow ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-            txtFollow.setSelected(isAskingToFollow);
-        }
+        showFollowStatus(txtFollow, isAskingToFollow);
+    }
+
+    private void showFollowStatus(TextView txtFollow, boolean isFollowing) {
+        txtFollow.setText(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        int drawableId = (isFollowing ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+        txtFollow.setSelected(isFollowing);
     }
 
     private static class UserViewHolder {
         private TextView txtName;
         private TextView txtUrl;
         private TextView txtFollow;
-        private WPNetworkImageView imgAvatar;
+        private NetworkImageView imgAvatar;
     }
 
     private boolean mIsTaskRunning = false;
@@ -186,12 +196,13 @@ public class ReaderUserAdapter extends BaseAdapter {
             if (tmpUsers==null)
                 return false;
 
-            // flag followed users & set avatar urls for use with photon - avoids having to do
-            // this for each user when getView() is called
+            // flag followed users, set avatar urls for use with photon, and pre-load user domains
+            // so we can avoid having to do this for each user when getView() is called
             ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
             for (ReaderUser user: tmpUsers) {
                 user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
                 user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
+                user.getUrlDomain();
             }
 
             return true;
@@ -202,6 +213,9 @@ public class ReaderUserAdapter extends BaseAdapter {
                 mUsers = (ReaderUserList)(tmpUsers.clone());
                 notifyDataSetChanged();
             }
+
+            if (mDataLoadedListener!=null)
+                mDataLoadedListener.onDataLoaded(isEmpty());
 
             mIsTaskRunning = false;
         }

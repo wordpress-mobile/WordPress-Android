@@ -110,7 +110,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
             if (accounts == null || accounts.size() == 0)
                 return false;
 

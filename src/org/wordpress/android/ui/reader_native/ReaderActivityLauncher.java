@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.util.ToastUtils;
 
 /**
@@ -26,6 +27,13 @@ public class ReaderActivityLauncher {
         activity.startActivityForResult(intent, Constants.INTENT_READER_POST_DETAIL);
     }
 
+    public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        Intent intent = new Intent(context, ReaderPostDetailActivity.class);
+        intent.putExtra(ReaderPostDetailActivity.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderPostDetailActivity.ARG_POST_ID, postId);
+        context.startActivity(intent);
+    }
+
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
         if (post==null)
             return;
@@ -40,8 +48,10 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderTagsForResult(Activity activity) {
+    public static void showReaderTagsForResult(Activity activity, String tagName) {
         Intent intent = new Intent(activity, ReaderTagActivity.class);
+        if (!TextUtils.isEmpty(tagName))
+            intent.putExtra(ReaderTagActivity.ARG_TAG_NAME, tagName);
         activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 
@@ -62,14 +72,25 @@ public class ReaderActivityLauncher {
         activity.startActivityForResult(intent, Constants.INTENT_READER_REBLOG);
     }
 
+    public static enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
+        openUrl(context, url, OpenUrlType.INTERNAL);
+    }
+    public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
         if (TextUtils.isEmpty(url))
             return;
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+        if (openUrlType == OpenUrlType.INTERNAL) {
+            Intent intent = new Intent(context, NotificationsWebViewActivity.class);
+            intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
             context.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+        } else {
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+            }
         }
     }
 }

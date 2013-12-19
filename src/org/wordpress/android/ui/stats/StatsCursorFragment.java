@@ -12,18 +12,17 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. 
@@ -40,7 +39,6 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int MAX_ITEMS_ON_TABLET = 10;
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
@@ -51,7 +49,6 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private TextView mEntryLabel;
     private TextView mTotalsLabel;
     private TextView mEmptyLabel;
-    private ListView mListView;
     private LinearLayout mLinearLayout;
 
     private CursorAdapter mAdapter;
@@ -99,16 +96,10 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
         mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
         configureEmptyLabel();
-        
-        if (isTablet()) {
-            mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
-            mLinearLayout.setVisibility(View.VISIBLE);
-        } else {
-            mListView = (ListView) view.findViewById(R.id.stats_list_listview);
-            mListView.setAdapter(mAdapter);
-            mListView.setVisibility(View.VISIBLE);
-        }
-        
+
+        mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
+        mLinearLayout.setVisibility(View.VISIBLE);
+
         return view;
     }
 
@@ -135,7 +126,8 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         if (WordPress.getCurrentBlog() == null)
             return null;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        if (TextUtils.isEmpty(blogId)) blogId = "0";
         CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         return cursorLoader;
     }
@@ -146,9 +138,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         if (mAdapter != null)
             mAdapter.changeCursor(data);
         configureEmptyLabel();
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     @Override
@@ -156,16 +146,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     public void setListAdapter(CursorAdapter adapter) {
         mAdapter = adapter;
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     private void reloadLinearLayout() {
@@ -175,7 +161,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mLinearLayout.removeAllViews();
         
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int count = Math.min(mAdapter.getCount(), MAX_ITEMS_ON_TABLET);
+        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < count; i++) {
             View view = mAdapter.getView(i, null, mLinearLayout);
             if (i % 2 == 1)
@@ -210,10 +196,6 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
            if (isAdded())
                getLoaderManager().restartLoader(0, null, StatsCursorFragment.this);           
        }        
-    }
-    
-    private boolean isTablet() {
-        return Utils.isTablet();
     }
 
     private void configureEmptyLabel() {

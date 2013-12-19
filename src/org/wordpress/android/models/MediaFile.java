@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.StringUtils;
 
 public class MediaFile {
 
@@ -20,7 +21,7 @@ public class MediaFile {
     protected int horizontalAlignment; //0 = none, 1 = left, 2 = center, 3 = right
     protected boolean verticalAligment = false; //false = bottom, true = top
     protected int width = 500, height;
-    protected String MIMEType = ""; //do not store this value
+    protected String mimeType = "";
     protected String videoPressShortCode = null;
     protected boolean featured = false;
     protected boolean isVideo = false;
@@ -48,8 +49,8 @@ public class MediaFile {
         setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
         
         String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
-        setMIMEType(mimeType);
+        String fileMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
+        setMimeType(fileMimeType);
         
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
@@ -193,12 +194,12 @@ public class MediaFile {
         this.fileName = fileName;
     }
 
-    public String getMIMEType() {
-        return MIMEType;
+    public String getMimeType() {
+        return StringUtils.notNullStr(mimeType);
     }
 
-    public void setMIMEType(String type) {
-        MIMEType = type;
+    public void setMimeType(String type) {
+        mimeType = StringUtils.notNullStr(type);
     }
 
     public String getVideoPressShortCode() {

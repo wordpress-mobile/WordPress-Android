@@ -14,50 +14,52 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
+import com.wordpress.rest.RestRequest;
 
-import org.wordpress.android.ui.accounts.WelcomeActivity;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.StringUtils;
-import org.xmlrpc.android.WPComXMLRPCApi;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.wordpress.passcodelock.AppLockManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.ManageBlogsActivity;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.StringUtils;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
-
     EditTextPreference taglineTextPreference;
     OnPreferenceChangeListener preferenceChangeListener;
-    
-    private Object[] mTypeList;
+
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
@@ -75,14 +77,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        if (WordPress.currentBlog == null) {
-            try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
-            } catch (Exception e) {
-                Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
         addPreferencesFromResource(R.xml.preferences);
         
         mNotificationsGroup = (PreferenceGroup)findPreference("wp_pref_notifications_category");
@@ -108,15 +102,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String settingsJson = mSettings.getString("wp_pref_notification_settings", null);
             if (settingsJson == null) {
-                new WPComXMLRPCApi().getNotificationSettings(new XMLRPCCallback() {
-                    public void onSuccess(long id, Object result) {
+                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        ReaderLog.d("token action succeeded");
+                        Editor editor = mSettings.edit();
+                        try {
+                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                            editor.putString("wp_pref_notification_settings", settingsJSON.toString());
+                            editor.commit();
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         refreshWPComAuthCategory();
                     }
-
-                    public void onFailure(long id, XMLRPCException error) {
-                        // prompt?
+                };
+                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        ReaderLog.w("blog action failed");
+                        ReaderLog.e(volleyError);
                     }
-                }, this);
+                };
+                NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }
         }
         
@@ -140,6 +149,24 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
         
         displayPreferences();
+    }
+
+    private void hidePostSignatureCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_root");
+        PreferenceCategory postSignature = (PreferenceCategory) findPreference("wp_post_signature");
+        if (preferenceScreen != null && postSignature != null) {
+            preferenceScreen.removePreference(postSignature);
+        }
+    }
+
+    private void hideNotificationBlogsCategory() {
+        PreferenceScreen preferenceScreen = (PreferenceScreen)
+                findPreference("wp_pref_notifications");
+        PreferenceCategory blogs = (PreferenceCategory)
+                findPreference("wp_pref_notification_blogs");
+        if (preferenceScreen != null && blogs != null) {
+            preferenceScreen.removePreference(blogs);
+        }
     }
 
     @Override
@@ -182,9 +209,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     protected void updateBlogsPreferenceCategory() {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
-
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         int order = 0;
+
+        // Add self-hosted blog button
+        Preference addBlogPreference = new Preference(this);
+        addBlogPreference.setTitle(R.string.add_self_hosted_blog);
+        Intent intentWelcome = new Intent(this, WelcomeActivity.class);
+        intentWelcome.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
+                WelcomeActivity.ADD_SELF_HOSTED_BLOG);
+        addBlogPreference.setIntent(intentWelcome);
+        addBlogPreference.setOrder(order++);
+        blogsCategory.addPreference(addBlogPreference);
+
+        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
+        if (allAccounts.size() > 1) {
+            // Add show/hide buttons
+            Preference manageBlogPreference = new Preference(this);
+            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
+            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
+            manageBlogPreference.setIntent(intentManage);
+            manageBlogPreference.setOrder(order++);
+            blogsCategory.addPreference(manageBlogPreference);
+        }
+
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
         for (Map<String, Object> account : accounts) {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -208,14 +256,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             blogSettingsPreference.setOrder(order++);
             blogsCategory.addPreference(blogSettingsPreference);
         }
-
-        Preference addBlogPreference = new Preference(this);
-        addBlogPreference.setTitle(R.string.add_account);
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra(WelcomeActivity.SKIP_WELCOME, true);
-        addBlogPreference.setIntent(intent);
-        addBlogPreference.setOrder(order++);
-        blogsCategory.addPreference(addBlogPreference);
     }
 
     protected int getEnabledBlogsCount() {
@@ -230,21 +270,25 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        
         // WordPress.com auth area and notifications
         refreshWPComAuthCategory();
-        
+
         // Post signature
-        if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
-            if (DeviceUtils.getInstance().isBlackBerry()) {
-                taglineTextPreference.setSummary(R.string.posted_from_blackberry);
-                taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
-            } else {
-                taglineTextPreference.setSummary(R.string.posted_from);
-                taglineTextPreference.setText(getString(R.string.posted_from));
-            }
+        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
+            hidePostSignatureCategory();
+            hideNotificationBlogsCategory();
         } else {
-            taglineTextPreference.setSummary(taglineTextPreference.getText());
+            if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
+                if (DeviceUtils.getInstance().isBlackBerry()) {
+                    taglineTextPreference.setSummary(R.string.posted_from_blackberry);
+                    taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
+                } else {
+                    taglineTextPreference.setSummary(R.string.posted_from);
+                    taglineTextPreference.setText(getString(R.string.posted_from));
+                }
+            } else {
+                taglineTextPreference.setSummary(taglineTextPreference.getText());
+            }
         }
          
         if (DeviceUtils.getInstance().isBlackBerry()) {
@@ -391,7 +435,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 String settingsJson = gson.toJson(mNotificationSettings);
                 editor.putString("wp_pref_notification_settings", settingsJson);
                 editor.commit();
-                new WPComXMLRPCApi().setNotificationSettings(PreferencesActivity.this);
+                NotificationUtils.setPushNotificationSettings(PreferencesActivity.this);
             } 
             return null;
         } 
@@ -407,9 +451,15 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
-            
             wpcomCategory.addPreference(usernamePref);
-            
+
+            Preference createWPComBlogPref = new Preference(this);
+            createWPComBlogPref.setTitle(getString(R.string.create_new_blog_wpcom));
+            Intent intent = new Intent(this, NewBlogActivity.class);
+            createWPComBlogPref.setIntent(intent);
+            wpcomCategory.addPreference(createWPComBlogPref);
+
+
             loadNotifications();
         } else {
             Preference signInPref = new Preference(this);
@@ -466,8 +516,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
                 mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
                 Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
-                               
-                mTypeList = mNotificationSettings.keySet().toArray();
+
+                Object[] mTypeList = mNotificationSettings.keySet().toArray();
                 
                 for (int i = 0; i < mTypeList.length; i++) {
                     if (!mTypeList[i].equals("muted_blogs") && !mTypeList[i].equals("mute_until")) {
@@ -514,14 +564,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
-            i.putExtra(WelcomeActivity.SKIP_WELCOME, true);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
             return true;
         }
     };
-    
+
     private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
 
         @Override

@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -32,6 +33,7 @@ import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -56,6 +58,8 @@ public class PostsListFragment extends ListFragment {
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
     private ListScrollPositionManager mListScrollPositionManager;
+    private int mLoadedBlogId;
+
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
     public int totalDrafts = 0;
@@ -63,7 +67,7 @@ public class PostsListFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-    
+
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
     private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
 
@@ -78,26 +82,19 @@ public class PostsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
+        return inflater.inflate(R.layout.post_listview, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        TextView textview = (TextView) getListView().getEmptyView();
+        TextView textview = (TextView) getActivity().findViewById(R.id.title_empty);
         if (textview != null) {
             if (isPage) {
                 textview.setText(getText(R.string.pages_empty_list));
             } else {
                 textview.setText(getText(R.string.posts_empty_list));
             }
-            textview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mParentActivity.newPost();
-                }
-            });
         }
         createSwitcher();
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), true);
@@ -120,6 +117,11 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null && mLoadedBlogId != currentBlog.getBlogId()) {
+            WordPress.currentPost = null;
+            loadPosts(false);
+        }
     }
 
     public void createSwitcher() {
@@ -128,11 +130,10 @@ public class PostsListFragment extends ListFragment {
         Button footer = (Button) View.inflate(getActivity()
                 .getApplicationContext(), R.layout.list_footer_btn, null);
         footer.setText(getResources().getText(R.string.load_more) + " "
-                + getResources().getText((isPage)? R.string.tab_pages : R.string.tab_posts));
+                + getResources().getText((isPage) ? R.string.tab_pages : R.string.tab_posts));
 
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), isPage)) {
                     // first view is showing, show the second progress view
                     switcher.showNext();
@@ -176,12 +177,11 @@ public class PostsListFragment extends ListFragment {
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
+        if (WordPress.currentBlog != null) {
+            mLoadedBlogId = WordPress.currentBlog.getBlogId();
+        }
         try {
-            if (isPage) {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
-            } else {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), false);
-            }
+            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), isPage);
         } catch (Exception e1) {
             return false;
         }
@@ -201,8 +201,10 @@ public class PostsListFragment extends ListFragment {
             mStatuses = new String[0];
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
-                mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
-                WordPress.currentPost = null;
+                if (WordPress.currentPost != null) {
+                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
+                    WordPress.currentPost = null;
+                }
             }
         }
         if (loadedPosts != null) {
@@ -316,7 +318,7 @@ public class PostsListFragment extends ListFragment {
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
-                        
+
                         // Show comments menu option only if post allows commenting
                         boolean allowComments = false;
                         Post post = new Post(WordPress.currentBlog
@@ -324,11 +326,11 @@ public class PostsListFragment extends ListFragment {
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
                         }
-                        
-                        if( PostUploadService.isUploading(post) ) {
+
+                        if (PostUploadService.isUploading(post)) {
                             return;
                         }
-                        
+
                         mRowID = info.position;
 
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
@@ -505,6 +507,14 @@ public class PostsListFragment extends ListFragment {
 
     }
 
+    public String statEventForViewClosing() {
+        if (isPage) {
+            return WPMobileStatsUtil.StatsEventPagesClosed;
+        } else {
+            return WPMobileStatsUtil.StatsEventPostsClosed;
+        }
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Post post = new Post(WordPress.currentBlog.getId(), mSelectedID, isPage);
@@ -525,25 +535,24 @@ public class PostsListFragment extends ListFragment {
         if (itemGroupID == MENU_GROUP_POSTS || itemGroupID == MENU_GROUP_PAGES || itemGroupID == MENU_GROUP_DRAFTS ) {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-                
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
+                Intent i2 = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
+                i2.putExtra(EditPostActivity.EXTRA_POSTID, mSelectedID);
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra("isPage", true);
+                    i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage)
-                        i2.putExtra("isPage", true);
-                    i2.putExtra("localDraft", true);
+                        i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
-                
-                startActivityForResult(i2, 0);
+
+                getActivity().startActivityForResult(i2, PostsActivity.ACTIVITY_EDIT_POST);
                 return true;
             case MENU_ITEM_DELETE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case MENU_ITEM_PREVIEW:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedPreview);
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 i.putExtra("isPage", itemGroupID == MENU_GROUP_PAGES ? true : false);
                 i.putExtra("postID", mSelectedID);
@@ -551,9 +560,11 @@ public class PostsListFragment extends ListFragment {
                 startActivity(i);
                 return true;
             case MENU_ITEM_SHARE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedShare);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             case MENU_ITEM_ADD_COMMENT:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedComment);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
                 return true;
             default:
@@ -595,10 +606,10 @@ public class PostsListFragment extends ListFragment {
             if (isAdded()) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
-                        
+
                         @Override
                         public void run() {
-                            loadPosts(mLoadMore);
+                        loadPosts(mLoadMore);
                         }
                     });
                 }
@@ -631,12 +642,10 @@ public class PostsListFragment extends ListFragment {
                         if (!mLoadMore) {
                             WordPress.wpDB.deleteUploadedPosts(mBlog.getId(), mIsPage);
                         }
-
                         for (int ctr = 0; ctr < result.length; ctr++) {
                             Map<?, ?> postMap = (Map<?, ?>) result[ctr];
                             postsList.add(ctr, postMap);
                         }
-
                         WordPress.wpDB.savePosts(postsList, mBlog.getId(), mIsPage);
                     }
                 }

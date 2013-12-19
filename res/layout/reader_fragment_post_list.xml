@@ -3,11 +3,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/reader_background">
 
     <ListView
         android:id="@android:id/list"
-        style="@style/ReaderListView.Posts"
+        style="@style/ReaderListView"
+        android:paddingLeft="@dimen/reader_list_margin"
+        android:paddingRight="@dimen/reader_list_margin"
+        android:divider="@color/reader_divider_grey"
+        android:dividerHeight="@dimen/reader_margin_large"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -16,13 +21,16 @@
         android:text="@string/reader_label_new_posts_one"
         android:visibility="gone" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_empty"
-        style="@style/ReaderTextView.Label.Medium"
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/reader_empty_view" />
+
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/ReaderProgressBar"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/reader_empty_posts_in_tag"
-        android:visibility="gone" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/reader_margin_large" />
 </RelativeLayout>

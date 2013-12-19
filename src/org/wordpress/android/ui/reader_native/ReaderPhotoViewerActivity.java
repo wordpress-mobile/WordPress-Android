@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader_native;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -22,8 +23,7 @@ import org.wordpress.android.widgets.photoview.PhotoViewAttacher;
  */
 public class ReaderPhotoViewerActivity extends FragmentActivity {
     protected static final String ARG_IMAGE_URL = "image_url";
-
-    private ProgressBar mProgress;
+    private String mImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,37 +31,44 @@ public class ReaderPhotoViewerActivity extends FragmentActivity {
 
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mProgress.setVisibility(View.VISIBLE);
-
-        String imageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
-
-        // use photon on non-https images, with the width set to the max size of the display - this
-        // is important since many wp images contain ?w= or ?h= params which result in an image
-        // reduced to a size that makes them appear very grainy when zoomed in here - also important
-        // since using a photon url with a width prevents downloading huge images here
-        if (imageUrl!=null && !UrlUtils.isHttps(imageUrl)) {
-            Point pt = DisplayUtils.getDisplayPixelSize(this);
-            int maxWidth = (pt.x > pt.y ? pt.x : pt.y);
-            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
+        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_IMAGE_URL)) {
+            mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
+        } else if (getIntent().hasExtra(ARG_IMAGE_URL)) {
+            mImageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
+            // use photon to enforce max size unless this is https
+            if (!UrlUtils.isHttps(mImageUrl)) {
+                Point pt = DisplayUtils.getDisplayPixelSize(this);
+                int maxWidth = Math.max(pt.x, pt.y);
+                mImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
+            }
         }
 
-        imageView.setImageUrl(imageUrl, ImageType.PHOTO_FULL, new ImageListener() {
-            @Override
-            public void onImageLoaded(boolean succeeded) {
-                mProgress.setVisibility(View.GONE);
-                if (succeeded) {
-                    new PhotoViewAttacher(imageView);
-                } else {
-                    ToastUtils.showToast(ReaderPhotoViewerActivity.this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+
+        if (!TextUtils.isEmpty(mImageUrl)) {
+            progress.setVisibility(View.VISIBLE);
+            imageView.setImageUrl(mImageUrl, ImageType.PHOTO_FULL, new ImageListener() {
+                @Override
+                public void onImageLoaded(boolean succeeded) {
+                    progress.setVisibility(View.GONE);
+                    if (succeeded) {
+                        new PhotoViewAttacher(imageView);
+                    } else {
+                        ToastUtils.showToast(ReaderPhotoViewerActivity.this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            imageView.setImageResource(R.drawable.ic_error);
+        }
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageUrl != null)
+            outState.putString(ARG_IMAGE_URL, mImageUrl);
     }
+
 }

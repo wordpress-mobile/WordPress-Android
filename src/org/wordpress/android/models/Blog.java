@@ -8,15 +8,20 @@ import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
-public class Blog {
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+
+public class Blog implements Serializable {
+
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
 
     private int id;
     private String url;
@@ -46,6 +51,7 @@ public class Blog {
     private String postFormats;
     private String blogOptions;
     private boolean isAdmin;
+    private boolean isHidden;
 
     public Blog(String url, String username, String password) {
         this.url = url;
@@ -99,6 +105,8 @@ public class Blog {
                 this.blogOptions = "";
             if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
                 this.setAdmin(true);
+            if (blogVals.get(26) != null && (Integer) blogVals.get(27) > 0)
+                this.isHidden = true;
         } else {
             throw new Exception();
         }
@@ -288,6 +296,14 @@ public class Blog {
         this.httppassword = httppassword;
     }
 
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+
     public boolean save(String originalUsername) {
         // Insert new blog to db
         if (this.id == -1) {
@@ -405,5 +421,17 @@ public class Blog {
 
     public boolean hasValidJetpackCredentials() {
         return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
+    }
+
+    /**
+     * Get the WordPress.com blog ID
+     * Stored in blogId for WP.com, api_blogId for Jetpack
+     * @return WP.com blogId string, potentially null for Jetpack sites
+     */
+    public String getDotComBlogId() {
+        if (isDotcomFlag())
+            return String.valueOf(getBlogId());
+        else
+            return getApi_blogid();
     }
 }

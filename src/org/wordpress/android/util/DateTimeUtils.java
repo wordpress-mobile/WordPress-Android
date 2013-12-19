@@ -123,4 +123,19 @@ public class DateTimeUtils {
             return 0;
         return (date.getTime() / 1000);
     }
+
+    /*
+     * routines involving Unix timestamps (GMT assumed)
+     */
+    public static Date timestampToDate(long timeStamp) {
+        return new java.util.Date(timeStamp*1000);
+    }
+    public static String timestampToIso8601Str(long timestamp) {
+        return javaDateToIso8601(timestampToDate(timestamp));
+    }
+    public static String timestampToTimeSpan(long timeStamp) {
+        Date dtGmt = timestampToDate(timeStamp);
+        return javaDateToTimeSpan(dtGmt);
+    }
+
 }

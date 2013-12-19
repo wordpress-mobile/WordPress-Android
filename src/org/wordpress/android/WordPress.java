@@ -1,14 +1,20 @@
 package org.wordpress.android;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +23,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -32,25 +39,24 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
-
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPRestClient;
 import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.WPComXMLRPCApi;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,15 +81,26 @@ public class WordPress extends Application {
     public static WPRestClient restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static BitmapLruCache localImageCache;
-    public static Simperium simperium;
+    public static final String TAG = "WordPress";
+    public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
 
+    private static Context mContext;
+    private static BitmapLruCache mBitmapCache;
+
+    public static Simperium simperium;
     public static Bucket<Note> notesBucket;
     public static Bucket<BucketObject> metaBucket;
 
-    private static Context mContext;
-
-    public static final String TAG = "WordPress";
+    public static BitmapLruCache getBitmapCache() {
+        if (mBitmapCache == null) {
+            // The cache size will be measured in kilobytes rather than
+            // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+            int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
+            mBitmapCache = new BitmapLruCache(cacheSize);
+        }
+        return mBitmapCache;
+    }
 
     @Override
     public void onCreate() {
@@ -99,13 +116,11 @@ public class WordPress extends Application {
 
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // Use a small slice of available memory for the image cache
-        int cacheSize = maxMemory / 32;
-        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
 
-        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
-        localImageCache = new BitmapLruCache(cacheSize / 2);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
@@ -114,12 +129,21 @@ public class WordPress extends Application {
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
 
-        //Uncomment this line if you want to test the app locking feature
+        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled())
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
 
+        WPMobileStatsUtil.initialize();
+        WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
+
         super.onCreate();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
+            registerComponentCallbacks(pnBackendMponitor);
+            registerActivityLifecycleCallbacks(pnBackendMponitor);
+         }
     }
 
     public static Context getContext() {
@@ -155,7 +179,6 @@ public class WordPress extends Application {
     }
 
     public static void registerForCloudMessaging(Context ctx) {
-
         if (WordPress.hasValidWPComCredentials(ctx)) {
             String token = null;
             try {
@@ -168,7 +191,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    new WPComXMLRPCApi().registerWPComToken(ctx, token);
+                    NotificationUtils.registerPushNotificationsToken(ctx, token, true);
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -176,7 +199,7 @@ public class WordPress extends Application {
             }
         }
     }
-
+    
     /**
      * Get versionName from Manifest.xml
      *
@@ -186,7 +209,7 @@ public class WordPress extends Application {
         PackageManager pm = getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
-            return pi.versionName;
+            return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }
@@ -226,7 +249,7 @@ public class WordPress extends Application {
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -258,7 +281,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
@@ -287,6 +310,17 @@ public class WordPress extends Application {
         }
 
         return currentBlog;
+    }
+
+    /*
+     * returns the blogID of the current blog
+     */
+    public static int getCurrentBlogId() {
+        return (currentBlog != null ? currentBlog.getBlogId() : -1);
+    }
+
+    public static int getCurrentBlogAccountId() {
+        return (currentBlog != null ? currentBlog.getId() : -1);
     }
 
     /**
@@ -335,6 +369,11 @@ public class WordPress extends Application {
                 if (blog != null) {
                     // get the access token from api key field
                     token = blog.getApi_key();
+
+                    // valid oauth tokens are 64 chars
+                    if (token != null && token.length() < 64 && !blog.isDotcomFlag()) {
+                        token = null;
+                    }
 
                     // if there is no access token, but this is the dotcom flag
                     if (token == null && (blog.isDotcomFlag() &&
@@ -422,7 +461,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        new WPComXMLRPCApi().unregisterWPComToken(
+        NotificationUtils.unregisterPushNotificationsToken(
                 context,
                 GCMRegistrar.getRegistrationId(context));
         try {
@@ -440,6 +479,20 @@ public class WordPress extends Application {
         wpDB.deactivateAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+
+        // reset all reader-related prefs & data
+        UserPrefs.reset();
+        ReaderDatabase.reset();
+
+        notesBucket.reset();
+        metaBucket.reset();
+
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        context.sendBroadcast(broadcastIntent);
+
     }
 
     public static String getLoginUrl(Blog blog) {
@@ -522,5 +575,126 @@ public class WordPress extends Application {
 
             return stack;
         }
+    }
+    
+    /*
+     * Detect when the app goes to the background and come back to the foreground.
+     * 
+     * Turns out that when your app has no more visible UI, a callback is triggered. 
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
+     * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
+     * 
+     * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
+     * 
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+        
+        private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
+        private Date lastPingDate;
+        
+        boolean background = false;
+
+        @Override
+        public void onConfigurationChanged(final Configuration newConfig) {
+        }
+
+        @Override
+        public void onLowMemory() {
+        }
+
+        @Override
+        public void onTrimMemory(final int level) {
+
+            if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+                // We're in the Background
+                background = true;
+            } else {
+                background = false;
+            }
+            
+            //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
+            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
+                mBitmapCache.evictAll();
+            }
+ 
+        }
+        
+        private boolean mustPingPushNotificationsBackend() {
+            
+            if (WordPress.hasValidWPComCredentials(mContext) == false)
+                return false;
+            
+            if (background == false)
+                return false;
+            
+            background = false;
+            
+            if (lastPingDate == null)
+                return false; //first startup
+
+            Date now = new Date();
+            long nowInMilliseconds = now.getTime();
+            long lastPingDateInMilliseconds = lastPingDate.getTime();
+            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
+            if (secondsPassed >= DEFAULT_TIMEOUT) {         
+                lastPingDate = now;
+                return true;
+            }
+
+            return false;
+        }
+        
+        @Override
+        public void onActivityResumed(Activity arg0) {
+            if(mustPingPushNotificationsBackend()) {
+                //uhhh ohhh!
+                
+                if (WordPress.hasValidWPComCredentials(mContext)) {
+                    String token = null;
+                    try {
+                        // Register for Google Cloud Messaging
+                        GCMRegistrar.checkDevice(mContext);
+                        GCMRegistrar.checkManifest(mContext);
+                        token = GCMRegistrar.getRegistrationId(mContext);
+                        String gcmId = Config.GCM_ID;
+                        if (gcmId == null || token == null || token.equals("") ) {
+                            Log.e("WORDPRESS", "Could not ping the PNs backend, Token or gmcID not found");
+                            return;
+                        } else {
+                            // Send the token to WP.com
+                            NotificationUtils.registerPushNotificationsToken(mContext, token, false);
+                        }
+                    } catch (Exception e) {
+                        Log.e("WORDPRESS", "Could not ping the PNs backend: " + e.getMessage());
+                    }
+                }
+                
+            }
+        }
+
+        @Override
+        public void onActivityCreated(Activity arg0, Bundle arg1) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity arg0) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity arg0) {
+            lastPingDate = new Date();
+        }
+        @Override
+        public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity arg0) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity arg0) {
+        }    
     }
 }

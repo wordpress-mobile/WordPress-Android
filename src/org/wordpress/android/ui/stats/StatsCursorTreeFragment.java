@@ -12,13 +12,13 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +26,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -47,9 +46,7 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsCursorTreeFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
 
-    private static final int MAX_ITEMS_ON_TABLET = 10;
     private static final int LOADER_URI_GROUP_INDEX = -1;
-    
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
     private static final String ARGS_CHILDREN_URI = "ARGS_CHILDREN_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
@@ -61,7 +58,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     private TextView mEntryLabel;
     private TextView mTotalsLabel;
     private TextView mEmptyLabel;
-    private ExpandableListView mListView;
     private LinearLayout mLinearLayout;
     
     private SparseBooleanArray mGroupIdToExpandedMap;
@@ -124,15 +120,9 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
         mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
         configureEmptyLabel();
-        
-        if (isTablet()) {
-            mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
-            mLinearLayout.setVisibility(View.VISIBLE);
-        } else {
-            mListView = (ExpandableListView) view.findViewById(R.id.stats_list_listview);
-            mListView.setAdapter(mAdapter);
-            mListView.setVisibility(View.VISIBLE);
-        }
+
+        mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
+        mLinearLayout.setVisibility(View.VISIBLE);
         
         return view;
     }
@@ -160,7 +150,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         if (WordPress.getCurrentBlog() == null)
             return null;
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        if (TextUtils.isEmpty(blogId)) blogId = "0";
         
         Uri uri = getGroupUri();
         
@@ -180,19 +171,19 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
-            
+
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
                 long date = data.getLong(data.getColumnIndex("date"));
-                
+
                 Bundle bundle = new Bundle();
                 bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupId);
                 bundle.putLong(StatsCursorLoaderCallback.BUNDLE_DATE, date);
-                
+
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
-        
+
 
             mCallback.onCursorLoaded(getGroupUri(), data);
             
@@ -214,9 +205,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         }
         
         configureEmptyLabel();
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     @Override
@@ -227,16 +216,12 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     public void setListAdapter(CursorTreeAdapter adapter) {
         mAdapter = adapter;
-        if (isTablet()) {
-            reloadLinearLayout();
-        }
+        reloadLinearLayout();
     }
 
     private void reloadLinearLayout() {
@@ -246,7 +231,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         mLinearLayout.removeAllViews();
         
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int groupCount = Math.min(mAdapter.getGroupCount(), MAX_ITEMS_ON_TABLET);
+        int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
             
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
@@ -306,10 +291,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
            if (isAdded())
                getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, StatsCursorTreeFragment.this);           
        }        
-    }
-    
-    private boolean isTablet() {
-        return Utils.isTablet();
     }
 
     private void configureEmptyLabel() {

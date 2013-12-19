@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nux_background"
+    android:orientation="vertical">
+
+    <fragment
+        android:name="org.wordpress.android.ui.accounts.NewBlogFragment"
+        android:id="@+id/new_blog_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

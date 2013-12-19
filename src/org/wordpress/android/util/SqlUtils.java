@@ -57,7 +57,7 @@ public class SqlUtils {
     }
 
     /*
-     * wrapper for DatabaseUtils.stringForQuery() which returns "" if query returns no rows
+     * wrapper for DatabaseUtils.stringForQuery(), returns "" if query returns no rows
      */
     public static String stringForQuery(SQLiteDatabase db, String query, String[] selectionArgs) {
         try {

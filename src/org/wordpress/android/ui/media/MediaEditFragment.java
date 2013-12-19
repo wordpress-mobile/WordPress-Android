@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,13 +25,15 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.xmlrpc.android.ApiHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment for editing media on the Media tab 
@@ -349,7 +348,6 @@ public class MediaEditFragment extends SherlockFragment {
             inflater.inflate(R.menu.media_edit, menu);
         }
     }
-    
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -357,10 +355,10 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_refresh).setVisible(false);
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
+
+            if (!MediaUtils.isWordPressVersionWithMediaEditingCapabilities())
+                menu.findItem(R.id.menu_save_media).setVisible(false);
         }
-       
-        if( ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
-            menu.findItem(R.id.menu_save_media).setVisible(false);
     }
     
     @Override
@@ -379,7 +377,7 @@ public class MediaEditFragment extends SherlockFragment {
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
-            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
@@ -388,7 +386,7 @@ public class MediaEditFragment extends SherlockFragment {
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);
-                        WordPress.localImageCache.put(path, bitmap);
+                        WordPress.getBitmapCache().put(path, bitmap);
                     }
                 });
                 task.execute(filePath);

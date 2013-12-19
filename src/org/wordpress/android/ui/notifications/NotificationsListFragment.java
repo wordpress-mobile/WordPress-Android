@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
@@ -187,34 +189,35 @@ public class NotificationsListFragment extends ListFragment {
             Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
             final Note note = bucketCursor.getObject();
 
-            final TextView noteLabelText = (TextView) view.findViewById(R.id.note_label);
-            final TextView detailText = (TextView) view.findViewById(R.id.note_detail);
-            final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            final NetworkImageView avatarView = (NetworkImageView) view.findViewById(R.id.note_avatar);
-            final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
+            final TextView txtLabel = (TextView) view.findViewById(R.id.note_label);
+            final TextView txtDetail = (TextView) view.findViewById(R.id.note_detail);
             final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+            final TextView txtDate = (TextView) view.findViewById(R.id.text_date);
+            final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+            final NetworkImageView imgAvatar = (NetworkImageView) view.findViewById(R.id.note_avatar);
+            final ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
 
+            txtLabel.setText(note.getSubject());
             if (note.isCommentType()) {
-                detailText.setText(note.getCommentPreview());
-                detailText.setVisibility(View.VISIBLE);
+                txtDetail.setText(note.getCommentPreview());
+                txtDetail.setVisibility(View.VISIBLE);
             } else {
-                detailText.setVisibility(View.GONE);
+                txtDetail.setVisibility(View.GONE);
             }
 
-            noteLabelText.setText(note.getSubject());
+            txtDate.setText(note.getTimeSpan());
 
             // gravatars default to having s=256 which is considerably larger than we need here, so
             // change the s= param to the actual size used here
-            String iconUrl = note.getIconURL();
-            if (iconUrl!=null && iconUrl.contains("s=256"))
-                iconUrl = iconUrl.replace("s=256", "s=" + mAvatarSz);
+            String avatarUrl = note.getIconURL();
+            if (avatarUrl!=null && avatarUrl.contains("s=256"))
+                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
+            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
 
-            avatarView.setImageUrl(iconUrl, WordPress.imageLoader);
-            avatarView.setDefaultImageResId(R.drawable.placeholder);
+            imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
-            iconView.setImageDrawable(getDrawableForType(note.getType()));
-
-            unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.GONE);
+            unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
             placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
         }
@@ -226,13 +229,19 @@ public class NotificationsListFragment extends ListFragment {
             if (noteType==null)
                 return null;
 
+            // use like icon for comment likes
+            if (noteType.equals(Note.NOTE_COMMENT_LIKE_TYPE))
+                noteType = Note.NOTE_LIKE_TYPE;
+
             Drawable icon = mNoteIcons.get(noteType);
             if (icon != null)
                 return icon;
 
             int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
-            if (imageId==0)
+            if (imageId==0) {
+                Log.w(WordPress.TAG, "unknown note type - " + noteType);
                 return null;
+            }
 
             icon = getResources().getDrawable(imageId);
             if (icon==null)

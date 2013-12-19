@@ -27,8 +27,12 @@ import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +44,7 @@ import java.util.Set;
 
 import static org.wordpress.android.WordPress.restClient;
 
-public class NotificationsActivity extends WPActionBarActivity {
+public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
     public static final String TAG="WPNotifications";
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
@@ -52,6 +56,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
                                             IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
+    private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -80,7 +85,22 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public Fragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    Fragment fragment = new NoteCommentFragment();
+                    //Fragment fragment = new NoteCommentFragment();
+                    Fragment fragment = CommentDetailFragment.newInstance(note);
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
+                if (note.isMultiLineListTemplate()){
+                    Fragment fragment = null;
+                    if (note.isCommentLikeType())
+                        fragment = new NoteCommentLikeFragment();
+                    else if (note.isAutomattcherType())
+                        fragment = new NoteMatcherFragment();
                     return fragment;
                 }
                 return null;
@@ -146,6 +166,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
+    private boolean mHasPerformedInitialUpdate;
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
@@ -278,6 +299,29 @@ public class NotificationsActivity extends WPActionBarActivity {
         WordPress.restClient.moderateComment(siteId, commentId, status, success, failure);
     }
 
+    /**
+     * these four methods implement OnCommentChangedListener and are triggered from the comment details fragment whenever a comment is changed
+     */
+    @Override
+    public void onCommentAdded() {
+    }
+
+    @Override
+    public void onCommentDeleted() {
+    }
+
+    @Override
+    public void onCommentModerated(final Comment comment, final Note note) {
+        if (isFinishing())
+            return;
+        if (note == null) 
+            return;
+        // Simperium notifies that the object is updated
+    }
+
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
+    }
 
     protected void updateLastSeen(String timestamp){
         // TODO: Write to meta bucket last seen time
@@ -343,6 +387,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.remove(NOTE_ID_EXTRA);
         super.onSaveInstanceState(outState);
     }
@@ -357,5 +402,14 @@ public class NotificationsActivity extends WPActionBarActivity {
     public void onResume() {
         super.onResume();
         registerReceiver(mBroadcastReceiver, new IntentFilter(NOTIFICATION_ACTION));
+    }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
+            ReaderAuthActions.updateCookies(this);
+        }
     }
 }

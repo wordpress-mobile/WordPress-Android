@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
@@ -11,7 +12,14 @@ import org.json.JSONException;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 
-public class Post {
+public class Post implements Serializable {
+
+    // Increment this value if this model changes
+    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
+    static final long serialVersionUID  = 1L;
+
+    public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
+    public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
 
     private long id;
     private int blogID;
@@ -49,7 +57,6 @@ public class Post {
     private Blog blog;
 
     public List<String> imageUrl = new Vector<String>();
-    List<String> selectedCategories = new Vector<String>();
 
     public Post(int blog_id, long post_id, boolean isPage) {
         // load an existing post
@@ -96,6 +103,13 @@ public class Post {
         } else {
             this.id = -1;
         }
+    }
+
+    public Post(int blogId, boolean isPage) {
+        // creates a new, empty post for the passed in blogId
+        this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", true, false);
+        this.localDraft = true;
+        save();
     }
 
     public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
@@ -363,7 +377,7 @@ public class Post {
         return isPage;
     }
 
-    public void setPage(boolean isPage) {
+    public void setIsPage(boolean isPage) {
         this.isPage = isPage;
     }
 
@@ -429,6 +443,27 @@ public class Post {
         return quickPostType;
     }
 
+    /**
+     * Checks if this post currently has data differing from another post.
+     *
+     * @param otherPost The post to compare to this post's editable data.
+     * @return True if this post's data differs from otherPost's data, False otherwise.
+     */
+    public boolean hasChanges(Post otherPost) {
+        return (!(this.title.equals(otherPost.title) &&
+                this.description.equals(otherPost.description) &&
+                this.mt_excerpt.equals(otherPost.mt_excerpt) &&
+                this.date_created_gmt == otherPost.date_created_gmt &&
+                this.categories.equals(otherPost.categories) &&
+                this.mt_keywords.equals(otherPost.mt_keywords) &&
+                this.post_status.equals(otherPost.post_status) &&
+                this.wp_password.equals(otherPost.wp_password) &&
+                this.wp_post_format.equals(otherPost.wp_post_format) &&
+                this.latitude == otherPost.latitude &&
+                this.longitude == otherPost.longitude)
+        );
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -439,15 +474,40 @@ public class Post {
         return result;
     }
 
-    @Override    
+    @Override
     public boolean equals(Object other) {
-        if (other == this) return true;
-        if (other == null) return false;
-        if (getClass() != other.getClass()) return false;
-        Post otherPost = (Post)other;
-        return (this.id == otherPost.id && 
-                this.isPage == otherPost.isPage &&
-                this.blogID == otherPost.blogID
-                );
-      }
+        if (other == this)
+            return true;
+        if (other instanceof Post) {
+            Post otherPost = (Post) other;
+            return (this.id == otherPost.id &&
+                    this.isPage == otherPost.isPage &&
+                    this.blogID == otherPost.blogID
+            );
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get the entire post content
+     * Joins description and mt_text_more fields if both are valid
+     * @return post content as String
+     */
+    public String getContent() {
+        String postContent;
+        if (!getMt_text_more().equals("")) {
+            if (isLocalDraft())
+                postContent = getDescription() + "\n&lt;!--more--&gt;\n" + getMt_text_more();
+            else
+                postContent = getDescription() + "\n<!--more-->\n" + getMt_text_more();
+        } else
+            postContent = getDescription();
+
+        return postContent;
+    }
+
+    public boolean isNew() {
+        return getId() >= 0;
+    }
 }

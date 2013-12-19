@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
+import org.wordpress.android.util.NetworkUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
@@ -293,7 +294,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void onResume() {
         super.onResume();
 
-        if (!Utils.isNetworkAvailable())
+        if (!NetworkUtils.isNetworkAvailable(this.getActivity()))
             mHasRetrievedAllMedia = true;
         
         refreshSpinnerAdapter();

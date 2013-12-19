@@ -190,10 +190,7 @@ public class ReaderPostActions {
      * get the latest version of this post
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        if (post.blogId==0)
-            ReaderLog.w("updating post with no blogId");
-
-        String path = "sites/" + post.blogId + "/posts/" + post.postId;
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -213,6 +210,7 @@ public class ReaderPostActions {
         ReaderLog.d("updating post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
+
     private static void handleUpdatePostResponse(final ReaderPost post,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
@@ -260,6 +258,34 @@ public class ReaderPostActions {
                 }
             }
         }.start();
+    }
+
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
+        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site";
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderPost post = ReaderPost.fromJson(jsonObject);
+                ReaderPostTable.addOrUpdatePost(post);
+                if (actionListener!=null)
+                    actionListener.onActionResult(true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ReaderLog.e(volleyError);
+                if (actionListener!=null)
+                    actionListener.onActionResult(false);
+
+            }
+        };
+        ReaderLog.d("requesting post");
+        WordPress.restClient.get(path, null, null, listener, errorListener);
     }
 
     /**

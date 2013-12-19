@@ -1,17 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
@@ -24,11 +12,22 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApiHelper {
     /** Called when the activity is first created. */
@@ -256,7 +255,7 @@ public class ApiHelper {
             };
             try {
                 Map<String, Object> userInfo = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
-                if (userInfo.containsKey("roles")) {
+                if (userInfo.containsKey("roles") && ( userInfo.get("roles") instanceof Object[])) {
                     Object[] userRoles = (Object[])userInfo.get("roles");
                     mBlog.setAdmin(false);
                     for (int i = 0; i < userRoles.length; i++) {
@@ -337,17 +336,7 @@ public class ApiHelper {
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = d.toString();
-            try {
-                int flags = 0;
-                flags |= DateUtils.FORMAT_SHOW_DATE;
-                flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= DateUtils.FORMAT_SHOW_YEAR;
-                flags |= DateUtils.FORMAT_SHOW_TIME;
-                formattedDate = DateUtils.formatDateTime(ctx,
-                        d.getTime(), flags);
-            } catch (Exception e) {
-            }
+            String formattedDate = getFormattedCommentDate(ctx, d);
 
             dbValues.put("blogID", String.valueOf(blog.getId()));
             dbValues.put("postID", postID);
@@ -366,6 +355,28 @@ public class ApiHelper {
         WordPress.wpDB.saveComments(dbVector);
 
         return allComments;
+    }
+
+    /**
+     * nbradbury 11/15/13 - this code was originally in refreshComments() above, moved here
+     * for re-usability
+     * @param context
+     * @param date
+     * @return
+     */
+    public static String getFormattedCommentDate(Context context, java.util.Date date) {
+        if (date == null)
+            return "";
+        try {
+            int flags = 0;
+            flags |= DateUtils.FORMAT_SHOW_DATE;
+            flags |= DateUtils.FORMAT_ABBREV_MONTH;
+            flags |= DateUtils.FORMAT_SHOW_YEAR;
+            flags |= DateUtils.FORMAT_SHOW_TIME;
+            return DateUtils.formatDateTime(context, date.getTime(), flags);
+        } catch (Exception e) {
+            return date.toString();
+        }
     }
     
     public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Integer> {
@@ -645,7 +656,7 @@ public class ApiHelper {
          
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
-            data.put("type", mMediaFile.getMIMEType());
+            data.put("type", mMediaFile.getMimeType());
             data.put("bits", mMediaFile);
             data.put("overwrite", true);
             
@@ -759,11 +770,18 @@ public class ApiHelper {
         }
 
         private Callback mCallback;
-        
+
+        public GetFeatures() {
+        }
+
         public GetFeatures(Callback callback) {
             mCallback = callback;
         }
-        
+
+        public FeatureSet doSynchronously(List<?>... params) {
+            return doInBackground(params);
+        }
+
         @Override
         protected FeatureSet doInBackground(List<?>... params) {
             
@@ -856,10 +874,13 @@ public class ApiHelper {
     public static InputStream getResponseStream(String urlString) {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
-            return request.buffer();
-        } else {
-            return null;
+            try {
+                return request.buffer();
+            } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+            }
         }
+        return null;
     }
 
     /**
@@ -875,6 +896,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
+                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
                 return null;
             }
         } else {

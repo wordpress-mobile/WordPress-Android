@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -82,7 +82,7 @@ public class ReaderLikeTable {
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked) {
         if (post==null)
             return;
-        long userId = ReaderPrefs.getCurrentUserId();
+        long userId = UserPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);

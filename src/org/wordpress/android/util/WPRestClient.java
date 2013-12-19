@@ -3,14 +3,6 @@
  */
 package org.wordpress.android.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import android.os.AsyncTask;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -26,10 +18,17 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class WPRestClient {
     
@@ -102,44 +101,7 @@ public class WPRestClient {
         String path = String.format("sites/%s/follows/mine/delete", siteId);
         post(path, listener, errorListener);
     }
-    /**
-     * Get a single notification.
-     * 
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
-     */
-    public void getNotification(String noteId, Listener listener, ErrorListener errorListener){
-        get(String.format("notifications/%s", noteId), listener, errorListener);
-    }
-    /**
-     * Mark a notification as read
-     * 
-     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
-     */
-    public void markNoteAsRead(Note note, Listener listener, ErrorListener errorListener){
-        String path = "notifications/read";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(String.format("counts[%s]", note.getId()), note.getUnreadCount());
-        post(path, params, null, listener, errorListener);
-    }
-    /**
-     * Get notifications with the provided params.
-     * 
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
-     */
-    public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener){
-        params.put("number", "40");
-        params.put("num_note_items", "20");
-        params.put("fields", NOTIFICATION_FIELDS);
-        get("notifications", params, null, listener, errorListener);
-    }
-    /**
-     * Get notifications with default params.
-     * 
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
-     */
-    public void getNotifications(Listener listener, ErrorListener errorListener){
-        getNotifications(new HashMap<String, String>(), listener, errorListener);
-    }
+
     /**
      * Update the seen timestamp.
      * 
@@ -199,11 +161,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for geoviews (views by country)
      */
-    public void getStatsGeoviews(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/geoviews";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsGeoviews(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/country-views?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
@@ -265,11 +225,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for top posts and pages
      */
-    public void getStatsTopPosts(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/top_posts";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsTopPosts(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/top-posts?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
@@ -441,6 +399,8 @@ public class WPRestClient {
 
             if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
                 int marker = SITE_PREFIX.length();
+                if (url.indexOf("/", marker) < marker)
+                    return null;
                 return url.substring(marker, url.indexOf("/", marker));
             }
             // not a sites/$siteId request

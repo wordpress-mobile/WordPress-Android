@@ -4,11 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
-import android.util.Log;
+
 import org.wordpress.android.TestUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.CategoryNode;
 
 public class CategoryNodeInstrumentationTest extends InstrumentationTestCase {
     protected Context testContext;
@@ -25,8 +22,8 @@ public class CategoryNodeInstrumentationTest extends InstrumentationTestCase {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
                 "one_category.sql");
         CategoryNode node = CategoryNode.createCategoryTreeFromDB(1);
-        // At least 1 category exists in test db: malformed_category_parent_id.sql
-        assertEquals(0, node.getChildren().size());
+        // At least 1 category exists in test db: one_category.sql
+        assertEquals(1, node.getChildren().size());
         db.close();
     }
 

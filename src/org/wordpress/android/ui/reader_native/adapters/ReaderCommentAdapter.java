@@ -5,10 +5,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,16 +49,25 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private int mBgColorNormal;
     private int mBgColorHighlight;
+    private int mLinkColor;
+    private int mNoLinkColor;
+
+    public interface RequestReplyListener {
+        void onRequestReply(long commentId);
+    }
 
     private ReaderCommentList mComments = new ReaderCommentList();
+    private RequestReplyListener mReplyListener;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,
+                                RequestReplyListener replyListener,
                                 ReaderActions.DataLoadedListener dataLoadedListener,
                                 ReaderActions.DataRequestedListener dataRequestedListener) {
         mPost = post;
+        mReplyListener = replyListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
 
@@ -67,6 +78,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
     }
 
     @SuppressLint("NewApi")
@@ -111,18 +124,23 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
             holder = new CommentViewHolder();
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.text_comment_title);
+            holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
             holder.spacer = convertView.findViewById(R.id.spacer);
             holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
+            holder.imgReply = (ImageView) convertView.findViewById(R.id.image_reply);
             convertView.setTag(holder);
+
+            // this is necessary in order for anchor tags in the comment text to be clickable
+            holder.txtText.setLinksClickable(true);
+            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
 
-        holder.txtTitle.setText(comment.getAuthorName());
+        holder.txtAuthor.setText(comment.getAuthorName());
         displayComment(comment.getText(), holder.txtText);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
@@ -130,21 +148,23 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (comment.hasAvatar()) {
             holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            holder.imgAvatar.setVisibility(View.VISIBLE);
-
-            // tapping avatar opens blog in browser
-            if (comment.hasAuthorUrl()) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(v.getContext(), comment.getAuthorUrl());
-                    }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
         } else {
-            holder.imgAvatar.setVisibility(View.GONE);
+            holder.imgAvatar.setImageResource(R.drawable.placeholder);
+        }
+
+        // tapping avatar or author name opens blog in browser
+        if (comment.hasAuthorUrl()) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.openUrl(view.getContext(), comment.getAuthorUrl());
+                }
+            };
+            holder.imgAvatar.setOnClickListener(listener);
+            holder.txtAuthor.setOnClickListener(listener);
+            holder.txtAuthor.setTextColor(mLinkColor);
+        } else {
+            holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
         // show spacer and indent it based on comment level
@@ -166,6 +186,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.progress.setVisibility(View.GONE);
         }
 
+        // tapping reply icon tells activity to show reply box
+        if (mReplyListener != null) {
+            holder.imgReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mReplyListener.onRequestReply(comment.commentId);
+                }
+            });
+        }
+
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
         if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1))
@@ -184,6 +214,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
         // convert emoticons first (otherwise they'll be downloaded)
         if (content.contains("icon_"))
             content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
+
+        // skip performance hit of html conversion if content doesn't contain html
+        if (!content.contains("<") && !content.contains("&")) {
+            textView.setText(content.trim());
+            return;
+        }
 
         // now convert to HTML with an image getter that enforces a max image size
         final SpannableStringBuilder html;
@@ -208,12 +244,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     private static class CommentViewHolder {
-        private TextView txtTitle;
+        private TextView txtAuthor;
         private TextView txtText;
         private TextView txtDate;
         private WPNetworkImageView imgAvatar;
         private View spacer;
         private ProgressBar progress;
+        private ImageView imgReply;
     }
 
     /*
@@ -290,6 +327,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
+            if (mPost==null)
+                return false;
+
             // determine whether more comments can be downloaded by comparing the number of
             // comments the post says it has with the number of comments actually stored
             // locally for this post

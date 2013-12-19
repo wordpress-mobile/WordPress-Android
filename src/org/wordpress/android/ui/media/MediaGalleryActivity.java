@@ -30,9 +30,13 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     
     // params for the gallery
     public static final String PARAMS_MEDIA_GALLERY = "PARAMS_MEDIA_GALLERY";
+
+    // launches media picker in onCreate() if set
+    public static final String PARAMS_LAUNCH_PICKER = "PARAMS_LAUNCH_PICKER";
     
     // result of the gallery
     public static final String RESULT_MEDIA_GALLERY = "RESULT_MEDIA_GALLERY";
+
     
     private MediaGalleryEditFragment mMediaGalleryEditFragment;
     private MediaGallerySettingsFragment mMediaGallerySettingsFragment;
@@ -62,8 +66,9 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         FragmentManager fm = getSupportFragmentManager();
         
         mMediaGallery = (MediaGallery) getIntent().getSerializableExtra(PARAMS_MEDIA_GALLERY);
-        if (mMediaGallery == null)
+        if (mMediaGallery == null) {
             mMediaGallery = new MediaGallery();
+        }
 
         mMediaGalleryEditFragment = (MediaGalleryEditFragment) fm.findFragmentById(R.id.mediaGalleryEditFragment);
         mMediaGallerySettingsFragment = (MediaGallerySettingsFragment) fm.findFragmentById(R.id.mediaGallerySettingsFragment);
@@ -103,6 +108,9 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
             });
         }
 
+        if (getIntent().hasExtra(PARAMS_LAUNCH_PICKER)) {
+            handleAddMedia();
+        }
     }
 
     @Override

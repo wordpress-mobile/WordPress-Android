@@ -1,986 +1,342 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.Html;
-import android.text.Layout;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
-import android.text.format.DateUtils;
-import android.text.method.ArrowKeyMovementMethod;
-import android.text.style.AlignmentSpan;
-import android.text.style.CharacterStyle;
-import android.text.style.QuoteSpan;
-import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.inputmethod.InputMethodManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.ToggleButton;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.wordpress.android.Constants;
+import com.actionbarsherlock.view.MenuItem;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
-import org.wordpress.android.ui.media.MediaUtils;
-import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.MediaUtils.RequestCode;
-import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.LocationHelper;
-import org.wordpress.android.util.LocationHelper.LocationResult;
-import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPEditText;
-import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPUnderlineSpan;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.ApiHelper;
+import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.WPViewPager;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
 
-public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
-        WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
+public class EditPostActivity extends SherlockFragmentActivity {
 
-    private static final int AUTOSAVE_DELAY_MILLIS = 60000;
+    public static final String EXTRA_POSTID = "postId";
+    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
+    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
+    public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
 
-    private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
-    private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
+    private static int PAGE_CONTENT = 0;
+    private static int PAGE_SETTINGS = 1;
+    private static int PAGE_PREVIEW = 2;
 
-    private static final int ID_DIALOG_DATE = 0;
-    private static final int ID_DIALOG_TIME = 1;
-    private static final int ID_DIALOG_LOADING = 2;
-    private static final int ID_DIALOG_DOWNLOAD = 3;
+    private static final int AUTOSAVE_INTERVAL_MILLIS = 30000;
+    private Handler mAutoSaveHandler;
 
-    private static final String CATEGORY_PREFIX_TAG = "category-";
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * fragments for each of the sections. We use a
+     * {@link FragmentPagerAdapter} derivative, which will keep every
+     * loaded fragment in memory. If this becomes too memory intensive, it
+     * may be best to switch to a
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+    SectionsPagerAdapter mSectionsPagerAdapter;
 
-    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
-    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
-    
-    public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
-    public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    WPViewPager mViewPager;
 
-    private Blog mBlog;
     private Post mPost;
-    // Used to restore post content if 'Discard' is chosen when leaving the editor.
     private Post mOriginalPost;
 
-    private WPEditText mContentEditText;
-    private ImageButton mAddPictureButton;
-    private Spinner mStatusSpinner;
-    private EditText mTitleEditText, mPasswordEditText, mTagsEditText, mExcerptEditText;
-    private TextView mLocationText, mPubDateText;
-    private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
-    private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
-    private Button mPubDateButton, mLinkButton, mMoreButton;
-    private RelativeLayout mFormatBar;
+    private EditPostContentFragment mEditPostContentFragment;
+    private EditPostSettingsFragment mEditPostSettingsFragment;
+    private EditPostPreviewFragment mEditPostPreviewFragment;
 
-    private Location mCurrentLocation;
-    private LocationHelper mLocationHelper;
-    private Handler mAutoSaveHandler;
-    private ArrayList<String> mCategories;
+    private boolean mIsNewPost;
 
-    private boolean mIsPage;
-    private boolean mIsNew;
-    private boolean mLocalDraft;
-    private boolean mIsCustomPubDate;
-    private boolean mIsBackspace;
-    private boolean mScrollDetected;
-    private boolean mKeyboardShown;
-    private boolean mEditContentHasFocus;
-
-    private String mAccountName = "";
-    private int mQuickMediaType = -1;
-    private String mMediaCapturePath = "";
-
-    private String[] mPostFormats = null;
-    private String[] mPostFormatTitles = null;
-
-    private int mBlogID = -1;
-    private long mPostID = -1;
-    private long mCustomPubDate = 0;
-
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    private int mStyleStart, mSelectionStart, mSelectionEnd;
-    private int mLastPosition = -1;
-    private int mCurrentActivityRequest = -1;
-
-    private float mLastYPos = 0;
-
-    private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
+    private String mStatEventEditorClosed = "";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
+        setContentView(R.layout.activity_new_edit_post);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        // Set up the action bar.
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
-        mCategories = new ArrayList<String>();
-        mAutoSaveHandler = new Handler();
-
+        Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // We arrived here from a share action
-            setupTitleForShareAction();
-        } else {
-            initBlog();
-            if (extras != null) {
-                mAccountName = StringUtils.unescapeHTML(extras.getString("accountName"));
-                mPostID = extras.getLong("postID");
-                mLocalDraft = extras.getBoolean("localDraft", false);
-                mIsPage = extras.getBoolean("isPage", false);
-                mIsNew = extras.getBoolean("isNew", false);
+        if (savedInstanceState == null) {
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action)
+                    || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
+                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
 
-                if (savedInstanceState != null) {
-                    mCurrentActivityRequest = savedInstanceState.getInt("currentActivityRequest");
-                    if (savedInstanceState.getString("mediaCapturePath") != null)
-                        mMediaCapturePath = savedInstanceState.getString("mediaCapturePath");
-                } else {
-                    mQuickMediaType = extras.getInt("quick-media", -1);
-                }
-
-                if (extras.getBoolean("isQuickPress")) {
-                    mBlogID = extras.getInt("id");
-                } else {
-                    mBlogID = WordPress.currentBlog.getId();
-                }
-
-                try {
-                    mBlog = new Blog(mBlogID);
-                    WordPress.currentBlog = mBlog;
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return;
-                }
-
-                if (!mIsNew) {
+                if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
+                    // QuickPress might want to use a different blog than the current blog
+                    int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
                     try {
-                        mPost = new Post(mBlogID, mPostID, mIsPage);
-                        if (mPost == null) {
-                            // big oopsie
-                            Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
-                            finish();
+                        Blog quickPressBlog = new Blog(blogId);
+                        if (quickPressBlog.isHidden()) {
+                            // Don't continue if blog is hidden
+                            showErrorAndFinish(R.string.error_blog_hidden);
                             return;
-                        } else {
-                            WordPress.currentPost = mPost;
-                            mOriginalPost = new Post(mBlogID, mPostID, mIsPage);
                         }
+                        WordPress.currentBlog = quickPressBlog;
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        finish();
+                        // QuickPress Blog not found
+                        showErrorAndFinish(R.string.blog_not_found);
+                        return;
                     }
                 }
-            }
 
-            if (mIsNew) {
-                mLocalDraft = true;
-                setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()) + " - "
-                        + getString((mIsPage) ? R.string.new_page : R.string.new_post));
-            } else {
-                setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()) + " - "
-                        + getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
-            }
-        }
+                // Create a new post for share intents and QuickPress
+                mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
+                mIsNewPost = true;
+            } else if (extras != null) {
+                // Load post from the postId passed in extras
+                long postId = extras.getLong(EXTRA_POSTID, -1);
+                boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
+                mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+                mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
 
-        setContentView(R.layout.edit);
-        mContentEditText = (WPEditText) findViewById(R.id.postContent);
-        mTitleEditText = (EditText) findViewById(R.id.title);
-        mExcerptEditText = (EditText) findViewById(R.id.postExcerpt);
-        mPasswordEditText = (EditText) findViewById(R.id.post_password);
-        mLocationText = (TextView) findViewById(R.id.locationText);
-        mBoldToggleButton = (ToggleButton) findViewById(R.id.bold);
-        mEmToggleButton = (ToggleButton) findViewById(R.id.em);
-        mBquoteToggleButton = (ToggleButton) findViewById(R.id.bquote);
-        mUnderlineToggleButton = (ToggleButton) findViewById(R.id.underline);
-        mStrikeToggleButton = (ToggleButton) findViewById(R.id.strike);
-        mAddPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
-        mPubDateButton = (Button) findViewById(R.id.pubDateButton);
-        mPubDateText = (TextView) findViewById(R.id.pubDate);
-        mLinkButton = (Button) findViewById(R.id.link);
-        mMoreButton = (Button) findViewById(R.id.more);
-        mStatusSpinner = (Spinner) findViewById(R.id.status);
-        mTagsEditText = (EditText) findViewById(R.id.tags);
-        mFormatBar = (RelativeLayout) findViewById(R.id.formatBar);
-
-        // Set header labels to upper case
-        ((TextView) findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
-        ((TextView) findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
-        ((TextView) findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
-        ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
-
-        if (mIsPage) { // remove post specific views
-            mExcerptEditText.setVisibility(View.GONE);
-            (findViewById(R.id.sectionTags)).setVisibility(View.GONE);
-            (findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
-            (findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
-            (findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
-            (findViewById(R.id.postFormat)).setVisibility(View.GONE);
-        } else {
-            if (mBlog.getPostFormats().equals("")) {
-                List<Object> args = new Vector<Object>();
-                args.add(mBlog);
-                args.add(this);
-                new ApiHelper.getPostFormatsTask().execute(args);
-                mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
-                        "video"};
-                mPostFormats = defaultPostFormatTitles;
-            } else {
-                try {
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<Map<String, String>>() {
-                    }.getType();
-                    Map<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
-                    mPostFormats = new String[jsonPostFormats.size()];
-                    mPostFormatTitles = new String[jsonPostFormats.size()];
-                    int i = 0;
-                    for (Map.Entry<String, String> entry : jsonPostFormats.entrySet()) {
-                        String key = entry.getKey();
-                        String val = entry.getValue();
-                        mPostFormats[i] = key;
-                        mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
-                        i++;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (isPage) {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
+                } else {
+                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
+                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
                 }
+            } else {
+                // A postId extra must be passed to this activity
+                showErrorAndFinish(R.string.post_not_found);
+                return;
             }
-            Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mPostFormatTitles);
-            pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            pfSpinner.setAdapter(pfAdapter);
-            String activePostFormat = "standard";
-            if (!mIsNew) {
-                try {
-                    if (!mPost.getWP_post_format().equals(""))
-                        activePostFormat = mPost.getWP_post_format();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            for (int i = 0; i < mPostFormats.length; i++) {
-                if (mPostFormats[i].equals(activePostFormat))
-                    pfSpinner.setSelection(i);
-            }
-
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
-                setContent();
-            else if (NEW_MEDIA_GALLERY.equals(action))
-                prepareMediaGallery();
-            else if (NEW_MEDIA_POST.equals(action))
-                prepareMediaPost();
-            
-        }
-
-        String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mStatusSpinner.setAdapter(adapter);
-
-        initLocation();
-
-        if (mIsNew) {
-            if (mQuickMediaType >= 0) {
-                // User selected a 'Quick (media type)' option in the menu drawer
-                if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
-                    launchCamera();
-                else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                    launchPictureLibrary();
-                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
-                    launchVideoCamera();
-                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                    launchVideoLibrary();
-                mLocalDraft = extras.getBoolean("localDraft");
-            }
-        } else {
-            mTitleEditText.setText(mPost.getTitle());
-            mExcerptEditText.setText(mPost.getMt_excerpt());
-
-            if (mPost.isUploaded()) {
-                items = new String[]{
-                        getResources().getString(R.string.publish_post),
-                        getResources().getString(R.string.draft),
-                        getResources().getString(R.string.pending_review),
-                        getResources().getString(R.string.post_private)
-                };
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-                        items);
-                mStatusSpinner.setAdapter(adapter);
-            }
-
-            String contentHTML;
-
-            if (!mPost.getMt_text_more().equals("")) {
-                if (mPost.isLocalDraft())
-                    contentHTML = mPost.getDescription() + "\n&lt;!--more--&gt;\n"
-                            + mPost.getMt_text_more();
-                else
-                    contentHTML = mPost.getDescription() + "\n<!--more-->\n"
-                            + mPost.getMt_text_more();
-            } else
-                contentHTML = mPost.getDescription();
-
+        } else if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
             try {
-                if (mPost.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""),
-                            EditPostActivity.this, mPost));
-                else
-                    mContentEditText.setText(contentHTML.replaceAll("\uFFFC", ""));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            long pubDate = mPost.getDate_created_gmt();
-            if (pubDate != 0) {
-                try {
-                    int flags = 0;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                    flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, pubDate,
-                            flags);
-                    mPubDateText.setText(formattedDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (mPost.getWP_password() != null)
-                mPasswordEditText.setText(mPost.getWP_password());
-
-            if (mPost.getPost_status() != null) {
-                String status = mPost.getPost_status();
-
-                if (status.equals("publish")) {
-                    mStatusSpinner.setSelection(0, true);
-                } else if (status.equals("draft")) {
-                    mStatusSpinner.setSelection(1, true);
-                } else if (status.equals("pending")) {
-                    mStatusSpinner.setSelection(2, true);
-                } else if (status.equals("private")) {
-                    mStatusSpinner.setSelection(3, true);
-                } else if (status.equals("localdraft")) {
-                    mStatusSpinner.setSelection(0, true);
-                }
-            }
-
-            if (!mIsPage) {
-                if (mPost.getJSONCategories() != null) {
-                    mCategories = JSONUtil.fromJSONArrayToStringList(mPost.getJSONCategories());
-                }
-
-                Double latitude = mPost.getLatitude();
-                Double longitude = mPost.getLongitude();
-
-                // if this post has location attached to it, look up the location address
-                if (latitude != 0.0) {
-                    setLocationStatus(LocationStatus.SEARCHING);
-                    new GetAddressTask().execute(latitude, longitude);
-                }
-            }
-            String tags = mPost.getMt_keywords();
-            if (!tags.equals("")) {
-                mTagsEditText.setText(tags);
+                mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+            } catch (ClassCastException e) {
+                mPost = null;
             }
         }
 
-        populateSelectedCategories();
+        // Ensure we have a valid blog
+        if (WordPress.getCurrentBlog() == null) {
+            showErrorAndFinish(R.string.blog_not_found);
+            return;
+        }
 
-        registerForContextMenu(mAddPictureButton);
-        mContentEditText.setOnSelectionChangedListener(this);
-        mContentEditText.setOnEditTextImeBackListener(this);
-        mContentEditText.setOnTouchListener(this);
-        mContentEditText.addTextChangedListener(this);
-        mContentEditText.setOnFocusChangeListener(this);
-        mAddPictureButton.setOnClickListener(this);
-        mPubDateButton.setOnClickListener(this);
-        mBoldToggleButton.setOnClickListener(this);
-        mLinkButton.setOnClickListener(this);
-        mEmToggleButton.setOnClickListener(this);
-        mUnderlineToggleButton.setOnClickListener(this);
-        mStrikeToggleButton.setOnClickListener(this);
-        mBquoteToggleButton.setOnClickListener(this);
-        mMoreButton.setOnClickListener(this);
-        softKeyboardHook();
-    }
+        // Ensure we have a valid post
+        if (mPost == null || mPost.getId() < 0) {
+            showErrorAndFinish(R.string.post_not_found);
+            return;
+        }
 
-    private void prepareMediaGallery() {
-        MediaGallery mediaGallery = new MediaGallery();
-        mediaGallery.setIds(getIntent().getStringArrayListExtra("NEW_MEDIA_GALLERY_EXTRA_IDS"));
-        
-        startMediaGalleryActivity(mediaGallery);
-    }
+        setTitle(WordPress.getCurrentBlog().getBlogName());
 
-    private void prepareMediaPost() {
-        String mediaId = getIntent().getStringExtra(NEW_MEDIA_POST_EXTRA);
-        addExistingMediaToEditor(mediaId);
-    }
-    
-    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        Intent intent = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
-        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
-    }
-    
-    private void startMediaGalleryAddActivity() {
-        Intent intent = new Intent(EditPostActivity.this, MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (WPViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setPagingEnabled(false);
+
+        // When swiping between different sections, select the corresponding
+        // tab. We can also use ActionBar.Tab#select() to do this if we have
+        // a reference to the Tab.
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+
+                supportInvalidateOptionsMenu();
+                if (position == PAGE_CONTENT) {
+                    setTitle(WordPress.getCurrentBlog().getBlogName());
+                } else if (position == PAGE_SETTINGS) {
+                    setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                } else if (position == PAGE_PREVIEW) {
+                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    savePost(true);
+                    if (mEditPostPreviewFragment != null)
+                        mEditPostPreviewFragment.loadPost(mPost);
+                }
+            }
+        });
+
+        // Autosave handler
+        mAutoSaveHandler = new Handler();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (mAutoSaveHandler != null)
-            mAutoSaveHandler.postDelayed(autoSaveRunnable, 60000);
+            mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mLocationHelper != null)
-            mLocationHelper.cancelTimer();
-
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt("currentActivityRequest", mCurrentActivityRequest);
-        if (!mMediaCapturePath.equals(""))
-            savedInstanceState.putString("mediaCapturePath", mMediaCapturePath);
-    }
-
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
-            menu.add(0, 1, 0, getResources().getText(R.string.media_add_popup_capture_photo));
-        }
-        menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
-            menu.add(0, 3, 0, getResources().getText(R.string.media_add_popup_capture_video));
-        }
-        
-        menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
-        menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
+    protected void onDestroy() {
+        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
+        super.onDestroy();
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-                launchPictureLibrary();
-                return true;
-            case 1:
-                launchCamera();
-                return true;
-            case 2:
-                launchVideoLibrary();
-                return true;
-            case 3:
-                launchVideoCamera();
-                return true;
-            case 4:
-                startMediaGalleryActivity(null);
-                return true;
-            case 5:
-                startMediaGalleryAddActivity();
-                return true;
-        }
-        return false;
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saves both post objects so we can restore them in onCreate()
+        savePost(true);
+        outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
+        outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
     }
 
     @Override
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.edit, menu);
+        inflater.inflate(R.menu.edit_post, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
+        MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
+        if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            previewMenuItem.setVisible(false);
+            saveMenuItem.setVisible(false);
+        } else {
+            previewMenuItem.setVisible(true);
+            saveMenuItem.setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_edit_post) {
-            if (mAutoSaveHandler != null)
-                mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-            if (savePost(false, false)) {
-                if (mQuickMediaType >= 0) {
-                    if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                        mPost.setQuickPostType("QuickPhoto");
-                    else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                        mPost.setQuickPostType("QuickVideo");
-                }
-                WordPress.currentPost = mPost;
-                PostUploadService.addPostToUpload(mPost);
-                startService(new Intent(this, PostUploadService.class));
-                Intent i = new Intent();
-                i.putExtra("shouldRefresh", true);
-                setResult(RESULT_OK, i);
-                finish();
-            }
-            return true;
-        } else if (itemId == android.R.id.home) {
-            showCancelAlert(true);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        mEditContentHasFocus = hasFocus;
-        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE) {
-            showFormatBar();
-        } else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE) {
-            hideFormatBar();
-        }
-    }
-
-    @Override
-    public void onImeBack(WPEditText ctrl, String text) {
-        if (mFormatBar.getVisibility() == View.VISIBLE)
-            hideFormatBar();
-    }
-
-    private void showFormatBar() {
-        if (mKeyboardShown && mEditContentHasFocus) {
-            mFormatBar.setVisibility(View.VISIBLE);
-            AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-            fadeInAnimation.setDuration(500);
-            mFormatBar.startAnimation(fadeInAnimation);
-        }
-    }
-
-    private void hideFormatBar() {
-        AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
-        fadeOutAnimation.setDuration(500);
-        mFormatBar.startAnimation(fadeOutAnimation);
-        mFormatBar.setVisibility(View.GONE);
-    }
-
-    private void softKeyboardHook() {
-        final View scrollView = findViewById(R.id.scrollView);
-        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                scrollView.getWindowVisibleDisplayFrame(r);
-                int heightDiff = scrollView.getRootView().getHeight() - (r.bottom - r.top);
-                if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
-                    mKeyboardShown = true;
-                    showFormatBar();
-                } else {
-                    mKeyboardShown = false;
-                    hideFormatBar();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.bold) {
-            formatBtnClick(mBoldToggleButton, "strong");
-        } else if (id == R.id.em) {
-            formatBtnClick(mEmToggleButton, "em");
-        } else if (id == R.id.underline) {
-            formatBtnClick(mUnderlineToggleButton, "u");
-        } else if (id == R.id.strike) {
-            formatBtnClick(mStrikeToggleButton, "strike");
-        } else if (id == R.id.bquote) {
-            formatBtnClick(mBquoteToggleButton, "blockquote");
-        } else if (id == R.id.more) {
-            mSelectionEnd = mContentEditText.getSelectionEnd();
-            Editable str = mContentEditText.getText();
-            str.insert(mSelectionEnd, "\n<!--more-->\n");
-        } else if (id == R.id.link) {
-            mSelectionStart = mContentEditText.getSelectionStart();
-            mStyleStart = mSelectionStart;
-            mSelectionEnd = mContentEditText.getSelectionEnd();
-            if (mSelectionStart > mSelectionEnd) {
-                int temp = mSelectionEnd;
-                mSelectionEnd = mSelectionStart;
-                mSelectionStart = temp;
-            }
-            Intent i = new Intent(EditPostActivity.this, EditLinkActivity.class);
-            if (mSelectionEnd > mSelectionStart) {
-                String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
-                i.putExtra("selectedText", selectedText);
-            }
-            startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
-        } else if (id == R.id.addPictureButton) {
-            mAddPictureButton.performLongClick();
-        } else if (id == R.id.pubDateButton) {
-            showDialog(ID_DIALOG_DATE);
-        } else if (id == R.id.selectCategories) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", mBlogID);
-            if (mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<String>(mCategories));
-            }
-            Intent categoriesIntent = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
-            categoriesIntent.putExtras(bundle);
-            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-        } else if (id == R.id.categoryButton) {
-            onCategoryButtonClick(v);
-        } else if (id == R.id.post) {
-            if (mAutoSaveHandler != null)
-                mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-            if (savePost(false, false)) {
-                if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
-                    if (mQuickMediaType >= 0) {
-                        if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                            mPost.setQuickPostType("QuickPhoto");
-                        else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                            mPost.setQuickPostType("QuickVideo");
-                    }
-
-                    WordPress.currentPost = mPost;
-                    PostUploadService.addPostToUpload(mPost);
-                    startService(new Intent(this, PostUploadService.class));
-                }
-                finish();
-            }
-        } else if (id == R.id.viewMap) {
-            Double latitude = 0.0;
-            try {
-                latitude = mCurrentLocation.getLatitude();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (latitude != 0.0) {
-                String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
-                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+        if (itemId == R.id.menu_save_post) {
+            if (mPost.isUploaded()) {
+                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedUpdate);
             } else {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
             }
-        } else if (id == R.id.updateLocation) {
-            getLocation();
-        } else if (id == R.id.removeLocation) {
-            removeLocation();
-        }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (mFormatBar.getVisibility() != View.VISIBLE) {
-            showFormatBar();
-        }
-
-        float pos = event.getY();
-
-        if (event.getAction() == 0)
-            mLastYPos = pos;
-
-        if (event.getAction() > 1) {
-            if (((mLastYPos - pos) > 2.0f) || ((pos - mLastYPos) > 2.0f))
-                mScrollDetected = true;
-        }
-
-        mLastYPos = pos;
-
-        if (event.getAction() == 1 && !mScrollDetected) {
-            Layout layout = ((TextView) v).getLayout();
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-
-            x += v.getScrollX();
-            y += v.getScrollY();
-            if (layout != null) {
-                int line = layout.getLineForVertical(y);
-                int charPosition = layout.getOffsetForHorizontal(line, x);
-
-                final Spannable s = mContentEditText.getText();
-                // check if image span was tapped
-                WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
-
-                if (image_spans.length != 0) {
-                    final WPImageSpan span = image_spans[0];
-                    if (!span.isVideo()) {
-                        LayoutInflater factory = LayoutInflater.from(EditPostActivity.this);
-                        final View alertView = factory.inflate(R.layout.alert_image_options, null);
-                        final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
-                        final EditText titleText = (EditText) alertView.findViewById(R.id.title);
-                        // final EditText descText = (EditText)
-                        // alertView.findViewById(R.id.description);
-                        final EditText caption = (EditText) alertView.findViewById(R.id.caption);
-                        final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
-                        final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
-
-                        // show featured image checkboxes if theme support it
-                        if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
-                            featuredCheckBox.setVisibility(View.VISIBLE);
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        }
-
-                        featuredCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                                } else {
-                                    featuredInPostCheckBox.setVisibility(View.GONE);
-                                }
-
-                            }
-                        });
-
-                        final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
-                        final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditPostActivity.this, R.array.alignment_array,
-                                android.R.layout.simple_spinner_item);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        alignmentSpinner.setAdapter(adapter);
-
-                        imageWidthText.setText(String.valueOf(span.getWidth()) + "px");
-                        seekBar.setProgress(span.getWidth());
-                        titleText.setText(span.getTitle());
-                        // descText.setText(span.getDescription());
-                        caption.setText(span.getCaption());
-                        featuredCheckBox.setChecked(span.isFeatured());
-
-                        if (span.isFeatured())
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        else
-                            featuredInPostCheckBox.setVisibility(View.GONE);
-
-                        featuredInPostCheckBox.setChecked(span.isFeaturedInPost());
-
-                        alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
-
-                        final int maxWidth = getMinimumImageWitdh(span.getImageSource());
-                        seekBar.setMax(maxWidth / 10);
-                        if (span.getWidth() != 0)
-                            seekBar.setProgress(span.getWidth() / 10);
-                        seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-                            }
-
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
-                            }
-
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                if (progress == 0)
-                                    progress = 1;
-                                imageWidthText.setText(progress * 10 + "px");
-                            }
-                        });
-
-                        imageWidthText.setOnFocusChangeListener(new OnFocusChangeListener() {
-                            @Override
-                            public void onFocusChange(View v, boolean hasFocus) {
-                                if (hasFocus) {
-                                    imageWidthText.setText("");
-                                }
-                            }
-                        });
-
-                        imageWidthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                            @Override
-                            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                int width = getEditTextIntegerClamped(imageWidthText, 10, maxWidth);
-                                seekBar.setProgress(width / 10);
-                                imageWidthText.setSelection((String.valueOf(width).length()));
-
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(imageWidthText.getWindowToken(),
-                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
-
-                                return true;
-                            }
-                        });
-
-                        AlertDialog ad = new AlertDialog.Builder(EditPostActivity.this).setTitle(getString(R.string.image_settings))
-                                .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                                        span.setTitle(titleText.getText().toString());
-                                        // span.setDescription(descText.getText().toString());
-                                        span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        span.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
-                                        span.setCaption(caption.getText().toString());
-                                        span.setFeatured(featuredCheckBox.isChecked());
-                                        if (featuredCheckBox.isChecked()) {
-                                            // remove featured flag from all
-                                            // other images
-                                            WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                                            if (click_spans.length > 1) {
-                                                for (int i = 0; i < click_spans.length; i++) {
-                                                    WPImageSpan verifySpan = click_spans[i];
-                                                    if (verifySpan != span) {
-                                                        verifySpan.setFeatured(false);
-                                                        verifySpan.setFeaturedInPost(false);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        span.setFeaturedInPost(featuredInPostCheckBox.isChecked());
-                                    }
-                                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                        ad.show();
-                        mScrollDetected = false;
-                        return true;
-                    }
-
-                } else {
-                    mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
-                    mContentEditText.setSelection(mContentEditText.getSelectionStart());
-                }
-                
-                // get media gallery spans
-
-                MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
-                if (gallerySpans.length > 0) {
-                    final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
-                    startMediaGalleryActivity(gallerySpan.getMediaGallery());
-                }
-                
+            savePost(false);
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
+            Intent i = new Intent();
+            i.putExtra("shouldRefresh", true);
+            setResult(RESULT_OK, i);
+            finish();
+            return true;
+        } else if (itemId == R.id.menu_preview_post) {
+            mViewPager.setCurrentItem(PAGE_PREVIEW);
+        } else if (itemId == android.R.id.home) {
+            if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+                mViewPager.setCurrentItem(PAGE_CONTENT);
+                supportInvalidateOptionsMenu();
+            } else {
+                showCancelAlert();
             }
-        } else if (event.getAction() == 1) {
-            mScrollDetected = false;
+            return true;
         }
         return false;
     }
 
-    private int getEditTextIntegerClamped(EditText editText, int min, int max) {
-        int width = 10;
-        try {
-            width = Integer.parseInt(editText.getText().toString().replace("px", ""));
-        } catch (NumberFormatException e) {
+    private void showErrorAndFinish(int errorMessageId) {
+        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private Runnable autoSaveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            savePost(true);
+            mAutoSaveHandler.postDelayed(this, AUTOSAVE_INTERVAL_MILLIS);
         }
-        width = Math.min(max, Math.max(width, min));
-        return width;
+    };
+
+    public Post getPost() {
+        return mPost;
+    }
+
+    private void savePost(boolean isAutosave) {
+        // Update post content from fragment fields
+        if (mEditPostContentFragment != null)
+            mEditPostContentFragment.savePostContent(isAutosave);
+        if (mEditPostSettingsFragment != null)
+            mEditPostSettingsFragment.savePostSettings();
     }
 
     @Override
     public void onBackPressed() {
-        showCancelAlert(false);
+        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            mViewPager.setCurrentItem(PAGE_CONTENT);
+            supportInvalidateOptionsMenu();
+            return;
+        }
+
+        if (getSupportActionBar() != null) {
+            if (getSupportActionBar().isShowing())
+                showCancelAlert();
+            else if (mEditPostContentFragment != null)
+                mEditPostContentFragment.setContentEditingModeVisible(false);
+        }
     }
 
-    private void showCancelAlert(final boolean isUpPress) {
+    private void showCancelAlert() {
         // Empty post? Let's not prompt then.
-        if (mIsNew && mContentEditText.getText().toString().equals("") && mTitleEditText.getText().toString().equals("")) {
+        if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
+            if (mIsNewPost)
+                mPost.delete();
             finish();
             return;
         }
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
-        dialogBuilder.setTitle(getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
+        savePost(true);
+
+        // Compare the current Post to the original and if no changes have been made,
+        // set the Post back to the original and go back to the previous view
+        if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            mOriginalPost.update();
+            WordPress.currentPost = mOriginalPost;
+            finish();
+            return;
+        }
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(getString((mPost.isPage()) ? R.string.edit_page : R.string.edit_post));
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                savePost(false, true);
+                savePost(false);
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);
@@ -989,13 +345,12 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         });
         dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // When discard options is chosen, restore existing post or delete new post if it was autosaved.
-                if (mOriginalPost != null) {
+                // When discard option is chosen, restore existing post or delete new post if it was autosaved.
+                if (mOriginalPost != null && !mIsNewPost) {
                     mOriginalPost.update();
                     WordPress.currentPost = mOriginalPost;
-                } else if (mPost != null && mIsNew) {
+                } else if (mPost != null && mIsNewPost) {
                     mPost.delete();
-                    WordPress.currentPost = null;
                 }
                 finish();
             }
@@ -1009,1607 +364,62 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         dialogBuilder.create().show();
     }
 
-    private void initBlog() {
-        if (WordPress.getCurrentBlog() == null)
-            showBlogErrorAndFinish();
+    public String getStatEventEditorClosed() {
+        return mStatEventEditorClosed;
     }
 
-    private void setupTitleForShareAction() {
-        mIsNew = true;
-        mLocalDraft = true;
-        
-        mBlog = WordPress.getCurrentBlog();
-        mBlogID = mBlog.getId();
-        mAccountName = mBlog.getBlogName();
-        WordPress.wpDB.updateLastBlogId(mBlogID);
-
-        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
-                + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
+    public void showPostSettings() {
+        mViewPager.setCurrentItem(PAGE_SETTINGS);
     }
 
-    private void showBlogErrorAndFinish() {
-        Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    private void formatBtnClick(ToggleButton toggleButton, String tag) {
-        try {
-            Spannable s = mContentEditText.getText();
-            int selectionStart = mContentEditText.getSelectionStart();
-            mStyleStart = selectionStart;
-            int selectionEnd = mContentEditText.getSelectionEnd();
-
-            if (selectionStart > selectionEnd) {
-                int temp = selectionEnd;
-                selectionEnd = selectionStart;
-                selectionStart = temp;
-            }
-
-            if (mLocalDraft) {
-                if (selectionEnd > selectionStart) {
-                    Spannable str = mContentEditText.getText();
-                    if (tag.equals("strong")) {
-                        StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
-
-                        boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
-                            if (style == android.graphics.Typeface.BOLD) {
-                                str.removeSpan(ss[i]);
-                                exists = true;
-                            }
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("em")) {
-                        StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
-
-                        boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
-                            if (style == android.graphics.Typeface.ITALIC) {
-                                str.removeSpan(ss[i]);
-                                exists = true;
-                            }
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("u")) {
-
-                        WPUnderlineSpan[] ss = str.getSpans(selectionStart, selectionEnd, WPUnderlineSpan.class);
-
-                        boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new WPUnderlineSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("strike")) {
-
-                        StrikethroughSpan[] ss = str.getSpans(selectionStart, selectionEnd, StrikethroughSpan.class);
-
-                        boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new StrikethroughSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    } else if (tag.equals("blockquote")) {
-
-                        QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd, QuoteSpan.class);
-
-                        boolean exists = false;
-                        for (int i = 0; i < ss.length; i++) {
-                            str.removeSpan(ss[i]);
-                            exists = true;
-                        }
-
-                        if (!exists) {
-                            str.setSpan(new QuoteSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        toggleButton.setChecked(false);
-                    }
-                } else if (!toggleButton.isChecked()) {
-
-                    if (tag.equals("strong") || tag.equals("em")) {
-
-                        StyleSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StyleSpan.class);
-
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            if (ss[i].getStyle() == android.graphics.Typeface.BOLD && tag.equals("strong")) {
-                                tagStart = s.getSpanStart(ss[i]);
-                                tagEnd = s.getSpanEnd(ss[i]);
-                                s.removeSpan(ss[i]);
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), tagStart, tagEnd,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (ss[i].getStyle() == android.graphics.Typeface.ITALIC && tag.equals("em")) {
-                                tagStart = s.getSpanStart(ss[i]);
-                                tagEnd = s.getSpanEnd(ss[i]);
-                                s.removeSpan(ss[i]);
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), tagStart, tagEnd,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                        }
-                    } else if (tag.equals("u")) {
-                        WPUnderlineSpan[] us = s.getSpans(mStyleStart - 1, mStyleStart, WPUnderlineSpan.class);
-                        for (int i = 0; i < us.length; i++) {
-                            int tagStart = s.getSpanStart(us[i]);
-                            int tagEnd = s.getSpanEnd(us[i]);
-                            s.removeSpan(us[i]);
-                            s.setSpan(new WPUnderlineSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } else if (tag.equals("strike")) {
-                        StrikethroughSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, StrikethroughSpan.class);
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            s.removeSpan(ss[i]);
-                            s.setSpan(new StrikethroughSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } else if (tag.equals("blockquote")) {
-                        QuoteSpan[] ss = s.getSpans(mStyleStart - 1, mStyleStart, QuoteSpan.class);
-                        for (int i = 0; i < ss.length; i++) {
-                            int tagStart = s.getSpanStart(ss[i]);
-                            int tagEnd = s.getSpanEnd(ss[i]);
-                            s.removeSpan(ss[i]);
-                            s.setSpan(new QuoteSpan(), tagStart, tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }
-                }
-            } else {
-                String startTag = "<" + tag + ">";
-                String endTag = "</" + tag + ">";
-                Editable content = mContentEditText.getText();
-                if (selectionEnd > selectionStart) {
-                    content.insert(selectionStart, startTag);
-                    content.insert(selectionEnd + startTag.length(), endTag);
-                    toggleButton.setChecked(false);
-                    mContentEditText.setSelection(selectionEnd + startTag.length() + endTag.length());
-                } else if (toggleButton.isChecked()) {
-                    content.insert(selectionStart, startTag);
-                    mContentEditText.setSelection(selectionEnd + startTag.length());
-                } else if (!toggleButton.isChecked()) {
-                    content.insert(selectionEnd, endTag);
-                    mContentEditText.setSelection(selectionEnd + endTag.length());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void launchPictureLibrary() {
-        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
-        MediaUtils.launchPictureLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchCamera() {
-        MediaUtils.launchCamera(this, new LaunchCameraCallback() {
-            
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
-    }
-
-    private void launchVideoLibrary() {
-        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
-        MediaUtils.launchVideoLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoCamera() {
-        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        MediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private LocationResult locationResult = new LocationResult() {
-        @Override
-        public void gotLocation(final Location location) {
-            // note that location will be null when requesting location fails
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    setLocation(location);
-                }
-            });
-        }
-    };
-
-    /*
-     * called when activity is created to initialize the location provider, show views related
-     * to location if enabled for this blog, and retrieve the current location if necessary
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
      */
-    private void initLocation() {
-        boolean hasLocationProvider = false;
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        if (providers != null) {
-            for (String providerName : providers) {
-                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                    hasLocationProvider = true;
-                }
-            }
-        }
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && mBlog.isLocation() && !mIsPage) {
-            ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
-            Button viewMap = (Button) findViewById(R.id.viewMap);
-            Button updateLocation = (Button) findViewById(R.id.updateLocation);
-            Button removeLocation = (Button) findViewById(R.id.removeLocation);
-            updateLocation.setOnClickListener(this);
-            removeLocation.setOnClickListener(this);
-            viewMap.setOnClickListener(this);
-
-            // if this is a new post, get the user's current location
-            if (mIsNew) {
-                getLocation();
-            }
-        }
-    }
-
-    /*
-     * get the current location
-     */
-    private void getLocation() {
-        if (mLocationHelper==null)
-            mLocationHelper = new LocationHelper();
-        boolean canGetLocation = mLocationHelper.getLocation(EditPostActivity.this, locationResult);
-        if (canGetLocation) {
-            setLocationStatus(LocationStatus.SEARCHING);
-            mLocationText.setText(getString(R.string.loading));
-        } else {
-            setLocation(null);
-        }
-    }
-
-    /*
-     * called when location is retrieved/updated for this post - looks up the address to
-     * display for the lat/long
-     */
-    private void setLocation(Location location) {
-        if (location != null) {
-            mCurrentLocation = location;
-            new GetAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        } else {
-            mLocationText.setText(getString(R.string.location_not_found));
-            setLocationStatus(LocationStatus.NOT_FOUND);
-        }
-    }
-
-    private void removeLocation() {
-        if (mCurrentLocation != null) {
-            mCurrentLocation.setLatitude(0.0);
-            mCurrentLocation.setLongitude(0.0);
-        }
-        if (mPost != null) {
-            mPost.setLatitude(0.0);
-            mPost.setLongitude(0.0);
-        }
-        mLocationText.setText("");
-        setLocationStatus(LocationStatus.NONE);
-    }
-
-    /*
-     * changes the left drawable on the location text to match the passed status
-     */
-    private void setLocationStatus(LocationStatus status) {
-        // animate location text when searching
-        if (status==LocationStatus.SEARCHING) {
-            Animation aniBlink = AnimationUtils.loadAnimation(this, R.anim.blink);
-            mLocationText.startAnimation(aniBlink);
-        } else {
-            mLocationText.clearAnimation();
-        }
-
-        final int drawableId;
-        switch (status) {
-            case FOUND:
-                drawableId = R.drawable.ic_action_location_found;
-                break;
-            case NOT_FOUND:
-                drawableId = R.drawable.ic_action_location_off;
-                break;
-            case SEARCHING:
-                drawableId = R.drawable.ic_action_location_searching;
-                break;
-            case NONE :
-                drawableId = 0;
-                break;
-            default :
-                return;
-        }
-
-        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_CANCELED) {
-            if (mQuickMediaType >= 0) {
-                setResult(Activity.RESULT_CANCELED, new Intent());
-                finish();
-            }
-            if (mFormatBar.getVisibility() == View.VISIBLE)
-                hideFormatBar();
-            return;
-        }
-
-        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
-            Bundle extras;
-
-            switch (requestCode) {
-                case MediaGalleryActivity.REQUEST_CODE:
-                    if (resultCode == RESULT_OK) {
-                        handleMediaGalleryResult(data);
-                    }
-                    break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
-                    if (resultCode == RESULT_OK) {
-                        handleMediaGalleryPickerResult(data);
-                    }
-                    break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-                    Uri imageUri = data.getData();
-                    verifyImage(imageUri);
-                    break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            File f = new File(mMediaCapturePath);
-                            Uri capturedImageUri = Uri.fromFile(f);
-                            f = null;
-                            if (!addMedia(capturedImageUri, null))
-                                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStorageDirectory())));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } catch (OutOfMemoryError e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
-                    Uri videoUri = data.getData();
-                    if (!addMedia(videoUri, null))
-                        Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                    break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri, null))
-                            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case ACTIVITY_REQUEST_CODE_CREATE_LINK:
-                    try {
-                        extras = data.getExtras();
-                        String linkURL = extras.getString("linkURL");
-                        if (!linkURL.equals("http://") && !linkURL.equals("")) {
-
-                            if (mSelectionStart > mSelectionEnd) {
-                                int temp = mSelectionEnd;
-                                mSelectionEnd = mSelectionStart;
-                                mSelectionStart = temp;
-                            }
-                            Editable str = mContentEditText.getText();
-                            if (mLocalDraft) {
-                                if (extras.getString("linkText") == null) {
-                                    if (mSelectionStart < mSelectionEnd)
-                                        str.delete(mSelectionStart, mSelectionEnd);
-                                    str.insert(mSelectionStart, linkURL);
-                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
-                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    mContentEditText.setSelection(mSelectionStart + linkURL.length());
-                                } else {
-                                    String linkText = extras.getString("linkText");
-                                    if (mSelectionStart < mSelectionEnd)
-                                        str.delete(mSelectionStart, mSelectionEnd);
-                                    str.insert(mSelectionStart, linkText);
-                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
-                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    mContentEditText.setSelection(mSelectionStart + linkText.length());
-                                }
-                            } else {
-                                if (extras.getString("linkText") == null) {
-                                    if (mSelectionStart < mSelectionEnd)
-                                        str.delete(mSelectionStart, mSelectionEnd);
-                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
-                                    str.insert(mSelectionStart, urlHTML);
-                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                                } else {
-                                    String linkText = extras.getString("linkText");
-                                    if (mSelectionStart < mSelectionEnd)
-                                        str.delete(mSelectionStart, mSelectionEnd);
-                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
-                                    str.insert(mSelectionStart, urlHTML);
-                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
-                    extras = data.getExtras();
-                    mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
-                    populateSelectedCategories();
-                    break;
-            }
-        }// end null check
-    }
-    
-    private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
-        if (ids == null || ids.size() == 0)
-            return;
-        
-        String mediaId = ids.get(0);
-        addExistingMediaToEditor(mediaId);
-    }
-    
-    private void addExistingMediaToEditor(String mediaId) {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        WPImageSpan imageSpan = prepareWPImageSpan(blogId, mediaId);
-        if (imageSpan == null)
-            return;
-        
-        // based on addMedia()
-
-        int selectionStart = mContentEditText.getSelectionStart();
-        int selectionEnd = mContentEditText.getSelectionEnd();
-        
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
-        
-        int line = 0, column = 0;
-        try {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
-        }
-        
-        Editable s = mContentEditText.getText();
-        WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-        if (gallerySpans.length != 0) {
-            // insert a few line breaks if the cursor is already on an image
-            s.insert(selectionEnd, "\n\n");
-            selectionStart = selectionStart + 2;
-            selectionEnd = selectionEnd + 2;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
-        
-        s.insert(selectionStart, " ");
-        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        // load image from server
-        loadWPImageSpanThumbnail(imageSpan);
-    }
-
-    private WPImageSpan prepareWPImageSpan(String blogId, final String mediaId) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-        if (cursor == null || !cursor.moveToFirst()){
-            if (cursor != null)
-                cursor.close();
-            return null; 
-        }
-
-        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
-        if (url == null) {
-            cursor.close();            
-            return null;
-        }
-        
-        Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);
-        imageSpan.setMediaId(mediaId);
-        imageSpan.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
-        imageSpan.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-        imageSpan.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
-        imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
-        imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
-        imageSpan.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        imageSpan.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-        imageSpan.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        
-        boolean isVideo = false;
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        if (mimeType != null && mimeType.contains("video"))
-            isVideo = true;
-        imageSpan.setVideo(isVideo);
-        cursor.close();
-        
-        return imageSpan;
-    }
-
-    /** Loads the thumbnail url in the imagespan from a server **/
-    private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final String mediaId = imageSpan.getMediaId();
-        String imageUrl = imageSpan.getThumbnailURL();
-        if (imageUrl == null || mediaId == null)
-            return;
-
-        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
-            String photonUrl = imageSpan.getImageSource().toString();
-            imageUrl = StringUtils.getPhotonUrl(photonUrl, 400);
-        }
-
-        WordPress.imageLoader.get(imageUrl, new ImageListener() {
-            
-            @Override
-            public void onErrorResponse(VolleyError arg0) {
-                
-            }
-            
-            @Override
-            public void onResponse(ImageContainer container, boolean arg1) {
-                if (container.getBitmap() != null) {
-
-                    Bitmap bitmap = container.getBitmap();
-
-                    ImageHelper ih = new ImageHelper();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] bitmapByteArray = stream.toByteArray();
-                    Bitmap resizedBitmap = ih.getResizedImageThumbnail(EditPostActivity.this, bitmapByteArray, null);
-                    if (resizedBitmap == null)
-                        return;
-                    Editable s = mContentEditText.getText();
-                    WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                    if (spans.length != 0) {
-                        for (WPImageSpan is : spans) {
-                            if (mediaId != null && mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
-                                    
-                                // replace the existing span with a new one with the correct image, re-add it to the same position.
-                                int spanStart = s.getSpanStart(is);
-                                int spanEnd = s.getSpanEnd(is);
-                                WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, resizedBitmap, is.getImageSource());
-                                imageSpan.setCaption(is.getCaption());
-                                imageSpan.setDescription(is.getDescription());
-                                imageSpan.setFeatured(is.isFeatured());
-                                imageSpan.setFeaturedInPost(is.isFeaturedInPost());
-                                imageSpan.setHeight(is.getHeight());
-                                imageSpan.setHorizontalAlignment(is.getHorizontalAlignment());
-                                imageSpan.setMediaId(is.getMediaId());
-                                imageSpan.setMimeType(is.getMimeType());
-                                imageSpan.setTitle(is.getTitle());
-                                imageSpan.setVideo(is.isVideo());
-                                imageSpan.setWidth(is.getWidth());
-                                imageSpan.setFileName(is.getFileName());
-                                imageSpan.setThumbnailURL(is.getThumbnailURL());
-                                imageSpan.setDateCreatedGMT(is.getDateCreatedGMT());
-                                imageSpan.setNetworkImageLoaded(true);
-                                s.removeSpan(is);
-                                s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }, 0, 0);
-        
-    }
-    
-    private void handleMediaGalleryResult(Intent data) {
-        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-        
-        // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0)
-            return;
-        
-
-        int selectionStart = mContentEditText.getSelectionStart();
-        int selectionEnd = mContentEditText.getSelectionEnd();
-        
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
-        
-        int line = 0, column = 0;
-        try {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
-        }
-        
-        Editable s = mContentEditText.getText();
-        MediaGalleryImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
-        if (gallerySpans.length != 0) {
-            for (int i = 0; i < gallerySpans.length; i++) {
-                if (gallerySpans[i].getMediaGallery().getUniqueId() == gallery.getUniqueId()) {
-                    
-                    // replace the existing span with a new gallery, re-add it to the same position.
-                    gallerySpans[i].setMediaGallery(gallery);
-                    int spanStart = s.getSpanStart(gallerySpans[i]);
-                    int spanEnd = s.getSpanEnd(gallerySpans[i]);
-                    s.setSpan(gallerySpans[i], spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-            return;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
-        
-        s.insert(selectionStart, " ");
-        MediaGalleryImageSpan is = new MediaGalleryImageSpan(EditPostActivity.this, gallery);
-        s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void verifyImage(Uri imageUri) {
-        if (isPicasaImage(imageUri)) {
-            // Create an AsyncTask to download the file
-            new DownloadImageTask().execute(imageUri);
-        } else {
-            // It is a regular local image file
-            if (!addMedia(imageUri, null))
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isPicasaImage(Uri imageUri) {
-        // Check if the imageUri returned is of picasa or not
-        if (imageUri.toString().startsWith("content://com.android.gallery3d.provider")) {
-            // Use the com.google provider for devices prior to 3.0
-            imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d", "com.google.android.gallery3d"));
-        }
-
-        if (imageUri.toString().startsWith("content://com.google.android.gallery3d"))
-            return true;
-        else
-            return false;
-    }
-
-    private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
-
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-            Uri imageUri = uris[0];
-            return downloadExternalImage(imageUri);
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        protected void onPreExecute() {
-            showDialog(ID_DIALOG_DOWNLOAD);
-        }
-
-        protected void onPostExecute(Uri newUri) {
-            dismissDialog(ID_DIALOG_DOWNLOAD);
-            if (newUri != null)
-                addMedia(newUri, null);
-            else
-                Toast.makeText(getApplicationContext(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private Uri downloadExternalImage(Uri imageUri) {
-        File cacheDir;
-
-        // If the device has an SD card
-        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
-        else {
-            // If no SD card
-            cacheDir = getApplicationContext().getCacheDir();
-        }
-
-        if (!cacheDir.exists())
-            cacheDir.mkdirs();
-        Random r = new Random();
-        final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
-
-        File f = new File(cacheDir, path);
-
-        try {
-            InputStream input;
-            // Download the file
-            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
-                input = getContentResolver().openInputStream(imageUri);
-            } else {
-                input = new URL(imageUri.toString()).openStream();
-            }
-            OutputStream output = new FileOutputStream(f);
-
-            byte data[] = new byte[1024];
-            int count;
-            while ((count = input.read(data)) != -1) {
-                output.write(data, 0, count);
-            }
-
-            output.flush();
-            output.close();
-            input.close();
-
-            Uri newUri = Uri.fromFile(f);
-            return newUri;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void onCategoryButtonClick(View v) {
-        // Get category name by removing prefix from the tag
-        boolean listChanged = false;
-        String categoryName = (String) v.getTag();
-        categoryName = categoryName.replaceFirst(CATEGORY_PREFIX_TAG, "");
-
-        // Remove clicked category from list
-        for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).equals(categoryName)) {
-                mCategories.remove(i);
-                listChanged = true;
-                break;
-            }
-        }
-
-        // Recreate category views
-        if (listChanged) {
-            populateSelectedCategories();
-        }
-    }
-
-    private void populateSelectedCategories() {
-        ViewGroup sectionCategories = ((ViewGroup) findViewById(R.id.sectionCategories));
-
-        // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<View>();
-        for (int i = 0; i < sectionCategories.getChildCount(); i++) {
-            View v = sectionCategories.getChildAt(i);
-            Object tag = v.getTag();
-            if (tag != null && tag.getClass() == String.class &&
-                    (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
-                viewsToRemove.add(v);
-            }
-        }
-        for (int i = 0; i < viewsToRemove.size(); i++) {
-            sectionCategories.removeView(viewsToRemove.get(i));
-        }
-        viewsToRemove.clear();
-
-        // New category buttons
-        LayoutInflater layoutInflater = getLayoutInflater();
-        for (int i = 0; i < mCategories.size(); i++) {
-            String categoryName = mCategories.get(i);
-            Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
-            buttonCategory.setText(Html.fromHtml(categoryName));
-            buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
-            buttonCategory.setOnClickListener(this);
-            sectionCategories.addView(buttonCategory);
-        }
-
-        // Add select category button
-        Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        selectCategory.setOnClickListener(this);
-        sectionCategories.addView(selectCategory);
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-
-        switch (id) {
-            case ID_DIALOG_DATE:
-                DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
-                dpd.setTitle("");
-                return dpd;
-            case ID_DIALOG_TIME:
-                TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
-                tpd.setTitle("");
-                return tpd;
-            case ID_DIALOG_LOADING:
-                ProgressDialog loadingDialog = new ProgressDialog(this);
-                loadingDialog.setMessage(getResources().getText(R.string.loading));
-                loadingDialog.setIndeterminate(true);
-                loadingDialog.setCancelable(false);
-                return loadingDialog;
-            case ID_DIALOG_DOWNLOAD:
-                ProgressDialog downloadDialog = new ProgressDialog(this);
-                downloadDialog.setMessage(getResources().getText(R.string.download));
-                downloadDialog.setIndeterminate(true);
-                downloadDialog.setCancelable(false);
-                return downloadDialog;
-        }
-        return super.onCreateDialog(id);
-    }
-
-    private boolean savePost(boolean isAutoSave, boolean isDraftSave) {
-
-        String title = mTitleEditText.getText().toString();
-        String password = mPasswordEditText.getText().toString();
-        String pubDate = mPubDateText.getText().toString();
-        String excerpt = mExcerptEditText.getText().toString();
-        String content = "";
-
-        if (mLocalDraft || mIsNew && !isAutoSave) {
-            Editable e = mContentEditText.getText();
-            if (android.os.Build.VERSION.SDK_INT >= 14) {
-                // remove suggestion spans, they cause craziness in
-                // WPHtml.toHTML().
-                CharacterStyle[] style = e.getSpans(0, e.length(), CharacterStyle.class);
-                for (int i = 0; i < style.length; i++) {
-                    if (style[i].getClass().getName().equals("android.text.style.SuggestionSpan"))
-                        e.removeSpan(style[i]);
-                }
-            }
-            content = WPHtml.toHtml(e);
-            // replace duplicate <p> tags so there's not duplicates, trac #86
-            content = content.replace("<p><p>", "<p>");
-            content = content.replace("</p></p>", "</p>");
-            content = content.replace("<br><br>", "<br>");
-            // sometimes the editor creates extra tags
-            content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
-                    .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
-        } else {
-            content = mContentEditText.getText().toString();
-        }
-
-        long pubDateTimestamp = 0;
-        if (!pubDate.equals(getResources().getText(R.string.immediately))) {
-            if (mIsCustomPubDate)
-                pubDateTimestamp = mCustomPubDate;
-            else if (!mIsNew)
-                pubDateTimestamp = mPost.getDate_created_gmt();
-        }
-
-        String tags = "", postFormat = "";
-        if (!mIsPage) {
-            tags = mTagsEditText.getText().toString();
-            // post format
-            Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
-            postFormat = mPostFormats[postFormatSpinner.getSelectedItemPosition()];
-        }
-
-        String images = "";
-        boolean success = false;
-
-        if (content.equals("") && !isAutoSave && !isDraftSave) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
-            dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
-            dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            if (!mIsNew) {
-                // update the images
-                mPost.deleteMediaFiles();
-
-                Editable s = mContentEditText.getText();
-
-                // Add gallery shortcode
-                MediaGalleryImageSpan[] gallerySpans = s.getSpans(0, s.length(), MediaGalleryImageSpan.class);
-                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                    int start = s.getSpanStart(gallerySpan);
-                    s.removeSpan(gallerySpan);
-                    s.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
-                }
-
-                WPImageSpan[] imageSpans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (imageSpans.length != 0) {
-
-                    for (int i = 0; i < imageSpans.length; i++) {
-                        WPImageSpan wpIS = imageSpans[i];
-                        images += wpIS.getImageSource().toString() + ",";
-
-                        if (wpIS.getMediaId() != null) {
-                            updateMediaFileOnServer(wpIS);
-                        } else {
-                            MediaFile mf = new MediaFile();
-                            mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-                            mf.setPostID(mPost.getId());
-                            mf.setTitle(wpIS.getTitle());
-                            mf.setCaption(wpIS.getCaption());
-                            // mf.setDescription(wpIS.getDescription());
-                            mf.setFeatured(wpIS.isFeatured());
-                            mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                            mf.setFileName(wpIS.getImageSource().toString());
-                            mf.setFilePath(wpIS.getImageSource().toString());
-                            mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                            mf.setWidth(wpIS.getWidth());
-                            mf.setVideo(wpIS.isVideo());
-                            mf.save();
-                        }
-
-                        int tagStart = s.getSpanStart(wpIS);
-                        if (!isAutoSave) {
-                            s.removeSpan(wpIS);
-                            
-                            // network image has a mediaId 
-                            if (wpIS.getMediaId() != null && wpIS.getMediaId().length() > 0) {
-                                s.insert(tagStart, WPHtml.getContent(wpIS));
-                                
-                            } else { // local image for upload
-                                s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
-                            }
-                        }
-                    }
-                }
-
-                if (mLocalDraft)
-                    content = WPHtml.toHtml(s);
-                else
-                    content = s.toString();
-            } else {
-
-                Editable s = mContentEditText.getText();
-                WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                
-                // update the description, caption and title of media files on the server
-                if (click_spans.length != 0) {
-
-                    for (int i = 0; i < click_spans.length; i++) {
-                        WPImageSpan wpIS = click_spans[i];
-                        images += wpIS.getImageSource().toString() + ",";
-
-                        if (wpIS.getMediaId() != null) {
-                            updateMediaFileOnServer(wpIS);
-                        }
-                        
-                    }
-                }
-            }
-            
-
-            final String moreTag = "<!--more-->";
-            int selectedStatus = mStatusSpinner.getSelectedItemPosition();
-            String status = "";
-
-            switch (selectedStatus) {
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            switch (position) {
                 case 0:
-                    status = "publish";
+                    return new EditPostContentFragment();
+                case 1:
+                    return new EditPostSettingsFragment();
+                default:
+                    return new EditPostPreviewFragment();
+            }
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            switch (position) {
+                case 0:
+                    mEditPostContentFragment = (EditPostContentFragment)fragment;
                     break;
                 case 1:
-                    status = "draft";
+                    mEditPostSettingsFragment = (EditPostSettingsFragment)fragment;
                     break;
                 case 2:
-                    status = "pending";
-                    break;
-                case 3:
-                    status = "private";
+                    mEditPostPreviewFragment = (EditPostPreviewFragment)fragment;
                     break;
             }
-
-            Double latitude = 0.0;
-            Double longitude = 0.0;
-            if (mBlog.isLocation()) {
-
-                // attempt to get the device's location
-                try {
-                    latitude = mCurrentLocation.getLatitude();
-                    longitude = mCurrentLocation.getLongitude();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (mIsNew) {
-                
-                JSONArray categorisList = JSONUtil.fromStringListToJSONArray(mCategories);
-                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, categorisList.toString(), tags, status, password,
-                        latitude, longitude, mIsPage, postFormat, true, false);
-                mPost.setLocalDraft(true);
-
-                // split up the post content if there's a more tag
-                if (content.indexOf(moreTag) >= 0) {
-                    mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
-                    mPost.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
-                }
-
-                success = mPost.save();
-
-                if (success) {
-                    mIsNew = false;
-                }
-
-                mPost.deleteMediaFiles();
-
-                Spannable s = mContentEditText.getText();
-                WPImageSpan[] image_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-
-                if (image_spans.length != 0) {
-
-                    for (int i = 0; i < image_spans.length; i++) {
-                        WPImageSpan wpIS = image_spans[i];
-                        images += wpIS.getImageSource().toString() + ",";
-
-                        MediaFile mf = new MediaFile();
-                        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-                        mf.setPostID(mPost.getId());
-                        mf.setTitle(wpIS.getTitle());
-                        mf.setCaption(wpIS.getCaption());
-                        // mf.setDescription(wpIS.getDescription());
-                        mf.setFeatured(wpIS.isFeatured());
-                        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                        mf.setFileName(wpIS.getImageSource().toString());
-                        mf.setFilePath(wpIS.getImageSource().toString());
-                        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                        mf.setWidth(wpIS.getWidth());
-                        mf.setVideo(wpIS.isVideo());
-                        mf.save();
-                    }
-                }
-
-                WordPress.currentPost = mPost;
-
-            } else {
-
-                if (mCurrentLocation == null) {
-                    latitude = mPost.getLatitude();
-                    longitude = mPost.getLongitude();
-                }
-
-                mPost.setTitle(title);
-                mPost.setMt_excerpt(excerpt);
-                // split up the post content if there's a more tag
-                if (mLocalDraft && content.indexOf(moreTag) >= 0) {
-                    mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
-                    mPost.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
-                } else {
-                    mPost.setDescription(content);
-                    mPost.setMt_text_more("");
-                }
-                mPost.setMediaPaths(images);
-                mPost.setDate_created_gmt(pubDateTimestamp);
-                mPost.setJSONCategories(new JSONArray(mCategories));
-                mPost.setMt_keywords(tags);
-                mPost.setPost_status(status);
-                mPost.setWP_password(password);
-                mPost.setLatitude(latitude);
-                mPost.setLongitude(longitude);
-                mPost.setWP_post_form(postFormat);
-                if (!mPost.isLocalDraft())
-                    mPost.setLocalChange(true);
-                success = mPost.update();
-            }
-        }
-        return success;
-    }
-
-    private MediaFile getMediaFileFromWPImageSpan(WPImageSpan wpIS) {
-        MediaFile mf = new MediaFile();
-        mf.setMediaId(wpIS.getMediaId());
-        if (mPost != null)
-            mf.setPostID(mPost.getId());
-        mf.setMIMEType(wpIS.getMimeType());
-        mf.setHeight(wpIS.getHeight());
-        mf.setFileName(wpIS.getFileName());
-        mf.setTitle(wpIS.getTitle());
-        mf.setCaption(wpIS.getCaption());
-        mf.setDescription(wpIS.getDescription());
-        mf.setFeatured(wpIS.isFeatured());
-        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-        mf.setWidth(wpIS.getWidth());
-        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
-        mf.setDateCreatedGMT(wpIS.getDateCreatedGMT());
-        mf.save();
-        return mf;
-    }
-    
-
-    private void updateMediaFileOnServer(WPImageSpan wpIS) {
-
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null || wpIS == null)
-            return;
-
-        MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
-        
-        final String mediaId = mf.getMediaId();
-        final String title = mf.getTitle();
-        final String description = mf.getDescription();
-        final String caption = mf.getCaption();
-        
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
-                mf.getDescription(), mf.getCaption(), 
-                new ApiHelper.EditMediaItemTask.Callback() {
-
-                    @Override
-                    public void onSuccess() {
-                        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
-                    }
-
-                    @Override
-                    public void onFailure() {
-                        Toast.makeText(EditPostActivity.this, R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(currentBlog);
-        task.execute(apiArgs);
-    }
-
-    /*
-     * retrieves and displays the friendly address for a lat/long location
-     */
-    private class GetAddressTask extends AsyncTask<Double, Void, String> {
-        double latitude;
-        double longitude;
-
-        @Override
-        protected String doInBackground(Double... args) {
-            // args will be the latitude, longitude to look up
-            latitude = args[0];
-            longitude = args[1];
-
-            // first make sure a Geocoder service exists on this device (requires API 9)
-            if (!Geocoder.isPresent())
-                return null;
-
-            Geocoder gcd = new Geocoder(EditPostActivity.this, Locale.getDefault());
-            List<Address> addresses;
-            try {
-                addresses = gcd.getFromLocation(latitude, longitude, 1);
-
-                // addresses may be null or empty if network isn't connected
-                if (addresses==null || addresses.size()==0)
-                    return null;
-
-                String locality = "", adminArea = "", country = "";
-                if (addresses.get(0).getLocality() != null)
-                    locality = addresses.get(0).getLocality();
-                if (addresses.get(0).getAdminArea() != null)
-                    adminArea = addresses.get(0).getAdminArea();
-                if (addresses.get(0).getCountryName() != null)
-                    country = addresses.get(0).getCountryName();
-
-                return ((locality.equals("")) ? locality : locality + ", ")
-                     + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
-            } catch (IOException e) {
-                // may get "Unable to parse response from server" IOException here if Geocoder
-                // service is hit too frequently
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        protected void onPostExecute(String result) {
-            setLocationStatus(LocationStatus.FOUND);
-            if (result==null || result.isEmpty()) {
-                // show lat/long when Geocoder fails (ugly, but better than not showing anything
-                // or showing an error since the location has been assigned to the post already)
-                mLocationText.setText(Double.toString(latitude) + ", " + Double.toString(longitude));
-            } else {
-                mLocationText.setText(result);
-            }
-        }
-    }
-
-    protected void setContent() {
-        Intent intent = getIntent();
-        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-        if (text != null) {
-
-            if (title != null) {
-                mTitleEditText.setText(title);
-            }
-
-            if (text.contains("youtube_gdata")) {
-                // Just use the URL for YouTube links for oEmbed support
-                mContentEditText.setText(text);
-            } else {
-                // add link tag around URLs, trac #64
-                text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), EditPostActivity.this, mPost));
-            }
-        } else {
-            String action = intent.getAction();
-            final String type = intent.getType();
-            final ArrayList<Uri> multi_stream;
-            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-            } else {
-                multi_stream = new ArrayList<Uri>();
-                multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
-            }
-
-            List<Serializable> params = new Vector<Serializable>();
-            params.add(multi_stream);
-            params.add(type);
-            new processAttachmentsTask().execute(params);
-        }
-    }
-
-    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
-
-        protected void onPreExecute() {
-            showDialog(ID_DIALOG_LOADING);
+            return fragment;
         }
 
         @Override
-        protected SpannableStringBuilder doInBackground(List<?>... args) {
-            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
-            String type = (String) args[0].get(1);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
-            for (int i = 0; i < multi_stream.size(); i++) {
-                Uri imageUri = (Uri) multi_stream.get(i);
-                if (imageUri != null && type != null) {
-                    addMedia(imageUri, ssb);
-                }
-            }
-            return ssb;
-        }
-
-        protected void onPostExecute(SpannableStringBuilder ssb) {
-            dismissDialog(ID_DIALOG_LOADING);
-            if (ssb != null) {
-                if (ssb.length() > 0) {
-                    mContentEditText.setText(ssb);
-                }
-            } else {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            }
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
         }
     }
 
-    // Calculate the minimun width between the blog setting and picture real width
-    private int getMinimumImageWitdh(Uri curStream) {
-        String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
-        int imageWidthBlogSetting = Integer.MAX_VALUE;
-
-        if (!imageWidth.equals("Original Size")) {
-            try {
-                imageWidthBlogSetting = Integer.valueOf(imageWidth);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-
-        int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
-        int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
-
-        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            //Default value in case of errors reading the picture size and the blog settings is set to Original size
-            return 1024;
-        } else {
-            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
-        }
-    }
-
-    private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
-        is.setWidth(getMinimumImageWitdh(curStream));
-    }
-
-    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
-
-        //if (mFormatBar.getVisibility() == View.VISIBLE)
-        //    hideFormatBar();
-
-        if (ssb != null && isPicasaImage(imageUri))
-            imageUri = downloadExternalImage(imageUri);
-
-        if (imageUri == null) {
-            return false;
-        }
-
-        ImageHelper ih = new ImageHelper();
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), EditPostActivity.this);
-
-        if (mediaData == null) {
-            // data stream not returned
-            return false;
-        }
-
-        Bitmap resizedBitmap = ih.getResizedImageThumbnail(this, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
-        if (resizedBitmap == null)
-            return false;
-
-        if (ssb != null) {
-            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
-
-            setWPImageSpanWidth(imageUri, is);
-
-            is.setTitle((String) mediaData.get("title"));
-            is.setImageSource(imageUri);
-            is.setVideo(imageUri.getEncodedPath().contains("video"));
-            ssb.append(" ");
-            ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append("\n");
-        } else {
-            int selectionStart = mContentEditText.getSelectionStart();
-            mStyleStart = selectionStart;
-            int selectionEnd = mContentEditText.getSelectionEnd();
-
-            if (selectionStart > selectionEnd) {
-                int temp = selectionEnd;
-                selectionEnd = selectionStart;
-                selectionStart = temp;
-            }
-
-            Editable s = mContentEditText.getText();
-            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
-
-            setWPImageSpanWidth(imageUri, is);
-
-            is.setTitle((String) mediaData.get("title"));
-            is.setImageSource(imageUri);
-            if (imageUri.getEncodedPath().contains("video")) {
-                is.setVideo(true);
-            }
-
-            int line = 0, column = 0;
-            try {
-                line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-                column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-            } catch (Exception ex) {
-            }
-
-            WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-            if (image_spans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
-                selectionStart = selectionStart + 2;
-                selectionEnd = selectionEnd + 2;
-            } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
-                selectionStart = selectionStart + 1;
-                selectionEnd = selectionEnd + 1;
-            }
-
-            s.insert(selectionStart, " ");
-            s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
-            try {
-                mContentEditText.setSelection(s.length());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            mYear = year;
-            mMonth = monthOfYear;
-            mDay = dayOfMonth;
-            showDialog(ID_DIALOG_TIME);
-        }
-    };
-
-    private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            mHour = hour;
-            mMinute = minute;
-
-            Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-            long timestamp = d.getTime();
-
-            try {
-                int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, timestamp, flags);
-                mCustomPubDate = timestamp;
-                mPubDateText.setText(formattedDate);
-                mIsCustomPubDate = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    private Runnable autoSaveRunnable = new Runnable() {
-        @Override
-        public void run() {
-            savePost(true, false);
-            mAutoSaveHandler.postDelayed(this, AUTOSAVE_DELAY_MILLIS);
-        }
-    };
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-        try {
-            int position = Selection.getSelectionStart(mContentEditText.getText());
-            if ((mIsBackspace && position != 1) || mLastPosition == position || !mLocalDraft)
-                return;
-
-            if (position < 0) {
-                position = 0;
-            }
-            mLastPosition = position;
-            if (position > 0) {
-
-                if (mStyleStart > position) {
-                    mStyleStart = position - 1;
-                }
-                boolean exists = false;
-                if (mBoldToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mEmToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position,
-                                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mEmToggleButton.isChecked()) {
-                    StyleSpan[] ss = s.getSpans(mStyleStart, position, StyleSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
-                            exists = true;
-                        }
-                    }
-                    if (!exists)
-                        s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position,
-                                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mUnderlineToggleButton.isChecked()) {
-                    WPUnderlineSpan[] ss = s.getSpans(mStyleStart, position, WPUnderlineSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
-                    if (!exists)
-                        s.setSpan(new WPUnderlineSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mStrikeToggleButton.isChecked()) {
-                    StrikethroughSpan[] ss = s.getSpans(mStyleStart, position, StrikethroughSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
-                    if (!exists)
-                        s.setSpan(new StrikethroughSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                if (mBquoteToggleButton.isChecked()) {
-
-                    QuoteSpan[] ss = s.getSpans(mStyleStart, position, QuoteSpan.class);
-                    exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        exists = true;
-                    }
-                    if (!exists)
-                        s.setSpan(new QuoteSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        if ((count - after == 1) || (s.length() == 0))
-            mIsBackspace = true;
-        else
-            mIsBackspace = false;
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-
-    @Override
-    public void onSelectionChanged() {
-        if (!mLocalDraft)
-            return;
-
-        final Spannable s = mContentEditText.getText();
-        // set toggle buttons if cursor is inside of a matching span
-        mStyleStart = mContentEditText.getSelectionStart();
-        Object[] spans = s.getSpans(mContentEditText.getSelectionStart(), mContentEditText.getSelectionStart(), Object.class);
-
-        mBoldToggleButton.setChecked(false);
-        mEmToggleButton.setChecked(false);
-        mBquoteToggleButton.setChecked(false);
-        mUnderlineToggleButton.setChecked(false);
-        mStrikeToggleButton.setChecked(false);
-        for (Object span : spans) {
-            if (span instanceof StyleSpan) {
-                StyleSpan ss = (StyleSpan) span;
-                if (ss.getStyle() == android.graphics.Typeface.BOLD) {
-                    mBoldToggleButton.setChecked(true);
-                }
-                if (ss.getStyle() == android.graphics.Typeface.ITALIC) {
-                    mEmToggleButton.setChecked(true);
-                }
-            }
-            if (span instanceof QuoteSpan) {
-                mBquoteToggleButton.setChecked(true);
-            }
-            if (span instanceof WPUnderlineSpan) {
-                mUnderlineToggleButton.setChecked(true);
-            }
-            if (span instanceof StrikethroughSpan) {
-                mStrikeToggleButton.setChecked(true);
-            }
-        }
+    public boolean isEditingPostContent() {
+        return (mViewPager.getCurrentItem() == PAGE_CONTENT);
     }
 }

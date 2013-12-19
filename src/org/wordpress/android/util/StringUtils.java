@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.math.BigInteger;
@@ -9,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import android.text.TextUtils;
 
 public class StringUtils {
 

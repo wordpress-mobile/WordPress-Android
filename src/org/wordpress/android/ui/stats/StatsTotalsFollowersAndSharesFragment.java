@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,13 +86,17 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     private void refreshSummary() {
         if (WordPress.getCurrentBlog() == null)
             return;
-           
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        if (TextUtils.isEmpty(blogId))
+            blogId = "0";
+
+        final String statsBlogId = blogId;
         new AsyncTask<Void, Void, StatsSummary>() {
 
             @Override
             protected StatsSummary doInBackground(Void... params) {
-                return StatUtils.getSummary(blogId);
+                return StatUtils.getSummary(statsBlogId);
             }
             
             protected void onPostExecute(final StatsSummary result) {

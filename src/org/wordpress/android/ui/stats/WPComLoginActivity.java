@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
@@ -24,7 +23,9 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.xmlrpc.android.WPComXMLRPCApi;
+import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -111,7 +112,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 if (!mIsJetpackAuthRequest) {
                     if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
                         // Sign out current user from all services
-                        new WPComXMLRPCApi().unregisterWPComToken(
+                        NotificationUtils.unregisterPushNotificationsToken(
                                 WPComLoginActivity.this,
                                 GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
                         try {
@@ -141,6 +142,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
+                            ReaderUserActions.updateCurrentUser(jsonObject);
                             finish();
                         }
                     }, null);

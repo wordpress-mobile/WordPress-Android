@@ -8,20 +8,22 @@
     <color name="gray">#CCC</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    
+
     <color name="image_options_label">#CCCCCC</color>
     <color name="image_options_text">#FFFFFF</color>
-    <color name="pressed_wordpress">#CC2EA2CC</color>
+    <color name="pressed_wordpress">#CC78C8E6</color>
     <color name="list_row_bg">#FFFFFF</color>
     <color name="list_row_selected">#78c8e6</color>
+    <color name="background_grey">@color/grey_extra_light</color>
 
     <!-- Colors for menu drawer. -->
+    <color name="md__defaultBackground">#222222</color>
     <color name="md__itemBackground">#CC2EA2CC</color>
     <color name="md__iconTintColor">#DDFFFFFF</color>
     <color name="md__shadowColor">#99000000</color>
-    
+
     <color name="wordpress_blue">#21759B</color>
-    
+
     <!-- Media Gallery colors -->
     <color name="media_gallery_grid_label_bg">#B3000000</color>
     <color name="media_gallery_grid_label">#FFFFFF</color>
@@ -30,56 +32,58 @@
 	<color name="media_gallery_bg">#75797C</color>
 	<color name="media_gallery_option_selected">#333333</color>
 	<color name="media_gallery_option_default">#EEEEEE</color>
-	
-    
+
+
     <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">#FFFFFF</color>
     <color name="theme_details_premium">#B0710E</color>
     <color name="theme_feature_text">#555555</color>
-    
+
     <!-- Horizontal Tab View colors -->
     <color name="tab_divider">#565656</color>
     <color name="tab_background">#363636</color>
     <color name="tab_text">@color/white</color>
-    
+
     <!-- Stats bar graph colors -->
     <color name="stats_bar_graph_views">#7CABC1</color>
     <color name="stats_bar_graph_visitors">#124277</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
-    
+
     <!-- Stats Tablet header -->
     <color name="stats_tablet_header_title">#434343</color>
     <color name="stats_alt_row">#EEF6F8</color>
     <color name="stats_div_color">#B7B7B7</color>
+    <color name="stats_activity_bg">#E8E8E8</color>
 
     <!--
-        nbradbury - these are used by the Reader, most of them are from
+        these are from the mobile handbook, handbook color name is in the comment
         http://make.wordpress.org/mobile/handbook/pathways/design/colors/
     -->
-    <color name="blue_extra_light">#c8eefc</color>
-    <color name="blue_light">#78c8e6</color>
-    <color name="blue_medium">#1e8cbe</color>
-    <color name="blue_dark">#0074a2</color>
-    <color name="blue_extra_dark">#005684</color>
-    <color name="orange_light">#fad2ae</color>
-    <color name="orange_medium">#f1831e</color>
-    <color name="orange_dark">#d54e21</color>
-    <color name="grey_extra_light">#eeeeee</color>
-    <color name="grey_light">#dddddd</color>
-    <color name="grey_medium">#999999</color>
-    <color name="grey_dark">#333333</color>
-    <color name="grey_extra_dark">#222222</color>
+    <color name="blue_extra_light">#c8eefc</color>  <!-- (not in handbook) -->
+    <color name="blue_light">#78c8e6</color>        <!-- "light blue" -->
+    <color name="blue_new_kid">#2EA2CC</color>      <!-- "new kid on the block blue" -->
+    <color name="blue_medium">#1e8cbe</color>       <!-- "base lighter blue" -->
+    <color name="blue_dark">#0074a2</color>         <!-- "base darker blue" -->
+    <color name="blue_extra_dark">#005684</color>   <!-- "midnight blue" -->
+    <color name="orange_medium">#f1831e</color>     <!-- "jazzy orange" -->
+    <color name="orange_dark">#d54e21</color>       <!-- "fire orange" -->
+    <color name="grey_extra_light">#eeeeee</color>  <!-- "it's everywhere grey" -->
+    <color name="grey_light">#dddddd</color>        <!-- "read grey" -->
+    <color name="grey_medium">#999999</color>       <!-- "all T, all shade grey" -->
+    <color name="grey_medium_dark">#666666</color>  <!-- "whisper grey" -->
+    <color name="grey_dark">#333333</color>         <!-- "little eddie grey" -->
+    <color name="grey_extra_dark">#222222</color>   <!-- "big eddie grey" -->
 
     <!-- native reader colors -->
-    <color name="reader_divider_grey">@color/grey_light</color>
-    <color name="reader_divider_grey_dark">#c3c3c3</color>
+    <color name="reader_background">@color/grey_extra_light</color>
+    <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_divider_blue">@color/blue_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
     <color name="reader_actionbar_text">@color/grey_extra_light</color>
-    <color name="reader_message_bar_blue">#cc1e8cbe</color>    <!-- blue_medium with alpha -->
-    <color name="reader_message_bar_orange">#ccf1831e</color>  <!-- orange_medium with alpha -->
-    <color name="reader_translucent_actionbar_light">#ccffffff</color>
+    <color name="reader_message_bar_blue">#cc1e8cbe</color>     <!-- blue_medium with alpha -->
+    <color name="reader_message_bar_orange">#ccf1831e</color>   <!-- orange_medium with alpha -->
+    <color name="reader_list_selector">#77c8eefc</color>        <!-- blue_extra_light with alpha -->
 
     <!-- NUX Colors -->
     <color name="nux_shadow">#7F0073A4</color>
@@ -89,8 +93,9 @@
     <color name="nux_tos">#77FFFFFF</color>
     <color name="nux_review">#BCDDEC</color>
     <color name="nux_alert_bg">#EE000000</color>
+    <color name="nux_text_light_grey">#D1D1D1</color>
+    <color name="nux_background">#2C9ECA</color>
 
-    <color name="page_indicator_selected_color">#2EA2CC</color>
-    <color name="page_indicator_unselected_color">#0F80B0</color>
+    <color name="page_indicator_selected_color">#AED5E8</color>
+    <color name="page_indicator_unselected_color">#2384B8</color>
 </resources>
-

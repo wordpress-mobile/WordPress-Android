@@ -9,9 +9,11 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.QuoteSpan;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
@@ -22,6 +24,7 @@ import com.simperium.client.Syncable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -75,17 +78,29 @@ public class Note extends Syncable {
 
 
     protected static final String TAG="NoteModel";
-    public static final String UNKNOWN_TYPE="unknown";
-    public static final String COMMENT_TYPE="comment";
-    public static final String LIKE_TYPE="like";
+
+    protected static final String NOTE_UNKNOWN_TYPE="unknown";
+    public static final String NOTE_COMMENT_TYPE="comment";
+    public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
+    public static final String NOTE_LIKE_TYPE="like";
+    public static final String NOTE_MATCHER_TYPE = "automattcher";
+
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
     public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
     public static final String BIG_BADGE_TEMPLATE="big-badge";
-    // JSON keys and values for looking up values
-    private static final String NOTE_ACTION_REPLY="replyto-comment";
-    private static final String REPLY_CONTENT_PARAM_KEY="content";
+
+    // JSON action keys
+    private static final String ACTION_KEY_REPLY = "replyto-comment";
+    private static final String ACTION_KEY_APPROVE = "approve-comment";
+    private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
+    private static final String ACTION_KEY_SPAM = "spam-comment";
+
+    public static enum EnabledActions {ACTION_REPLY,
+                                       ACTION_APPROVE,
+                                       ACTION_UNAPPROVE,
+                                       ACTION_SPAM}
 
     // FIXME: add other types
     private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
@@ -102,6 +117,7 @@ public class Note extends Syncable {
     private transient String mCommentPreview = null;
     private transient String mSubject = null;
     private transient String mIconUrl = null;
+    private transient String mTimestamp = null;
 
     /**
      * Create a note using JSON from REST API
@@ -117,7 +133,7 @@ public class Note extends Syncable {
     public Note(Bundle extras) {
         JSONObject tmpNoteJSON = new JSONObject();
         String type = extras.getString("type");
-        String finalType = UNKNOWN_TYPE;
+        String finalType = NOTE_UNKNOWN_TYPE;
         if (type != null && pnType2type.containsKey(type)) {
             finalType = pnType2type.get(type);
         }
@@ -127,7 +143,7 @@ public class Note extends Syncable {
         JSONArray items = new JSONArray();
         try {
             // subject
-            if (finalType.equals(COMMENT_TYPE)) {
+            if (finalType.equals(NOTE_COMMENT_TYPE)) {
                 subject.put("text", extras.get("title"));
             } else {
                 subject.put("text", extras.get("msg"));
@@ -193,13 +209,19 @@ public class Note extends Syncable {
         return queryJSON("id", "0");
     }
     public String getType(){
-        return queryJSON("type", UNKNOWN_TYPE);
+        return queryJSON("type", NOTE_UNKNOWN_TYPE);
     }
-    public Boolean isType(String type){
+    private Boolean isType(String type){
         return getType().equals(type);
     }
     public Boolean isCommentType(){
-        return isType(COMMENT_TYPE);
+        return isType(NOTE_COMMENT_TYPE);
+    }
+    public Boolean isCommentLikeType(){
+        return isType(NOTE_COMMENT_LIKE_TYPE);
+    }
+    public Boolean isAutomattcherType(){
+        return isType(NOTE_MATCHER_TYPE);
     }
     public String getSubject(){
         if (mSubject==null) {
@@ -283,18 +305,35 @@ public class Note extends Syncable {
         }
     }
     public Reply buildReply(String content){
-        JSONObject replyAction = getActions().get(NOTE_ACTION_REPLY);
+        JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         Log.d(TAG, String.format("Search actions %s", restPath));
         Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
         return reply;
     }
+
     /**
-     * Get the timestamp provided by the API for the note.
+     * Get the timestamp provided by the API for the note - cached for performance
      */
     public String getTimestamp(){
-        return queryJSON("timestamp", "");
+        if (mTimestamp == null)
+            mTimestamp = queryJSON("timestamp", "");
+        return mTimestamp;
     }
+
+    /*
+     * returns a string representing the timespan based on the note's timestamp - used for display
+     * in the notification list (ex: "3d")
+     */
+    public String getTimeSpan() {
+        try {
+            return DateTimeUtils.timestampToTimeSpan(Long.valueOf(getTimestamp()));
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "failed to convert timestamp to long", e);
+            return "";
+        }
+    }
+
     public String getTemplate(){
         return queryJSON("body.template", "");
     }
@@ -327,6 +366,7 @@ public class Note extends Syncable {
         return mActions;
     }
 
+
     protected void updateJSON(JSONObject json){
 
         mNoteJSON = json;
@@ -339,6 +379,25 @@ public class Note extends Syncable {
 
         // preload content again
         preloadContent();
+    }
+
+    /*
+     * returns the actions allowed on this note, assumes it's a comment notification
+     */
+    public EnumSet<EnabledActions> getEnabledActions() {
+        EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
+        Map<String,JSONObject> jsonActions = getActions();
+        if (jsonActions == null || jsonActions.size() == 0)
+            return actions;
+        if (jsonActions.containsKey(ACTION_KEY_REPLY))
+            actions.add(EnabledActions.ACTION_REPLY);
+        if (jsonActions.containsKey(ACTION_KEY_APPROVE))
+            actions.add(EnabledActions.ACTION_APPROVE);
+        if (jsonActions.containsKey(ACTION_KEY_UNAPPROVE))
+            actions.add(EnabledActions.ACTION_UNAPPROVE);
+        if (jsonActions.containsKey(ACTION_KEY_SPAM))
+            actions.add(EnabledActions.ACTION_SPAM);
+        return actions;
     }
 
     /**

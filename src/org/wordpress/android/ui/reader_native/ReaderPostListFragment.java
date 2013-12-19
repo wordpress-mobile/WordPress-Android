@@ -1,23 +1,21 @@
 package org.wordpress.android.ui.reader_native;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -29,51 +27,46 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.prefs.ReaderPrefs;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView;
 
 /**
  * Created by nbradbury on 6/30/13.
- * Fragment hosted by NativeReaderActivity which shows a list/grid of posts in a specific tag
+ * Fragment hosted by NativeReaderActivity which shows a list of posts in a specific tag
  */
-public class ReaderPostListFragment extends Fragment implements View.OnTouchListener, AbsListView.OnScrollListener {
+public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
     private ReaderActionBarTagAdapter mActionBarAdapter;
 
     private TextView mNewPostsBar;
-    private TextView mEmptyMessage;
-    private View mFooterProgress;
+    private View mEmptyView;
+    private ProgressBar mProgress;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
     private boolean mAlreadyUpdatedTagList = false;
-    private int mScrollToIndex = 0;
+    private boolean mIsFlinging = false;
 
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
-    private static final String KEY_TOP_INDEX = "top_index";
 
-    protected interface OnFirstVisibleItemChangeListener {
-        void onFirstVisibleItemChanged(int firstVisibleItem);
-    }
-
-    private OnFirstVisibleItemChangeListener mFirstVisibleItemChangeListener;
+    private static final String LIST_STATE = "list_state";
+    private Parcelable mListState = null;
 
     protected static ReaderPostListFragment newInstance(Context context) {
         ReaderLog.d("post list newInstance");
 
         // restore the previously-chosen tag, revert to default if not set or doesn't exist
-        String tagName = ReaderPrefs.getReaderTag();
+        String tagName = UserPrefs.getReaderTag();
         if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
             tagName = context.getString(R.string.reader_default_tag_name);
 
@@ -103,9 +96,7 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (savedInstanceState!=null) {
             mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
-            mScrollToIndex = savedInstanceState.getInt(KEY_TOP_INDEX);
-        } else {
-            mScrollToIndex = 0;
+            mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
 
         // get list of tags from server if it hasn't already been done this session
@@ -116,37 +107,19 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // activity is assumed to implement OnFirstVisibleItemChangeListener
-        try {
-            mFirstVisibleItemChangeListener = (OnFirstVisibleItemChangeListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFirstVisibleItemChangeListener");
-        }
-
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
-        // retain index of top-most post
+
+        // retain list state so we can return to this position
+        // http://stackoverflow.com/a/5694441/1673548
         if (hasActivity()) {
             final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
-            final StaggeredGridView gridView = (StaggeredGridView) getActivity().findViewById(R.id.grid);
-            final int topIndex;
-            if (listView!=null) {
-                topIndex = listView.getFirstVisiblePosition();
-            } else if (gridView != null) {
-                topIndex = gridView.getFirstPosition();
-            } else {
-                topIndex = 0;
-            }
-            outState.putInt(KEY_TOP_INDEX, topIndex);
+            if (listView.getFirstVisiblePosition() > 0)
+                outState.putParcelable(LIST_STATE, listView.onSaveInstanceState());
         }
     }
 
@@ -159,53 +132,15 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     @Override
     public void onPause() {
         super.onPause();
-        // turn off row animation - this prevents the list from animating when the keyboard is
-        // shown/hidden in the tag editor (or any other activity)
-        if (hasPostAdapter())
-            getPostAdapter().enableRowAnimation(false);
         unscheduleAutoUpdate();
         hideLoadingProgress();
     }
 
-    /*
-     * use dual-pane grid view for landscape tablets & landscape high-dpi devices
-     */
-    private boolean useGridView() {
-        if (!hasActivity())
-            return false;
-
-        if (!DisplayUtils.isLandscape(getActivity()))
-            return false;
-
-        if (DisplayUtils.isTablet(getActivity()))
-            return true;
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return (displayMetrics.densityDpi >= DisplayMetrics.DENSITY_HIGH);
-    }
-
-    @SuppressLint("NewApi")
-    private void initListViewOverscroll(ListView listView) {
-        // setOverScrollMode requires API 9
-        if (listView!=null && Build.VERSION.SDK_INT >= 9)
-            listView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final boolean useGridView = useGridView();
-        final Context context = container.getContext();
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-        final boolean isTranslucentActionBarEnabled = NativeReaderActivity.isTranslucentActionBarEnabled();
-        final View view;
-
-        // use two-column grid layout for landscape/tablet, list layout otherwise
-        if (useGridView) {
-            view = inflater.inflate(R.layout.reader_fragment_post_grid, container, false);
-        } else {
-            view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-        }
+        final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+        final ListView listView = (ListView) view.findViewById(android.R.id.list);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -213,88 +148,91 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadPosts();
+                reloadPosts(true);
                 hideNewPostsBar();
             }
         });
 
         // textView that appears when current tag has no posts
-        mEmptyMessage = (TextView) view.findViewById(R.id.text_empty);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
-        // move the "new posts" bar and "empty" textView down when the translucent ActionBar is enabled
-        if (isTranslucentActionBarEnabled) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.setMargins(0, actionbarHeight, 0, 0);
-            mEmptyMessage.setPadding(0, actionbarHeight, 0, 0);
-        }
+        // progress bar that appears when loading more posts
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
+        mProgress.setVisibility(View.GONE);
 
-        if (useGridView) {
-            final StaggeredGridView gridView = (StaggeredGridView) view.findViewById(R.id.grid);
-            gridView.setOnTouchListener(this);
+        // set the listView's scroll listeners so we can detect up/down scrolling
+        listView.setOnScrollListener(this);
 
-            if (isTranslucentActionBarEnabled) {
-                RelativeLayout header = new RelativeLayout(context);
-                header.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                header.setMinimumHeight(actionbarHeight - (gridView.getItemMargin() * 2));
-                gridView.setHeaderView(header);
-                // we can't fade the ActionBar while items are scrolled because StaggeredGridView
-                // doesn't have a scroll listener, so just use a default alpha
-                if (hasActivity() && getActivity() instanceof NativeReaderActivity)
-                    ((NativeReaderActivity)getActivity()).setActionBarAlpha(NativeReaderActivity.ALPHA_LEVEL_3);
+        // tapping a post opens the detail view
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // take header into account
+                position -= listView.getHeaderViewsCount();
+                ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
+                ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
             }
+        });
 
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, gridView, false);
-            gridView.setFooterView(mFooterProgress);
-
-            gridView.setOnItemClickListener(new StaggeredGridView.OnItemClickListener() {
-                @Override
-                public void onItemClick(StaggeredGridView parent, View view, int position, long id) {
-                    // take header into account
-                    position -= gridView.getHeaderViewsCount();
-                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                    ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
-                }
-            });
-
-            gridView.setAdapter(getPostAdapter());
-        } else {
-            final ListView listView = (ListView) view.findViewById(android.R.id.list);
-
-            // set the listView's touch/scroll listeners so we can detect up/down scrolling
-            listView.setOnTouchListener(this);
-            listView.setOnScrollListener(this);
-
-            // add listView footer containing progress bar - appears when loading older posts
-            mFooterProgress = inflater.inflate(R.layout.reader_footer_progress, listView, false);
-            listView.addFooterView(mFooterProgress);
-
-            if (isTranslucentActionBarEnabled) {
-                // add a transparent header to the listView that matches the size of the ActionBar,
-                // taking the size of the listView divider into account
-                int headerHeight = actionbarHeight - getResources().getDimensionPixelSize(R.dimen.reader_divider_size);
-                RelativeLayout header = new RelativeLayout(context);
-                header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight));
-                listView.addHeaderView(header, null, false);
-                initListViewOverscroll(listView);
-            }
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    // take header into account
-                    position -= listView.getHeaderViewsCount();
-                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                    ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
-                }
-            });
-
-            listView.setAdapter(getPostAdapter());
-        }
-
-        mFooterProgress.setVisibility(View.GONE);
-        mFooterProgress.setBackgroundColor(context.getResources().getColor(R.color.reader_divider_grey));
+        listView.setAdapter(getPostAdapter());
 
         return view;
+    }
+
+    private void startBoxAndPagesAnimation() {
+        Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page1);
+        ImageView page1 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page1);
+        page1.startAnimation(animPage1);
+
+        Animation animPage2 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page2);
+        ImageView page2 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page2);
+        page2.startAnimation(animPage2);
+
+        Animation animPage3 = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.box_with_pages_slide_up_page3);
+        ImageView page3 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page3);
+        page3.startAnimation(animPage3);
+    }
+
+    private void setEmptyTitleAndDecriptionForCurrentTag() {
+        if (!isPostAdapterEmpty()) {
+            return ;
+        }
+        int title, description = -1;
+        if (isUpdating()) {
+            title = R.string.reader_empty_posts_in_topic_updating;
+        } else {
+            int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
+
+            final String tagId;
+            if (tagIndex > -1) {
+                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+                tagId = tag.getStringIdFromEndpoint();
+            } else {
+                tagId = "";
+            }
+            if (tagId.equals("following")) {
+                title = R.string.reader_empty_followed_blogs_title;
+                description = R.string.reader_empty_followed_blogs_description;
+            } else {
+                if (tagId.equals("liked")) {
+                    title = R.string.reader_empty_posts_liked;
+                } else {
+                    title = R.string.reader_empty_posts_in_topic;
+                }
+            }
+        }
+        TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
+        titleView.setText(getString(title));
+        if (description == -1) {
+            descriptionView.setVisibility(View.INVISIBLE);
+        } else {
+            descriptionView.setText(getString(description));
+            descriptionView.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
@@ -304,22 +242,16 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (isEmpty) {
-                // different empty text depending on whether this tag has ever been updated
-                boolean hasTagEverUpdated = ReaderTagTable.hasEverUpdatedTag(mCurrentTag);
-                mEmptyMessage.setText(hasTagEverUpdated ? R.string.reader_empty_posts_in_tag : R.string.reader_empty_posts_in_tag_never_updated);
-                mEmptyMessage.setVisibility(View.VISIBLE);
+                startBoxAndPagesAnimation();
+                setEmptyTitleAndDecriptionForCurrentTag();
+                mEmptyView.setVisibility(View.VISIBLE);
             } else {
-                mEmptyMessage.setVisibility(View.GONE);
-                // restore previous scroll position
-                if (mScrollToIndex > 0) {
+                mEmptyView.setVisibility(View.GONE);
+                // restore listView state - this returns to the previously scrolled-to item
+                if (mListState != null) {
                     final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
-                    final StaggeredGridView gridView = (StaggeredGridView) getActivity().findViewById(R.id.grid);
-                    if (listView != null) {
-                        listView.setSelection(mScrollToIndex);
-                    } else if (gridView != null) {
-                        gridView.setSelection(mScrollToIndex);
-                    }
-                    mScrollToIndex = 0;
+                    listView.onRestoreInstanceState(mListState);
+                    mListState = null;
                 }
             }
         }
@@ -356,7 +288,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter==null)
             mPostAdapter = new ReaderPostAdapter(getActivity(),
-                                                 useGridView(),
                                                  mReblogListener,
                                                  mDataLoadedListener,
                                                  mDataRequestedListener);
@@ -393,11 +324,11 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
             return;
 
         mCurrentTag = tagName;
-        ReaderPrefs.setReaderTag(tagName);
+        UserPrefs.setReaderTag(tagName);
 
+        hideLoadingProgress();
         getPostAdapter().setTag(tagName);
         hideNewPostsBar();
-        hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName))
@@ -424,8 +355,8 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     /*
      * reload current tag
      */
-    private void reloadPosts() {
-        getPostAdapter().reload();
+    private void reloadPosts(boolean animateRows) {
+        getPostAdapter().reload(animateRows);
     }
 
     private boolean hasActivity() {
@@ -443,14 +374,17 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (TextUtils.isEmpty(tagName))
             return;
 
-        // cancel existing requests if we're already updating
-        /*if (isUpdating()) {
-            VolleyUtils.cancelAllNonImageRequests(WordPress.requestQueue);
-            ReaderLog.i("canceling existing update");
-        }*/
-
         unscheduleAutoUpdate();
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ReaderLog.i("network unavailable, rescheduling reader update");
+            scheduleAutoUpdate();
+            return;
+        }
+
         setIsUpdating(true, updateAction);
+        // update empty view title and description if the the post list is empty
+        setEmptyTitleAndDecriptionForCurrentTag();
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
             @Override
@@ -468,6 +402,9 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     } else {
                         refreshPosts();
                     }
+                } else {
+                    // update empty view title and description if the the post list is empty
+                    setEmptyTitleAndDecriptionForCurrentTag();
                 }
                 // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
@@ -479,12 +416,12 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     protected boolean isUpdating() {
         return mIsUpdating;
     }
+
     protected void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
         if (mIsUpdating==isUpdating)
             return;
         if (!hasActivity())
             return;
-
         mIsUpdating = isUpdating;
         switch (updateAction) {
             case LOAD_NEWER:
@@ -548,7 +485,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         if (!hasCurrentTag())
             return;
 
-        ReaderLog.d("scheduling tag auto-update");
         mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
@@ -566,7 +502,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     /*
      * make sure the passed tag is the one selected in the actionbar
      */
-    @SuppressLint("NewApi")
     private void selectTagInActionBar(String tagName) {
         if (!hasActivity())
             return;
@@ -586,7 +521,6 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
         actionBar.setSelectedNavigationItem(position);
     }
 
-    @SuppressLint("NewApi")
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
         if (actionBar==null)
@@ -618,7 +552,13 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
                     selectTagInActionBar(mCurrentTag);
                 }
             };
-            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), dataListener);
+            final boolean isStaticMenuDrawer;
+            if (getActivity() instanceof WPActionBarActivity) {
+                isStaticMenuDrawer = ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
+            } else {
+                isStaticMenuDrawer = false;
+            }
+            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
         }
         return mActionBarAdapter;
     }
@@ -659,62 +599,29 @@ public class ReaderPostListFragment extends Fragment implements View.OnTouchList
     }
 
     /*
-     * show/hide progress bar footer in the listView
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
     protected void showLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()==View.VISIBLE )
-            return;
-        mFooterProgress.setVisibility(View.VISIBLE);
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.VISIBLE);
     }
     protected void hideLoadingProgress() {
-        if (!hasActivity() || mFooterProgress ==null || mFooterProgress.getVisibility()!=View.VISIBLE )
-            return;
-        mFooterProgress.setVisibility(View.GONE);
-    }
-
-    /**
-     * row animation in the listView is only enabled when user is scrolling down and not flinging
-     **/
-    private float mCurrentY;
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mCurrentY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float y = event.getY();
-                float yDiff = y - mCurrentY;
-                getPostAdapter().enableRowAnimation(yDiff < 0.0f);
-                mCurrentY = y;
-                break;
-        }
-
-        return false;
+        if (hasActivity() && mProgress != null)
+            mProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        // (1) disable row animation when scrolling is done - will be re-enabled in onTouch() when user scrolls down
-        // (2) disable row animation during fling on pre-ICS devices (on older devices animation will seem choppy)
-        if (scrollState==SCROLL_STATE_IDLE) {
-            getPostAdapter().enableRowAnimation(false);
-        } else if (scrollState==SCROLL_STATE_FLING && !SysUtils.isGteAndroid4()) {
-            getPostAdapter().enableRowAnimation(false);
+        boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
+        if (isFlingingNow != mIsFlinging) {
+            mIsFlinging = isFlingingNow;
+            if (hasPostAdapter())
+                getPostAdapter().setIsFlinging(mIsFlinging);
         }
     }
 
-    private int mPrevFirstVisibleItem = -1;
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (visibleItemCount==0 || !hasActivity())
-            return;
-        if (firstVisibleItem != mPrevFirstVisibleItem && mFirstVisibleItemChangeListener != null) {
-            // this tells NativeReaderActivity to make the ActionBar more translucent as the user
-            // scrolls through the list
-            mFirstVisibleItemChangeListener.onFirstVisibleItemChanged(firstVisibleItem);
-            mPrevFirstVisibleItem = firstVisibleItem;
-        }
+        // nop
     }
 }
