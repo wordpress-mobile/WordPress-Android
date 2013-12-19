@@ -100,11 +100,28 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private static final int MOVE_MIN_DIFF = 6;
     private static final long WEBVIEW_DELAY_MS = 2000L;
 
+    /*
+     * returns true if the listView can scroll vertically in either direction
+     * always returns true prior to ICS because canScrollVertically() requires API 14
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static boolean canScrollList(ListView listView) {
+        if (listView == null)
+            return false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            return true;
+        return listView.canScrollVertically(-1)
+            || listView.canScrollVertically(1);
+    }
+
     private ListView getListView() {
         if (mListView==null) {
             mListView = (ListView) findViewById(android.R.id.list);
 
-            // enable full screen when user scrolls down, disable full screen when user scrolls up
+            /*
+             * when the list can be scrolled vertically, enable full screen when user scrolls down
+             * and disable full screen when user scrolls up
+             */
             if (isFullScreenSupported()) {
                 mListView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -124,7 +141,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                                         setIsFullScreen(false);
                                         return true;
                                     }
-                                } else {
+                                } else if (canScrollList(mListView)) {
                                     mIsMoving = true;
                                     return true;
                                 }
