@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.xmlrpc.android.ApiHelper;
 
@@ -60,7 +61,11 @@ public class Comment {
 
         this.commentID = json.optInt("ID");
         this.status = JSONUtil.getString(json, "status");
-        this.comment = JSONUtil.getString(json, "content"); // contains html
+
+        // note that the content often contains html, and on rare occasions may contain
+        // script blocks that need to be removed (only seen with blogs that use the
+        // sociable plugin)
+        this.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
 
         java.util.Date date = DateTimeUtils.iso8601ToJavaDate(JSONUtil.getString(json, "date"));
         if (date != null)

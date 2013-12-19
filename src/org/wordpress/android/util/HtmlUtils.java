@@ -42,7 +42,6 @@ public class HtmlUtils {
         return fastUnescapeHtml(text.replaceAll("<(.|\n)*?>", "").trim());
     }
 
-
     /*
      * convert html entities to actual Unicode characters - relies on commons apache lang
      */
@@ -61,6 +60,31 @@ public class HtmlUtils {
         } catch (Resources.NotFoundException e) {
             return "#000000";
         }
+    }
+
+    /*
+     * remove <script>..</script> blocks from the passed string - added to project after noticing
+     * comments on posts that use the "Sociable" plugin ( http://wordpress.org/plugins/sociable/ )
+     * may have a script block which contains <!--//--> followed by a CDATA section followed by <!]]>,
+     * all of which will show up if we don't strip it here (example: http://cl.ly/image/0J0N3z3h1i04 )
+     * first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
+     */
+    public static String stripScript(final String text) {
+        if (text == null)
+            return null;
+
+        StringBuilder sb = new StringBuilder(text);
+        int start = sb.indexOf("<script");
+
+        while (start > -1) {
+            int end = sb.indexOf("</script>", start);
+            if (end == -1)
+                return sb.toString();
+            sb.delete(start, end+9);
+            start = sb.indexOf("<script", start);
+        }
+
+        return sb.toString();
     }
 
 }
