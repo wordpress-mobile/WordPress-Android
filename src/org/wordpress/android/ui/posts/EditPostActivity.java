@@ -346,7 +346,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // When discard option is chosen, restore existing post or delete new post if it was autosaved.
-                if (mOriginalPost != null) {
+                if (mOriginalPost != null && !mIsNewPost) {
                     mOriginalPost.update();
                     WordPress.currentPost = mOriginalPost;
                 } else if (mPost != null && mIsNewPost) {
