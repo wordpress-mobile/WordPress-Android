@@ -251,6 +251,20 @@ public class Note extends Syncable {
     public Boolean isRead(){
         return getUnreadCount().equals("0");
     }
+
+    /**
+     * Sets the note's read count to "0" and saves it to sync with Simperium
+     */
+    public void markAsRead() {
+        try {
+            mNoteJSON.put("unread", "0");
+        } catch (JSONException e) {
+            Log.e(TAG, "Unable to update note unread property", e);
+            return;
+        }
+        save();
+    }
+
     /**
      * For some reason the unread count is a string in the JSON API but is truly represented
      * by an Integer. We can handle a simple string.

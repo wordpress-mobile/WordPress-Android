@@ -209,22 +209,8 @@ public class NotificationsActivity extends WPActionBarActivity {
             return;
         // if note is "unread" set note to "read"
         if (note.isUnread()) {
-            // send a request to mark note as read
-            restClient.markNoteAsRead(note,
-                new RestRequest.Listener(){
-                    @Override
-                    public void onResponse(JSONObject response){
-                        note.setUnreadCount("0");
-                        mNotesList.getNotesAdapter().notifyDataSetChanged();
-                    }
-                },
-                new RestRequest.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        Log.d(TAG, String.format("Failed to mark as read %s", error));
-                    }
-                }
-            );
+            // mark as read which syncs with simperium
+            note.markAsRead();
         }
         
         FragmentManager fm = getSupportFragmentManager();
