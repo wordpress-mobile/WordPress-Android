@@ -323,10 +323,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void onCommentsModerated(final List<Comment> comments) {
     }
 
-    protected void updateLastSeen(String timestamp){
-        // TODO: Write to meta bucket last seen time
-    }
-    
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){

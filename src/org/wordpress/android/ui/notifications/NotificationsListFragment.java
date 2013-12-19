@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObject;
+import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
 
 public class NotificationsListFragment extends ListFragment {
@@ -114,6 +116,19 @@ public class NotificationsListFragment extends ListFragment {
         mNoteClickListener = listener;
     }
 
+    protected void updateLastSeenTime(){
+        // set the timestamp to now
+        try {
+            if (mNotesAdapter == null) return;
+            Note newestNote = mNotesAdapter.getNote(0);
+            BucketObject meta = WordPress.metaBucket.get("meta");
+            meta.setProperty("last_seen", newestNote.getTimestamp());
+            meta.save();
+        } catch (BucketObjectMissingException e) {
+            // try again later, meta is created by wordpress.com
+        }
+    }
+
     class NotesAdapter extends ResourceCursorAdapter implements Bucket.Listener<Note> {
 
         int mAvatarSz;
@@ -168,6 +183,7 @@ public class NotificationsListFragment extends ListFragment {
                 @Override
                 public void run(){
                     swapCursor(mQuery.execute());
+                    updateLastSeenTime();
                 }
 
             });
