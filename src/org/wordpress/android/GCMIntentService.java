@@ -1,14 +1,6 @@
 
 package org.wordpress.android;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -27,17 +19,24 @@ import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.StringUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -90,10 +89,10 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
         }
         
-        String title = extras.getString("title");
+        String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
         if (title == null)
             title = "WordPress";
-        String message = StringUtils.unescapeHTML(extras.getString("msg"));
+        String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
         String note_id = extras.getString("note_id");
 
         Note note = null;
@@ -212,19 +211,20 @@ public class GCMIntentService extends GCMBaseIntentService {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
             int noteCtr = 1;
-            for (Bundle wpNotification : activeNotificationsMap.values()) {
-                // InboxStyle notification is limited to 5 lines
-                if (noteCtr > 5)
+            for (Bundle wpPN : activeNotificationsMap.values()) {
+                if (noteCtr > 5) // InboxStyle notification is limited to 5 lines
                     break;
-                if (wpNotification.getString("msg") != null) {
-                    if (wpNotification.getString("type").equals("c"))
-                        inboxStyle.addLine(wpNotification.getString("title") + ": "
-                                + wpNotification.getString("msg"));
-                    else
-                        inboxStyle.addLine(wpNotification.getString("msg"));
-                    noteCtr++;
+                if (wpPN.getString("msg") == null)
+                    continue;
+                if (wpPN.getString("type") != null && wpPN.getString("type").equals("c")) {
+                    String pnTitle = StringEscapeUtils.unescapeHtml((wpPN.getString("title")));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
+                    inboxStyle.addLine(pnTitle + ": " + pnMessage);
+                } else {
+                    String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
+                    inboxStyle.addLine(pnMessage);
                 }
-
+                noteCtr++;
             }
 
             if (activeNotificationsMap.size() > 5)
