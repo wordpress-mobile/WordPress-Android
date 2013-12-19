@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
@@ -41,7 +42,7 @@ public class ReaderComment {
         comment.status = JSONUtil.getString(json, "status");
 
         // note that content may contain html, adapter needs to handle it
-        comment.text = stripScript(JSONUtil.getString(json, "content"));
+        comment.text = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
 
         comment.published = JSONUtil.getString(json, "date");
         comment.timestamp = DateTimeUtils.iso8601ToTimestamp(comment.published);
@@ -63,26 +64,6 @@ public class ReaderComment {
             comment.parentId = jsonParent.optLong("ID");
 
         return comment;
-    }
-
-    // comments on posts that use the "Sociable" plugin ( http://wordpress.org/plugins/sociable/ )
-    // may have a script block which contains <!--//--> followed by a CDATA section followed by <!]]>,
-    // all of which will show up if we don't strip it here (example: http://cl.ly/image/0J0N3z3h1i04 )
-    // first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
-    // TODO: move this to a utility class
-    private static String stripScript(final String text) {
-        StringBuilder sb = new StringBuilder(text);
-        int start = sb.indexOf("<script");
-
-        while (start > -1) {
-            int end = sb.indexOf("</script>", start);
-            if (end == -1)
-                return sb.toString();
-            sb.delete(start, end+9);
-            start = sb.indexOf("<script", start);
-        }
-
-        return sb.toString();
     }
 
     public String getAuthorName() {
