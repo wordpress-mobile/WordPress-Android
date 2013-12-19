@@ -223,7 +223,7 @@ public class SetupBlog {
             blog.setImagePlacement(""); //deprecated
             blog.setFullSizeImage(false);
             blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
-            blog.setMaxImageWidthId(5);
+            blog.setMaxImageWidthId(0); //deprecated
             blog.setRunService(false); //deprecated
             blog.setBlogId(Integer.parseInt(blogId));
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));

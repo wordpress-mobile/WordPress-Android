@@ -54,18 +54,12 @@ public class Post implements Serializable {
     private String mediaPaths;
     private String quickPostType;
 
-    private Blog blog;
-
     public List<String> imageUrl = new Vector<String>();
 
     public Post(int blog_id, long post_id, boolean isPage) {
         // load an existing post
         List<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
         if (postVals != null) {
-            try {
-                this.blog = new Blog(blog_id);
-            } catch (Exception e) {
-            }
             this.id = (Long) postVals.get(0);
             this.blogID = blog_id;
             if (postVals.get(2) != null)
@@ -107,22 +101,13 @@ public class Post implements Serializable {
 
     public Post(int blogId, boolean isPage) {
         // creates a new, empty post for the passed in blogId
-        this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", true, false);
+        this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", false);
         this.localDraft = true;
         save();
     }
 
     public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
-            String password, double latitude, double longitude, boolean isPage, String postFormat,
-            boolean createBlogReference, boolean isLocalChange) {
-        // create a new post
-        if (createBlogReference) {
-            try {
-                this.blog = new Blog(blog_id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+            String password, double latitude, double longitude, boolean isPage, String postFormat, boolean isLocalChange) {
         this.blogID = blog_id;
         this.title = title;
         this.description = content;
@@ -429,14 +414,6 @@ public class Post implements Serializable {
 
     public void setQuickPostType(String type) {
         this.quickPostType = type;
-    }
-
-    public Blog getBlog() {
-        return blog;
-    }
-
-    public void setBlog(Blog blog) {
-        this.blog = blog;
     }
 
     public String getQuickPostType() {

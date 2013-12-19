@@ -142,11 +142,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
         blog.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
 
-        long maxImageWidthId = mImageWidthSpinner.getSelectedItemId();
-        int maxImageWidthIdInt = (int) maxImageWidthId;
-
-        blog.setMaxImageWidthId(maxImageWidthIdInt);
-
         blog.setLocation(mLocationCB.isChecked());
 
         blog.save(originalUsername);
@@ -280,8 +275,9 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             locationLayout.setVisibility(View.GONE);
         }
 
-        mImageWidthSpinner.setSelection(blog.getMaxImageWidthId());
-        if(blog.getMaxImageWidthId() == 0) //Original size selected. Do not show the link to full image.
+        int imageWidthPosition = spinnerArrayAdapter.getPosition(blog.getMaxImageWidth());
+        mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);
+        if (mImageWidthSpinner.getSelectedItemPosition() == 0) //Original size selected. Do not show the link to full image.
             fullSizeImageCheckBox.setVisibility(View.GONE);
         else
             fullSizeImageCheckBox.setVisibility(View.VISIBLE);
