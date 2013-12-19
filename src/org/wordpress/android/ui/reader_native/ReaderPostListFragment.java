@@ -68,7 +68,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         // restore the previously-chosen tag, revert to default if not set or doesn't exist
         String tagName = UserPrefs.getReaderTag();
         if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
-            tagName = context.getString(R.string.reader_default_tag_name);
+            tagName = ReaderTag.TAG_NAME_DEFAULT;
 
         Bundle args = new Bundle();
         args.putString(KEY_TAG_NAME, tagName);
@@ -213,11 +213,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             } else {
                 tagId = "";
             }
-            if (tagId.equals("following")) {
+            if (tagId.equals(ReaderTag.TAG_ID_FOLLOWING)) {
                 title = R.string.reader_empty_followed_blogs_title;
                 description = R.string.reader_empty_followed_blogs_description;
             } else {
-                if (tagId.equals("liked")) {
+                if (tagId.equals(ReaderTag.TAG_ID_LIKED)) {
                     title = R.string.reader_empty_posts_liked;
                 } else {
                     title = R.string.reader_empty_posts_in_topic;
@@ -360,7 +360,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     private boolean hasActivity() {
-        return (getActivity()!=null);
+        return (getActivity() != null && !isRemoving());
     }
 
     /*
@@ -571,9 +571,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             return;
 
         // make sure current tag still exists, reset to default if it doesn't
-        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName())) {
-            mCurrentTag = getActivity().getString(R.string.reader_default_tag_name);
-        }
+        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName()))
+            mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
+
         getActionBarAdapter().refreshTags();
     }
 
