@@ -62,6 +62,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
+    protected static enum RefreshType {AUTOMATIC, MANUAL};
+
     protected static ReaderPostListFragment newInstance(Context context) {
         ReaderLog.d("post list newInstance");
 
@@ -270,7 +272,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
                 return;
             // request older posts
-            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER);
+            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
         }
     };
 
@@ -332,7 +334,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName))
-            updatePostsWithTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER);
+            updatePostsWithTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
     }
 
     /*
@@ -366,11 +368,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * get latest posts for this tag from the server
      */
-    protected void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction) {
+    protected void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
         if (hasCurrentTag())
-            updatePostsWithTag(mCurrentTag, updateAction);
+            updatePostsWithTag(mCurrentTag, updateAction, refreshType);
     }
-    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction) {
+    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName))
             return;
 
@@ -383,8 +385,13 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
 
         setIsUpdating(true, updateAction);
-        // update empty view title and description if the the post list is empty
         setEmptyTitleAndDecriptionForCurrentTag();
+
+        // if this is "Posts I Like" and it's a manual refresh (user tapped refresh icon), refresh the posts so posts that were unliked
+        // no longer appear
+        if (refreshType == RefreshType.MANUAL && isCurrentTagName(tagName) && tagName.equals((ReaderTag.TAG_NAME_LIKED))) {
+            refreshPosts();
+        }
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
             @Override
@@ -476,7 +483,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         public void run() {
             if (hasCurrentTag()) {
                 ReaderLog.d("performing automatic update");
-                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, ReaderPostListFragment.RefreshType.AUTOMATIC);
             }
         }
     };
