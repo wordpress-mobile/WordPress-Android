@@ -44,7 +44,8 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="#21759b" />
+                android:textColorLink="#21759b"
+                android:layerType="software" />
         </LinearLayout>
     </ScrollView>
 
