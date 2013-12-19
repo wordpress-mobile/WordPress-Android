@@ -20,6 +20,11 @@ android {
         abortOnError false
     }
 
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+    }
+
 	buildTypes {
 	    release {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
