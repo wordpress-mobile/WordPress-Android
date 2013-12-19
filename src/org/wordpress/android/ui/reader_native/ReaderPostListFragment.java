@@ -148,7 +148,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadPosts();
+                reloadPosts(true);
                 hideNewPostsBar();
             }
         });
@@ -355,8 +355,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * reload current tag
      */
-    private void reloadPosts() {
-        getPostAdapter().reload();
+    private void reloadPosts(boolean animateRows) {
+        getPostAdapter().reload(animateRows);
     }
 
     private boolean hasActivity() {
