@@ -11,17 +11,14 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class Blog implements Serializable {
-
-    // Increment this value if this model changes
-    // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
-    static final long serialVersionUID  = 1L;
+public class Blog {
 
     private int id;
     private String url;
@@ -60,7 +57,7 @@ public class Blog implements Serializable {
         this.id = -1;
     }
 
-    public Blog(int blog_id) throws Exception{
+    public Blog(int blog_id) throws Exception {
         // Instantiate an existing blog
         List<Object> blogVals = WordPress.wpDB.getBlog(blog_id);
 
@@ -185,7 +182,7 @@ public class Blog implements Serializable {
     }
 
     public String getMaxImageWidth() {
-        return maxImageWidth;
+        return StringUtils.notNullStr(maxImageWidth);
     }
 
     public void setMaxImageWidth(String maxImageWidth) {
