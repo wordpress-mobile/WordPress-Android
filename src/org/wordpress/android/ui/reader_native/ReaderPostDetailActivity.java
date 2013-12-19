@@ -1070,6 +1070,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         // hide VideoPress divs that don't make sense on mobile
         sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
 
+        // tiled mosaic galleries have hard-coded DIV sizes which make them look bad on mobile, correct for
+        // this by resetting their height/width to auto and make their images full-width
+        if (content.contains("gallery-")) {
+            sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
+                  .append("  div.tiled-gallery-item img { width: 100% !important; height: auto !important; }")
+                  .append("  div.tiled-gallery-caption { clear: both; }");
+
+        }
+
         // hide noscript
         //sbHtml.append("  noscript { display: none ;}");
 
