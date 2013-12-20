@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -338,8 +339,13 @@ public class ReaderPostTable {
         String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                   + " AND tbl_post_tags.tag_name=?"
-                   + " ORDER BY tbl_posts.timestamp DESC";
+                   + " AND tbl_post_tags.tag_name=?";
+
+        // skip posts that are no longer liked if this is "Posts I Like"
+        if (tagName.equals(ReaderTag.TAG_NAME_LIKED))
+            sql += " AND tbl_posts.is_liked != 0";
+
+        sql += " ORDER BY tbl_posts.timestamp DESC";
 
         if (maxPosts > 0)
             sql += " LIMIT " + Integer.toString(maxPosts);

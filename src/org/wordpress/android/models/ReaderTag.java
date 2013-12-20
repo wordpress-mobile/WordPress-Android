@@ -14,6 +14,15 @@ public class ReaderTag {
     private static final int INT_SUBSCRIBED = 1;
     private static final int INT_RECOMMENDED = 2;
 
+    public static String TAG_ID_FOLLOWING = "following";
+    public static String TAG_ID_LIKED = "liked";
+
+    // these are the default tag names, which aren't localized in the /read/menu/ response
+    public static String TAG_NAME_LIKED = "Posts I Like";
+    public static String TAG_NAME_FOLLOWING = "Blogs I Follow";
+    public static String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
+    public static String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
+
     public static enum ReaderTagType {SUBSCRIBED,
                                       DEFAULT,
                                       RECOMMENDED;
