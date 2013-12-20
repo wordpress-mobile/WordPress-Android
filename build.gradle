@@ -75,7 +75,7 @@ android {
 	    compile files('libs/MixpanelAPI.jar')
 
         // Howdy Simperium
-        compile 'com.simperium:simperium-android:0.4.0-beta4'
+        compile 'com.simperium:simperium-android:0.4.1-beta'
         compile 'com.android:volley:2.2'
 	}
 
