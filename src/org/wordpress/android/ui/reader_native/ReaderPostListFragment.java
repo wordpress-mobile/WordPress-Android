@@ -509,7 +509,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * make sure the passed tag is the one selected in the actionbar
      */
-    private void selectTagInActionBar(String tagName) {
+    protected void selectTagInActionBar(String tagName) {
         if (!hasActivity())
             return;
         if (tagName==null)
@@ -571,17 +571,31 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     /*
+     * make sure current tag still exists, reset to default if it doesn't
+     */
+    private void checkCurrentTag() {
+        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName()))
+            mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
+    }
+
+    /*
      * refresh the list of tags shown in the ActionBar
      */
     protected void refreshTags() {
         if (!hasActivity())
             return;
-
-        // make sure current tag still exists, reset to default if it doesn't
-        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName()))
-            mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
-
+        checkCurrentTag();
         getActionBarAdapter().refreshTags();
+    }
+
+    /*
+     * similar to refreshTags except that the adapter always re-creates its underlying data
+     */
+    protected void reloadTags() {
+        if (!hasActivity())
+            return;
+        checkCurrentTag();
+        getActionBarAdapter().reloadTags();
     }
 
     /*

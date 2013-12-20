@@ -50,6 +50,7 @@ public class MessageBarUtils {
                 return;
         }
 
+        txtMessageBar.clearAnimation();
         txtMessageBar.setText(message);
 
         ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_in);
@@ -72,6 +73,8 @@ public class MessageBarUtils {
             return;
         if (txtMessageBar.getVisibility()!=View.VISIBLE)
             return;
+
+        txtMessageBar.clearAnimation();
 
         // hide w/o animation if caller requested it
         if (hideImmediate) {
