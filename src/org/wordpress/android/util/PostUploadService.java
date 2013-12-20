@@ -583,8 +583,10 @@ public class PostUploadService extends Service {
 
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName);
-                if (TextUtils.isEmpty(fileExtension)) {
-                    // No file extension? Try and get the mimeType and extension from an InputStream them.
+                if (!TextUtils.isEmpty(fileExtension)) {
+                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                } else {
+                    // No file extension? Try and get the mimeType and extension from an InputStream.
                     try {
                         DataInputStream inputStream = new DataInputStream(new FileInputStream(imageFile));
                         String imageMimeType = MediaUtils.getMimeTypeOfInputStream(inputStream);
@@ -601,8 +603,6 @@ public class PostUploadService extends Service {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
                 }
 
                 ImageHelper ih = new ImageHelper();
