@@ -613,11 +613,11 @@ public class PostUploadService extends Service {
                 // We need to upload a resized version of the picture when the blog settings != original size, or when
                 // the user has selected a smaller size for the current picture in the picture settings screen
                 // We won't resize gif images to keep them awesome.
-                boolean shouldUploadResizedVersion = !blog.getMaxImageWidth().equals("Original Size");
-                if (!shouldUploadResizedVersion && !fileExtension.equals("gif")) {
+                boolean shouldUploadResizedVersion = false;
+                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+                if (!fileExtension.equals("gif") && !blog.getMaxImageWidth().equals("Original Size")) {
                     //check the picture settings
                     int pictureSettingWidth = mf.getWidth();
-
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(path, options);
