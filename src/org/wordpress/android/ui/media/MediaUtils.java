@@ -18,11 +18,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.ImageHelper;
@@ -343,10 +346,6 @@ public class MediaUtils {
 
         if (!cacheDir.exists())
             cacheDir.mkdirs();
-        Random r = new Random();
-        final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
-
-        File f = new File(cacheDir, path);
 
         try {
             InputStream input;
@@ -356,6 +355,10 @@ public class MediaUtils {
             } else {
                 input = new URL(imageUri.toString()).openStream();
             }
+
+            String fileName = "wp-" + System.currentTimeMillis();
+            File f = new File(cacheDir, fileName);
+
             OutputStream output = new FileOutputStream(f);
 
             byte data[] = new byte[1024];
@@ -375,5 +378,12 @@ public class MediaUtils {
         }
 
         return null;
+    }
+
+    public static String getMimeTypeOfInputStream(InputStream stream) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(stream, null, options);
+        return options.outMimeType;
     }
 }
