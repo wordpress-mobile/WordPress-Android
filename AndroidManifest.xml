@@ -87,10 +87,6 @@
         <activity
             android:name=".ui.comments.EditCommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".ui.comments.AddCommentActivity"
-            android:theme="@style/WordPress.Dialog"
-            android:windowSoftInputMode="stateVisible" />
 
         <!-- Posts activities -->
         <activity

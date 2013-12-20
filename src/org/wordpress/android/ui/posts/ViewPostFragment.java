@@ -1,21 +1,33 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
+import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMobileStatsUtil;
 
@@ -24,6 +36,10 @@ public class ViewPostFragment extends Fragment {
 
     private OnDetailPostActionListener onDetailPostActionListener;
     PostsActivity parentActivity;
+
+    private ViewGroup mLayoutCommentBox;
+    private EditText mEditComment;
+    private ImageButton mAddCommentButton;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -46,6 +62,11 @@ public class ViewPostFragment extends Fragment {
             Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.viewpost, container, false);
+
+        // comment views
+        mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
+        mEditComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
+        mEditComment.setHint(R.string.reader_hint_comment_on_post);
 
         // button listeners here
         ImageButton editPostButton = (ImageButton) v
@@ -98,14 +119,13 @@ public class ViewPostFragment extends Fragment {
 
             }
         });
-        
-        ImageButton addCommentButton = (ImageButton) v
-                .findViewById(R.id.addComment);
-        addCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
+
+        mAddCommentButton = (ImageButton) v.findViewById(R.id.addComment);
+        mAddCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
                 if (!parentActivity.isRefreshing)
-                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_COMMENT, WordPress.currentPost);
+                    toggleCommentBox();
 
             }
         });
@@ -212,6 +232,121 @@ public class ViewPostFragment extends Fragment {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    boolean mIsCommentBoxShowing = false;
+    boolean mIsSubmittingComment = false;
+
+    private boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
+    private void showCommentBox() {
+        // skip if it's already showing or a comment is being submitted
+        if (mIsCommentBoxShowing || mIsSubmittingComment)
+            return;
+        if (!hasActivity())
+            return;
+
+        WPMobileStatsUtil.flagProperty(WPMobileStatsUtil.StatsEventPostsClosed,
+                WPMobileStatsUtil.StatsPropertyPostDetailClickedComment);
+
+        // animate the comment box in, force keyboard to appear and highlight the comment button
+        ReaderAniUtils.flyIn(mLayoutCommentBox);
+        mEditComment.requestFocus();
+
+        // submit comment when done/send tapped on the keyboard
+        mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)
+                    submitComment();
+                return false;
+            }
+        });
+
+        // submit comment when send icon tapped
+        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
+        imgPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitComment();
+            }
+        });
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mEditComment, InputMethodManager.SHOW_IMPLICIT);
+        mIsCommentBoxShowing = true;
+    }
+
+    private void hideCommentBox() {
+        if (!mIsCommentBoxShowing)
+            return;
+        if (!hasActivity())
+            return;
+
+        EditTextUtils.hideSoftInput(mEditComment);
+        ReaderAniUtils.flyOut(mLayoutCommentBox);
+
+        mIsCommentBoxShowing = false;
+    }
+
+    private void toggleCommentBox() {
+        if (mIsCommentBoxShowing) {
+            hideCommentBox();
+        } else {
+            showCommentBox();
+        }
+    }
+
+    private void submitComment() {
+        if (!hasActivity() || mIsSubmittingComment)
+            return;
+
+        if (!NetworkUtils.checkConnection(getActivity()))
+            return;
+
+        final String commentText = EditTextUtils.getText(mEditComment);
+        if (TextUtils.isEmpty(commentText))
+            return;
+
+        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
+        final ProgressBar progress = (ProgressBar) mLayoutCommentBox.findViewById(R.id.progress_submit_comment);
+
+        // disable editor & comment button, hide soft keyboard, hide submit icon, and show progress spinner while submitting
+        mEditComment.setEnabled(false);
+        mAddCommentButton.setEnabled(false);
+        EditTextUtils.hideSoftInput(mEditComment);
+        imgPostComment.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+
+        CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                mIsSubmittingComment = false;
+                if (!hasActivity())
+                    return;
+
+                parentActivity.attemptToSelectPost();
+
+                mEditComment.setEnabled(true);
+                mAddCommentButton.setEnabled(true);
+                imgPostComment.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+
+                if (succeeded) {
+                    ToastUtils.showToast(getActivity(), R.string.comment_added);
+                    hideCommentBox();
+                    mEditComment.setText(null);
+                    parentActivity.refreshComments();
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
+                }
+            }
+        };
+
+        int accountId = WordPress.getCurrentBlogAccountId();
+        CommentActions.addComment(accountId, WordPress.currentPost.getPostid(), commentText, actionListener);
     }
 
 }
