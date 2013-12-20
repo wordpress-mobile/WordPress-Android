@@ -98,19 +98,19 @@ public class NativeReaderActivity extends WPActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         boolean isResultOK = (resultCode==Activity.RESULT_OK);
-        ReaderPostListFragment readerFragment = getPostListFragment();
+        final ReaderPostListFragment readerFragment = getPostListFragment();
 
         switch (requestCode) {
             // user just returned from the tag editor
             case Constants.INTENT_READER_TAGS :
                 if (isResultOK && readerFragment!=null && data!=null) {
-                    // refresh topics if they were changed
-                    if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false))
-                        readerFragment.refreshTags();
-                    // set the last topic added as the current topic
-                    String lastAddedTopic = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
-                    if (!TextUtils.isEmpty(lastAddedTopic))
-                        readerFragment.setCurrentTag(lastAddedTopic);
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
+                        readerFragment.reloadTags();
+                        String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
+                        if (!TextUtils.isEmpty(lastAddedTag))
+                            readerFragment.setCurrentTag(lastAddedTag);
+                    }
                 }
                 break;
 

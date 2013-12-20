@@ -67,6 +67,11 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         }
     }
 
+    public void reloadTags() {
+        mTags.clear();
+        refreshTags();
+    }
+
     @Override
     public int getCount() {
         return (mTags !=null ? mTags.size() : 0);
