@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.text.TextUtils;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
@@ -70,7 +71,7 @@ public class ImageHelper {
         return dimensions;
     }
     
-    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny) {
+    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny, String fileExtension) {
         // creates a thumbnail and returns the bytes
 
         int finalHeight = 0;
@@ -146,7 +147,10 @@ public class ImageHelper {
                 }
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                resized.compress(Bitmap.CompressFormat.JPEG, 85, baos);
+                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+                if (fileExtension != null && fileExtension.equalsIgnoreCase("png"))
+                    format = Bitmap.CompressFormat.PNG;
+                resized.compress(format, 85, baos);
 
                 bm.recycle(); // free up memory
                 resized.recycle();
@@ -495,7 +499,7 @@ public class ImageHelper {
             conversionFactor = 0.70f;
 
         byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
-                orientation, true);
+                orientation, true, null);
 
         if (finalBytes == null) {
             return null;

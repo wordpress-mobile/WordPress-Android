@@ -30,6 +30,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.xmlrpc.android.ApiHelper;
@@ -536,7 +537,7 @@ public class PostUploadService extends Service {
                 curImagePath = mf.getFilePath();
 
                 Uri imageUri = Uri.parse(curImagePath);
-                File jpeg = null;
+                File imageFile = null;
                 String mimeType = "", orientation = "", path = "";
 
                 if (imageUri.toString().contains("content:")) {
@@ -561,44 +562,62 @@ public class PostUploadService extends Service {
                         orientation = cur.getString(orientationColumn);
                         String thumbData = cur.getString(dataColumn);
                         mimeType = cur.getString(mimeTypeColumn);
-                        jpeg = new File(thumbData);
+                        imageFile = new File(thumbData);
                         path = thumbData;
-                        mf.setFilePath(jpeg.getPath());
+                        mf.setFilePath(imageFile.getPath());
                     }
                 } else { // file is not in media library
                     path = imageUri.toString().replace("file://", "");
-                    jpeg = new File(path);
-                    String extension = MimeTypeMap.getFileExtensionFromUrl(path);
-                    if (extension != null) {
-                        MimeTypeMap mime = MimeTypeMap.getSingleton();
-                        mimeType = mime.getMimeTypeFromExtension(extension);
-                        if (mimeType == null)
-                            mimeType = "image/jpeg";
-                    }
+                    imageFile = new File(path);
                     mf.setFilePath(path);
                 }
 
                 // check if the file exists
-                if (jpeg == null) {
+                if (imageFile == null) {
                     mErrorMessage = context.getString(R.string.file_not_found);
                     mIsMediaError = true;
                     return null;
                 }
 
+                String fileName = imageFile.getName();
+
+                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName);
+                if (!TextUtils.isEmpty(fileExtension)) {
+                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                } else {
+                    // No file extension? Try and get the mimeType and extension from an InputStream.
+                    try {
+                        DataInputStream inputStream = new DataInputStream(new FileInputStream(imageFile));
+                        String imageMimeType = MediaUtils.getMimeTypeOfInputStream(inputStream);
+                        if (!TextUtils.isEmpty(imageMimeType)) {
+                            mimeType = imageMimeType;
+                            if (mimeTypeMap.hasMimeType(mimeType)) {
+                                fileExtension = mimeTypeMap.getExtensionFromMimeType(mimeType);
+                                fileName += "." + fileExtension;
+                            }
+                        }
+                        inputStream.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 ImageHelper ih = new ImageHelper();
                 orientation = ih.getExifOrientation(path, orientation);
 
-                String imageTitle = jpeg.getName();
-
                 String resizedPictureURL = null;
 
-                //We need to upload a resized version of the picture when the blog settings != original size, or when
-                //the user has selected a smaller size for the current picture in the picture settings screen
-                boolean shouldUploadResizedVersion = !blog.getMaxImageWidth().equals("Original Size");
-                if (shouldUploadResizedVersion == false) {
+                // We need to upload a resized version of the picture when the blog settings != original size, or when
+                // the user has selected a smaller size for the current picture in the picture settings screen
+                // We won't resize gif images to keep them awesome.
+                boolean shouldUploadResizedVersion = false;
+                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+                if (!fileExtension.equals("gif") && !blog.getMaxImageWidth().equals("Original Size")) {
                     //check the picture settings
                     int pictureSettingWidth = mf.getWidth();
-
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(path, options);
@@ -614,7 +633,7 @@ public class PostUploadService extends Service {
                     byte[] bytes;
                     byte[] finalBytes;
                     try {
-                        bytes = new byte[(int) jpeg.length()];
+                        bytes = new byte[(int) imageFile.length()];
                     } catch (OutOfMemoryError er) {
                         mErrorMessage = context.getString(R.string.out_of_memory);
                         mIsMediaError = true;
@@ -623,7 +642,7 @@ public class PostUploadService extends Service {
 
                     DataInputStream in = null;
                     try {
-                        in = new DataInputStream(new FileInputStream(jpeg));
+                        in = new DataInputStream(new FileInputStream(imageFile));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -640,8 +659,7 @@ public class PostUploadService extends Service {
 
                     String width = String.valueOf(mf.getWidth());
 
-                    ImageHelper ih2 = new ImageHelper();
-                    finalBytes = ih2.createThumbnail(bytes, width, orientation, false);
+                    finalBytes = ih.createThumbnail(bytes, width, orientation, false, fileExtension);
 
                     if (finalBytes == null) {
                         mErrorMessage = context.getString(R.string.out_of_memory);
@@ -652,7 +670,7 @@ public class PostUploadService extends Service {
                     //upload picture
                     Map<String, Object> m = new HashMap<String, Object>();
 
-                    m.put("name", imageTitle);
+                    m.put("name", fileName);
                     m.put("type", mimeType);
                     m.put("bits", finalBytes);
                     m.put("overwrite", true);
@@ -667,7 +685,7 @@ public class PostUploadService extends Service {
                 if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
                     // try to upload the image
                     Map<String, Object> m = new HashMap<String, Object>();
-                    m.put("name", imageTitle);
+                    m.put("name", fileName);
                     m.put("type", mimeType);
                     m.put("bits", mf);
                     m.put("overwrite", true);
