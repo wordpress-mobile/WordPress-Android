@@ -57,12 +57,10 @@ public class SimperiumUtils {
     }
 
     public static void authorizeUser(Simperium simperium, String token){
-        // for now we're going to hardcod mdawaffe's
+
         if (token == null) return;
 
         User user = simperium.getUser();
-
-        // The token is WPCC/SIMPERIUM_SECRET/WP_OAUTH_ACCESS_TOKEN
 
         String wpccToken = String.format(TOKEN_FORMAT, Config.SIMPERIUM_APP_SECRET, token);
 
