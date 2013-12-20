@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -136,7 +137,7 @@ public class PostUploadService extends Service {
         private int featuredImageID = -1;
         private int notificationID;
         private Notification n;
-        
+
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
@@ -169,7 +170,7 @@ public class PostUploadService extends Service {
 
                 nm.notify(notificationID, n); // needs a unique id
             }
-            
+
             postUploaded();
         }
 
@@ -199,6 +200,14 @@ public class PostUploadService extends Service {
             notificationID = (new Random()).nextInt() + Integer.valueOf(post.getBlogID());
             nm.notify(notificationID, n); // needs a unique id
 
+            Blog blog;
+            try {
+                blog = new Blog(post.getBlogID());
+            } catch (Exception e) {
+                mErrorMessage = context.getString(R.string.blog_not_found);
+                return false;
+            }
+
             if (post.getPost_status() == null) {
                 post.setPost_status("publish");
             }
@@ -218,14 +227,14 @@ public class PostUploadService extends Service {
                     descriptionContent = post.getDescription();
                 else
                     moreContent = post.getMt_text_more();
-                
+
                 Matcher matcher;
-                
+
                 if (x == 0) {
                     matcher = pattern.matcher(descriptionContent);
                 } else {
                     matcher = pattern.matcher(moreContent);
-                }                    
+                }
 
                 List<String> imageTags = new ArrayList<String>();
                 while (matcher.find()) {
@@ -243,7 +252,7 @@ public class PostUploadService extends Service {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
                             if (mf != null) {
-                                String imgHTML = uploadMediaFile(mf);
+                                String imgHTML = uploadMediaFile(mf, blog);
                                 if (imgHTML != null) {
                                     if (x == 0) {
                                         descriptionContent = descriptionContent.replace(tag, imgHTML);
@@ -334,7 +343,7 @@ public class PostUploadService extends Service {
                 if (post.getMt_keywords() != "") {
                     contentStruct.put("mt_keywords", post.getMt_keywords());
                 }
-                
+
                 if (theCategories != null && theCategories.length > 0)
                     contentStruct.put("categories", theCategories);
             }
@@ -362,7 +371,7 @@ public class PostUploadService extends Service {
                     hPublic.put("key", "geo_public");
                     hPublic.put("value", 1);
 
-                    Object[] geo = { hLatitude, hLongitude, hPublic };
+                    Object[] geo = {hLatitude, hLongitude, hPublic};
 
                     contentStruct.put("custom_fields", geo);
                 }
@@ -372,7 +381,7 @@ public class PostUploadService extends Service {
             if (featuredImageID != -1)
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
 
-            XMLRPCClient client = new XMLRPCClient(post.getBlog().getUrl(), post.getBlog().getHttpuser(), post.getBlog().getHttppassword());
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
             if (post.getQuickPostType() != null)
                 client.addQuickPostHeader(post.getQuickPostType());
@@ -385,11 +394,11 @@ public class PostUploadService extends Service {
             Object[] params;
 
             if (post.isLocalDraft() && !post.isUploaded())
-                params = new Object[] { post.getBlog().getBlogId(), post.getBlog().getUsername(), post.getBlog().getPassword(),
-                        contentStruct, publishThis };
+                params = new Object[]{blog.getBlogId(), blog.getUsername(), blog.getPassword(),
+                        contentStruct, publishThis};
             else
-                params = new Object[] { post.getPostid(), post.getBlog().getUsername(), post.getBlog().getPassword(), contentStruct,
-                        publishThis };
+                params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,
+                        publishThis};
 
             try {
                 client.call((post.isLocalDraft() && !post.isUploaded()) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
@@ -408,7 +417,7 @@ public class PostUploadService extends Service {
             return false;
         }
 
-        public String uploadMediaFile(MediaFile mf) {
+        public String uploadMediaFile(MediaFile mf, Blog blog) {
             String content = "";
 
             String curImagePath = mf.getFilePath();
@@ -417,8 +426,7 @@ public class PostUploadService extends Service {
 
             if (curImagePath.contains("video")) {
                 // Upload the video
-                XMLRPCClient client = new XMLRPCClient(post.getBlog().getUrl(), post.getBlog().getHttpuser(), post.getBlog()
-                        .getHttppassword());
+                XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
                 // create temp file for media upload
                 String tempFileName = "wp-" + System.currentTimeMillis();
@@ -472,9 +480,9 @@ public class PostUploadService extends Service {
                             // set the width of the video to the
                             // thumbnail
                             // width, else 640x480
-                            if (!post.getBlog().getMaxImageWidth().equals("Original Size")) {
-                                xRes = post.getBlog().getMaxImageWidth();
-                                yRes = String.valueOf(Math.round(Integer.valueOf(post.getBlog().getMaxImageWidth()) * 0.75));
+                            if (!blog.getMaxImageWidth().equals("Original Size")) {
+                                xRes = blog.getMaxImageWidth();
+                                yRes = String.valueOf(Math.round(Integer.valueOf(blog.getMaxImageWidth()) * 0.75));
                             } else {
                                 xRes = "640";
                                 yRes = "480";
@@ -500,8 +508,8 @@ public class PostUploadService extends Service {
                 m.put("bits", mf);
                 m.put("overwrite", true);
 
-                Object[] params = {1, post.getBlog().getUsername(),
-                        post.getBlog().getPassword(), m};
+                Object[] params = {1, blog.getUsername(),
+                        blog.getPassword(), m};
 
                 FeatureSet featureSet = synchronousGetFeatureSet();
                 boolean selfHosted = WordPress.currentBlog != null &&
@@ -605,7 +613,7 @@ public class PostUploadService extends Service {
                 // We need to upload a resized version of the picture when the blog settings != original size, or when
                 // the user has selected a smaller size for the current picture in the picture settings screen
                 // We won't resize gif images to keep them awesome.
-                boolean shouldUploadResizedVersion = !post.getBlog().getMaxImageWidth().equals("Original Size");
+                boolean shouldUploadResizedVersion = !blog.getMaxImageWidth().equals("Original Size");
                 if (!shouldUploadResizedVersion && !fileExtension.equals("gif")) {
                     //check the picture settings
                     int pictureSettingWidth = mf.getWidth();
@@ -667,14 +675,14 @@ public class PostUploadService extends Service {
                     m.put("bits", finalBytes);
                     m.put("overwrite", true);
 
-                    resizedPictureURL = uploadPicture(m, mf);
+                    resizedPictureURL = uploadPicture(m, mf, blog);
                     if (resizedPictureURL == null)
                         return null;
                 }
 
                 String fullSizeUrl = null;
                 //Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
-                if (!shouldUploadResizedVersion || post.getBlog().isFullSizeImage()) {
+                if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
                     // try to upload the image
                     Map<String, Object> m = new HashMap<String, Object>();
                     m.put("name", fileName);
@@ -682,7 +690,7 @@ public class PostUploadService extends Service {
                     m.put("bits", mf);
                     m.put("overwrite", true);
 
-                    fullSizeUrl = uploadPicture(m, mf);
+                    fullSizeUrl = uploadPicture(m, mf, blog);
                     if (fullSizeUrl == null)
                         return null;
                 }
@@ -734,8 +742,8 @@ public class PostUploadService extends Service {
         }
    
 
-        private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf) {
-            XMLRPCClient client = new XMLRPCClient(post.getBlog().getUrl(), post.getBlog().getHttpuser(), post.getBlog().getHttppassword());
+        private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
             
             // create temp file for media upload
             String tempFileName = "wp-" + System.currentTimeMillis();
@@ -748,7 +756,7 @@ public class PostUploadService extends Service {
             }
 
             File tempFile = context.getFileStreamPath(tempFileName);
-            Object[] params = { 1, post.getBlog().getUsername(), post.getBlog().getPassword(), pictureParams };
+            Object[] params = { 1, blog.getUsername(), blog.getPassword(), pictureParams };
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
                 mIsMediaError = true;

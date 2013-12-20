@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
@@ -170,7 +171,7 @@ public class NativeReaderActivity extends WPActionBarActivity {
                     if (!NetworkUtils.isNetworkAvailable(this)) {
                         ToastUtils.showToast(this, R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
                     } else {
-                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER);
+                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                     }
                     return true;
                 }

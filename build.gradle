@@ -3,31 +3,37 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.android.tools.build:gradle:0.7.+'
     }
 }
-
-apply plugin: 'android'
 
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
-project.archivesBaseName="WordPress-Android"
+apply plugin: 'android'
 
 android {
+    lintOptions {
+        quiet true
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+    }
 
 	buildTypes {
 	    release {
-            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.playstore\";"
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
         }
         debug {
-            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.debug.build\";"
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
         }
-	    betagroup.initWith(buildTypes.release)
         betagroup {
-            buildConfig "public static String APP_PN_KEY = \"org.wordpress.android.beta.build\";"
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
         }
 	}
 
@@ -85,7 +91,7 @@ android {
 
 // Generates the Config.java class using properties defined in gradle.properties
 // or by other means provided by Gradle
-task wordpressConfig(group: "build", description: "Generate Config class") {
+task generateWPConfig(group: "generate", description: "Generate Config class") {
     def dir = "${buildDir}/source/wordpress"
     def file = new File(dir, "org/wordpress/android/Config.java")
     android {
@@ -128,13 +134,13 @@ ${config}
     }
 }
 
-// Add the wordpressConfig task to every flavor's compile tasks
+// Add the generateWPConfig task to every flavor's compile tasks
 android.buildTypes.all { buildType ->
-    def name = "compile${buildType.name.capitalize()}"
+    def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
-            task.dependsOn(wordpressConfig)
-            task.mustRunAfter(wordpressConfig)
+            task.dependsOn(generateWPConfig)
+            task.mustRunAfter(generateWPConfig)
         }
     }
 }
