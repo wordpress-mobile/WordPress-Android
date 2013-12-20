@@ -907,6 +907,24 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         });
     }
 
+    private static final String getAttribute(final String html, final String attribute, int tagStart, int tagEnd) {
+        // hack to determine whether html uses single-quoted attributes
+        boolean usesSingleQuotes = html.contains(attribute + "='");
+
+        final String searchFor = attribute + (usesSingleQuotes ? "='" : "=\"");
+        int attrStart = html.indexOf(searchFor);
+        if (attrStart == -1 || attrStart > tagEnd)
+            return null;
+
+        // find the end of the attribute's value
+        int attrEnd = html.indexOf(usesSingleQuotes ? "'" : "\"", attrStart + searchFor.length());
+        if (attrEnd == -1 || attrEnd > tagEnd)
+            return null;
+
+        // extract the attribute's value
+        return html.substring(attrStart + searchFor.length(), attrEnd);
+    }
+
     /*
      * extracts the src from iframes and inserts a video player image with a link to the actual video
      * this is necessary since embedded videos won't work (and the CSS we're using hides iframes)
@@ -923,22 +941,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (iFrameStart == -1)
             return text;
 
-        // hack to determine whether html uses single-quoted attributes
-        boolean usesSingleQuotes = text.contains("src='");
-
         while (iFrameStart > -1) {
             int iFrameEnd = text.indexOf(">", iFrameStart);
             if (iFrameEnd == -1)
                 return text;
 
             // extract the src attribute
-            int srcStart = text.indexOf(usesSingleQuotes ? "src='" : "src=\"", iFrameStart);
-            if (srcStart == -1 || srcStart > iFrameEnd)
+            String src = getAttribute(text, "src", iFrameStart, iFrameEnd);
+            if (src == null)
                 return text;
-            int srcEnd = text.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
-            if (srcEnd == -1 || srcEnd > iFrameEnd)
-                return text;
-            String src = text.substring(srcStart+5, srcEnd);
 
             boolean isVideo = (src.contains("youtube")
                             || src.contains("video")
@@ -1003,6 +1014,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         } else {
             ReaderActivityLauncher.showReaderPhotoViewer(this, imageUrl);
         }
+    }
+
+    /*
+     * size to use for images that fit the full width of the listView item
+     */
+    private int getFullSizeImageWidth() {
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
+        int marginWidth = getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
+        return displayWidth - (marginWidth * 2);
     }
 
     /*
@@ -1071,20 +1091,21 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         // hide VideoPress divs that don't make sense on mobile
         sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
 
-        // tiled mosaic galleries have hard-coded DIV sizes which make them look bad on mobile, correct for
-        // this by resetting their height/width to auto and make their images full-width with top/bottom margins
-        if (content.contains("gallery-")) {
+        // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
+        // content contains a tiled image gallery, remove the height params and replace the width
+        // params with ones that make images fit the width of the listView item, then adjust the
+        // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
+        if (content.contains("tiled-gallery-item")) {
+            String widthParam = "w=" + Integer.toString(getFullSizeImageWidth());
+            content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                  .append("  div.tiled-gallery-item img { width: 100% !important; height: auto !important;")
+                  .append("  div.tiled-gallery-item img { ")
+                  .append("     width: auto !important; height: auto !important;")
                   .append("     margin-top: ").append(marginExtraSmall).append("px; ")
                   .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
                   .append(" }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
-
         }
-
-        // hide noscript
-        //sbHtml.append("  noscript { display: none ;}");
 
         sbHtml.append("</style></head><body>")
                 .append(processVideos(content))
