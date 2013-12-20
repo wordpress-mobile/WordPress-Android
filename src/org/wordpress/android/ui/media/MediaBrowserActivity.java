@@ -302,6 +302,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // reset the media fragment
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reset();
+            mMediaGridFragment.refreshSpinnerAdapter();
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
                 mMediaGridFragment.refreshMediaFromServer(0, false);

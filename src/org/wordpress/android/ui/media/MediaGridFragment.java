@@ -246,6 +246,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void refreshSpinnerAdapter() {
         updateFilterText();
         updateSpinnerAdapter();
+        setFilter(mFilter);
     }
     
     public void resetSpinnerAdapter() {
@@ -275,8 +276,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private void updateSpinnerAdapter() {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
-        if (adapter != null)
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -448,24 +450,24 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         mFilter = filter;
         Cursor cursor = filterItems(mFilter);
 
-        mResultView.setVisibility(View.GONE);
+        if (filter != Filter.CUSTOM_DATE || cursor == null || cursor.getCount() == 0) {
+            mResultView.setVisibility(View.GONE);
+        }
         if (cursor != null && cursor.getCount() != 0) {
             mGridAdapter.swapCursor(cursor);
             setEmptyViewVisible(false);
         } else {
-            if (filter == Filter.CUSTOM_DATE) {
-                setEmptyViewVisible(false);
-            } else {
+            if (filter != Filter.CUSTOM_DATE) {
                 setEmptyViewVisible(true, R.string.media_empty_list);
             }
         }
     }
 
-    public void setDateFilter() {
+    public Cursor setDateFilter() {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog == null)
-            return;
+            return null;
 
         String blogId = String.valueOf(blog.getBlogId());
 
@@ -484,10 +486,13 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             String formattedStart = fmt.format(startDate.getTime());
             String formattedEnd = fmt.format(endDate.getTime());
 
+            mResultView.setVisibility(View.VISIBLE);
             mResultView.setText("Displaying media from " + formattedStart + " to " + formattedEnd);
+            return cursor;
         } else {
             setEmptyViewVisible(true, R.string.media_empty_list_custom_date);
         }
+        return null;
     }
 
     private Cursor filterItems(Filter filter) {
@@ -511,7 +516,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                     mIsDateFilterSet = false;
                     showDatePicker();
                 } else {
-                    setDateFilter();
+                    return setDateFilter();
                 }
                 break;
         }
