@@ -305,11 +305,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
-        
-        if (mGridAdapter.getDataCount() == 0  && !mHasRetrievedAllMedia) {
+        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia) {
             refreshMediaFromServer(0, true);
         }
-        
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
@@ -449,7 +447,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void setFilter(Filter filter) {
         mFilter = filter;
         Cursor cursor = filterItems(mFilter);
-
         if (filter != Filter.CUSTOM_DATE || cursor == null || cursor.getCount() == 0) {
             mResultView.setVisibility(View.GONE);
         }
