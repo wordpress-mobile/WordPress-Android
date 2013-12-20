@@ -490,8 +490,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 sharedUris = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
             } else {
-                sharedUris = new ArrayList<Uri>();
-                sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+                // For a single media share, we only allow images and video types
+                if (type != null && (type.startsWith("image") || type.startsWith("video"))) {
+                    sharedUris = new ArrayList<Uri>();
+                    sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+                } else {
+                    return;
+                }
             }
 
             if (sharedUris != null) {
