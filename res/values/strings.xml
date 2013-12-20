@@ -60,7 +60,6 @@
     <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
-    <string name="empty_fields">No Content Found</string>
     <string name="cancel_edit">Cancel Edit</string>
     <string name="upload_full_size_image">Upload and link to full image</string>
     <string name="upload_scaled_image">Upload and link to scaled image</string>
@@ -127,6 +126,8 @@
     <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
     <string name="wait_until_upload_completes">Please wait until upload completes.</string>
     <string name="cannot_delete_multi_media_items">Some media cannot be deleted at this time. Please try again later.</string>
+    <string name="media_empty_list">No Media.</string>
+    <string name="media_empty_list_custom_date">No Media In This Time&#160;Interval.</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
