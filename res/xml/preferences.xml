@@ -70,6 +70,17 @@
                 android:targetPackage="org.wordpress.android"/>
        </CheckBoxPreference>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_share_pref"
+        android:persistent="false"
+        android:title="@string/share_preference_title" >
+        <Preference
+            android:key="wp_reset_share_pref"
+            android:persistent="false"
+            android:title="@string/reset_auto_share_preference">
+        </Preference>
+    </PreferenceCategory>
     
 <PreferenceCategory
         android:key="wp_pref_app_about_section"

@@ -216,8 +216,14 @@
     <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="FloatingActivityTheme.CheckBox">
+        <item name="android:textColor">@color/blue_dark</item>
+        <item name="android:button">?android:attr/listChoiceIndicatorMultiple</item>
     </style>
 
     <style name="EmptyListText">
