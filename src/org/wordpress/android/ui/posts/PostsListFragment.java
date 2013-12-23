@@ -32,6 +32,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
@@ -277,7 +278,7 @@ public class PostsListFragment extends ListFragment {
                             return;
                         if (v == null) //view is gone
                             return;
-                        if (!mParentActivity.isRefreshing) {
+                        if (!mParentActivity.mIsRefreshing) {
                             mSelectedID = v.getId();
                             showPost(mSelectedID);
                         } else {
@@ -299,7 +300,7 @@ public class PostsListFragment extends ListFragment {
                             return;
                         }
 
-                        if (mParentActivity.isRefreshing)
+                        if (mParentActivity.mIsRefreshing)
                             return;
 
                         Object[] args = {R.id.row_post_id};
@@ -586,15 +587,8 @@ public class PostsListFragment extends ListFragment {
                 if (getActivity() == null)
                     return;
                 if (errorMsg != "" && !getActivity().isFinishing()) {
-                    FragmentTransaction ft = getFragmentManager()
-                            .beginTransaction();
-                    WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newInstance(String.format(getResources().getString(R.string.error_refresh), (mIsPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
-                    try {
-                        alert.show(ft, "alert");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
+                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
                     errorMsg = "";
                 }
                 return;

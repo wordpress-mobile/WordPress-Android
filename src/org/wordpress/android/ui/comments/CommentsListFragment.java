@@ -42,6 +42,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -728,11 +729,8 @@ public class CommentsListFragment extends ListFragment {
 
                 mOnAnimateRefreshButton.onAnimateRefreshButton(false);
                 if (!moderateErrorMsg.equals("") && !getActivity().isFinishing()) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(
-                            String.format(getResources().getString(R.string.error_refresh),
-                                    getResources().getText(R.string.tab_comments)), moderateErrorMsg);
-                    alert.show(ft, "alert");
+                    ToastUtils.showToast(getActivity(), R.string.error_refresh_comments,
+                            ToastUtils.Duration.LONG);
                     moderateErrorMsg = "";
                 }
                 return;
