@@ -308,6 +308,10 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, please add an account and try again.</string>
+    <string name="share_preference_title">Share to WordPress</string>
+    <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
+    <string name="auto_sharing_preference_reset">Auto-sharing settings reset.</string>
+    <string name="auto_sharing_preference_reset_caused_by_error">Previous selected blog is not visible anymore. Auto-sharing settings reset.</string>
 
     <!-- file errors -->
     <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
@@ -699,4 +703,5 @@
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="one_blog_must_be_selected">At least one blog must be visible</string>
+    <string name="always_use_these_settings_to_share">Always use these settings</string>
 </resources>
