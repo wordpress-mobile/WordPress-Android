@@ -645,8 +645,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     }
 
-
-
     public void startAnimatingRefreshButton(MenuItem refreshItem) {
         if (refreshItem != null && !isAnimatingRefreshButton) {
             isAnimatingRefreshButton = true;

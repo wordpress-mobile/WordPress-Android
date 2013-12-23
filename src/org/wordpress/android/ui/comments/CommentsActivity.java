@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.List;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -25,6 +23,8 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.List;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -321,6 +321,7 @@ public class CommentsActivity extends WPActionBarActivity
             shouldAnimateRefreshButton = true;
             this.startAnimatingRefreshButton(refreshMenuItem);
         } else {
+            shouldAnimateRefreshButton = false;
             this.stopAnimatingRefreshButton(refreshMenuItem);
         }
 

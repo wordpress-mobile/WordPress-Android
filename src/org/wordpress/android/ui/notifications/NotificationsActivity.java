@@ -33,6 +33,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.WordPress.restClient;
 
 public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
@@ -466,7 +468,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 adapter.clear();
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
-                Toast.makeText(NotificationsActivity.this, String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.notifications).toString().toLowerCase()), Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(getContext(), R.string.error_refresh_notifications,
+                        ToastUtils.Duration.LONG);
                 stopAnimatingRefreshButton(mRefreshMenuItem);
                 shouldAnimateRefreshButton = false;
             }
