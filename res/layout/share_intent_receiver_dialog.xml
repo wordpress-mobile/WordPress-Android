@@ -92,11 +92,12 @@
         android:layout_height="wrap_content"
         android:text="@string/always_use_these_settings_to_share"
         android:id="@+id/always_use_checkbox"
-        android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+        android:drawableLeft="@drawable/media_gallery_checkbox_selector"
         android:clickable="true"
         android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
         android:textColor="@color/white"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical" />
 
     <Button
         android:id="@+id/share_intent_receiver_button"
