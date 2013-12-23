@@ -21,6 +21,7 @@ import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,18 +52,18 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         mBlogSpinner = (IcsSpinner) findViewById(R.id.blog_spinner);
 
         String[] blogNames = getBlogNames();
-        if (blogNames != null) {
-
-            if (blogNames.length == 1) {
-                // one blog
-                mBlogSpinner.setVisibility(View.GONE);
-                mBlogSpinnerTitle.setVisibility(View.GONE);
-            } else {
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(themedContext, R.layout.sherlock_spinner_dropdown_item, blogNames);
-                mBlogSpinner.setAdapter(adapter);
-                mBlogSpinner.setOnItemSelectedListener(this);
-            }
-
+        if (blogNames == null) {
+            finishIfNoVisibleBlogs();
+            return;
+        }
+        if (blogNames.length == 1) {
+            mBlogSpinner.setVisibility(View.GONE);
+            mBlogSpinnerTitle.setVisibility(View.GONE);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(themedContext,
+                    R.layout.sherlock_spinner_dropdown_item, blogNames);
+            mBlogSpinner.setAdapter(adapter);
+            mBlogSpinner.setOnItemSelectedListener(this);
         }
 
         // If type is text/plain hide Media Gallery option
@@ -70,13 +71,33 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if ("text/plain".equals(getIntent().getType())) {
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
+            // if text/plain and only one blog, then don't show this fragment, share it directly
+            // to a new post
+            if (blogNames.length == 1) {
+                startActivityAndFinish(new Intent(this, EditPostActivity.class));
+            }
         } else {
             String[] actions = new String[]{getString(R.string.share_action_post), getString(R.string.share_action_media)};
-            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext, R.layout.sherlock_spinner_dropdown_item, actions);
+            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext,
+                    R.layout.sherlock_spinner_dropdown_item, actions);
             mActionSpinner.setAdapter(actionAdapter);
             mActionSpinner.setOnItemSelectedListener(this);
         }
         getSupportActionBar().hide();
+    }
+
+    private void finishIfNoVisibleBlogs() {
+        // If not signed in, then ask to sign in, else inform the user to set at least one blog
+        // visible
+        if (!WordPress.isSignedIn(getBaseContext())) {
+            ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
+            startActivity(new Intent(this, WelcomeActivity.class));
+            finish();
+        } else {
+            ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog,
+                    ToastUtils.Duration.LONG);
+            finish();
+        }
     }
 
     @Override
@@ -87,16 +108,11 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
 
     private String[] getBlogNames() {
         List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
-
         if (accounts.size() > 0) {
-
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];
-
             Blog blog;
-
             for (int i = 0; i < accounts.size(); i++) {
-
                 Map<String, Object> curHash = accounts.get(i);
                 try {
                     blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
@@ -111,15 +127,9 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                     return null;
                 }
             }
-
             return blogNames;
-        } else {
-            // no account, load main view to load new account view
-            Toast.makeText(this, getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, WelcomeActivity.class));
-            finish();
-            return null;
         }
+        return null;
     }
 
     private void showBlogErrorAndFinish() {
@@ -141,16 +151,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         }
     }
 
-    public void onShareClicked(View view) {
+    private void startActivityAndFinish(Intent intent) {
         String action = getIntent().getAction();
-        Intent intent = null;
-        if (mActionIndex == 0) {
-            // new post
-            intent = new Intent(this, EditPostActivity.class);
-        } else if (mActionIndex == 1) {
-            // add to media gallery
-            intent = new Intent(this, MediaBrowserActivity.class);
-        }
         if (intent != null) {
             intent.setAction(action);
             intent.setType(getIntent().getType());
@@ -169,6 +171,18 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             startActivity(intent);
             finish();
         }
+    }
+
+    public void onShareClicked(View view) {
+        Intent intent = null;
+        if (mActionIndex == 0) {
+            // new post
+            intent = new Intent(this, EditPostActivity.class);
+        } else if (mActionIndex == 1) {
+            // add to media gallery
+            intent = new Intent(this, MediaBrowserActivity.class);
+        }
+        startActivityAndFinish(intent);
     }
 
     @Override
