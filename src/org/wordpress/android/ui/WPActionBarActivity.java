@@ -466,19 +466,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return blogNames;
     }
 
-    private int getNumVisibleAccounts() {
-        return WordPress.wpDB.getNumVisibleAccounts();
-    }
-
-    protected boolean isSignedIn() {
-        if (WordPress.hasValidWPComCredentials(WPActionBarActivity.this)) {
-            return true;
-        }
-        return getNumVisibleAccounts() != 0;
-    }
-
     private boolean askToSignInIfNot() {
-        if (!isSignedIn()) {
+        if (!WordPress.isSignedIn(WPActionBarActivity.this)) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent intent = new Intent(this, WelcomeActivity.class);
@@ -507,7 +496,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     protected void showReaderIfNoBlog() {
         // If logged in without blog, redirect to the Reader view
-        if (getNumVisibleAccounts() == 0) {
+        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             showReader();
         }
     }
@@ -747,7 +736,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
@@ -769,7 +758,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
     
@@ -794,7 +783,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
@@ -833,7 +822,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
     
@@ -884,7 +873,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
@@ -904,7 +893,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
@@ -924,7 +913,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
@@ -946,7 +935,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible() {
-            return getNumVisibleAccounts() != 0;
+            return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
 
