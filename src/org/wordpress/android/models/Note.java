@@ -401,7 +401,13 @@ public class Note {
      * Replaces emoticons with emoji
      */
     public static SpannableStringBuilder prepareHtml(String text){
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
+        SpannableStringBuilder html;
+        try {
+            html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
+        } catch (RuntimeException runtimeException) {
+            // In case our tag handler doesn't handle
+            html = (SpannableStringBuilder) Html.fromHtml(text, null, null);
+        }
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {
