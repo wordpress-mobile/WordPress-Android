@@ -2,8 +2,6 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,10 +22,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.UserEmail;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
-import org.xmlpull.v1.XmlPullParser;
 
-import java.util.Hashtable;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -269,7 +264,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 .inflate(R.layout.new_account_user_fragment_screen, container, false);
 
         WPTextView termsOfServiceTextView = (WPTextView) rootView.findViewById(R.id.l_agree_terms_of_service);
-        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service, "<u>", "</u>"))));
+        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>", "</u>")));
         termsOfServiceTextView.setOnClickListener(
                 new OnClickListener() {
                     @Override
