@@ -304,7 +304,7 @@
     <string name="select_a_blog">Select a Blog</string>
     <string name="share_action_title">Add to &#8230;</string>
     <string name="share_action_post">New Post</string>
-    <string name="share_action_media">Media Gallery</string>
+    <string name="share_action_media">Media Library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, please add an account and try again.</string>
