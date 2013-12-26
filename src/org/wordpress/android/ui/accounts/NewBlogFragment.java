@@ -8,12 +8,15 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +67,16 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
     public void onBackPressed() {
         signoutAndFinish();
+    }
+
+    private boolean signupOnDoneEvent(int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            validateAndCreateUserAndBlog();
+            return true;
+        }
+        return false;
     }
 
     private void signoutAndFinish() {
@@ -227,6 +240,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
 
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,18 +260,24 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         return rootView;
     }
 
-
-    OnClickListener signupClickListener = new OnClickListener() {
+    private OnClickListener signupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
         }
     };
 
-    OnClickListener cancelClickListener = new OnClickListener() {
+    private OnClickListener cancelClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             signoutAndFinish();
+        }
+    };
+
+    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            return signupOnDoneEvent(actionId, event);
         }
     };
 }

@@ -2,20 +2,21 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
@@ -24,10 +25,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.UserEmail;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
-import org.xmlpull.v1.XmlPullParser;
 
-import java.util.Hashtable;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,10 +133,27 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         return true;
     }
 
-    OnClickListener signupClickListener = new OnClickListener() {
+    private boolean signupOnDoneEvent(int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            validateAndCreateUserAndBlog();
+            return true;
+        }
+        return false;
+    }
+
+    private OnClickListener signupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
+        }
+    };
+
+    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            return signupOnDoneEvent(actionId, event);
         }
     };
 
@@ -298,6 +313,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
