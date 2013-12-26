@@ -542,6 +542,7 @@
     <string name="error_refresh_pages">Pages could not be refreshed at this time.</string>
     <string name="error_refresh_notifications">Notifications could not be refreshed at this time.</string>
     <string name="error_refresh_comments">Comments could not be refreshed at this time.</string>
+    <string name="error_refresh_stats">Stats could not be refreshed at this time.</string>
     <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
     <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
     <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
