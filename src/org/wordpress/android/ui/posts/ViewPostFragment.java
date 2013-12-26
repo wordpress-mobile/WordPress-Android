@@ -14,10 +14,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPMobileStatsUtil;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
@@ -52,7 +50,7 @@ public class ViewPostFragment extends Fragment {
                 .findViewById(R.id.editPost);
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (WordPress.currentPost != null && !parentActivity.isRefreshing) {
+                if (WordPress.currentPost != null && !parentActivity.mIsRefreshing) {
                     onDetailPostActionListener.onDetailPostAction(
                             PostsActivity.POST_EDIT, WordPress.currentPost);
                     Intent i = new Intent(
@@ -71,7 +69,7 @@ public class ViewPostFragment extends Fragment {
         shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
-                if (!parentActivity.isRefreshing)
+                if (!parentActivity.mIsRefreshing)
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
 
             }
@@ -82,7 +80,7 @@ public class ViewPostFragment extends Fragment {
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
-                if (!parentActivity.isRefreshing)
+                if (!parentActivity.mIsRefreshing)
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
 
             }
@@ -93,7 +91,7 @@ public class ViewPostFragment extends Fragment {
         viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
-                if (!parentActivity.isRefreshing)
+                if (!parentActivity.mIsRefreshing)
                     loadPostPreview();
 
             }
@@ -104,7 +102,7 @@ public class ViewPostFragment extends Fragment {
         addCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
-                if (!parentActivity.isRefreshing)
+                if (!parentActivity.mIsRefreshing)
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_COMMENT, WordPress.currentPost);
 
             }

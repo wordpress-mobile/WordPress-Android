@@ -181,7 +181,7 @@
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader_native.ReaderUserListActivity"
-            android:theme="@style/ReaderTheme.Popup" />tal
+            android:theme="@style/ReaderTheme.Popup" />
         <activity
             android:name=".ui.reader_native.ReaderTagActivity"
             android:theme="@style/ReaderTheme.Popup"

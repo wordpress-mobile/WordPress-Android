@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -42,10 +33,9 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.passcodelock.AppLockManager;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
@@ -54,6 +44,17 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.passcodelock.AppLockManager;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
@@ -93,9 +94,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         taglineTextPreference = (EditTextPreference) findPreference("wp_pref_post_signature");
         taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
         
-        Preference signOutPreference = (Preference) findPreference("wp_pref_sign_out");
+        Preference signOutPreference = findPreference("wp_pref_sign_out");
         signOutPreference.setOnPreferenceClickListener(signOutPreferenceClickListener);
-        
+
+        Preference resetAutoShare = findPreference("wp_reset_share_pref");
+        resetAutoShare.setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
+
+
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         
         // Request notification settings if needed
@@ -567,6 +572,21 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
+            return true;
+        }
+    };
+
+    private OnPreferenceClickListener resetAUtoSharePreferenceClickListener =
+            new OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Editor editor = mSettings.edit();
+            editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_BLOG_ID_KEY);
+            editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_ADDTO_KEY);
+            editor.remove(ShareIntentReceiverActivity.SHARE_TEXT_BLOG_ID_KEY);
+            editor.commit();
+            ToastUtils.showToast(getBaseContext(), R.string.auto_sharing_preference_reset,
+                    ToastUtils.Duration.SHORT);
             return true;
         }
     };
