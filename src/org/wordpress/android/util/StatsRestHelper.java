@@ -972,7 +972,7 @@ public class StatsRestHelper {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null)
                             callback.onFailure(error);
-                        Log.e(TAG, "Stats: Failed to get summary");
+                        Log.e(TAG, "Stats: Failed to get summary", error);
                     }
                 });
     }
