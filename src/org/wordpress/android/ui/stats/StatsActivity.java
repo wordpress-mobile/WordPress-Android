@@ -185,7 +185,7 @@ public class StatsActivity extends WPActionBarActivity {
                                     String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
                                     if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
                                         currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save("");
+                                        currentBlog.save();
                                         if (!isFinishing())
                                             refreshStats();
                                     }
@@ -526,7 +526,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save("");
+                    currentBlog.save();
                 }
 
                 return jetpackBlogId;
