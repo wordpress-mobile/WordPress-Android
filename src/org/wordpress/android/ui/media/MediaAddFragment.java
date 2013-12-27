@@ -152,7 +152,16 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String[] proj = { MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        if (cursor == null)
+            return null;
+
+        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        if (column_index == -1) {
+            cursor.close();
+            return null;
+        }
+
         cursor.moveToFirst();
         String path = cursor.getString(column_index);
         cursor.close();
