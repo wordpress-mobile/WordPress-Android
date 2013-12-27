@@ -402,7 +402,6 @@ public class WordPressDB {
                 + " WHERE isHidden = 0", null);
     }
 
-
     public List<Map<String, Object>> getAllAccounts() {
         return getAccountsBy(null, null);
     }

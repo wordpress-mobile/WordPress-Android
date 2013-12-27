@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -162,13 +164,11 @@ public class ApiHelper {
      * related to the active theme (available post types, recent comments, etc).
      */
     public static class RefreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
-        /** Blog being refresh. */
+        private static HashSet<BlogIdentifier> refreshedBlogs = new HashSet<BlogIdentifier>();
         private Blog mBlog;
-
-        /** Application context. */
         private Context mContext;
+        private BlogIdentifier mBlogIdentifier;
 
-        /** Callback */
         public interface Callback {
             public void onSuccess();
             public void onFailure();
@@ -177,6 +177,12 @@ public class ApiHelper {
         private Callback mCallback;
 
         public RefreshBlogContentTask(Context context, Blog blog, Callback callback) {
+            mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getBlogId());
+            if (refreshedBlogs.contains(mBlogIdentifier)) {
+                cancel(true);
+            } else {
+                refreshedBlogs.add(mBlogIdentifier);
+            }
             mBlog = blog;
             mContext = context;
             mCallback = callback;
@@ -269,7 +275,8 @@ public class ApiHelper {
             // Check if user is an admin
             Object[] userParams = {mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfos = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
+                Map<String, Object> userInfos = (HashMap<String, Object>)
+                        client.call("wp.getProfile", userParams);
                 updateBlogAdmin(userInfos);
             } catch (XMLRPCException e) {
                 return false;
@@ -299,6 +306,7 @@ public class ApiHelper {
                 else
                     mCallback.onSuccess();
             }
+            refreshedBlogs.remove(mBlogIdentifier);
         }
     }
 

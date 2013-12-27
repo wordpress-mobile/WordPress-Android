@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Blog {
-
     private int id;
     private String url;
     private String homeURL;
