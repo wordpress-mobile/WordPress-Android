@@ -344,17 +344,26 @@ public class PostsListFragment extends ListFragment {
                             if (isPage) {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText( R.string.delete_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_page));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                // Post status: publish, draft, pending, private, localdraft
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
+                                }
+                                if (allowComments && ("publish".equals(post.getPost_status()) || "private".equals(post.getPost_status()))) {
+                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                }
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_post));
-                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
+                                }
+                                if (allowComments && ("publish".equals(post.getPost_status()) || "private".equals(post.getPost_status()))) {
+                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                }
                             }
                         }
                     }
