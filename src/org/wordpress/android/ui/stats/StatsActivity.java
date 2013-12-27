@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -32,11 +28,6 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -45,6 +36,14 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -185,7 +184,7 @@ public class StatsActivity extends WPActionBarActivity {
                                     String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
                                     if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
                                         currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save("");
+                                        currentBlog.save();
                                         if (!isFinishing())
                                             refreshStats();
                                     }
@@ -520,7 +519,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save("");
+                    currentBlog.save();
                 }
 
                 return jetpackBlogId;

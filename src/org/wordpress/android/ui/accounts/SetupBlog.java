@@ -229,7 +229,7 @@ public class SetupBlog {
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
             blog.setAdmin(isAdmin);
-            blog.save(null);
+            blog.save();
         } else {
             // Update blog name
             int accountId = WordPress.wpDB.getAccountIdForBlogIdAndXmlRpcUrl(

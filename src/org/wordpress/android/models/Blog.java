@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +172,14 @@ public class Blog {
         this.featuredImageCapable = isCapable;
     }
 
+    public boolean bsetFeaturedImageCapable(boolean isCapable) {
+        if (featuredImageCapable == isCapable) {
+            return false;
+        }
+        setFeaturedImageCapable(isCapable);
+        return true;
+    }
+
     public boolean isFullSizeImage() {
         return fullSizeImage;
     }
@@ -277,6 +284,14 @@ public class Blog {
         this.wpVersion = wpVersion;
     }
 
+    public boolean bsetWpVersion(String wpVersion) {
+        if (this.wpVersion.equals(wpVersion)) {
+            return false;
+        }
+        setWpVersion(wpVersion);
+        return true;
+    }
+
     public String getHttpuser() {
         return httpuser;
     }
@@ -301,7 +316,7 @@ public class Blog {
         this.isHidden = isHidden;
     }
 
-    public boolean save(String originalUsername) {
+    public boolean save() {
         // Insert new blog to db
         if (this.id == -1) {
             return WordPress.wpDB.addBlog(this);
@@ -310,16 +325,20 @@ public class Blog {
         }
     }
 
-    public void save(){
-        this.save("");
-    }
-
     public String getPostFormats() {
         return postFormats;
     }
 
     public void setPostFormats(String postFormats) {
         this.postFormats = postFormats;
+    }
+
+    public boolean bsetPostFormats(String postFormats) {
+        if (this.postFormats.equals(postFormats)) {
+            return false;
+        }
+        setPostFormats(postFormats);
+        return true;
     }
 
     public int getUnmoderatedCommentCount() {
@@ -350,6 +369,16 @@ public class Blog {
         this.blogOptions = blogOptions;
     }
 
+    // TODO: it's ugly to compare json strings, we have to normalize both strings before
+    // comparison or compare JSON objects after parsing
+    public boolean bsetBlogOptions(String blogOptions) {
+        if (this.blogOptions.equals(blogOptions)) {
+            return false;
+        }
+        setBlogOptions(blogOptions);
+        return true;
+    }
+
     public boolean isActive() {
         return !password.equals("");
     }
@@ -360,6 +389,14 @@ public class Blog {
 
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public boolean bsetAdmin(boolean isAdmin) {
+        if (this.isAdmin == isAdmin) {
+            return false;
+        }
+        setAdmin(isAdmin);
+        return true;
     }
 
     public String getAdminUrl() {
