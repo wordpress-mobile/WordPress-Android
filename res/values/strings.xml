@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WordPress</string>
+    <string name="app_name" translatable="false">WordPress</string>
 
     <!-- account setup -->
     <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
@@ -73,7 +73,7 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
-    <string name="wpcom">WordPress.com</string>
+    <string name="wpcom" translatable="false">WordPress.com</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="all">All</string>
@@ -313,7 +313,7 @@
     <string name="auto_sharing_preference_reset">Auto-sharing settings reset.</string>
     <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible.</string>
     <string name="always_use_these_settings_to_share">Always use these settings</string>
-    
+
     <!-- file errors -->
     <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
 
