@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,14 +25,13 @@ import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
-
-import org.json.JSONObject;
 import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.List;
@@ -146,14 +144,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     };
 
-    private boolean signInOnDoneEvent(int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event.getAction() == KeyEvent.ACTION_DOWN &&
-                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-            signin();
-            return true;
-        }
-        return false;
+    protected void onDoneAction() {
+        signin();
     }
 
     private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
@@ -164,10 +156,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     mUrlEditText.requestFocus();
                     return true;
                 } else {
-                    return signInOnDoneEvent(actionId, event);
+                    return onDoneEvent(actionId, event);
                 }
             }
-            return signInOnDoneEvent(actionId, event);
+            return onDoneEvent(actionId, event);
         }
     };
 

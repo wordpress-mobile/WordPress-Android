@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -133,14 +132,8 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         return true;
     }
 
-    private boolean signupOnDoneEvent(int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event.getAction() == KeyEvent.ACTION_DOWN &&
-                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-            validateAndCreateUserAndBlog();
-            return true;
-        }
-        return false;
+    protected void onDoneAction() {
+        validateAndCreateUserAndBlog();
     }
 
     private OnClickListener signupClickListener = new OnClickListener() {
@@ -153,7 +146,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            return signupOnDoneEvent(actionId, event);
+            return onDoneEvent(actionId, event);
         }
     };
 
