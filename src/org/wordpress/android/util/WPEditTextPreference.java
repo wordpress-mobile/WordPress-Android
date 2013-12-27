@@ -20,15 +20,7 @@ public class WPEditTextPreference extends EditTextPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
-
-        if (positiveResult) {
-            if (getEditText() != null && getEditText().getText() != null) {
-                String value = getEditText().getText().toString();
-                if (callChangeListener(value)) {
-                    setText(value);
-                }
-            }
-        } else {
+        if (!positiveResult) {
             callChangeListener(null);
         }
     }
