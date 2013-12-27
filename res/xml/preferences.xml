@@ -53,7 +53,7 @@
             android:key="wp_pref_signature_enabled"
             android:title="@string/add_tagline" />
 
-        <EditTextPreference
+        <org.wordpress.android.util.WPEditTextPreference
             android:key="wp_pref_post_signature"
             android:title="@string/post_signature" />
     </PreferenceCategory>
