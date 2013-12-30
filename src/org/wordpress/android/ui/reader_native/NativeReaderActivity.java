@@ -13,6 +13,8 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
@@ -121,6 +123,11 @@ public class NativeReaderActivity extends WPActionBarActivity {
                     long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
                     readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    //Update 'following' status on all other posts in the same blog.
+                    ReaderPostList blogPosts = ReaderPostTable.getPostsForBlog(blogId, 0);
+                    for (ReaderPost readerPost : blogPosts) {
+                        readerFragment.reloadPost(readerPost);
+                    }
                 }
                 break;
 

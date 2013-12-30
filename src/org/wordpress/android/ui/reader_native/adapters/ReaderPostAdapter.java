@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -406,6 +405,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
+        
+        //Update 'following' status on all other posts in the same blog.
+        ReaderPostList blogPosts = ReaderPostTable.getPostsForBlog(post.blogId, 0);
+        for (ReaderPost readerPost : blogPosts) {
+            int index = mPosts.indexOfPost(readerPost);
+            if (index == -1)
+                continue;
+                mPosts.set(index, readerPost);
+        }
+        notifyDataSetChanged();
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {

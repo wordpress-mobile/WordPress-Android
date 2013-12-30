@@ -265,6 +265,17 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }*/
 
+    
+    public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
+        if (blogId==0)
+            return;
+
+        String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                  + " WHERE blog_id=?";
+        String[] args = {Long.toString(blogId)};
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+    
     public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
         if (posts==null || posts.size()==0)
             return;
@@ -366,7 +377,32 @@ public class ReaderPostTable {
             SqlUtils.closeCursor(cursor);
         }
     }
+    
+    public static ReaderPostList getPostsForBlog(long blogId, int maxPosts) {
+        
+        String sql = "SELECT tbl_posts.* FROM tbl_posts WHERE tbl_posts.blog_id=?";
+        sql += " ORDER BY tbl_posts.timestamp DESC";
 
+        if (maxPosts > 0)
+            sql += " LIMIT " + Integer.toString(maxPosts);
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderPostList posts = new ReaderPostList();
+            if (cursor==null || !cursor.moveToFirst())
+                return posts;
+
+            resetColumnIndexes(cursor);
+            do {
+                posts.add(getPostFromCursor(cursor));
+            } while (cursor.moveToNext());
+
+            return posts;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+    
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post==null)
             return;
