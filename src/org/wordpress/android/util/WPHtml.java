@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -56,6 +57,7 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
+import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -836,8 +838,13 @@ class HtmlToSpannedConverter implements ContentHandler {
 
         Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
-        if (mediaData != null) {
-            Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+        if (mediaData != null || src.contains("video")) {
+            Bitmap resizedBitmap;
+
+            if (mediaData != null)
+                resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+            else
+                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
 
             int len = text.length();
             text.append("\uFFFC");
@@ -871,8 +878,7 @@ class HtmlToSpannedConverter implements ContentHandler {
                         if ("".equals(aName))
                             aName = attributes.getQName(i);
                         text.append(" ");
-                        text.append(aName + "=\"" + attributes.getValue(i)
-                                + "\"");
+                        text.append(aName + "=\"" + attributes.getValue(i) + "\"");
                     }
                     text.append(" />\n");
                 }

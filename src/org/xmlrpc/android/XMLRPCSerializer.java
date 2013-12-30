@@ -90,15 +90,10 @@ class XMLRPCSerializer {
             byte[] buffer = new byte[3600];//you must use a 24bit multiple
             int length = -1;
             String chunk = null;
-            //int ctr = 0;
-            //Log.i("WordPress", "converting media file to base64");
             while ((length = inStream.read(buffer)) > 0) {
                 chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
                 serializer.text(chunk);
-                //ctr+=3600;
-                //Log.i("WordPress", "chunk " + ctr);
             }
-            //Log.i("WordPress", "conversion done!");
             inStream.close();
             serializer.endTag(null, "base64");
         }else
