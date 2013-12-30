@@ -271,7 +271,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     protected void onResume() {
         super.onResume();
-        if (isSignedIn()) {
+        if (WordPress.isSignedIn(PostsActivity.this)) {
             showReaderIfNoBlog();
         }
         if (postList.getListView().getCount() == 0)
