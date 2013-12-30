@@ -40,7 +40,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -48,9 +47,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3,
-            POST_COMMENT = 4, POST_VIEW = 5;
+            POST_VIEW = 5;
     public static final int ACTIVITY_EDIT_POST = 0;
-    public static final int ACTIVITY_ADD_COMMENT = 1;
 
     private PostsListFragment mPostList;
     private MenuItem mRefreshMenuItem;
