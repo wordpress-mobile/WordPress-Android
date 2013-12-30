@@ -320,7 +320,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
-        if (blogSelection != -1) {
+        if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
         }
         updateMenuDrawer();
@@ -679,7 +679,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
- 
         if (mIsXLargeDevice) {
             if (mMenuDrawer != null) {
                 // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
@@ -688,11 +687,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     mMenuDrawer.getContentContainer().removeView(content);
                     mMenuDrawer = attachMenuDrawer();
                     mMenuDrawer.setContentView(content);
-                    initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
+                    if (mBlogSpinner != null) {
+                        initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
+                    }
                 }
             }
         }
- 
         super.onConfigurationChanged(newConfig);
     }
 
