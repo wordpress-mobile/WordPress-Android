@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,6 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.MediaUploadService;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -93,15 +91,12 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
+            if (action.equals(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION)) {
                 String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
-                String errorMessage = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
-                if (errorMessage != null) {
-                    ToastUtils.showToast(context, errorMessage, ToastUtils.Duration.SHORT);
-                }
                 mCallback.onMediaAdded(mediaId);
             }
         }
@@ -141,10 +136,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-            else
-                new DownloadMediaTask().execute(mediaUri);
+            new DownloadMediaTask().execute(mediaUri);
         } else {
             // It is a regular local media file
             String path = getRealPathFromURI(mediaUri);
@@ -199,7 +191,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String fileType = new String(path).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
         
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setBlogId(String.valueOf(blog.getBlogId()));
         mediaFile.setFileName(fileName + "." + fileType);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
@@ -250,7 +242,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
     
     public void addToQueue(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
         startMediaUploadService();
     }
@@ -275,9 +267,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         }
 
         protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
-                return;
-
             if (newUri != null) {
                 String path = getRealPathFromURI(newUri);
                 queueFileForUpload(path);

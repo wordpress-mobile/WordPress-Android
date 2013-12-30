@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -81,6 +80,7 @@ import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -676,10 +676,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-            else
-                new DownloadMediaTask().execute(mediaUri);
+            new DownloadMediaTask().execute(mediaUri);
         } else {
             // It is a regular local image file
             if (!addMedia(mediaUri, null))
@@ -701,9 +698,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
-                return;
-            
+            //dismissDialog(ID_DIALOG_DOWNLOAD);
             if (newUri != null)
                 addMedia(newUri, null);
             else
@@ -727,7 +722,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
 
         WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(getActivity(), blogId, mediaId);
         if (imageSpan == null)
@@ -791,16 +786,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
                 mf.getDescription(), mf.getCaption(),
-                new ApiHelper.GenericCallback() {
+                new ApiHelper.EditMediaItemTask.Callback() {
 
                     @Override
                     public void onSuccess() {
-                        String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                        WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
+                        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
                     }
 
                     @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    public void onFailure() {
                         Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -812,31 +807,20 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final int maxPictureWidthForContentEditor = 400;
-        final int minPictureWidthForContentEditor = 200;
-        
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
             return;
-        
         final String mediaId = mediaFile.getMediaId();
-        if (mediaId == null)
+        String imageUrl = mediaFile.getThumbnailURL();
+        if (imageUrl == null || mediaId == null)
             return;
 
-        String imageURL = null;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
-            imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
-        } else {
-            //Not a Jetpack or wpcom blog
-           //imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
-            imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
+            imageUrl = StringUtils.getPhotonUrl(photonUrl, 400);
         }
 
-        if (imageURL == null)
-            return;
-        
-        WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
+        WordPress.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
 
             @Override
             public void onErrorResponse(VolleyError arg0) {
@@ -845,58 +829,41 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
-                Bitmap downloadedBitmap = container.getBitmap();
-                if (downloadedBitmap == null) {
-                    //no bitmap downloaded from the server.
-                    return;
-                }
+                if (container.getBitmap() != null) {
 
-                if (downloadedBitmap.getWidth() < minPictureWidthForContentEditor) {
-                    //Picture is too small. Show the placeholder in this case.
-                    return;
-                }
+                    Bitmap bitmap = container.getBitmap();
 
-                Bitmap resizedBitmap = null;
-                if (downloadedBitmap.getWidth() <= maxPictureWidthForContentEditor) {
-                    //bitmap is already small in size, do not resize.
-                    resizedBitmap = downloadedBitmap;
-                } else {
-                    //resize the downloaded bitmap
-                    try {
-                        ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
-                    } catch (OutOfMemoryError er) {
+                    ImageHelper ih = new ImageHelper();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] bitmapByteArray = stream.toByteArray();
+                    Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), bitmapByteArray, null);
+                    if (resizedBitmap == null)
                         return;
-                    }
-                }
+                    Editable s = mContentEditText.getText();
+                    if (s == null)
+                        return;
+                    WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                    if (spans.length != 0) {
+                        for (WPImageSpan is : spans) {
+                            MediaFile mediaFile = is.getMediaFile();
+                            if (mediaFile == null)
+                                continue;
+                            if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
 
-                if (resizedBitmap == null)
-                    return;
-
-                Editable s = mContentEditText.getText();
-                if (s == null)
-                    return;
-                WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (spans.length != 0) {
-                    for (WPImageSpan is : spans) {
-                        MediaFile mediaFile = is.getMediaFile();
-                        if (mediaFile == null)
-                            continue;
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
-
-                            // replace the existing span with a new one with the correct image, re-add it to the same position.
-                            int spanStart = s.getSpanStart(is);
-                            int spanEnd = s.getSpanEnd(is);
-                            WPImageSpan imageSpan = new WPImageSpan(getActivity(), resizedBitmap, is.getImageSource());
-                            imageSpan.setMediaFile(is.getMediaFile());
-                            imageSpan.setNetworkImageLoaded(true);
-                            s.removeSpan(is);
-                            s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            break;
+                                // replace the existing span with a new one with the correct image, re-add it to the same position.
+                                int spanStart = s.getSpanStart(is);
+                                int spanEnd = s.getSpanEnd(is);
+                                WPImageSpan imageSpan = new WPImageSpan(getActivity(), resizedBitmap, is.getImageSource());
+                                imageSpan.setMediaFile(is.getMediaFile());
+                                imageSpan.setNetworkImageLoaded(true);
+                                s.removeSpan(is);
+                                s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            }
                         }
                     }
                 }
-
             }
         }, 0, 0);
     }
