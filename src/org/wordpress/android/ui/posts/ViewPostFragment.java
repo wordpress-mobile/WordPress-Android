@@ -25,7 +25,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
@@ -251,8 +250,8 @@ public class ViewPostFragment extends Fragment {
         WPMobileStatsUtil.flagProperty(WPMobileStatsUtil.StatsEventPostsClosed,
                 WPMobileStatsUtil.StatsPropertyPostDetailClickedComment);
 
-        // animate the comment box in, force keyboard to appear and highlight the comment button
-        ReaderAniUtils.flyIn(mLayoutCommentBox);
+        // show the comment box in, force keyboard to appear and highlight the comment button
+        mLayoutCommentBox.setVisibility(View.VISIBLE);
         mEditComment.requestFocus();
 
         // submit comment when done/send tapped on the keyboard
@@ -286,7 +285,7 @@ public class ViewPostFragment extends Fragment {
             return;
 
         EditTextUtils.hideSoftInput(mEditComment);
-        ReaderAniUtils.flyOut(mLayoutCommentBox);
+        mLayoutCommentBox.setVisibility(View.GONE);
 
         mIsCommentBoxShowing = false;
     }
