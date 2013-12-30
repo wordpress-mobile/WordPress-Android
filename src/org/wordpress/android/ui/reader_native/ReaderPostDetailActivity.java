@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader_native;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -63,14 +65,13 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-
 /**
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailActivity extends WPActionBarActivity {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_POST_ID = "post_id";
+    public static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
 
     private long mPostId;
     private long mBlogId;
@@ -89,6 +90,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
+    private boolean mIsBlogFollowStatusChanged = false;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
@@ -429,6 +431,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             Intent data = new Intent();
             data.putExtra(ARG_BLOG_ID, mBlogId);
             data.putExtra(ARG_POST_ID, mPostId);
+            data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
+            
             if (mIsPostChanged) {
                 setResult(RESULT_OK, data);
             } else {
@@ -482,6 +486,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 refreshLikes(true);
                 break;
             case TOGGLE_FOLLOW:
+                mIsBlogFollowStatusChanged = true;
                 refreshFollowed();
                 break;
         }

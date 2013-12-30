@@ -122,11 +122,12 @@ public class NativeReaderActivity extends WPActionBarActivity {
                 if (isResultOK && readerFragment!=null && data!=null) {
                     long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
-                    readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailActivity.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
+                    ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
+                    readerFragment.reloadPost(updatedPost);
                     //Update 'following' status on all other posts in the same blog.
-                    ReaderPostList blogPosts = ReaderPostTable.getPostsForBlog(blogId, 0);
-                    for (ReaderPost readerPost : blogPosts) {
-                        readerFragment.reloadPost(readerPost);
+                    if (isBlogFollowStatusChanged) {
+                        readerFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
                     }
                 }
                 break;

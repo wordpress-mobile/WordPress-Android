@@ -119,12 +119,12 @@ public class ReaderPostActions {
                 // revert to original post
                 if (originalPost!=null) {
                     ReaderPostTable.addOrUpdatePost(originalPost);
-                    ReaderPostTable.setBlogPostsFollowStatus(originalPost.blogId, originalPost.isFollowedByCurrentUser);
                     switch (action) {
                         case TOGGLE_LIKE:
                             ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
                             break;
                         case TOGGLE_FOLLOW :
+                            ReaderPostTable.setBlogPostsFollowStatus(originalPost.blogId, originalPost.isFollowedByCurrentUser);
                             if (originalPost.hasBlogUrl())
                                 ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
                            break;
