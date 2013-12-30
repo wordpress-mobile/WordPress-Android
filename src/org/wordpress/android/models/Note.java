@@ -18,6 +18,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPHtmlTagHandler;
+import org.wordpress.android.util.WPMobileStatsUtil;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -396,7 +397,7 @@ public class Note {
             mCommentJson = commentJson;
         }
     }
-    
+
     /**
      * Replaces emoticons with emoji
      */
@@ -405,8 +406,17 @@ public class Note {
         try {
             html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
         } catch (RuntimeException runtimeException) {
-            // In case our tag handler doesn't handle
+            // In case our tag handler fails
             html = (SpannableStringBuilder) Html.fromHtml(text, null, null);
+            // Log the exception and text that produces the error
+            try {
+                JSONObject additionalData = new JSONObject();
+                additionalData.put("input_text", text);
+                WPMobileStatsUtil.trackExceptionForWPCom(runtimeException, "note-html-parsing",
+                        additionalData);
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
         }
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
