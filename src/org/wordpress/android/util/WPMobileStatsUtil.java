@@ -16,6 +16,8 @@ import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 
 
@@ -80,6 +82,9 @@ public class WPMobileStatsUtil {
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
     public static final String StatsEventPageDetailOpenedEditor = "Page - Opened Editor";
     public static final String StatsEventPageDetailClosedEditor = "Page - Closed Editor";
+
+    // Exception logging
+    public static final String StatsEventException = "Exception";
 
     /* /Events  */
 
@@ -256,6 +261,56 @@ public class WPMobileStatsUtil {
         WPMobileStatsUtil.instance.flag(event, property);
     }
 
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     */
+    public static void trackExceptionForWPCom(Exception exception, String exceptionId) {
+        WPMobileStatsUtil.instance.trackException(true, exception, exceptionId, null);
+    }
+
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     */
+    public static void trackExceptionForSelfHostedAndWPCom(Exception exception, String exceptionId) {
+        WPMobileStatsUtil.instance.trackException(false, exception, exceptionId, null);
+    }
+
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     * @param additionalData a JSON Object to track additional data that could help solve this
+     *                       exception
+     */
+    public static void trackExceptionForWPCom(Exception exception, String exceptionId,
+                                              JSONObject additionalData) {
+        WPMobileStatsUtil.instance.trackException(true, exception, exceptionId, additionalData);
+    }
+
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     * @param additionalData a JSON Object to track additional data that could help solve this
+     *                       exception
+     */
+    public static void trackExceptionForSelfHostedAndWPCom(Exception exception, String exceptionId,
+                                                           JSONObject additionalData) {
+        WPMobileStatsUtil.instance.trackException(false, exception, exceptionId, additionalData);
+    }
+
 
     // Instance methods
 
@@ -359,6 +414,23 @@ public class WPMobileStatsUtil {
 
     private JSONObject propertiesForEvent(String event) {
         return aggregatedProperties.get(event);
+    }
+
+    private void trackException(boolean isWpCom, Exception exception, String exceptionId,
+                                JSONObject additionalData) {
+        JSONObject jsonObject = new JSONObject();
+        StringWriter errors = new StringWriter();
+        exception.printStackTrace(new PrintWriter(errors));
+        try {
+            jsonObject.put("exception_id", exceptionId);
+            jsonObject.put("stacktrace", errors.toString());
+            if (additionalData != null) {
+                jsonObject.put("additional_data", additionalData);
+            }
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+        track(isWpCom, StatsEventException, jsonObject);
     }
 
 }
