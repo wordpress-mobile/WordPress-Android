@@ -461,6 +461,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
+
+        // Check for shared text
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
@@ -477,21 +479,32 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
                 mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost()));
             }
-        } else {
+        }
+
+        // Check for shared media
+        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             String action = intent.getAction();
-            final String type = intent.getType();
-            final ArrayList<Uri> multi_stream;
+            String type = intent.getType();
+            ArrayList<Uri> sharedUris;
+
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+                sharedUris = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
             } else {
-                multi_stream = new ArrayList<Uri>();
-                multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+                // For a single media share, we only allow images and video types
+                if (type != null && (type.startsWith("image") || type.startsWith("video"))) {
+                    sharedUris = new ArrayList<Uri>();
+                    sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+                } else {
+                    return;
+                }
             }
 
-            List<Serializable> params = new Vector<Serializable>();
-            params.add(multi_stream);
-            params.add(type);
-            new processAttachmentsTask().execute(params);
+            if (sharedUris != null) {
+                List<Serializable> params = new Vector<Serializable>();
+                params.add(sharedUris);
+                params.add(type);
+                new processAttachmentsTask().execute(params);
+            }
         }
     }
 
@@ -624,10 +637,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
-            if (ssb != null) {
-                if (ssb.length() > 0) {
-                    mContentEditText.setText(ssb);
-                }
+            if (ssb != null && ssb.length() > 0) {
+                Editable postContentEditable = mContentEditText.getText();
+                if (postContentEditable != null)
+                    postContentEditable.insert(0, ssb);
             } else {
                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             }

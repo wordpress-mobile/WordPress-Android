@@ -2,20 +2,20 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
@@ -24,10 +24,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.UserEmail;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
-import org.xmlpull.v1.XmlPullParser;
 
-import java.util.Hashtable;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,10 +132,21 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         return true;
     }
 
-    OnClickListener signupClickListener = new OnClickListener() {
+    protected void onDoneAction() {
+        validateAndCreateUserAndBlog();
+    }
+
+    private OnClickListener signupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
+        }
+    };
+
+    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            return onDoneEvent(actionId, event);
         }
     };
 
@@ -269,7 +277,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 .inflate(R.layout.new_account_user_fragment_screen, container, false);
 
         WPTextView termsOfServiceTextView = (WPTextView) rootView.findViewById(R.id.l_agree_terms_of_service);
-        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service, "<u>", "</u>"))));
+        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>", "</u>")));
         termsOfServiceTextView.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -298,6 +306,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

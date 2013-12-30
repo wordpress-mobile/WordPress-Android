@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.RequestQueue;
@@ -49,6 +51,18 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     }
 
     protected void endProgress() {
+    }
+
+    protected abstract void onDoneAction();
+
+    protected boolean onDoneEvent(int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            onDoneAction();
+            return true;
+        }
+        return false;
     }
 
     protected class ErrorListener implements RestRequest.ErrorListener {

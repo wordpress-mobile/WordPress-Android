@@ -319,11 +319,14 @@ public class WordPress extends Application {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
         String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
+        return username != null && password != null;
+    }
 
-        if (username != null && password != null)
+    public static boolean isSignedIn(Context context) {
+        if (WordPress.hasValidWPComCredentials(context)) {
             return true;
-        else
-            return false;
+        }
+        return WordPress.wpDB.getNumVisibleAccounts() != 0;
     }
 
     /**

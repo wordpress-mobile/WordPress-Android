@@ -302,6 +302,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // reset the media fragment
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reset();
+            mMediaGridFragment.refreshSpinnerAdapter();
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
                 mMediaGridFragment.refreshMediaFromServer(0, false);
@@ -656,34 +657,28 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaAdded(String mediaId) {
-        if (WordPress.getCurrentBlog() == null || mediaId == null)
+        if (WordPress.getCurrentBlog() == null || mediaId == null) {
             return;
-
+        }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
         if (cursor == null || !cursor.moveToFirst()) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
-            mMediaGridFragment.refreshMediaFromDB();
-
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
-
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(null);
                 } else {
                     getSupportFragmentManager().popBackStack();
                 }
-
             }
-
-            if (cursor != null)
-                cursor.close();
         } else {
             mMediaGridFragment.refreshMediaFromDB();
+        }
+        if (cursor != null) {
             cursor.close();
         }
-
     }
 
     @Override
