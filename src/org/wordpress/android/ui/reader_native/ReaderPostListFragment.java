@@ -340,7 +340,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * refresh adapter so latest posts appear
      */
-    protected void refreshPosts() {
+    private void refreshPosts() {
         getPostAdapter().refresh();
     }
 
