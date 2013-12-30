@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,17 +21,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
-
-import org.json.JSONObject;
 import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.List;
@@ -100,6 +101,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
+        mPasswordEditText.setOnEditorActionListener(mEditorAction);
+        mUrlEditText.setOnEditorActionListener(mEditorAction);
         return rootView;
     }
 
@@ -141,17 +144,40 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     };
 
+    protected void onDoneAction() {
+        signin();
+    }
+
+    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (mPasswordEditText == v) {
+                if (mSelfHosted) {
+                    mUrlEditText.requestFocus();
+                    return true;
+                } else {
+                    return onDoneEvent(actionId, event);
+                }
+            }
+            return onDoneEvent(actionId, event);
+        }
+    };
+
+    private void signin() {
+        if (!wpcomFieldsFilled()) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            WPAlertDialogFragment alert = WPAlertDialogFragment
+                    .newInstance(getString(R.string.required_fields));
+            alert.show(ft, "alert");
+            return;
+        }
+        new SetupBlogTask().execute();
+    }
+
     private OnClickListener mSignInClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!wpcomFieldsFilled()) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment
-                        .newInstance(getString(R.string.required_fields));
-                alert.show(ft, "alert");
-                return;
-            }
-            new SetupBlogTask().execute();
+            signin();
         }
     };
 
