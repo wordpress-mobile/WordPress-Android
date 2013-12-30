@@ -54,7 +54,7 @@
         android:padding="0px"
         android:textSize="12dip"
         android:textColor="#666666"
-        android:textColorLink="#21759b"
+        android:textColorLink="@color/wordpress_blue"
         android:text="@string/blogusername" />
     </LinearLayout>
   </LinearLayout>

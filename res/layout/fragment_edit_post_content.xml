@@ -45,8 +45,7 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="#21759b"
-                android:layerType="software" />
+                android:textColorLink="@color/wordpress_blue" />
         </LinearLayout>
     </ScrollView>
 
