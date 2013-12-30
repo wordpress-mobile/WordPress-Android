@@ -36,7 +36,7 @@ public class CommentActions {
     /*
      * listener when a comment action is performed
      */
-    protected interface CommentActionListener {
+    public interface CommentActionListener {
         public void onActionResult(boolean succeeded);
     }
 
@@ -45,6 +45,67 @@ public class CommentActions {
         public void onCommentsModerated(final List<Comment> comments);
         public void onCommentAdded();
         public void onCommentDeleted();
+    }
+
+    /*
+     * add a comment for the passed post
+     */
+    public static void addComment(final int accountId,
+                                  final String postID,
+                                  final String commentText,
+                                  final CommentActionListener actionListener) {
+        final Blog blog = WordPress.getBlog(accountId);
+        if (blog==null || TextUtils.isEmpty(commentText)) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                XMLRPCClient client = new XMLRPCClient(
+                        blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
+
+                Map<String, Object> commentHash = new HashMap<String, Object>();
+                commentHash.put("content", commentText);
+                commentHash.put("author", "");
+                commentHash.put("author_url", "");
+                commentHash.put("author_email", "");
+
+                Object[] params = {
+                        blog.getBlogId(),
+                        blog.getUsername(),
+                        blog.getPassword(),
+                        postID,
+                        commentHash};
+
+                int newCommentID;
+                try {
+                    newCommentID = (Integer) client.call("wp.newComment", params);
+                } catch (XMLRPCException e) {
+                    Log.e(WordPress.TAG, e.getMessage(), e);
+                    newCommentID = -1;
+                }
+
+                final boolean succeeded = (newCommentID >= 0);
+                if (succeeded)
+                    WordPress.wpDB.updateLatestCommentID(accountId, newCommentID);
+
+                if (actionListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionListener.onActionResult(succeeded);
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     /**

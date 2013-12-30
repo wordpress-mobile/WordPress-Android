@@ -189,7 +189,8 @@ public class ReaderPostActions {
     }
 
     /*
-     * get the latest version of this post
+     * get the latest version of this post - note that the post is only considered changed if the
+     * like/comment count has changed, or if the current user's like/follow status has changed
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site";
@@ -227,28 +228,16 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                // IMPORTANT: this API call returns the post in a different format, so skip parsing
-                // the entire post and just check for the specific changes we care about here
-                int numReplies = jsonObject.optInt("comment_count");
-                int numLikes = jsonObject.optInt("like_count");
-                boolean isLiked = JSONUtil.getBool(jsonObject, "i_like");
-                boolean isCommentsOpen = JSONUtil.getBool(jsonObject, "comments_open");
-                boolean isFollowed = JSONUtil.getBool(jsonObject, "is_following");
-
-                final boolean hasChanges = (numReplies != post.numReplies
-                                         || numLikes != post.numLikes
-                                         || isLiked  != post.isLikedByCurrentUser
-                                         || isCommentsOpen != post.isCommentsOpen
-                                         || isFollowed != post.isFollowedByCurrentUser);
+                ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
+                final boolean hasChanges = (updatedPost.numReplies != post.numReplies
+                                         || updatedPost.numLikes != post.numLikes
+                                         || updatedPost.isCommentsOpen != post.isCommentsOpen
+                                         || updatedPost.isLikedByCurrentUser != post.isLikedByCurrentUser
+                                         || updatedPost.isFollowedByCurrentUser != post.isFollowedByCurrentUser);
 
                 if (hasChanges) {
                     ReaderLog.d("post updated");
-                    post.numLikes = numLikes;
-                    post.numReplies = numReplies;
-                    post.isCommentsOpen = isCommentsOpen;
-                    post.isLikedByCurrentUser = isLiked;
-                    post.isFollowedByCurrentUser = isFollowed;
-                    ReaderPostTable.addOrUpdatePost(post);
+                    ReaderPostTable.addOrUpdatePost(updatedPost);
                 }
 
                 if (resultListener!=null) {

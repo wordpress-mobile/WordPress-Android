@@ -527,6 +527,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (!hasPost() || !mPost.isWP())
             return;
 
+        final int origNumLikes = mPost.numLikes;
+        final int origNumReplies = mPost.numReplies;
+
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -550,8 +553,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        final boolean isLikesChanged = mPost.numLikes!=ReaderLikeTable.getNumLikesForPost(mPost);
-                        final boolean isCommentsChanged = mPost.numReplies!=ReaderCommentTable.getNumCommentsForPost(mPost);
+                        final boolean isLikesChanged = (mPost.numLikes != origNumLikes
+                                                     || mPost.numLikes != ReaderLikeTable.getNumLikesForPost(mPost));
+                        final boolean isCommentsChanged = (mPost.numReplies != origNumReplies
+                                                        || mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost));
                         if (isLikesChanged || isCommentsChanged) {
                             mHandler.post(new Runnable() {
                                 public void run() {
