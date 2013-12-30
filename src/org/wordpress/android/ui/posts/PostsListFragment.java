@@ -32,7 +32,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
@@ -70,7 +69,7 @@ public class PostsListFragment extends ListFragment {
     public getRecentPostsTask getPostsTask;
 
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
-    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
+    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -278,7 +277,7 @@ public class PostsListFragment extends ListFragment {
                             return;
                         if (v == null) //view is gone
                             return;
-                        if (!mParentActivity.mIsRefreshing) {
+                        if (!mParentActivity.isRefreshing) {
                             mSelectedID = v.getId();
                             showPost(mSelectedID);
                         } else {
@@ -300,7 +299,7 @@ public class PostsListFragment extends ListFragment {
                             return;
                         }
 
-                        if (mParentActivity.mIsRefreshing)
+                        if (mParentActivity.isRefreshing)
                             return;
 
                         Object[] args = {R.id.row_post_id};
@@ -346,25 +345,19 @@ public class PostsListFragment extends ListFragment {
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_page));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_page));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_page));
-                                // Post status: publish, draft, pending, private, localdraft
-                                if ("publish".equals(post.getPost_status())) {
-                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
-                                }
-                                if (allowComments && ("publish".equals(post.getPost_status()) || "private".equals(post.getPost_status()))) {
-                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
-                                }
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_post));
-                                if ("publish".equals(post.getPost_status())) {
-                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
-                                }
-                                if (allowComments && ("publish".equals(post.getPost_status()) || "private".equals(post.getPost_status()))) {
-                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
-                                }
                             }
+                            // Post status: publish, draft, pending, private, localdraft
+                            if ("publish".equals(post.getPost_status())) {
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(isPage? R.string.share_url_page : R.string.share_url));
+                            }
+                            /*if (allowComments && ("publish".equals(post.getPost_status()) || "private".equals(post.getPost_status()))) {
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                            }*/
                         }
                     }
                 });
@@ -573,10 +566,10 @@ public class PostsListFragment extends ListFragment {
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedShare);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
-            case MENU_ITEM_ADD_COMMENT:
+            /*case MENU_ITEM_ADD_COMMENT:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedComment);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
-                return true;
+                return true;*/
             default:
                 return false;
             }
@@ -596,8 +589,15 @@ public class PostsListFragment extends ListFragment {
                 if (getActivity() == null)
                     return;
                 if (errorMsg != "" && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
-                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
+                    FragmentTransaction ft = getFragmentManager()
+                            .beginTransaction();
+                    WPAlertDialogFragment alert = WPAlertDialogFragment
+                            .newInstance(String.format(getResources().getString(R.string.error_refresh), (mIsPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
+                    try {
+                        alert.show(ft, "alert");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     errorMsg = "";
                 }
                 return;
