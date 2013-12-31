@@ -267,6 +267,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         }
 
         protected void onPostExecute(Uri newUri) {
+            if (getActivity() == null)
+                return;
+
             if (newUri != null) {
                 String path = getRealPathFromURI(newUri);
                 queueFileForUpload(path);
