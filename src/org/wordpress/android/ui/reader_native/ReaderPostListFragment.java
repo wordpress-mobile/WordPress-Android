@@ -34,7 +34,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.NetworkUtils;
@@ -56,10 +55,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
-    private boolean mAlreadyUpdatedTagList = false;
     private boolean mIsFlinging = false;
 
-    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
@@ -98,14 +95,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState!=null) {
-            mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
-
-        // get list of tags from server if it hasn't already been done this session
-        if (!mAlreadyUpdatedTagList)
-            updateTagList();
 
         setupActionBar();
     }
@@ -114,7 +106,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
 
@@ -611,27 +602,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             return;
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
-    }
-
-    /*
-     * request list of tags from the server
-     */
-    protected void updateTagList() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!hasActivity()) {
-                    ReaderLog.w("volley response when fragment has no activity");
-                    return;
-                }
-                if (result!= ReaderActions.UpdateResult.FAILED)
-                    mAlreadyUpdatedTagList = true;
-                // refresh tags if they've changed
-                if (result==ReaderActions.UpdateResult.CHANGED)
-                    refreshTags();
-            }
-        };
-        ReaderTagActions.updateTags(listener);
     }
 
     /*
