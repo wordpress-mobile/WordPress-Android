@@ -69,9 +69,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailActivity extends WPActionBarActivity {
-    public static final String ARG_BLOG_ID = "blog_id";
-    public static final String ARG_POST_ID = "post_id";
-    public static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
+    protected static final String ARG_BLOG_ID = "blog_id";
+    protected static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
 
     private long mPostId;
     private long mBlogId;
