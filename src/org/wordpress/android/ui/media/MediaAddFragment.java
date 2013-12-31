@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -136,7 +137,10 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            new DownloadMediaTask().execute(mediaUri);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            else
+                new DownloadMediaTask().execute(mediaUri);
         } else {
             // It is a regular local media file
             String path = getRealPathFromURI(mediaUri);
