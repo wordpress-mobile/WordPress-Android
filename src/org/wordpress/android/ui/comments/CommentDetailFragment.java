@@ -295,6 +295,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             };
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
+            txtName.setTextColor(getResources().getColor(R.color.reader_hyperlink));
+        } else {
+            txtName.setTextColor(getResources().getColor(R.color.grey_medium_dark));
         }
 
         // make sure reply box is showing
