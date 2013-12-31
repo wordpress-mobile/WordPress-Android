@@ -213,6 +213,10 @@ public class NativeReaderActivity extends WPActionBarActivity {
     @Override
     public void onSignout() {
         super.onSignout();
+
+        mHasUpdatedTagList = false;
+        mHasPerformedInitialUpdate = false;
+
         // reader database will have been cleared by the time this is called, but the fragment must
         // be removed or else it will continue to show the same articles - onResume() will take care
         // of re-displaying the fragment if necessary
