@@ -418,6 +418,12 @@ public class WordPressDB {
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
     }
 
+    public boolean isDotComAccountVisible(int blogId) {
+        String[] args = {Integer.toString(blogId)};
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
+                " WHERE isHidden = 0 AND blogId=?", args);
+    }
+
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
         Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
                 new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);
