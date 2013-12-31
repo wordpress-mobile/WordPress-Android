@@ -698,7 +698,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(Uri newUri) {
-            //dismissDialog(ID_DIALOG_DOWNLOAD);
+            if (getActivity() == null)
+                return;
+            
             if (newUri != null)
                 addMedia(newUri, null);
             else
