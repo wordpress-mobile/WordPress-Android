@@ -97,7 +97,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsMoving;
     private float mLastMotionY;
 
-    private static final int MOVE_MIN_DIFF = 10;
+    private static final int MOVE_MIN_DIFF = 8;
     private static final long WEBVIEW_DELAY_MS = 2000L;
 
     /*
@@ -142,11 +142,17 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
                                     if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                        // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
                                     } else if (mIsFullScreen && !canScrollUp(mListView)) {
+                                        // disable full-screen if user scrolls to the top
+                                        setIsFullScreen(false);
+                                    } else if (mIsFullScreen && !canScrollDown(mListView)) {
+                                        // disable full-screen if user scrolls to the bottom
                                         setIsFullScreen(false);
                                     } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                        // user is scrolling up, so disable full-screen
                                         setIsFullScreen(false);
                                         return true;
                                     }
