@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader_native;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -63,14 +65,13 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-
 /**
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailActivity extends WPActionBarActivity {
-    public static final String ARG_BLOG_ID = "blog_id";
-    public static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_BLOG_ID = "blog_id";
+    protected static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
 
     private long mPostId;
     private long mBlogId;
@@ -89,6 +90,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
+    private boolean mIsBlogFollowStatusChanged = false;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
@@ -393,7 +395,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_IS_POST_CHANGED = "is_post_changed";
-
+    private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -401,6 +404,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_IS_POST_CHANGED, mIsPostChanged);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
+        outState.putBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
     }
@@ -411,6 +415,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (savedInstanceState!=null) {
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mIsPostChanged = savedInstanceState.getBoolean(KEY_IS_POST_CHANGED);
+            mIsBlogFollowStatusChanged = savedInstanceState.getBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -429,6 +434,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             Intent data = new Intent();
             data.putExtra(ARG_BLOG_ID, mBlogId);
             data.putExtra(ARG_POST_ID, mPostId);
+            data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
+            
             if (mIsPostChanged) {
                 setResult(RESULT_OK, data);
             } else {
@@ -482,6 +489,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 refreshLikes(true);
                 break;
             case TOGGLE_FOLLOW:
+                mIsBlogFollowStatusChanged = true;
                 refreshFollowed();
                 break;
         }

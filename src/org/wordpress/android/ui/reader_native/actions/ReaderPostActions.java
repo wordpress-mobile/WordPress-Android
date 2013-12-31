@@ -79,6 +79,7 @@ public class ReaderPostActions {
                 boolean isAskingToFollow = !post.isFollowedByCurrentUser;
                 post.isFollowedByCurrentUser = isAskingToFollow;
                 ReaderPostTable.addOrUpdatePost(post);
+                ReaderPostTable.setBlogPostsFollowStatus(post.blogId, isAskingToFollow);
                 path = "sites/" + post.blogId + "/follows/";
                 if (isAskingToFollow) {
                     path += "new";
@@ -123,6 +124,7 @@ public class ReaderPostActions {
                             ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
                             break;
                         case TOGGLE_FOLLOW :
+                            ReaderPostTable.setBlogPostsFollowStatus(originalPost.blogId, originalPost.isFollowedByCurrentUser);
                             if (originalPost.hasBlogUrl())
                                 ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
                            break;

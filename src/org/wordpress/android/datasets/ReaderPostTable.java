@@ -265,6 +265,17 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }*/
 
+    
+    public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
+        if (blogId==0)
+            return;
+
+        String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                  + " WHERE blog_id=?";
+        String[] args = {Long.toString(blogId)};
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+    
     public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
         if (posts==null || posts.size()==0)
             return;
@@ -366,7 +377,7 @@ public class ReaderPostTable {
             SqlUtils.closeCursor(cursor);
         }
     }
-
+    
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post==null)
             return;

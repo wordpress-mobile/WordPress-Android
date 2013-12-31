@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,7 +149,20 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPosts.set(index, updatedPost);
         notifyDataSetChanged();
     }
-
+    
+    public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+        boolean isChanged = false;
+        for (ReaderPost readerPost: mPosts) {
+            if (readerPost.blogId == blogId) {
+                readerPost.isFollowedByCurrentUser = followStatus;
+                isChanged = true;
+            }
+        }
+        if (isChanged)
+         notifyDataSetChanged();
+    }
+    
+    
     @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning)
@@ -406,6 +418,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
+        
+        //Update 'following' status on all other posts in the same blog.
+        updateFollowStatusOnPostsForBlog(post.blogId, updatedPost.isFollowedByCurrentUser);
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {

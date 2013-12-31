@@ -365,6 +365,10 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         return (getActivity() != null && !isRemoving());
     }
 
+    protected void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+        getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
+    }
+    
     /*
      * get latest posts for this tag from the server
      */
