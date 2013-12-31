@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
@@ -58,7 +61,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
-
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
@@ -340,7 +342,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * refresh adapter so latest posts appear
      */
-    private void refreshPosts() {
+    protected void refreshPosts() {
         getPostAdapter().refresh();
     }
 
@@ -402,9 +404,17 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
                     ReaderLog.w("volley response when fragment has no activity");
+                    // this fragment is no longer valid, so send a broadcast that tells the host
+                    // NativeReaderActivity that it needs to refresh the list of posts - this
+                    // situation occurs when the user rotates the device while the update is
+                    // still in progress
+                    if (numNewPosts > 0)
+                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(NativeReaderActivity.ACTION_REFRESH_POSTS));
                     return;
                 }
+
                 setIsUpdating(false, updateAction);
+
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTagName(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
@@ -417,6 +427,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     // update empty view title and description if the the post list is empty
                     setEmptyTitleAndDecriptionForCurrentTag();
                 }
+
                 // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
                     scheduleAutoUpdate();

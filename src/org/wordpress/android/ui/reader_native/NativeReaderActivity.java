@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.view.MenuInflater;
@@ -14,13 +18,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
@@ -59,8 +62,15 @@ public class NativeReaderActivity extends WPActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_REFRESH_POSTS));
         if (getPostListFragment() == null)
             showPostListFragment();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -227,4 +237,21 @@ public class NativeReaderActivity extends WPActionBarActivity {
             return null;
         return ((ReaderPostListFragment) fragment);
     }
+
+    /*
+     * this broadcast receiver handles the ACTION_REFRESH_POSTS action, which may be called from the
+     * post list fragment if the device is rotated while an update is in progress
+     */
+    protected static final String ACTION_REFRESH_POSTS = "action_refresh_posts";
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
+                ReaderLog.i("received ACTION_REFRESH_POSTS");
+                ReaderPostListFragment fragment = getPostListFragment();
+                if (fragment != null)
+                    fragment.refreshPosts();
+            }
+        }
+    };
 }
