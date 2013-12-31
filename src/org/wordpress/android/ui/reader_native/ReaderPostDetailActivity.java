@@ -96,24 +96,31 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private final Handler mHandler = new Handler();
 
     private boolean mIsFullScreen;
-    private float mLastMotionY;
     private boolean mIsMoving;
+    private float mLastMotionY;
 
-    private static final int MOVE_MIN_DIFF = 6;
+    private static final int MOVE_MIN_DIFF = 8;
     private static final long WEBVIEW_DELAY_MS = 2000L;
 
     /*
-     * returns true if the listView can scroll vertically in either direction
-     * always returns true prior to ICS because canScrollVertically() requires API 14
+     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
+     * because canScrollVertically() requires API 14
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static boolean canScrollList(ListView listView) {
+    private static boolean canScrollUp(ListView listView) {
         if (listView == null)
             return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             return true;
-        return listView.canScrollVertically(-1)
-            || listView.canScrollVertically(1);
+        return listView.canScrollVertically(-1);
+    }
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static boolean canScrollDown(ListView listView) {
+        if (listView == null)
+            return false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            return true;
+        return listView.canScrollVertically(1);
     }
 
     private ListView getListView() {
@@ -121,8 +128,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             mListView = (ListView) findViewById(android.R.id.list);
 
             /*
-             * when the list can be scrolled vertically, enable full screen when user scrolls down
-             * and disable full screen when user scrolls up
+             * if full-screen mode is supported, enable full-screen when user scrolls down
+             * and disable full-screen when user scrolls up
              */
             if (isFullScreenSupported()) {
                 mListView.setOnTouchListener(new View.OnTouchListener() {
@@ -136,23 +143,31 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         switch (action) {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
-                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
+                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                        // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
+                                    } else if (mIsFullScreen && !canScrollUp(mListView)) {
+                                        // disable full-screen if user scrolls to the top
+                                        setIsFullScreen(false);
+                                    } else if (mIsFullScreen && !canScrollDown(mListView)) {
+                                        // disable full-screen if user scrolls to the bottom
+                                        setIsFullScreen(false);
                                     } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                        // user is scrolling up, so disable full-screen
                                         setIsFullScreen(false);
                                         return true;
                                     }
-                                } else if (canScrollList(mListView)) {
+                                } else {
                                     mIsMoving = true;
-                                    return true;
                                 }
                                 break;
+
                             default :
                                 mIsMoving = false;
                                 break;
-
                         }
+
                         return false;
                     }
                 });
