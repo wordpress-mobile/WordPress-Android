@@ -395,7 +395,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_IS_POST_CHANGED = "is_post_changed";
-
+    private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -403,6 +404,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_IS_POST_CHANGED, mIsPostChanged);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
+        outState.putBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
     }
@@ -413,6 +415,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (savedInstanceState!=null) {
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mIsPostChanged = savedInstanceState.getBoolean(KEY_IS_POST_CHANGED);
+            mIsBlogFollowStatusChanged = savedInstanceState.getBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
