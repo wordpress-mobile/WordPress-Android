@@ -26,7 +26,7 @@ Gradle project.
 
 ## Need help to build or hack? ##
 
-Say hello on our IRC channel: `#WordPress-Android` (freenode). Read our
+Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 [Developer Handbook][4] and [Development Blog][5].
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
