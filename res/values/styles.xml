@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/org.wordpress.android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
 
@@ -20,6 +19,8 @@
 
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+
+        <item name="android:windowBackground">@color/background_grey</item>
     </style>
 
     <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
@@ -125,6 +126,7 @@
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">@dimen/menu_drawer_width</item>
+        <item name="mdContentBackground">@color/background_grey</item>
     </style>
 
     <style name="MenuDrawer.Button">
