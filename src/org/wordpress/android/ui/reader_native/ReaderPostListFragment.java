@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
@@ -31,7 +34,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.NetworkUtils;
@@ -53,12 +55,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
-    private boolean mAlreadyUpdatedTagList = false;
     private boolean mIsFlinging = false;
 
-    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_TAG_NAME = "tag_name";
-
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
@@ -96,14 +95,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState!=null) {
-            mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
-
-        // get list of tags from server if it hasn't already been done this session
-        if (!mAlreadyUpdatedTagList)
-            updateTagList();
 
         setupActionBar();
     }
@@ -112,7 +106,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
 
@@ -340,7 +333,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     /*
      * refresh adapter so latest posts appear
      */
-    private void refreshPosts() {
+    protected void refreshPosts() {
         getPostAdapter().refresh();
     }
 
@@ -402,9 +395,17 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
                     ReaderLog.w("volley response when fragment has no activity");
+                    // this fragment is no longer valid, so send a broadcast that tells the host
+                    // NativeReaderActivity that it needs to refresh the list of posts - this
+                    // situation occurs when the user rotates the device while the update is
+                    // still in progress
+                    if (numNewPosts > 0)
+                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(NativeReaderActivity.ACTION_REFRESH_POSTS));
                     return;
                 }
+
                 setIsUpdating(false, updateAction);
+
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTagName(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
@@ -417,6 +418,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                     // update empty view title and description if the the post list is empty
                     setEmptyTitleAndDecriptionForCurrentTag();
                 }
+
                 // schedule the next update in this tag
                 if (result != ReaderActions.UpdateResult.FAILED)
                     scheduleAutoUpdate();
@@ -600,27 +602,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             return;
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
-    }
-
-    /*
-     * request list of tags from the server
-     */
-    protected void updateTagList() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!hasActivity()) {
-                    ReaderLog.w("volley response when fragment has no activity");
-                    return;
-                }
-                if (result!= ReaderActions.UpdateResult.FAILED)
-                    mAlreadyUpdatedTagList = true;
-                // refresh tags if they've changed
-                if (result==ReaderActions.UpdateResult.CHANGED)
-                    refreshTags();
-            }
-        };
-        ReaderTagActions.updateTags(listener);
     }
 
     /*
