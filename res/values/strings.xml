@@ -329,6 +329,7 @@
     <string name="stats_password">Password</string>
     <string name="invalid_login">Incorrect Login</string>
     <string name="view_stats_full_site">View full site</string>
+    <string name="view_stats_activity">View stats</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
