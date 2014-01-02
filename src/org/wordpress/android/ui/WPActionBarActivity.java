@@ -104,7 +104,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int NOTIFICATIONS_ACTIVITY = 11;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
-    
+
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -126,7 +126,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
             mIsXLargeDevice = true;
-        
+
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
         mMenuItems.add(new NotificationsMenuItem());
@@ -194,7 +194,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
-        
+
         initMenuDrawer();
     }
 
