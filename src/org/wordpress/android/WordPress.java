@@ -231,7 +231,7 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null) {
+        if (currentBlog == null || !wpDB.isDotComAccountVisible(currentBlog.getBlogId())) {
             // attempt to restore the last active blog
             setCurrentBlogToLastActive();
 
@@ -276,11 +276,13 @@ public class WordPress extends Application {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
                     setCurrentBlog(id);
+                    return currentBlog;
                 }
             }
         }
-
-        return currentBlog;
+        // Previous active blog is hidden or deleted
+        currentBlog = null;
+        return null;
     }
 
     /**

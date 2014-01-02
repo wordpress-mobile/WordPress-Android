@@ -279,10 +279,7 @@ public class SetupBlog {
             String homeUrl = blogMap.get("url").toString();
             String blogId = blogMap.get("blogid").toString();
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
-            Blog blog = addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
-            if (blog != null && i == 0) {
-                WordPress.setCurrentBlog(blog.getId());
-            }
+            addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
         }
     }
 }
