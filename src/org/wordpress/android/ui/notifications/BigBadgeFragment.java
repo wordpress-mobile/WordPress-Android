@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
@@ -42,20 +43,23 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
             if (!iconURL.equals(""))
                 badgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
 
-            // if this is a stats-related note, show stats link and enable tapping badge to view stats
-            TextView txtStats = (TextView) view.findViewById(R.id.text_stats_link);
+            // if this is a stats-related note, show stats link and enable tapping badge
+            // to view stats - but only if the note is for a blog that's visible
             if (isStatsNote()) {
-                txtStats.setVisibility(View.VISIBLE);
-                View.OnClickListener statsListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showStatsActivity();
-                    }
-                };
-                txtStats.setOnClickListener(statsListener);
-                badgeImageView.setOnClickListener(statsListener);
-            } else {
-                txtStats.setVisibility(View.GONE);
+                JSONObject jsonMeta = getNote().getJSONMeta();
+                final int blogId = (jsonMeta != null ? jsonMeta.optInt("blog_id", -1) : -1);
+                if (WordPress.wpDB.isDotComAccountVisible(blogId)) {
+                    TextView txtStats = (TextView) view.findViewById(R.id.text_stats_link);
+                    txtStats.setVisibility(View.VISIBLE);
+                    View.OnClickListener statsListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showStatsActivity(blogId);
+                        }
+                    };
+                    txtStats.setOnClickListener(statsListener);
+                    badgeImageView.setOnClickListener(statsListener);
+                }
             }
         }
         
@@ -97,11 +101,19 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
              || type.startsWith("most_"));
     }
 
-    // TODO: this will show stats for the currently selected blog, but doesn't handle the case
-    // where the note is for a different blog
-    private void showStatsActivity() {
+    /*
+     * show stats for the passed blog
+     */
+    private void showStatsActivity(int blogId) {
         if (getActivity() == null || isRemoving())
             return;
+
+        // stats activity is designed to work with the current blog, so switch blogs if necessary
+        if (WordPress.getCurrentBlogId() != blogId) {
+            int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+            WordPress.setCurrentBlog(accountId);
+        }
+
         Intent intent = new Intent(getActivity(), StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
         getActivity().startActivity(intent);
