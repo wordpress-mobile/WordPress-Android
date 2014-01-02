@@ -256,7 +256,6 @@ public class PostsListFragment extends ListFragment {
         if (loadedPosts != null || drafts == true) {
             ListView listView = getListView();
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
             listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
             listView.setDividerHeight(1);
             listView.removeFooterView(switcher);
