@@ -612,6 +612,7 @@
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
+    <string name="reader_label_reply">Reply</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
