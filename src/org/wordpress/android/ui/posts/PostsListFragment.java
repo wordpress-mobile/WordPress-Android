@@ -70,7 +70,7 @@ public class PostsListFragment extends ListFragment {
     public getRecentPostsTask getPostsTask;
 
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
-    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
+    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -344,17 +344,20 @@ public class PostsListFragment extends ListFragment {
                             if (isPage) {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText( R.string.delete_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_page));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                // Post status: publish, draft, pending, private, localdraft
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
+                                }
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_post));
-                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
+                                }
                             }
                         }
                     }
@@ -564,10 +567,10 @@ public class PostsListFragment extends ListFragment {
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedShare);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
-            case MENU_ITEM_ADD_COMMENT:
+            /*case MENU_ITEM_ADD_COMMENT:
                 WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedComment);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
-                return true;
+                return true;*/
             default:
                 return false;
             }

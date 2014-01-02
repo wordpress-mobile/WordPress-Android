@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.reader_native;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.view.MenuInflater;
@@ -13,12 +17,14 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
@@ -32,10 +38,12 @@ public class NativeReaderActivity extends WPActionBarActivity {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
+    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
 
     private MenuItem mRefreshMenuItem;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
+    private boolean mHasUpdatedTagList = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,14 +59,22 @@ public class NativeReaderActivity extends WPActionBarActivity {
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
+            mHasUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_REFRESH_POSTS));
         if (getPostListFragment() == null)
             showPostListFragment();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -84,6 +100,10 @@ public class NativeReaderActivity extends WPActionBarActivity {
             ReaderLog.i("updating followed blogs");
             ReaderBlogActions.updateFollowedBlogs();
         }
+
+        // get list of tags from server if it hasn't already been done this session
+        if (!mHasUpdatedTagList)
+            updateTagList();
     }
 
     @Override
@@ -91,6 +111,7 @@ public class NativeReaderActivity extends WPActionBarActivity {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
+        outState.putBoolean(KEY_TAG_LIST_UPDATED, mHasUpdatedTagList);
     }
 
     @Override
@@ -120,7 +141,15 @@ public class NativeReaderActivity extends WPActionBarActivity {
                 if (isResultOK && readerFragment!=null && data!=null) {
                     long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
-                    readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailActivity.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
+                    ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
+                    if (updatedPost != null) {
+                        readerFragment.reloadPost(updatedPost);
+                        //Update 'following' status on all other posts in the same blog.
+                        if (isBlogFollowStatusChanged) {
+                            readerFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
+                        }
+                    }
                 }
                 break;
 
@@ -184,6 +213,10 @@ public class NativeReaderActivity extends WPActionBarActivity {
     @Override
     public void onSignout() {
         super.onSignout();
+
+        mHasUpdatedTagList = false;
+        mHasPerformedInitialUpdate = false;
+
         // reader database will have been cleared by the time this is called, but the fragment must
         // be removed or else it will continue to show the same articles - onResume() will take care
         // of re-displaying the fragment if necessary
@@ -217,4 +250,41 @@ public class NativeReaderActivity extends WPActionBarActivity {
             return null;
         return ((ReaderPostListFragment) fragment);
     }
+
+    /*
+     * request list of tags from the server
+     */
+    protected void updateTagList() {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (result != ReaderActions.UpdateResult.FAILED)
+                    mHasUpdatedTagList = true;
+                // refresh tags if they've changed
+                if (result == ReaderActions.UpdateResult.CHANGED) {
+                    ReaderPostListFragment fragment = getPostListFragment();
+                    if (fragment != null)
+                        fragment.refreshTags();
+                }
+            }
+        };
+        ReaderTagActions.updateTags(listener);
+    }
+
+    /*
+     * this broadcast receiver handles the ACTION_REFRESH_POSTS action, which may be called from the
+     * post list fragment if the device is rotated while an update is in progress
+     */
+    protected static final String ACTION_REFRESH_POSTS = "action_refresh_posts";
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
+                ReaderLog.i("received ACTION_REFRESH_POSTS");
+                ReaderPostListFragment fragment = getPostListFragment();
+                if (fragment != null)
+                    fragment.refreshPosts();
+            }
+        }
+    };
 }

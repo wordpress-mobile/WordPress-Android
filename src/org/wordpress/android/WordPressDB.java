@@ -402,7 +402,6 @@ public class WordPressDB {
                 + " WHERE isHidden = 0", null);
     }
 
-
     public List<Map<String, Object>> getAllAccounts() {
         return getAccountsBy(null, null);
     }
@@ -417,6 +416,12 @@ public class WordPressDB {
         ContentValues values = new ContentValues();
         values.put("isHidden", !visible);
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
+    }
+
+    public boolean isDotComAccountVisible(int blogId) {
+        String[] args = {Integer.toString(blogId)};
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
+                " WHERE isHidden = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {

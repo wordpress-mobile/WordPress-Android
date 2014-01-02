@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -112,9 +114,7 @@ public class ApiHelper {
         }
     }
 
-    public static class getPostFormatsTask extends
-            AsyncTask<List<?>, Void, Object> {
-
+    public static class getPostFormatsTask extends AsyncTask<List<?>, Void, Object> {
         Context ctx;
         Blog blog;
         boolean isPage, loadMore;
@@ -126,8 +126,9 @@ public class ApiHelper {
                     Gson gson = new Gson();
                     String postFormatsJson = gson.toJson(postFormats);
                     if (postFormatsJson != null) {
-                        blog.setPostFormats(postFormatsJson);
-                        blog.save(null);
+                        if (blog.bsetPostFormats(postFormatsJson)) {
+                            blog.save();
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -163,13 +164,11 @@ public class ApiHelper {
      * related to the active theme (available post types, recent comments, etc).
      */
     public static class RefreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
-        /** Blog being refresh. */
+        private static HashSet<BlogIdentifier> refreshedBlogs = new HashSet<BlogIdentifier>();
         private Blog mBlog;
-
-        /** Application context. */
         private Context mContext;
+        private BlogIdentifier mBlogIdentifier;
 
-        /** Callback */
         public interface Callback {
             public void onSuccess();
             public void onFailure();
@@ -178,9 +177,61 @@ public class ApiHelper {
         private Callback mCallback;
 
         public RefreshBlogContentTask(Context context, Blog blog, Callback callback) {
+            mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getBlogId());
+            if (refreshedBlogs.contains(mBlogIdentifier)) {
+                cancel(true);
+            } else {
+                refreshedBlogs.add(mBlogIdentifier);
+            }
             mBlog = blog;
             mContext = context;
             mCallback = callback;
+        }
+
+        private void updateBlogOptions(Map<?, ?> blogOptions) {
+            boolean isModified = false;
+            Gson gson = new Gson();
+            String blogOptionsJson = gson.toJson(blogOptions);
+            if (blogOptionsJson != null) {
+                isModified |= mBlog.bsetBlogOptions(blogOptionsJson);
+            }
+            // Software version
+            if (!mBlog.isDotcomFlag()) {
+                Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
+                String wpVersion = sv.get("value").toString();
+                if (wpVersion.length() > 0) {
+                    isModified |= mBlog.bsetWpVersion(wpVersion);
+                }
+            }
+            // Featured image support
+            Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
+            if (featuredImageHash != null) {
+                boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
+                        .get("value").toString());
+                isModified |= mBlog.bsetFeaturedImageCapable(featuredImageCapable);
+            } else {
+                isModified |= mBlog.bsetFeaturedImageCapable(false);
+            }
+            if (isModified && WordPress.getCurrentBlog() != null
+                    && WordPress.getCurrentBlog().isActive()) {
+                mBlog.save();
+            }
+        }
+
+        private void updateBlogAdmin(Map<String, Object> userInfos) {
+            if (userInfos.containsKey("roles") && ( userInfos.get("roles") instanceof Object[])) {
+                boolean isAdmin = false;
+                Object[] userRoles = (Object[])userInfos.get("roles");
+                for (int i = 0; i < userRoles.length; i++) {
+                    if (userRoles[i].toString().equals("administrator")) {
+                        isAdmin = true;
+                        break;
+                    }
+                }
+                if (mBlog.bsetAdmin(isAdmin)) {
+                    mBlog.save();
+                }
+            }
         }
 
         @Override
@@ -199,47 +250,19 @@ public class ApiHelper {
                 hPost.put("home_url", "home_url");
                 hPost.put("admin_url", "admin_url");
                 hPost.put("login_url", "login_url");
-                
-                Object[] vParams = {
-                        mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
-                };
-                Object versionResult = new Object();
+
+                Object[] vParams = {mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(),
+                        hPost};
+                Object versionResult;
                 try {
-                    versionResult = (Object) client.call("wp.getOptions", vParams);
+                    versionResult = client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
                     return false;
                 }
 
                 if (versionResult != null) {
-                    try {
-                        Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
-                        Gson gson = new Gson();
-                        String blogOptionsJson = gson.toJson(blogOptions);
-                        if (blogOptionsJson != null)
-                            mBlog.setBlogOptions(blogOptionsJson);
-
-                        // Software version
-                        if (!mBlog.isDotcomFlag()) {
-                            Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
-                            String wpVersion = sv.get("value").toString();
-                            if (wpVersion.length() > 0) {
-                                mBlog.setWpVersion(wpVersion);
-                            }
-                        }
-                        // Featured image support
-                        Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions
-                                .get("post_thumbnail");
-                        if (featuredImageHash != null) {
-                            boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
-                                    .get("value").toString());
-                            mBlog.setFeaturedImageCapable(featuredImageCapable);
-                        } else {
-                            mBlog.setFeaturedImageCapable(false);
-                        }
-                        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive())
-                            mBlog.save("");
-                    } catch (Exception e) {
-                    }
+                    Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
+                    updateBlogOptions(blogOptions);
                 }
 
                 // get theme post formats
@@ -250,22 +273,11 @@ public class ApiHelper {
             }
 
             // Check if user is an admin
-            Object[] userParams = {
-                    mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword()
-            };
+            Object[] userParams = {mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfo = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
-                if (userInfo.containsKey("roles") && ( userInfo.get("roles") instanceof Object[])) {
-                    Object[] userRoles = (Object[])userInfo.get("roles");
-                    mBlog.setAdmin(false);
-                    for (int i = 0; i < userRoles.length; i++) {
-                        if (userRoles[i].toString().equals("administrator")) {
-                            mBlog.setAdmin(true);
-                            break;
-                        }
-                    }
-                    mBlog.save("");
-                }
+                Map<String, Object> userInfos = (HashMap<String, Object>)
+                        client.call("wp.getProfile", userParams);
+                updateBlogAdmin(userInfos);
             } catch (XMLRPCException e) {
                 return false;
             }
@@ -294,6 +306,7 @@ public class ApiHelper {
                 else
                     mCallback.onSuccess();
             }
+            refreshedBlogs.remove(mBlogIdentifier);
         }
     }
 

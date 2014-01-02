@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -20,6 +20,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -45,6 +46,7 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPEditTextPreference;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.net.MalformedURLException;
@@ -58,15 +60,13 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
-    EditTextPreference taglineTextPreference;
-    OnPreferenceChangeListener preferenceChangeListener;
-
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
-    
+
     private PreferenceGroup mNotificationsGroup;
-    
+    WPEditTextPreference mTaglineTextPreference;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -82,18 +82,22 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         
         mNotificationsGroup = (PreferenceGroup)findPreference("wp_pref_notifications_category");
 
-        preferenceChangeListener = new OnPreferenceChangeListener() {
+        OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Set summary to changed value
-                preference.setSummary(newValue.toString());
+                if (newValue != null) { // cancelled dismiss keyoard
+                    preference.setSummary(newValue.toString());
+                }
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getListView().getWindowToken(), 0);
                 return true;
             }
         };
 
-        taglineTextPreference = (EditTextPreference) findPreference("wp_pref_post_signature");
-        taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
-        
+        mTaglineTextPreference = (WPEditTextPreference) findPreference("wp_pref_post_signature");
+        if (mTaglineTextPreference != null) {
+            mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
+        }
         Preference signOutPreference = findPreference("wp_pref_sign_out");
         signOutPreference.setOnPreferenceClickListener(signOutPreferenceClickListener);
 
@@ -283,16 +287,16 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             hidePostSignatureCategory();
             hideNotificationBlogsCategory();
         } else {
-            if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
+            if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
                 if (DeviceUtils.getInstance().isBlackBerry()) {
-                    taglineTextPreference.setSummary(R.string.posted_from_blackberry);
-                    taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
+                    mTaglineTextPreference.setSummary(R.string.posted_from_blackberry);
+                    mTaglineTextPreference.setText(getString(R.string.posted_from_blackberry));
                 } else {
-                    taglineTextPreference.setSummary(R.string.posted_from);
-                    taglineTextPreference.setText(getString(R.string.posted_from));
+                    mTaglineTextPreference.setSummary(R.string.posted_from);
+                    mTaglineTextPreference.setText(getString(R.string.posted_from));
                 }
             } else {
-                taglineTextPreference.setSummary(taglineTextPreference.getText());
+                mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
             }
         }
          

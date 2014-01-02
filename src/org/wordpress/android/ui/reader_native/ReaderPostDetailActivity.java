@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader_native;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -63,14 +65,13 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-
 /**
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailActivity extends WPActionBarActivity {
-    public static final String ARG_BLOG_ID = "blog_id";
-    public static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_BLOG_ID = "blog_id";
+    protected static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
 
     private long mPostId;
     private long mBlogId;
@@ -89,29 +90,37 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
+    private boolean mIsBlogFollowStatusChanged = false;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
 
     private boolean mIsFullScreen;
-    private float mLastMotionY;
     private boolean mIsMoving;
+    private float mLastMotionY;
 
-    private static final int MOVE_MIN_DIFF = 6;
+    private static final int MOVE_MIN_DIFF = 8;
     private static final long WEBVIEW_DELAY_MS = 2000L;
 
     /*
-     * returns true if the listView can scroll vertically in either direction
-     * always returns true prior to ICS because canScrollVertically() requires API 14
+     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
+     * because canScrollVertically() requires API 14
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static boolean canScrollList(ListView listView) {
+    private static boolean canScrollUp(ListView listView) {
         if (listView == null)
             return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             return true;
-        return listView.canScrollVertically(-1)
-            || listView.canScrollVertically(1);
+        return listView.canScrollVertically(-1);
+    }
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static boolean canScrollDown(ListView listView) {
+        if (listView == null)
+            return false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            return true;
+        return listView.canScrollVertically(1);
     }
 
     private ListView getListView() {
@@ -119,8 +128,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             mListView = (ListView) findViewById(android.R.id.list);
 
             /*
-             * when the list can be scrolled vertically, enable full screen when user scrolls down
-             * and disable full screen when user scrolls up
+             * if full-screen mode is supported, enable full-screen when user scrolls down
+             * and disable full-screen when user scrolls up
              */
             if (isFullScreenSupported()) {
                 mListView.setOnTouchListener(new View.OnTouchListener() {
@@ -134,23 +143,31 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         switch (action) {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
-                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen) {
+                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                        // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
+                                    } else if (mIsFullScreen && !canScrollUp(mListView)) {
+                                        // disable full-screen if user scrolls to the top
+                                        setIsFullScreen(false);
+                                    } else if (mIsFullScreen && !canScrollDown(mListView)) {
+                                        // disable full-screen if user scrolls to the bottom
+                                        setIsFullScreen(false);
                                     } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                        // user is scrolling up, so disable full-screen
                                         setIsFullScreen(false);
                                         return true;
                                     }
-                                } else if (canScrollList(mListView)) {
+                                } else {
                                     mIsMoving = true;
-                                    return true;
                                 }
                                 break;
+
                             default :
                                 mIsMoving = false;
                                 break;
-
                         }
+
                         return false;
                     }
                 });
@@ -393,7 +410,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_IS_POST_CHANGED = "is_post_changed";
-
+    private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -401,6 +419,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_IS_POST_CHANGED, mIsPostChanged);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
+        outState.putBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
     }
@@ -411,6 +430,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (savedInstanceState!=null) {
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mIsPostChanged = savedInstanceState.getBoolean(KEY_IS_POST_CHANGED);
+            mIsBlogFollowStatusChanged = savedInstanceState.getBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -429,6 +449,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             Intent data = new Intent();
             data.putExtra(ARG_BLOG_ID, mBlogId);
             data.putExtra(ARG_POST_ID, mPostId);
+            data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
+            
             if (mIsPostChanged) {
                 setResult(RESULT_OK, data);
             } else {
@@ -482,6 +504,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 refreshLikes(true);
                 break;
             case TOGGLE_FOLLOW:
+                mIsBlogFollowStatusChanged = true;
                 refreshFollowed();
                 break;
         }
@@ -522,6 +545,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (!hasPost() || !mPost.isWP())
             return;
 
+        final int origNumLikes = mPost.numLikes;
+        final int origNumReplies = mPost.numReplies;
+
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -545,8 +571,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        final boolean isLikesChanged = mPost.numLikes!=ReaderLikeTable.getNumLikesForPost(mPost);
-                        final boolean isCommentsChanged = mPost.numReplies!=ReaderCommentTable.getNumCommentsForPost(mPost);
+                        final boolean isLikesChanged = (mPost.numLikes != origNumLikes
+                                                     || mPost.numLikes != ReaderLikeTable.getNumLikesForPost(mPost));
+                        final boolean isCommentsChanged = (mPost.numReplies != origNumReplies
+                                                        || mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost));
                         if (isLikesChanged || isCommentsChanged) {
                             mHandler.post(new Runnable() {
                                 public void run() {

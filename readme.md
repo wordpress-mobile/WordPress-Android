@@ -16,17 +16,17 @@ Then edit the local.properties file to add your Android
 `sdk.dir`. After this step, you can invoke gradle to build, install
 and test the project:
 
-    $ gradle assembleDebug # assemble the debug .apk
-    $ gradle installDebug  # assemble and install the debug .apk if you
-                           # have an emulator or an Android device connected
-    $ gradle cIT           # assemble, install and run unit tests
+    $ ./gradlew assembleDebug # assemble the debug .apk
+    $ ./gradlew installDebug  # assemble and install the debug .apk if you
+                              # have an emulator or an Android device connected
+    $ ./gradlew cIT           # assemble, install and run unit tests
 
 Note: you can use the [Android Studio IDE][3], import the project as a
 Gradle project.
 
 ## Need help to build or hack? ##
 
-Say hello on our IRC channel: `#WordPress-Android` (freenode). Read our
+Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 [Developer Handbook][4] and [Development Blog][5].
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android

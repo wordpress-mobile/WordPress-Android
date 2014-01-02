@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WordPress</string>
+    <string name="app_name" translatable="false">WordPress</string>
 
     <!-- account setup -->
     <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
@@ -73,7 +73,7 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
     <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
-    <string name="wpcom">WordPress.com</string>
+    <string name="wpcom" translatable="false">WordPress.com</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="all">All</string>
@@ -183,17 +183,6 @@
     <string name="download">Downloading image</string>
     <string name="post_settings">Post Settings</string>
 
-    <!-- add comment view -->
-    <string name="add_comment_enter">Enter comment:</string>
-    <string name="add_comment_send">Send Comment</string>
-    <string name="write_comment">Write Comment</string>
-    <string name="add_comment_required">Required Field</string>
-    <string name="add_comment_please_enter">Please enter something in the comment field.</string>
-    <string name="reply_enter">Enter a reply:</string>
-    <string name="reply_send">Send Reply</string>
-    <string name="reply_to_comment">Reply to Comment</string>
-    <string name="reply_please_enter">Please enter something in the reply field.</string>
-
     <!-- reload drop down -->
     <string name="loading">Loading&#8230;</string>
 
@@ -247,7 +236,6 @@
     <string name="delete_post">Delete Post</string>
     <string name="post_deleted">Post Deleted Successfully</string>
     <string name="comment_added">Comment Added Successfully</string>
-    <string name="attempting_add_comment">Attempting to post comment</string>
     <string name="delete_sure_post">Are you sure you want to delete the post</string>
     <string name="attempt_delete_post">Attempting to delete post</string>
     <string name="share_url">Share Post</string>
@@ -304,7 +292,7 @@
     <string name="select_a_blog">Select a Blog</string>
     <string name="share_action_title">Add to &#8230;</string>
     <string name="share_action_post">New Post</string>
-    <string name="share_action_media">Media Gallery</string>
+    <string name="share_action_media">Media Library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, please add an account and try again.</string>
@@ -313,7 +301,7 @@
     <string name="auto_sharing_preference_reset">Auto-sharing settings reset.</string>
     <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible.</string>
     <string name="always_use_these_settings_to_share">Always use these settings</string>
-    
+
     <!-- file errors -->
     <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
 
@@ -542,6 +530,7 @@
     <string name="error_refresh_pages">Pages could not be refreshed at this time.</string>
     <string name="error_refresh_notifications">Notifications could not be refreshed at this time.</string>
     <string name="error_refresh_comments">Comments could not be refreshed at this time.</string>
+    <string name="error_refresh_stats">Stats could not be refreshed at this time.</string>
     <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
     <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
     <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
