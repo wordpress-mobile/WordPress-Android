@@ -287,6 +287,13 @@ public class Note {
     }
 
     /*
+     * returns the "meta" section of the note's JSON (not guaranteed to exist)
+     */
+    public JSONObject getJSONMeta() {
+        return JSONUtil.getJSONChild(this.toJSONObject(), "meta");
+    }
+
+    /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
     public EnumSet<EnabledActions> getEnabledActions() {
