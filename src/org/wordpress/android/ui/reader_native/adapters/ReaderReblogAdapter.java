@@ -115,7 +115,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 return false;
 
             Blog blog = WordPress.getCurrentBlog();
-            int currentBlogId = (blog != null ? blog.getBlogId() : 0);
+            int currentBlogId = (blog != null ? blog.getRemoteBlogId() : 0);
 
             Iterator<Map<String, Object>> it = accounts.iterator();
             while (it.hasNext()) {

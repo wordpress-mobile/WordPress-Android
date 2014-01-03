@@ -179,7 +179,7 @@ public class MediaEditFragment extends SherlockFragment {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null && getActivity() != null) {
-            String blogId = String.valueOf(blog.getBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
 
             Cursor cursor = null;
 
@@ -216,7 +216,7 @@ public class MediaEditFragment extends SherlockFragment {
 
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(currentBlog.getBlogId());
+                        String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
 
                         if (getActivity() != null)

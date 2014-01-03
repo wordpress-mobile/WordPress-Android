@@ -195,7 +195,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String fileType = new String(path).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
         
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(blog.getBlogId()));
+        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
         mediaFile.setFileName(fileName + "." + fileType);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
@@ -246,7 +246,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
     
     public void addToQueue(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
         startMediaUploadService();
     }

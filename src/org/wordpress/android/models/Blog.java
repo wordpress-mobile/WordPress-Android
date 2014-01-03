@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Blog {
-    private int id;
+    private int localTableBlogId;
     private String url;
     private String homeURL;
     private String blogName;
@@ -33,7 +33,7 @@ public class Blog {
     private int maxImageWidthId;
     private int lastCommentId;
     private boolean runService;
-    private int blogId;
+    private int remoteBlogId;
     private boolean location;
     private String dotcom_username;
     private String dotcom_password;
@@ -52,7 +52,7 @@ public class Blog {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.id = -1;
+        this.localTableBlogId = -1;
     }
 
     public Blog(int blog_id) throws Exception {
@@ -60,7 +60,7 @@ public class Blog {
         List<Object> blogVals = WordPress.wpDB.getBlog(blog_id);
 
         if (blogVals != null) {
-            this.id = blog_id;
+            this.localTableBlogId = blog_id;
             this.url = blogVals.get(0).toString();
             this.blogName = blogVals.get(1).toString();
             this.username = blogVals.get(2).toString();
@@ -73,7 +73,7 @@ public class Blog {
             this.maxImageWidth = blogVals.get(9).toString();
             this.maxImageWidthId = (Integer) blogVals.get(10);
             this.runService = (Integer)blogVals.get(11)>0;
-            this.blogId = (Integer) blogVals.get(12);
+            this.remoteBlogId = (Integer) blogVals.get(12);
             this.location = (Integer)blogVals.get(13)>0;
             this.dotcomFlag = (Integer)blogVals.get(14)>0;
             //these were accidentally set up to contain null values :(
@@ -107,12 +107,12 @@ public class Blog {
         }
     }
 
-    public int getId() {
-        return id;
+    public int getLocalTableBlogId() {
+        return localTableBlogId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setLocalTableBlogId(int id) {
+        this.localTableBlogId = id;
     }
 
     public String getUrl() {
@@ -219,12 +219,12 @@ public class Blog {
         this.runService = runService;
     }
 
-    public int getBlogId() {
-        return blogId;
+    public int getRemoteBlogId() {
+        return remoteBlogId;
     }
 
-    public void setBlogId(int blogId) {
-        this.blogId = blogId;
+    public void setRemoteBlogId(int blogId) {
+        this.remoteBlogId = blogId;
     }
 
     public boolean isLocation() {
@@ -317,7 +317,7 @@ public class Blog {
 
     public boolean save() {
         // Insert new blog to db
-        if (this.id == -1) {
+        if (this.localTableBlogId == -1) {
             return WordPress.wpDB.addBlog(this);
         } else {
             return WordPress.wpDB.saveBlog(this);
@@ -341,7 +341,7 @@ public class Blog {
     }
 
     public int getUnmoderatedCommentCount() {
-        return WordPress.wpDB.getUnmoderatedCommentCount(this.id);
+        return WordPress.wpDB.getUnmoderatedCommentCount(this.localTableBlogId);
     }
 
     public boolean isScaledImage() {
@@ -463,7 +463,7 @@ public class Blog {
      */
     public String getDotComBlogId() {
         if (isDotcomFlag())
-            return String.valueOf(getBlogId());
+            return String.valueOf(getRemoteBlogId());
         else
             return getApi_blogid();
     }

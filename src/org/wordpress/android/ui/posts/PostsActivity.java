@@ -220,7 +220,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), mIsPage);
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             if (!shouldPrompt)
                 return;
@@ -326,7 +326,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public void newPost() {
         WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
         // Create a new post object
-        Post newPost = new Post(WordPress.getCurrentBlog().getId(), mIsPage);
+        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         Intent i = new Intent(this, EditPostActivity.class);
         i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
@@ -504,7 +504,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             Object[] postParams = { "", post.getPostid(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
-            Object[] pageParams = { WordPress.currentBlog.getBlogId(),
+            Object[] pageParams = { WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword(), post.getPostid() };
 
@@ -527,7 +527,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         @Override
         protected Void doInBackground(Void... params) {
 
-            Object[] commentParams = { WordPress.currentBlog.getBlogId(),
+            Object[] commentParams = { WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
 
@@ -596,7 +596,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             Object versionResult = new Object();
             try {
                 if (mIsPage) {
-                    Object[] vParams = { WordPress.currentBlog.getBlogId(),
+                    Object[] vParams = { WordPress.currentBlog.getRemoteBlogId(),
                             post.getPostid(),
                             WordPress.currentBlog.getUsername(),
                             WordPress.currentBlog.getPassword() };
