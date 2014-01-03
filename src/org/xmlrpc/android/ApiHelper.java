@@ -424,7 +424,7 @@ public class ApiHelper {
                 return -1;
             }
 
-            String blogId = String.valueOf(blog.getRemoteBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
             
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
@@ -590,7 +590,7 @@ public class ApiHelper {
                 return null;
             }
             
-            String blogId = String.valueOf(blog.getRemoteBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
             
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),

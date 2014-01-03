@@ -563,7 +563,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onDeleteMedia(final List<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         List<String> sanitizedIds = new ArrayList<String>(ids.size());
         
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
@@ -660,7 +660,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (WordPress.getCurrentBlog() == null || mediaId == null) {
             return;
         }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
         if (cursor == null || !cursor.moveToFirst()) {
