@@ -31,6 +31,7 @@
             android:text="@string/view_stats_activity"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/reader_text_sz_large"
+            android:background="@drawable/reader_transparent_selector"
             android:visibility="gone" />
 
         <TextView
