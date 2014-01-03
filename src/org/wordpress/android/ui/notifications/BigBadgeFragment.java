@@ -73,17 +73,14 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
 
     /*
      * returns true if this is a stats-related notification - currently handles these types:
-     *
-     *      followed_milestone_achievement
-     *      post_milestone_achievement
-     *      like_milestone_achievement
-     *      traffic_surge
-     *      best_followed_day_feat
-     *      best_liked_day_feat
-     *      most_liked_day
-     *      most_followed_day
-     *
-     *  https://wpcom.trac.automattic.com/browser/trunk/wp-content/mu-plugins/notes/notes-rest-common.js#L64
+     *   followed_milestone_achievement
+     *   post_milestone_achievement
+     *   like_milestone_achievement
+     *   traffic_surge
+     *   best_followed_day_feat
+     *   best_liked_day_feat
+     *   most_liked_day
+     *   most_followed_day
      */
     public boolean isStatsNote() {
         if (getNote() == null)
@@ -107,9 +104,9 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
             return;
 
         // stats activity is designed to work with the current blog, so switch blogs if necessary
-        if (WordPress.getCurrentBlogId() != remoteBlogId) {
+        if (WordPress.getCurrentRemoteBlogId() != remoteBlogId) {
             // TODO: should we show a toast to let user know blog was switched?
-            int localBlogId = WordPress.wpDB.getAccountIdForBlogId(remoteBlogId);
+            int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
             WordPress.setCurrentBlog(localBlogId);
         }
 
