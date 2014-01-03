@@ -26,10 +26,14 @@ import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.text.NumberFormat;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -331,14 +335,14 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void showCounts(final PostViewHolder holder, final ReaderPost post) {
         if (post.numLikes > 0) {
-            holder.txtLikeCount.setText(Integer.toString(post.numLikes));
+            holder.txtLikeCount.setText(FormatUtils.formatInt(post.numLikes));
             holder.txtLikeCount.setVisibility(View.VISIBLE);
         } else {
             holder.txtLikeCount.setVisibility(View.GONE);
         }
 
         if (post.numReplies > 0) {
-            holder.txtCommentCount.setText(Integer.toString(post.numReplies));
+            holder.txtCommentCount.setText(FormatUtils.formatInt(post.numReplies));
             holder.txtCommentCount.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
