@@ -146,7 +146,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
         blog.save();
         
-        if (WordPress.getCurrentBlog().getId() == blog.getId())
+        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
             WordPress.currentBlog = blog;
         
         // exit settings screen
@@ -311,7 +311,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getId());
+                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
                             .show();
@@ -348,7 +348,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     public void viewAdmin(View view) {
         mIsViewingAdmin = true;
         Intent i = new Intent(this, DashboardActivity.class);
-        i.putExtra("blogID", blog.getId());
+        i.putExtra("blogID", blog.getLocalTableBlogId());
         startActivity(i);
     }
 }

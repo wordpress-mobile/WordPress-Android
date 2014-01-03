@@ -119,7 +119,7 @@ public class PostsListFragment extends ListFragment {
         super.onResume();
         mParentActivity = (PostsActivity) getActivity();
         Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog != null && mLoadedBlogId != currentBlog.getBlogId()) {
+        if (currentBlog != null && mLoadedBlogId != currentBlog.getRemoteBlogId()) {
             WordPress.currentPost = null;
             loadPosts(false);
         }
@@ -135,7 +135,7 @@ public class PostsListFragment extends ListFragment {
 
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), isPage)) {
+                if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), isPage)) {
                     // first view is showing, show the second progress view
                     switcher.showNext();
                     // get 20 more posts
@@ -179,10 +179,10 @@ public class PostsListFragment extends ListFragment {
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
         if (WordPress.currentBlog != null) {
-            mLoadedBlogId = WordPress.currentBlog.getBlogId();
+            mLoadedBlogId = WordPress.currentBlog.getRemoteBlogId();
         }
         try {
-            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), isPage);
+            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getLocalTableBlogId(), isPage);
         } catch (Exception e1) {
             return false;
         }
@@ -256,7 +256,6 @@ public class PostsListFragment extends ListFragment {
         if (loadedPosts != null || drafts == true) {
             ListView listView = getListView();
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
             listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
             listView.setDividerHeight(1);
             listView.removeFooterView(switcher);
@@ -323,7 +322,7 @@ public class PostsListFragment extends ListFragment {
                         // Show comments menu option only if post allows commenting
                         boolean allowComments = false;
                         Post post = new Post(WordPress.currentBlog
-                                .getId(), mSelectedID, isPage);
+                                .getLocalTableBlogId(), mSelectedID, isPage);
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
                         }
@@ -433,10 +432,10 @@ public class PostsListFragment extends ListFragment {
         List<Map<String, Object>> loadedPosts;
         if (isPage) {
             loadedPosts = WordPress.wpDB.loadDrafts(
-                    WordPress.currentBlog.getId(), true);
+                    WordPress.currentBlog.getLocalTableBlogId(), true);
         } else {
             loadedPosts = WordPress.wpDB.loadDrafts(
-                    WordPress.currentBlog.getId(), false);
+                    WordPress.currentBlog.getLocalTableBlogId(), false);
         }
         if (loadedPosts != null) {
             mDraftIDs = new String[loadedPosts.size()];
@@ -521,7 +520,7 @@ public class PostsListFragment extends ListFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Post post = new Post(WordPress.currentBlog.getId(), mSelectedID, isPage);
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), mSelectedID, isPage);
 
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {
@@ -560,7 +559,7 @@ public class PostsListFragment extends ListFragment {
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 i.putExtra("isPage", itemGroupID == MENU_GROUP_PAGES ? true : false);
                 i.putExtra("postID", mSelectedID);
-                i.putExtra("blogID", WordPress.currentBlog.getId());
+                i.putExtra("blogID", WordPress.currentBlog.getLocalTableBlogId());
                 startActivity(i);
                 return true;
             case MENU_ITEM_SHARE:
@@ -626,7 +625,7 @@ public class PostsListFragment extends ListFragment {
             XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(),
                     mBlog.getHttpuser(),
                     mBlog.getHttppassword());
-            Object[] params = {mBlog.getBlogId(),
+            Object[] params = {mBlog.getRemoteBlogId(),
                     mBlog.getUsername(),
                     mBlog.getPassword(), recordCount};
             try {
@@ -637,13 +636,13 @@ public class PostsListFragment extends ListFragment {
                         success = true;
                         List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
                         if (!mLoadMore) {
-                            WordPress.wpDB.deleteUploadedPosts(mBlog.getId(), mIsPage);
+                            WordPress.wpDB.deleteUploadedPosts(mBlog.getLocalTableBlogId(), mIsPage);
                         }
                         for (int ctr = 0; ctr < result.length; ctr++) {
                             Map<?, ?> postMap = (Map<?, ?>) result[ctr];
                             postsList.add(ctr, postMap);
                         }
-                        WordPress.wpDB.savePosts(postsList, mBlog.getId(), mIsPage);
+                        WordPress.wpDB.savePosts(postsList, mBlog.getLocalTableBlogId(), mIsPage);
                     }
                 }
             } catch (XMLRPCException e) {
@@ -669,7 +668,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     private void showPost(long selectedID) {
-        Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage);
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), selectedID, isPage);
         if (post.getId() >= 0) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);
@@ -684,7 +683,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     private void selectAndShowFirstPost() {
-        Post post = new Post(WordPress.currentBlog.getId(), Integer.valueOf(mPostIDs[0]), isPage);
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), Integer.valueOf(mPostIDs[0]), isPage);
         if (post.getId() >= 0) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);

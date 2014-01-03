@@ -31,6 +31,7 @@
     <string name="page">Page</string>
     <string name="posts">Posts</string>
     <string name="media">Media</string>
+    <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="pages">Pages</string>
     <string name="about">About</string>
@@ -180,7 +181,7 @@
     <string name="out_of_memory">Device out of memory.</string>
     <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
-    <string name="download">Downloading image</string>
+    <string name="download">Downloading media</string>
     <string name="post_settings">Post Settings</string>
 
     <!-- reload drop down -->
@@ -611,6 +612,7 @@
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
+    <string name="reader_label_reply">Reply</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>

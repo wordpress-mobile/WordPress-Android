@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader_native;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,6 +64,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by nbradbury on 7/8/13.
  */
@@ -72,6 +73,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
     protected static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
+    private static final String ARG_LIST_STATE = "list_state";
 
     private long mPostId;
     private long mBlogId;
@@ -91,6 +93,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
     private boolean mIsBlogFollowStatusChanged = false;
+
+
+    private Parcelable mListState = null;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
@@ -191,6 +196,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 public void onDataLoaded(boolean isEmpty) {
                     // show footer below comments when comments exist
                     mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                    // restore listView state (scroll position) if it was saved during rotation
+                    if (mListState != null) {
+                        if (!isEmpty)
+                            getListView().onRestoreInstanceState(mListState);
+                        mListState = null;
+                    }
                 }
             };
 
@@ -422,6 +433,13 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         outState.putBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
+
+        // retain listView state if a comment has been scrolled to - this enables us to restore
+        // the scroll position after comment data is loaded
+        if (getListView().getFirstVisiblePosition() > 0) {
+            mListState = getListView().onSaveInstanceState();
+            outState.putParcelable(ARG_LIST_STATE, mListState);
+        }
     }
 
     @Override
@@ -435,6 +453,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
+            mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
         }
     }
 
@@ -683,7 +702,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
                 final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_like);
+                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
                 final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
 
                 // determine how many avatars will fit the space
@@ -1097,6 +1116,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);
+        final String greyExtraLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_extra_light);
 
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -1110,12 +1130,19 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
-        // use a consistent top/bottom margin for paragraphs
+        // add border, background color, and padding to pre blocks, and add overflow scrolling
+        // so user can scroll the block if it's wider than the display
+        sbHtml.append("  pre { overflow-x: scroll;")
+              .append("        border: 1px solid ").append(greyLight).append("; ")
+              .append("        background-color: ").append(greyExtraLight).append("; ")
+              .append("        padding: ").append(marginSmall).append("px; }");
+
+         // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // css for video div when no video thumb available (see processVideos)
-        sbHtml.append("  div.wpreader-video { background-color: ").append(greyLight).append(";")
-              .append("     width: 100%; padding: ").append(marginLarge).append("px 0px }");
+        sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
+              .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
 
         // make sure links are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");

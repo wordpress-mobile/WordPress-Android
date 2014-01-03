@@ -305,7 +305,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private String getBlogId() {
-        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {

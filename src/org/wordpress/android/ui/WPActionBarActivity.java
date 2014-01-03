@@ -175,7 +175,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             
         if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
-                if (blogIDs[i] == currentBlog.getId()) {
+                if (blogIDs[i] == currentBlog.getLocalTableBlogId()) {
                     if (mBlogSpinner != null) {
                         mBlogSpinner.setSelection(i);
                     }
@@ -251,10 +251,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             return false;
         }
     }
+
+    private void initMenuDrawer() {
+        initMenuDrawer(-1);
+    }
+
     /**
      * Create menu drawer ListView and listeners
      */
-    private void initMenuDrawer() {
+    private void initMenuDrawer(int blogSelection) {
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
@@ -315,23 +320,26 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
+        if (blogSelection != -1 && mBlogSpinner != null) {
+            mBlogSpinner.setSelection(blogSelection);
+        }
         updateMenuDrawer();
     }
 
     private void addBlogSpinner(String[] blogNames) {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
-        
-        spinnerWrapper.setOnClickListener(new OnClickListener() {
+        if (spinnerWrapper != null) {
+            spinnerWrapper.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (mBlogSpinner != null) {
-                    mBlogSpinner.performClick();
+                @Override
+                public void onClick(View v) {
+                    if (mBlogSpinner != null) {
+                        mBlogSpinner.performClick();
+                    }
                 }
-            }
-        });
-        
+            });
+        }
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
@@ -479,7 +487,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
-     * Setup the global state tracking which blog is currently active if the user is signed in.q
+     * Setup the global state tracking which blog is currently active if the user is signed in.
      */
     public void setupCurrentBlog() {
         if (askToSignInIfNot()) {
@@ -528,7 +536,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0)
                             || (blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
                             || blogNames.length == 0) {
-                        this.initMenuDrawer();
+                        initMenuDrawer();
                     } else if (blogNames.length > 1 && mBlogSpinner != null) {
                         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
                                 getSupportActionBar().getThemedContext(),
@@ -614,7 +622,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * This method is called when the user changes the active blog.
      */
     public void onBlogChanged() {
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
@@ -671,7 +679,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
- 
         if (mIsXLargeDevice) {
             if (mMenuDrawer != null) {
                 // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
@@ -680,11 +687,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     mMenuDrawer.getContentContainer().removeView(content);
                     mMenuDrawer = attachMenuDrawer();
                     mMenuDrawer.setContentView(content);
-                    initMenuDrawer();
+                    if (mBlogSpinner != null) {
+                        initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
+                    }
                 }
             }
         }
- 
         super.onConfigurationChanged(newConfig);
     }
 
@@ -773,7 +781,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -798,7 +806,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew",
                     true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -864,7 +872,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
             
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);

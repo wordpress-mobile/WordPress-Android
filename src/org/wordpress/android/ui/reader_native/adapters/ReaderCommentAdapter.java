@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -127,10 +126,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
             holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
             holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
+            holder.txtReply = (TextView) convertView.findViewById(R.id.text_reply);
             holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-            holder.spacer = convertView.findViewById(R.id.spacer);
+            holder.spacerIndent = convertView.findViewById(R.id.spacer_indent);
+            holder.spacerTop = convertView.findViewById(R.id.spacer_top);
             holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
-            holder.imgReply = (ImageView) convertView.findViewById(R.id.image_reply);
             convertView.setTag(holder);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
@@ -167,14 +167,17 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
-        // show spacer and indent it based on comment level
-        holder.spacer.setVisibility(comment.parentId==0 ? View.GONE : View.VISIBLE);
+        // show top spacer for first comment (adds extra space between comments and post)
+        holder.spacerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+
+        // show indentation spacer and indent it based on comment level
+        holder.spacerIndent.setVisibility(comment.parentId==0 ? View.GONE : View.VISIBLE);
         if (comment.level > 0) {
             int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.spacer.getLayoutParams();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.spacerIndent.getLayoutParams();
             if (params.width!=indent)
                 params.width = indent;
-            holder.spacer.setVisibility(View.VISIBLE);
+            holder.spacerIndent.setVisibility(View.VISIBLE);
         }
 
         // different background for highlighted comment, with optional progress bar
@@ -188,7 +191,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // tapping reply icon tells activity to show reply box
         if (mReplyListener != null) {
-            holder.imgReply.setOnClickListener(new View.OnClickListener() {
+            holder.txtReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mReplyListener.onRequestReply(comment.commentId);
@@ -247,10 +250,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private TextView txtAuthor;
         private TextView txtText;
         private TextView txtDate;
+        private TextView txtReply;
         private WPNetworkImageView imgAvatar;
-        private View spacer;
+        private View spacerIndent;
+        private View spacerTop;
         private ProgressBar progress;
-        private ImageView imgReply;
     }
 
     /*

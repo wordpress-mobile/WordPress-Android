@@ -58,14 +58,15 @@
                 style="@style/ReaderTextView.Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/noticon_clock"
                 android:text="text_date" />
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_follow"
             style="@style/ReaderTextView.Follow"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
@@ -90,10 +91,10 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/reader_margin_large"
+        android:scrollbars="none"
         android:visibility="invisible" />
 
     <RelativeLayout
@@ -118,7 +119,7 @@
         <LinearLayout
             android:id="@+id/layout_liking_avatars"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_avatar_sz_like"
+            android:layout_height="@dimen/reader_avatar_sz_small"
             android:layout_below="@+id/text_like_count"
             android:layout_marginTop="@dimen/reader_margin_medium"
             android:gravity="center_vertical"

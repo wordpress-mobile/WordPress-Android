@@ -78,7 +78,7 @@ public class CommentActions {
                 commentHash.put("author_email", "");
 
                 Object[] params = {
-                        blog.getBlogId(),
+                        blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         postID,
@@ -141,7 +141,7 @@ public class CommentActions {
                 replyHash.put("author_email", "");
 
                 Object[] params = {
-                        blog.getBlogId(),
+                        blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         Integer.valueOf(comment.postID),
@@ -240,7 +240,7 @@ public class CommentActions {
                 postHash.put("author_url", comment.authorURL);
                 postHash.put("author_email", comment.authorEmail);
 
-                Object[] params = { blog.getBlogId(),
+                Object[] params = { blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         comment.commentID,
@@ -256,7 +256,7 @@ public class CommentActions {
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
-                    WordPress.wpDB.updateCommentStatus(blog.getId(), comment.commentID, CommentStatus.toString(newStatus));
+                    WordPress.wpDB.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus.toString(newStatus));
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -294,7 +294,7 @@ public class CommentActions {
                         blog.getHttppassword());
 
                 Object[] params = {
-                        blog.getBlogId(),
+                        blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         comment.commentID };

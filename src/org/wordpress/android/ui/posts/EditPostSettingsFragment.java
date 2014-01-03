@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -304,7 +303,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", WordPress.getCurrentBlog().getId());
+            bundle.putInt("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             if (mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
