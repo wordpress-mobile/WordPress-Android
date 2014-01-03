@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.GravatarUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -164,7 +165,7 @@ public class NotificationsListFragment extends ListFragment {
             if (avatarUrl!=null && avatarUrl.contains("s=256"))
                 avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+            imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(avatarUrl), WordPress.imageLoader);
 
             imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 

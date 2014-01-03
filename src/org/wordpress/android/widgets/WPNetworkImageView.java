@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
 
@@ -61,7 +62,11 @@ public class WPNetworkImageView extends ImageView {
         setImageUrl(url, imageType, null);
     }
     public void setImageUrl(String url, ImageType imageType, ImageListener imageListener) {
-        mUrl = url;
+        if (imageType == ImageType.AVATAR) {
+            mUrl = GravatarUtils.fixGravatarUrl(url);
+        } else {
+            mUrl = url;
+        }
         mImageType = imageType;
         mImageListener = imageListener;
         if (url==null) {

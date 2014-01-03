@@ -23,6 +23,7 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader_native.actions.ReaderActions;
 import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
@@ -134,7 +135,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             convertView.setOnClickListener(null);
         }
 
-        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WordPress.imageLoader);
+        holder.imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl()), WordPress.imageLoader);
 
         return convertView;
     }
