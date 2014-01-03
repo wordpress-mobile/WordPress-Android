@@ -289,8 +289,18 @@ public class Note {
     /*
      * returns the "meta" section of the note's JSON (not guaranteed to exist)
      */
-    public JSONObject getJSONMeta() {
+    private JSONObject getJSONMeta() {
         return JSONUtil.getJSONChild(this.toJSONObject(), "meta");
+    }
+
+    /*
+     * returns the value of the passed name in the meta section of the JSON
+     */
+    public int getMetaValueAsInt(String name, int defaultValue) {
+        JSONObject jsonMeta = getJSONMeta();
+        if (jsonMeta == null)
+            return defaultValue;
+        return jsonMeta.optInt(name, defaultValue);
     }
 
     /*
