@@ -674,7 +674,7 @@ public class ApiHelper {
             data.put("overwrite", true);
             
             Object[] apiParams = { 
-                    1, 
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     data
