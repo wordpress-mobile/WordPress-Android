@@ -86,9 +86,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(int blogId, final Comment comment) {
+    protected static CommentDetailFragment newInstance(int localBlogId, final Comment comment) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setComment(blogId, comment);
+        fragment.setComment(localBlogId, comment);
         return fragment;
     }
 
@@ -145,13 +145,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    protected void setComment(int blogId, final Comment comment) {
+    protected void setComment(int localBlogId, final Comment comment) {
         mComment = comment;
-        mLocalTableBlogId = blogId;
+        mLocalTableBlogId = localBlogId;
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
-        mIsUsersBlog = (comment != null && WordPress.wpDB.isBlogIdInDatabase(mLocalTableBlogId));
+        mIsUsersBlog = (comment != null && WordPress.wpDB.isLocalBlogIdInDatabase(mLocalTableBlogId));
 
         if (hasActivity())
             showComment();
@@ -545,19 +545,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             JSONObject jsonAction = actions.get(firstKey);
             JSONObject jsonParams = jsonAction.optJSONObject("params");
             if (jsonParams != null) {
-                int blogId = jsonParams.optInt("blog_id");
+                int remoteBlogId = jsonParams.optInt("blog_id");
                 int commentId = jsonParams.optInt("comment_id");
 
-                // note that the account won't be found if the comment is from someone else's blog
-                int accountId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(blogId);
+                // note that the local blog id won't be found if the comment is from someone else's blog
+                int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
 
                 // first try to get from local db, if that fails request it from the server
-                Comment comment = WordPress.wpDB.getComment(accountId, commentId);
+                Comment comment = WordPress.wpDB.getComment(localBlogId, commentId);
                 if (comment != null) {
                     comment.setProfileImageUrl(note.getIconURL());
-                    setComment(accountId, comment);
+                    setComment(localBlogId, comment);
                 } else {
-                    requestComment(blogId, commentId, note.getIconURL());
+                    requestComment(localBlogId, remoteBlogId, commentId, note.getIconURL());
                 }
             }
         } else {
@@ -571,7 +571,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * either be wp.com or have Jetpack, but it's safe to do this since this method is only called when
      * displayed from a notification (and notifications require wp.com/Jetpack)
      */
-    private void requestComment(final int blogId, final int commentId, final String profileImageUrl) {
+    private void requestComment(final int localBlogId,
+                                final int remoteBlogId,
+                                final int commentId,
+                                final String profileImageUrl) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -587,8 +590,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (comment != null) {
                         if (profileImageUrl != null)
                             comment.setProfileImageUrl(profileImageUrl);
-                        WordPress.wpDB.addComment(mLocalTableBlogId, comment);
-                        setComment(blogId, comment);
+                        WordPress.wpDB.addComment(localBlogId, comment);
+                        setComment(localBlogId, comment);
                     }
                 }
             }
@@ -606,7 +609,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", blogId, commentId);
+        final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         mIsRequestingComment = true;
         WordPress.restClient.get(path, restListener, restErrListener);
     }
