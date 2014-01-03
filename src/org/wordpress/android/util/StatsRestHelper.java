@@ -1,5 +1,9 @@
 package org.wordpress.android.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -10,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -18,6 +23,8 @@ import com.wordpress.rest.RestRequest.Listener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
@@ -48,17 +55,13 @@ import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+import org.wordpress.android.ui.stats.StatsGeoviewsFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.util.AppLog.T;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A utility class to help with parsing json from the stats api.
  * Deletes and inserts are done on the database in batches, by adding each operation into a list of {@link ContentProviderOperation}s.
- * Once ready, a {@link ContentResolver} is used to apply the batch with the {@link StatsContentProvider#AUTHORITY} as the authority.
+ * Once ready, a {@link ContentResolver} is used to apply the batch with the {@link Config#STATS_PROVIDER_AUTHORITY} as the authority.
  * The relevant URIs are then notified once the operation is complete.  
  */
 public class StatsRestHelper {
@@ -184,7 +187,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.e(T.STATS, "Stats: Failed to fetch clicks");
+                        Log.e(TAG, "Stats: Failed to fetch clicks");
                         updateRefreshMap(StatsViewType.CLICKS, -1);
                     }
                 });
@@ -244,7 +247,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_CLICK_GROUP_URI, null);
                     resolver.notifyChange(StatsContentProvider.STATS_CLICKS_URI, null);
                     
@@ -278,7 +281,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.COMMENTS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch most commented");
+                        Log.e(TAG, "Stats: Failed to fetch most commented");
                     }
                 });
         
@@ -295,7 +298,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.COMMENTS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch top commenters");
+                        Log.e(TAG, "Stats: Failed to fetch top commenters");
                     }
                 });
         
@@ -331,7 +334,7 @@ public class StatsRestHelper {
                     }
 
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_MOST_COMMENTED_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -378,7 +381,7 @@ public class StatsRestHelper {
                     }
 
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_TOP_COMMENTERS_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -410,7 +413,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.REFERRERS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch referrers");
+                        Log.e(TAG, "Stats: Failed to fetch referrers");
                     }
                 });
     }
@@ -468,7 +471,7 @@ public class StatsRestHelper {
                     }
 
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
                     resolver.notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
                 } catch (JSONException e) {
@@ -501,7 +504,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.SEARCH_ENGINE_TERMS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch search engine terms");
+                        Log.e(TAG, "Stats: Failed to fetch search engine terms");
                     }
                 });
         
@@ -542,7 +545,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
                     
                 } catch (JSONException e) {
@@ -575,7 +578,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TAGS_AND_CATEGORIES, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch tags and categories");
+                        Log.e(TAG, "Stats: Failed to fetch tags and categories");
                     }
                 });
     }
@@ -610,7 +613,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -643,7 +646,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TOP_AUTHORS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch top authors");
+                        Log.e(TAG, "Stats: Failed to fetch top authors");
                     }
                 });
     }
@@ -678,7 +681,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_TOP_AUTHORS_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -711,7 +714,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TOP_POSTS_AND_PAGES, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch top posts and pages");
+                        Log.e(TAG, "Stats: Failed to fetch top posts and pages");
                     }
                 });
     }
@@ -748,7 +751,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -779,7 +782,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.VIDEO_PLAYS, -1);
-                        AppLog.e(T.STATS, "Stats: Failed to fetch video plays");
+                        Log.e(TAG, "Stats: Failed to fetch video plays");
                     }
                 });
     }
@@ -814,7 +817,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_VIDEOS_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -831,22 +834,24 @@ public class StatsRestHelper {
         }        
     }
 
+
     private static void getStatsViewsByCountry(final String blogId, String date) {
         WordPress.restClient.getStatsGeoviews(blogId, date,
                 new Listener() {
+                    
                     @Override
                     public void onResponse(JSONObject response) {
                         new ParseGeoViewsTask().execute(blogId, response);
                     }
-                },
+                }, 
                 new ErrorListener() {
+                    
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.VIEWS_BY_COUNTRY, -1);
-                        AppLog.e(T.STATS, error);
+                        Log.e("WordPress Stats", StatsGeoviewsFragment.class.getSimpleName() + ": " + error.toString());
                     }
-                }
-        );
+                });
     }
 
     private static class ParseGeoViewsTask extends AsyncTask<Object, Void, Void> {
@@ -882,7 +887,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(StatsContentProvider.STATS_GEOVIEWS_URI, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -968,7 +973,7 @@ public class StatsRestHelper {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null)
                             callback.onFailure(error);
-                        AppLog.e(T.STATS, "Stats: Failed to get summary", error);
+                        Log.e(TAG, "Stats: Failed to get summary", error);
                     }
                 });
     }
@@ -989,7 +994,7 @@ public class StatsRestHelper {
             @Override
             public void onErrorResponse(VolleyError error) {
                 updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
-                AppLog.e(T.STATS, "Stats: Failed to get bar chart data");
+                Log.e(TAG, "Stats: Failed to get bar chart data");
             }
         };
         
@@ -1034,7 +1039,7 @@ public class StatsRestHelper {
                     }
                     
                     ContentResolver resolver = context.getContentResolver();
-                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
                     resolver.notifyChange(uri, null);
                 } catch (JSONException e) {
                     e.printStackTrace();
