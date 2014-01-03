@@ -68,7 +68,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         if (WordPress.getCurrentBlog() == null)
             return;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
         

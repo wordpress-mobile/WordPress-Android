@@ -181,7 +181,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if (WordPress.currentBlog.isHidden()) {
             return false;
         }
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
         return true;
     }
 
@@ -279,9 +279,9 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
                     .edit();
             if (isSharingText()) {
-                editor.putInt(SHARE_TEXT_BLOG_ID_KEY, WordPress.currentBlog.getId());
+                editor.putInt(SHARE_TEXT_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
             } else {
-                editor.putInt(SHARE_IMAGE_BLOG_ID_KEY, WordPress.currentBlog.getId());
+                editor.putInt(SHARE_IMAGE_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
                 editor.putInt(SHARE_IMAGE_ADDTO_KEY, mActionIndex); // Add to new post or media
             }
             editor.commit();

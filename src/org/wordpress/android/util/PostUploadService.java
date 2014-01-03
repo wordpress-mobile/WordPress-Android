@@ -394,7 +394,7 @@ public class PostUploadService extends Service {
             Object[] params;
 
             if (post.isLocalDraft() && !post.isUploaded())
-                params = new Object[]{blog.getBlogId(), blog.getUsername(), blog.getPassword(),
+                params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};
             else
                 params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,

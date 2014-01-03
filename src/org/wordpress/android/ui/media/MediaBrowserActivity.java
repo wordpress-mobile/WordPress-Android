@@ -563,7 +563,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onDeleteMedia(final List<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         List<String> sanitizedIds = new ArrayList<String>(ids.size());
         
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
@@ -660,7 +660,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (WordPress.getCurrentBlog() == null || mediaId == null) {
             return;
         }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
         if (cursor == null || !cursor.moveToFirst()) {
@@ -741,7 +741,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaGridFragment == null)
             return;
 
-        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), false);
         if (newPost.getId() < 0) {
             return;
         }
@@ -780,7 +780,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
-        Post newPost = new Post(WordPress.getCurrentBlog().getId(), false);
+        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), false);
         if (newPost.getId() < 0) {
             return;
         }

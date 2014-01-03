@@ -84,7 +84,7 @@ public class MediaUploadService extends Service {
         // Since we won't be able to receive notifications for these, set them to 'failed'.
         
         if(WordPress.getCurrentBlog() != null){
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
     
             sendUpdateBroadcast(null);
@@ -95,7 +95,7 @@ public class MediaUploadService extends Service {
         if (WordPress.getCurrentBlog() == null)
             return null;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         return WordPress.wpDB.getMediaUploadQueue(blogId);
     }
     

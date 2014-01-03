@@ -119,7 +119,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
 
     private void populateOrFetchCategories() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getId());
+        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
 
         if (mCategories.getChildren().size() > 0) {
             populateCategoryList();
@@ -190,7 +190,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public String fetchCategories() {
         String returnMessage;
         Object result[] = null;
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), };
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
         boolean success = false;
@@ -204,7 +204,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         if (success) {
             // wipe out the categories table
-            WordPress.wpDB.clearCategories(blog.getId());
+            WordPress.wpDB.clearCategories(blog.getLocalTableBlogId());
 
             for (Object aResult : result) {
                 Map<?, ?> curHash = (Map<?, ?>) aResult;
@@ -213,7 +213,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 String categoryParentID = curHash.get("parentId").toString();
                 int convertedCategoryID = Integer.parseInt(categoryID);
                 int convertedCategoryParentID = Integer.parseInt(categoryParentID);
-                WordPress.wpDB.insertCategory(blog.getId(), convertedCategoryID, convertedCategoryParentID, categoryName);
+                WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), convertedCategoryID, convertedCategoryParentID, categoryName);
             }
             returnMessage = "gotCategories";
         } else {
@@ -247,7 +247,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), struct };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), struct };
 
         Object result = null;
         try {
@@ -280,7 +280,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             }
 
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, new_category_name);
+            WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
             mSelectedCategories.add(new_category_name);
@@ -341,7 +341,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             return true;
         } else if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getId());
+            bundle.putInt("id", blog.getLocalTableBlogId());
             Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
             i.putExtras(bundle);
             startActivityForResult(i, 0);
@@ -357,7 +357,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private String getCanonicalCategoryName(int category_id) {
         String new_category_name = null;
         Map<?, ?> result = null;
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
         try {
             result = (Map<?, ?>) client.call("wp.getTerm", params);
         } catch (XMLRPCException e) {
