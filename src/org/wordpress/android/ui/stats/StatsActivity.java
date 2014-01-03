@@ -60,6 +60,7 @@ public class StatsActivity extends WPActionBarActivity {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
+    public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
 
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
@@ -68,6 +69,7 @@ public class StatsActivity extends WPActionBarActivity {
     private int mResultCode = -1;
     private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
+    private boolean mNoMenuDrawer = false;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -86,7 +88,14 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         }
 
-        createMenuDrawer(R.layout.stats_activity);
+        mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
+        if (mNoMenuDrawer) {
+            setContentView(R.layout.stats_activity);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            createMenuDrawer(R.layout.stats_activity);
+        }
+
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
         mColumnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
         mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
@@ -395,6 +404,9 @@ public class StatsActivity extends WPActionBarActivity {
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
+            return true;
+        } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

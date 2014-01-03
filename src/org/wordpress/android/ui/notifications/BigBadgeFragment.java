@@ -1,17 +1,14 @@
 package org.wordpress.android.ui.notifications;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -19,16 +16,16 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.JSONUtil;
 
 public class BigBadgeFragment extends Fragment implements NotificationFragment {
     private Note mNote;
-    private NetworkImageView mBadgeImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
         View view = inflater.inflate(R.layout.notifications_big_badge, parent, false);
-        mBadgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
+        NetworkImageView badgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
         
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
         bodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -37,12 +34,30 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
             String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");
             if (noteHTML.equals(""))
                 noteHTML = getNote().getSubject();
-            bodyTextView.setText(Html.fromHtml(noteHTML));
+            Spanned html = Html.fromHtml(noteHTML);
+            bodyTextView.setText(html);
 
             // Get the badge
             String iconURL = getNote().getIconURL();
-            if (!iconURL.equals("")) {
-                mBadgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
+            if (!iconURL.equals(""))
+                badgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
+
+            // if this is a stats-related note, show stats link and enable tapping badge
+            // to view stats - but only if the note is for a blog that's visible
+            if (isStatsNote()) {
+                final int remoteBlogId = getNote().getMetaValueAsInt("blog_id", -1);
+                if (WordPress.wpDB.isDotComAccountVisible(remoteBlogId)) {
+                    TextView txtStats = (TextView) view.findViewById(R.id.text_stats_link);
+                    txtStats.setVisibility(View.VISIBLE);
+                    View.OnClickListener statsListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showStatsActivity(remoteBlogId);
+                        }
+                    };
+                    txtStats.setOnClickListener(statsListener);
+                    badgeImageView.setOnClickListener(statsListener);
+                }
             }
         }
         
@@ -55,5 +70,48 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
     public Note getNote(){
         return mNote;
     }
-    
+
+    /*
+     * returns true if this is a stats-related notification - currently handles these types:
+     *   followed_milestone_achievement
+     *   post_milestone_achievement
+     *   like_milestone_achievement
+     *   traffic_surge
+     *   best_followed_day_feat
+     *   best_liked_day_feat
+     *   most_liked_day
+     *   most_followed_day
+     */
+    public boolean isStatsNote() {
+        if (getNote() == null)
+            return false;
+
+        String type = getNote().getType();
+        if (type == null)
+            return false;
+
+        return (type.contains("_milestone_")
+             || type.startsWith("traffic_")
+             || type.startsWith("best_")
+             || type.startsWith("most_"));
+    }
+
+    /*
+     * show stats for the passed blog
+     */
+    private void showStatsActivity(int remoteBlogId) {
+        if (getActivity() == null || isRemoving())
+            return;
+
+        // stats activity is designed to work with the current blog, so switch blogs if necessary
+        if (WordPress.getCurrentRemoteBlogId() != remoteBlogId) {
+            // TODO: should we show a toast to let user know blog was switched?
+            int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
+            WordPress.setCurrentBlog(localBlogId);
+        }
+
+        Intent intent = new Intent(getActivity(), StatsActivity.class);
+        intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+        getActivity().startActivity(intent);
+    }
 }
