@@ -23,7 +23,7 @@ nb,nb,Norwegian
 nl,nl,Dutch
 pl,pl,Polish
 pt,pt,Portuguese
-pt-br,pt-br,Portuguese(Brazil)
+pt-br,pt-rBR,Portuguese(Brazil)
 ro,ro,Romanian
 sk,sk,Slovak
 sl,sl,Slovenian
@@ -35,5 +35,5 @@ tr,tr,Turkish
 uk,uk,Ukranian
 vi,vi,Vietnamese
 zh,zh,Chinese
-zh-cn,zh-cn,Chinese(China)
-zh-tw,zh-tw,Chinese(Taiwan)
+zh-cn,zh-rCN,Chinese(China)
+zh-tw,zh-rTW,Chinese(Taiwan)
