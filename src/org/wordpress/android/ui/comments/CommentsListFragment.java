@@ -643,7 +643,7 @@ public class CommentsListFragment extends ListFragment {
 
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             if (comment.hasProfileImageUrl()) {
-                imgAvatar.setImageUrl(comment.getProfileImageUrl(), WordPress.imageLoader);
+                imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
             } else {
                 imgAvatar.setImageResource(R.drawable.placeholder);
             }
