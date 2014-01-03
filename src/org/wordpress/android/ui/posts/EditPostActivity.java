@@ -26,8 +26,6 @@ import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
-import java.util.Locale;
-
 public class EditPostActivity extends SherlockFragmentActivity {
 
     public static final String EXTRA_POSTID = "postId";
@@ -108,15 +106,15 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 }
 
                 // Create a new post for share intents and QuickPress
-                mPost = new Post(WordPress.getCurrentBlogAccountId(), false);
+                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
                 mIsNewPost = true;
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long postId = extras.getLong(EXTRA_POSTID, -1);
                 boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-                mPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
-                mOriginalPost = new Post(WordPress.getCurrentBlogAccountId(), postId, isPage);
+                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
+                mOriginalPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
 
                 if (isPage) {
                     WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);

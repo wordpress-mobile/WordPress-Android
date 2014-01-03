@@ -176,14 +176,14 @@ public class CommentsActivity extends WPActionBarActivity
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(commentList);
-                f = CommentDetailFragment.newInstance(WordPress.getCurrentBlogId(), comment);
+                f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment);
                 ft.add(R.id.commentDetailFragmentContainer, f);
                 //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
-                f.setComment(WordPress.getCurrentBlogId(), comment);
+                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment);
             }
         }
     }
@@ -260,7 +260,7 @@ public class CommentsActivity extends WPActionBarActivity
              */
             showDialog(ID_DIALOG_DELETING);
             CommentActions.deleteComment(
-                    WordPress.getCurrentBlogAccountId(),
+                    WordPress.getCurrentLocalTableBlogId(),
                     WordPress.currentComment,
                     new CommentActions.CommentActionListener() {
                         @Override
@@ -295,7 +295,7 @@ public class CommentsActivity extends WPActionBarActivity
                     return true;
             }
 
-            CommentActions.moderateComment(WordPress.getCurrentBlogAccountId(),
+            CommentActions.moderateComment(WordPress.getCurrentLocalTableBlogId(),
                                            WordPress.currentComment,
                                            status,
                     new CommentActions.CommentActionListener() {

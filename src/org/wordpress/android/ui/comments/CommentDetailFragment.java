@@ -56,8 +56,7 @@ import java.util.Map;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
-    private int mAccountId;
-    private int mBlogId;
+    private int mLocalTableBlogId;
 
     private Comment mComment;
     private Note mNote;
@@ -148,12 +147,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     protected void setComment(int blogId, final Comment comment) {
         mComment = comment;
-        mBlogId = blogId;
-        mAccountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+        mLocalTableBlogId = blogId;
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
-        mIsUsersBlog = (comment != null && WordPress.wpDB.isBlogIdInDatabase(mBlogId));
+        mIsUsersBlog = (comment != null && WordPress.wpDB.isBlogIdInDatabase(mLocalTableBlogId));
 
         if (hasActivity())
             showComment();
@@ -199,7 +197,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     protected int getBlogId() {
-        return mBlogId;
+        return mLocalTableBlogId;
     }
 
     /*
@@ -208,8 +206,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     protected void refreshComment() {
         if (!hasComment())
             return;
-        Comment updatedComment = WordPress.wpDB.getComment(mAccountId, getCommentId());
-        setComment(mBlogId, updatedComment);
+        Comment updatedComment = WordPress.wpDB.getComment(mLocalTableBlogId, getCommentId());
+        setComment(mLocalTableBlogId, updatedComment);
     }
 
     /*
@@ -369,7 +367,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
         mIsModeratingComment = true;
-        CommentActions.moderateComment(mAccountId, mComment, newStatus, actionListener);
+        CommentActions.moderateComment(mLocalTableBlogId, mComment, newStatus, actionListener);
     }
 
     /*
@@ -424,7 +422,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
         } else {
-            CommentActions.submitReplyToComment(mAccountId, mComment, replyText, actionListener);
+            CommentActions.submitReplyToComment(mLocalTableBlogId, mComment, replyText, actionListener);
         }
     }
 
@@ -551,13 +549,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 int commentId = jsonParams.optInt("comment_id");
 
                 // note that the account won't be found if the comment is from someone else's blog
-                int accountId = WordPress.wpDB.getAccountIdForBlogId(blogId);
+                int accountId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(blogId);
 
                 // first try to get from local db, if that fails request it from the server
                 Comment comment = WordPress.wpDB.getComment(accountId, commentId);
                 if (comment != null) {
                     comment.setProfileImageUrl(note.getIconURL());
-                    setComment(blogId, comment);
+                    setComment(accountId, comment);
                 } else {
                     requestComment(blogId, commentId, note.getIconURL());
                 }
@@ -589,7 +587,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (comment != null) {
                         if (profileImageUrl != null)
                             comment.setProfileImageUrl(profileImageUrl);
-                        WordPress.wpDB.addComment(mAccountId, comment);
+                        WordPress.wpDB.addComment(mLocalTableBlogId, comment);
                         setComment(blogId, comment);
                     }
                 }

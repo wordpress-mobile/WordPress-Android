@@ -304,11 +304,11 @@ public class WordPress extends Application {
     /*
      * returns the blogID of the current blog
      */
-    public static int getCurrentBlogId() {
+    public static int getCurrentRemoteBlogId() {
         return (currentBlog != null ? currentBlog.getRemoteBlogId() : -1);
     }
 
-    public static int getCurrentBlogAccountId() {
+    public static int getCurrentLocalTableBlogId() {
         return (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
     }
 
