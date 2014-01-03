@@ -434,7 +434,7 @@ public class WordPressDB {
 
     public boolean isBlogIdInDatabase(int blogId) {
         String[] args = {Integer.toString(blogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE blogId=?", args);
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE id=?", args);
     }
 
     public boolean saveBlog(Blog blog) {
@@ -680,11 +680,11 @@ public class WordPressDB {
     /*
      * nbradbury 11/14/13
      */
-    public int getAccountIdForBlogId(int blogId) {
+    public int getLocalTableBlogIdForRemoteBlogId(int blogId) {
         return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
     }
 
-    public int getAccountIdForBlogIdAndXmlRpcUrl(int blogId, String xmlRpcUrl) {
+    public int getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(int blogId, String xmlRpcUrl) {
         return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
                 new String[]{Integer.toString(blogId), xmlRpcUrl});
     }

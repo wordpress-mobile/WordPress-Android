@@ -232,16 +232,16 @@ public class SetupBlog {
             blog.save();
         } else {
             // Update blog name
-            int accountId = WordPress.wpDB.getAccountIdForBlogIdAndXmlRpcUrl(
+            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
                     Integer.parseInt(blogId), xmlRpcUrl);
             try {
-                blog = new Blog(accountId);
+                blog = new Blog(localTableBlogId);
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
                     blog.save();
                 }
             } catch (Exception e) {
-                Log.e(WordPress.TAG, "accountId: " + accountId + " not found");
+                Log.e(WordPress.TAG, "localTableBlogId: " + localTableBlogId + " not found");
             }
         }
         return blog;
