@@ -258,7 +258,7 @@ public class CommentsListFragment extends ListFragment {
             postHash.put("author_email", contentHash.get("email"));
 
             Object[] params = {
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     curCommentID,
@@ -273,8 +273,8 @@ public class CommentsListFragment extends ListFragment {
                     listRow.setStatus(newStatusStr);
                     contentHash.put("status", newStatusStr);
                     model.set(i, listRow);
-                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), listRow.commentID, newStatusStr);
-                    commentsUpdatedList.add(WordPress.wpDB.getComment(WordPress.currentBlog.getId(), listRow.commentID));
+                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getLocalTableBlogId(), listRow.commentID, newStatusStr);
+                    commentsUpdatedList.add(WordPress.wpDB.getComment(WordPress.currentBlog.getLocalTableBlogId(), listRow.commentID));
                 }
             } catch (XMLRPCException e) {
                 moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
@@ -323,7 +323,7 @@ public class CommentsListFragment extends ListFragment {
             Comment listRow = (Comment) getListView().getItemAtPosition(i);
             int curCommentID = listRow.commentID;
 
-            Object[] params = {WordPress.currentBlog.getBlogId(),
+            Object[] params = {WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword(), curCommentID};
 
@@ -371,7 +371,7 @@ public class CommentsListFragment extends ListFragment {
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
-        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
+        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getLocalTableBlogId());
 
         if (refreshOnly) {
             if (model != null) {
@@ -522,7 +522,7 @@ public class CommentsListFragment extends ListFragment {
             hPost.put("number", COMMENTS_PER_PAGE);
         }
 
-        Object[] params = { WordPress.currentBlog.getBlogId(),
+        Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
                 WordPress.currentBlog.getUsername(),
                 WordPress.currentBlog.getPassword(), hPost };
 
@@ -718,7 +718,7 @@ public class CommentsListFragment extends ListFragment {
 
             if (commentsResult == null) {
                 if (model != null && model.size() == 1) {
-                    WordPress.wpDB.clearComments(WordPress.currentBlog.getId());
+                    WordPress.wpDB.clearComments(WordPress.currentBlog.getLocalTableBlogId());
                     model.clear();
                     allComments.clear();
                     getListView().invalidateViews();

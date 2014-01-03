@@ -225,7 +225,7 @@ public class SetupBlog {
             blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
             blog.setMaxImageWidthId(0); //deprecated
             blog.setRunService(false); //deprecated
-            blog.setBlogId(Integer.parseInt(blogId));
+            blog.setRemoteBlogId(Integer.parseInt(blogId));
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
             blog.setAdmin(isAdmin);

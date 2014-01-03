@@ -336,7 +336,7 @@ public class WordPressDB {
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("runService", false);
-        values.put("blogId", blog.getBlogId());
+        values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
         values.put("wpVersion", blog.getWpVersion());
         values.put("isAdmin", blog.isAdmin());
@@ -463,7 +463,7 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
 
-        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
+        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
         if (blog.isDotcomFlag()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());

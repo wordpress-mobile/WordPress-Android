@@ -240,7 +240,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     }
     
     public void loadTheme(String themeId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         Theme theme = WordPress.wpDB.getTheme(blogId, themeId);
         if (theme != null) {
             if (mNameView != null) {

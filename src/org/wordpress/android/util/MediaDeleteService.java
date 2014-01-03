@@ -74,7 +74,7 @@ public class MediaDeleteService extends Service {
         if (WordPress.getCurrentBlog() == null)
             return null;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         return WordPress.wpDB.getMediaDeleteQueueItem(blogId);
     }
     

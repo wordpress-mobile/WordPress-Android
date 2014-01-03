@@ -223,7 +223,7 @@ public class EditCommentActivity extends SherlockActivity {
                 WordPress.currentBlog.getHttpuser(),
                 WordPress.currentBlog.getHttppassword());
 
-        Object[] params = { WordPress.currentBlog.getBlogId(),
+        Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
                 WordPress.currentBlog.getUsername(),
                 WordPress.currentBlog.getPassword(),
                 WordPress.currentComment.commentID,
@@ -248,7 +248,7 @@ public class EditCommentActivity extends SherlockActivity {
 
                 // Save the updates
                 WordPress.wpDB.updateComment(
-                        WordPress.currentBlog.getId(),
+                        WordPress.currentBlog.getLocalTableBlogId(),
                         WordPress.currentComment.commentID,
                         postHash);
 

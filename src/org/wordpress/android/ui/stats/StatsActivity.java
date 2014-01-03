@@ -183,7 +183,7 @@ public class StatsActivity extends WPActionBarActivity {
                     Map<String, String> args = new HashMap<String, String>();
                     args.put("jetpack_client_id", "jetpack_client_id");
                     Object[] params = {
-                            currentBlog.getBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
+                            currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
                     xmlrpcClient.callAsync(new XMLRPCCallback() {
                         @Override
@@ -460,7 +460,7 @@ public class StatsActivity extends WPActionBarActivity {
         String blogId;
         
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch())
-            blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         else {
             blogId = getBlogId();
             if (blogId == null) {
@@ -523,7 +523,7 @@ public class StatsActivity extends WPActionBarActivity {
     public String getBlogId() {
         // for dotcom blogs that were added manually
         if (WordPress.getCurrentBlog().isDotcomFlag() && !dotComCredentialsMatch())
-            return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
 
         // for self-hosted blogs
         try {

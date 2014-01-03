@@ -138,7 +138,7 @@ public class MediaItemFragment extends SherlockFragment {
         Blog blog = WordPress.getCurrentBlog();
         
         if (blog != null) {
-            String blogId = String.valueOf(blog.getBlogId());
+            String blogId = String.valueOf(blog.getRemoteBlogId());
             
             Cursor cursor;
             
@@ -317,7 +317,7 @@ public class MediaItemFragment extends SherlockFragment {
         int itemId = item.getItemId();
         
         if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             boolean canDeleteMedia = MediaUtils.canDeleteMedia(blogId, getMediaId());
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
