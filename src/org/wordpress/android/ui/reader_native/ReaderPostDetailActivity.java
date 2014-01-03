@@ -1097,6 +1097,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);
+        final String greyExtraLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_extra_light);
 
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -1110,12 +1111,19 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
-        // use a consistent top/bottom margin for paragraphs
+        // add border, background color, and padding to pre blocks, and add overflow scrolling
+        // so user can scroll the block if it's wider than the display
+        sbHtml.append("  pre { overflow-x: scroll;")
+              .append("        border: 1px solid ").append(greyLight).append("; ")
+              .append("        background-color: ").append(greyExtraLight).append("; ")
+              .append("        padding: ").append(marginSmall).append("px; }");
+
+         // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // css for video div when no video thumb available (see processVideos)
-        sbHtml.append("  div.wpreader-video { background-color: ").append(greyLight).append(";")
-              .append("     width: 100%; padding: ").append(marginLarge).append("px 0px }");
+        sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
+              .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
 
         // make sure links are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
