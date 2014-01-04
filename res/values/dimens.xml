@@ -30,10 +30,10 @@
     <!--
         native reader dimens
     -->
-    <dimen name="reader_margin_extra_small">2dp</dimen>
-    <dimen name="reader_margin_small">4dp</dimen>
-    <dimen name="reader_margin_medium">8dp</dimen>
-    <dimen name="reader_margin_large">12dp</dimen>
+    <dimen name="margin_extra_small">2dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
 
     <!-- left/right margin for posts in both list and detail views -->
     <dimen name="reader_list_margin_normal">8dp</dimen>
@@ -44,10 +44,10 @@
     <dimen name="reader_list_margin_landscape_tablet_large">192dp</dimen>
     <dimen name="reader_list_margin">@dimen/reader_list_margin_normal</dimen>
 
-    <dimen name="reader_text_sz_small">12sp</dimen>
-    <dimen name="reader_text_sz_medium">14sp</dimen>
-    <dimen name="reader_text_sz_large">18sp</dimen>
-    <dimen name="reader_text_sz_extra_large">22sp</dimen>
+    <dimen name="text_sz_small">12sp</dimen>
+    <dimen name="text_sz_medium">14sp</dimen>
+    <dimen name="text_sz_large">18sp</dimen>
+    <dimen name="text_sz_extra_large">22sp</dimen>
 
     <dimen name="reader_avatar_sz_medium">48dp</dimen>
     <dimen name="reader_avatar_sz_small">32dp</dimen>

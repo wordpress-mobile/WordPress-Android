@@ -700,8 +700,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
-                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
-                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
+                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
                 final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
                 final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
 
@@ -1110,9 +1110,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             content = "";
         }
 
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-        int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
-        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
+        int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
+        int marginSmall = getResources().getDimensionPixelSize(R.dimen.margin_small);
+        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);

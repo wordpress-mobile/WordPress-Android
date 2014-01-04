@@ -45,7 +45,7 @@
             android:background="@drawable/wp_button_small"
             android:text="@string/approve"
             android:textColor="#FF006505"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/text_sz_small" />
 
         <Button
             android:id="@+id/bulkUnapproveComment"
@@ -55,7 +55,7 @@
             android:background="@drawable/wp_button_small"
             android:text="@string/unapprove"
             android:textColor="#FFD98500"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/text_sz_small" />
 
         <Button
             android:id="@+id/bulkMarkSpam"
@@ -65,7 +65,7 @@
             android:background="@drawable/wp_button_small"
             android:text="@string/spam"
             android:textColor="#FFBC0B0B"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/text_sz_small" />
 
         <Button
             android:id="@+id/bulkDeleteComment"
@@ -75,7 +75,7 @@
             android:background="@drawable/wp_button_small"
             android:text="@string/delete"
             android:textColor="#FFBC0B0B"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/text_sz_small" />
     </LinearLayout>
 
 </RelativeLayout>
