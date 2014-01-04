@@ -24,7 +24,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -83,7 +82,7 @@ public class ReaderAuthActions {
 
                     int statusCode = response.getStatusLine().getStatusCode();
                     if (statusCode != HttpStatus.SC_OK) {
-                        AppLog.w(T.READER, String.format("failed to retrieve cookies, status %d", statusCode));
+                        AppLog.w(String.format("failed to retrieve cookies, status %d", statusCode));
                         return;
                     }
 
@@ -97,9 +96,9 @@ public class ReaderAuthActions {
                     }
 
                 } catch (UnsupportedEncodingException e) {
-                    AppLog.e(T.READER, e);
+                    AppLog.e(e);
                 } catch (IOException e) {
-                    AppLog.e(T.READER, e);
+                    AppLog.e(e);
                 }
             }
         }.start();

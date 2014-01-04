@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -168,7 +167,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "reader posts task already running");
+            AppLog.w("reader posts task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -228,15 +227,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(post.getTitle());
+        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-
-        if (post.hasBlogName()) {
-            holder.txtBlogName.setText(post.getBlogName());
-        } else if (post.hasAuthorName()) {
-            holder.txtBlogName.setText(post.getAuthorName());
-        } else {
-            holder.txtBlogName.setText(null);
-        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
@@ -259,7 +251,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR, false);
+            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
         }
 
         /*final String firstTag = post.getFirstTag();
@@ -349,12 +341,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.numReplies > 0) {
             holder.txtCommentCount.setText(FormatUtils.formatInt(post.numReplies));
             holder.txtCommentCount.setVisibility(View.VISIBLE);
-            // note that the comment icon is shown here even if comments are now closed since
-            // the post has existing comments
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
-            holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -514,7 +502,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void preloadPostImages(final int position) {
         if (position >= mPosts.size() || position < 0) {
-            AppLog.w(T.READER, "invalid preload position > " + Integer.toString(position));
+            AppLog.w("invalid preload position > " + Integer.toString(position));
             return;
         }
 
@@ -553,7 +541,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            AppLog.e(T.READER, volleyError);
+            AppLog.e(volleyError);
         }
     };
 }

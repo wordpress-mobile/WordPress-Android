@@ -9,7 +9,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 8/25/13.
@@ -47,7 +46,7 @@ public class ReaderUserActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
+                AppLog.e(volleyError);
                 if (resultListener != null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }

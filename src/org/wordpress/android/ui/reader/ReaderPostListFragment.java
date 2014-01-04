@@ -36,15 +36,14 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.StringUtils;
 
 /**
  * Created by nbradbury on 6/30/13.
- * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
+ * Fragment hosted by NativeReaderActivity which shows a list of posts in a specific tag
  */
 public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
@@ -65,7 +64,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     protected static enum RefreshType {AUTOMATIC, MANUAL};
 
     protected static ReaderPostListFragment newInstance(Context context) {
-        AppLog.d(T.READER, "post list newInstance");
+        AppLog.d("post list newInstance");
 
         // restore the previously-chosen tag, revert to default if not set or doesn't exist
         String tagName = UserPrefs.getReaderTag();
@@ -377,7 +376,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         unscheduleAutoUpdate();
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.i(T.READER, "network unavailable, rescheduling reader update");
+            AppLog.i("network unavailable, rescheduling reader update");
             scheduleAutoUpdate();
             return;
         }
@@ -395,13 +394,13 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
-                    AppLog.w(T.READER, "volley response when fragment has no activity");
+                    AppLog.w("volley response when fragment has no activity");
                     // this fragment is no longer valid, so send a broadcast that tells the host
-                    // ReaderActivity that it needs to refresh the list of posts - this
+                    // NativeReaderActivity that it needs to refresh the list of posts - this
                     // situation occurs when the user rotates the device while the update is
                     // still in progress
                     if (numNewPosts > 0)
-                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(ReaderActivity.ACTION_REFRESH_POSTS));
+                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(NativeReaderActivity.ACTION_REFRESH_POSTS));
                     return;
                 }
 
@@ -439,8 +438,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mIsUpdating = isUpdating;
         switch (updateAction) {
             case LOAD_NEWER:
-                if (getActivity() instanceof ReaderActivity)
-                    ((ReaderActivity)getActivity()).setIsUpdating(isUpdating);
+                if (getActivity() instanceof NativeReaderActivity)
+                    ((NativeReaderActivity)getActivity()).setIsUpdating(isUpdating);
                 break;
 
             case LOAD_OLDER:
@@ -489,7 +488,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private Runnable mAutoUpdateTask = new Runnable() {
         public void run() {
             if (hasCurrentTag()) {
-                AppLog.d(T.READER, "performing automatic update");
+                AppLog.d("performing automatic update");
                 updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, ReaderPostListFragment.RefreshType.AUTOMATIC);
             }
         }
@@ -549,7 +548,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
                 if (tag!=null) {
                     setCurrentTag(tag.getTagName());
-                    AppLog.d(T.READER, "tag chosen from actionbar: " + tag.getTagName());
+                    AppLog.d("tag chosen from actionbar: " + tag.getTagName());
                 }
                 return true;
             }

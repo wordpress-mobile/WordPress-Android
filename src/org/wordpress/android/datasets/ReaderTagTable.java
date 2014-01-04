@@ -10,11 +10,9 @@ import android.text.TextUtils;
 import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
-
 
 import java.util.Date;
 
@@ -78,7 +76,7 @@ public class ReaderTagTable {
                 db.setTransactionSuccessful();
 
             } catch (SQLException e) {
-                AppLog.e(T.READER, e);
+                AppLog.e(e);
             }
         } finally {
             db.endTransaction();
@@ -207,7 +205,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            AppLog.e(T.READER, e);
+            AppLog.e(e);
         }
     }
 
@@ -226,7 +224,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            AppLog.e(T.READER, e);
+            AppLog.e(e);
         }
     }
 
@@ -254,7 +252,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            AppLog.e(T.READER, e);
+            AppLog.e(e);
         }
     }
 
@@ -332,7 +330,7 @@ public class ReaderTagTable {
                 db.setTransactionSuccessful();
 
             } catch (SQLException e) {
-                AppLog.e(T.READER, e);
+                AppLog.e(e);
             }
         } finally {
             SqlUtils.closeStatement(stmt);

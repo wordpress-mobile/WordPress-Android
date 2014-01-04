@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -35,7 +34,7 @@ import org.wordpress.android.util.ToastUtils;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderActivity extends WPActionBarActivity {
+public class NativeReaderActivity extends WPActionBarActivity {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
@@ -89,13 +88,13 @@ public class ReaderActivity extends WPActionBarActivity {
             mHasPerformedInitialUpdate = true;
             // update the current user the first time this is shown - ensures we have their user_id
             // as well as their latest info (in case they changed their avatar, name, etc. since last time)
-            AppLog.i(T.READER, "updating current user");
+            AppLog.i("updating current user");
             ReaderUserActions.updateCurrentUser(null);
             // also update cookies so that we can show authenticated images in WebViews
-            AppLog.i(T.READER, "updating cookies");
+            AppLog.i("updating cookies");
             ReaderAuthActions.updateCookies(this);
             // update followed blogs
-            AppLog.i(T.READER, "updating followed blogs");
+            AppLog.i("updating followed blogs");
             ReaderBlogActions.updateFollowedBlogs();
             // update list of followed tags
             updateTagList();
@@ -271,7 +270,7 @@ public class ReaderActivity extends WPActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
+                AppLog.i("received ACTION_REFRESH_POSTS");
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment != null)
                     fragment.refreshPosts();

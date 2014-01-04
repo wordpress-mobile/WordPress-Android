@@ -53,7 +53,6 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -190,7 +189,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter==null) {
             if (mPost==null)
-                AppLog.w(T.READER, "comment adapter created before post loaded");
+                AppLog.w("comment adapter created before post loaded");
 
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -225,7 +224,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 public void onRequestData(ReaderActions.RequestDataAction action) {
                     if (mIsUpdatingComments)
                         return;
-                    AppLog.i(T.READER, "requesting newer comments");
+                    AppLog.i("requesting newer comments");
                     updateComments();
                 }
             };
@@ -1228,7 +1227,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     @SuppressLint("NewApi")
     private void showPost() {
         if (mIsPostTaskRunning)
-            AppLog.w(T.READER, "post task already running");
+            AppLog.w("post task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1434,7 +1433,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 public void run() {
                     if (mWebView.getVisibility()!=View.VISIBLE) {
                         mWebView.setVisibility(View.VISIBLE);
-                        AppLog.w(T.READER, "forced webView to appear before page finished");
+                        AppLog.w("forced webView to appear before page finished");
                     }
                 }
             }, WEBVIEW_DELAY_MS);

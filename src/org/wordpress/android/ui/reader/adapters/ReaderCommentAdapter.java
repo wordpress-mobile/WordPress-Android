@@ -3,6 +3,9 @@ package org.wordpress.android.ui.reader.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +20,14 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -82,7 +84,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshComments() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "Load comments task already running");
+            AppLog.w("Load comments task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -133,13 +135,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             holder.txtText.setLinksClickable(true);
-            holder.txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
+            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
-        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
+        displayComment(comment.getText(), holder.txtText);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -205,7 +207,44 @@ public class ReaderCommentAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /*
+     * prepares comment text for display as html, including retrieving images
+     */
+    private void displayComment(String content, TextView textView) {
+        if (content==null || textView==null)
+            return;
 
+        // convert emoticons first (otherwise they'll be downloaded)
+        if (content.contains("icon_"))
+            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
+
+        // skip performance hit of html conversion if content doesn't contain html
+        if (!content.contains("<") && !content.contains("&")) {
+            textView.setText(content.trim());
+            return;
+        }
+
+        // now convert to HTML with an image getter that enforces a max image size
+        final SpannableStringBuilder html;
+        if (content.contains("<img")) {
+            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
+        } else {
+            html = (SpannableStringBuilder) Html.fromHtml(content);
+        }
+
+        // remove extra \n\n added by Html.convert()
+        CharSequence source = html;
+        int start = 0;
+        int end = source.length();
+        while (start < end && Character.isWhitespace(source.charAt(start))) {
+            start++;
+        }
+        while (end > start && Character.isWhitespace(source.charAt(end - 1))) {
+            end--;
+        }
+
+        textView.setText(source.subSequence(start, end));
+    }
 
     private static class CommentViewHolder {
         private TextView txtAuthor;

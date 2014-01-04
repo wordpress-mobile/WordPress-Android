@@ -12,11 +12,11 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by nbradbury on 6/21/13.
- * simple wrapper for Android log calls, enables recording & displaying log
+ * simple wrapper for Android log calls, currently used only by the native reader
+ * enables recording & displaying log
  */
 public class AppLog {
-    // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES}
+
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 
@@ -25,60 +25,42 @@ public class AppLog {
     }
 
     /*
-     * defaults to false, pass true to capture log so it can be displayed by AppLogViewerActivity
+     * defaults to false, pass true to capture log so it can be displayed by ReaderLogViewerActivity
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
     }
 
-    public static void v(T tag, String message) {
-        Log.v(TAG + "-" + tag.toString(), message);
-        addEntry(tag, LogLevel.v, message);
+    public static void d(String message) {
+        Log.d(TAG, message);
+        addEntry(LogLevel.d, message);
     }
 
-    public static void d(T tag, String message) {
-        Log.d(TAG + "-" + tag.toString(), message);
-        addEntry(tag, LogLevel.d, message);
+    public static void i(String message) {
+        Log.i(TAG, message);
+        addEntry(LogLevel.i, message);
     }
 
-    public static void i(T tag, String message) {
-        Log.i(TAG + "-" + tag.toString(), message);
-        addEntry(tag, LogLevel.i, message);
+    public static void w(String message) {
+        Log.w(TAG, message);
+        addEntry(LogLevel.w, message);
     }
 
-    public static void w(T tag, String message) {
-        Log.w(TAG + "-" + tag.toString(), message);
-        addEntry(tag, LogLevel.w, message);
+    public static void e(Exception e) {
+        Log.e(TAG, e.getMessage(), e);
+        addEntry(LogLevel.e, e.getMessage());
     }
-
-    public static void e(T tag, String message) {
-        Log.e(TAG + "-" + tag.toString(), message);
-        addEntry(tag, LogLevel.e, message);
-    }
-
-    public static void e(T tag, String message, Throwable tr) {
-        Log.e(TAG + "-" + tag.toString(), message, tr);
-        addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
-    }
-
-    public static void e(T tag, Throwable tr) {
-        Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
-        addEntry(tag, LogLevel.e, tr.getMessage());
-    }
-
-    public static void e(T tag, VolleyError volleyError) {
+    public static void e(VolleyError volleyError) {
         if (volleyError==null)
             return;
         String logText;
         if (volleyError.networkResponse==null) {
             logText = volleyError.getMessage();
         } else {
-            logText = volleyError.getMessage() + ", status "
-                    + volleyError.networkResponse.statusCode
-                    + " - " + volleyError.networkResponse.toString();
+            logText = volleyError.getMessage() + ", status " + volleyError.networkResponse.statusCode + " - " + volleyError.networkResponse.toString();
         }
-        Log.e(TAG + "-" + tag.toString(), logText, volleyError);
-        addEntry(tag, LogLevel.w, logText);
+        Log.e(TAG, logText, volleyError);
+        addEntry(LogLevel.w, logText);
     }
 
     // --------------------------------------------------------------------------------------------------------
@@ -86,20 +68,13 @@ public class AppLog {
     private static final int MAX_ENTRIES = 99;
 
     private enum LogLevel {
-        v, d, i, w, e;
+        d, i, w, e;
         private String toHtmlColor() {
             switch(this) {
-                case v:
-                    return "grey";
-                case i:
-                    return "black";
-                case w:
-                    return "purple";
-                case e:
-                    return "red";
-                case d:
-                default:
-                    return "teal";
+                case i  : return "black";
+                case w  : return "purple";
+                case e  : return "red";
+                default : return "teal";
             }
         }
     }
@@ -107,16 +82,12 @@ public class AppLog {
     private static class LogEntry {
         LogLevel logLevel;
         String logText;
-        T logTag;
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder()
                     .append("<font color='")
                     .append(logLevel.toHtmlColor())
                     .append("'>")
-                    .append("[")
-                    .append(logTag.name())
-                    .append("] ")
                     .append(logLevel.name())
                     .append(": ")
                     .append(logText)
@@ -145,19 +116,18 @@ public class AppLog {
 
     private static LogEntryList mLogEntries = new LogEntryList();
 
-    private static void addEntry(T tag, LogLevel level, String text) {
+    private static void addEntry(LogLevel level, String text) {
         // skip if recording is disabled (default)
         if (!mEnableRecording)
             return;
         LogEntry entry = new LogEntry();
         entry.logLevel = level;
         entry.logText = text;
-        entry.logTag = tag;
         mLogEntries.addEntry(entry);
     }
 
     /*
-     * returns entire log as html for display (see AppLogViewerActivity)
+     * returns entire log as html for display (see ReaderLogViewerActivity)
      */
     public static String toHtml() {
         StringBuilder sb = new StringBuilder();
