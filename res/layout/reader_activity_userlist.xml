@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_title"
-        android:layout_marginTop="@dimen/reader_margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
 
     <ListView

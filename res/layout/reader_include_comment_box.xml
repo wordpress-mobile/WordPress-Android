@@ -29,10 +29,10 @@
         android:maxLines="4"
         android:minLines="2"
         android:textColorHint="@color/grey_medium"
-        android:textSize="@dimen/reader_text_sz_large"
-        android:paddingTop="@dimen/reader_margin_extra_small"
-        android:paddingBottom="@dimen/reader_margin_extra_small"
-        android:paddingLeft="@dimen/reader_margin_large" />
+        android:textSize="@dimen/text_sz_large"
+        android:paddingTop="@dimen/margin_extra_small"
+        android:paddingBottom="@dimen/margin_extra_small"
+        android:paddingLeft="@dimen/margin_large" />
 
     <ImageView
         android:id="@+id/image_post_comment"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingRight="@dimen/reader_margin_medium"
+        android:paddingRight="@dimen/margin_medium"
         android:src="@drawable/ic_send" />
 
     <ProgressBar
