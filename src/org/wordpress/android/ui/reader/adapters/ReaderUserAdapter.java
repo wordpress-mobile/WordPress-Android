@@ -51,7 +51,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         mListType = listType;
         mDataLoadedListener = dataLoadedListener;
         mPost = post;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         loadUsers();
     }
 

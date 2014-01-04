@@ -21,8 +21,8 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_avatar"
-            android:layout_width="@dimen/reader_avatar_sz_large"
-            android:layout_height="@dimen/reader_avatar_sz_large"
+            android:layout_width="@dimen/avatar_sz_large"
+            android:layout_height="@dimen/avatar_sz_large"
             android:layout_gravity="center_vertical" />
 
         <LinearLayout

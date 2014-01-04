@@ -72,7 +72,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mInflater = LayoutInflater.from(context);
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
