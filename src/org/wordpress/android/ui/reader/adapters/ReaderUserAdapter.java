@@ -23,9 +23,9 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
@@ -123,7 +123,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderAniUtils.zoomAction(holder.txtFollow);
+                    AniUtils.zoomAction(holder.txtFollow);
                     toggleFollowUser(user, holder.txtFollow);
                 }
             });

@@ -37,7 +37,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ReaderAniUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -461,7 +461,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         } else {
             mNewPostsBar.setText(getString(R.string.reader_label_new_posts_multi, numNewPosts));
         }
-        ReaderAniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
+        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
     }
 
@@ -478,7 +478,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        ReaderAniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
+        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
     }
 
     /**

@@ -99,7 +99,7 @@ public class ReaderTagAdapter extends BaseAdapter {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        ReaderAniUtils.removeListItem(listView, position, listener, android.R.anim.fade_out);
+        AniUtils.removeListItem(listView, position, listener, android.R.anim.fade_out);
         return true;
     }*/
 

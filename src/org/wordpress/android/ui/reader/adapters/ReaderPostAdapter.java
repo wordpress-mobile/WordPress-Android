@@ -24,10 +24,10 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -294,7 +294,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderAniUtils.zoomAction(holder.imgBtnReblog);
+                        AniUtils.zoomAction(holder.imgBtnReblog);
                         if (mReblogListener!=null)
                             mReblogListener.onRequestReblog(post);
                     }
@@ -359,7 +359,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             animator.setInterpolator(mRowInterpolator);
             animator.start();
         } else {
-            ReaderAniUtils.startAnimation(view, R.anim.reader_listview_row);
+            AniUtils.startAnimation(view, R.anim.reader_listview_row);
         }
     }
 
@@ -386,7 +386,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     public void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
-        ReaderAniUtils.zoomAction(holder.imgBtnLike);
+        AniUtils.zoomAction(holder.imgBtnLike);
 
         if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;
@@ -411,7 +411,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
-        ReaderAniUtils.zoomAction(holder.txtFollow);
+        AniUtils.zoomAction(holder.txtFollow);
 
         if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
             return;

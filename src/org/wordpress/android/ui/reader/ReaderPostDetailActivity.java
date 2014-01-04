@@ -51,12 +51,12 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
@@ -505,7 +505,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private void doPostAction(View actionView, ReaderPostActions.PostAction action, ReaderPost post) {
         boolean isSelected = actionView.isSelected();
         actionView.setSelected(!isSelected);
-        ReaderAniUtils.zoomAction(actionView);
+        AniUtils.zoomAction(actionView);
 
         if (!ReaderPostActions.performPostAction(this, action, post, null)) {
             actionView.setSelected(isSelected);
@@ -538,7 +538,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             return;
         }
         imgBtnReblog.setSelected(true);
-        ReaderAniUtils.zoomAction(imgBtnReblog);
+        AniUtils.zoomAction(imgBtnReblog);
         ReaderActivityLauncher.showReaderReblogForResult(this, post);
     }
 
@@ -813,7 +813,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
         imgBtnComment.setSelected(true);
-        ReaderAniUtils.flyIn(layoutCommentBox);
+        AniUtils.flyIn(layoutCommentBox);
 
         editComment.requestFocus();
         editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -864,7 +864,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
 
         imgBtnComment.setSelected(false);
-        ReaderAniUtils.flyOut(layoutCommentBox);
+        AniUtils.flyOut(layoutCommentBox);
         EditTextUtils.hideSoftInput(editComment);
 
         getCommentAdapter().setHighlightCommentId(0, false);
