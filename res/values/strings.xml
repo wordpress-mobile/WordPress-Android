@@ -510,7 +510,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="app_title_blackberry">WordPress for BlackBerry</string>
     <string name="publisher">Publisher: Automattic, Inc</string>
-    <string name="copyright">©2013 Automattic, Inc</string>
+    <string name="copyright">©2014 Automattic, Inc</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -637,8 +637,8 @@
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_topic">No post in this&#160;topic.</string>
-    <string name="reader_empty_posts_in_topic_updating">Fetching posts…</string>
+    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag.</string>
+    <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags.</string>
     <string name="reader_empty_popular_tags">No popular tags.</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet.</string>

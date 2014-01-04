@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="stats_totals_followers_shares_header_includes_publicize">รวม %s การเผยแพร่</string>
 	<string name="account_two_step_auth_enabled">บัญชีนี้มีสองขั้นตอนในการเปิดใช้งาน  โปรดใช้เบราว์เซอร์ของคุณเปิดเว็บ WordPress.com และสร้างรหัสผ่านเฉพาะแอพพลิเคชั่นเพื่อใช้งานแอพนี้\n(เข้าสู่ระบบเวิร์ดเพรสและไปที่การตั้งค่า->ความปลอดภัย)</string>
 	<string name="themes">Themes</string>
 	<string name="gallery_error">ขอโทษครับ ไฟล์สื่อนี้ไม่สามารถดึงมาได้</string>
@@ -10,8 +9,13 @@
 	<string name="custom_date">วันที่ปรับแต่ง</string>
 	<string name="please_wait_refresh_done">โปรดรอ กำลังโหลดอยู่</string>
 	<string name="info">ข้อมูล</string>
+	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
 	<string name="media_add_popup_capture_photo">จับภาพรูปภาพ</string>
 	<string name="media_add_popup_capture_video">จับภาพวีดีโอ</string>
+	<string name="media_add_popup_pick_photo_from_gallery">เลือกรูปจากคลังรูป</string>
+	<string name="media_add_popup_pick_video_from_gallery">เลือกวีดีโอจากคลังสื่อ</string>
+	<string name="media_add_new_post">เรื่องใหม่</string>
+	<string name="media_add_new_media_gallery">คลังสื่อใหม่</string>
 	<string name="media_gallery_settings_title">การตั้งค่าคลังรูป</string>
 	<string name="media_gallery_image_order">การเรียงรูปภาพ</string>
 	<string name="media_gallery_image_order_random">สุ่ม</string>
@@ -45,6 +49,7 @@
 	<string name="media_edit_show_sharing_buttons">แสดงปุ่มแบ่งปัน</string>
 	<string name="media_edit_success">อัปเดตแล้ว</string>
 	<string name="media_edit_failure">ล้มเหลวในการอัปเดต</string>
+	<string name="media_edit_fragment_tag">MediaEditFragment</string>
 	<string name="confirm_delete_media">คุณแน่ใจรึเปล่าว่าต้องการลบไฟล์สื่อนี้</string>
 	<string name="confirm_delete_multi_media">คุณแน่ใจรึเปล่าว่าต้องการลบสิ่งเหล่านี้</string>
 	<string name="themes_live_preview">การดูเสมือนจริง</string>
@@ -64,6 +69,7 @@
 	<string name="post_excerpt">คำย่อเรื่อง</string>
 	<string name="download">การดาวน์โหลดรูปภาพ</string>
 	<string name="media_remove_from_queue">ลบออกจากคิว</string>
+	<string name="select_from_media_library">เลือกจากคลังสื่อ</string>
 	<string name="share_action_title">เพิ่มไปที่...</string>
 	<string name="share_action_post">เรื่องใหม่</string>
 	<string name="share_action_media">คลังสื่อรูป</string>
@@ -113,6 +119,7 @@
 	<string name="stats_visitors_and_views_header_all_time">เวลาทั้งหมด</string>
 	<string name="stats_totals_followers_shares_header_content">บทความ</string>
 	<string name="stats_totals_followers_shares_header_followers">ผู้ติดตาม</string>
+	<string name="stats_totals_followers_shares_header_followers_publicize">      →	ผู้เยี่ยมชม \n      →	&lt;font color="#9E9E9E">(รวม &lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">การเผยแพร่&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	</string>
 	<string name="stats_totals_followers_shares_header_shares">แบ่งปัน</string>
 	<string name="stats_totals_followers_shares_label_posts">เรื่อง</string>
 	<string name="stats_totals_followers_shares_label_categories">หมวดหมู่</string>
@@ -357,6 +364,7 @@
 	<string name="view_comment_from">ความเห็นจาก</string>
 	<string name="stats_password">รหัสผ่าน</string>
 	<string name="stats_username">ชื่อผู้ใช้</string>
+	<string name="username_password_required">ชื่อผู้ใช้และรหัสผ่านเป็นช่องที่ต้องการ</string>
 	<string name="title">หัวข้อ</string>
 	<string name="tags_separate_with_commas">ป้ายกำกับ (แยกป้ายกำกับด้วย commas)</string>
 	<string name="categories">หมวดหมู่</string>
@@ -382,6 +390,7 @@
 	<string name="status">สถานะ</string>
 	<string name="sdcard_message">ต้องเชื่อมต่อ SD card เพื่ออัปโหลดไฟล์สื่อ</string>
 	<string name="location">สถานที่</string>
+	<string name="take_video">ถ่ายวีดีโอใหม่</string>
 	<string name="sdcard_title">ต้องการ SD Card</string>
 	<string name="select_video">เลือกวีดีโอจาก gallery</string>
 	<string name="preview_page">ดูหน้า</string>
@@ -412,6 +421,7 @@
 	<string name="blogs">บล็อก</string>
 	<string name="could_not_remove_account">ไม่สามารถลบบล็อก</string>
 	<string name="select_photo">เลือกรูปจาก gallery</string>
+	<string name="take_photo">ถ่ายรูปใหม่</string>
 	<string name="error">ผิดพลาด</string>
 	<string name="selected_categories">หมวดหมู่ที่เลือก:</string>
 	<string name="dont_yet_have_a_blog">ยังไม่มีบล็อก?</string>
@@ -483,10 +493,5 @@
 		<item>ชนิดเรื่องมาตรฐาน</item>
 		<item>ชนิดเรื่องสถานะ</item>
 		<item>ชนิดเรื่องวีดีโอ</item>
-	</string-array>
-	<string-array name="privacy_array">
-		<item>Public</item>
-		<item>Hidden</item>
-		<item>Private</item>
 	</string-array>
 </resources>
