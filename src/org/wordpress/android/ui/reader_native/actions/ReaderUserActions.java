@@ -16,7 +16,7 @@ import org.wordpress.android.util.ReaderLog;
 public class ReaderUserActions {
 
     /*
-     * request the current user's info, update locally if different than local
+     * request the current user's info, update locally if different than existing local
      */
     public static void updateCurrentUser(final ReaderActions.UpdateResultListener resultListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -58,7 +58,12 @@ public class ReaderUserActions {
     /*
      * set the passed user as the current user in both the local db and prefs
      */
-    public static void setCurrentUser(ReaderUser user) {
+    public static void setCurrentUser(JSONObject jsonUser) {
+        if (jsonUser == null)
+            return;
+        setCurrentUser(ReaderUser.fromJson(jsonUser));
+    }
+    private static void setCurrentUser(ReaderUser user) {
         if (user == null)
             return;
         ReaderUserTable.addOrUpdateUser(user);

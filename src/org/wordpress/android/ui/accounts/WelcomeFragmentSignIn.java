@@ -373,7 +373,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        ReaderUserActions.setCurrentUser(ReaderUser.fromJson(jsonObject));
+                        ReaderUserActions.setCurrentUser(jsonObject);
                     }
                 }, null);
             }

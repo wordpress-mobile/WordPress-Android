@@ -143,7 +143,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
-                            ReaderUserActions.setCurrentUser(ReaderUser.fromJson(jsonObject));
+                            ReaderUserActions.setCurrentUser(jsonObject);
                             finish();
                         }
                     }, null);
