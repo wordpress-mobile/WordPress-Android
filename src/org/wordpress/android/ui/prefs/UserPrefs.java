@@ -66,6 +66,9 @@ public class UserPrefs {
     public static void clearCurrentUserId() {
         remove(PREFKEY_USER_ID);
     }
+    public static boolean hasCurrentUserId() {
+        return (getCurrentUserId() != 0);
+    }
 
     public static String getReaderTag() {
         return getString(PREFKEY_READER_TAG);
