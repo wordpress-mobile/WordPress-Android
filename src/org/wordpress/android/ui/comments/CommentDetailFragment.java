@@ -35,13 +35,13 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -300,7 +300,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // make sure reply box is showing
         if (mLayoutReply.getVisibility() != View.VISIBLE && isReplyingEnabled())
-            ReaderAniUtils.flyIn(mLayoutReply);
+            AniUtils.flyIn(mLayoutReply);
     }
 
     /*
@@ -318,11 +318,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // animate the buttons out (updateStatusViews will re-display them when request completes)
         mLayoutButtons.clearAnimation();
-        ReaderAniUtils.flyOut(mLayoutButtons);
+        AniUtils.flyOut(mLayoutButtons);
 
         // hide status (updateStatusViews will un-hide it)
         if (mTxtStatus.getVisibility() == View.VISIBLE)
-            ReaderAniUtils.fadeOut(mTxtStatus);
+            AniUtils.fadeOut(mTxtStatus);
 
         // immediately show message bar displaying new status
         final int msgResId;
@@ -477,7 +477,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
                 mTxtStatus.clearAnimation();
-                ReaderAniUtils.fadeIn(mTxtStatus);
+                AniUtils.fadeIn(mTxtStatus);
             }
         } else {
             mTxtStatus.setVisibility(View.GONE);
@@ -502,7 +502,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // animate the buttons in if they're not visible
         if (mLayoutButtons.getVisibility() != View.VISIBLE && (isMarkSpamEnabled() || isModerationEnabled())) {
             mLayoutButtons.clearAnimation();
-            ReaderAniUtils.flyIn(mLayoutButtons);
+            AniUtils.flyIn(mLayoutButtons);
         }
     }
 

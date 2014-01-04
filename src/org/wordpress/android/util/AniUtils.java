@@ -15,11 +15,11 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 
 
-public class ReaderAniUtils {
+public class AniUtils {
 
     public static enum Duration { DEFAULT, SHORT, MEDIUM, LONG }
 
-    private ReaderAniUtils() {
+    private AniUtils() {
         throw new AssertionError();
     }
 
