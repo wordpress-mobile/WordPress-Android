@@ -100,7 +100,7 @@ public class CreateUserAndBlog {
                                 mCallback.onSuccess(response);
                                 break;
                             case AUTHENTICATE_USER:
-                                ReaderUserActions.setCurrentUser(ReaderUser.fromJson(response));
+                                ReaderUserActions.setCurrentUser(response);
                                 break;
                             default:
                                 break;
