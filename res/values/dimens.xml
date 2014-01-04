@@ -49,9 +49,9 @@
     <dimen name="text_sz_large">18sp</dimen>
     <dimen name="text_sz_extra_large">22sp</dimen>
 
-    <dimen name="reader_avatar_sz_medium">48dp</dimen>
-    <dimen name="reader_avatar_sz_small">32dp</dimen>
-    <dimen name="reader_avatar_sz_large">72dp</dimen>
+    <dimen name="avatar_sz_medium">48dp</dimen>
+    <dimen name="avatar_sz_small">32dp</dimen>
+    <dimen name="avatar_sz_large">72dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
     <dimen name="reader_button_icon_small">40dp</dimen>
@@ -61,7 +61,7 @@
     <dimen name="actionbar_refresh_margin">12dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
-    <dimen name="reader_comment_indent_per_level">@dimen/reader_avatar_sz_small</dimen>
+    <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>
 
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">96dp</dimen>

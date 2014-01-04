@@ -276,7 +276,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WordPress.imageLoader);
         } else {
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_large);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
         }

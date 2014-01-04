@@ -9,8 +9,8 @@
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/avatar"
-        android:layout_width="@dimen/reader_avatar_sz_medium"
-        android:layout_height="@dimen/reader_avatar_sz_medium" />
+        android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_height="@dimen/avatar_sz_medium" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/name"

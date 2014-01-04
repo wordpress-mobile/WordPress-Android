@@ -75,7 +75,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
 
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);

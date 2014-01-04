@@ -702,7 +702,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
                 final int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
                 final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
 
                 // determine how many avatars will fit the space
@@ -1337,7 +1337,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             }
 
             if (mPost.hasPostAvatar()) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {

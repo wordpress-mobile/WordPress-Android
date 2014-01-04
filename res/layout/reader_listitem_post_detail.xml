@@ -119,7 +119,7 @@
         <LinearLayout
             android:id="@+id/layout_liking_avatars"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
             android:layout_below="@+id/text_like_count"
             android:layout_marginTop="@dimen/margin_medium"
             android:gravity="center_vertical"
