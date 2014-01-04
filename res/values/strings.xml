@@ -637,7 +637,7 @@
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_tag">No posts in this&#160;tag.</string>
+    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag.</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags.</string>
     <string name="reader_empty_popular_tags">No popular tags.</string>
