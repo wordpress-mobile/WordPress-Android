@@ -29,9 +29,9 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ReaderLog;
 
 public class NotificationUtils {
     public static void refreshNotifications(final RestRequest.Listener listener,
@@ -187,12 +187,12 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderLog.d("Register token action succeeded");
+                AppLog.d("Register token action succeeded");
                 if (loadSettings) { //load notification settings if necessary
                     com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            ReaderLog.d("token action succeeded");
+                            AppLog.d("token action succeeded");
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                             Editor editor = settings.edit();
                             try {
@@ -214,8 +214,8 @@ public class NotificationUtils {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.w("Register token action failed");
-                ReaderLog.e(volleyError);
+                AppLog.w("Register token action failed");
+                AppLog.e(volleyError);
             }
         };
         WordPress.restClient.post("/push/register", contentStruct, null, listener, errorListener);
@@ -230,14 +230,14 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderLog.d("Unregister token action succeeded");
+                AppLog.d("Unregister token action succeeded");
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.w("Unregister token action failed");
-                ReaderLog.e(volleyError);
+                AppLog.w("Unregister token action failed");
+                AppLog.e(volleyError);
             }
         };
         WordPress.restClient.post("/push/unregister", contentStruct, null, listener, errorListener);
