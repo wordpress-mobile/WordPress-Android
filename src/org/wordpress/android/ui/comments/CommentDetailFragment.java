@@ -34,7 +34,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.notifications.NotificationFragment;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;

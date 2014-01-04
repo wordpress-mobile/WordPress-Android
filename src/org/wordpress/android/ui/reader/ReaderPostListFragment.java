@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,10 +32,10 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.adapters.ReaderActionBarTagAdapter;
-import org.wordpress.android.ui.reader_native.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;

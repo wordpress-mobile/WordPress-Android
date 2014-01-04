@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.adapters;
+package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,9 +20,9 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderAniUtils;

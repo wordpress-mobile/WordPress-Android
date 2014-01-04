@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -19,12 +19,12 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;

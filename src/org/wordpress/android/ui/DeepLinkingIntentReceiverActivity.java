@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
 

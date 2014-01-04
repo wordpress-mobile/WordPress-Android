@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.adapters;
+package org.wordpress.android.ui.reader.adapters;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -22,18 +22,15 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ReaderAniUtils;
 import org.wordpress.android.util.ReaderLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
-
-import java.text.NumberFormat;
 
 /**
  * Created by nbradbury on 6/27/13.

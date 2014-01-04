@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;

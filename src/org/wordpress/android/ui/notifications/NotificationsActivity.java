@@ -32,7 +32,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;

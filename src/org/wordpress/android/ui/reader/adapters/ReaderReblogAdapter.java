@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.adapters;
+package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
