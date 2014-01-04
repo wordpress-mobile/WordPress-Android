@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,14 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.adapters.ReaderReblogAdapter;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;

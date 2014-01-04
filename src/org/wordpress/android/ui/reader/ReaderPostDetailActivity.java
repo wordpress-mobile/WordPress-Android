@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -46,11 +46,11 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher.OpenUrlType;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;

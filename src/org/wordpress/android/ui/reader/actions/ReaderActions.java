@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;

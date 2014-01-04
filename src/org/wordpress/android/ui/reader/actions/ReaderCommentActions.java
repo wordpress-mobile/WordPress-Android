@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
 import android.text.TextUtils;

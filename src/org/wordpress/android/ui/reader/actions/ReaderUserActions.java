@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
