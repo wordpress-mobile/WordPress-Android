@@ -16,7 +16,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SysUtils;
 
 /**
@@ -58,7 +58,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshTags() {
         if (mIsTaskRunning)
-            ReaderLog.w("Load tags task already running");
+            AppLog.w("Load tags task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

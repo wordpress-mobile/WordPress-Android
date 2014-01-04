@@ -24,9 +24,9 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
 /**
@@ -58,7 +58,7 @@ public class ReaderUserAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     private void loadUsers() {
         if (mIsTaskRunning)
-            ReaderLog.w("user task already running");
+            AppLog.w("user task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

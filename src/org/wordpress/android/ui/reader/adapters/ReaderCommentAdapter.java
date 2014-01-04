@@ -22,10 +22,10 @@ import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -84,7 +84,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshComments() {
         if (mIsTaskRunning)
-            ReaderLog.w("Load comments task already running");
+            AppLog.w("Load comments task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
