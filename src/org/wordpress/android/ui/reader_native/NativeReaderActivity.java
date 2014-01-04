@@ -38,12 +38,10 @@ public class NativeReaderActivity extends WPActionBarActivity {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
-    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
 
     private MenuItem mRefreshMenuItem;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
-    private boolean mHasUpdatedTagList = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +57,6 @@ public class NativeReaderActivity extends WPActionBarActivity {
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
-            mHasUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
         }
     }
 
@@ -99,11 +96,9 @@ public class NativeReaderActivity extends WPActionBarActivity {
             // update followed blogs
             ReaderLog.i("updating followed blogs");
             ReaderBlogActions.updateFollowedBlogs();
-        }
-
-        // get list of tags from server if it hasn't already been done this session
-        if (!mHasUpdatedTagList)
+            // update list of followed tags
             updateTagList();
+        }
     }
 
     @Override
@@ -111,7 +106,6 @@ public class NativeReaderActivity extends WPActionBarActivity {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
-        outState.putBoolean(KEY_TAG_LIST_UPDATED, mHasUpdatedTagList);
     }
 
     @Override
@@ -213,8 +207,6 @@ public class NativeReaderActivity extends WPActionBarActivity {
     @Override
     public void onSignout() {
         super.onSignout();
-
-        mHasUpdatedTagList = false;
         mHasPerformedInitialUpdate = false;
 
         // reader database will have been cleared by the time this is called, but the fragment must
@@ -258,8 +250,6 @@ public class NativeReaderActivity extends WPActionBarActivity {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result != ReaderActions.UpdateResult.FAILED)
-                    mHasUpdatedTagList = true;
                 // refresh tags if they've changed
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     ReaderPostListFragment fragment = getPostListFragment();

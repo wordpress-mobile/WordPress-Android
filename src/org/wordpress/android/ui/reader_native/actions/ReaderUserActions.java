@@ -15,13 +15,30 @@ import org.wordpress.android.util.ReaderLog;
  */
 public class ReaderUserActions {
 
-    public static void updateCurrentUserWithNetworkCall(final ReaderActions.UpdateResultListener resultListener) {
-
+    /*
+     * request the current user's info, update locally if different than local
+     */
+    public static void updateCurrentUser(final ReaderActions.UpdateResultListener resultListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                final ReaderActions.UpdateResult result = ReaderUserActions.updateCurrentUser(jsonObject);
-                if (resultListener!=null)
+                final ReaderActions.UpdateResult result;
+                if (jsonObject == null) {
+                    result = ReaderActions.UpdateResult.FAILED;
+                } else {
+                    final ReaderUser serverUser = ReaderUser.fromJson(jsonObject);
+                    final ReaderUser localUser = ReaderUserTable.getCurrentUser();
+                    if (serverUser == null) {
+                        result = ReaderActions.UpdateResult.FAILED;
+                    } else if (serverUser.isSameUser(localUser)) {
+                        result = ReaderActions.UpdateResult.UNCHANGED;
+                    } else {
+                        setCurrentUser(serverUser);
+                        result = ReaderActions.UpdateResult.CHANGED;
+                    }
+                }
+
+                if (resultListener != null)
                     resultListener.onUpdateResult(result);
             }
         };
@@ -30,30 +47,21 @@ public class ReaderUserActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 ReaderLog.e(volleyError);
-                if (resultListener!=null)
+                if (resultListener != null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
 
         WordPress.restClient.get("me", listener, errorListener);
     }
-    
-    public static ReaderActions.UpdateResult updateCurrentUser(final JSONObject jsonObject) {
-        final ReaderUser localUser = ReaderUserTable.getCurrentUser();
-        final ReaderActions.UpdateResult result;
-        ReaderUser serverUser = ReaderUser.fromJson(jsonObject);
-        if (serverUser!=null) {
-            if (serverUser.isSameUser(localUser)) {
-                result = ReaderActions.UpdateResult.UNCHANGED;
-            } else {
-                // add logged in user to user table and store the userId in prefs
-                ReaderUserTable.addOrUpdateUser(serverUser);
-                UserPrefs.setCurrentUserId(serverUser.userId);
-                result = ReaderActions.UpdateResult.CHANGED;
-            }
-        } else {
-            result = ReaderActions.UpdateResult.FAILED;
-        }
-        return result;
+
+    /*
+     * set the passed user as the current user in both the local db and prefs
+     */
+    public static void setCurrentUser(ReaderUser user) {
+        if (user == null)
+            return;
+        ReaderUserTable.addOrUpdateUser(user);
+        UserPrefs.setCurrentUserId(user.userId);
     }
 }

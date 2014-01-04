@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
@@ -372,7 +373,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 WordPress.restClient.get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        ReaderUserActions.updateCurrentUser(jsonObject);
+                        ReaderUserActions.setCurrentUser(ReaderUser.fromJson(jsonObject));
                     }
                 }, null);
             }

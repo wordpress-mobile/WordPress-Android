@@ -23,6 +23,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
 
@@ -142,7 +143,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
-                            ReaderUserActions.updateCurrentUser(jsonObject);
+                            ReaderUserActions.setCurrentUser(ReaderUser.fromJson(jsonObject));
                             finish();
                         }
                     }, null);
