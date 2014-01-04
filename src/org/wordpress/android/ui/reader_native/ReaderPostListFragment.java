@@ -197,7 +197,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         }
         int title, description = -1;
         if (isUpdating()) {
-            title = R.string.reader_empty_posts_in_topic_updating;
+            title = R.string.reader_empty_posts_in_tag_updating;
         } else {
             int tagIndex = mActionBarAdapter.getIndexOfTagName(mCurrentTag);
 
@@ -215,7 +215,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 if (tagId.equals(ReaderTag.TAG_ID_LIKED)) {
                     title = R.string.reader_empty_posts_liked;
                 } else {
-                    title = R.string.reader_empty_posts_in_topic;
+                    title = R.string.reader_empty_posts_in_tag;
                 }
             }
         }
