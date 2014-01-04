@@ -1,5 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="themes">Sablonok</string>
+	<string name="all">Összes</string>
+	<string name="images">Képek</string>
+	<string name="info">Infó</string>
+	<string name="media_add_new_post">Új bejegyzés</string>
+	<string name="media_upload_video_button">Videó</string>
+	<string name="media_upload_other_button">Egyéb</string>
+	<string name="media_upload_image_button">Kép</string>
+	<string name="media_upload_edit_button">szerkeszt</string>
+	<string name="media_edit_title_text">Cím</string>
+	<string name="stats_totals_followers_shares_label_blog">Blog</string>
+	<string name="stats_totals_followers_shares_label_comments">Hozzászólások</string>
+	<string name="stats_totals_followers_shares_label_tags">Címkék</string>
+	<string name="stats_comments_summary_header_comments">HOZZÁSZÓLÁSOK</string>
+	<string name="stats_comments_summary_header_recent">LEGUTÓBBI</string>
+	<string name="stats_totals_followers_shares_label_posts">Bejegyzések</string>
+	<string name="stats_totals_followers_shares_label_categories">Kategóriák</string>
+	<string name="stats_totals_followers_shares_header_followers">Követők</string>
+	<string name="stats_totals_followers_shares_header_content">Tartalom</string>
+	<string name="custom_date">Egyedi dátum</string>
+	<string name="media_add_popup_capture_photo">Fénykép készítése</string>
+	<string name="media_add_popup_capture_video">Videó készítése</string>
+	<string name="media_gallery_settings_title">Galéria beállítások</string>
+	<string name="media_gallery_image_order">Kép sorrend</string>
+	<string name="media_gallery_image_order_random">Véletlenszerű</string>
+	<string name="media_gallery_type">Típus</string>
+	<string name="media_add_new_media_gallery">Új médiatár</string>
+	<string name="media_gallery_image_order_reverse">Megfordítás</string>
+	<string name="media_gallery_num_columns">Cellák száma</string>
+	<string name="media_upload_retry_button">újra</string>
+	<string name="media_upload_uploading_button">feltöltés</string>
+	<string name="media_edit_caption_text">Felirat</string>
+	<string name="media_edit_description_text">Leírás</string>
+	<string name="media_edit_title_hint">Címsor megadása</string>
+	<string name="media_edit_success">Frissítve</string>
+	<string name="theme_activating_button">Aktiválás</string>
+	<string name="post_excerpt">Kivonat</string>
+	<string name="theme_premium_theme">Prémium sablon</string>
+	<string name="theme_current_theme">Akutális sablon</string>
+	<string name="stats_view_video_plays">Videó lejátszások</string>
+	<string name="stats_view_comments">Hozzászólások</string>
+	<string name="stats_view_referrers">Hivatkozások</string>
+	<string name="stats_timeframe_today">Ma</string>
+	<string name="stats_timeframe_yesterday">Tegnap</string>
+	<string name="stats_view_search_engine_terms">Kereső motor kifejezések</string>
+	<string name="stats_view_clicks">Kattintások</string>
+	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
+	<string name="view_stats_full_site">Teljes oldal megtekintése</string>
+	<string name="menu_search">Keresés</string>
+	<string name="stats_empty_comments">Vélemény?</string>
+	<string name="stats_visitors_and_views_header_today">Ma</string>
+	<string name="stats_visitors_and_views_header_best_ever">Eddigi legjobb</string>
+	<string name="stats_entry_search_engine_terms">Keresés</string>
+	<string name="stats_totals_visitors">Látogatók</string>
+	<string name="stats_entry_clicks_url">URL</string>
+	<string name="stats_entry_tags_and_categories">Téma</string>
+	<string name="stats_entry_authors">Szerző</string>
+	<string name="stats_timeframe_week">Hét</string>
+	<string name="stats_timeframe_month">Hónap</string>
+	<string name="stats_timeframe_quarter">Negyedév</string>
+	<string name="stats_timeframe_year">Év</string>
+	<string name="themes_details_label">Részletek</string>
+	<string name="themes_features_label">Funkciók</string>
+	<string name="themes_live_preview">Élő előnézet</string>
+	<string name="stats_totals_comments">Hozzászólás</string>
+	<string name="stats_entry_most_commented">Bejegyzés</string>
+	<string name="unattached">Különálló</string>
+	<string name="please_wait_refresh_done">Türelem, betöltés.</string>
+	<string name="media_add_popup_title">Hozzáadás a Médiatárhoz</string>
+	<string name="media_add_popup_pick_photo_from_gallery">Kép választás a galériából</string>
+	<string name="media_add_popup_pick_video_from_gallery">Videó választás a galériából</string>
+	<string name="media_gallery_type_squares">Négyzetek</string>
+	<string name="media_gallery_edit">Galéria szerkesztése</string>
+	<string name="media_upload_title">Új média feltöltése</string>
+	<string name="theme_activate_button">Bekapcsolás</string>
+	<string name="theme_fetch_failed">Nem sikerült a témák betöltése. Próbáljuk újra.</string>
+	<string name="theme_fetch_success">Sablonok frissítve</string>
+	<string name="confirm_delete_multi_media">Biztosan töröljük a kiválasztott elem(ek)et?</string>
+	<string name="confirm_delete_media">Biztosan töröljük a média elemet?</string>
+	<string name="media_gallery_type_circles">Körök</string>
+	<string name="media_no_video_title">VideoPress nem érhető el</string>
+	<string name="media_no_video_message">Fizessünk elő VideoPressre a a videó feltöltéséhez!</string>
+	<string name="media_edit_caption_hint">A feliratot itt lehet megadni</string>
+	<string name="media_edit_description_hint">A leírást itt lehet megadni</string>
+	<string name="media_edit_show_likes">Kedvelések megjelenítése</string>
+	<string name="media_edit_show_sharing_buttons">Megosztási gombok megjelenítése</string>
+	<string name="media_edit_failure">A feltöltés nem sikerült</string>
+	<string name="download">Kép letöltése</string>
+	<string name="theme_auth_error_title">Nem sikerült a témák betöltése</string>
+	<string name="theme_set_success">Sikerült beállítani a sablont!</string>
+	<string name="theme_set_failed">A sablon beállítása nem sikerült. Próbáljuk újra!</string>
+	<string name="media_upload_queued_button">Sorbaállítva</string>
+	<string name="theme_auth_error_message">Ellenőrizzük, hogy van-e jogosultságunk sablon módosításhoz.</string>
+	<string name="theme_no_search_result_found">Nem található.</string>
+	<string name="stats">Statisztikák</string>
+	<string name="share_action_post">Új bejegyzés</string>
+	<string name="share_action_title">Hozzáadás...</string>
+	<string name="share_action">Megosztás</string>
+	<string name="share_action_media">Médiatár</string>
+	<string name="select_from_media_library">Kiválasztás a Médiatárból</string>
+	<string name="view_stats_login">WordPress.com felhasználónév</string>
+	<string name="stats_view_visitors_and_views">Látogatók és megtekintések</string>
+	<string name="stats_view_views_by_country">Megtekintések országonként</string>
+	<string name="stats_view_top_posts_and_pages">Népszerű bejegyzések és oldalak</string>
+	<string name="stats_view_totals_followers_and_shares">Összesítés, követők és megosztások</string>
+	<string name="stats_timeframe_days">nap</string>
+	<string name="stats_timeframe_weeks">hét</string>
+	<string name="stats_timeframe_months">hónap</string>
+	<string name="stats_summary">összes</string>
+	<string name="stats_entry_country">ország</string>
+	<string name="stats_timeframe_all_time">Összesen</string>
+	<string name="media_remove_from_queue">Eltávolítás a sorból</string>
+	<string name="stats_view_top_authors">Legnépszerűbb szerzők</string>
+	<string name="stats_entry_video_plays">Videó neve</string>
+	<string name="stats_entry_referrers">Hivatkozók</string>
+	<string name="stats_entry_top_commenter">Hozzászóló</string>
+	<string name="stats_totals_views">Megtekintések</string>
+	<string name="stats_totals_clicks">Kattintások</string>
+	<string name="stats_totals_plays">Lejátszások</string>
+	<string name="stats_visitors_and_views_header_all_time">Összesen</string>
+	<string name="stats_totals_followers_shares_header_shares">Megosztások</string>
+	<string name="stats_totals_followers_shares_label_shares">Megosztások</string>
+	<string name="stats_comments_summary_label_per_month">Havonta</string>
+	<string name="stats_comments_summary_label_total">Összesen</string>
+	<string name="stats_comments_summary_label_most_active_day">Legaktívabb napokban mostanában</string>
+	<string name="stats_comments_summary_label_most_active_time">A legaktívabb időszak</string>
+	<string name="stats_video_summary_label_bandwidth">Szávszélesség</string>
+	<string name="stats_video_summary_label_impressions">Megtekintések</string>
+	<string name="stats_video_summary_label_plays">Lejátszások</string>
+	<string name="stats_comments_summary_label_most_commented">A legtöbb hozzászólásos bejegyzés</string>
+	<string name="stats_comments_summary_footer">* a legutóbbi 1000 hozzászólás alapján</string>
+	<string name="stats_video_summary_header">%s egyesített statisztika </string>
+	<string name="stats_empty_geoviews">Nincsenek megtekintések.</string>
+	<string name="stats_empty_top_posts">&lt;b>Nincsenek népszerű bejegyzések vagy oldalak.&lt;/b> Ezen az oldalon a legtöbb megtekintéssel rendelkező bejegyzések láthatóak</string>
+	<string name="stats_empty_referrers">&lt;b>Nincsenek hivatkozók.&lt;/b> A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
+	<string name="stats_empty_top_authors">Nincsenek megtekintett bejegyzések</string>
+	<string name="stats_empty_tags_and_categories">Még nincsenek címkével ellátott bejegyzésekre vagy oldalakra megtekintések.</string>
+	<string name="stats_empty_video">Még nincsenek videólejátszások.</string>
+	<string name="stats_bar_graph_empty">Nincsenek statisztikák.</string>
+	<string name="new_media">Új média</string>
+	<string name="error_downloading_image">Sikertelen kép letöltés. Próbáljuk újra.</string>
+	<string name="passcode_manage">Azonosító kód kezelése</string>
+	<string name="passcode_enter_passcode">Azonosító kód megadása</string>
+	<string name="passcode_enter_old_passcode">Régi azonosító kód megadása</string>
+	<string name="passcode_re_enter_passcode">Azonosító kód újbóli megadása</string>
+	<string name="passcode_change_passcode">Azonosító kód változtatása</string>
+	<string name="passcode_set">Azonosító kód megadva</string>
+	<string name="passcode_wrong_passcode">Hibás azonosító kód, próbáljuk újra.</string>
+	<string name="passcode_preference_title">Azonosítókódzár</string>
+	<string name="passcode_turn_off">Azonosító kódos védelem kikapcsolása</string>
+	<string name="passcode_turn_on">Azonosító kódos védelem bekapcsolása</string>
+	<string name="stats_empty_search_engine_terms">&lt;b>Nincsenek keresési kifejezések.&lt;/b> A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
+	<string name="stats_empty_clicks">&lt;b>Nincsenek kattintások.&lt;/b> A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
+	<string name="stats_entry_posts_and_pages">Fejléc</string>
+	<string name="gallery_error">Sajnos, a média elemet nem lehet betölteni.</string>
+	<string name="media_gallery_type_slideshow">Diavetítés</string>
+	<string name="media_upload_clear_uploaded">Feltöltöttek kiürítése</string>
+	<string name="media_gallery_type_tiled">Mozaik</string>
+	<string name="media_gallery_type_thumbnail_grid">Előnézeti rács</string>
+	<string name="stats_totals_followers_shares_header_followers_publicize">\n      \n      →	Követők\n      →	&lt;font color="#9E9E9E">(beleértve&lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">Publicize&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	\n  </string>
+	<string name="media_edit_fragment_tag">MediaEditFragment</string>
+	<string name="account_two_step_auth_enabled">Ezen a felhasználói fiókon be van kapcsolva a kétlépcsős beléptetés. Nyissuk meg a böngészőben a WordPress.com-ot, és generáljunk egy jelszót az alkalmazás használatához.\n(Lépjünk be a WordPress.com-on, majd, Beállítások->biztonság).</string>
+	<string name="category">Kategória</string>
+	<string name="remote_changes">Már módosítottad a bejegyzést, csak még nem töltötted fel. Folytatod a frissítést és felülírod a helyi változatot?</string>
+	<string name="discard">Elvet</string>
+	<string name="error_load_comment">Sajnálom, nem sikerült betölteni a hozzászólást. Kérlek próbáld újra.</string>
+	<string name="dashboard_tip">Érintsd meg a vissza gombot, hogy visszatérj az alkalmazáshoz.</string>
+	<string name="prompt_save_changes">Szeretnéd menteni a változásokat?</string>
+	<string name="upload">Feltöltés</string>
+	<string name="manage">Kezelés</string>
+	<string name="reply_failed">A válasz nem sikerült.</string>
+	<string name="retry_reply">A válasz nem sikerült. Érintsd meg újra.</string>
+	<string name="error_parsing_response">Sajnálom, hiba történt az adatok lekérdezésekor. Kérlek próbáld újra.</string>
+	<string name="tap_retry">Érintsd meg újra próbáláshoz.</string>
 	<string name="sure_sign_out">Biztosan kijelentkezünk a WordPress.com-ról?</string>
 	<string name="please_sign_in">Lépjünk be újra.</string>
 	<string name="wpcom">WordPress.com</string>
@@ -107,7 +281,6 @@
 	<string name="app_title_blackberry">WordPress BlackBerryre</string>
 	<string name="posted_from_blackberry">A bejegyzés WordPress BlackBerryre alkalmazással készült</string>
 	<string name="xmlrpc_error">Nem lehet kapcsolódni. Adjuk meg az xmlrpc.pho teljes elérési útját és próbáljuk újra.</string>
-	<string name="remote_changes">Változások történtek a feltöltött bejegyzésben, amelyek nincsenek még elmentve. Folytassuk a frissítést, amely feülírja a helyi változásokat?</string>
 	<string name="local_changes">Helyi változások</string>
 	<string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
 	<string name="scaled_image_error">Adjunk meg az átméretetett kép szélességét</string>
@@ -152,7 +325,6 @@
 	<string name="quick_video">Gyors videó</string>
 	<string name="refresh">Frissítés</string>
 	<string name="home">Főoldal</string>
-	<string name="gallery_error">Sajnos, a média elemet nem lehet letölteni a Galériából.</string>
 	<string name="upload_failed">A feltöltés nem sikerült</string>
 	<string name="view_in_browser">Megtekintés böngészőben</string>
 	<string name="invalid_url_message">Ellenőrizzük, hogy a megadott blog cím helyes-e.</string>
@@ -193,6 +365,7 @@
 	<string name="username_password_required">A felhasználó név és a jelszót megadása kötelező</string>
 	<string name="title">Cím</string>
 	<string name="tags_separate_with_commas">Címkék (vesszővel elválasztva)</string>
+	<string name="categories">Kategóriák</string>
 	<string name="moderating_comments">Hozzászólások moderálása</string>
 	<string name="tab_stats">Statisztikák</string>
 	<string name="deleting_comments">Hozzászólások törlése</string>
@@ -251,6 +424,7 @@
 	<string name="selected_categories">Választott kategóriák:</string>
 	<string name="dont_yet_have_a_blog">Blogtulajdonos már?</string>
 	<string name="get_free_blog">Ingyenes blogot szeretneék a WordPress.com oldalon!</string>
+	<string name="app_name">WordPress</string>
 	<string name="cancel">Megszakítás</string>
 	<string name="save">Mentés</string>
 	<string name="add">Hozzáad</string>
@@ -300,4 +474,22 @@
 	<string name="no">Nem</string>
 	<string name="local_drafts">Helyi vázlatok</string>
 	<string name="preview">Előnézet</string>
+	<string-array name="alignment_array">
+		<item>Nincs</item>
+		<item>Bal</item>
+		<item>Közép</item>
+		<item>Jobb</item>
+	</string-array>
+	<string-array name="post_formats_array">
+		<item>Széljegyzet</item>
+		<item>Audió</item>
+		<item>Chat</item>
+		<item>Galéria</item>
+		<item>Kép</item>
+		<item>Hivatkozás</item>
+		<item>Idézet</item>
+		<item>Általános</item>
+		<item>Állapot</item>
+		<item>Videó</item>
+	</string-array>
 </resources>

@@ -1,52 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="visit_security_settings">Parameter von Sicherkeit sehen</string>
-	<string name="sign_in_capital">Anmelden</string>
-	<string name="media_add_popup_title">An Media von Bibliotek anfuegen</string>
-	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
-	<string name="pages_empty_list">Noch keine Seiten. Warum eine nicht erstellen?</string>
-	<string name="posts_empty_list">Es gibt nock keine Nachrichten. Warum einen Nachricht nicht erstellen?</string>
-	<string name="empty_list_default">Diese Liste ist leer</string>
-	<string name="comments_empty_list">Keine Kommentaren </string>
-	<string name="select_from_media_library">Von Bibliotek von Media waehlen.</string>
-	<string name="category_automatically_renamed">Der Name von Kategorie %1$s ist nicht richtig. Er ist nach %2$s unbenommen worden.</string>
-	<string name="notifications_empty_list">Keine Benachrichtigungen.</string>
-	<string name="jetpack_not_found">Das Jetpack plugin ist nicht gefunden worden.</string>
-	<string name="jetpack_stats_unauthorized">Kein Zugang an Statistik</string>
-	<string name="jetpack_stats_switch_user">Kein Zugang an die Stats des Kontos von WordPress.com ist moeglich fuer dieses Blog. Wollen Sie an ein verschiedenes Konto anmelden?</string>
-	<string name="reader_timespan_now">jetzt</string>
-	<string name="reader_untitled_post">(Ohne Titel)</string>
-	<string name="reader_title_main">Leser</string>
-	<string name="reader_title_applog">Log von Anwendung </string>
-	<string name="reader_title_userlist_default">Leute </string>
-	<string name="reader_title_followed_tags">Gefolgte Tags </string>
-	<string name="reader_title_popular_tags">Volk Tags</string>
-	<string name="reader_title_reblog">Reblog</string>
-	<string name="reader_title_err_unable_to_load_post">Kann keinen Nachricht loden.</string>
-	<string name="reader_share_link">Link erteilen</string>
-	<string name="reader_share_subject">Erteilt von %s</string>
-	<string name="reader_menu_tags">Tags</string>
-	<string name="reader_menu_log">Log Sehen </string>
-	<string name="reader_menu_refresh">Erneuern</string>
-	<string name="reader_menu_signout">Abmelden</string>
-	<string name="reader_menu_about">Über</string>
-	<string name="reader_btn_yes">Ja</string>
-	<string name="reader_btn_no">Nein</string>
-	<string name="reader_btn_share">Erteilen </string>
-	<string name="reader_btn_comment">Kommentar</string>
-	<string name="reader_btn_like">Gefaellt mir</string>
-	<string name="reader_btn_unlike">Hat mir gefallen </string>
-	<string name="reader_btn_reblog">Reblog </string>
-	<string name="reader_btn_reblogged">Rebloggiert</string>
-	<string name="reader_btn_follow">Folgen </string>
-	<string name="reader_btn_unfollow">Folgend </string>
-	<string name="reader_hint_comment_on_post">Ihren Kommentar fuegen </string>
-	<string name="reader_hint_comment_on_comment">An Kommentar antworten </string>
-	<string name="reader_hint_add_tag">Ein Tag eintragen</string>
-	<string name="reader_hint_reblog_comment">Freiwilliges Kommentar</string>
-	<string name="label_toggle_show">ZEIGEN </string>
-	<string name="label_toggle_hide">VERSTECKEN</string>
-	<string name="stats_totals_followers_shares_header_includes_publicize">enthält %sPublicize</string>
 	<string name="account_two_step_auth_enabled">In diesem Benutzerkonto wurde die zweistufige Authentifizierung aktiviert. Rufe bitte WordPress.com in deinem Browser auf und generiere ein applikationsspezifisches Passwort, das mit dieser App verwendet werden soll.\n(Melde dich bei WordPress an und gehe dann auf Einstellungen&amp;rarr;Sicherheit).</string>
 	<string name="themes">Themes</string>
 	<string name="gallery_error">Das Medienobjekt konnte leider nicht aufgerufen werden.</string>
@@ -56,8 +9,13 @@
 	<string name="custom_date">Benutzerdefiniertes Datum</string>
 	<string name="please_wait_refresh_done">Bitte warten, lade Objekte.</string>
 	<string name="info">Info</string>
+	<string name="media_add_popup_title">Zur Mediathek hinzufügen</string>
 	<string name="media_add_popup_capture_photo">Foto aufnehmen</string>
 	<string name="media_add_popup_capture_video">Video aufnehmen</string>
+	<string name="media_add_popup_pick_photo_from_gallery">Foto aus der Galerie auswählen</string>
+	<string name="media_add_popup_pick_video_from_gallery">Video aus der Galerie auswählen</string>
+	<string name="media_add_new_post">Neuer Beitrag</string>
+	<string name="media_add_new_media_gallery">Neue Mediengalerie</string>
 	<string name="media_gallery_settings_title">Galerie-Einstellungen</string>
 	<string name="media_gallery_image_order">Bild-Reihenfolge</string>
 	<string name="media_gallery_image_order_random">Zufall</string>
@@ -74,6 +32,7 @@
 	<string name="media_upload_image_button">Bild</string>
 	<string name="media_upload_video_button">Video</string>
 	<string name="media_upload_other_button">Andere</string>
+	<string name="media_upload_clear_uploaded">Hochgeladenes löschen</string>
 	<string name="media_upload_edit_button">bearbeiten</string>
 	<string name="media_upload_queued_button">in der Warteschlange</string>
 	<string name="media_upload_retry_button">wiederholen</string>
@@ -90,6 +49,7 @@
 	<string name="media_edit_show_sharing_buttons">Zeige Teilen-Schaltflächen</string>
 	<string name="media_edit_success">Aktualisiert</string>
 	<string name="media_edit_failure">Aktualisierung fehlgeschlagen</string>
+	<string name="media_edit_fragment_tag">MediaEditFragment</string>
 	<string name="confirm_delete_media">Bist du sicher, dass du dieses Medienobjekt löschen möchtest?</string>
 	<string name="confirm_delete_multi_media">Bist Du sicher, dass du diese(s) Objekt(e) löschen möchtest?</string>
 	<string name="themes_live_preview">Live-Vorschau</string>
@@ -109,6 +69,7 @@
 	<string name="post_excerpt">Auszug</string>
 	<string name="download">Bild wird heruntergeladen</string>
 	<string name="media_remove_from_queue">Aus der Warteschlange entfernen</string>
+	<string name="select_from_media_library">Aus der Mediathek auswählen</string>
 	<string name="share_action_title">Hinzufügen zu ...</string>
 	<string name="share_action_post">Neuer Beitrag</string>
 	<string name="share_action_media">Mediengalerie</string>
@@ -158,6 +119,7 @@
 	<string name="stats_visitors_and_views_header_all_time">Aller Zeiten</string>
 	<string name="stats_totals_followers_shares_header_content">Inhalt</string>
 	<string name="stats_totals_followers_shares_header_followers">Follower</string>
+	<string name="stats_totals_followers_shares_header_followers_publicize">\n	\n	Followers \n	&lt;font color="#9E9E9E">(enthält &lt;/font>\n	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">Publicize&lt;/a>&lt;/font>\n	&lt;font color="#9E9E9E">)&lt;/font>\n	\n  </string>
 	<string name="stats_totals_followers_shares_header_shares">Shares</string>
 	<string name="stats_totals_followers_shares_label_posts">Beiträge</string>
 	<string name="stats_totals_followers_shares_label_categories">Kategorien</string>
@@ -402,6 +364,7 @@
 	<string name="view_comment_from">Kommentar von</string>
 	<string name="stats_password">Passwort</string>
 	<string name="stats_username">Nutzername</string>
+	<string name="username_password_required">Benutzername und Password werden benötigt.</string>
 	<string name="title">Titel</string>
 	<string name="tags_separate_with_commas">Tags (durch Kommas getrennt)</string>
 	<string name="categories">Kategorien</string>
@@ -427,6 +390,7 @@
 	<string name="status">Status</string>
 	<string name="sdcard_message">Eine eingebundene SD-Karte wird benötigt, um Medien hochzuladen.</string>
 	<string name="location">Ortung</string>
+	<string name="take_video">Ein neues Video drehen</string>
 	<string name="sdcard_title">SD-Karte benötigt</string>
 	<string name="select_video">Wähle ein Video von der Galerie</string>
 	<string name="preview_page">Seite ansehen</string>
@@ -457,6 +421,7 @@
 	<string name="blogs">Blogs</string>
 	<string name="could_not_remove_account">Konnte Blog nicht löschen.</string>
 	<string name="select_photo">Wähle ein Foto von der Galerie</string>
+	<string name="take_photo">Schieß ein Foto</string>
 	<string name="error">Fehler</string>
 	<string name="selected_categories">Ausgewählte Kategorien:</string>
 	<string name="dont_yet_have_a_blog">Du hast noch kein Blog?</string>
@@ -528,10 +493,5 @@
 		<item>Standard</item>
 		<item>Status</item>
 		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_array">
-		<item>Public</item>
-		<item>Hidden</item>
-		<item>Private</item>
 	</string-array>
 </resources>
