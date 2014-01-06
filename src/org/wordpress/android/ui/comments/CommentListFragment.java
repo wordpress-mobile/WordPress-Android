@@ -93,9 +93,6 @@ public class CommentListFragment extends SherlockListFragment {
         }
         mListScrollPositionManager = new ListScrollPositionManager(listView, false);
         mPriorCheckedCommentPositions = new HashMap<Integer, Boolean>();
-
-        /* TODO: JCO - We need to make sure we are only calling this once during the fragment's create life cycle */
-        //refreshComments();
     }
 
     @Override
@@ -205,11 +202,18 @@ public class CommentListFragment extends SherlockListFragment {
             for(Comment currentComment : selectedCommentsSnapshot) {
                 Integer currentCommentId = currentComment.commentID;
                 if (moderatedComments.contains(currentCommentId)) {
-                    currentComment.setStatus(newStatusStr);
-                    replaceCommentInModel(currentComment);
-                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
 
-                    if (mAdapter != null) { mAdapter.notifyDataSetChanged(); }
+                    currentComment.setStatus(newStatusStr);
+
+                    if ( newStatusStr == CommentStatus.SPAM.toString()) {
+                        deleteCommentInModel(currentComment);
+                        if (mAdapter != null) { mAdapter.remove(currentComment); }
+                    } else {
+                        replaceCommentInModel(currentComment);
+                        if (mAdapter != null) { mAdapter.notifyDataSetChanged(); }
+                    }
+
+                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
 
                     Map<String, String> contentHash;
                     contentHash = (Map<String, String>) allComments.get(currentCommentId);
@@ -221,7 +225,7 @@ public class CommentListFragment extends SherlockListFragment {
     }
 
     /**
-     * Updates, all comments, model and the local database for a set of Comments changed server side.
+     * Updates all comments: The model, the wpDB for a set of Comments changed server side.
      */
     private void deleteCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments) {
         if (moderatedComments.size() > 0) {
@@ -229,10 +233,8 @@ public class CommentListFragment extends SherlockListFragment {
                 Integer currentCommentId = currentComment.commentID;
                 if (moderatedComments.contains(currentCommentId)) {
                     deleteCommentInModel(currentComment);
-                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
-
                     if (mAdapter != null) { mAdapter.remove(currentComment); }
-
+                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
                     allComments.remove(currentCommentId);
                 }
             }
