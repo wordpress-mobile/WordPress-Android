@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -71,7 +70,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = imageType;
         mImageListener = imageListener;
         if (url==null) {
-            showDefaultImage(mImageType);
+            showDefaultImage(mImageType, false);
         } else {
             // The URL has potentially changed. See if we need to load it.
             loadImageIfNecessary(false);
@@ -85,7 +84,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = ImageType.VIDEO;
 
         if (TextUtils.isEmpty(videoUrl)) {
-            showDefaultImage(ImageType.VIDEO);
+            showDefaultImage(ImageType.VIDEO, false);
             return;
         }
 
@@ -96,7 +95,7 @@ public class WPNetworkImageView extends ImageView {
             return;
         }
 
-        showDefaultImage(ImageType.VIDEO);
+        showDefaultImage(ImageType.VIDEO, false);
 
         // vimeo videos require network request to get thumbnail
         if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
@@ -136,7 +135,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showDefaultImage(mImageType);
+            showDefaultImage(mImageType, false);
             return;
         }
 
@@ -158,7 +157,7 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showErrorImage(mImageType);
+                        showDefaultImage(mImageType, true);
                         if (mImageListener!=null)
                             mImageListener.onImageLoaded(false);
                     }
@@ -200,7 +199,7 @@ public class WPNetworkImageView extends ImageView {
             if (mImageListener!=null)
                 mImageListener.onImageLoaded(true);
         } else {
-            showDefaultImage(mImageType);
+            showDefaultImage(mImageType, false);
         }
     }
 
@@ -229,12 +228,14 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    public void showDefaultImage(ImageType imageType) {
-        setImageDrawable(getDefaultDrawable(getContext(), imageType));
-    }
-
-    public void showErrorImage(ImageType imageType) {
-        setImageDrawable(getErrorDrawable(getContext(), imageType));
+    public void showDefaultImage(ImageType imageType, boolean isError) {
+        if (imageType == ImageType.PHOTO_FULL) {
+            // null default for full-screen photos
+            setImageDrawable(null);
+        } else {
+            int color = getContext().getResources().getColor(isError ? R.color.grey_medium : R.color.grey_extra_light);
+            setImageDrawable(new ColorDrawable(color));
+        }
     }
 
     protected void onDraw(Canvas canvas) {
@@ -283,36 +284,6 @@ public class WPNetworkImageView extends ImageView {
             AlphaAnimation animation = new AlphaAnimation(0.25f, 1f);
             animation.setDuration(FADE_TRANSITION);
             this.startAnimation(animation);
-        }
-    }
-
-    private static Drawable mErrorDrawable;
-    private static Drawable getErrorDrawable(Context context, ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no error image for full-screen images
-                return null;
-            default :
-                if (mErrorDrawable == null) {
-                    int color = context.getResources().getColor(R.color.grey_light);
-                    mErrorDrawable = new ColorDrawable(color);
-                }
-                return mErrorDrawable;
-        }
-    }
-
-    private static Drawable mDefaultDrawable;
-    private static Drawable getDefaultDrawable(Context context, ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no default image for full-screen images
-                return null;
-            default :
-                if (mDefaultDrawable==null) {
-                    int color = context.getResources().getColor(R.color.grey_extra_light);
-                    mDefaultDrawable = new ColorDrawable(color);
-                }
-                return mDefaultDrawable;
         }
     }
 }
