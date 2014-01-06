@@ -172,29 +172,35 @@ public class WPNetworkImageView extends ImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    onResponse(response, false);
+                                    // don't fade in the image since we know it's cached
+                                    handleResponse(response, true, false);
                                 }
                             });
-                            return;
-                        }
-
-                        if (response.getBitmap() != null) {
-                            setImageBitmap(response.getBitmap());
-
-                            // fade the image in if it wasn't cached
-                            if (!isImmediate)
-                                fadeIn();
-
-                            if (mImageListener!=null)
-                                mImageListener.onImageLoaded(true);
                         } else {
-                            setImageDrawable(getDefaultDrawable(getContext(), mImageType));
+                            handleResponse(response, isImmediate, true);
                         }
                     }
                 });
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
+    }
+
+    private void handleResponse(ImageLoader.ImageContainer response,
+                                boolean isCached,
+                                boolean allowFadeIn) {
+        if (response.getBitmap() != null) {
+            setImageBitmap(response.getBitmap());
+
+            // fade the image in if it wasn't cached
+            if (!isCached && allowFadeIn)
+                fadeIn();
+
+            if (mImageListener!=null)
+                mImageListener.onImageLoaded(true);
+        } else {
+            showDefaultImage(mImageType);
+        }
     }
 
     @Override
