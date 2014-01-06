@@ -251,7 +251,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR, false);
         }
 
         /*final String firstTag = post.getFirstTag();
