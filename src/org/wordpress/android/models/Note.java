@@ -429,7 +429,8 @@ public class Note {
             try {
                 JSONObject additionalData = new JSONObject();
                 additionalData.put("input_text", text);
-                WPMobileStatsUtil.trackExceptionForWPCom(runtimeException, "note-html-parsing",
+                WPMobileStatsUtil.trackException(runtimeException,
+                        WPMobileStatsUtil.StatsPropertyExceptionNoteParsing,
                         additionalData);
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();

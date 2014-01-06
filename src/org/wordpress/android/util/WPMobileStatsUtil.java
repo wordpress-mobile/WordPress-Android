@@ -85,6 +85,7 @@ public class WPMobileStatsUtil {
 
     // Exception logging
     public static final String StatsEventException = "Exception";
+    public static final String StatsPropertyExceptionNoteParsing = "note_html_parsing_failed";
 
     /* /Events  */
 
@@ -268,49 +269,35 @@ public class WPMobileStatsUtil {
      * @param exceptionId a string id (short name that helps to distinguish different tracked
      *                    exception)
      */
-    public static void trackExceptionForWPCom(Exception exception, String exceptionId) {
-        WPMobileStatsUtil.instance.trackException(true, exception, exceptionId, null);
+    public static void trackException(Exception exception, String exceptionId) {
+        trackException(exception, exceptionId, null);
     }
 
     /**
      * Tracks the exception stack trace associated to a String id
      *
-     * @param exception contains stack trace
-     * @param exceptionId a string id (short name that helps to distinguish different tracked
-     *                    exception)
-     */
-    public static void trackExceptionForSelfHostedAndWPCom(Exception exception, String exceptionId) {
-        WPMobileStatsUtil.instance.trackException(false, exception, exceptionId, null);
-    }
-
-    /**
-     * Tracks the exception stack trace associated to a String id
-     *
-     * @param exception contains stack trace
+     * @param exception exception we want to track - contains stack trace
      * @param exceptionId a string id (short name that helps to distinguish different tracked
      *                    exception)
      * @param additionalData a JSON Object to track additional data that could help solve this
      *                       exception
      */
-    public static void trackExceptionForWPCom(Exception exception, String exceptionId,
-                                              JSONObject additionalData) {
-        WPMobileStatsUtil.instance.trackException(true, exception, exceptionId, additionalData);
+    public static void trackException(Exception exception, String exceptionId,
+                                      JSONObject additionalData) {
+        JSONObject properties = new JSONObject();
+        StringWriter errors = new StringWriter();
+        exception.printStackTrace(new PrintWriter(errors));
+        try {
+            properties.put("exception_id", exceptionId);
+            properties.put("stacktrace", errors.toString());
+            if (additionalData != null) {
+                properties.put("additional_data", additionalData);
+            }
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+        mixpanel.track(StatsEventException, properties);
     }
-
-    /**
-     * Tracks the exception stack trace associated to a String id
-     *
-     * @param exception contains stack trace
-     * @param exceptionId a string id (short name that helps to distinguish different tracked
-     *                    exception)
-     * @param additionalData a JSON Object to track additional data that could help solve this
-     *                       exception
-     */
-    public static void trackExceptionForSelfHostedAndWPCom(Exception exception, String exceptionId,
-                                                           JSONObject additionalData) {
-        WPMobileStatsUtil.instance.trackException(false, exception, exceptionId, additionalData);
-    }
-
 
     // Instance methods
 
@@ -415,22 +402,4 @@ public class WPMobileStatsUtil {
     private JSONObject propertiesForEvent(String event) {
         return aggregatedProperties.get(event);
     }
-
-    private void trackException(boolean isWpCom, Exception exception, String exceptionId,
-                                JSONObject additionalData) {
-        JSONObject jsonObject = new JSONObject();
-        StringWriter errors = new StringWriter();
-        exception.printStackTrace(new PrintWriter(errors));
-        try {
-            jsonObject.put("exception_id", exceptionId);
-            jsonObject.put("stacktrace", errors.toString());
-            if (additionalData != null) {
-                jsonObject.put("additional_data", additionalData);
-            }
-        } catch (JSONException jsonException) {
-            jsonException.printStackTrace();
-        }
-        track(isWpCom, StatsEventException, jsonObject);
-    }
-
 }
