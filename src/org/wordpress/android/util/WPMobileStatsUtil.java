@@ -16,6 +16,8 @@ import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 
 
@@ -80,6 +82,10 @@ public class WPMobileStatsUtil {
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
     public static final String StatsEventPageDetailOpenedEditor = "Page - Opened Editor";
     public static final String StatsEventPageDetailClosedEditor = "Page - Closed Editor";
+
+    // Exception logging
+    public static final String StatsEventException = "Exception";
+    public static final String StatsPropertyExceptionNoteParsing = "note_html_parsing_failed";
 
     /* /Events  */
 
@@ -256,6 +262,42 @@ public class WPMobileStatsUtil {
         WPMobileStatsUtil.instance.flag(event, property);
     }
 
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     */
+    public static void trackException(Exception exception, String exceptionId) {
+        trackException(exception, exceptionId, null);
+    }
+
+    /**
+     * Tracks the exception stack trace associated to a String id
+     *
+     * @param exception exception we want to track - contains stack trace
+     * @param exceptionId a string id (short name that helps to distinguish different tracked
+     *                    exception)
+     * @param additionalData a JSON Object to track additional data that could help solve this
+     *                       exception
+     */
+    public static void trackException(Exception exception, String exceptionId,
+                                      JSONObject additionalData) {
+        JSONObject properties = new JSONObject();
+        StringWriter errors = new StringWriter();
+        exception.printStackTrace(new PrintWriter(errors));
+        try {
+            properties.put("exception_id", exceptionId);
+            properties.put("stacktrace", errors.toString());
+            if (additionalData != null) {
+                properties.put("additional_data", additionalData);
+            }
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+        mixpanel.track(StatsEventException, properties);
+    }
 
     // Instance methods
 
@@ -360,5 +402,4 @@ public class WPMobileStatsUtil {
     private JSONObject propertiesForEvent(String event) {
         return aggregatedProperties.get(event);
     }
-
 }
