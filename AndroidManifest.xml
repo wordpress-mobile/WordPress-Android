@@ -164,31 +164,31 @@
 
         <!-- Native Reader Activities -->
         <activity
-            android:name=".ui.reader_native.NativeReaderActivity"
+            android:name=".ui.reader.ReaderActivity"
             android:theme="@style/WordPress.Theme.NoBackground"
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".ui.reader_native.ReaderPostDetailActivity"
+            android:name=".ui.reader.ReaderPostDetailActivity"
             android:theme="@style/WordPress.Theme.NoBackground"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.reader_native.ReaderLogViewerActivity"
+            android:name=".ui.reader.ReaderLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity
-            android:name=".ui.reader_native.ReaderUserListActivity"
+            android:name=".ui.reader.ReaderUserListActivity"
             android:theme="@style/ReaderTheme.Popup" />
         <activity
-            android:name=".ui.reader_native.ReaderTagActivity"
+            android:name=".ui.reader.ReaderTagActivity"
             android:theme="@style/ReaderTheme.Popup"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader_native.ReaderReblogActivity"
+            android:name=".ui.reader.ReaderReblogActivity"
             android:theme="@style/ReaderTheme.Popup"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader_native.ReaderPhotoViewerActivity"
+            android:name=".ui.reader.ReaderPhotoViewerActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
         <!-- Other activities -->

@@ -16,8 +16,8 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:maxWidth="175dp"
-        android:paddingBottom="@dimen/reader_margin_medium"
-        android:paddingTop="@dimen/reader_margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
         android:text="text_name"
         android:textColor="@color/reader_actionbar_text" />
 

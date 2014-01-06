@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.adapters;
+package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,12 +20,12 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -72,7 +72,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mInflater = LayoutInflater.from(context);
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
@@ -84,7 +84,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshComments() {
         if (mIsTaskRunning)
-            ReaderLog.w("Load comments task already running");
+            AppLog.w("Load comments task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

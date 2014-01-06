@@ -5,18 +5,18 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/reader_margin_large">
+    android:padding="@dimen/margin_large">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/image_avatar"
-        android:layout_width="@dimen/reader_avatar_sz_small"
-        android:layout_height="@dimen/reader_avatar_sz_small" />
+        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_small" />
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_margin_medium"
-        android:layout_marginRight="@dimen/reader_margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_weight="1">
 
         <org.wordpress.android.widgets.WPTextView
@@ -26,7 +26,7 @@
             android:maxLines="2"
             android:text="text_name"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/reader_text_sz_medium" />
+            android:textSize="@dimen/text_sz_medium" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_url"
@@ -38,7 +38,7 @@
             android:maxLines="1"
             android:text="text_url"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/reader_text_sz_small" />
+            android:textSize="@dimen/text_sz_small" />
 
     </RelativeLayout>
 

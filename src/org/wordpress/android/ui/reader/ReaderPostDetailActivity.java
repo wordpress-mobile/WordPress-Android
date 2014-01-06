@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -46,18 +46,18 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher.OpenUrlType;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderCommentActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader_native.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderAniUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -189,7 +189,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter==null) {
             if (mPost==null)
-                ReaderLog.w("comment adapter created before post loaded");
+                AppLog.w("comment adapter created before post loaded");
 
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -224,7 +224,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 public void onRequestData(ReaderActions.RequestDataAction action) {
                     if (mIsUpdatingComments)
                         return;
-                    ReaderLog.i("requesting newer comments");
+                    AppLog.i("requesting newer comments");
                     updateComments();
                 }
             };
@@ -505,7 +505,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private void doPostAction(View actionView, ReaderPostActions.PostAction action, ReaderPost post) {
         boolean isSelected = actionView.isSelected();
         actionView.setSelected(!isSelected);
-        ReaderAniUtils.zoomAction(actionView);
+        AniUtils.zoomAction(actionView);
 
         if (!ReaderPostActions.performPostAction(this, action, post, null)) {
             actionView.setSelected(isSelected);
@@ -538,7 +538,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             return;
         }
         imgBtnReblog.setSelected(true);
-        ReaderAniUtils.zoomAction(imgBtnReblog);
+        AniUtils.zoomAction(imgBtnReblog);
         ReaderActivityLauncher.showReaderReblogForResult(this, post);
     }
 
@@ -700,9 +700,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
-                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
-                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
+                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
                 final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
 
                 // determine how many avatars will fit the space
@@ -813,7 +813,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
         imgBtnComment.setSelected(true);
-        ReaderAniUtils.flyIn(layoutCommentBox);
+        AniUtils.flyIn(layoutCommentBox);
 
         editComment.requestFocus();
         editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -864,7 +864,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
 
         imgBtnComment.setSelected(false);
-        ReaderAniUtils.flyOut(layoutCommentBox);
+        AniUtils.flyOut(layoutCommentBox);
         EditTextUtils.hideSoftInput(editComment);
 
         getCommentAdapter().setHighlightCommentId(0, false);
@@ -1110,9 +1110,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             content = "";
         }
 
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.reader_margin_large);
-        int marginSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_small);
-        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.reader_margin_extra_small);
+        int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
+        int marginSmall = getResources().getDimensionPixelSize(R.dimen.margin_small);
+        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(this, R.color.grey_light);
@@ -1227,7 +1227,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     @SuppressLint("NewApi")
     private void showPost() {
         if (mIsPostTaskRunning)
-            ReaderLog.w("post task already running");
+            AppLog.w("post task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1337,7 +1337,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             }
 
             if (mPost.hasPostAvatar()) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_medium);
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
@@ -1433,7 +1433,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 public void run() {
                     if (mWebView.getVisibility()!=View.VISIBLE) {
                         mWebView.setVisibility(View.VISIBLE);
-                        ReaderLog.w("forced webView to appear before page finished");
+                        AppLog.w("forced webView to appear before page finished");
                     }
                 }
             }, WEBVIEW_DELAY_MS);

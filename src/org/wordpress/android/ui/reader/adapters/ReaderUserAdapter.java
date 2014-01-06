@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.adapters;
+package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,13 +20,13 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ReaderAniUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SysUtils;
 
 /**
@@ -51,14 +51,14 @@ public class ReaderUserAdapter extends BaseAdapter {
         mListType = listType;
         mDataLoadedListener = dataLoadedListener;
         mPost = post;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.reader_avatar_sz_small);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         loadUsers();
     }
 
     @SuppressLint("NewApi")
     private void loadUsers() {
         if (mIsTaskRunning)
-            ReaderLog.w("user task already running");
+            AppLog.w("user task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -123,7 +123,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderAniUtils.zoomAction(holder.txtFollow);
+                    AniUtils.zoomAction(holder.txtFollow);
                     toggleFollowUser(user, holder.txtFollow);
                 }
             });

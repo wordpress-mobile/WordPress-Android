@@ -15,8 +15,8 @@
             android:id="@+id/text_log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/reader_margin_medium"
-            android:textSize="@dimen/reader_text_sz_medium" />
+            android:padding="@dimen/margin_medium"
+            android:textSize="@dimen/text_sz_medium" />
     </ScrollView>
 
     <Button

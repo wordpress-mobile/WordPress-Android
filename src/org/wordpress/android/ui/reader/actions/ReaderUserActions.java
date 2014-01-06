@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -8,7 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.AppLog;
 
 /**
  * Created by nbradbury on 8/25/13.
@@ -46,7 +46,7 @@ public class ReaderUserActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.e(volleyError);
+                AppLog.e(volleyError);
                 if (resultListener != null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }

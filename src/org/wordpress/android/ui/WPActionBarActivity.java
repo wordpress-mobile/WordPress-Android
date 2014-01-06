@@ -53,7 +53,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
-import org.wordpress.android.ui.reader_native.NativeReaderActivity;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -497,7 +497,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private void showReader() {
         Intent intent;
-        intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
+        intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
@@ -709,12 +709,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof NativeReaderActivity;
+            return WPActionBarActivity.this instanceof ReaderActivity;
         }
         @Override
         public void onSelectItem(){
             Intent intent;
-            intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
+            intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

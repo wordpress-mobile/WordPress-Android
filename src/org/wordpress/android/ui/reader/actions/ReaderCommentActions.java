@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
 import android.text.TextUtils;
@@ -15,8 +15,8 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.ReaderLog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,13 +49,13 @@ public class ReaderCommentActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.e(volleyError);
+                AppLog.e(volleyError);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
 
             }
         };
-        ReaderLog.d("updating comments");
+        AppLog.d("updating comments");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject, final long blogId, final ReaderActions.UpdateResultListener resultListener) {
@@ -74,7 +74,7 @@ public class ReaderCommentActions {
                 ReaderCommentList serverComments = ReaderCommentList.fromJson(jsonObject, blogId);
                 final int numNew = serverComments.size();
                 if (numNew > 0) {
-                    ReaderLog.d("new comments found");
+                    AppLog.d("new comments found");
                     ReaderCommentTable.addOrUpdateComments(serverComments);
                 }
 
@@ -142,7 +142,7 @@ public class ReaderCommentActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
-                ReaderLog.i("comment succeeded");
+                AppLog.i("comment succeeded");
                 ReaderComment newComment = ReaderComment.fromJson(jsonObject, post.blogId);
                 ReaderCommentTable.addOrUpdateComment(newComment);
                 if (actionListener!=null)
@@ -153,14 +153,14 @@ public class ReaderCommentActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
-                ReaderLog.w("comment failed");
-                ReaderLog.e(volleyError);
+                AppLog.w("comment failed");
+                AppLog.e(volleyError);
                 if (actionListener!=null)
                     actionListener.onActionResult(false, null);
             }
         };
 
-        ReaderLog.i("submitting comment");
+        AppLog.i("submitting comment");
         WordPress.restClient.post(path, params, null, listener, errorListener);
 
         return newComment;

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native.actions;
+package org.wordpress.android.ui.reader.actions;
 
 import android.text.TextUtils;
 
@@ -9,11 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUrlList;
-import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.UrlUtils;
 
 /**
@@ -55,14 +53,14 @@ public class ReaderBlogActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderLog.d("blog action " + action.name() + " succeeded");
+                AppLog.d("blog action " + action.name() + " succeeded");
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.w("blog action " + action.name() + " failed");
-                ReaderLog.e(volleyError);
+                AppLog.w("blog action " + action.name() + " failed");
+                AppLog.e(volleyError);
                 // revert to original state
                 ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isCurrentlyFollowing);
             }
@@ -85,7 +83,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.e(volleyError);
+                AppLog.e(volleyError);
             }
         };
         WordPress.restClient.get("/read/following/mine", listener, errorListener);

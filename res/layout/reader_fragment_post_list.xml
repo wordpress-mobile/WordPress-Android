@@ -12,7 +12,7 @@
         android:paddingLeft="@dimen/reader_list_margin"
         android:paddingRight="@dimen/reader_list_margin"
         android:divider="@color/reader_divider_grey"
-        android:dividerHeight="@dimen/reader_margin_large"
+        android:dividerHeight="@dimen/margin_large"
         tools:listitem="@layout/reader_listitem_post_excerpt" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -32,5 +32,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/reader_margin_large" />
+        android:layout_marginLeft="@dimen/margin_large" />
 </RelativeLayout>

@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.android.volley.VolleyError;
 
+import org.wordpress.android.WordPress;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -13,12 +15,12 @@ import java.util.NoSuchElementException;
  * simple wrapper for Android log calls, currently used only by the native reader
  * enables recording & displaying log
  */
-public class ReaderLog {
+public class AppLog {
 
-    public static final String TAG = "WordPress.Reader";
+    public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 
-    private ReaderLog() {
+    private AppLog() {
         throw new AssertionError();
     }
 

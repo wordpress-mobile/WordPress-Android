@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_title"
-        android:layout_marginBottom="@dimen/reader_margin_medium"
-        android:layout_marginTop="@dimen/reader_margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
 
     <RelativeLayout
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider_title"
-        android:padding="@dimen/reader_margin_large">
+        android:padding="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_reblog_label"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/spinner_reblog"
-            android:layout_marginTop="@dimen/reader_margin_large"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/reader_hint_reblog_comment" />
 
         <EditText
@@ -57,13 +57,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_comment_label"
-            android:layout_marginBottom="@dimen/reader_margin_large"
-            android:layout_marginTop="@dimen/reader_margin_small"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             android:background="@drawable/reader_edittext_frame"
             android:gravity="top"
             android:inputType="textCapSentences|textMultiLine"
             android:minLines="3"
-            android:padding="@dimen/reader_margin_medium" />
+            android:padding="@dimen/margin_medium" />
 
         <Button
             android:id="@+id/btn_reblog"

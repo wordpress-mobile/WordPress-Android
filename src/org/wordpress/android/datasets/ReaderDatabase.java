@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.AppLog;
 
 /**
  * Created by nbradbury on 6/22/13.
@@ -65,7 +65,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // for now just reset the db when upgrading, future versions may want to avoid this
         // and modify table structures, etc., on upgrade while preserving data
-        ReaderLog.i("Upgrading database from version " + oldVersion + " to version " + newVersion);
+        AppLog.i("Upgrading database from version " + oldVersion + " to version " + newVersion);
         reset(db);
     }
 
@@ -73,7 +73,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // IMPORTANT: do NOT call super() here - doing so throws a SQLiteException
-        ReaderLog.w("Downgrading database from version " + oldVersion + " to version " + newVersion);
+        AppLog.w("Downgrading database from version " + oldVersion + " to version " + newVersion);
         reset(db);
     }
 
@@ -121,27 +121,27 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
             // don't bother purging other data unless posts were purged
             if (numPostsDeleted > 0) {
-                ReaderLog.i(String.format("%d total posts purged", numPostsDeleted));
+                AppLog.i(String.format("%d total posts purged", numPostsDeleted));
 
                 // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
                 if (numCommentsDeleted > 0)
-                    ReaderLog.i(String.format("%d comments purged", numCommentsDeleted));
+                    AppLog.i(String.format("%d comments purged", numCommentsDeleted));
 
                 // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0)
-                    ReaderLog.i(String.format("%d likes purged", numLikesDeleted));
+                    AppLog.i(String.format("%d likes purged", numLikesDeleted));
 
                 // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
                 if (numThumbsPurged > 0)
-                    ReaderLog.i(String.format("%d thumbnails purged", numThumbsPurged));
+                    AppLog.i(String.format("%d thumbnails purged", numThumbsPurged));
 
                 // purge unattached tags
                 int numTagsPurged = ReaderTagTable.purge(db);
                 if (numTagsPurged > 0)
-                    ReaderLog.i(String.format("%d tags purged", numTagsPurged));
+                    AppLog.i(String.format("%d tags purged", numTagsPurged));
             }
             db.setTransactionSuccessful();
         } finally {

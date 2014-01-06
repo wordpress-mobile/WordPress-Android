@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 /**
  * Created by nbradbury on 7/16/13.
- * views the activity log (ReaderLog.java)
+ * views the activity log (AppLog.java)
  */
 public class ReaderLogViewerActivity extends FragmentActivity {
     private TextView mTxtLogViewer;
@@ -25,7 +25,7 @@ public class ReaderLogViewerActivity extends FragmentActivity {
         setContentView(R.layout.reader_activity_logviewer);
 
         mTxtLogViewer = (TextView) findViewById(R.id.text_log);
-        mTxtLogViewer.setText(Html.fromHtml(ReaderLog.toHtml()));
+        mTxtLogViewer.setText(Html.fromHtml(AppLog.toHtml()));
 
         Button btnShare = (Button) findViewById(R.id.btn_share);
         btnShare.setOnClickListener(new View.OnClickListener() {

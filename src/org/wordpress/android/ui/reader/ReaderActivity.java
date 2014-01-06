@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader_native;
+package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -19,14 +19,14 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader_native.ReaderPostListFragment.RefreshType;
-import org.wordpress.android.ui.reader_native.actions.ReaderActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderAuthActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader_native.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.ToastUtils;
 
 /*
@@ -34,7 +34,7 @@ import org.wordpress.android.util.ToastUtils;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class NativeReaderActivity extends WPActionBarActivity {
+public class ReaderActivity extends WPActionBarActivity {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
@@ -88,13 +88,13 @@ public class NativeReaderActivity extends WPActionBarActivity {
             mHasPerformedInitialUpdate = true;
             // update the current user the first time this is shown - ensures we have their user_id
             // as well as their latest info (in case they changed their avatar, name, etc. since last time)
-            ReaderLog.i("updating current user");
+            AppLog.i("updating current user");
             ReaderUserActions.updateCurrentUser(null);
             // also update cookies so that we can show authenticated images in WebViews
-            ReaderLog.i("updating cookies");
+            AppLog.i("updating cookies");
             ReaderAuthActions.updateCookies(this);
             // update followed blogs
-            ReaderLog.i("updating followed blogs");
+            AppLog.i("updating followed blogs");
             ReaderBlogActions.updateFollowedBlogs();
             // update list of followed tags
             updateTagList();
@@ -270,7 +270,7 @@ public class NativeReaderActivity extends WPActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                ReaderLog.i("received ACTION_REFRESH_POSTS");
+                AppLog.i("received ACTION_REFRESH_POSTS");
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment != null)
                     fragment.refreshPosts();
