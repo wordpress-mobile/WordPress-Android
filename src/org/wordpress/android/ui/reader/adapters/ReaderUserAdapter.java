@@ -9,11 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
@@ -25,9 +22,9 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Created by nbradbury on 6/27/13.
@@ -98,8 +95,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtName = (TextView) convertView.findViewById(R.id.text_name);
             holder.txtUrl = (TextView) convertView.findViewById(R.id.text_url);
             holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-            holder.imgAvatar = (NetworkImageView) convertView.findViewById(R.id.image_avatar);
-            holder.imgAvatar.setDefaultImageResId(R.drawable.reader_photo_default);
+            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
             convertView.setTag(holder);
         } else {
             holder = (UserViewHolder) convertView.getTag();
@@ -135,7 +131,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             convertView.setOnClickListener(null);
         }
 
-        holder.imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl()), WordPress.imageLoader);
+        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
 
         return convertView;
     }
@@ -170,7 +166,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         private TextView txtName;
         private TextView txtUrl;
         private TextView txtFollow;
-        private NetworkImageView imgAvatar;
+        private WPNetworkImageView imgAvatar;
     }
 
     private boolean mIsTaskRunning = false;
