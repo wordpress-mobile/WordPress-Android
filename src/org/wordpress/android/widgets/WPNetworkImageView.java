@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -157,7 +158,7 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        setImageResource(getErrorImageResId(mImageType));
+                        showErrorImage(mImageType);
                         if (mImageListener!=null)
                             mImageListener.onImageLoaded(false);
                     }
@@ -192,8 +193,8 @@ public class WPNetworkImageView extends ImageView {
         if (response.getBitmap() != null) {
             setImageBitmap(response.getBitmap());
 
-            // fade the image in if it wasn't cached
-            if (!isCached && allowFadeIn)
+            // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
+            if (!isCached && allowFadeIn && (mImageType == ImageType.PHOTO || mImageType == ImageType.VIDEO))
                 fadeIn();
 
             if (mImageListener!=null)
@@ -230,6 +231,10 @@ public class WPNetworkImageView extends ImageView {
 
     public void showDefaultImage(ImageType imageType) {
         setImageDrawable(getDefaultDrawable(getContext(), imageType));
+    }
+
+    public void showErrorImage(ImageType imageType) {
+        setImageDrawable(getErrorDrawable(getContext(), imageType));
     }
 
     protected void onDraw(Canvas canvas) {
@@ -281,26 +286,33 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
-    private static int getErrorImageResId(ImageType imageType) {
+    private static Drawable mErrorDrawable;
+    private static Drawable getErrorDrawable(Context context, ImageType imageType) {
         switch (imageType) {
             case PHOTO_FULL :
                 // no error image for full-screen images
-                return 0;
+                return null;
             default :
-                return R.drawable.reader_photo_error;
+                if (mErrorDrawable == null) {
+                    int color = context.getResources().getColor(R.color.grey_light);
+                    mErrorDrawable = new ColorDrawable(color);
+                }
+                return mErrorDrawable;
         }
     }
 
-    private static Drawable mDefaultPhoto;
+    private static Drawable mDefaultDrawable;
     private static Drawable getDefaultDrawable(Context context, ImageType imageType) {
         switch (imageType) {
             case PHOTO_FULL :
                 // no default image for full-screen images
                 return null;
             default :
-                if (mDefaultPhoto==null)
-                    mDefaultPhoto = context.getResources().getDrawable(R.drawable.reader_photo_default);
-                return mDefaultPhoto;
+                if (mDefaultDrawable==null) {
+                    int color = context.getResources().getColor(R.color.grey_extra_light);
+                    mDefaultDrawable = new ColorDrawable(color);
+                }
+                return mDefaultDrawable;
         }
     }
 }
