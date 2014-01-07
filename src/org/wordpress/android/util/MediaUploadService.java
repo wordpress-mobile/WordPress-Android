@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.xmlrpc.android.ApiHelper;
@@ -27,7 +28,8 @@ public class MediaUploadService extends Service {
     /** Listen to this Intent for when there are updates to the upload queue **/
     public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION = "MEDIA_UPLOAD_INTENT_NOTIFICATION";
     public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA = "MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA";
-    
+    public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR = "MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR";
+
     private Context mContext;
     private Handler mHandler = new Handler();
     private boolean mUploadInProgress;
@@ -83,8 +85,7 @@ public class MediaUploadService extends Service {
         if(WordPress.getCurrentBlog() != null){
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
-    
-            sendUpdateBroadcast(null);
+            sendUpdateBroadcast(null, null);
         }
     }
     
@@ -97,7 +98,6 @@ public class MediaUploadService extends Service {
     }
     
     private void uploadMediaFile(Cursor cursor) {
-
         if (!cursor.moveToFirst())
             return;
         
@@ -122,7 +122,7 @@ public class MediaUploadService extends Service {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
                 WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                sendUpdateBroadcast(mediaId);
+                sendUpdateBroadcast(mediaId, null);
                 fetchMediaFile(id);
             }
             
@@ -130,18 +130,20 @@ public class MediaUploadService extends Service {
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                sendUpdateBroadcast(mediaId);
+                if (errorType == ApiHelper.ErrorType.NETWORK_XMLRPC) {
+                    sendUpdateBroadcast(mediaId, getString(R.string.upload_failed));
+                } else {
+                    sendUpdateBroadcast(mediaId, null);
+                }
                 mHandler.post(mFetchQueueTask);
             }
         });
-        
+
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
-        sendUpdateBroadcast(mediaId);
-        
+        sendUpdateBroadcast(mediaId, null);
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs) ;
-        
+        task.execute(apiArgs);
         mHandler.post(mFetchQueueTask);
     }
 
@@ -156,27 +158,34 @@ public class MediaUploadService extends Service {
                 String mediaId = mediaFile.getMediaId();
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
-                sendUpdateBroadcast(id);
+                sendUpdateBroadcast(id, null);
                 mHandler.post(mFetchQueueTask);
             }
             
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                 mUploadInProgress = false;
-                sendUpdateBroadcast(id);
+                if (errorType == ApiHelper.ErrorType.NETWORK_XMLRPC) {
+                    sendUpdateBroadcast(id, getString(R.string.error_refresh_media));
+                } else {
+                    sendUpdateBroadcast(id, null);
+                }
                 mHandler.post(mFetchQueueTask);
             }
         });
         task.execute(apiArgs);
     }
 
-    private void sendUpdateBroadcast(String mediaId) {
+    private void sendUpdateBroadcast(String mediaId, String errorMessage) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(mContext);
         Intent intent = new Intent(MEDIA_UPLOAD_INTENT_NOTIFICATION);
-        if (mediaId != null)
+        if (mediaId != null) {
             intent.putExtra(MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA, mediaId);
+        }
+        if (errorMessage != null) {
+            intent.putExtra(MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR, errorMessage);
+        }
         lbm.sendBroadcast(intent);
-        
     }
     
 }

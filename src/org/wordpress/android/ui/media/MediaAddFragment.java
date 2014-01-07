@@ -28,6 +28,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.MediaUploadService;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -92,12 +93,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION)) {
                 String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
+                String errorMessage = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
+                if (errorMessage != null) {
+                    ToastUtils.showToast(context, errorMessage, ToastUtils.Duration.SHORT);
+                }
                 mCallback.onMediaAdded(mediaId);
             }
         }
