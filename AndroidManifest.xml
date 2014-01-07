@@ -173,7 +173,7 @@
             android:theme="@style/WordPress.Theme.NoBackground"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.reader.ReaderLogViewerActivity"
+            android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"

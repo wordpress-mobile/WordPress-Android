@@ -25,7 +25,7 @@ public class AppLog {
     }
 
     /*
-     * defaults to false, pass true to capture log so it can be displayed by ReaderLogViewerActivity
+     * defaults to false, pass true to capture log so it can be displayed by AppLogViewerActivity
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
@@ -157,7 +157,7 @@ public class AppLog {
     }
 
     /*
-     * returns entire log as html for display (see ReaderLogViewerActivity)
+     * returns entire log as html for display (see AppLogViewerActivity)
      */
     public static String toHtml() {
         StringBuilder sb = new StringBuilder();
