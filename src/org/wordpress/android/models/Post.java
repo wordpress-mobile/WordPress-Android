@@ -168,7 +168,7 @@ public class Post implements Serializable {
             categories = StringUtils.unescapeHTML(categories);
             jArray = new JSONArray(categories);
         } catch (JSONException e) {
-            AppLog.e(T.EDITOR, e);
+            AppLog.e(T.POSTS, e);
         }
         return jArray;
     }
