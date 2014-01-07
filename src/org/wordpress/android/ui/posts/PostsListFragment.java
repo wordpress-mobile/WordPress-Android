@@ -297,7 +297,7 @@ public class PostsListFragment extends ListFragment {
                         try {
                             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                         } catch (ClassCastException e) {
-                            AppLog.e(T.EDITOR, "bad menuInfo", e);
+                            AppLog.e(T.POSTS, "bad menuInfo", e);
                             return;
                         }
 

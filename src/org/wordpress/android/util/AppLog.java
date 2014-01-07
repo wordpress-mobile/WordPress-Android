@@ -12,12 +12,11 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by nbradbury on 6/21/13.
- * simple wrapper for Android log calls, currently used only by the native reader
- * enables recording & displaying log
+ * simple wrapper for Android log calls, enables recording & displaying log
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, COMMENTS, THEMES}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 

@@ -114,7 +114,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.READER, "token action succeeded");
+                        AppLog.d(T.NOTIFS, "token action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
@@ -130,8 +130,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.w(T.READER, "blog action failed");
-                        AppLog.e(T.READER, volleyError);
+                        AppLog.w(T.NOTIFS, "blog action failed");
+                        AppLog.e(T.NOTIFS, volleyError);
                     }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
