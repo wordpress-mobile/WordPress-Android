@@ -16,7 +16,8 @@ import java.util.NoSuchElementException;
  * enables recording & displaying log
  */
 public class AppLog {
-    public enum T {READER, EDITOR, MEDIA, NUX, API} // T for Tag
+    // T for Tag
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, COMMENTS, THEMES}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 
@@ -49,6 +50,16 @@ public class AppLog {
     public static void w(T tag, String message) {
         Log.w(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.w, message);
+    }
+
+    public static void e(T tag, String message) {
+        Log.e(TAG + "-" + tag.toString(), message);
+        addEntry(tag, LogLevel.e, message);
+    }
+
+    public static void e(T tag, String message, Exception e) {
+        Log.e(TAG + "-" + tag.toString(), message, e);
+        addEntry(tag, LogLevel.e, message + " - exception: " + e.getMessage());
     }
 
     public static void e(T tag, Exception e) {

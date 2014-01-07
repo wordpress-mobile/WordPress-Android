@@ -18,7 +18,6 @@ import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import org.json.JSONArray;
@@ -33,6 +32,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -411,7 +411,7 @@ public class PostUploadService extends Service {
                         .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
                         + " " + cleanXMLRPCErrorMessage(e.getMessage());
                 mIsMediaError = false;
-                Log.i("WP", mErrorMessage);
+                AppLog.i(T.EDITOR, mErrorMessage);
             }
 
             return false;

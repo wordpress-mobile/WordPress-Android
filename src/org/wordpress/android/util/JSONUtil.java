@@ -1,11 +1,11 @@
 package org.wordpress.android.util;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 
@@ -38,10 +38,10 @@ public class JSONUtil {
                     return defaultObject;
                 }
             } catch (JSONException e) {
-                Log.e(TAG, String.format("Could not complete query %s", query), e);
+                AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
                 return defaultObject;
             } catch (ClassCastException e) {
-                Log.e(TAG, String.format("Could not cast object %s", query), e);
+                AppLog.e(T.UTILS, String.format("Could not cast object %s", query), e);
                 return defaultObject;
             }
         }
@@ -71,10 +71,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch (java.lang.ClassCastException e) {
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
             return defaultObject;
         } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
     }
@@ -114,7 +114,7 @@ public class JSONUtil {
                 return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
             } else if(!remainingQuery.equals("")){
                 // TODO throw an exception since the query isn't valid?
-                Log.d(TAG, String.format("Incorrect query for next object %s", remainingQuery));
+                AppLog.d(T.UTILS, String.format("Incorrect query for next object %s", remainingQuery));
                 return defaultObject;
             }
             Object result = source.get(index);
@@ -124,10 +124,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch(java.lang.ClassCastException e){
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
             return defaultObject;
         } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
 

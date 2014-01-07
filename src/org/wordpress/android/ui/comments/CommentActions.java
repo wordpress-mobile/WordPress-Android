@@ -2,7 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,6 +12,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -88,7 +89,7 @@ public class CommentActions {
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
                 } catch (XMLRPCException e) {
-                    Log.e(WordPress.TAG, e.getMessage(), e);
+                    AppLog.e(T.NUX, e.getMessage(), e);
                     newCommentID = -1;
                 }
 
@@ -152,7 +153,7 @@ public class CommentActions {
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
                 } catch (XMLRPCException e) {
-                    Log.e(WordPress.TAG, e.getMessage(), e);
+                    AppLog.e(T.NUX, e.getMessage(), e);
                     newCommentID = -1;
                 }
 
@@ -197,7 +198,7 @@ public class CommentActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 if (volleyError != null)
-                    Log.e(WordPress.TAG, volleyError.getMessage(), volleyError);
+                    AppLog.e(T.NUX, volleyError.getMessage(), volleyError);
                 if (actionListener != null)
                     actionListener.onActionResult(false);
             }
@@ -250,7 +251,7 @@ public class CommentActions {
                 try {
                     result = client.call("wp.editComment", params);
                 } catch (final XMLRPCException e) {
-                    Log.e(WordPress.TAG, e.getMessage(), e);
+                    AppLog.e(T.NUX, e.getMessage(), e);
                     result = null;
                 }
 
@@ -303,7 +304,7 @@ public class CommentActions {
                 try {
                     result = client.call("wp.deleteComment", params);
                 } catch (final XMLRPCException e) {
-                    Log.e(WordPress.TAG, e.getMessage(), e);
+                    AppLog.e(T.NUX, e.getMessage(), e);
                     result = null;
                 }
 

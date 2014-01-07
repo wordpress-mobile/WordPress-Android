@@ -17,7 +17,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -561,10 +560,10 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 }
 
             } catch (JsonSyntaxException e) {
-                Log.v("WORDPRESS", "Notification Settings Json could not be parsed.");
+                AppLog.v(T.NOTIFS, "Notification Settings Json could not be parsed.");
                 return;
             } catch (Exception e) {
-                Log.v("WORDPRESS", "Failed to load notification settings.");
+                AppLog.v(T.NOTIFS, "Failed to load notification settings.");
                 return;
             }
             

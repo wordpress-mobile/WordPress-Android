@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
@@ -84,7 +83,7 @@ public class NotificationUtils {
             bout.close();
             unzipped = bout.toString();
         } catch (IOException io) {
-            Log.e(WordPress.TAG, "Unzipping failed: " + io);
+            AppLog.e(T.NOTIFS, "Unzipping failed: " + io);
             return null;
         }
         return unzipped;

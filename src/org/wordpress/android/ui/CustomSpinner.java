@@ -1,14 +1,15 @@
 package org.wordpress.android.ui;
 
-import java.lang.reflect.Field;
-
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.actionbarsherlock.internal.widget.IcsSpinner;
 
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+
+import java.lang.reflect.Field;
 
 public class CustomSpinner extends IcsSpinner {
     OnItemSelectedListener listener;
@@ -37,7 +38,7 @@ public class CustomSpinner extends IcsSpinner {
             reqField.setAccessible(true);
             reqField.setInt(this, -1);
         } catch (Exception e) {
-            Log.d("Exception Private", "ex", e);
+            AppLog.e(T.UTILS, e);
         }
     }
 }

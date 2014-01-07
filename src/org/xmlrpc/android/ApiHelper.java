@@ -3,7 +3,6 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -14,6 +13,8 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.xmlpull.v1.XmlPullParser;
@@ -32,13 +33,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApiHelper {
-    public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
-        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
 
     @SuppressWarnings("unchecked")
     static void refreshComments(final int id, final Context ctx) {
+
         Blog blog;
         try {
             blog = new Blog(id);
@@ -115,73 +115,69 @@ public class ApiHelper {
         }
     }
 
-    public static abstract class HelperAsyncTask<Params, Progress, Result>
-            extends AsyncTask<Params, Progress, Result> {
-        protected String mErrorMessage;
-        protected ErrorType mErrorType = ErrorType.NO_ERROR;
-
-        protected void setError(ErrorType errorType, String errorMessage) {
-            mErrorMessage = errorMessage;
-            mErrorType = errorType;
-        }
-    }
-
-    public interface GenericErrorCallback {
-        public void onFailure(ErrorType errorType, String errorMessage);
-    }
-
-    public interface GenericCallback extends GenericErrorCallback {
-        public void onSuccess();
-    }
-
-    public static class GetPostFormatsTask extends HelperAsyncTask<List<?>, Void, Object> {
-        private Blog mBlog;
-
-        @Override
-        protected Object doInBackground(List<?>... args) {
-            List<?> arguments = args[0];
-            mBlog = (Blog) arguments.get(0);
-            client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
-            Object result = null;
-            Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), "show-supported" };
-            try {
-                result = client.call("wp.getPostFormats", params);
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
-            }
-            return result;
-        }
+    public static class getPostFormatsTask extends AsyncTask<List<?>, Void, Object> {
+        Context ctx;
+        Blog blog;
+        boolean isPage, loadMore;
 
         protected void onPostExecute(Object result) {
-            if (result != null) {
+            try {
                 Map<?, ?> postFormats = (HashMap<?, ?>) result;
                 if (postFormats.size() > 0) {
                     Gson gson = new Gson();
                     String postFormatsJson = gson.toJson(postFormats);
                     if (postFormatsJson != null) {
-                        if (mBlog.bsetPostFormats(postFormatsJson)) {
-                            mBlog.save();
+                        if (blog.bsetPostFormats(postFormatsJson)) {
+                            blog.save();
                         }
                     }
                 }
+            } catch (Exception e) {
+                //e.printStackTrace();
             }
         }
+
+        @Override
+        protected Object doInBackground(List<?>... args) {
+
+            List<?> arguments = args[0];
+            blog = (Blog) arguments.get(0);
+            ctx = (Context) arguments.get(1);
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object result = null;
+            Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
+                    blog.getPassword(), "show-supported" };
+            try {
+                result = (Object) client.call("wp.getPostFormats", params);
+            } catch (XMLRPCException e) {
+                //e.printStackTrace();
+            }
+
+            return result;
+        }
+
     }
 
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
      */
-    public static class RefreshBlogContentTask extends HelperAsyncTask<Boolean, Void, Boolean> {
+    public static class RefreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
         private static HashSet<BlogIdentifier> refreshedBlogs = new HashSet<BlogIdentifier>();
         private Blog mBlog;
         private Context mContext;
         private BlogIdentifier mBlogIdentifier;
-        private GenericCallback mCallback;
 
-        public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+
+        private Callback mCallback;
+
+        public RefreshBlogContentTask(Context context, Blog blog, Callback callback) {
             mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
@@ -256,13 +252,13 @@ public class ApiHelper {
                 hPost.put("admin_url", "admin_url");
                 hPost.put("login_url", "login_url");
 
-                Object[] vParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                        mBlog.getPassword(), hPost};
-                Object versionResult = null;
+                Object[] vParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
+                        hPost};
+                Object versionResult;
                 try {
                     versionResult = client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                    return false;
                 }
 
                 if (versionResult != null) {
@@ -274,7 +270,7 @@ public class ApiHelper {
                 List<Object> args = new Vector<Object>();
                 args.add(mBlog);
                 args.add(mContext);
-                new GetPostFormatsTask().execute(args);
+                new getPostFormatsTask().execute(args);
             }
 
             // Check if user is an admin
@@ -284,19 +280,19 @@ public class ApiHelper {
                         client.call("wp.getProfile", userParams);
                 updateBlogAdmin(userInfos);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
                 return false;
             }
 
             // refresh the comments
             Map<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("number", 30);
-            Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), hPost};
+            Object[] commentParams = {
+                    mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
+            };
+
             try {
                 ApiHelper.refreshComments(mContext, commentParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
                 return false;
             }
 
@@ -306,18 +302,17 @@ public class ApiHelper {
         @Override
         protected void onPostExecute(Boolean success) {
             if(mCallback != null) {
-                if (success) {
+                if(!success)
+                    mCallback.onFailure();
+                else
                     mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
             }
             refreshedBlogs.remove(mBlogIdentifier);
         }
     }
 
-    public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,Object[] commentParams)
-            throws XMLRPCException {
+    public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,
+            Object[] commentParams) throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null)
             return null;
@@ -398,11 +393,16 @@ public class ApiHelper {
         }
     }
     
-    public static class SyncMediaLibraryTask extends HelperAsyncTask<List<?>, Void, Integer> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(int results);
-        }
+    public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Integer> {
 
+        public static final int NO_UPLOAD_FILES_CAP = -401; // error code is 401
+        public static final int UNKNOWN_ERROR = -1;
+
+        public interface Callback {
+            public void onSuccess(int count);
+            public void onFailure(int error_code);
+        }
+        
         private Callback mCallback;
         private int mOffset;
         private Filter mFilter;
@@ -415,89 +415,100 @@ public class ApiHelper {
         
         @Override
         protected Integer doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-
-            if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
-                return 0;
+            
+            if(blog == null) {
+                AppLog.e(T.API, "Current blog is null");
+                return -1;
             }
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+            
 
             Map<String, Object> filter = new HashMap<String, Object>();
             filter.put("number", 50);
             filter.put("offset", mOffset);
             
-            if (mFilter == Filter.IMAGES) {
+            if (mFilter == Filter.IMAGES)
                 filter.put("mime_type","image/*");
-            } else if(mFilter == Filter.UNATTACHED) {
+            else if(mFilter == Filter.UNATTACHED)
                 filter.put("parent_id", 0);
-            }
-
-            Object[] apiParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
-                    filter};
+                
+            
+            Object[] apiParams = { 
+                    blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    filter
+            };
             
             Object[] results = null;
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", e.getMessage());
-                // user does not have permission to view media gallery
-                if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage());
-                    return 0;
+                AppLog.e(T.API, e.getMessage());
+                if (e.getMessage().contains("401")) { // user does not have permission to view media gallery
+                    return NO_UPLOAD_FILES_CAP;
                 }
             }
-
-            if (blogId == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "Invalid blogId");
-                return 0;
+            
+            if(results != null && blogId != null) {
+                
+                Map<?, ?> resultMap;
+                
+                // results returned, so mark everything existing to deleted
+                // since offset is 0, we are doing a full refresh
+                if (mOffset == 0) {
+                    WordPress.wpDB.setMediaFilesMarkedForDeleted(blogId);
+                }
+               
+                for(Object result : results) {
+                    resultMap = (Map<?, ?>) result;
+                    MediaFile mediaFile = new MediaFile(blogId, resultMap);
+                    WordPress.wpDB.saveMediaFile(mediaFile);
+                }
+                
+                WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
+                
+                return results.length;
             }
-
-            if (results == null) {
-                setError(ErrorType.INVALID_RESULT, "Invalid blogId");
-                return 0;
-            }
-
-            Map<?, ?> resultMap;
-            // results returned, so mark everything existing to deleted
-            // since offset is 0, we are doing a full refresh
-            if (mOffset == 0) {
-                WordPress.wpDB.setMediaFilesMarkedForDeleted(blogId);
-            }
-            for (Object result : results) {
-                resultMap = (Map<?, ?>) result;
-                MediaFile mediaFile = new MediaFile(blogId, resultMap);
-                WordPress.wpDB.saveMediaFile(mediaFile);
-            }
-            WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
-            return results.length;
+            
+            return UNKNOWN_ERROR;
         }
         
         @Override
         protected void onPostExecute(Integer result) {
-            if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
+            if(mCallback != null) {
+                if(result == null || result < 0)
+                    mCallback.onFailure(result);
+                else
                     mCallback.onSuccess(result);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
             }
         }
+        
     }
     
-    public static class EditMediaItemTask extends HelperAsyncTask<List<?>, Void, Boolean> {
-        private GenericCallback mCallback;
+    public static class EditMediaItemTask extends AsyncTask<List<?>, Void, Boolean> {
+        
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+        
+        private Callback mCallback;
         private String mMediaId;
         private String mTitle;
         private String mDescription;
         private String mCaption;
         
-        public EditMediaItemTask(String mediaId, String title, String description, String caption,
-                                 GenericCallback callback) {
+        public EditMediaItemTask(String mediaId, String title, String description, String caption, Callback callback) {
             mMediaId = mediaId;
             mCallback = callback;
             mTitle = title;
@@ -506,12 +517,13 @@ public class ApiHelper {
         }
         @Override
         protected Boolean doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
             
             if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
+                AppLog.e(T.API, "ApiHelper - current blog is null");
                 return null;
             }
                         
@@ -534,7 +546,7 @@ public class ApiHelper {
             try {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             return result;
@@ -543,19 +555,22 @@ public class ApiHelper {
         @Override
         protected void onPostExecute(Boolean result) {
             if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
+                if (result == null || !result)
+                    mCallback.onFailure();
+                else
                     mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
             }
         }
+
     }
     
-    public static class GetMediaItemTask extends HelperAsyncTask<List<?>, Void, MediaFile> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(MediaFile results);
+    public static class GetMediaItemTask extends AsyncTask<List<?>, Void, MediaFile> {
+
+        public interface Callback {
+            public void onSuccess(MediaFile mediaFile);
+            public void onFailure();
         }
+        
         private Callback mCallback;
         private int mMediaId;
 
@@ -566,65 +581,72 @@ public class ApiHelper {
         
         @Override
         protected MediaFile doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-
-            if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
+            
+            if(blog == null) {
+                AppLog.e(T.API, "ApiHelper - current blog is null");
                 return null;
             }
-
+            
             String blogId = String.valueOf(blog.getLocalTableBlogId());
-
+            
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
-
-            Object[] apiParams = {
+            
+            Object[] apiParams = { 
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     mMediaId
             };
+            
+
+            
             Map<?, ?> results = null;
             try {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                AppLog.e(T.API, e.getMessage());
             }
-
-            if (results != null && blogId != null) {
+            
+            if(results != null && blogId != null) {
                 MediaFile mediaFile = new MediaFile(blogId, results);
                 mediaFile.save();
                 return mediaFile;
             } else {
                 return null;
             }
+            
         }
         
         @Override
         protected void onPostExecute(MediaFile result) {
-            if (mCallback != null) {
-                if (result != null) {
+            if(mCallback != null) {
+                if(result != null)
                     mCallback.onSuccess(result);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
+                else
+                    mCallback.onFailure();
             }
         }
+        
     }
     
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(String id);
-        }
+    public static class UploadMediaTask extends AsyncTask<List<?>, Void, String> {
+        
         private Callback mCallback;
         private Context mContext;
         private MediaFile mMediaFile;
         
-        public UploadMediaTask(Context applicationContext, MediaFile mediaFile,
-                               Callback callback) {
+        public interface Callback {
+            public void onSuccess(String id);
+            public void onFailure();
+        }
+        
+        public UploadMediaTask(Context applicationContext, MediaFile mediaFile, Callback callback) {
             mContext = applicationContext;
             mMediaFile = mediaFile;
             mCallback = callback;
@@ -632,12 +654,13 @@ public class ApiHelper {
         
         @Override
         protected String doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
             
             if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
+                AppLog.e(T.API, "UploadMediaTask: ApiHelper - current blog is null");
                 return null;
             }
 
@@ -658,27 +681,22 @@ public class ApiHelper {
                     data
             };
             
-            if (mContext == null) {
+            if (mContext == null)
                 return null;
-            }
             
-            Map<?, ?> resultMap;
+            Map<?, ?> resultMap = null;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
-                return null;
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
-            if (resultMap != null && resultMap.containsKey("id")) {
+            if (resultMap != null && resultMap.containsKey("id"))
                 return (String) resultMap.get("id");
-            } else {
-                setError(ErrorType.INVALID_RESULT, "Invalid result");
-            }
 
             return null;
         }
-
+        
         // Create a temp file for media upload
         private File getTempFile(Context context) {
             String tempFileName = "wp-" + System.currentTimeMillis();
@@ -693,64 +711,74 @@ public class ApiHelper {
         @Override
         protected void onPostExecute(String result) {
             if (mCallback != null) {
-                if (result != null) {
+                if (result != null)
                     mCallback.onSuccess(result);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
+                else
+                    mCallback.onFailure();
             }
         }
+
     }
 
-    public static class DeleteMediaTask extends HelperAsyncTask<List<?>, Void, Void> {
-        private GenericCallback mCallback;
+    public static class DeleteMediaTask extends AsyncTask<List<?>, Void, Boolean> {
+        private Callback mCallback;
         private String mMediaId;
-
-        public DeleteMediaTask(String mediaId, GenericCallback callback) {
+        
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+        
+        public DeleteMediaTask(String mediaId, Callback callback) {
             mMediaId = mediaId;
             mCallback = callback;
         }
         
         @Override
-        protected Void doInBackground(List<?>... params) {
+        protected Boolean doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+            
 
-            if (blog == null) {
-                setError(ErrorType.INVALID_CONTEXT, "ApiHelper - invalid blog");
-                return null;
-            }
-
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            Object[] apiParams = new Object[]{blog.getRemoteBlogId(), blog.getUsername(),
-                    blog.getPassword(), mMediaId};
-
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+            
+            Object[] apiParams = new Object[] {
+                    blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    mMediaId
+            };
+            
+            Boolean result = null;
             try {
-                if (client != null) {
-                    Boolean result = (Boolean) client.call("wp.deletePost", apiParams);
-                    if (!result) {
-                        setError(ErrorType.INVALID_RESULT, "wp.deletePost returned false");
-                    }
-                }
+                if (client != null)
+                    result = (Boolean) client.call("wp.deletePost", apiParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
-            return null;
+            
+            return result;
+            
         }
         
         @Override
-        protected void onPostExecute(Void v) {
+        protected void onPostExecute(Boolean b) {
             if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
+                if (b == null || !b)
+                    mCallback.onFailure();
+                else
                     mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
-                }
             }
         }
     }
     
     public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
+
         public interface Callback {
             void onResult(FeatureSet featureSet);
         }
@@ -770,6 +798,7 @@ public class ApiHelper {
 
         @Override
         protected FeatureSet doInBackground(List<?>... params) {
+            
             List<?> arguments = params[0];
             Blog blog = (Blog) arguments.get(0);
             
@@ -790,7 +819,7 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             if (resultMap != null) {
@@ -862,7 +891,7 @@ public class ApiHelper {
             try {
                 return request.buffer();
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+                AppLog.e(T.API, "Cannot setup an InputStream on " + urlString, e);
             }
         }
         return null;
@@ -881,7 +910,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
+                AppLog.e(T.API, "Cannot load the content of " + urlString, e);
                 return null;
             }
         } else {
@@ -995,6 +1024,7 @@ public class ApiHelper {
                 e.printStackTrace();
                 return null;
             }
+
         }
         return null; // never found the rsd tag
     }

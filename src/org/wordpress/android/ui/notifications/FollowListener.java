@@ -1,19 +1,15 @@
 package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-
-import com.wordpress.rest.RestRequest.Listener;
 import com.wordpress.rest.RestRequest.ErrorListener;
+import com.wordpress.rest.RestRequest.Listener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 class FollowListener implements FollowRow.OnFollowListener {
     
@@ -44,7 +40,7 @@ class FollowListener implements FollowRow.OnFollowListener {
         @Override
         public void onErrorResponse(VolleyError error){
             enableButton();
-            Log.d("WPNotifications", String.format("Failed to follow the blog: %s ", error));
+            AppLog.d(T.NOTIFS, String.format("Failed to follow the blog: %s ", error));
         }
         public void disableButton(){
             if (mRow.isSiteId(mSiteId)) {
