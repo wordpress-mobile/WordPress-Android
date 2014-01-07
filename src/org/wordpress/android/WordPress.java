@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,6 +40,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -162,7 +163,7 @@ public class WordPress extends Application {
                 .penaltyLog()
                 .build());
 
-        Log.w("WORDPRESS", "Strict mode enabled");
+        AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
     public static void registerForCloudMessaging(Context ctx) {
@@ -179,14 +180,14 @@ public class WordPress extends Application {
                 } else {
                     // Send the token to WP.com in case it was invalidated
                     NotificationUtils.registerPushNotificationsToken(ctx, token, true);
-                    Log.v("WORDPRESS", "Already registered for GCM");
+                    AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
-                Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
+                AppLog.v(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
             }
         }
     }
-    
+
     /**
      * Get versionName from Manifest.xml
      *
@@ -220,7 +221,6 @@ public class WordPress extends Application {
         } else {
             postsShouldRefresh = true;
         }
-
     }
 
     /**
@@ -459,7 +459,7 @@ public class WordPress extends Application {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
         } catch (Exception e) {
-            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+            AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
         SharedPreferences.Editor editor = PreferenceManager
                 .getDefaultSharedPreferences(context).edit();
@@ -477,7 +477,7 @@ public class WordPress extends Application {
 
         //Delete all the Notes
         WordPress.wpDB.clearNotes();
-        
+
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
@@ -524,7 +524,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -532,7 +532,7 @@ public class WordPress extends Application {
                         defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     }
                     headers.putAll(defaultHeaders);
-                    
+
                     return super.performRequest(request, headers);
                 }
             };
@@ -551,7 +551,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -567,23 +567,23 @@ public class WordPress extends Application {
             return stack;
         }
     }
-    
+
     /*
      * Detect when the app goes to the background and come back to the foreground.
-     * 
-     * Turns out that when your app has no more visible UI, a callback is triggered. 
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
+     *
+     * Turns out that when your app has no more visible UI, a callback is triggered.
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
      * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
-     * 
+     *
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
-     * 
+     *
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-        
+
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
-        
+
         boolean background = false;
 
         @Override
@@ -603,24 +603,24 @@ public class WordPress extends Application {
             } else {
                 background = false;
             }
-            
+
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
- 
+
         }
-        
+
         private boolean mustPingPushNotificationsBackend() {
-            
+
             if (WordPress.hasValidWPComCredentials(mContext) == false)
                 return false;
-            
+
             if (background == false)
                 return false;
-            
+
             background = false;
-            
+
             if (lastPingDate == null)
                 return false; //first startup
 
@@ -628,19 +628,19 @@ public class WordPress extends Application {
             long nowInMilliseconds = now.getTime();
             long lastPingDateInMilliseconds = lastPingDate.getTime();
             int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {         
+            if (secondsPassed >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
 
             return false;
         }
-        
+
         @Override
         public void onActivityResumed(Activity arg0) {
             if(mustPingPushNotificationsBackend()) {
                 //uhhh ohhh!
-                
+
                 if (WordPress.hasValidWPComCredentials(mContext)) {
                     String token = null;
                     try {
@@ -650,17 +650,16 @@ public class WordPress extends Application {
                         token = GCMRegistrar.getRegistrationId(mContext);
                         String gcmId = Config.GCM_ID;
                         if (gcmId == null || token == null || token.equals("") ) {
-                            Log.e("WORDPRESS", "Could not ping the PNs backend, Token or gmcID not found");
+                            AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
                             return;
                         } else {
                             // Send the token to WP.com
                             NotificationUtils.registerPushNotificationsToken(mContext, token, false);
                         }
                     } catch (Exception e) {
-                        Log.e("WORDPRESS", "Could not ping the PNs backend: " + e.getMessage());
+                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                     }
                 }
-                
             }
         }
 

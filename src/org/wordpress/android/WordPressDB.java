@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
@@ -25,6 +24,8 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
@@ -1931,7 +1932,7 @@ public class WordPressDB {
                 note.setPlaceholder(placeholder);
                 notes.add(note);
             } catch (JSONException e) {
-                Log.e(WordPress.TAG, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
+                AppLog.e(T.DB, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
             }
         }
         cursor.close();
@@ -1986,10 +1987,10 @@ public class WordPressDB {
             JSONObject jsonNote = new JSONObject(cursor.getString(0));
             return new Note(jsonNote);
         } catch (JSONException e) {
-            Log.e(WordPress.TAG, "Can't parse JSON Note: " + e);
+            AppLog.e(T.DB, "Can't parse JSON Note: " + e);
             return null;
         } catch (CursorIndexOutOfBoundsException e) {
-            Log.v(WordPress.TAG, "No Note with this id: " + e);
+            AppLog.v(T.DB, "No Note with this id: " + e);
             return null;
         }
     }
@@ -2018,7 +2019,7 @@ public class WordPressDB {
             output.close();
             input.close();
         } catch (IOException e) {
-            Log.e("WORDPRESS", "failed to copy database", e);
+            AppLog.e(T.DB, "failed to copy database", e);
         }
     }
 }

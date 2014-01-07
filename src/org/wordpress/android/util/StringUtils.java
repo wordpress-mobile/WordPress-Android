@@ -2,7 +2,8 @@ package org.wordpress.android.util;
 
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
+
+import org.wordpress.android.util.AppLog.T;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -83,7 +84,7 @@ public class StringUtils {
             BigInteger number = new BigInteger(1, messageDigest);
             return number;
         } catch (NoSuchAlgorithmException e) {
-            Log.e("MD5", e.getLocalizedMessage());
+            AppLog.e(T.UTILS, e);
             return null;
         }
     }

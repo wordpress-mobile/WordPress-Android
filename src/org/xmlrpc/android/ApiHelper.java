@@ -3,7 +3,6 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -14,6 +13,8 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.xmlpull.v1.XmlPullParser;
@@ -420,7 +421,7 @@ public class ApiHelper {
             Blog blog = WordPress.currentBlog;
             
             if(blog == null) {
-                Log.e("WordPress", "ApiHelper - current blog is null");
+                AppLog.e(T.API, "Current blog is null");
                 return -1;
             }
 
@@ -452,7 +453,7 @@ public class ApiHelper {
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", e.getMessage());
+                AppLog.e(T.API, e.getMessage());
                 if (e.getMessage().contains("401")) { // user does not have permission to view media gallery
                     return NO_UPLOAD_FILES_CAP;
                 }
@@ -522,7 +523,7 @@ public class ApiHelper {
             Blog blog = WordPress.currentBlog;
             
             if (blog == null) {
-                Log.e("WordPress", "ApiHelper - current blog is null");
+                AppLog.e(T.API, "ApiHelper - current blog is null");
                 return null;
             }
                         
@@ -545,7 +546,7 @@ public class ApiHelper {
             try {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             return result;
@@ -586,7 +587,7 @@ public class ApiHelper {
             Blog blog = WordPress.currentBlog;
             
             if(blog == null) {
-                Log.e("WordPress", "ApiHelper - current blog is null");
+                AppLog.e(T.API, "ApiHelper - current blog is null");
                 return null;
             }
             
@@ -609,7 +610,7 @@ public class ApiHelper {
             try {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", e.getMessage());
+                AppLog.e(T.API, e.getMessage());
             }
             
             if(results != null && blogId != null) {
@@ -659,7 +660,7 @@ public class ApiHelper {
             Blog blog = WordPress.currentBlog;
             
             if (blog == null) {
-                Log.e("WordPress", "UploadMediaTask: ApiHelper - current blog is null");
+                AppLog.e(T.API, "UploadMediaTask: ApiHelper - current blog is null");
                 return null;
             }
 
@@ -687,7 +688,7 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             if (resultMap != null && resultMap.containsKey("id"))
@@ -758,7 +759,7 @@ public class ApiHelper {
                 if (client != null)
                     result = (Boolean) client.call("wp.deletePost", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             return result;
@@ -818,7 +819,7 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             if (resultMap != null) {
@@ -890,7 +891,7 @@ public class ApiHelper {
             try {
                 return request.buffer();
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+                AppLog.e(T.API, "Cannot setup an InputStream on " + urlString, e);
             }
         }
         return null;
@@ -909,7 +910,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
+                AppLog.e(T.API, "Cannot load the content of " + urlString, e);
                 return null;
             }
         } else {

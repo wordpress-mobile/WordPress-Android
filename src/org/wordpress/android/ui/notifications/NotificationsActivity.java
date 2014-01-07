@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.IntentCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -33,6 +32,8 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
-                Log.d(TAG, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
+                AppLog.d(T.NOTIFS, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
                 if (note.isBigBadgeTemplate()) {
                     Fragment fragment = new BigBadgeFragment();
                     return fragment;
@@ -291,7 +292,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 new RestRequest.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Log.d(TAG, String.format("Failed to mark as read %s", error));
+                        AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
                     }
                 }
             );
@@ -304,7 +305,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
         Fragment fragment = fragmentForNote(note);
         if (fragment == null) {
-            Log.d(TAG, String.format("No fragment found for %s", note.toJSONObject()));
+            AppLog.d(T.NOTIFS, String.format("No fragment found for %s", note.toJSONObject()));
             return;
         }
         // swap the fragment
@@ -350,7 +351,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         RestRequest.ErrorListener failure = new RestRequest.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error){
-                Log.d(TAG, String.format("Error moderating comment: %s", error));
+                AppLog.d(T.NOTIFS, String.format("Error moderating comment: %s", error));
                 if (isFinishing())
                     return;
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
@@ -483,20 +484,20 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             new RestRequest.Listener(){
                 @Override
                 public void onResponse(JSONObject response){
-                    Log.d(TAG, String.format("Set last seen time %s", response));
+                    AppLog.d(T.NOTIFS, String.format("Set last seen time %s", response));
                 }
             },
             new RestRequest.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error){
-                    Log.d(TAG, String.format("Could not set last seen time %s", error));
+                    AppLog.d(T.NOTIFS, String.format("Could not set last seen time %s", error));
                 }
             }
         );
     }
     public void requestNotesBefore(final Note note){
         Map<String, String> params = new HashMap<String, String>();
-        Log.d(TAG, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
+        AppLog.d(T.NOTIFS, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
         params.put("before", note.queryJSON("timestamp", ""));
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
@@ -544,7 +545,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
             if( response == null ) {
                 //Not sure this could ever happen, but make sure we're catching all response types
-                Log.w(TAG, "Success, but did not receive any notes");
+                AppLog.w(T.NOTIFS, "Success, but did not receive any notes");
                 notes = new ArrayList<Note>(0);
                 onNotes(notes);
                 return;
@@ -554,7 +555,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 notes = NotificationUtils.parseNotes(response);
                 onNotes(notes);
             } catch (JSONException e) {
-                Log.e(TAG, "Success, but can't parse the response", e);
+                AppLog.e(T.NOTIFS, "Success, but can't parse the response", e);
                 showError(getString(R.string.error_parsing_response));
                 return;
             }
@@ -564,7 +565,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         public void onErrorResponse(VolleyError error){
             mLoadingMore = false;
             showError();
-            Log.d(TAG, String.format("Error retrieving notes: %s", error));
+            AppLog.d(T.NOTIFS, String.format("Error retrieving notes: %s", error));
         }
 
         public void showError(final String errorMessage){

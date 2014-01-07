@@ -8,11 +8,12 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.QuoteSpan;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
@@ -119,7 +120,7 @@ public class Note {
             tmpNoteJSON.put("type", finalType);
             tmpNoteJSON.put("unread", "1");
         } catch (JSONException e) {
-            Log.e(TAG, "Failed to put key in noteJSON", e);
+            AppLog.e(T.NOTIFS, "Failed to put key in noteJSON", e);
         }
         mNoteJSON = tmpNoteJSON;
     }
@@ -221,13 +222,13 @@ public class Note {
         try {
             mNoteJSON.putOpt("unread", count);            
         } catch (JSONException e){
-            Log.e(TAG, "Failed to set unread property", e);
+            AppLog.e(T.NOTIFS, "Failed to set unread property", e);
         }
     }
     public Reply buildReply(String content){
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
-        Log.d(TAG, String.format("Search actions %s", restPath));
+        AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
         Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
         return reply;
     }
@@ -249,7 +250,7 @@ public class Note {
         try {
             return DateTimeUtils.timestampToTimeSpan(Long.valueOf(getTimestamp()));
         } catch (NumberFormatException e) {
-            Log.e(TAG, "failed to convert timestamp to long", e);
+            AppLog.e(T.NOTIFS, "failed to convert timestamp to long", e);
             return "";
         }
     }
@@ -279,7 +280,7 @@ public class Note {
                     }
                 }
             } catch (JSONException e) {
-                Log.e(TAG, "Could not find actions", e);
+                AppLog.e(T.NOTIFS, "Could not find actions", e);
                 mActions = new HashMap<String,JSONObject>();
             }
         }

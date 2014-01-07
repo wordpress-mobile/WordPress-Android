@@ -29,6 +29,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
@@ -295,7 +297,7 @@ public class PostsListFragment extends ListFragment {
                         try {
                             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                         } catch (ClassCastException e) {
-                            // Log.e(TAG, "bad menuInfo", e);
+                            AppLog.e(T.EDITOR, "bad menuInfo", e);
                             return;
                         }
 

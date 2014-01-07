@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 
@@ -18,6 +17,8 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPRestClient;
 
 /**
@@ -70,9 +71,9 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         public void onErrorResponse(VolleyError error) {
             String message = null;
             int messageId;
-            Log.d("ErrorListener", String.format("Error type: %s", error));
+            AppLog.e(T.NUX, error);
             if (error.networkResponse != null && error.networkResponse.data != null) {
-                Log.d("ErrorListener", String.format("Error message: %s",
+                AppLog.e(T.NUX, String.format("Error message: %s",
                         new String(error.networkResponse.data)));
                 String jsonString = new String(error.networkResponse.data);
                 try {
@@ -83,8 +84,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
                         message = (String) errorObj.get("message");
                     }
                 } catch (JSONException e) {
-                    Log.d("ErrorListener", String.format("Error parsing the error message :( : %s",
-                            e));
+                    AppLog.e(T.NUX, e);
                     messageId = R.string.error_generic;
                 }
             } else {
