@@ -32,8 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApiHelper {
-    public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_GENERIC, NETWORK_SERVER,
-        NETWORK_XMLRPC, INVALID_CONTEXT, INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
+    public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
+        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
 
@@ -155,13 +155,15 @@ public class ApiHelper {
         }
 
         protected void onPostExecute(Object result) {
-            Map<?, ?> postFormats = (HashMap<?, ?>) result;
-            if (postFormats.size() > 0) {
-                Gson gson = new Gson();
-                String postFormatsJson = gson.toJson(postFormats);
-                if (postFormatsJson != null) {
-                    if (mBlog.bsetPostFormats(postFormatsJson)) {
-                        mBlog.save();
+            if (result != null) {
+                Map<?, ?> postFormats = (HashMap<?, ?>) result;
+                if (postFormats.size() > 0) {
+                    Gson gson = new Gson();
+                    String postFormatsJson = gson.toJson(postFormats);
+                    if (postFormatsJson != null) {
+                        if (mBlog.bsetPostFormats(postFormatsJson)) {
+                            mBlog.save();
+                        }
                     }
                 }
             }
@@ -660,11 +662,12 @@ public class ApiHelper {
                 return null;
             }
             
-            Map<?, ?> resultMap = null;
+            Map<?, ?> resultMap;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                return null;
             }
             
             if (resultMap != null && resultMap.containsKey("id")) {
