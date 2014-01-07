@@ -43,6 +43,7 @@ public class MediaFile {
         setTitle(MapUtils.getMapStr(resultMap, "title"));
         setCaption(MapUtils.getMapStr(resultMap, "caption"));
         setDescription(MapUtils.getMapStr(resultMap, "description"));
+        setVideoPressShortCode(MapUtils.getMapStr(resultMap, "videopress_shortcode"));
         
         // get the file name from the link
         String link = MapUtils.getMapStr(resultMap, "link");
@@ -65,6 +66,8 @@ public class MediaFile {
                 thumbnailURL = thumbnailURL.replace("http:", "https:");
             setThumbnailURL(thumbnailURL);
         }
+
+
 
         Date date = MapUtils.getMapDate(resultMap, "date_created_gmt");
         if (date != null)
