@@ -17,7 +17,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -42,6 +41,7 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
@@ -114,7 +114,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        AppLog.d("token action succeeded");
+                        AppLog.d(T.NOTIFS, "token action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
@@ -130,8 +130,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.w("blog action failed");
-                        AppLog.e(volleyError);
+                        AppLog.w(T.NOTIFS, "blog action failed");
+                        AppLog.e(T.NOTIFS, volleyError);
                     }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
@@ -560,10 +560,10 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 }
 
             } catch (JsonSyntaxException e) {
-                Log.v("WORDPRESS", "Notification Settings Json could not be parsed.");
+                AppLog.v(T.NOTIFS, "Notification Settings Json could not be parsed.");
                 return;
             } catch (Exception e) {
-                Log.v("WORDPRESS", "Failed to load notification settings.");
+                AppLog.v(T.NOTIFS, "Failed to load notification settings.");
                 return;
             }
             

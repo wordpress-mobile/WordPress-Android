@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +55,8 @@ import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
@@ -476,7 +477,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private boolean askToSignInIfNot() {
         if (!WordPress.isSignedIn(WPActionBarActivity.this)) {
-            Log.d(TAG, "No accounts configured.  Sending user to set up an account");
+            AppLog.d(T.NUX, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);

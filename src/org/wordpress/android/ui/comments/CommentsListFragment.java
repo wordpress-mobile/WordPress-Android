@@ -39,6 +39,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
@@ -477,7 +479,7 @@ public class CommentsListFragment extends ListFragment {
                 try {
                     info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                 } catch (ClassCastException e) {
-                    // Log.e(TAG, "bad menuInfo", e);
+                    AppLog.e(T.COMMENTS, "bad menuInfo", e);
                     return;
                 }
                 WordPress.currentComment = model.get(info.position);

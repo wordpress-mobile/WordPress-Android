@@ -1,16 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,10 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
-import android.text.TextUtils;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.widget.ImageView;
 
@@ -35,6 +21,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.util.AppLog.T;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImageHelper {
     
@@ -228,8 +226,8 @@ public class ImageHelper {
             HttpResponse response = client.execute(getRequest);
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                // Log.w("ImageDownloader", "Error " + statusCode +
-                // " while retrieving bitmap from " + url);
+                AppLog.w(T.UTILS, "ImageDownloader Error " + statusCode
+                        + " while retrieving bitmap from " + url);
                 return null;
             }
 
@@ -251,8 +249,7 @@ public class ImageHelper {
             // Could provide a more explicit error message for IOException or
             // IllegalStateException
             getRequest.abort();
-            // Log.w("ImageDownloader", "Error while retrieving bitmap from " +
-            // url);
+            AppLog.w(T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
         }
         return null;
     }
@@ -454,10 +451,10 @@ public class ImageHelper {
                 return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);                 
             }
             catch (IOException e) {
-                Log.w("WordPress", "-- Error in setting image");
+                AppLog.e(T.UTILS, "Error in setting image", e);
             }   
             catch(OutOfMemoryError oom) {
-                Log.w("WordPress", "-- OOM Error in setting image");
+                AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
             }
             
             return null;

@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -163,7 +163,7 @@ public class WPMobileStatsUtil {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 String errMsg = String.format("Error pinging WPCom Stats: %s", volleyError.getMessage());
-                Log.w("WORDPRESS", errMsg);
+                AppLog.w(T.STATS, errMsg);
             }
         };
 

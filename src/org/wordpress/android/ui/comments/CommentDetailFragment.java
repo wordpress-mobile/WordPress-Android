@@ -9,7 +9,6 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +35,8 @@ import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
@@ -600,7 +601,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 mIsRequestingComment = false;
-                Log.e(WordPress.TAG, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
+                AppLog.e(T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
                 if (hasActivity()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
