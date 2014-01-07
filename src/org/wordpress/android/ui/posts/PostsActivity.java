@@ -79,7 +79,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.RefreshBlogContentTask.Callback() {
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
+                    new ApiHelper.GenericCallback() {
                 @Override
                 public void onSuccess() {
                     if (!isFinishing())
@@ -87,8 +88,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 }
 
                 @Override
-                public void onFailure() {
-
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                 }
             }).execute(false);
             

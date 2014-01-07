@@ -37,7 +37,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
 import java.text.SimpleDateFormat;
@@ -368,11 +367,12 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                 }
 
                 @Override
-                public void onFailure(int errorCode) {
-
-                    if (errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP || errorCode == SyncMediaLibraryTask.UNKNOWN_ERROR ) {
-                        String errorMessage = errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP ? "You do not have permission to view the media library" : "Something went wrong while refreshing the media library. Try again later.";
-                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
+                        String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP
+                                ? getString(R.string.media_error_no_permission)
+                                : getString(R.string.error_refresh_media);
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
                         adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
@@ -391,11 +391,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                             
                         });
                     }
-                    
                 }
             };
-            
-            
+
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, callback);
             getMediaTask.execute(apiArgs);
         }

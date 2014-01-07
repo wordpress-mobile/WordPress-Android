@@ -212,32 +212,32 @@ public class MediaEditFragment extends SherlockFragment {
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
                 description, caption, 
-                new ApiHelper.EditMediaItemTask.Callback() {
-
+                new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
                         String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
-
-                        if (getActivity() != null)
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description,
+                                caption);
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
-
+                        }
                         setMediaUpdating(false);
-                        if (hasCallback())
+                        if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, true);
+                        }
                     }
 
                     @Override
-                    public void onFailure() {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-    
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.media_edit_failure,
+                                    Toast.LENGTH_LONG).show();
+                        }
                         setMediaUpdating(false);
-                        
                         getSherlockActivity().invalidateOptionsMenu();
-                        
-                        if (hasCallback())
+                        if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, false);
+                        }
                     }
                 });
 

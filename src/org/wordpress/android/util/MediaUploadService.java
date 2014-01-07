@@ -1,8 +1,5 @@
 package org.wordpress.android.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,19 +8,19 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
-import org.xmlrpc.android.ApiHelper.UploadMediaTask.Callback;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A service for uploading media files from the media browser.
  * Only one file is uploaded at a time.
  */
 public class MediaUploadService extends Service {
-
     // time to wait before trying to upload the next file
     private static final int UPLOAD_WAIT_TIME = 1000;
 
@@ -118,8 +115,8 @@ public class MediaUploadService extends Service {
         mediaFile.setFilePath(filePath);
         mediaFile.setMimeType(mimeType);
 
-        ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile, new Callback() {
-            
+        ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile,
+                new ApiHelper.UploadMediaTask.Callback() {
             @Override
             public void onSuccess(String id) {
                 // once the file has been uploaded, delete the local database entry and
@@ -130,7 +127,7 @@ public class MediaUploadService extends Service {
             }
             
             @Override
-            public void onFailure() {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
                 sendUpdateBroadcast(mediaId);
@@ -151,24 +148,23 @@ public class MediaUploadService extends Service {
     private void fetchMediaFile(final String id) {
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
-        GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id), new GetMediaItemTask.Callback() {
-            
+        GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id),
+                new ApiHelper.GetMediaItemTask.Callback() {
             @Override
             public void onSuccess(MediaFile mediaFile) {
                 String blogId = mediaFile.getBlogId();
                 String mediaId = mediaFile.getMediaId();
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
-
                 mUploadInProgress = false;
                 sendUpdateBroadcast(id);
                 mHandler.post(mFetchQueueTask);
             }
             
             @Override
-            public void onFailure() {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                 mUploadInProgress = false;
                 sendUpdateBroadcast(id);
-                mHandler.post(mFetchQueueTask);                
+                mHandler.post(mFetchQueueTask);
             }
         });
         task.execute(apiArgs);
