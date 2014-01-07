@@ -816,17 +816,24 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
             return;
+        
         final String mediaId = mediaFile.getMediaId();
-        String imageUrl = mediaFile.getThumbnailURL();
-        if (imageUrl == null || mediaId == null)
+        if (mediaId == null)
             return;
 
+        String imageURL = null;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
-            imageUrl = StringUtils.getPhotonUrl(photonUrl, 400);
+            imageURL = StringUtils.getPhotonUrl(photonUrl, 400);
+        } else {
+            //Not a Jetpack or wpcom blog
+           imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
         }
 
-        WordPress.imageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+        if (imageURL == null)
+            return;
+        
+        WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
 
             @Override
             public void onErrorResponse(VolleyError arg0) {
@@ -836,16 +843,22 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
                 if (container.getBitmap() != null) {
-
-                    Bitmap bitmap = container.getBitmap();
-
-                    ImageHelper ih = new ImageHelper();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] bitmapByteArray = stream.toByteArray();
-                    Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), bitmapByteArray, null);
+                    Bitmap resizedBitmap = null;
+                    
+                    try {
+                        Bitmap bitmap = container.getBitmap();
+                        ImageHelper ih = new ImageHelper();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bitmapByteArray = stream.toByteArray();
+                        resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), bitmapByteArray, null);
+                    } catch (OutOfMemoryError er) {
+                        return;
+                    }
+                    
                     if (resizedBitmap == null)
                         return;
+                    
                     Editable s = mContentEditText.getText();
                     if (s == null)
                         return;
