@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.util.ToastUtils;
 
@@ -44,7 +45,7 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderLogViewer(Context context) {
-        Intent intent = new Intent(context, ReaderLogViewerActivity.class);
+        Intent intent = new Intent(context, AppLogViewerActivity.class);
         context.startActivity(intent);
     }
 
