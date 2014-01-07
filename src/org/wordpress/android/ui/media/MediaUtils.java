@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.media;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +17,7 @@ import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -274,8 +278,11 @@ public class MediaUtils {
             return null;
         }
 
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        boolean isVideo = mimeType != null && mimeType.contains("video");
+
         Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(context, R.drawable.remote_image, uri);
+        WPImageSpan imageSpan = new WPImageSpan(context, isVideo ? R.drawable.media_movieclip : R.drawable.remote_image, uri);
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
@@ -283,11 +290,12 @@ public class MediaUtils {
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
         mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
         mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
-        mediaFile.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        mediaFile.setMimeType(mimeType);
         mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
         mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mediaFile.setVideo(mediaFile.getMimeType().contains("video"));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
+        mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();
 
@@ -324,22 +332,25 @@ public class MediaUtils {
             mediaFile.setWidth(getMinimumImageWidth(context, curStream));
     }
 
-    public static boolean isLocalImage(Uri imageUri) {
+    public static boolean isInMediaStore(Uri mediaUri) {
         // Check if the image is externally hosted (Picasa/Google Photos for example)
-        if (imageUri != null && imageUri.toString().startsWith("content://media/")) {
+        if (mediaUri != null && mediaUri.toString().startsWith("content://media/")) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static Uri downloadExternalImage(Context context, Uri imageUri) {
+    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         File cacheDir;
+        String mimeType = context.getContentResolver().getType(imageUri);
+        boolean isVideo = (mimeType != null && mimeType.contains("video"));
 
         // If the device has an SD card
-        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
-        else {
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+            String mediaFolder = isVideo ? "video" : "images";
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/" + mediaFolder);
+        } else {
             // If no SD card
             cacheDir = context.getApplicationContext().getCacheDir();
         }
@@ -357,6 +368,9 @@ public class MediaUtils {
             }
 
             String fileName = "wp-" + System.currentTimeMillis();
+            if (isVideo)
+                fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+
             File f = new File(cacheDir, fileName);
 
             OutputStream output = new FileOutputStream(f);

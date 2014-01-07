@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class WPRestClient {
     
-    private static final String NOTIFICATION_FIELDS="id,type,unread,body,subject,timestamp";
+    private static final String NOTIFICATION_FIELDS="id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD="content";
     
     private RestClient mRestClient;

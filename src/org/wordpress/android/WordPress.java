@@ -231,7 +231,7 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComAccountVisible(currentBlog.getBlogId())) {
+        if (currentBlog == null || !wpDB.isDotComAccountVisible(currentBlog.getRemoteBlogId())) {
             // attempt to restore the last active blog
             setCurrentBlogToLastActive();
 
@@ -304,12 +304,12 @@ public class WordPress extends Application {
     /*
      * returns the blogID of the current blog
      */
-    public static int getCurrentBlogId() {
-        return (currentBlog != null ? currentBlog.getBlogId() : -1);
+    public static int getCurrentRemoteBlogId() {
+        return (currentBlog != null ? currentBlog.getRemoteBlogId() : -1);
     }
 
-    public static int getCurrentBlogAccountId() {
-        return (currentBlog != null ? currentBlog.getId() : -1);
+    public static int getCurrentLocalTableBlogId() {
+        return (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
     }
 
     /**

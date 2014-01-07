@@ -31,6 +31,7 @@
     <string name="page">Page</string>
     <string name="posts">Posts</string>
     <string name="media">Media</string>
+    <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="pages">Pages</string>
     <string name="about">About</string>
@@ -180,7 +181,7 @@
     <string name="out_of_memory">Device out of memory.</string>
     <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
-    <string name="download">Downloading image</string>
+    <string name="download">Downloading media</string>
     <string name="post_settings">Post Settings</string>
 
     <!-- reload drop down -->
@@ -328,6 +329,7 @@
     <string name="stats_password">Password</string>
     <string name="invalid_login">Incorrect Login</string>
     <string name="view_stats_full_site">View full site</string>
+    <string name="view_stats_activity">View stats</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
@@ -508,7 +510,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="app_title_blackberry">WordPress for BlackBerry</string>
     <string name="publisher">Publisher: Automattic, Inc</string>
-    <string name="copyright">©2013 Automattic, Inc</string>
+    <string name="copyright">©2014 Automattic, Inc</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -610,13 +612,14 @@
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
+    <string name="reader_label_reply">Reply</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
-    <string name="reader_likes_multi">%d people like this</string>
+    <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
-    <string name="reader_likes_you_and_multi">You and %d others like this</string>
+    <string name="reader_likes_you_and_multi">You and %,d others like this</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
@@ -634,8 +637,8 @@
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_topic">No post in this&#160;topic.</string>
-    <string name="reader_empty_posts_in_topic_updating">Fetching posts…</string>
+    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag.</string>
+    <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags.</string>
     <string name="reader_empty_popular_tags">No popular tags.</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet.</string>

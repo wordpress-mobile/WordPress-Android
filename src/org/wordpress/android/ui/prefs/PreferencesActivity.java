@@ -41,9 +41,9 @@ import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPEditTextPreference;
@@ -63,6 +63,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
+    private boolean mNotificationSettingsChanged;
 
     private PreferenceGroup mNotificationsGroup;
     WPEditTextPreference mTaglineTextPreference;
@@ -104,9 +105,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         Preference resetAutoShare = findPreference("wp_reset_share_pref");
         resetAutoShare.setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
-
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-        
+
         // Request notification settings if needed
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String settingsJson = mSettings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
@@ -114,7 +114,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        ReaderLog.d("token action succeeded");
+                        AppLog.d("token action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
@@ -130,8 +130,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        ReaderLog.w("blog action failed");
-                        ReaderLog.e(volleyError);
+                        AppLog.w("blog action failed");
+                        AppLog.e(volleyError);
                     }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
@@ -312,7 +312,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
      * Listens for changes to notification type settings
      */
     private OnPreferenceChangeListener mTypeChangeListener = new OnPreferenceChangeListener() {
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             // Update the mNoteSettings map with the new value
@@ -324,7 +323,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 typeMap.put("value", (isChecked) ? 1 : 0);
                 mNotificationSettings.put(key, typeMap);
                 checkBoxPreference.setChecked(isChecked);
-                new sendNotificationSettingsTask().execute();
+                mNotificationSettingsChanged = true;
             }
             return false;
         }
@@ -348,7 +347,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 mutedBlogsMap.put("value", mMutedBlogsList);
                 mNotificationSettings.put("muted_blogs", mutedBlogsMap);
                 checkBoxPreference.setChecked(isChecked);
-                new sendNotificationSettingsTask().execute();
+                mNotificationSettingsChanged = true;
             }
             return false;
         }
@@ -367,7 +366,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     StringMap<String> muteUntilMap = (StringMap<String>) mNotificationSettings.get("mute_until");
                     muteUntilMap.put("value", "0");
                     mNotificationSettings.put("mute_until", muteUntilMap);
-                    new sendNotificationSettingsTask().execute();
+                    mNotificationSettingsChanged = true;
                     return true;
                 } else {
                     final Dialog dialog = new Dialog(PreferencesActivity.this);
@@ -423,20 +422,22 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
             enabledCheckBoxPreference.setChecked(false);
             mNotificationSettings.put("mute_until", muteUntilMap);
-            new sendNotificationSettingsTask().execute();
+            mNotificationSettingsChanged = true;
         }
     }
-    
+
+    private void sendNotificationsSettings() {
+        AppLog.d("Send push notification settings");
+        new sendNotificationSettingsTask().execute();
+    }
+
     /**
      * Performs the notification settings save in the background
      */
-    private class sendNotificationSettingsTask extends AsyncTask<Object, Object, Object> {
-        
+    private class sendNotificationSettingsTask extends AsyncTask<Void, Void, Void> {
         // Sends updated notification settings to WP.com
-
         @Override
-        protected Object doInBackground(Object... params) {
-            
+        protected Void doInBackground(Void... params) {
             if (mNotificationSettings != null) {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(PreferencesActivity.this);
                 SharedPreferences.Editor editor = settings.edit();
@@ -445,9 +446,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
                 editor.commit();
                 NotificationUtils.setPushNotificationSettings(PreferencesActivity.this);
-            } 
+            }
             return null;
-        } 
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            mNotificationSettingsChanged = false;
+        }
     }
 
     private void refreshWPComAuthCategory() {
@@ -510,7 +516,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         // Add notifications group back in case it was previously removed from being logged out
         PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
         rootScreen.addPreference(mNotificationsGroup);
-        
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference("wp_pref_notification_types");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -628,5 +633,12 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         refreshWPComAuthCategory();
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onStop() {
+        super.onStop();
+        if (mNotificationSettingsChanged) {
+            sendNotificationsSettings();
+        }
     }
 }

@@ -5,7 +5,6 @@
   android:layout_height="fill_parent"
   android:id="@+id/posts"
   android:padding="0px"
-  android:background="#F4F4F4"
   android:orientation="vertical">
   <LinearLayout
     android:id="@+id/postDetailFragmentContainer"

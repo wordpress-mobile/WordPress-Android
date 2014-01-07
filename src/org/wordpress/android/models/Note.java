@@ -18,6 +18,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPHtmlTagHandler;
+import org.wordpress.android.util.WPMobileStatsUtil;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -286,6 +287,23 @@ public class Note {
     }
 
     /*
+     * returns the "meta" section of the note's JSON (not guaranteed to exist)
+     */
+    private JSONObject getJSONMeta() {
+        return JSONUtil.getJSONChild(this.toJSONObject(), "meta");
+    }
+
+    /*
+     * returns the value of the passed name in the meta section of the JSON
+     */
+    public int getMetaValueAsInt(String name, int defaultValue) {
+        JSONObject jsonMeta = getJSONMeta();
+        if (jsonMeta == null)
+            return defaultValue;
+        return jsonMeta.optInt(name, defaultValue);
+    }
+
+    /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
     public EnumSet<EnabledActions> getEnabledActions() {
@@ -396,12 +414,28 @@ public class Note {
             mCommentJson = commentJson;
         }
     }
-    
+
     /**
      * Replaces emoticons with emoji
      */
     public static SpannableStringBuilder prepareHtml(String text){
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
+        SpannableStringBuilder html;
+        try {
+            html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
+        } catch (RuntimeException runtimeException) {
+            // In case our tag handler fails
+            html = (SpannableStringBuilder) Html.fromHtml(text, null, null);
+            // Log the exception and text that produces the error
+            try {
+                JSONObject additionalData = new JSONObject();
+                additionalData.put("input_text", text);
+                WPMobileStatsUtil.trackException(runtimeException,
+                        WPMobileStatsUtil.StatsPropertyExceptionNoteParsing,
+                        additionalData);
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
+        }
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {

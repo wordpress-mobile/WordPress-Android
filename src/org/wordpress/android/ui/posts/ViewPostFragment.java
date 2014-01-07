@@ -343,7 +343,7 @@ public class ViewPostFragment extends Fragment {
             }
         };
 
-        int accountId = WordPress.getCurrentBlogAccountId();
+        int accountId = WordPress.getCurrentLocalTableBlogId();
         CommentActions.addComment(accountId, WordPress.currentPost.getPostid(), commentText, actionListener);
     }
 

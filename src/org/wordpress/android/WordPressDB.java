@@ -50,7 +50,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 22;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -136,6 +136,7 @@ public class WordPressDB {
     private static final String ADD_MEDIA_BLOG_ID = "alter table media add blogId text default '';";
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
+    private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
     // create table to store notifications
     private static final String NOTES_TABLE = "notes";
@@ -239,6 +240,9 @@ public class WordPressDB {
                 case 20:
                     db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
                     currentVersion++;
+                case 21:
+                    db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
+                    currentVersion++;
             }
             db.setVersion(DATABASE_VERSION);
         } catch (SQLException e) {
@@ -336,7 +340,7 @@ public class WordPressDB {
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("runService", false);
-        values.put("blogId", blog.getBlogId());
+        values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
         values.put("wpVersion", blog.getWpVersion());
         values.put("isAdmin", blog.isAdmin());
@@ -432,9 +436,9 @@ public class WordPressDB {
         return result;
     }
 
-    public boolean isBlogIdInDatabase(int blogId) {
-        String[] args = {Integer.toString(blogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE blogId=?", args);
+    public boolean isLocalBlogIdInDatabase(int localBlogId) {
+        String[] args = {Integer.toString(localBlogId)};
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE id=?", args);
     }
 
     public boolean saveBlog(Blog blog) {
@@ -463,7 +467,7 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
 
-        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getId(),
+        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
         if (blog.isDotcomFlag()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
@@ -663,30 +667,13 @@ public class WordPressDB {
         return returnVector;
     }
 
-    public String getAccountName(String accountID) {
-
-        String accountName = "";
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"blogName"}, "id="
-                + accountID, null, null, null, null);
-        c.moveToFirst();
-        if (c.getString(0) != null) {
-            accountName = c.getString(0);
-        }
-        c.close();
-
-        return accountName;
+    public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
+        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(remoteBlogId)});
     }
 
-    /*
-     * nbradbury 11/14/13
-     */
-    public int getAccountIdForBlogId(int blogId) {
-        return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(blogId)});
-    }
-
-    public int getAccountIdForBlogIdAndXmlRpcUrl(int blogId, String xmlRpcUrl) {
+    public int getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(int remoteBlogId, String xmlRpcUrl) {
         return SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
-                new String[]{Integer.toString(blogId), xmlRpcUrl});
+                new String[]{Integer.toString(remoteBlogId), xmlRpcUrl});
     }
 
     public void updateNotificationFlag(int id, boolean flag) {
@@ -946,17 +933,6 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    /**
-     * nbradbury 11/15/13 - get the title of a specific post
-     * @param accountId - - unique id in account table for this blog
-     * @param postId - id of the desired post
-     * @return title if exists, empty string otherwise
-     */
-    public String getPostTitle(int accountId, String postId) {
-        String[] args = {Integer.toString(accountId), StringUtils.notNullStr(postId)};
-        return SqlUtils.stringForQuery(db, "SELECT TITLE FROM " + POSTS_TABLE + " WHERE blogID=? AND postid=?", args);
-    }
-
     public int updatePost(Post post, int blogID) {
         int success = 0;
         if (post != null) {
@@ -1103,19 +1079,19 @@ public class WordPressDB {
 
     /**
      * nbradbury 11/15/13 - add a single comment
-     * @param accountId - unique id in account table for the blog the comment is from
+     * @param localBlogId - unique id in account table for the blog the comment is from
      * @param comment - comment object to store
      */
-    public void addComment(int accountId, Comment comment) {
+    public void addComment(int localBlogId, Comment comment) {
         if (comment == null)
             return;
 
         // first delete existing comment (necessary since there's no primary key or indexes
         // on this table, which means we can't rely on using CONFLICT_REPLACE below)
-        deleteComment(accountId, comment.commentID);
+        deleteComment(localBlogId, comment.commentID);
 
         ContentValues values = new ContentValues();
-        values.put("blogID", accountId);
+        values.put("blogID", localBlogId);
         values.put("postID", StringUtils.notNullStr(comment.postID));
         values.put("iCommentID", comment.commentID);
         values.put("author", StringUtils.notNullStr(comment.name));
@@ -1132,11 +1108,11 @@ public class WordPressDB {
 
     /**
      * nbradbury 11/11/13 - retrieve a single comment
-     * @param accountId - unique id in account table for the blog the comment is from
+     * @param localBlogId - unique id in account table for the blog the comment is from
      * @param commentId - commentId of the actual comment
      * @return Comment if found, null otherwise
      */
-    public Comment getComment(int accountId, int commentId) {
+    public Comment getComment(int localBlogId, int commentId) {
         String[] cols = {"author",
                          "comment",
                          "commentDateFormatted",
@@ -1145,7 +1121,7 @@ public class WordPressDB {
                          "email",
                          "postTitle",
                          "postID"};
-        String[] args = {Integer.toString(accountId),
+        String[] args = {Integer.toString(localBlogId),
                          Integer.toString(commentId)};
         Cursor c = db.query(COMMENTS_TABLE,
                             cols,
@@ -1180,12 +1156,12 @@ public class WordPressDB {
 
     /**
      * nbradbury 11/12/13 - delete a single comment
-     * @param accountId - unique id in account table for this blog
+     * @param localBlogId - unique id in account table for this blog
      * @param commentId - commentId of the actual comment
      * @return true if comment deleted, false otherwise
      */
-    public boolean deleteComment(int accountId, int commentId) {
-        String[] args = {Integer.toString(accountId),
+    public boolean deleteComment(int localBlogId, int commentId) {
+        String[] args = {Integer.toString(localBlogId),
                          Integer.toString(commentId)};
         int count = db.delete(COMMENTS_TABLE, "blogID=? AND iCommentID=?", args);
         return (count > 0);
@@ -1536,6 +1512,7 @@ public class WordPressDB {
         values.put("mediaId", mf.getMediaId());
         values.put("blogId", mf.getBlogId());
         values.put("date_created_gmt", mf.getDateCreatedGMT());
+        values.put("videoPressShortcode", mf.getVideoPressShortCode());
         if (mf.getUploadState() != null)
             values.put("uploadState", mf.getUploadState());
         else
@@ -1678,6 +1655,7 @@ public class WordPressDB {
             mf.setBlogId(c.getString(17));
             mf.setDateCreatedGMT(c.getLong(18));
             mf.setUploadState(c.getString(19));
+            mf.setVideoPressShortCode(c.getString(20));
         } else {
             c.close();
             return null;

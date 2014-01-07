@@ -271,12 +271,15 @@ public class ImageHelper {
         }
         if (curStream != null) {
             if (filePath.contains("video")) {
-                int videoID = Integer.parseInt(curStream.getLastPathSegment());
-                projection = new String[] { Video.Thumbnails._ID, Video.Thumbnails.DATA };
+                int videoId = 0;
+                try {
+                    videoId = Integer.parseInt(curStream.getLastPathSegment());
+                } catch (NumberFormatException e) {
+                }
                 ContentResolver crThumb = ctx.getContentResolver();
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 1;
-                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoID, MediaStore.Video.Thumbnails.MINI_KIND,
+                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
                         options);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -325,7 +328,6 @@ public class ImageHelper {
                 } else {
                     path = filePath.toString().replace("file://", "");
                     jpeg = new File(path);
-
                 }
 
                 title = jpeg.getName();

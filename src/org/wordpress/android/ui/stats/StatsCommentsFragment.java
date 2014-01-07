@@ -235,7 +235,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             if (WordPress.getCurrentBlog() == null)
                 return;
             
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             new AsyncTask<Void, Void, StatsSummary>() {
 
                 @Override

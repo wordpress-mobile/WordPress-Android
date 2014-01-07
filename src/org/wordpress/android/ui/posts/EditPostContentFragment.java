@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -336,7 +338,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    verifyImage(imageUri);
+                    fetchMedia(imageUri);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -360,8 +362,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    if (!addMedia(videoUri, null))
-                        Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                    fetchMedia(videoUri);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -673,23 +674,26 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    private void verifyImage(Uri imageUri) {
-        if (!MediaUtils.isLocalImage(imageUri)) {
+    private void fetchMedia(Uri mediaUri) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            new DownloadImageTask().execute(imageUri);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            else
+                new DownloadMediaTask().execute(mediaUri);
         } else {
             // It is a regular local image file
-            if (!addMedia(imageUri, null))
+            if (!addMedia(mediaUri, null))
                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
+    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
 
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
-            return MediaUtils.downloadExternalImage(getActivity(), imageUri);
+            return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
         }
 
         @Override
@@ -698,7 +702,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(Uri newUri) {
-            //dismissDialog(ID_DIALOG_DOWNLOAD);
+            if (getActivity() == null)
+                return;
+            
             if (newUri != null)
                 addMedia(newUri, null);
             else
@@ -722,7 +728,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
 
         WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(getActivity(), blogId, mediaId);
         if (imageSpan == null)
@@ -790,8 +796,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
+                        String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                        WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
                     }
 
                     @Override
@@ -946,29 +952,38 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
 
-        if (ssb != null && !MediaUtils.isLocalImage(imageUri))
-            imageUri = MediaUtils.downloadExternalImage(getActivity(), imageUri);
+        if (ssb != null && !MediaUtils.isInMediaStore(imageUri))
+            imageUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
 
         if (imageUri == null) {
             return false;
         }
 
-        ImageHelper ih = new ImageHelper();
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), getActivity());
+        Bitmap thumbnailBitmap;
+        String mediaTitle = "";
+        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+            thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
+            mediaTitle = getResources().getString(R.string.video);
+        } else {
+            ImageHelper ih = new ImageHelper();
+            Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), getActivity());
 
-        if (mediaData == null) {
-            // data stream not returned
-            return false;
+            if (mediaData == null) {
+                // data stream not returned
+                return false;
+            }
+
+            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+            if (thumbnailBitmap == null)
+                return false;
+
+            mediaTitle = (String) mediaData.get("title");
         }
 
-        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
-        if (resizedBitmap == null)
-            return false;
-
-        WPImageSpan is = new WPImageSpan(getActivity(), resizedBitmap, imageUri);
+        WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
         mediaFile.setPostID(mActivity.getPost().getId());
-        mediaFile.setTitle((String) mediaData.get("title"));
+        mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(is.getImageSource().toString());
         MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
         if (imageUri.getEncodedPath() != null)

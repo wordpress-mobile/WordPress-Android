@@ -176,7 +176,7 @@ public class Theme {
         
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         
         String features = "";
         JSONArray tags = object.getJSONArray("tags");

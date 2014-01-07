@@ -53,7 +53,7 @@ public class ApiHelper {
         hPost.put("post_id", "");
         hPost.put("number", 30);
 
-        Object[] params = { blog.getBlogId(), blog.getUsername(),
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
                 blog.getPassword(), hPost };
         Object[] result = null;
         try {
@@ -146,7 +146,7 @@ public class ApiHelper {
                     blog.getHttppassword());
 
             Object result = null;
-            Object[] params = { blog.getBlogId(), blog.getUsername(),
+            Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
                     blog.getPassword(), "show-supported" };
             try {
                 result = (Object) client.call("wp.getPostFormats", params);
@@ -177,7 +177,7 @@ public class ApiHelper {
         private Callback mCallback;
 
         public RefreshBlogContentTask(Context context, Blog blog, Callback callback) {
-            mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getBlogId());
+            mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
             } else {
@@ -251,7 +251,7 @@ public class ApiHelper {
                 hPost.put("admin_url", "admin_url");
                 hPost.put("login_url", "login_url");
 
-                Object[] vParams = {mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(),
+                Object[] vParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
                         hPost};
                 Object versionResult;
                 try {
@@ -273,7 +273,7 @@ public class ApiHelper {
             }
 
             // Check if user is an admin
-            Object[] userParams = {mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword()};
+            Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
                 Map<String, Object> userInfos = (HashMap<String, Object>)
                         client.call("wp.getProfile", userParams);
@@ -286,7 +286,7 @@ public class ApiHelper {
             Map<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("number", 30);
             Object[] commentParams = {
-                    mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
+                    mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
             };
 
             try {
@@ -351,7 +351,7 @@ public class ApiHelper {
 
             String formattedDate = getFormattedCommentDate(ctx, d);
 
-            dbValues.put("blogID", String.valueOf(blog.getId()));
+            dbValues.put("blogID", String.valueOf(blog.getLocalTableBlogId()));
             dbValues.put("postID", postID);
             dbValues.put("commentID", commentID);
             dbValues.put("author", author);
@@ -424,7 +424,7 @@ public class ApiHelper {
                 return -1;
             }
 
-            String blogId = String.valueOf(blog.getBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
             
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
@@ -442,7 +442,7 @@ public class ApiHelper {
                 
             
             Object[] apiParams = { 
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     filter
@@ -534,7 +534,7 @@ public class ApiHelper {
             contentStruct.put("post_excerpt", mCaption);
             
             Object[] apiParams = {
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     mMediaId,
@@ -590,14 +590,14 @@ public class ApiHelper {
                 return null;
             }
             
-            String blogId = String.valueOf(blog.getBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
             
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
             
             Object[] apiParams = { 
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     mMediaId
@@ -674,7 +674,7 @@ public class ApiHelper {
             data.put("overwrite", true);
             
             Object[] apiParams = { 
-                    1, 
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     data
@@ -747,7 +747,7 @@ public class ApiHelper {
                     blog.getHttppassword());
             
             Object[] apiParams = new Object[] {
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     mMediaId
@@ -809,7 +809,7 @@ public class ApiHelper {
                     blog.getHttppassword());
             
             Object[] apiParams = new Object[] {
-                    blog.getBlogId(),
+                    blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
             };
@@ -822,7 +822,7 @@ public class ApiHelper {
             }
             
             if (resultMap != null) {
-                return new FeatureSet(blog.getBlogId(), resultMap);
+                return new FeatureSet(blog.getRemoteBlogId(), resultMap);
             }
             
             return null;

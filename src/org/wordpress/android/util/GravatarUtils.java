@@ -27,4 +27,18 @@ public class GravatarUtils {
         return url;
     }
 
+    /*
+     * returns the passed avatar url with d=mm to ensure that the default avatar is
+     * the "mystery man" image - necessary since our API often returns avatar URLs
+     * with "d=identicon"
+     */
+    public static String fixGravatarUrl(final String url) {
+        if (TextUtils.isEmpty(url))
+            return url;
+        if (url.contains("d=identicon"))
+            return url.replace("d=identicon", "d=mm");
+        String prefix = (url.contains("?") ? "&" : "?");
+        return url + prefix + "d=mm";
+    }
+
 }

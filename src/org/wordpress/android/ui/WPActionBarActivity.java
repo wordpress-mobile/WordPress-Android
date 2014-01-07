@@ -53,7 +53,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
-import org.wordpress.android.ui.reader_native.NativeReaderActivity;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -104,7 +104,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int NOTIFICATIONS_ACTIVITY = 11;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
-    
+
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -126,7 +126,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
             mIsXLargeDevice = true;
-        
+
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
         mMenuItems.add(new NotificationsMenuItem());
@@ -175,7 +175,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             
         if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
-                if (blogIDs[i] == currentBlog.getId()) {
+                if (blogIDs[i] == currentBlog.getLocalTableBlogId()) {
                     if (mBlogSpinner != null) {
                         mBlogSpinner.setSelection(i);
                     }
@@ -194,7 +194,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
-        
+
         initMenuDrawer();
     }
 
@@ -497,7 +497,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private void showReader() {
         Intent intent;
-        intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
+        intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
@@ -622,7 +622,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * This method is called when the user changes the active blog.
      */
     public void onBlogChanged() {
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
@@ -709,12 +709,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof NativeReaderActivity;
+            return WPActionBarActivity.this instanceof ReaderActivity;
         }
         @Override
         public void onSelectItem(){
             Intent intent;
-            intent = new Intent(WPActionBarActivity.this, NativeReaderActivity.class);
+            intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -781,7 +781,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -806,7 +806,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew",
                     true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -872,7 +872,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
             
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);

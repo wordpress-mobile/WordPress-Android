@@ -19,15 +19,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_title"
-        android:layout_marginTop="@dimen/reader_margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         style="@style/ReaderTextView.EmptyList"
         android:layout_below="@+id/divider_title"
-        android:paddingBottom="@dimen/reader_margin_large"
-        android:paddingTop="@dimen/reader_margin_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
         android:text="@string/reader_empty_followed_tags"
         android:visibility="gone" />
 
@@ -58,10 +58,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/reader_margin_medium"
-        android:layout_marginRight="@dimen/reader_margin_medium"
-        android:paddingBottom="@dimen/reader_margin_medium"
-        android:paddingTop="@dimen/reader_margin_small">
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small">
 
         <EditText
             android:id="@+id/edit_add"

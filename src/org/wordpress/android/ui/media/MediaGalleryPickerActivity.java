@@ -107,7 +107,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     private void refereshViews() {
         if (WordPress.getCurrentBlog() == null)
             return;
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
@@ -214,7 +214,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
                     adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
-                    String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                    String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                     if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
                         // There is no media at all
                         noMediaFinish();
@@ -229,7 +229,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                                 Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
                                 mGridAdapter.swapCursor(cursor);
 

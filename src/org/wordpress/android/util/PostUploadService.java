@@ -394,7 +394,7 @@ public class PostUploadService extends Service {
             Object[] params;
 
             if (post.isLocalDraft() && !post.isUploaded())
-                params = new Object[]{blog.getBlogId(), blog.getUsername(), blog.getPassword(),
+                params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};
             else
                 params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,
@@ -441,7 +441,7 @@ public class PostUploadService extends Service {
                 File tempFile = context.getFileStreamPath(tempFileName);
 
                 Uri videoUri = Uri.parse(curImagePath);
-                File fVideo = null;
+                File videoFile = null;
                 String mimeType = "", xRes = "", yRes = "";
 
                 if (videoUri.toString().contains("content:")) {
@@ -453,7 +453,7 @@ public class PostUploadService extends Service {
 
                     Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
 
-                    if (cur.moveToFirst()) {
+                    if (cur != null && cur.moveToFirst()) {
 
                         int mimeTypeColumn, resolutionColumn, dataColumn;
 
@@ -465,21 +465,16 @@ public class PostUploadService extends Service {
 
                         String thumbData = cur.getString(dataColumn);
                         mimeType = cur.getString(mimeTypeColumn);
-                        if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
-                            mimeType = "video/mp4";
-                        }
 
-                        fVideo = new File(thumbData);
-                        mf.setFilePath(fVideo.getPath());
+                        videoFile = new File(thumbData);
+                        mf.setFilePath(videoFile.getPath());
                         String resolution = cur.getString(resolutionColumn);
                         if (resolution != null) {
                             String[] resx = resolution.split("x");
                             xRes = resx[0];
                             yRes = resx[1];
                         } else {
-                            // set the width of the video to the
-                            // thumbnail
-                            // width, else 640x480
+                            // set the width of the video to the thumbnail width, else 640x480
                             if (!blog.getMaxImageWidth().equals("Original Size")) {
                                 xRes = blog.getMaxImageWidth();
                                 yRes = String.valueOf(Math.round(Integer.valueOf(blog.getMaxImageWidth()) * 0.75));
@@ -490,20 +485,32 @@ public class PostUploadService extends Service {
                         }
                     }
                 } else { // file is not in media library
-                    fVideo = new File(videoUri.toString().replace("file://", ""));
+                    String filePath = videoUri.toString().replace("file://", "");
+                    mf.setFilePath(filePath);
+                    videoFile = new File(filePath);
                 }
 
-                if (fVideo == null) {
-                    mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ".";
+                if (videoFile == null) {
+                    mErrorMessage = context.getResources().getString(R.string.error_media_upload);
                     return null;
                 }
 
-                String imageTitle = fVideo.getName();
+                String videoName = videoFile.getName();
+
+                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                if (!TextUtils.isEmpty(fileExtension)) {
+                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                }
+
+                if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
+                    mimeType = "video/mp4";
+                }
 
                 // try to upload the video
                 Map<String, Object> m = new HashMap<String, Object>();
 
-                m.put("name", imageTitle);
+                m.put("name", videoName);
                 m.put("type", mimeType);
                 m.put("bits", mf);
                 m.put("overwrite", true);
@@ -518,15 +525,19 @@ public class PostUploadService extends Service {
                         (featureSet != null && mFeatureSet.isVideopressEnabled());
                 if (isVideoEnabled) {
                     Object result = uploadFileHelper(client, params, tempFile);
-                    Map<?, ?> contentHash = (HashMap<?, ?>) result;
-                    String resultURL = contentHash.get("url").toString();
-                    if (contentHash.containsKey("videopress_shortcode")) {
-                        resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
+                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
+                    if (resultMap != null && resultMap.containsKey("url")) {
+                        String resultURL = resultMap.get("url").toString();
+                        if (resultMap.containsKey("videopress_shortcode")) {
+                            resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
+                        } else {
+                            resultURL = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                                    xRes, yRes, resultURL, mimeType, resultURL);
+                        }
+                        content = content + resultURL;
                     } else {
-                        resultURL = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                xRes, yRes, resultURL, mimeType, resultURL);
+                        return null;
                     }
-                    content = content + resultURL;
                 } else {
                     mErrorMessage = getString(R.string.media_no_video_message);
                     mErrorUnavailableVideoPress = true;

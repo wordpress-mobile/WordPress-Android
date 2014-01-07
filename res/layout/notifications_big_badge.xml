@@ -3,34 +3,48 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#FFFFFF"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center" >
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/badge"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:minWidth="170dp"
-            android:minHeight="170dp"
-            android:scaleType="fitCenter"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:minHeight="170dp"
+            android:minWidth="170dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/text_stats_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@drawable/note_icon_stats"
+            android:padding="16dp"
+            android:text="@string/view_stats_activity"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_large"
+            android:background="@drawable/reader_transparent_selector"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingRight="16dp"
             android:paddingLeft="16dp"
-            android:textSize="20sp"
+            android:paddingRight="16dp"
             android:textAlignment="center"
-            android:textIsSelectable="true" />
+            android:textColorLink="@color/reader_hyperlink"
+            android:textIsSelectable="true"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>
