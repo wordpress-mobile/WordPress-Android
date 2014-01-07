@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -167,7 +168,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning)
-            AppLog.w("reader posts task already running");
+            AppLog.w(T.READER, "reader posts task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -502,7 +503,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void preloadPostImages(final int position) {
         if (position >= mPosts.size() || position < 0) {
-            AppLog.w("invalid preload position > " + Integer.toString(position));
+            AppLog.w(T.READER, "invalid preload position > " + Integer.toString(position));
             return;
         }
 
@@ -541,7 +542,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            AppLog.e(volleyError);
+            AppLog.e(T.READER, volleyError);
         }
     };
 }

@@ -13,8 +13,9 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.Iterator;
@@ -75,7 +76,7 @@ public class ReaderTagActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.i("tag action " + action.name() + " succeeded");
+                AppLog.i(T.READER, "tag action " + action.name() + " succeeded");
                 if (actionListener!=null)
                     actionListener.onActionResult(true);
             }
@@ -91,14 +92,14 @@ public class ReaderTagActions {
                 boolean isSuccess = (action== TagAction.ADD    && error.equals("already_subscribed"))
                                  || (action== TagAction.DELETE && error.equals("not_subscribed"));
                 if (isSuccess) {
-                    AppLog.w("tag action " + action.name() + " succeeded with error " + error);
+                    AppLog.w(T.READER, "tag action " + action.name() + " succeeded with error " + error);
                     if (actionListener!=null)
                         actionListener.onActionResult(true);
                     return;
                 }
 
-                AppLog.w("tag action " + action.name() + " failed");
-                AppLog.e(volleyError);
+                AppLog.w(T.READER, "tag action " + action.name() + " failed");
+                AppLog.e(T.READER, volleyError);
 
                 // revert on failure
                 switch (action) {
@@ -156,12 +157,12 @@ public class ReaderTagActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
-        AppLog.d("updating reader tags");
+        AppLog.d(T.READER, "updating reader tags");
         WordPress.restClient.get("read/menu", null, null, listener, errorListener);
     }
     private static void handleUpdateTagsResponse(final JSONObject jsonObject, final ReaderActions.UpdateResultListener resultListener) {
@@ -200,7 +201,7 @@ public class ReaderTagActions {
                 ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
                 ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
-                    AppLog.d("recommended topics changed");
+                    AppLog.d(T.READER, "recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
                 }
 

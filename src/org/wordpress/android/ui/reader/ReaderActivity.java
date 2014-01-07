@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -88,13 +89,13 @@ public class NativeReaderActivity extends WPActionBarActivity {
             mHasPerformedInitialUpdate = true;
             // update the current user the first time this is shown - ensures we have their user_id
             // as well as their latest info (in case they changed their avatar, name, etc. since last time)
-            AppLog.i("updating current user");
+            AppLog.i(T.READER, "updating current user");
             ReaderUserActions.updateCurrentUser(null);
             // also update cookies so that we can show authenticated images in WebViews
-            AppLog.i("updating cookies");
+            AppLog.i(T.READER, "updating cookies");
             ReaderAuthActions.updateCookies(this);
             // update followed blogs
-            AppLog.i("updating followed blogs");
+            AppLog.i(T.READER, "updating followed blogs");
             ReaderBlogActions.updateFollowedBlogs();
             // update list of followed tags
             updateTagList();
@@ -270,7 +271,7 @@ public class NativeReaderActivity extends WPActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                AppLog.i("received ACTION_REFRESH_POSTS");
+                AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
                 ReaderPostListFragment fragment = getPostListFragment();
                 if (fragment != null)
                     fragment.refreshPosts();
