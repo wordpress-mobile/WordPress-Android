@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
@@ -101,7 +102,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d("post action " + action.name() + " succeeded");
+                AppLog.d(T.READER, "post action " + action.name() + " succeeded");
                 if (actionListener!=null)
                     actionListener.onActionResult(true);
             }
@@ -111,11 +112,11 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 String error = VolleyUtils.errStringFromVolleyError(volleyError);
                 if (TextUtils.isEmpty(error)) {
-                    AppLog.w(String.format("post action %s failed", action.name()));
+                    AppLog.w(T.READER, String.format("post action %s failed", action.name()));
                 } else {
-                    AppLog.w(String.format("post action %s failed (%s)", action.name(), error));
+                    AppLog.w(T.READER, String.format("post action %s failed (%s)", action.name(), error));
                 }
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 // revert to original post
                 if (originalPost!=null) {
                     ReaderPostTable.addOrUpdatePost(originalPost);
@@ -178,7 +179,7 @@ public class ReaderPostActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (actionListener != null)
                     actionListener.onActionResult(false);
 
@@ -204,13 +205,13 @@ public class ReaderPostActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
 
             }
         };
-        AppLog.d("updating post");
+        AppLog.d(T.READER, "updating post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
 
@@ -236,12 +237,12 @@ public class ReaderPostActions {
                                          || updatedPost.isFollowedByCurrentUser != post.isFollowedByCurrentUser);
 
                 if (hasChanges) {
-                    AppLog.d("post updated");
+                    AppLog.d(T.READER, "post updated");
                     // the endpoint for requesting a single post doesn't always support featured images,
                     // so if the original post had a featured image and the updated post doesn't, set
                     // the featured image for the updated post to that of the original post
                     if (post.hasFeaturedImage() && !updatedPost.hasFeaturedImage()) {
-                        AppLog.i("restored featured image after updating post");
+                        AppLog.i(T.READER, "restored featured image after updating post");
                         updatedPost.setFeaturedImage(post.getFeaturedImage());
                     }
                     ReaderPostTable.addOrUpdatePost(updatedPost);
@@ -276,13 +277,13 @@ public class ReaderPostActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (actionListener!=null)
                     actionListener.onActionResult(false);
 
             }
         };
-        AppLog.d("requesting post");
+        AppLog.d(T.READER, "requesting post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
 
@@ -300,13 +301,13 @@ public class ReaderPostActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
 
             }
         };
-        AppLog.d("updating likes");
+        AppLog.d(T.READER, "updating likes");
         WordPress.restClient.get(path, null, null, listener, errorListener);
     }
     private static void handleUpdateLikesResponse(final JSONObject jsonObject, final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
@@ -323,7 +324,7 @@ public class ReaderPostActions {
 
                 final boolean hasChanges = !localLikeIDs.isSameList(serverLikeIDs);
                 if (hasChanges) {
-                    AppLog.d("new likes found");
+                    AppLog.d(T.READER, "new likes found");
                     post.numLikes = jsonObject.optInt("found");
                     post.isLikedByCurrentUser = JSONUtil.getBool(jsonObject, "i_like");
                     ReaderPostTable.addOrUpdatePost(post);
@@ -372,7 +373,7 @@ public class ReaderPostActions {
                     String dateNewest = ReaderTagTable.getTagNewestDate(tagName);
                     if (!TextUtils.isEmpty(dateNewest)) {
                         sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                        AppLog.d(String.format("requesting newer posts in topic %s (%s)", tagName, dateNewest));
+                        AppLog.d(T.READER, String.format("requesting newer posts in topic %s (%s)", tagName, dateNewest));
                     }
                     break;
 
@@ -384,12 +385,12 @@ public class ReaderPostActions {
                         dateOldest = ReaderPostTable.getOldestPubDateWithTag(tagName);
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                        AppLog.d(String.format("requesting older posts in topic %s (%s)", tagName, dateOldest));
+                        AppLog.d(T.READER, String.format("requesting older posts in topic %s (%s)", tagName, dateOldest));
                     }
                     break;
             }
         } else {
-            AppLog.d(String.format("requesting posts in empty topic %s", tagName));
+            AppLog.d(T.READER, String.format("requesting posts in empty topic %s", tagName));
         }
 
         String endpoint = sb.toString();
@@ -403,7 +404,7 @@ public class ReaderPostActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 if (resultListener!=null)
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
             }
@@ -471,7 +472,7 @@ public class ReaderPostActions {
                 // new posts and posts updated since the last call)
                 final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
 
-                AppLog.d(String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
+                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
 
                 // save the posts even if none are new in order to update comment counts, likes, etc., on existing posts
                 ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
