@@ -796,7 +796,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+                        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
                     }
 
