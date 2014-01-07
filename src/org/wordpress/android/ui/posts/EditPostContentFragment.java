@@ -792,7 +792,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
                 mf.getDescription(), mf.getCaption(),
-                new ApiHelper.EditMediaItemTask.Callback() {
+                new ApiHelper.GenericCallback() {
 
                     @Override
                     public void onSuccess() {
@@ -801,7 +801,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     }
 
                     @Override
-                    public void onFailure() {
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
                         Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                     }
                 });

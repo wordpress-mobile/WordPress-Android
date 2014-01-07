@@ -346,8 +346,7 @@ public class StatsActivity extends WPActionBarActivity {
 
     }
 
-    private class VerifyJetpackSettingsCallback implements ApiHelper.RefreshBlogContentTask.Callback {
-
+    private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> statsActivityWeakRef;
         
         public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
@@ -356,7 +355,8 @@ public class StatsActivity extends WPActionBarActivity {
        
         @Override
         public void onSuccess() {
-            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing() || statsActivityWeakRef.get().mIsInFront == false) {
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
+                    || statsActivityWeakRef.get().mIsInFront == false) {
                 return;
             }
             
@@ -383,8 +383,7 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         @Override
-        public void onFailure() {
-
+        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
         }
     }
 
@@ -465,7 +464,8 @@ public class StatsActivity extends WPActionBarActivity {
             blogId = getBlogId();
             if (blogId == null) {
                 //Refresh Jetpack Settings
-                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new VerifyJetpackSettingsCallback( StatsActivity.this ) ).execute(false);
+                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
+                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
                 return;
             }
         }
