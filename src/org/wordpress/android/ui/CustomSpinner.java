@@ -38,7 +38,7 @@ public class CustomSpinner extends IcsSpinner {
             reqField.setAccessible(true);
             reqField.setInt(this, -1);
         } catch (Exception e) {
-            AppLog.e(T.MEDIA, e);
+            AppLog.e(T.UTILS, e);
         }
     }
 }

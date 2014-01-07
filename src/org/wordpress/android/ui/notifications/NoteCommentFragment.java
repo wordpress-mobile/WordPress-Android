@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -42,7 +43,6 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.util.Map;
 
@@ -119,7 +119,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             html.removeSpan(img);
         }
         mCommentText.setText(html);
-        mCommentText.setMovementMethod(WPLinkMovementMethod.getInstance());
+        mCommentText.setMovementMethod(LinkMovementMethod.getInstance());
         mReplyField.setOnReplyListener(mReplyListener);
         mDetailHeader.setText(getNote().getSubject());
         

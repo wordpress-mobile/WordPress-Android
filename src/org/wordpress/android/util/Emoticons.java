@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -16,8 +15,8 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES;
 
 public class Emoticons {
-    public static final int EMOTICON_COLOR = 0xFF21759B;
-    private static final boolean HAS_EMOJI = SDK_INT >= VERSION_CODES.JELLY_BEAN;
+    public static final int EMOTICON_COLOR=0xFF21759B;
+    private static final boolean HAS_EMOJI=SDK_INT >= VERSION_CODES.JELLY_BEAN;
     private static final Map<String, String> wpSmilies;
     static {
         Map<String, String> smilies = new HashMap<String, String>();
@@ -71,14 +70,5 @@ public class Emoticons {
             }
         }
         return html;
-    }
-    public static String replaceEmoticonsWithEmoji(final String text) {
-        if (text != null && text.contains("icon_")) {
-            final SpannableStringBuilder html = (SpannableStringBuilder)replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(text));
-            // Html.toHtml() is used here rather than toString() since the latter strips html
-            return Html.toHtml(html);
-        } else {
-            return text;
-        }
     }
 }
