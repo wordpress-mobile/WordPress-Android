@@ -509,5 +509,18 @@ public class ImageHelper {
 
         return BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
     }
-
+    
+    public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
+        
+        if (largeBitmap.getWidth() < resizeWidth)
+            return largeBitmap; //Do not resize.
+        
+        float percentage = (float) resizeWidth / largeBitmap.getWidth();
+        float proportionateHeight = largeBitmap.getHeight() * percentage;
+        int resizeHeight = (int) Math.rint(proportionateHeight);
+        
+        Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
+        
+        return scaled;
+    }
 }
