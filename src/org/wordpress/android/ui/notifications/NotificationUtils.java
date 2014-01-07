@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.InflaterInputStream;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -25,13 +16,22 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
     public static void refreshNotifications(final RestRequest.Listener listener,
@@ -187,12 +187,12 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d("Register token action succeeded");
+                AppLog.d(T.READER, "Register token action succeeded");
                 if (loadSettings) { //load notification settings if necessary
                     com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            AppLog.d("token action succeeded");
+                            AppLog.d(T.READER, "token action succeeded");
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                             Editor editor = settings.edit();
                             try {
@@ -214,8 +214,8 @@ public class NotificationUtils {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w("Register token action failed");
-                AppLog.e(volleyError);
+                AppLog.w(T.READER, "Register token action failed");
+                AppLog.e(T.READER, volleyError);
             }
         };
         WordPress.restClient.post("/push/register", contentStruct, null, listener, errorListener);
@@ -230,14 +230,14 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d("Unregister token action succeeded");
+                AppLog.d(T.READER, "Unregister token action succeeded");
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w("Unregister token action failed");
-                AppLog.e(volleyError);
+                AppLog.w(T.READER, "Unregister token action failed");
+                AppLog.e(T.READER, volleyError);
             }
         };
         WordPress.restClient.post("/push/unregister", contentStruct, null, listener, errorListener);

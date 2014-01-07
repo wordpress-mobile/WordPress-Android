@@ -42,6 +42,7 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
@@ -114,7 +115,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        AppLog.d("token action succeeded");
+                        AppLog.d(T.READER, "token action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
@@ -130,8 +131,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.w("blog action failed");
-                        AppLog.e(volleyError);
+                        AppLog.w(T.READER, "blog action failed");
+                        AppLog.e(T.READER, volleyError);
                     }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
