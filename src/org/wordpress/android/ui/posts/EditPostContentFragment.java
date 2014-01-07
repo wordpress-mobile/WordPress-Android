@@ -728,7 +728,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
 
         WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(getActivity(), blogId, mediaId);
         if (imageSpan == null)

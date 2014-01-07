@@ -136,6 +136,7 @@ public class WordPressDB {
     private static final String ADD_MEDIA_BLOG_ID = "alter table media add blogId text default '';";
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
+    private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
     // create table to store notifications
     private static final String NOTES_TABLE = "notes";
@@ -238,6 +239,7 @@ public class WordPressDB {
                     currentVersion++;
                 case 20:
                     db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
+                    db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                     currentVersion++;
             }
             db.setVersion(DATABASE_VERSION);
@@ -1508,6 +1510,7 @@ public class WordPressDB {
         values.put("mediaId", mf.getMediaId());
         values.put("blogId", mf.getBlogId());
         values.put("date_created_gmt", mf.getDateCreatedGMT());
+        values.put("videoPressShortcode", mf.getVideoPressShortCode());
         if (mf.getUploadState() != null)
             values.put("uploadState", mf.getUploadState());
         else
@@ -1650,6 +1653,7 @@ public class WordPressDB {
             mf.setBlogId(c.getString(17));
             mf.setDateCreatedGMT(c.getLong(18));
             mf.setUploadState(c.getString(19));
+            mf.setVideoPressShortCode(c.getString(20));
         } else {
             c.close();
             return null;
