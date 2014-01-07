@@ -813,6 +813,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
+        final int maxPictureWidthForContentEditor = 400;
+        final int minPictureWidthForContentEditor = 200;
+        
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
             return;
@@ -824,10 +827,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         String imageURL = null;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
-            imageURL = StringUtils.getPhotonUrl(photonUrl, 400);
+            imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
         } else {
             //Not a Jetpack or wpcom blog
-           imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
+           //imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
+            imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
 
         if (imageURL == null)
@@ -842,47 +846,58 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
-                if (container.getBitmap() != null) {
-                    Bitmap resizedBitmap = null;
-                    
+                Bitmap downloadedBitmap = container.getBitmap();
+                if (downloadedBitmap == null) {
+                    //no bitmap downloaded from the server.
+                    return;
+                }
+
+                if (downloadedBitmap.getWidth() < minPictureWidthForContentEditor) {
+                    //Picture is too small. Show the placeholder in this case.
+                    return;
+                }
+
+                Bitmap resizedBitmap = null;
+                if (downloadedBitmap.getWidth() <= maxPictureWidthForContentEditor) {
+                    //bitmap is already small in size, do not resize.
+                    resizedBitmap = downloadedBitmap;
+                } else {
+                    //resize the downloaded bitmap
                     try {
-                        Bitmap bitmap = container.getBitmap();
                         ImageHelper ih = new ImageHelper();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] bitmapByteArray = stream.toByteArray();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(getActivity(), bitmapByteArray, null);
+                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
                     } catch (OutOfMemoryError er) {
                         return;
                     }
-                    
-                    if (resizedBitmap == null)
-                        return;
-                    
-                    Editable s = mContentEditText.getText();
-                    if (s == null)
-                        return;
-                    WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                    if (spans.length != 0) {
-                        for (WPImageSpan is : spans) {
-                            MediaFile mediaFile = is.getMediaFile();
-                            if (mediaFile == null)
-                                continue;
-                            if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
+                }
 
-                                // replace the existing span with a new one with the correct image, re-add it to the same position.
-                                int spanStart = s.getSpanStart(is);
-                                int spanEnd = s.getSpanEnd(is);
-                                WPImageSpan imageSpan = new WPImageSpan(getActivity(), resizedBitmap, is.getImageSource());
-                                imageSpan.setMediaFile(is.getMediaFile());
-                                imageSpan.setNetworkImageLoaded(true);
-                                s.removeSpan(is);
-                                s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            }
+                if (resizedBitmap == null)
+                    return;
+
+                Editable s = mContentEditText.getText();
+                if (s == null)
+                    return;
+                WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                if (spans.length != 0) {
+                    for (WPImageSpan is : spans) {
+                        MediaFile mediaFile = is.getMediaFile();
+                        if (mediaFile == null)
+                            continue;
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
+
+                            // replace the existing span with a new one with the correct image, re-add it to the same position.
+                            int spanStart = s.getSpanStart(is);
+                            int spanEnd = s.getSpanEnd(is);
+                            WPImageSpan imageSpan = new WPImageSpan(getActivity(), resizedBitmap, is.getImageSource());
+                            imageSpan.setMediaFile(is.getMediaFile());
+                            imageSpan.setNetworkImageLoaded(true);
+                            s.removeSpan(is);
+                            s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            break;
                         }
                     }
                 }
+
             }
         }, 0, 0);
     }
