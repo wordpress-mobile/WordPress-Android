@@ -31,7 +31,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.util.AppLog;
 
 public class NotificationUtils {
     
@@ -199,7 +199,7 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderLog.d("Register token action succeeded");
+                AppLog.d("Register token action succeeded");
                 try {
                     String deviceID = jsonObject.getString("device_id");
                     if (deviceID==null) {
@@ -219,7 +219,7 @@ public class NotificationUtils {
                     com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            ReaderLog.d("Settings loaded with success");
+                            AppLog.d("Settings loaded with success");
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                             Editor editor = settings.edit();
                             try {
