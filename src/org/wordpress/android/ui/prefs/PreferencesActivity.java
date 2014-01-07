@@ -427,7 +427,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     private void sendNotificationsSettings() {
-        AppLog.d("Send push notification settings");
+        AppLog.d(T.NOTIFS, "Send push notification settings");
         new sendNotificationSettingsTask().execute();
     }
 
