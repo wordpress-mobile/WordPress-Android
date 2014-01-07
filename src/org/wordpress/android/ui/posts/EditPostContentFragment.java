@@ -728,7 +728,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
 
         WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(getActivity(), blogId, mediaId);
         if (imageSpan == null)
@@ -796,8 +796,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
+                        String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                        WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
                     }
 
                     @Override

@@ -466,11 +466,15 @@ public class WPHtml {
         String url = imageSpan.getImageSource().toString();
         
         if (isVideo) {
-            int xRes = mediaFile.getWidth();
-            int yRes = mediaFile.getHeight();
-            String mimeType = mediaFile.getMimeType();
-            content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                    xRes, yRes, url, mimeType, url);
+            if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                content = mediaFile.getVideoPressShortCode();
+            } else {
+                int xRes = mediaFile.getWidth();
+                int yRes = mediaFile.getHeight();
+                String mimeType = mediaFile.getMimeType();
+                content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                        xRes, yRes, url, mimeType, url);
+            }
         } else {
             String alignment = "";
             switch (mediaFile.getHorizontalAlignment()) {
