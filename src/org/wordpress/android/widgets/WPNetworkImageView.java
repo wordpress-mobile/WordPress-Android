@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -70,7 +70,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = imageType;
         mImageListener = imageListener;
         if (url==null) {
-            showDefaultImage(mImageType);
+            showDefaultImage(mImageType, false);
         } else {
             // The URL has potentially changed. See if we need to load it.
             loadImageIfNecessary(false);
@@ -84,7 +84,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = ImageType.VIDEO;
 
         if (TextUtils.isEmpty(videoUrl)) {
-            showDefaultImage(ImageType.VIDEO);
+            showDefaultImage(ImageType.VIDEO, false);
             return;
         }
 
@@ -95,7 +95,7 @@ public class WPNetworkImageView extends ImageView {
             return;
         }
 
-        showDefaultImage(ImageType.VIDEO);
+        showDefaultImage(ImageType.VIDEO, false);
 
         // vimeo videos require network request to get thumbnail
         if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
@@ -135,7 +135,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showDefaultImage(mImageType);
+            showDefaultImage(mImageType, false);
             return;
         }
 
@@ -157,7 +157,7 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        setImageResource(getErrorImageResId(mImageType));
+                        showDefaultImage(mImageType, true);
                         if (mImageListener!=null)
                             mImageListener.onImageLoaded(false);
                     }
@@ -172,29 +172,35 @@ public class WPNetworkImageView extends ImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    onResponse(response, false);
+                                    // don't fade in the image since we know it's cached
+                                    handleResponse(response, true, false);
                                 }
                             });
-                            return;
-                        }
-
-                        if (response.getBitmap() != null) {
-                            setImageBitmap(response.getBitmap());
-
-                            // fade the image in if it wasn't cached
-                            if (!isImmediate)
-                                fadeIn();
-
-                            if (mImageListener!=null)
-                                mImageListener.onImageLoaded(true);
                         } else {
-                            setImageDrawable(getDefaultDrawable(getContext(), mImageType));
+                            handleResponse(response, isImmediate, true);
                         }
                     }
                 });
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
+    }
+
+    private void handleResponse(ImageLoader.ImageContainer response,
+                                boolean isCached,
+                                boolean allowFadeIn) {
+        if (response.getBitmap() != null) {
+            setImageBitmap(response.getBitmap());
+
+            // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
+            if (!isCached && allowFadeIn && (mImageType == ImageType.PHOTO || mImageType == ImageType.VIDEO))
+                fadeIn();
+
+            if (mImageListener!=null)
+                mImageListener.onImageLoaded(true);
+        } else {
+            showDefaultImage(mImageType, false);
+        }
     }
 
     @Override
@@ -222,8 +228,14 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    public void showDefaultImage(ImageType imageType) {
-        setImageDrawable(getDefaultDrawable(getContext(), imageType));
+    public void showDefaultImage(ImageType imageType, boolean isError) {
+        if (imageType == ImageType.PHOTO_FULL) {
+            // null default for full-screen photos
+            setImageDrawable(null);
+        } else {
+            int color = getContext().getResources().getColor(isError ? R.color.grey_medium : R.color.grey_extra_light);
+            setImageDrawable(new ColorDrawable(color));
+        }
     }
 
     protected void onDraw(Canvas canvas) {
@@ -272,29 +284,6 @@ public class WPNetworkImageView extends ImageView {
             AlphaAnimation animation = new AlphaAnimation(0.25f, 1f);
             animation.setDuration(FADE_TRANSITION);
             this.startAnimation(animation);
-        }
-    }
-
-    private static int getErrorImageResId(ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no error image for full-screen images
-                return 0;
-            default :
-                return R.drawable.reader_photo_error;
-        }
-    }
-
-    private static Drawable mDefaultPhoto;
-    private static Drawable getDefaultDrawable(Context context, ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no default image for full-screen images
-                return null;
-            default :
-                if (mDefaultPhoto==null)
-                    mDefaultPhoto = context.getResources().getDrawable(R.drawable.reader_photo_default);
-                return mDefaultPhoto;
         }
     }
 }

@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/margin_large">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small" />
