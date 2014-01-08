@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -215,22 +215,21 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (content==null || textView==null)
             return;
 
-        // convert emoticons first (otherwise they'll be downloaded)
-        if (content.contains("icon_"))
-            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
-
         // skip performance hit of html conversion if content doesn't contain html
-        if (!content.contains("<") && !content.contains("&")) {
+        if (!content.contains("<") && content.contains("&")) {
             textView.setText(content.trim());
             return;
         }
 
+        // convert emoticons first (otherwise they'll be downloaded)
+        content = Emoticons.replaceEmoticonsWithEmoji(content);
+
         // now convert to HTML with an image getter that enforces a max image size
-        final SpannableStringBuilder html;
+        final Spanned html;
         if (content.contains("<img")) {
-            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
+            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
         } else {
-            html = (SpannableStringBuilder) Html.fromHtml(content);
+            html = Html.fromHtml(content);
         }
 
         // remove extra \n\n added by Html.convert()
