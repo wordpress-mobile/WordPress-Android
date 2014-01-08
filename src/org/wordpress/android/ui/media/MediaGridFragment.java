@@ -367,7 +367,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                 }
 
                 @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     if (errorType != ApiHelper.ErrorType.NO_ERROR) {
                         String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP
                                 ? getString(R.string.media_error_no_permission)

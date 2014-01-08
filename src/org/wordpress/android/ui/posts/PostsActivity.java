@@ -88,7 +88,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 }
 
                 @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 }
             }).execute(false);
             

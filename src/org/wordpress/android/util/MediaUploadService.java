@@ -8,10 +8,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
 
 import java.util.ArrayList;
@@ -127,15 +129,18 @@ public class MediaUploadService extends Service {
             }
             
             @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                if (errorType == ApiHelper.ErrorType.NETWORK_XMLRPC) {
-                    sendUpdateBroadcast(mediaId, getString(R.string.upload_failed));
-                } else {
-                    sendUpdateBroadcast(mediaId, null);
-                }
+                sendUpdateBroadcast(mediaId, getString(R.string.upload_failed));
                 mHandler.post(mFetchQueueTask);
+                // Only log the error if it's not caused by the network (internal inconsistency)
+                if (errorType != ErrorType.NETWORK_XMLRPC) {
+                    JSONObject properties = new JSONObject();
+                    properties.put("error_message", errorMessage);
+                    WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionUploadMedia,
+                            properties);
+                }
             }
         });
 
@@ -163,14 +168,17 @@ public class MediaUploadService extends Service {
             }
             
             @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mUploadInProgress = false;
-                if (errorType == ApiHelper.ErrorType.NETWORK_XMLRPC) {
-                    sendUpdateBroadcast(id, getString(R.string.error_refresh_media));
-                } else {
-                    sendUpdateBroadcast(id, null);
-                }
+                sendUpdateBroadcast(id, getString(R.string.error_refresh_media));
                 mHandler.post(mFetchQueueTask);
+                // Only log the error if it's not caused by the network (internal inconsistency)
+                if (errorType != ErrorType.NETWORK_XMLRPC) {
+                    JSONObject properties = new JSONObject();
+                    properties.put("error_message", errorMessage);
+                    WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionFetchMedia,
+                            properties);
+                }
             }
         });
         task.execute(apiArgs);

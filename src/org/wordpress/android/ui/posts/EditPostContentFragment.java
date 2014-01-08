@@ -81,7 +81,6 @@ import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -801,7 +800,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     }
 
                     @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                         Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                     }
                 });
