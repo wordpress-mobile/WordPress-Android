@@ -228,8 +228,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(post.getTitle());
-        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+
+        if (post.hasBlogName()) {
+            holder.txtBlogName.setText(post.getBlogName());
+        } else if (post.hasAuthorName()) {
+            holder.txtBlogName.setText(post.getAuthorName());
+        } else {
+            holder.txtBlogName.setText(null);
+        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
