@@ -56,14 +56,14 @@ public class AppLog {
         addEntry(tag, LogLevel.e, message);
     }
 
-    public static void e(T tag, String message, Exception e) {
-        Log.e(TAG + "-" + tag.toString(), message, e);
-        addEntry(tag, LogLevel.e, message + " - exception: " + e.getMessage());
+    public static void e(T tag, String message, Throwable tr) {
+        Log.e(TAG + "-" + tag.toString(), message, tr);
+        addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
     }
 
-    public static void e(T tag, Exception e) {
-        Log.e(TAG + "-" + tag.toString(), e.getMessage(), e);
-        addEntry(tag, LogLevel.e, e.getMessage());
+    public static void e(T tag, Throwable tr) {
+        Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
+        addEntry(tag, LogLevel.e, tr.getMessage());
     }
 
     public static void e(T tag, VolleyError volleyError) {
