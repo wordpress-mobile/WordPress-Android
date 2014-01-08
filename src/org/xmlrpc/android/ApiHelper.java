@@ -3,7 +3,6 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -125,6 +124,7 @@ public class ApiHelper {
         protected void setError(ErrorType errorType, String errorMessage) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
+            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
         }
     }
 
