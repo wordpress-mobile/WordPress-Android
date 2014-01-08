@@ -295,6 +295,7 @@ public class MediaUtils {
         mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL"))); 
         mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();
