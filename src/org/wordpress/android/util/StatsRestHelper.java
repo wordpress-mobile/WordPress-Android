@@ -63,8 +63,8 @@ import java.util.Map;
  */
 public class StatsRestHelper {
 
-    private static final String TAG = "WordPress";
-    private static long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+    final private static String TAG = "WordPress";
+    final private static long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     // A map to keep track of the number of pending calls for each viewtype.
     // A counter for each type is incremented before a call is executed. 
