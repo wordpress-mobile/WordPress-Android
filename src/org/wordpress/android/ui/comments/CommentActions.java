@@ -44,7 +44,7 @@ public class CommentActions {
         public void onCommentModerated(final Comment comment, final Note note);
         public void onCommentsModerated(final List<Comment> comments);
         public void onCommentAdded();
-        public void onCommentDeleted();
+        public void onCommentDeleted(final Comment comment);
     }
 
     /*

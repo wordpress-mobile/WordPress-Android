@@ -172,22 +172,27 @@ public class CommentsActivity extends WPActionBarActivity implements CommentList
     }
 
     /**
-     * these three methods implement OnCommentChangedListener and are triggered from this activity,
+     * these four methods implement OnCommentChangedListener and are triggered from
      * the list fragment, and the detail fragment whenever a comment is changed
      */
     @Override
     public void onCommentAdded() {
-        refreshCommentList();
+        refreshCommentList(); // This should be better handled by the CommentListFragment
     }
 
     @Override
-    public void onCommentDeleted() {
-        refreshCommentList();
-        clearCommentDetail();
+    public void onCommentDeleted(final Comment comment) {
+        clearCommentDetail(comment);
     }
+
     @Override
-    public void onCommentModerated() {
-        refreshCommentList();
+    public void onCommentModerated(final Comment comment, final Note note) {
+        refreshCommentList(); // This should be better handled by the CommentListFragment
+        refreshCommentDetail();
+    }
+
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
         refreshCommentDetail();
     }
 
@@ -205,12 +210,12 @@ public class CommentsActivity extends WPActionBarActivity implements CommentList
     /*
      * clear the comment in the detail view if it's showing
      */
-    private void clearCommentDetail() {
+    private void clearCommentDetail(final Comment comment) {
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (fragment == null)
             return;
-        fragment.clearComment();
+        fragment.clearComment(comment);
     }
 
     private void refreshCommentList() {
@@ -224,6 +229,7 @@ public class CommentsActivity extends WPActionBarActivity implements CommentList
             shouldAnimateRefreshButton = true;
             this.startAnimatingRefreshButton(refreshMenuItem);
         } else {
+            shouldAnimateRefreshButton = false;
             this.stopAnimatingRefreshButton(refreshMenuItem);
         }
     }

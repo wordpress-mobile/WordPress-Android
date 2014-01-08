@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -38,7 +37,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -68,6 +67,7 @@ public class CommentListFragment extends SherlockListFragment {
             mCommentsUpdating = false;
     private Object[] mCommentParams;
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
+    private CommentActions.OnCommentChangeListener mOnCommentChangeListener;
     private CommentListListener mOnCommentListListener;
     private ListScrollPositionManager mListScrollPositionManager;
     private CommentAdapter mAdapter;
@@ -101,8 +101,8 @@ public class CommentListFragment extends SherlockListFragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentListListener = (CommentListListener) activity;
+            mOnCommentChangeListener = (CommentActions.OnCommentChangeListener) activity;
             onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
-
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -166,46 +166,20 @@ public class CommentListFragment extends SherlockListFragment {
         super.onDestroy();
     }
 
-    private void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
-            if (mActionMode != null) {
-                mActionMode.invalidate();
-            }
-        } else if (commentModerationStatusType == CommentStatus.SPAM
-                || commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        }
-    }
-
-    private void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
-        if (commentModerationStatusType == CommentStatus.APPROVED
-                || commentModerationStatusType == CommentStatus.UNAPPROVED
-                || commentModerationStatusType == CommentStatus.SPAM) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        } else if (commentModerationStatusType == CommentStatus.TRASH) {
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-        }
-    }
-
     /**
      * Updates, all comments, model and the local database for a set of Comments changed server side.
      */
     private void updateChangedCommentSet(ArrayList<Comment> selectedCommentsSnapshot, ArrayList<Integer> moderatedComments, String newStatusStr) {
         if (moderatedComments.size() > 0) {
+            List<Comment> successfullyModeratedComments = new ArrayList<Comment>(moderatedComments.size());
+            CommentStatus newStatus = CommentStatus.fromString(newStatusStr);
             for(Comment currentComment : selectedCommentsSnapshot) {
                 Integer currentCommentId = currentComment.commentID;
                 if (moderatedComments.contains(currentCommentId)) {
-
                     currentComment.setStatus(newStatusStr);
+                    successfullyModeratedComments.add(currentComment);
 
-                    if ( newStatusStr == CommentStatus.SPAM.toString()) {
+                    if (newStatus == CommentStatus.SPAM) {
                         deleteCommentInModel(currentComment);
                         if (mAdapter != null) { mAdapter.remove(currentComment); }
                     } else {
@@ -213,14 +187,18 @@ public class CommentListFragment extends SherlockListFragment {
                         if (mAdapter != null) { mAdapter.notifyDataSetChanged(); }
                     }
 
-                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(), currentCommentId, newStatusStr);
+                    WordPress.wpDB.updateCommentStatus(WordPress.getCurrentLocalTableBlogId(), currentCommentId, newStatusStr);
 
                     Map<String, String> contentHash;
                     contentHash = (Map<String, String>) allComments.get(currentCommentId);
-                    contentHash.put("status", newStatusStr);
-                    allComments.put(currentCommentId, contentHash);
+                    if (contentHash != null) {
+                        contentHash.put("status", newStatusStr);
+                        allComments.put(currentCommentId, contentHash);
+                    }
                 }
             }
+            mOnCommentChangeListener.onCommentsModerated(successfullyModeratedComments);
+            onAsyncModerationReturnSuccess(newStatus);
         }
     }
 
@@ -234,10 +212,12 @@ public class CommentListFragment extends SherlockListFragment {
                 if (moderatedComments.contains(currentCommentId)) {
                     deleteCommentInModel(currentComment);
                     if (mAdapter != null) { mAdapter.remove(currentComment); }
-                    WordPress.wpDB.deleteComment(WordPress.currentBlog.getId(), currentCommentId);
+                    WordPress.wpDB.deleteComment(WordPress.getCurrentLocalTableBlogId(), currentCommentId);
                     allComments.remove(currentCommentId);
+                    mOnCommentChangeListener.onCommentDeleted(currentComment);
                 }
             }
+            onAsyncModerationReturnSuccess(CommentStatus.TRASH);
         }
     }
 
@@ -272,7 +252,6 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onCancelled(ArrayList<Integer> moderatedCommentIds) {
@@ -289,7 +268,6 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        onAsyncModerationReturnSuccess(commentStatus);
                     }
                     @Override
                     public void onFailure() {
@@ -352,7 +330,6 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
                     public void onCancelled(ArrayList<Integer> deletedCommentIds) {
@@ -370,7 +347,6 @@ public class CommentListFragment extends SherlockListFragment {
                             }
                             MessageBarUtils.showMessageBar(getActivity(), messageBarText);
                         }
-                        onAsyncModerationReturnSuccess(CommentStatus.TRASH);
                     }
                     @Override
                     public void onFailure() {
@@ -404,7 +380,7 @@ public class CommentListFragment extends SherlockListFragment {
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
-        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
+        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.getCurrentLocalTableBlogId());
 
         if (refreshOnly) {
             if (model != null) {
@@ -541,7 +517,7 @@ public class CommentListFragment extends SherlockListFragment {
             hPost.put("number", COMMENTS_PER_PAGE);
         }
 
-        Object[] params = { WordPress.currentBlog.getBlogId(),
+        Object[] params = { WordPress.getCurrentRemoteBlogId(),
                 WordPress.currentBlog.getUsername(),
                 WordPress.currentBlog.getPassword(), hPost };
 
@@ -555,7 +531,7 @@ public class CommentListFragment extends SherlockListFragment {
             if (!isCancelled()) {
                 if (commentsResult == null) {
                     if (model != null && model.size() == 1) {
-                        WordPress.wpDB.clearComments(WordPress.currentBlog.getId());
+                        WordPress.wpDB.clearComments(WordPress.getCurrentLocalTableBlogId());
                         model.clear();
                         allComments.clear();
                         getListView().invalidateViews();
@@ -566,11 +542,8 @@ public class CommentListFragment extends SherlockListFragment {
                     onAnimateRefreshButton.onAnimateRefreshButton(false);
 
                     if (!moderateErrorMsg.equals("") && !getActivity().isFinishing()) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(
-                                String.format(getResources().getString(R.string.error_refresh),
-                                        getResources().getText(R.string.tab_comments)), moderateErrorMsg);
-                        alert.show(ft, "alert");
+                        ToastUtils.showToast(getActivity(), R.string.error_refresh_comments,
+                                ToastUtils.Duration.LONG);
                         moderateErrorMsg = "";
                     }
                 } else {
@@ -634,31 +607,31 @@ public class CommentListFragment extends SherlockListFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Comment comment = mAdapter.getItem(position);
                 if (mActionMode == null) {
                     getListView().setItemChecked(position, true);
                     mPriorCheckedCommentPositions.put(position, true);
                     mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
                     mActionMode.setTitle("1");
-                    return true;
-                }
-
-                Boolean checkedPrevious = mPriorCheckedCommentPositions.get(position);
-                if (checkedPrevious == null) { checkedPrevious = false; }
-
-                if (!checkedPrevious) {
-                    getListView().setItemChecked(position, true);
                 } else {
-                    getListView().setItemChecked(position, false);
-                }
+                    Boolean checkedPrevious = mPriorCheckedCommentPositions.get(position);
+                    if (checkedPrevious == null) { checkedPrevious = false; }
 
-                int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
-                mPriorCheckedCommentPositions.put(position, !checkedPrevious);
+                    if (!checkedPrevious) {
+                        getListView().setItemChecked(position, true);
+                    } else {
+                        getListView().setItemChecked(position, false);
+                    }
 
-                if (checkedItemCount == 0) {
-                    mActionMode.finish();
-                } else {
-                    mActionMode.setTitle(Integer.toString(checkedItemCount));
-                    mActionMode.invalidate();
+                    int checkedItemCount = getSelectedPositionCount(getListView().getCheckedItemPositions());
+                    mPriorCheckedCommentPositions.put(position, !checkedPrevious);
+
+                    if (checkedItemCount == 0) {
+                        mActionMode.finish();
+                    } else {
+                        mActionMode.setTitle(Integer.toString(checkedItemCount));
+                        mActionMode.invalidate();
+                    }
                 }
                 return true;
             }
@@ -825,9 +798,37 @@ public class CommentListFragment extends SherlockListFragment {
 
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             if (comment.hasProfileImageUrl()) {
-                imgAvatar.setImageUrl(comment.getProfileImageUrl(), WordPress.imageLoader);
+                imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
             } else {
                 imgAvatar.setImageResource(R.drawable.placeholder);
+            }
+        }
+    }
+
+    private void onAsyncModerationReturnSuccess(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED) {
+            if (mActionMode != null) {
+                mActionMode.invalidate();
+            }
+        } else if (commentModerationStatusType == CommentStatus.SPAM
+                || commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        }
+    }
+
+    private void onAsyncModerationReturnFailure(CommentStatus commentModerationStatusType) {
+        if (commentModerationStatusType == CommentStatus.APPROVED
+                || commentModerationStatusType == CommentStatus.UNAPPROVED
+                || commentModerationStatusType == CommentStatus.SPAM) {
+            if (mActionMode != null) {
+                mActionMode.finish();
+            }
+        } else if (commentModerationStatusType == CommentStatus.TRASH) {
+            if (mActionMode != null) {
+                mActionMode.finish();
             }
         }
     }

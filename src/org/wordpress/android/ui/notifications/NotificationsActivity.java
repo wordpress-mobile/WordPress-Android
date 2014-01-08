@@ -394,7 +394,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void onCommentAdded() {
     }
     @Override
-    public void onCommentDeleted() {
+    public void onCommentDeleted(final Comment comment) {
     }
     @Override
     public void onCommentModerated(final Comment comment, final Note note) {

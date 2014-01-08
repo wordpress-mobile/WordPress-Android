@@ -213,8 +213,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * clear the currently displayed comment
      */
-    protected void clearComment() {
-        setComment(0, null);
+    protected void clearComment(Comment comment) {
+        if (mComment != null && mComment.commentID == comment.commentID) { setComment(0, null); }
     }
 
     /*

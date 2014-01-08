@@ -840,7 +840,7 @@ public class ApiHelper {
                 postHash.put("author_email", contentHash.get("email"));
 
                 Object[] apiParams = {
-                        blog.getBlogId(),
+                        blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
                         currentCommentId,
@@ -925,7 +925,7 @@ public class ApiHelper {
                 rpcCallStatus = false;
 
                 int currentCommentId = mSelectedCommentIdArraySnapshot.get(i);
-                Object[] apiParams = {blog.getBlogId(),
+                Object[] apiParams = {blog.getRemoteBlogId(),
                         blog.getUsername(), blog.getPassword(), currentCommentId};
 
                 Object result;
