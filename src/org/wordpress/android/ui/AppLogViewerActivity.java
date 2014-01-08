@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import org.wordpress.android.util.ToastUtils;
 
 /**
  * Created by nbradbury on 7/16/13.
- * views the activity log (AppLog.java)
+ * views the activity log (see utils/AppLog.java)
  */
-public class ReaderLogViewerActivity extends FragmentActivity {
+public class AppLogViewerActivity extends FragmentActivity {
     private TextView mTxtLogViewer;
 
     @Override

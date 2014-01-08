@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
@@ -194,7 +195,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                                     getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                             setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
                         } catch (JSONException e) {
-                            Log.e(WordPress.TAG, "Invalid JSON response from site/new: " + e);
+                            AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
                         }
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();

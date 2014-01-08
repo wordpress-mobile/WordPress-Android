@@ -1,20 +1,20 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.util.AppLog.T;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DrawableManager {
     private final Map<String, Drawable> drawableMap;
@@ -28,20 +28,20 @@ public class DrawableManager {
             return (Drawable) drawableMap.get(urlString);
         }
 
-        Log.d(this.getClass().getSimpleName(), "image url:" + urlString);
+        AppLog.d(T.UTILS, "image url:" + urlString);
         try {
             InputStream is = fetch(urlString);
             Drawable drawable = Drawable.createFromStream(is, "src");
             drawableMap.put(urlString, drawable);
-            Log.d(this.getClass().getSimpleName(), "got a thumbnail drawable: " + drawable.getBounds() + ", "
+            AppLog.d(T.UTILS, "got a thumbnail drawable: " + drawable.getBounds() + ", "
                     + drawable.getIntrinsicHeight() + "," + drawable.getIntrinsicWidth() + ", "
                     + drawable.getMinimumHeight() + "," + drawable.getMinimumWidth());
             return drawable;
         } catch (MalformedURLException e) {
-            Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
+            AppLog.e(T.UTILS, "fetchDrawable failed", e);
             return null;
         } catch (IOException e) {
-            Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
+            AppLog.e(T.UTILS, "fetchDrawable failed", e);
             return null;
         }
     }

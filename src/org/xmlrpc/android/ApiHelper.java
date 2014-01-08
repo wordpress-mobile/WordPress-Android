@@ -14,6 +14,8 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.xmlpull.v1.XmlPullParser;
@@ -418,7 +420,6 @@ public class ApiHelper {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return 0;
@@ -444,7 +445,7 @@ public class ApiHelper {
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", e.getMessage());
+                AppLog.e(T.API, e);
                 // user does not have permission to view media gallery
                 if (e.getMessage().contains("401")) {
                     setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage());
@@ -569,7 +570,6 @@ public class ApiHelper {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return null;
@@ -790,7 +790,7 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
             
             if (resultMap != null) {
@@ -862,7 +862,7 @@ public class ApiHelper {
             try {
                 return request.buffer();
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot setup an InputStream on " + urlString, e );
+                AppLog.e(T.API, "Cannot setup an InputStream on " + urlString, e);
             }
         }
         return null;
@@ -881,7 +881,7 @@ public class ApiHelper {
                 String body = request.body();
                 return body;
             } catch (HttpRequestException e) {
-                Log.e( "ApiHelper", "Cannot load the content of " + urlString, e );
+                AppLog.e(T.API, "Cannot load the content of " + urlString, e);
                 return null;
             }
         } else {

@@ -278,8 +278,11 @@ public class MediaUtils {
             return null;
         }
 
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        boolean isVideo = mimeType != null && mimeType.contains("video");
+
         Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(context, R.drawable.remote_image, uri);
+        WPImageSpan imageSpan = new WPImageSpan(context, isVideo ? R.drawable.media_movieclip : R.drawable.remote_image, uri);
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
@@ -287,11 +290,13 @@ public class MediaUtils {
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
         mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
         mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
-        mediaFile.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        mediaFile.setMimeType(mimeType);
         mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
         mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mediaFile.setVideo(mediaFile.getMimeType().contains("video"));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL"))); 
+        mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();
 

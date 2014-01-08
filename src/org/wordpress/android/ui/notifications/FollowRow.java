@@ -9,26 +9,23 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.json.JSONObject;
 import org.json.JSONException;
-
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.passcodelock.AppLockManager;
 
 public class FollowRow extends LinearLayout {
@@ -93,7 +90,7 @@ public class FollowRow extends LinearLayout {
             
             updateButton();
         }catch (JSONException e) {
-            Log.e(TAG, String.format("Could not set action from %s", actionJSON), e);
+            AppLog.e(T.NOTIFS, String.format("Could not set action from %s", actionJSON), e);
             getFollowButton().setVisibility(GONE);
             getFollowDivider().setVisibility(GONE);
             getSiteTextView().setText("");
@@ -141,7 +138,7 @@ public class FollowRow extends LinearLayout {
             try {
                 mParams.putOpt(IS_FOLLOWING_PARAM, following);                
             } catch (JSONException e) {
-                Log.e(TAG, String.format("Could not set following %b", following), e);
+                AppLog.e(T.NOTIFS, String.format("Could not set following %b", following), e);
             }
         };
         updateButton();

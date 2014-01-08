@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +24,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -119,7 +119,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                             GCMRegistrar.checkDevice(WPComLoginActivity.this);
                             GCMRegistrar.unregister(WPComLoginActivity.this);
                         } catch (Exception e) {
-                            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                            AppLog.v(T.NUX, "Could not unregister for GCM: " + e.getMessage());
                         }
                     }
 

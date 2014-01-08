@@ -81,6 +81,12 @@ public class ReaderUserListActivity extends FragmentActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (getListView().getFirstVisiblePosition() > 0)

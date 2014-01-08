@@ -15,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -34,6 +33,8 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
@@ -203,7 +204,7 @@ public class StatsActivity extends WPActionBarActivity {
                         }
                         @Override
                         public void onFailure(long id, XMLRPCException error) {
-                            Log.e("StatsActivity", "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
+                            AppLog.e(T.STATS, "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
                         }
                     }, "wp.getOptions", params);
                 }

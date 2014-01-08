@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SysUtils;
 
 /**
@@ -49,7 +50,7 @@ public class ReaderTagAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshTopics(ReaderActions.DataLoadedListener dataListener) {
         if (mIsTaskRunning)
-            AppLog.w("topic task is already running");
+            AppLog.w(T.READER, "topic task is already running");
         mDataLoadadListener = dataListener;
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadTopicsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

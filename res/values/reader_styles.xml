@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    styles used by the native reader - all margins & padding use reader_margin_xxxx sizes
-    and all font sizes use reader_text_sz_xxxx sizes defined in dimens.xml for consistency
+    styles used by the native reader - all margins & padding use margin_xxxx sizes
+    and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
     <!-- activity themes -->

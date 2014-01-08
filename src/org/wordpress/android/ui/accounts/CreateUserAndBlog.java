@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.wordpress.rest.RestRequest;
 
@@ -15,6 +14,8 @@ import org.wordpress.android.Config;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPRestClient;
 import org.xmlpull.v1.XmlPullParser;
 
@@ -115,8 +116,8 @@ public class CreateUserAndBlog {
 
         @Override
         public void onResponse(JSONObject response) {
-            Log.d("REST Response", String.format("Create Account step %s", mStep.name()));
-            Log.d("REST Response", String.format("OK %s", response.toString()));
+            AppLog.d(T.NUX, String.format("Create Account step %s", mStep.name()));
+            AppLog.d(T.NUX, String.format("OK %s", response.toString()));
             nextStep(response);
         }
     }

@@ -43,11 +43,6 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderLogViewer(Context context) {
-        Intent intent = new Intent(context, ReaderLogViewerActivity.class);
-        context.startActivity(intent);
-    }
-
     public static void showReaderTagsForResult(Activity activity, String tagName) {
         Intent intent = new Intent(activity, ReaderTagActivity.class);
         if (!TextUtils.isEmpty(tagName))

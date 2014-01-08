@@ -1,16 +1,15 @@
 package org.wordpress.android.models;
 
-import android.util.Log;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.StringUtils;
 
 public class Post implements Serializable {
 
@@ -169,7 +168,7 @@ public class Post implements Serializable {
             categories = StringUtils.unescapeHTML(categories);
             jArray = new JSONArray(categories);
         } catch (JSONException e) {
-            Log.e("WordPress - getJSONCategories", e.getLocalizedMessage());
+            AppLog.e(T.POSTS, e);
         }
         return jArray;
     }
