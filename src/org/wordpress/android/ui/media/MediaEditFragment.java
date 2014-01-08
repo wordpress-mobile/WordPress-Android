@@ -228,7 +228,7 @@ public class MediaEditFragment extends SherlockFragment {
                     }
 
                     @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_failure,
                                     Toast.LENGTH_LONG).show();

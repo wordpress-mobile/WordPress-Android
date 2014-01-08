@@ -384,7 +384,7 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         @Override
-        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
         }
     }
 

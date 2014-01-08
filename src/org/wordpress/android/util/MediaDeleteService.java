@@ -101,7 +101,7 @@ public class MediaDeleteService extends Service {
             }
             
             @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage) {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 // Ideally we would do handle the 401 (unauthorized) and 404 (not found) errors,
                 // but the XMLRPCExceptions don't seem to give messages when they are thrown.
                 
