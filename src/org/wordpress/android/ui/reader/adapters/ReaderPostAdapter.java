@@ -345,6 +345,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
         }
+
+        holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
     }
 
     /*
