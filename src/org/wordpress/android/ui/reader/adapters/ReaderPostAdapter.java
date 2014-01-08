@@ -349,8 +349,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.numReplies > 0) {
             holder.txtCommentCount.setText(FormatUtils.formatInt(post.numReplies));
             holder.txtCommentCount.setVisibility(View.VISIBLE);
+            // note that the comment icon is shown here even if comments are now closed since
+            // the post has existing comments
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
+            holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
         }
     }
 
