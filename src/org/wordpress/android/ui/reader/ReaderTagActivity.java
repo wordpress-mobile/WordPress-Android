@@ -119,6 +119,12 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     /*
      * update title & text based on whether we're showing followed or popular topics
      */
