@@ -216,7 +216,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             return;
 
         // skip performance hit of html conversion if content doesn't contain html
-        if (!content.contains("<") && content.contains("&")) {
+        if (!content.contains("<") && !content.contains("&")) {
             textView.setText(content.trim());
             return;
         }
