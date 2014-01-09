@@ -79,6 +79,7 @@
     <dimen name="page_indicator_stroke_width">4dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>
+    <dimen name="nux_edit_field_font_size">16sp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">20dp</dimen>
