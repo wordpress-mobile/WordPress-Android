@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,7 +142,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
-        displayComment(comment.getText(), holder.txtText);
+        displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -209,28 +209,27 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     /*
-     * prepares comment text for display as html, including retrieving images
+     * displays comment text as html, including retrieving images
      */
-    private void displayComment(String content, TextView textView) {
+    private static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
         if (content==null || textView==null)
             return;
 
-        // convert emoticons first (otherwise they'll be downloaded)
-        if (content.contains("icon_"))
-            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
-
         // skip performance hit of html conversion if content doesn't contain html
-        if (!content.contains("<") && !content.contains("&")) {
+        if (!content.contains("<") && content.contains("&")) {
             textView.setText(content.trim());
             return;
         }
 
+        // convert emoticons first (otherwise they'll be downloaded)
+        content = Emoticons.replaceEmoticonsWithEmoji(content);
+
         // now convert to HTML with an image getter that enforces a max image size
-        final SpannableStringBuilder html;
+        final Spanned html;
         if (content.contains("<img")) {
-            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
+            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, maxImageSize), null);
         } else {
-            html = (SpannableStringBuilder) Html.fromHtml(content);
+            html = Html.fromHtml(content);
         }
 
         // remove extra \n\n added by Html.convert()
