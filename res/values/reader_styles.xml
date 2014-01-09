@@ -182,17 +182,14 @@
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_medium</item>
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>
-        <item name="android:background">@color/grey_extra_light</item>
     </style>
     <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
-        <item name="android:background">@color/grey_extra_light</item>
     </style>
     <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
-        <item name="android:background">@color/grey_extra_light</item>
     </style>
     <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/reader_button_icon</item>
