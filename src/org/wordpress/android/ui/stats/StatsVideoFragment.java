@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,7 +11,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +22,6 @@ import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
@@ -34,6 +29,10 @@ import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.WPLinkMovementMethod;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
@@ -111,7 +110,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
             if (url != null && url.length() > 0) {
                 Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
                 entryTextView.setText(link);
-                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(entry);
             }
