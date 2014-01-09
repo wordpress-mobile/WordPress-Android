@@ -88,16 +88,17 @@
                     android:layout_marginLeft="10dp" />
 
                 <ImageView
-                    android:layout_width="24dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/password_visibility"
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/nux_icon_secure_text"
+                    android:src="@drawable/dashicon_eye_closed"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:tint="@color/nux_eye_icon_color"/>
             </RelativeLayout>
 
 

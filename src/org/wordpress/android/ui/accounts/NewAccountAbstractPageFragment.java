@@ -82,12 +82,13 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             public void onClick(View v) {
                 mPasswordVisible = !mPasswordVisible;
                 if (mPasswordVisible) {
-                    passwordVisibility.setImageResource(R.drawable.nux_icon_secure_text_visible);
+                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
                     passwordEditText.setTransformationMethod(null);
                 } else {
-                    passwordVisibility.setImageResource(R.drawable.nux_icon_secure_text);
+                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
                     passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
+                passwordEditText.setSelection(passwordEditText.length());
             }
         }
         );
