@@ -73,7 +73,7 @@
                     android:inputType="textPassword"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/password"
-                    android:layout_marginRight="48dp" />
+                    android:layout_marginRight="40dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
                     android:layout_marginLeft="10dp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/password_visibility"
                     android:layout_gravity="center_horizontal"
