@@ -392,7 +392,7 @@ public class CommentsListFragment extends ListFragment {
                 author = StringUtils.unescapeHTML(contentHash.get("author").toString());
                 commentID = (Integer) contentHash.get("commentID");
                 postID = contentHash.get("postID").toString();
-                comment = StringUtils.unescapeHTML(contentHash.get("comment").toString());
+                comment = contentHash.get("comment").toString();
                 dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
                 status = contentHash.get("status").toString();
                 authorEmail = StringUtils.unescapeHTML(contentHash.get("email").toString());
@@ -599,8 +599,8 @@ public class CommentsListFragment extends ListFragment {
 
         void populateFrom(Comment comment, final int position) {
             txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : getString(R.string.anonymous));
-            txtComment.setText(comment.comment);
             txtPostTitle.setText(getResources().getText(R.string.on) + " " + comment.postTitle);
+            txtComment.setText(StringUtils.unescapeHTML(comment.comment));
 
             // use the email address if the commenter didn't add a url
             String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.emailURL : comment.authorURL);
