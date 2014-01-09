@@ -305,15 +305,15 @@ public class GCMIntentService extends GCMBaseIntentService {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (regId != null && regId.length() > 0) {
             // Get or create UUID for WP.com notes api
-            String uuid = settings.getString("wp_pref_notifications_uuid", null);
+            String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("wp_pref_notifications_uuid", uuid);
+                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 editor.commit();
             }
 
-            NotificationUtils.registerPushNotificationsToken(context, regId, true);
+            NotificationUtils.registerDeviceForPushNotifications(context, regId);
         }
     }
 
