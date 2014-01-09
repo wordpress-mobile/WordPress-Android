@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -181,7 +180,7 @@ public class WordPress extends Application {
                 } else {
                     // Send the token to WP.com in case it was invalidated
                     NotificationUtils.registerDeviceForPushNotifications(ctx, token, true);
-                    Log.v("WORDPRESS", "Already registered for GCM");
+                    AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
                 AppLog.v(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
