@@ -1,15 +1,15 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * As of January 20 2012:
@@ -121,7 +121,7 @@ public class DeviceUtils {
                 model = decodedModel;
             }
         } catch (IOException e) {
-            Log.e("WORDPRESS", e.getMessage());
+            AppLog.e(T.UTILS, e.getMessage());
         }
 
         if( model == null ) {  //Device model not found in the list

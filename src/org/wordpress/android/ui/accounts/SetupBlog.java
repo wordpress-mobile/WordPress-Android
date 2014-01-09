@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.URLUtil;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
@@ -15,8 +16,8 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import java.net.URI;
 import java.net.IDN;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +120,7 @@ public class SetupBlog {
                 try {
                     userBlogList.add((Map<String, Object>) blog);
                 } catch (ClassCastException e) {
-                    Log.e(WordPress.TAG, "invalid date received from XMLRPC call wp.getUsersBlogs");
+                    AppLog.e(T.NUX, "invalid date received from XMLRPC call wp.getUsersBlogs");
                 }
             }
             return userBlogList;
@@ -241,7 +242,7 @@ public class SetupBlog {
                     blog.save();
                 }
             } catch (Exception e) {
-                Log.e(WordPress.TAG, "localTableBlogId: " + localTableBlogId + " not found");
+                AppLog.e(T.NUX, "localTableBlogId: " + localTableBlogId + " not found");
             }
         }
         return blog;

@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.notifications;
 
-import java.util.Map;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,9 +15,8 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ImageSpan;
 import android.text.style.ClickableSpan;
-import android.util.Log;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,16 +33,18 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
-
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
+
+import java.util.Map;
 
 public class NoteCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
@@ -303,7 +301,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         public void onErrorResponse(VolleyError error){
             if (error.networkResponse != null) {
                 String body = new String(error.networkResponse.data);
-                Log.e(TAG, body, error);
+                AppLog.e(T.NOTIFS, body, error);
             }
             mRow.setFailed(true);
             mRow.setText(R.string.retry_reply);
@@ -346,7 +344,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             WordPress.imageLoader.get(source, new ImageLoader.ImageListener(){
                @Override
                public void onErrorResponse(VolleyError error){
-                   Log.e(TAG, "Failed to load image", error);
+                   AppLog.e(T.NOTIFS, "Failed to load image", error);
                    remote.displayFailed();
                    mView.invalidate();
                }

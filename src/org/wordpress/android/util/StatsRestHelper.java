@@ -1,9 +1,5 @@
 package org.wordpress.android.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -14,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -23,7 +18,6 @@ import com.wordpress.rest.RestRequest.Listener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
@@ -54,8 +48,12 @@ import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
-import org.wordpress.android.ui.stats.StatsGeoviewsFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
+import org.wordpress.android.util.AppLog.T;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A utility class to help with parsing json from the stats api.
@@ -186,7 +184,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "Stats: Failed to fetch clicks");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch clicks");
                         updateRefreshMap(StatsViewType.CLICKS, -1);
                     }
                 });
@@ -280,7 +278,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.COMMENTS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch most commented");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch most commented");
                     }
                 });
         
@@ -297,7 +295,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.COMMENTS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch top commenters");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch top commenters");
                     }
                 });
         
@@ -412,7 +410,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.REFERRERS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch referrers");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch referrers");
                     }
                 });
     }
@@ -503,7 +501,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.SEARCH_ENGINE_TERMS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch search engine terms");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch search engine terms");
                     }
                 });
         
@@ -577,7 +575,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TAGS_AND_CATEGORIES, -1);
-                        Log.e(TAG, "Stats: Failed to fetch tags and categories");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch tags and categories");
                     }
                 });
     }
@@ -645,7 +643,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TOP_AUTHORS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch top authors");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch top authors");
                     }
                 });
     }
@@ -713,7 +711,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.TOP_POSTS_AND_PAGES, -1);
-                        Log.e(TAG, "Stats: Failed to fetch top posts and pages");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch top posts and pages");
                     }
                 });
     }
@@ -781,7 +779,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.VIDEO_PLAYS, -1);
-                        Log.e(TAG, "Stats: Failed to fetch video plays");
+                        AppLog.e(T.STATS, "Stats: Failed to fetch video plays");
                     }
                 });
     }
@@ -833,24 +831,22 @@ public class StatsRestHelper {
         }        
     }
 
-
     private static void getStatsViewsByCountry(final String blogId, String date) {
         WordPress.restClient.getStatsGeoviews(blogId, date,
                 new Listener() {
-                    
                     @Override
                     public void onResponse(JSONObject response) {
                         new ParseGeoViewsTask().execute(blogId, response);
                     }
-                }, 
+                },
                 new ErrorListener() {
-                    
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         updateRefreshMap(StatsViewType.VIEWS_BY_COUNTRY, -1);
-                        Log.e("WordPress Stats", StatsGeoviewsFragment.class.getSimpleName() + ": " + error.toString());
+                        AppLog.e(T.STATS, error);
                     }
-                });
+                }
+        );
     }
 
     private static class ParseGeoViewsTask extends AsyncTask<Object, Void, Void> {
@@ -972,7 +968,7 @@ public class StatsRestHelper {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null)
                             callback.onFailure(error);
-                        Log.e(TAG, "Stats: Failed to get summary", error);
+                        AppLog.e(T.STATS, "Stats: Failed to get summary", error);
                     }
                 });
     }
@@ -993,7 +989,7 @@ public class StatsRestHelper {
             @Override
             public void onErrorResponse(VolleyError error) {
                 updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
-                Log.e(TAG, "Stats: Failed to get bar chart data");
+                AppLog.e(T.STATS, "Stats: Failed to get bar chart data");
             }
         };
         

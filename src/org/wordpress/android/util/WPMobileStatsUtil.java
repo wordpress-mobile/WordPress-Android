@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -86,6 +86,8 @@ public class WPMobileStatsUtil {
     // Exception logging
     public static final String StatsEventException = "Exception";
     public static final String StatsPropertyExceptionNoteParsing = "note_html_parsing_failed";
+    public static final String StatsPropertyExceptionFetchMedia = "fetch_media_failed";
+    public static final String StatsPropertyExceptionUploadMedia = "upload_media_failed";
 
     /* /Events  */
 
@@ -163,7 +165,7 @@ public class WPMobileStatsUtil {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 String errMsg = String.format("Error pinging WPCom Stats: %s", volleyError.getMessage());
-                Log.w("WORDPRESS", errMsg);
+                AppLog.w(T.STATS, errMsg);
             }
         };
 
@@ -265,12 +267,12 @@ public class WPMobileStatsUtil {
     /**
      * Tracks the exception stack trace associated to a String id
      *
-     * @param exception contains stack trace
+     * @param throwable contains stack trace
      * @param exceptionId a string id (short name that helps to distinguish different tracked
      *                    exception)
      */
-    public static void trackException(Exception exception, String exceptionId) {
-        trackException(exception, exceptionId, null);
+    public static void trackException(Throwable throwable, String exceptionId) {
+        trackException(throwable, exceptionId, null);
     }
 
     /**
@@ -282,14 +284,16 @@ public class WPMobileStatsUtil {
      * @param additionalData a JSON Object to track additional data that could help solve this
      *                       exception
      */
-    public static void trackException(Exception exception, String exceptionId,
+    public static void trackException(Throwable throwable, String exceptionId,
                                       JSONObject additionalData) {
         JSONObject properties = new JSONObject();
-        StringWriter errors = new StringWriter();
-        exception.printStackTrace(new PrintWriter(errors));
         try {
             properties.put("exception_id", exceptionId);
-            properties.put("stacktrace", errors.toString());
+            if (throwable != null) {
+                StringWriter errors = new StringWriter();
+                throwable.printStackTrace(new PrintWriter(errors));
+                properties.put("stacktrace", errors.toString());
+            }
             if (additionalData != null) {
                 properties.put("additional_data", additionalData);
             }

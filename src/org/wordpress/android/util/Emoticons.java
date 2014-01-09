@@ -1,16 +1,18 @@
 package org.wordpress.android.util;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 
-import android.util.Log;
+import org.wordpress.android.util.AppLog.T;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES;
-import android.text.Spanned;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
-import android.text.style.ForegroundColorSpan;
 
 public class Emoticons {
     public static final int EMOTICON_COLOR=0xFF21759B;
@@ -49,7 +51,7 @@ public class Emoticons {
     }
     public static String lookupImageSmiley(String url, String ifNone){
         String file = url.substring(url.lastIndexOf("/") + 1);
-        Log.d("Smilies", String.format("Looking for %s", file));
+        AppLog.d(T.UTILS, String.format("Looking for %s", file));
         if (wpSmilies.containsKey(file)) {
             return wpSmilies.get(file);
         }

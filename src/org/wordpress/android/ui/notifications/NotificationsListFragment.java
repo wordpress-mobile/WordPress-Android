@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 
@@ -237,7 +237,7 @@ public class NotificationsListFragment extends ListFragment {
 
             int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
             if (imageId==0) {
-                Log.w(WordPress.TAG, "unknown note type - " + noteType);
+                AppLog.w(T.NOTIFS, "unknown note type - " + noteType);
                 return null;
             }
 
