@@ -240,7 +240,7 @@
         <item name="android:textColor">@color/nux_primary_button</item>
         <item name="android:padding">8dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/nux_third_button_selector</item>
+        <item name="android:background">@drawable/nux_primary_button_selector</item>
     </style>
 
     <style name="WordPress.NUXWhiteButtonNoBg">
