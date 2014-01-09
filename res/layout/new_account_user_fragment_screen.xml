@@ -79,7 +79,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:id="@+id/relativeLayout2">
@@ -90,7 +90,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     style="@style/WordPress.NUXEditText"
-                    android:hint="@string/password"/>
+                    android:hint="@string/password"
+                    android:layout_marginRight="38dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -102,6 +103,18 @@
                     android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/password_visibility"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/nux_icon_secure_text"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
