@@ -109,20 +109,19 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // Request notification settings if needed
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
-            String settingsJson = mSettings.getString("wp_pref_notification_settings", null);
+            String settingsJson = mSettings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.NOTIFS, "token action succeeded");
+                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                            editor.putString("wp_pref_notification_settings", settingsJSON.toString());
+                            editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                             editor.commit();
                         } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
                         }
                         refreshWPComAuthCategory();
                     }
@@ -130,9 +129,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.w(T.NOTIFS, "blog action failed");
-                        AppLog.e(T.NOTIFS, volleyError);
-                    }
+                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);                    }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }
@@ -443,7 +440,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 SharedPreferences.Editor editor = settings.edit();
                 Gson gson = new Gson();
                 String settingsJson = gson.toJson(mNotificationSettings);
-                editor.putString("wp_pref_notification_settings", settingsJson);
+                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
                 editor.commit();
                 NotificationUtils.setPushNotificationSettings(PreferencesActivity.this);
             }
@@ -519,7 +516,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference("wp_pref_notification_types");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String settingsJson = settings.getString("wp_pref_notification_settings", null);
+        String settingsJson = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
         if (settingsJson == null) {
             rootScreen.removePreference(mNotificationsGroup);
             return;
