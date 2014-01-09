@@ -23,10 +23,12 @@ public class WPTextView extends TextView {
         super(context);
         setCustomFont(context, null);
     }
+
     public WPTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCustomFont(context, attrs);
     }
+
     public WPTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setCustomFont(context, attrs);
@@ -39,11 +41,10 @@ public class WPTextView extends TextView {
 
         // read custom fontVariation from attributes, default to normal
         int variation = VARIATION_NORMAL;
-        if (attrs!=null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView,
-                    0, 0);
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
 
-            if (a!=null) {
+            if (a != null) {
                 try {
                     variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_NORMAL);
                 } finally {
@@ -54,7 +55,7 @@ public class WPTextView extends TextView {
 
         // determine the font style from the existing typeface
         final int fontStyle;
-        if (this.getTypeface()!=null) {
+        if (this.getTypeface() != null) {
             boolean isBold = this.getTypeface().isBold();
             boolean isItalic = this.getTypeface().isItalic();
             if (isBold && isItalic) {
@@ -71,8 +72,9 @@ public class WPTextView extends TextView {
         }
 
         Typeface typeface = getCustomTypeface(context, fontStyle, variation);
-        if (typeface!=null)
+        if (typeface != null) {
             setTypeface(typeface);
+        }
     }
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<String, Typeface>();
@@ -81,25 +83,27 @@ public class WPTextView extends TextView {
         // note that the "light" variation doesn't support bold or bold-italic
         final String typefaceName;
         switch (fontStyle) {
-            case Typeface.BOLD :
+            case Typeface.BOLD:
                 typefaceName = "OpenSans-Bold.ttf";
                 break;
-            case Typeface.ITALIC :
-                typefaceName = (variation==VARIATION_LIGHT ? "OpenSans-LightItalic.ttf" : "OpenSans-Italic.ttf");
+            case Typeface.ITALIC:
+                typefaceName = (variation == VARIATION_LIGHT ? "OpenSans-LightItalic.ttf" : "OpenSans-Italic.ttf");
                 break;
-            case Typeface.BOLD_ITALIC :
+            case Typeface.BOLD_ITALIC:
                 typefaceName = "OpenSans-BoldItalic.ttf";
                 break;
-            default :
-                typefaceName = (variation==VARIATION_LIGHT ? "OpenSans-Light.ttf" : "OpenSans-Regular.ttf");
+            default:
+                typefaceName = (variation == VARIATION_LIGHT ? "OpenSans-Light.ttf" : "OpenSans-Regular.ttf");
                 break;
         }
 
 
         if (!mTypefaceCache.containsKey(typefaceName)) {
-            Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/" + typefaceName);
-            if (typeface!=null)
+            Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
+                    + typefaceName);
+            if (typeface != null) {
                 mTypefaceCache.put(typefaceName, typeface);
+            }
         }
 
         return mTypefaceCache.get(typefaceName);
