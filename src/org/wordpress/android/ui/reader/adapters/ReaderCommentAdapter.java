@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPImageGetter;
+import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -136,7 +136,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             holder.txtText.setLinksClickable(true);
-            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
