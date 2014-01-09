@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +24,10 @@ import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.WPLinkMovementMethod;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
@@ -119,7 +119,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment implements Ta
             if (name.startsWith("http")) {
                 Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
                 entryTextView.setText(link);
-                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(name);
                 entryTextView.setMovementMethod(null);
@@ -152,7 +152,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment implements Ta
             if (urlValid) {
                 Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
                 entryTextView.setText(link);
-                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(name);
                 entryTextView.setMovementMethod(null);
