@@ -22,7 +22,8 @@
             android:gravity="center"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:paddingTop="10dp">
 
             <ImageView
                 android:id="@+id/nux_fragment_icon"
@@ -163,7 +164,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:layout_marginBottom="10dp">
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXWhiteButtonNoBg"
