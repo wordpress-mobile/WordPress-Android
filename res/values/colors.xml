@@ -85,15 +85,10 @@
     <color name="reader_list_selector">#77c8eefc</color>        <!-- blue_extra_light with alpha -->
 
     <!-- NUX Colors -->
-    <color name="nux_shadow">#7F0073A4</color>
-    <color name="nux_secondary_button_shadow">#7F000000</color>
-    <color name="nux_primary_button_shadow">#19000000</color>
     <color name="nux_primary_button_disabled">#99FFFFFF</color>
     <color name="nux_tos">#77FFFFFF</color>
-    <color name="nux_review">#BCDDEC</color>
     <color name="nux_alert_bg">#EE000000</color>
-    <color name="nux_text_light_grey">#D1D1D1</color>
-    <color name="nux_background">#2EA2CC</color>
+    <color name="nux_background">@color/blue_new_kid</color>
 
     <color name="page_indicator_selected_color">#AED5E8</color>
     <color name="page_indicator_unselected_color">#2384B8</color>
