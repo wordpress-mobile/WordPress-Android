@@ -660,7 +660,7 @@
     <string name="invalid_username_too_short">Username must be longer than 4 characters.</string>
     <string name="invalid_username_too_long">Username must be shorter than 61 characters.</string>
     <string name="email_hint">Email Address</string>
-    <string name="agree_terms_of_service">By creating an account you agree to the %1$sTerms of Service%2$s.</string>
+    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms&#160;of&#160;Service%2$s.</string>
     <string name="username_email">Username or Email</string>
     <string name="site_address">Your Self-Hosted Address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
