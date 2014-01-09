@@ -273,6 +273,7 @@ public class ApiHelper {
                     versionResult = client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
                     setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                    return false;
                 }
 
                 if (versionResult != null) {
