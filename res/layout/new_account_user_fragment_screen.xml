@@ -46,7 +46,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_email"
+                    android:src="@drawable/dashicon_email"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
 
@@ -73,7 +73,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_person"
+                    android:src="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
             </RelativeLayout>
@@ -99,7 +99,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_secure"
+                    android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
             </RelativeLayout>
@@ -148,7 +148,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_web_site"
+                    android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
 
