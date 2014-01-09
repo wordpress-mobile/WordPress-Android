@@ -3,8 +3,6 @@ package org.wordpress.android.ui.reader.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +17,14 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -142,7 +139,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
-        displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
+        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -208,43 +205,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /*
-     * displays comment text as html, including retrieving images
-     */
-    private static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
-        if (content==null || textView==null)
-            return;
 
-        // skip performance hit of html conversion if content doesn't contain html
-        if (!content.contains("<") && !content.contains("&")) {
-            textView.setText(content.trim());
-            return;
-        }
-
-        // convert emoticons first (otherwise they'll be downloaded)
-        content = Emoticons.replaceEmoticonsWithEmoji(content);
-
-        // now convert to HTML with an image getter that enforces a max image size
-        final Spanned html;
-        if (content.contains("<img")) {
-            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, maxImageSize), null);
-        } else {
-            html = Html.fromHtml(content);
-        }
-
-        // remove extra \n\n added by Html.convert()
-        CharSequence source = html;
-        int start = 0;
-        int end = source.length();
-        while (start < end && Character.isWhitespace(source.charAt(start))) {
-            start++;
-        }
-        while (end > start && Character.isWhitespace(source.charAt(end - 1))) {
-            end--;
-        }
-
-        textView.setText(source.subSequence(start, end));
-    }
 
     private static class CommentViewHolder {
         private TextView txtAuthor;

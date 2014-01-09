@@ -5,8 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,7 +35,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.MessageBarUtils.MessageBarType;
@@ -45,7 +42,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.WPImageGetter;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.util.EnumSet;
@@ -260,18 +256,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtContent.setLinksClickable(true);
         txtContent.setMovementMethod(WPLinkMovementMethod.getInstance());
 
-        // convert emoticons in content first so their images won't be downloaded, then convert to HTML
-        String content = StringUtils.notNullStr(mComment.comment);
-        if (content.contains("icon_"))
-            content = Emoticons.replaceEmoticonsWithEmoji((SpannableStringBuilder) Html.fromHtml(content)).toString().trim();
-        final SpannableStringBuilder html;
-        if (content.contains("<img")) {
-            int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-            html = (SpannableStringBuilder) Html.fromHtml(content, new WPImageGetter(getActivity(), txtContent, maxImageSz), null);
-        } else {
-            html = (SpannableStringBuilder) Html.fromHtml(content);
-        }
-        txtContent.setText(html);
+        int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
+        CommentUtils.displayHtmlComment(txtContent, mComment.comment, maxImageSz);
 
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         if (mComment.hasProfileImageUrl()) {
