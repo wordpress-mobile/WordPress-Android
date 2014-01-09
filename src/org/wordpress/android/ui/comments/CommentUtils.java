@@ -40,7 +40,7 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, maxImageSize), null);
+            html = Html.fromHtml(content, new WPImageGetter(textView, maxImageSize), null);
         } else {
             html = Html.fromHtml(content);
         }
