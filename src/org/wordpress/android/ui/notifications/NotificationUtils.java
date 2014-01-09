@@ -178,7 +178,7 @@ public class NotificationUtils {
         WordPress.restClient.post("/device/"+deviceID, contentStruct, null, null, null);
     }
     
-    public static void registerDeviceForPushNotifications(final Context ctx, String token, final boolean loadSettings) {
+    public static void registerDeviceForPushNotifications(final Context ctx, String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString("wp_pref_notifications_uuid", null);
         if (uuid == null)
@@ -199,7 +199,7 @@ public class NotificationUtils {
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.NOTIFS, "Register token action succeeded");
                 try {
-                    String deviceID = jsonObject.getString("device_id");
+                    String deviceID = jsonObject.getString("ID");
                     if (deviceID==null) {
                         AppLog.e(T.NOTIFS, "Server response is missing of the device_id. Registration skipped!!");
                         return;
@@ -207,31 +207,13 @@ public class NotificationUtils {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
+                    JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                    editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                     editor.commit();
                     AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
                     AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
                     return;
-                }
-                if (loadSettings) { //load notification settings if necessary
-                    com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            AppLog.d(T.NOTIFS, "Settings loaded with success");
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-                            Editor editor = settings.edit();
-                            try {
-                                JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                                editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
-                                editor.commit();
-                            } catch (JSONException e) {
-                                AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
-                                return;
-                            }
-                        }
-                    };
-
-                    NotificationUtils.getPushNotificationSettings(ctx, listener, null);
                 }
             }
         };
