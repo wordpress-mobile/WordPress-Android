@@ -330,7 +330,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 }
             }
         });
-
+        initPasswordVisibilityButton(rootView, mPasswordTextField);
         return rootView;
     }
 }
