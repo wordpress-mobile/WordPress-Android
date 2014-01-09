@@ -60,7 +60,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
 
                 <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/site_url"
@@ -103,8 +103,8 @@
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
-
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
