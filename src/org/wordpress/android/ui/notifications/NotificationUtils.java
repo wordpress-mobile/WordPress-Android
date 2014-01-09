@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
@@ -29,6 +28,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.AppLog;
@@ -37,8 +37,6 @@ public class NotificationUtils {
     
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
-    private static final String TAG = "NotificationUtils";
-    
     public static void refreshNotifications(final RestRequest.Listener listener,
                                             final RestRequest.ErrorListener errorListener) {
         WordPress.restClient.getNotifications(
@@ -89,7 +87,7 @@ public class NotificationUtils {
             bout.close();
             unzipped = bout.toString();
         } catch (IOException io) {
-            Log.e(WordPress.TAG, "Unzipping failed: " + io);
+            AppLog.e(T.NOTIFS, "Unzipping failed", io);
             return null;
         }
         return unzipped;
@@ -108,7 +106,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (deviceID==null) {
-            Log.e(NotificationUtils.TAG, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
             return;
         }
         
@@ -127,7 +125,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (deviceID==null) {
-            Log.e(NotificationUtils.TAG, "Wait, device_ID is null in preferences. Set device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. WTF has appenend here?!?!");
             return;
         }
 
@@ -199,27 +197,27 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d("Register token action succeeded");
+                AppLog.d(T.NOTIFS, "Register token action succeeded");
                 try {
                     String deviceID = jsonObject.getString("device_id");
                     if (deviceID==null) {
-                        Log.e(NotificationUtils.TAG, "Server response is missing of the device_id. Registration skipped!!");
+                        AppLog.e(T.NOTIFS, "Server response is missing of the device_id. Registration skipped!!");
                         return;
                     }
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
                     editor.commit();
-                    Log.d(NotificationUtils.TAG, "Server response OK. The device_id : " + deviceID);
+                    AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
-                    Log.e(NotificationUtils.TAG, "Server response is NOT ok. Registration skipped!!", e1);
+                    AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
                     return;
                 }
                 if (loadSettings) { //load notification settings if necessary
                     com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            AppLog.d("Settings loaded with success");
+                            AppLog.d(T.NOTIFS, "Settings loaded with success");
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                             Editor editor = settings.edit();
                             try {
@@ -227,7 +225,7 @@ public class NotificationUtils {
                                 editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                                 editor.commit();
                             } catch (JSONException e) {
-                                Log.e(NotificationUtils.TAG, "Can't parse the JSON object returned from the server that contains PN settings.", e);
+                                AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
                                 return;
                             }
                         }
@@ -240,7 +238,7 @@ public class NotificationUtils {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.e(NotificationUtils.TAG, "Register token action failed", volleyError);
+                AppLog.e(T.NOTIFS, "Register token action failed", volleyError);
             }
         };
         
@@ -251,23 +249,23 @@ public class NotificationUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
+                AppLog.d(T.NOTIFS, "Unregister token action succeeded");
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
                 editor.commit();
-                Log.d(NotificationUtils.TAG, "Unregister token action succeeded");
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.e(NotificationUtils.TAG,"Unregister token action failed", volleyError);
+                AppLog.e(T.NOTIFS, "Unregister token action failed", volleyError);
             }
         };
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (deviceID==null) {
-            Log.e(NotificationUtils.TAG, "Wait, device_ID is null in preferences. Unregistration skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Unregistration skipped. WTF has appenend here?!?!");
             return;
         }
         WordPress.restClient.post("/devices/"+deviceID+"/delete", listener, errorListener);

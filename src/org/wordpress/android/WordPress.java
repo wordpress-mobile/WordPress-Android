@@ -41,6 +41,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -162,7 +164,7 @@ public class WordPress extends Application {
                 .penaltyLog()
                 .build());
 
-        Log.w("WORDPRESS", "Strict mode enabled");
+        AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
     public static void registerForCloudMessaging(Context ctx) {
@@ -182,7 +184,7 @@ public class WordPress extends Application {
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
-                Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
+                AppLog.v(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
             }
         }
     }
@@ -459,7 +461,7 @@ public class WordPress extends Application {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
         } catch (Exception e) {
-            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+            AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
         SharedPreferences.Editor editor = PreferenceManager
                 .getDefaultSharedPreferences(context).edit();
@@ -650,14 +652,14 @@ public class WordPress extends Application {
                         token = GCMRegistrar.getRegistrationId(mContext);
                         String gcmId = Config.GCM_ID;
                         if (gcmId == null || token == null || token.equals("") ) {
-                            Log.e("WORDPRESS", "Could not ping the PNs backend, Token or gmcID not found");
+                            AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
                             return;
                         } else {
                             // Send the token to WP.com
                             NotificationUtils.registerDeviceForPushNotifications(mContext, token, false);
                         }
                     } catch (Exception e) {
-                        Log.e("WORDPRESS", "Could not ping the PNs backend: " + e.getMessage());
+                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                     }
                 }
                 
