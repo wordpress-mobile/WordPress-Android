@@ -106,7 +106,7 @@
     <string name="media_gallery_edit">Edit Gallery</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
-
+    <string name="media_error_no_permission">You do not have permission to view the media library</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>
@@ -533,6 +533,7 @@
     <string name="error_refresh_notifications">Notifications could not be refreshed at this time.</string>
     <string name="error_refresh_comments">Comments could not be refreshed at this time.</string>
     <string name="error_refresh_stats">Stats could not be refreshed at this time.</string>
+    <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
     <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
     <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
     <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>

@@ -86,6 +86,8 @@ public class WPMobileStatsUtil {
     // Exception logging
     public static final String StatsEventException = "Exception";
     public static final String StatsPropertyExceptionNoteParsing = "note_html_parsing_failed";
+    public static final String StatsPropertyExceptionFetchMedia = "fetch_media_failed";
+    public static final String StatsPropertyExceptionUploadMedia = "upload_media_failed";
 
     /* /Events  */
 
@@ -265,12 +267,12 @@ public class WPMobileStatsUtil {
     /**
      * Tracks the exception stack trace associated to a String id
      *
-     * @param exception contains stack trace
+     * @param throwable contains stack trace
      * @param exceptionId a string id (short name that helps to distinguish different tracked
      *                    exception)
      */
-    public static void trackException(Exception exception, String exceptionId) {
-        trackException(exception, exceptionId, null);
+    public static void trackException(Throwable throwable, String exceptionId) {
+        trackException(throwable, exceptionId, null);
     }
 
     /**
@@ -282,14 +284,16 @@ public class WPMobileStatsUtil {
      * @param additionalData a JSON Object to track additional data that could help solve this
      *                       exception
      */
-    public static void trackException(Exception exception, String exceptionId,
+    public static void trackException(Throwable throwable, String exceptionId,
                                       JSONObject additionalData) {
         JSONObject properties = new JSONObject();
-        StringWriter errors = new StringWriter();
-        exception.printStackTrace(new PrintWriter(errors));
         try {
             properties.put("exception_id", exceptionId);
-            properties.put("stacktrace", errors.toString());
+            if (throwable != null) {
+                StringWriter errors = new StringWriter();
+                throwable.printStackTrace(new PrintWriter(errors));
+                properties.put("stacktrace", errors.toString());
+            }
             if (additionalData != null) {
                 properties.put("additional_data", additionalData);
             }
