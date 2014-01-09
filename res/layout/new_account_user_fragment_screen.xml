@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/email_address"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/username"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout2">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/password"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 android:background="@color/white"
                 android:layout_marginBottom="8dp">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/site_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -148,7 +148,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_admin_site"
+                    android:src="@drawable/ic_action_web_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
 
