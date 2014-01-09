@@ -14,7 +14,7 @@
         android:animateLayoutChanges="true"
         android:gravity="center"
         android:baselineAligned="false"
-        android:background="@color/blue_new_kid">
+        >
 
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
