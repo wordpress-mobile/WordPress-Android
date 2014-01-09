@@ -234,6 +234,7 @@ public class NotificationUtils {
                 AppLog.d(T.NOTIFS, "Unregister token action succeeded");
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
+                editor.remove(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
                 editor.commit();
             }
         };
