@@ -8,10 +8,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
@@ -137,7 +139,11 @@ public class MediaUploadService extends Service {
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
                     JSONObject properties = new JSONObject();
-                    properties.put("error_message", errorMessage);
+                    try {
+                        properties.put("error_message", errorType.name() + "-" + errorMessage);
+                    } catch (JSONException e) {
+                        AppLog.e(T.MEDIA, "Can't serialize message to JSON: " + errorMessage);
+                    }
                     WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionUploadMedia,
                             properties);
                 }
@@ -175,7 +181,11 @@ public class MediaUploadService extends Service {
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
                     JSONObject properties = new JSONObject();
-                    properties.put("error_message", errorMessage);
+                    try {
+                        properties.put("error_message", errorType.name() + "-" + errorMessage);
+                    } catch (JSONException e) {
+                        AppLog.e(T.MEDIA, "Can't serialize message to JSON: " + errorMessage);
+                    }
                     WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionFetchMedia,
                             properties);
                 }
