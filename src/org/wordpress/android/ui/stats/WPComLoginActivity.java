@@ -112,9 +112,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 if (!mIsJetpackAuthRequest) {
                     if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
                         // Sign out current user from all services
-                        NotificationUtils.unregisterDevicePushNotifications(
-                                WPComLoginActivity.this,
-                                GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
+                        NotificationUtils.unregisterDevicePushNotifications(WPComLoginActivity.this);
                         try {
                             GCMRegistrar.checkDevice(WPComLoginActivity.this);
                             GCMRegistrar.unregister(WPComLoginActivity.this);

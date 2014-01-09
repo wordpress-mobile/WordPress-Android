@@ -453,9 +453,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        NotificationUtils.unregisterDevicePushNotifications(
-                context,
-                GCMRegistrar.getRegistrationId(context));
+        NotificationUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
