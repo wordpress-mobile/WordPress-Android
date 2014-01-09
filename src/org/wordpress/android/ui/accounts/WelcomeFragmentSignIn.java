@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private RelativeLayout mUrlButtonLayout;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
+    private boolean mPasswordVisible;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -97,6 +100,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         });
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
+        initPasswordVisibilityButton(rootView);
         return rootView;
     }
 
@@ -109,6 +113,23 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         mSelfHosted = true;
+    }
+
+    private void initPasswordVisibilityButton(View rootView) {
+        final ImageView passwordVisibility = (ImageView) rootView.findViewById(R.id.password_visibility);
+        passwordVisibility.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordVisible = !mPasswordVisible;
+                if (mPasswordVisible) {
+                    passwordVisibility.setImageResource(R.drawable.nux_icon_secure_text_visible);
+                    mPasswordEditText.setTransformationMethod(null);
+                } else {
+                    passwordVisibility.setImageResource(R.drawable.nux_icon_secure_text);
+                    mPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
     }
 
     private void autocorrectUsername() {

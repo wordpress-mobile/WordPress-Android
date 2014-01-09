@@ -12,7 +12,9 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:baselineAligned="false"
+        android:background="@color/blue_new_kid">
 
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
@@ -33,7 +35,7 @@
                 android:src="@drawable/nux_icon_wp" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
@@ -59,7 +61,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:id="@+id/relativeLayout2">
@@ -70,23 +72,36 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     style="@style/WordPress.NUXEditText"
-                    android:hint="@string/password" />
+                    android:hint="@string/password"
+                    android:layout_marginRight="48dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView3"
+                    android:id="@+id/imageView4"
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
                     android:src="@drawable/ic_action_secure"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/password_visibility"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/nux_icon_secure_text"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:id="@+id/url_button_layout"
