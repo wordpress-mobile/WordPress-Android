@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPImageGetter;
+import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -136,13 +136,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             holder.txtText.setLinksClickable(true);
-            holder.txtText.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
         } else {
             holder = (CommentViewHolder) convertView.getTag();
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
-        displayComment(comment.getText(), holder.txtText);
+        displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -209,14 +209,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     /*
-     * prepares comment text for display as html, including retrieving images
+     * displays comment text as html, including retrieving images
      */
-    private void displayComment(String content, TextView textView) {
+    private static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
         if (content==null || textView==null)
             return;
 
         // skip performance hit of html conversion if content doesn't contain html
-        if (!content.contains("<") && content.contains("&")) {
+        if (!content.contains("<") && !content.contains("&")) {
             textView.setText(content.trim());
             return;
         }
@@ -227,7 +227,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (content.contains("<img")) {
-            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, mMaxImageSz), null);
+            html = Html.fromHtml(content, new WPImageGetter(textView.getContext(), textView, maxImageSize), null);
         } else {
             html = Html.fromHtml(content);
         }

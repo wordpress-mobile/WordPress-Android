@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.util.ArrayList;
 
@@ -248,7 +248,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             }
             mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
             mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
-            mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+            mDescriptionView.setMovementMethod(WPLinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
             
             loadFeatureView(theme.getFeaturesArray());
