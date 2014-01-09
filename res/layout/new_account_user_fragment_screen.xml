@@ -149,7 +149,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_web_site"
+                    android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp" />
 
