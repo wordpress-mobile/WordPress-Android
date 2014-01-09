@@ -114,15 +114,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.NOTIFS, "token action succeeded");
+                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
                             editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                             editor.commit();
                         } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
                         }
                         refreshWPComAuthCategory();
                     }
@@ -130,9 +129,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.w(T.NOTIFS, "blog action failed");
-                        AppLog.e(T.NOTIFS, volleyError);
-                    }
+                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);                    }
                 };
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }

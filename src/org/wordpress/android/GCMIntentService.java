@@ -313,7 +313,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 editor.commit();
             }
 
-            NotificationUtils.registerDeviceForPushNotifications(context, regId, true);
+            NotificationUtils.registerDeviceForPushNotifications(context, regId);
         }
     }
 
