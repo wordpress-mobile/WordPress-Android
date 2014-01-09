@@ -51,7 +51,7 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
 
         // note that there will be only one URLSpan (the one that was tapped)
         String url = StringUtils.notNullStr(urlSpans[0].getURL());
-        if (!url.contains("://"))
+        if (Uri.parse(url).getScheme() == null)
             return "http://" + url.trim();
 
         return url.trim();
