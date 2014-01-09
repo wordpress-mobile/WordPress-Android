@@ -11,7 +11,6 @@ import java.util.zip.InflaterInputStream;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -38,6 +37,8 @@ public class NotificationUtils {
     
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
+    public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    
     public static void refreshNotifications(final RestRequest.Listener listener,
                                             final RestRequest.ErrorListener errorListener) {
         WordPress.restClient.getNotifications(
@@ -181,7 +182,7 @@ public class NotificationUtils {
     
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String uuid = settings.getString("wp_pref_notifications_uuid", null);
+        String uuid = settings.getString(WPCOM_PUSH_DEVICE_UUID, null);
         if (uuid == null)
             return;
 
@@ -236,6 +237,7 @@ public class NotificationUtils {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
                 editor.remove(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
+                editor.remove(WPCOM_PUSH_DEVICE_UUID);
                 editor.commit();
             }
         };
