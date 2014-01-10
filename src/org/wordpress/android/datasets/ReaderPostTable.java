@@ -155,6 +155,16 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
     }
 
+    public static String getPostTitle(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT title FROM tbl_posts WHERE blog_id=? AND post_id=?", args);
+    }
+
+    public static boolean postExists(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_posts WHERE blog_id=? AND post_id=?", args);
+    }
+
     /*
      * returns a count of which posts in the passed list don't already exist in the db for the passed tag
      */
