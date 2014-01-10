@@ -24,6 +24,7 @@
             android:gravity="center"
             android:maxLines="3"
             android:padding="@dimen/margin_large"
+            android:background="@drawable/reader_transparent_selector"
             android:textColor="@color/grey_medium_dark"
             android:textSize="@dimen/text_sz_medium" />
 
