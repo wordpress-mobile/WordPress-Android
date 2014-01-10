@@ -69,6 +69,7 @@ android {
 	    releaseCompile 'org.wordpress:emailchecker:0.1'
 	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
 	    betagroupCompile 'org.wordpress:emailchecker:0.1'
+        instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
 
 	    // Local dependencies
 	    compile files('libs/MixpanelAPI.jar')
