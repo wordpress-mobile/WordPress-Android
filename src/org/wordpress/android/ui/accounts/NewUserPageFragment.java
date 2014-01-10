@@ -230,10 +230,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                                 updateProgress(getString(R.string.validating_site_data));
                                 break;
                             case VALIDATE_SITE:
-                                updateProgress(getString(R.string.create_account_wpcom));
+                                updateProgress(getString(R.string.creating_your_account));
                                 break;
                             case CREATE_USER:
-                                updateProgress(getString(R.string.create_first_blog_wpcom));
+                                updateProgress(getString(R.string.creating_your_site));
                                 break;
                             case CREATE_SITE: // no messages
                             case AUTHENTICATE_USER:
