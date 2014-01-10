@@ -41,6 +41,21 @@
        <property name="severity" value="info"/>
     </module>
 
+
+    <module name="RegexpMultiline">
+      <property name="format"
+                value="\n[\t ]*\n[\t ]*\}"/>
+      <property name="message" value="Empty line not allowed before brace"/>
+    </module>
+
+    <module name="RegexpMultiline">
+      <property name="format"
+                value="\{[\t ]*\n[\t ]*\n"/>
+      <property name="message" value="Empty line not allowed after brace"/>
+    </module>
+
+    <module name="StrictDuplicateCode"/>
+
     <module name="TreeWalker">
 
         <!-- Checks for Javadoc comments.                     -->
@@ -102,7 +117,6 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
         <module name="LineLength">
@@ -112,9 +126,11 @@
           <property name="ignorePattern" value="\$File.*\$"/>
           <property name="severity" value="info"/>
         </module>
-        <module name="MethodLength"/>
+        <module name="MethodLength">
+          <property name="tokens" value="METHOD_DEF"/>
+          <property name="max" value="60"/>
+        </module>
         <module name="ParameterNumber"/>
-
 
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
@@ -197,6 +213,8 @@
         <module name="UpperEll"/>
 
         <module name="FileContentsHolder"/> <!-- Required by comment suppression filters -->
+
+        <module name="OneStatementPerLine"/>
 
     </module>
 
