@@ -48,7 +48,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_email"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
             </RelativeLayout>
 
@@ -75,7 +76,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -102,7 +104,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
                 <ImageView
                     android:layout_width="24dp"
@@ -115,7 +118,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="true"
-                    android:tint="@color/nux_eye_icon_color" />
+                    android:tint="@color/nux_eye_icon_color"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -165,7 +168,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
             </RelativeLayout>
             <RelativeLayout
