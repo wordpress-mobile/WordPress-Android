@@ -299,7 +299,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int blogId = getRemoteBlogId();
         int postId = Integer.valueOf(mComment.postID);
         showPostTitle(blogId, postId);
-        preloadReaderPost(blogId, postId);
 
         // make sure reply box is showing
         if (mLayoutReply.getVisibility() != View.VISIBLE && isReplyingEnabled())
@@ -307,33 +306,47 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * ensure the post associated with this comment is available in the reader
+     * ensure the post associated with this comment is available to the reader and show its
+     * title above the comment
      */
-    private void preloadReaderPost(final int blogId, final int postId) {
-        if (ReaderPostTable.postExists(blogId, postId))
-            return;
-
-        ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (succeeded && hasActivity())
-                    showPostTitle(blogId, postId);
-            }
-        });
-    }
-
-    /*
-     * show the title of the associated post above the comment
-     */
-    private void showPostTitle(int blogId, int postId) {
+    private void showPostTitle(final int blogId, final int postId) {
         if (!hasActivity())
             return;
 
         final TextView txtPostTitle = (TextView) getActivity().findViewById(R.id.text_post_title);
-        String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+        boolean postExists = ReaderPostTable.postExists(blogId, postId);
 
-        if (!TextUtils.isEmpty(postTitle))
-            txtPostTitle.setText(postTitle);
+        // use notification subject as the title if this was shown from a notification, otherwise
+        // user the title of the associated post
+        final boolean hasTitle;
+        if (getNote() != null) {
+            txtPostTitle.setText(getNote().getSubject());
+            hasTitle = true;
+        } else if (postExists) {
+            txtPostTitle.setText(ReaderPostTable.getPostTitle(blogId, postId));
+            hasTitle = true;
+        } else {
+            hasTitle = false;
+        }
+
+        // make sure this post is available to the reader, and show progress bar in title view
+        // if the title wasn't set above so user knows something is happening
+        if (!postExists) {
+            final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_post_title);
+            if (!hasTitle)
+                progress.setVisibility(View.VISIBLE);
+            ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
+                @Override
+                public void onActionResult(boolean succeeded) {
+                    if (!hasActivity())
+                        return;
+                    progress.setVisibility(View.INVISIBLE);
+                    // update title if it wasn't set above
+                    if (succeeded && !hasTitle)
+                        txtPostTitle.setText(ReaderPostTable.getPostTitle(blogId, postId));
+                }
+            });
+        }
 
         // tapping this view should open the associated post in the reader
         txtPostTitle.setOnClickListener(new View.OnClickListener() {
