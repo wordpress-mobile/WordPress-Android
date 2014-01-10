@@ -57,7 +57,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
             </RelativeLayout>
 
@@ -85,7 +86,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -127,7 +129,8 @@
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
             </RelativeLayout>
 
 
