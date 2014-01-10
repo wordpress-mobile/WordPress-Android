@@ -12,20 +12,11 @@
     <!--
         WPTextView attribute to enable switching between regular and light Open Sans typeface (see widgets/WPTextView)
     -->
-    <declare-styleable name="WPTextView">
+    <declare-styleable name="WPTypeface">
         <attr name="fontVariation" format="enum">
             <enum name="normal" value="0"/>
             <enum name="light" value="1"/>
         </attr>
-    </declare-styleable>
-
-    <!--
-        StaggeredGridView attributes
-    -->
-    <declare-styleable name="StaggeredGridView">
-        <attr name="drawSelectorOnTop" format="boolean" />
-        <attr name="numColumns" format="integer" />
-        <attr name="itemMargin" format="dimension" />
     </declare-styleable>
 
     <!--

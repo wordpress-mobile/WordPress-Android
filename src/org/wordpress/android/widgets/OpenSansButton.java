@@ -2,23 +2,24 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
+import android.widget.Button;
 
 /**
- * EditText that uses OpenSans as default font type
+ * Created by nbradbury on 10-Jan-2014
  */
-public class OpenSansEditText extends EditText {
-    public OpenSansEditText(Context context) {
+public class OpenSansButton extends Button {
+
+    public OpenSansButton(Context context) {
         super(context);
         TypefaceCache.setCustomTypeface(context, this, null);
     }
 
-    public OpenSansEditText(Context context, AttributeSet attrs) {
+    public OpenSansButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypefaceCache.setCustomTypeface(context, this, attrs);
     }
 
-    public OpenSansEditText(Context context, AttributeSet attrs, int defStyle) {
+    public OpenSansButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypefaceCache.setCustomTypeface(context, this, attrs);
     }

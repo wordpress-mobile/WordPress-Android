@@ -45,7 +45,6 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/username_email"
-                    android:fontFamily=""
                     android:inputType="textEmailAddress" />
 
                 <ImageView
