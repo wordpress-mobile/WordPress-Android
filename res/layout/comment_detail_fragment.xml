@@ -9,10 +9,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_light"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="3"
+        android:drawableRight="@drawable/ic_navigate_next"
+        android:text="@string/reader_label_view_post"
+        android:padding="@dimen/margin_large"
+        android:textColor="@color/grey_medium_dark"
+        android:textSize="@dimen/text_sz_medium" />
+
     <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/text_post_title"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
@@ -77,8 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text_content"
-            android:textIsSelectable="true"
             android:textColorLink="@color/reader_hyperlink"
+            android:textIsSelectable="true"
             android:textSize="@dimen/text_sz_large" />
     </ScrollView>
 
@@ -102,7 +117,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/moderate_approve"
-                android:text="@string/approve" />
+                android:text="@string/approve"
+                android:textSize="@dimen/text_sz_medium" />
 
             <Button
                 android:id="@+id/text_btn_spam"
@@ -110,7 +126,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/moderate_spam"
-                android:text="@string/spam" />
+                android:text="@string/spam"
+                android:textSize="@dimen/text_sz_medium" />
         </LinearLayout>
 
         <include
