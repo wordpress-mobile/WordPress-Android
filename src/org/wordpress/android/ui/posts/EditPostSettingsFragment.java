@@ -138,7 +138,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 List<Object> args = new Vector<Object>();
                 args.add(WordPress.getCurrentBlog());
                 args.add(mActivity);
-                new ApiHelper.getPostFormatsTask().execute(args);
+                new ApiHelper.GetPostFormatsTask().execute(args);
             } else {
                 try {
                     Gson gson = new Gson();

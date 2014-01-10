@@ -179,7 +179,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    NotificationUtils.registerPushNotificationsToken(ctx, token, true);
+                    NotificationUtils.registerDeviceForPushNotifications(ctx, token);
                     AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -187,7 +187,7 @@ public class WordPress extends Application {
             }
         }
     }
-
+    
     /**
      * Get versionName from Manifest.xml
      *
@@ -221,6 +221,7 @@ public class WordPress extends Application {
         } else {
             postsShouldRefresh = true;
         }
+
     }
 
     /**
@@ -452,9 +453,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        NotificationUtils.unregisterPushNotificationsToken(
-                context,
-                GCMRegistrar.getRegistrationId(context));
+        NotificationUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
@@ -477,7 +476,7 @@ public class WordPress extends Application {
 
         //Delete all the Notes
         WordPress.wpDB.clearNotes();
-
+        
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
@@ -524,7 +523,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-
+                    
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -532,7 +531,7 @@ public class WordPress extends Application {
                         defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     }
                     headers.putAll(defaultHeaders);
-
+                    
                     return super.performRequest(request, headers);
                 }
             };
@@ -551,7 +550,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-
+                    
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -567,23 +566,23 @@ public class WordPress extends Application {
             return stack;
         }
     }
-
+    
     /*
      * Detect when the app goes to the background and come back to the foreground.
-     *
-     * Turns out that when your app has no more visible UI, a callback is triggered.
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
+     * 
+     * Turns out that when your app has no more visible UI, a callback is triggered. 
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
      * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
-     *
+     * 
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
-     *
+     * 
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-
+        
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
-
+        
         boolean background = false;
 
         @Override
@@ -603,24 +602,24 @@ public class WordPress extends Application {
             } else {
                 background = false;
             }
-
+            
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
-
+ 
         }
-
+        
         private boolean mustPingPushNotificationsBackend() {
-
+            
             if (WordPress.hasValidWPComCredentials(mContext) == false)
                 return false;
-
+            
             if (background == false)
                 return false;
-
+            
             background = false;
-
+            
             if (lastPingDate == null)
                 return false; //first startup
 
@@ -628,19 +627,19 @@ public class WordPress extends Application {
             long nowInMilliseconds = now.getTime();
             long lastPingDateInMilliseconds = lastPingDate.getTime();
             int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {
+            if (secondsPassed >= DEFAULT_TIMEOUT) {         
                 lastPingDate = now;
                 return true;
             }
 
             return false;
         }
-
+        
         @Override
         public void onActivityResumed(Activity arg0) {
             if(mustPingPushNotificationsBackend()) {
                 //uhhh ohhh!
-
+                
                 if (WordPress.hasValidWPComCredentials(mContext)) {
                     String token = null;
                     try {
@@ -654,12 +653,13 @@ public class WordPress extends Application {
                             return;
                         } else {
                             // Send the token to WP.com
-                            NotificationUtils.registerPushNotificationsToken(mContext, token, false);
+                            NotificationUtils.registerDeviceForPushNotifications(mContext, token);
                         }
                     } catch (Exception e) {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                     }
                 }
+                
             }
         }
 

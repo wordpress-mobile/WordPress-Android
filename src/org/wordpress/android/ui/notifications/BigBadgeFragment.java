@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class BigBadgeFragment extends Fragment implements NotificationFragment {
     private Note mNote;
@@ -28,7 +28,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
         NetworkImageView badgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
         
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
-        bodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        bodyTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         if (getNote() != null) {
             String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");

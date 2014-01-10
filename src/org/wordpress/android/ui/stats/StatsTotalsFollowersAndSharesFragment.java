@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +18,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.WPLinkMovementMethod;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Fragment for summary stats. Only a single page.
@@ -68,7 +68,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                     "</font><font color=\"#21759B\"><a href=\"http://support.wordpress.com/publicize/\">") +
                     "</font><font color=\"#9E9E9E\">)</font>";
             followersHeader.setText(Html.fromHtml(headerText));
-            followersHeader.setMovementMethod(LinkMovementMethod.getInstance());
+            followersHeader.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
         
         return view;

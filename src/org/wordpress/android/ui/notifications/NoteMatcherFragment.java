@@ -3,7 +3,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +13,11 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class NoteMatcherFragment extends Fragment implements NotificationFragment {
     private Note mNote;
@@ -50,7 +49,7 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         }
 
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
-        bodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        bodyTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
         String noteHTML = JSONUtil.getString(noteBodyItemAtPositionZero, "html");
         bodyTextView.setText(Html.fromHtml(noteHTML));
 
