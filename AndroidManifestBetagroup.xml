@@ -3,13 +3,7 @@
     package="org.wordpress.android"
     android:installLocation="auto" >
 
-    <application
-        android:name="WordPress Beta"
-        android:allowBackup="false"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/app_icon"
-        android:label="WordPress Beta"
-        android:theme="@style/WordPress" >
+    <application>
 
         <provider
             android:name=".providers.StatsContentProvider"
