@@ -179,7 +179,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    NotificationUtils.registerDeviceForPushNotifications(ctx, token, true);
+                    NotificationUtils.registerDeviceForPushNotifications(ctx, token);
                     AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -453,9 +453,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        NotificationUtils.unregisterDevicePushNotifications(
-                context,
-                GCMRegistrar.getRegistrationId(context));
+        NotificationUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
@@ -655,7 +653,7 @@ public class WordPress extends Application {
                             return;
                         } else {
                             // Send the token to WP.com
-                            NotificationUtils.registerDeviceForPushNotifications(mContext, token, false);
+                            NotificationUtils.registerDeviceForPushNotifications(mContext, token);
                         }
                     } catch (Exception e) {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());

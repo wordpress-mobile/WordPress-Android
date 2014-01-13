@@ -228,8 +228,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         holder.txtTitle.setText(post.getTitle());
-        holder.txtBlogName.setText(post.getBlogName());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+
+        if (post.hasBlogName()) {
+            holder.txtBlogName.setText(post.getBlogName());
+        } else if (post.hasAuthorName()) {
+            holder.txtBlogName.setText(post.getAuthorName());
+        } else {
+            holder.txtBlogName.setText(null);
+        }
 
         if (post.hasExcerpt()) {
             holder.txtText.setVisibility(View.VISIBLE);
@@ -252,7 +259,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR, false);
         }
 
         /*final String firstTag = post.getFirstTag();
@@ -342,8 +349,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (post.numReplies > 0) {
             holder.txtCommentCount.setText(FormatUtils.formatInt(post.numReplies));
             holder.txtCommentCount.setVisibility(View.VISIBLE);
+            // note that the comment icon is shown here even if comments are now closed since
+            // the post has existing comments
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
+            holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
         }
     }
 

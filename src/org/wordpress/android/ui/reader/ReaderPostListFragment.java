@@ -44,7 +44,7 @@ import org.wordpress.android.util.StringUtils;
 
 /**
  * Created by nbradbury on 6/30/13.
- * Fragment hosted by NativeReaderActivity which shows a list of posts in a specific tag
+ * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
 public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
     private ReaderPostAdapter mPostAdapter;
@@ -397,11 +397,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 if (!hasActivity()) {
                     AppLog.w(T.READER, "volley response when fragment has no activity");
                     // this fragment is no longer valid, so send a broadcast that tells the host
-                    // NativeReaderActivity that it needs to refresh the list of posts - this
+                    // ReaderActivity that it needs to refresh the list of posts - this
                     // situation occurs when the user rotates the device while the update is
                     // still in progress
                     if (numNewPosts > 0)
-                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(NativeReaderActivity.ACTION_REFRESH_POSTS));
+                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(ReaderActivity.ACTION_REFRESH_POSTS));
                     return;
                 }
 
@@ -439,8 +439,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         mIsUpdating = isUpdating;
         switch (updateAction) {
             case LOAD_NEWER:
-                if (getActivity() instanceof NativeReaderActivity)
-                    ((NativeReaderActivity)getActivity()).setIsUpdating(isUpdating);
+                if (getActivity() instanceof ReaderActivity)
+                    ((ReaderActivity)getActivity()).setIsUpdating(isUpdating);
                 break;
 
             case LOAD_OLDER:

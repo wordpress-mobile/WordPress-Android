@@ -12,12 +12,11 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by nbradbury on 6/21/13.
- * simple wrapper for Android log calls, currently used only by the native reader
- * enables recording & displaying log
+ * simple wrapper for Android log calls, enables recording & displaying log
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, COMMENTS, THEMES}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 
@@ -26,7 +25,7 @@ public class AppLog {
     }
 
     /*
-     * defaults to false, pass true to capture log so it can be displayed by ReaderLogViewerActivity
+     * defaults to false, pass true to capture log so it can be displayed by AppLogViewerActivity
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
@@ -57,14 +56,14 @@ public class AppLog {
         addEntry(tag, LogLevel.e, message);
     }
 
-    public static void e(T tag, String message, Exception e) {
-        Log.e(TAG + "-" + tag.toString(), message, e);
-        addEntry(tag, LogLevel.e, message + " - exception: " + e.getMessage());
+    public static void e(T tag, String message, Throwable tr) {
+        Log.e(TAG + "-" + tag.toString(), message, tr);
+        addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
     }
 
-    public static void e(T tag, Exception e) {
-        Log.e(TAG + "-" + tag.toString(), e.getMessage(), e);
-        addEntry(tag, LogLevel.e, e.getMessage());
+    public static void e(T tag, Throwable tr) {
+        Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
+        addEntry(tag, LogLevel.e, tr.getMessage());
     }
 
     public static void e(T tag, VolleyError volleyError) {
@@ -158,7 +157,7 @@ public class AppLog {
     }
 
     /*
-     * returns entire log as html for display (see ReaderLogViewerActivity)
+     * returns entire log as html for display (see AppLogViewerActivity)
      */
     public static String toHtml() {
         StringBuilder sb = new StringBuilder();

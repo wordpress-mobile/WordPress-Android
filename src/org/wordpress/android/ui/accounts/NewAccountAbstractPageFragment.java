@@ -5,8 +5,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.RequestQueue;
@@ -31,6 +36,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected ProgressDialog mProgressDialog;
     protected static RequestQueue requestQueue = null;
     protected static WPRestClient restClient = null;
+    protected boolean mPasswordVisible;
 
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
 
@@ -66,6 +72,27 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         return false;
     }
 
+    protected void initPasswordVisibilityButton(View rootView, final EditText passwordEditText) {
+        final ImageView passwordVisibility = (ImageView) rootView.findViewById(R.id.password_visibility);
+        if (passwordVisibility == null) {
+            return ;
+        }
+        passwordVisibility.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordVisible = !mPasswordVisible;
+                if (mPasswordVisible) {
+                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordEditText.setTransformationMethod(null);
+                } else {
+                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                passwordEditText.setSelection(passwordEditText.length());
+            }
+        }
+        );
+    }
     protected class ErrorListener implements RestRequest.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {

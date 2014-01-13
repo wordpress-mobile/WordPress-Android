@@ -120,16 +120,24 @@ public class ApiHelper {
             extends AsyncTask<Params, Progress, Result> {
         protected String mErrorMessage;
         protected ErrorType mErrorType = ErrorType.NO_ERROR;
+        protected Throwable mThrowable;
 
         protected void setError(ErrorType errorType, String errorMessage) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
         }
+
+        protected void setError(ErrorType errorType, String errorMessage, Throwable throwable) {
+            mErrorMessage = errorMessage;
+            mErrorType = errorType;
+            mThrowable = throwable;
+            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
+        }
     }
 
     public interface GenericErrorCallback {
-        public void onFailure(ErrorType errorType, String errorMessage);
+        public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable);
     }
 
     public interface GenericCallback extends GenericErrorCallback {
@@ -151,7 +159,7 @@ public class ApiHelper {
             try {
                 result = client.call("wp.getPostFormats", params);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return result;
         }
@@ -264,7 +272,8 @@ public class ApiHelper {
                 try {
                     versionResult = client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                    return false;
                 }
 
                 if (versionResult != null) {
@@ -286,7 +295,7 @@ public class ApiHelper {
                         client.call("wp.getProfile", userParams);
                 updateBlogAdmin(userInfos);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
 
@@ -298,7 +307,7 @@ public class ApiHelper {
             try {
                 ApiHelper.refreshComments(mContext, commentParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
 
@@ -311,7 +320,7 @@ public class ApiHelper {
                 if (success) {
                     mCallback.onSuccess();
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
             refreshedBlogs.remove(mBlogIdentifier);
@@ -448,7 +457,7 @@ public class ApiHelper {
                 AppLog.e(T.API, e);
                 // user does not have permission to view media gallery
                 if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage());
+                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
                     return 0;
                 }
             }
@@ -484,7 +493,7 @@ public class ApiHelper {
                 if (mErrorType == ErrorType.NO_ERROR) {
                     mCallback.onSuccess(result);
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
         }
@@ -535,7 +544,7 @@ public class ApiHelper {
             try {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             
             return result;
@@ -547,7 +556,7 @@ public class ApiHelper {
                 if (mErrorType == ErrorType.NO_ERROR) {
                     mCallback.onSuccess();
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
         }
@@ -591,7 +600,7 @@ public class ApiHelper {
             try {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
 
             if (results != null && blogId != null) {
@@ -609,7 +618,7 @@ public class ApiHelper {
                 if (result != null) {
                     mCallback.onSuccess(result);
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
         }
@@ -635,9 +644,9 @@ public class ApiHelper {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-            
+
             if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
+                setError(ErrorType.INVALID_CURRENT_BLOG, "current blog is null");
                 return null;
             }
 
@@ -666,7 +675,7 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return null;
             }
             
@@ -696,7 +705,7 @@ public class ApiHelper {
                 if (result != null) {
                     mCallback.onSuccess(result);
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
         }
@@ -733,7 +742,7 @@ public class ApiHelper {
                     }
                 }
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage());
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return null;
         }
@@ -744,7 +753,7 @@ public class ApiHelper {
                 if (mErrorType == ErrorType.NO_ERROR) {
                     mCallback.onSuccess();
                 } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage);
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
             }
         }
