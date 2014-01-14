@@ -251,7 +251,6 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Unregistration skipped. WTF has appenend here?!?!");
             return;
         }
         WordPress.restClient.post("/devices/"+deviceID+"/delete", listener, errorListener);

@@ -94,6 +94,10 @@
             <intent android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
                 android:targetPackage="org.wordpress.android.beta"/>
         </Preference>
+        <Preference android:title="@string/reader_title_applog" >
+            <intent android:targetClass="org.wordpress.android.ui.AppLogViewerActivity"
+                android:targetPackage="org.wordpress.android.beta"/>
+        </Preference>
     </PreferenceCategory>
     
     <PreferenceCategory
