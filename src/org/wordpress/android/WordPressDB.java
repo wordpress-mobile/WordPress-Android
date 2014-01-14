@@ -677,6 +677,10 @@ public class WordPressDB {
                 new String[]{Integer.toString(remoteBlogId), xmlRpcUrl});
     }
 
+    public int getRemoteBlogIdForLocalTableBlogId(int localBlogId) {
+        return SqlUtils.intForQuery(db, "SELECT blogId FROM accounts WHERE id=?", new String[]{Integer.toString(localBlogId)});
+    }
+
     public void updateNotificationFlag(int id, boolean flag) {
 
         ContentValues values = new ContentValues();

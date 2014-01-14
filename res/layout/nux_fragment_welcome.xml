@@ -12,7 +12,9 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:baselineAligned="false"
+        >
 
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
@@ -22,20 +24,22 @@
             android:gravity="center"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:paddingTop="10dp">
 
             <ImageView
                 android:id="@+id/nux_fragment_icon"
                 android:layout_width="50dp"
-                android:layout_height="52dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/nux_icon_wp" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/nux_username"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -50,48 +54,64 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_person"
+                    android:src="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:id="@+id/relativeLayout2">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/nux_password"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     style="@style/WordPress.NUXEditText"
-                    android:hint="@string/password" />
+                    android:hint="@string/password"
+                    android:layout_marginRight="38dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView3"
+                    android:id="@+id/imageView4"
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_secure"
+                    android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/password_visibility"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:src="@drawable/dashicon_eye_closed"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="true"
+                    android:tint="@color/nux_eye_icon_color"/>
             </RelativeLayout>
 
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:id="@+id/url_button_layout"
                 android:visibility="gone"
                 android:animateLayoutChanges="true">
 
-                <EditText
+                <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/nux_url"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -106,16 +126,17 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/ic_action_web_site"
+                    android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:tint="@color/grey_medium"/>
             </RelativeLayout>
 
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp">
 
@@ -163,7 +184,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:layout_marginBottom="10dp">
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXWhiteButtonNoBg"
