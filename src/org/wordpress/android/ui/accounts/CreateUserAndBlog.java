@@ -73,6 +73,7 @@ public class CreateUserAndBlog {
             try {
                 if (mStep == Step.AUTHENTICATE_USER) {
                     mCallback.onStepFinished(Step.AUTHENTICATE_USER);
+                    ReaderUserActions.setCurrentUser(response);
                     createBlog();
                 } else {
                     // steps VALIDATE_USER and VALIDATE_SITE could be run simultaneously in
@@ -98,9 +99,6 @@ public class CreateUserAndBlog {
                             case CREATE_SITE:
                                 mCallback.onStepFinished(Step.CREATE_SITE);
                                 mCallback.onSuccess(response);
-                                break;
-                            case AUTHENTICATE_USER:
-                                ReaderUserActions.setCurrentUser(response);
                                 break;
                             default:
                                 break;
