@@ -17,11 +17,11 @@
             android:authorities="org.wordpress.android.providers.StatsContentProviderBeta"
             android:exported="false" />
 
-        <service android:name="org.wordpress.android.beta.GCMIntentService" />
+        <service android:name="org.wordpress.android.GCMIntentService" />
         
         <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:name="org.wordpress.android.GCMReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" > <!-- We've used a custom receiver here. The one that is bundled in GCM API wasn't able to start the service. -->
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
