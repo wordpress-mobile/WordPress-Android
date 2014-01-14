@@ -34,12 +34,12 @@ android {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
-        betagroup {
+        zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             packageNameSuffix ".beta"
             versionNameSuffix "-beta"
-        } //end betagroup
+        } //end zbetagroup
 	} //end buildTypes
 
     compileSdkVersion 19
@@ -73,7 +73,7 @@ android {
 	    compile 'org.wordpress:commons-lang:2.6'
 	    releaseCompile 'org.wordpress:emailchecker:0.1'
 	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
-	    betagroupCompile 'org.wordpress:emailchecker:0.1'
+	    zbetagroupCompile 'org.wordpress:emailchecker:0.1'
 
 	    // Local dependencies
 	    compile files('libs/MixpanelAPI.jar')
@@ -99,8 +99,8 @@ android {
 		    manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
 		}
 		
-	    betagroup {
-	        res.srcDirs = ['res-betagroup']
+	    zbetagroup {
+	        res.srcDirs = ['res-zbetagroup']
 	        manifest.srcFile 'AndroidManifestBetagroup.xml'
 	    }
 
@@ -166,7 +166,7 @@ android.buildTypes.all { buildType ->
     }
 }
 
-// For app signing
+//For app signing
 if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
     android {
         signingConfigs {
@@ -179,5 +179,5 @@ if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.ha
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
-    android.buildTypes.betagroup.signingConfig = android.signingConfigs.release
+    android.buildTypes.zbetagroup.signingConfig = android.signingConfigs.release
 }
