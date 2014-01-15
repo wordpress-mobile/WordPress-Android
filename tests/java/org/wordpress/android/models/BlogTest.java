@@ -1,79 +1,160 @@
 package org.wordpress.android.models;
 
-import android.app.Instrumentation;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
-import android.test.InstrumentationTestSuite;
-import android.test.RenamingDelegatingContext;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import static junit.framework.Assert.*;
 
 import org.wordpress.android.TestUtils;
-import org.wordpress.android.ui.accounts.SetupBlog;
 
 /**
  * Created by aaron on 1/14/14.
  */
 public class BlogTest extends InstrumentationTestCase {
-    protected Context testContext;
-    protected Context targetContext;
-    private Blog originalBlog;
+    private Blog blog;
 
     @Override
     protected void setUp() throws Exception {
-        // Run tests in an isolated context
-        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
-        testContext = getInstrumentation().getContext();
-
-        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
-                "empty_tables.sql");
+        blog = new Blog("http://www.example.com/xml-rpc.php", "username", "password");
 
         super.setUp();
     }
 
-    private Blog createBlog() {
-        Blog blog = new Blog("http://example.com/xml-rpc.php", "username", "password");
-        blog.setHomeURL("http://example.com");
-        blog.setHttpuser("mHttpUsername");
-        blog.setHttppassword("mHttpPassword");
-        blog.setBlogName("blogName");
-        blog.setImagePlacement(""); //deprecated
-        blog.setFullSizeImage(false);
-        blog.setMaxImageWidth("100");
-        blog.setMaxImageWidthId(0); //deprecated
-        blog.setRunService(false); //deprecated
-        blog.setRemoteBlogId(Integer.parseInt("1"));
-        blog.setDotcomFlag(false);
-        blog.setWpVersion(""); // assigned later in getOptions call
-        blog.setAdmin(true);
-        //blog.save();
-
-        return blog;
-    }
-
-    public void testValidateFields() {
-        Blog blog = createBlog();
-
-        assertEquals("blogName", blog.getBlogName());
-        assertEquals("http://example.com/xml-rpc.php", blog.getUrl());
-        assertEquals("http://example.com", blog.getHomeURL());
-        assertEquals(1, blog.getRemoteBlogId());
+    public void testBlogTestUrlUsernamePassword() {
+        assertEquals("http://www.example.com/xml-rpc.php", blog.getUrl());
         assertEquals("username", blog.getUsername());
         assertEquals("password", blog.getPassword());
-        assertTrue(blog.isAdmin());
+        assertEquals(-1, blog.getLocalTableBlogId());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        TestUtils.dropDB(targetContext, testContext);
-
-        testContext = null;
-        targetContext = null;
+    public void testGetSetLocalTableBlogId() {
+        assertEquals(-1, blog.getLocalTableBlogId());
+        blog.setLocalTableBlogId(0);
+        assertEquals(0, blog.getLocalTableBlogId());
     }
+
+    public void testGetSetUrl() {
+        assertEquals("http://www.example.com/xml-rpc.php", blog.getUrl());
+        blog.setUrl(null);
+        assertNull(blog.getUrl());
+        blog.setUrl("http://example.com/two");
+        assertEquals("http://example.com/two", blog.getUrl());
+    }
+
+//    public void testGetSetHomeURL() {
+//    }
+//
+//    public void testGetSetBlogName() {
+//    }
+//
+//    public void testGetSetUsername() {
+//    }
+//
+//    public void testGetSetPassword() {
+//    }
+//
+//    public void testGetSetImagePlacement() {
+//    }
+//
+//    public void testGetSetFeaturedImageCapable() {
+//    }
+//
+//    public void testBsetFeaturedImageCapable() {
+//    }
+//
+//    public void testGetSetFullSizeImage() {
+//    }
+//
+//    public void testGetSetMaxImageWidth() {
+//    }
+//
+//    public void testGetSetMaxImageWidthId() {
+//    }
+//
+//    public void testGetSetLastCommentId() {
+//    }
+//
+//    public void testGetSetRunService() {
+//    }
+//
+//    public void testGetSetRemoteBlogId() {
+//    }
+//
+//    public void testGetSetLocation() {
+//    }
+//
+//    public void testGetSetDotcom_username() {
+//    }
+//
+//    public void testGetSetDotcom_password() {
+//    }
+//
+//    public void testGetSetApi_key() {
+//    }
+//
+//    public void testGetSetApi_blogid() {
+//    }
+//
+//    public void testGetSetDotcomFlag() {
+//    }
+//
+//    public void testGetSetWpVersion() {
+//    }
+//
+//    public void testBsetWpVersion() {
+//    }
+//
+//    public void testGetSetHttpuser() {
+//    }
+//
+//    public void testGetSetHttppassword() {
+//    }
+//
+//    public void testGetSetHidden() {
+//    }
+//
+//    public void testGetSetPostFormats() {
+//    }
+//
+//    public void testBSetPostFormats() {
+//    }
+//
+//    public void testGetSetUnmoderatedCommentCount() {
+//    }
+//
+//    public void testGetSetScaledImage() {
+//    }
+//
+//    public void testGetSetScaledImageWidth() {
+//    }
+//
+//    public void testGetSetBlogOptions() {
+//    }
+//
+//    public void testBSetBlogOptions() {
+//    }
+//
+//    public void testGetSetActive() {
+//    }
+//
+//    public void testGetSetAdmin() {
+//    }
+//
+//    public void testBSetAdmin(boolean isAdmin) {
+//    }
+//
+//    public void testGetSetAdminUrl() {
+//    }
+//
+//    public void testGetSetPrivate() {
+//    }
+//
+//    public void testGetSetJetpackPowered() {
+//    }
+//
+//    public void testGetSetPhotonCapable() {
+//    }
+//
+//    public void testGetSetHasValidJetpackCredentials() {
+//    }
+//
+//    public void testGetSetDotComBlogId() {
+//    }
 }
