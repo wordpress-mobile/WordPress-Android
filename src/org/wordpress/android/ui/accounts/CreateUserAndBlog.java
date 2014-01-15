@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -191,7 +192,7 @@ public class CreateUserAndBlog {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
         editor.commit();
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
         // fire off a request to get an access token
