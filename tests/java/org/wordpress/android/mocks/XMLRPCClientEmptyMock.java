@@ -1,4 +1,4 @@
-package org.xmlrpc.android.mocks;
+package org.wordpress.android.mocks;
 
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;

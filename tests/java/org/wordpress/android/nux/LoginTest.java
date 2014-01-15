@@ -4,9 +4,9 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
+import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.xmlrpc.android.XMLRPCFactory;
-import org.xmlrpc.android.XMLRPCFactory.Mode;
 
 public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
     private Solo solo;
@@ -32,7 +32,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
     // TODO: remove this test (we don't want to test production version of XMLRPCClient class)
     public void testWrongCredential() throws Exception {
         // Use real network call
-        XMLRPCFactory.setMode(Mode.PRODUCTION);
+        // XMLRPCFactory.setMode(Mode.PRODUCTION);
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
@@ -42,7 +42,8 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
 
     public void testGoodCredential() throws Exception {
         // Use XMLRPCMock object
-        XMLRPCFactory.setMode(Mode.EMPTY_MOCK);
+        // XMLRPCFactory.setMode(Mode.EMPTY_MOCK);
+        XMLRPCFactory.factory = new XMLRPCFactoryTest();
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");

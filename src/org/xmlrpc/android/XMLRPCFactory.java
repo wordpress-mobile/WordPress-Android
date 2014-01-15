@@ -1,12 +1,11 @@
 package org.xmlrpc.android;
 
-import org.xmlrpc.android.mocks.XMLRPCClientEmptyMock;
-
 import java.net.URI;
 
 public class XMLRPCFactory {
     public enum Mode {PRODUCTION, EMPTY_MOCK, CUSTOMIZABLE_MOCK}
-    private static Mode mMode = Mode.PRODUCTION;
+    private static Mode mMode = Mode.EMPTY_MOCK;
+    public static XMLRPCFactoryAbstract factory;
 
     public static Mode getMode() {
         return mMode;
@@ -17,6 +16,11 @@ public class XMLRPCFactory {
     }
 
     public static XMLRPCClientInterface instantiate(URI uri, String httpUser, String httpPassword) {
+        if (factory == null) {
+            factory = new XMLRPCFactoryDefault();
+        }
+        return factory.make(uri, httpUser, httpPassword);
+        /*
         switch (getMode()) {
             case EMPTY_MOCK:
                 return new XMLRPCClientEmptyMock(uri, httpUser, httpPassword);
@@ -24,5 +28,6 @@ public class XMLRPCFactory {
             case PRODUCTION:
                 return new XMLRPCClient(uri, httpUser, httpPassword);
         }
+        */
     }
 }
