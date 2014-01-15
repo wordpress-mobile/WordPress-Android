@@ -5,6 +5,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.robotium.solo.Solo;
 
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.xmlrpc.android.FlavoredFactory.Mode;
+import org.xmlrpc.android.XMLRPCFactory;
 
 public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
     private Solo solo;
@@ -26,8 +28,18 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         //finishOpenedActivities() will finish all the activities that have been opened during the test execution.
         solo.finishOpenedActivities();
     }
-
+/*
     public void testWrongCredential() throws Exception {
+        solo.enterText(0, "test");
+        solo.enterText(1, "test");
+        solo.clickOnText("Sign in");
+        boolean errorMessageFound = solo.searchText("incorrect");
+        assertTrue("Error message not found, wrong login should fail", errorMessageFound);
+    }
+*/
+    public void testGoodCredential() throws Exception {
+        // Use XMLRPCMock object
+        XMLRPCFactory.setMode(Mode.TEST);
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");

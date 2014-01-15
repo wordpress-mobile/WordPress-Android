@@ -13,8 +13,9 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.net.IDN;
 import java.net.URI;
@@ -103,14 +104,14 @@ public class SetupBlog {
 
         // Validate the URL found before calling the client. Prevent a crash that can occur
         // during the setup of self-hosted sites.
+        URI uri;
         try {
-            URI.create(mXmlrpcUrl);
+            uri = URI.create(mXmlrpcUrl);
         } catch (Exception e1) {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
-
-        XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, mHttpUsername, mHttpPassword);
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
@@ -180,7 +181,8 @@ public class SetupBlog {
         } else {
             // Try the user entered path
             try {
-                XMLRPCClient client = new XMLRPCClient(url, mHttpUsername, mHttpPassword);
+                URI nuri = URI.create(url);
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(nuri, mHttpUsername, mHttpPassword);
                 try {
                     client.call("system.listMethods");
                     xmlrpcUrl = url;
@@ -198,7 +200,8 @@ public class SetupBlog {
                         guessURL = guessURL.substring(0, guessURL.length() - 1);
                     }
                     guessURL += "/xmlrpc.php";
-                    client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
+                    URI guestUri = URI.create(guessURL);
+                    client = XMLRPCFactory.instantiate(guestUri, mHttpUsername, mHttpPassword);
                     try {
                         client.call("system.listMethods");
                         xmlrpcUrl = guessURL;

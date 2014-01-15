@@ -38,12 +38,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DeviceUtils;
 
 /**
- * A WordPress XMLRPC Client. 
+ * A WordPress XMLRPC Client.
  * Based on android-xmlrpc: code.google.com/p/android-xmlrpc/
  * Async support based on aXMLRPC: https://github.com/timroes/aXMLRPC
  */
 
-public class XMLRPCClient {
+public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_METHOD_CALL = "methodCall";
     private static final String TAG_METHOD_NAME = "methodName";
     private static final String TAG_METHOD_RESPONSE = "methodResponse";
@@ -52,14 +52,14 @@ public class XMLRPCClient {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
-    
+
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
     private ConnectionClient client;
     private HttpPost postMethod;
     private XmlSerializer serializer;
     private HttpParams httpParams;
-    
+
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
      * @param XMLRPC server URI
@@ -140,13 +140,13 @@ public class XMLRPCClient {
     public XMLRPCClient(URL url, String httpuser, String httppasswd) {
         this(URI.create(url.toExternalForm()), httpuser, httppasswd);
     }
-    
+
     /**
      * Set WP.com auth header
      * @param String authorization token
      */
     public void setAuthorizationHeader(String authToken) {
-        if( authToken != null) 
+        if( authToken != null)
             postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
         else
             postMethod.removeHeaders("Authorization");
@@ -176,12 +176,12 @@ public class XMLRPCClient {
     public Object call(String method) throws XMLRPCException {
         return call(method, null, null);
     }
-    
-    
+
+
     public Object call(String method, Object[] params, File tempFile) throws XMLRPCException {
         return new Caller().callXMLRPC(method, params, tempFile);
     }
-    
+
     /**
      * Convenience call for callAsync with two paramaters
      *
@@ -192,7 +192,7 @@ public class XMLRPCClient {
     public long callAsync(XMLRPCCallback listener, String methodName, Object[] params) {
         return callAsync(listener, methodName, params, null);
     }
-    
+
     /**
      * Asynchronous XMLRPC call
      *
@@ -205,7 +205,7 @@ public class XMLRPCClient {
         new Caller(listener, id, methodName, params, tempFile).start();
         return id;
     }
-    
+
     /**
      * The Caller class is used to make asynchronous calls to the server.
      * For synchronous calls the Thread function of this class isn't used.
@@ -469,6 +469,6 @@ public class XMLRPCClient {
         }
 
     }
-    
+
     private class CancelException extends RuntimeException { }
 }
