@@ -1,4 +1,4 @@
-package org.wordpress.android.mocks;
+package org.xmlrpc.android.mocks;
 
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -7,8 +7,8 @@ import org.xmlrpc.android.XMLRPCException;
 import java.io.File;
 import java.net.URI;
 
-public class XMLRPCClientMock implements XMLRPCClientInterface {
-    public XMLRPCClientMock(URI uri, String httpUser, String httpPassword) {
+public class XMLRPCClientEmptyMock implements XMLRPCClientInterface {
+    public XMLRPCClientEmptyMock(URI uri, String httpUser, String httpPassword) {
 
     }
 

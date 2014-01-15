@@ -5,8 +5,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.robotium.solo.Solo;
 
 import org.wordpress.android.ui.accounts.WelcomeActivity;
-import org.xmlrpc.android.FlavoredFactory.Mode;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFactory.Mode;
 
 public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
     private Solo solo;
@@ -28,22 +28,25 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         //finishOpenedActivities() will finish all the activities that have been opened during the test execution.
         solo.finishOpenedActivities();
     }
-/*
+
+    // TODO: remove this test (we don't want to test production version of XMLRPCClient class)
     public void testWrongCredential() throws Exception {
+        // Use real network call
+        XMLRPCFactory.setMode(Mode.PRODUCTION);
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
         boolean errorMessageFound = solo.searchText("incorrect");
         assertTrue("Error message not found, wrong login should fail", errorMessageFound);
     }
-*/
+
     public void testGoodCredential() throws Exception {
         // Use XMLRPCMock object
-        XMLRPCFactory.setMode(Mode.TEST);
+        XMLRPCFactory.setMode(Mode.EMPTY_MOCK);
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
         boolean errorMessageFound = solo.searchText("incorrect");
-        assertTrue("Error message not found, wrong login should fail", errorMessageFound);
+        assertTrue("Error message found, and that's wrong!", !errorMessageFound);
     }
 }
