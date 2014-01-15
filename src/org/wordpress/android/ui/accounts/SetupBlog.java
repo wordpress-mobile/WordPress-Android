@@ -116,7 +116,7 @@ public class SetupBlog {
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
             if (userBlogs == null) { // Could happen if the returned server response is truncated
-                mErrorMsgId = R.string.xmlrpc_error;
+                mErrorMsgId = R.string.no_network_message;
                 return null;
             }
             Arrays.sort(userBlogs, Utils.BlogNameComparator);
