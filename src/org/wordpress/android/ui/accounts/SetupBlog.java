@@ -115,6 +115,10 @@ public class SetupBlog {
         Object[] params = {mUsername, mPassword};
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
+            if (userBlogs == null) { // Could happen if the returned server response is truncated
+                mErrorMsgId = R.string.xmlrpc_error;
+                return null;
+            }
             Arrays.sort(userBlogs, Utils.BlogNameComparator);
             List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
             for (Object blog : userBlogs) {
