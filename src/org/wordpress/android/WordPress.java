@@ -256,7 +256,7 @@ public class WordPress extends Application {
      */
     public static Blog getBlog(int id) {
         try {
-            Blog blog = new Blog(id);
+            Blog blog = wpDB.getBlogById(id);
             return blog;
         } catch (Exception e) {
             return null;
@@ -294,7 +294,7 @@ public class WordPress extends Application {
      */
     public static Blog setCurrentBlog(int id) {
         try {
-            currentBlog = new Blog(id);
+            currentBlog = wpDB.getBlogById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -425,7 +425,7 @@ public class WordPress extends Application {
                                         commit();
                             } else {
                                 blog.setApi_key(token.toString());
-                                blog.save();
+                                WordPress.wpDB.saveBlog(blog);
                             }
                             request.sendWithAccessToken(token);
                         }

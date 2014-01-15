@@ -230,16 +230,16 @@ public class SetupBlog {
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
             blog.setAdmin(isAdmin);
-            blog.save();
+            WordPress.wpDB.saveBlog(blog);
         } else {
             // Update blog name
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
                     Integer.parseInt(blogId), xmlRpcUrl);
             try {
-                blog = new Blog(localTableBlogId);
+                blog = WordPress.wpDB.getBlogById(localTableBlogId);
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
-                    blog.save();
+                    WordPress.wpDB.saveBlog(blog);
                 }
             } catch (Exception e) {
                 AppLog.e(T.NUX, "localTableBlogId: " + localTableBlogId + " not found");

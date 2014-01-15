@@ -42,7 +42,7 @@ public class ApiHelper {
     static void refreshComments(final int id, final Context ctx) {
         Blog blog;
         try {
-            blog = new Blog(id);
+            blog = WordPress.wpDB.getBlogById(id);
         } catch (Exception e1) {
             return;
         }
@@ -172,7 +172,7 @@ public class ApiHelper {
                     String postFormatsJson = gson.toJson(postFormats);
                     if (postFormatsJson != null) {
                         if (mBlog.bsetPostFormats(postFormatsJson)) {
-                            mBlog.save();
+                            WordPress.wpDB.saveBlog(mBlog);
                         }
                     }
                 }
@@ -229,7 +229,7 @@ public class ApiHelper {
             }
             if (isModified && WordPress.getCurrentBlog() != null
                     && WordPress.getCurrentBlog().isActive()) {
-                mBlog.save();
+                WordPress.wpDB.saveBlog(mBlog);
             }
         }
 
@@ -244,7 +244,7 @@ public class ApiHelper {
                     }
                 }
                 if (mBlog.bsetAdmin(isAdmin)) {
-                    mBlog.save();
+                    WordPress.wpDB.saveBlog(mBlog);
                 }
             }
         }

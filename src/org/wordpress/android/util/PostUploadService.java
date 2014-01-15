@@ -202,7 +202,7 @@ public class PostUploadService extends Service {
 
             Blog blog;
             try {
-                blog = new Blog(post.getBlogID());
+                blog = WordPress.wpDB.getBlogById(post.getBlogID());
             } catch (Exception e) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;

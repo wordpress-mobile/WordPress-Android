@@ -123,7 +123,7 @@ public class StatsActivity extends WPActionBarActivity {
                 String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                 WordPress.getCurrentBlog().setDotcom_username(username);
                 WordPress.getCurrentBlog().setDotcom_password(password);
-                WordPress.getCurrentBlog().save();
+                WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
                 refreshStats();
             } else {
                 startWPComLoginActivity();
@@ -195,7 +195,7 @@ public class StatsActivity extends WPActionBarActivity {
                                     String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
                                     if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
                                         currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save();
+                                        WordPress.wpDB.saveBlog(currentBlog);
                                         if (!isFinishing())
                                             refreshStats();
                                     }
@@ -539,7 +539,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save();
+                    WordPress.wpDB.saveBlog(currentBlog);
                 }
 
                 return jetpackBlogId;

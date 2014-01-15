@@ -443,6 +443,10 @@ public class WordPressDB {
     }
 
     public boolean saveBlog(Blog blog) {
+        if (blog.getLocalTableBlogId() == -1) {
+            return addBlog(blog);
+        }
+
         ContentValues values = new ContentValues();
         values.put("url", blog.getUrl());
         values.put("homeURL", blog.getHomeURL());
@@ -528,7 +532,62 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public List<Object> getBlog(int id) {
+    public Blog getBlogById(int blog_id) throws Exception {
+        // Instantiate an existing blog
+        Blog blog = null;
+        List<Object> blogVals = getBlog(blog_id);
+
+        if (blogVals != null) {
+            blog.setLocalTableBlogId(blog_id);
+            blog.setUrl(blogVals.get(0).toString());
+            blog.setBlogName(blogVals.get(1).toString());
+            blog.setUsername(blogVals.get(2).toString());
+            blog.setPassword(blogVals.get(3).toString());
+            blog.setHttpuser(blogVals.get(4).toString());
+            blog.setHttppassword(blogVals.get(5).toString());
+            blog.setImagePlacement(blogVals.get(6).toString());
+            blog.setFeaturedImageCapable((Integer)blogVals.get(7)>0);
+            blog.setFullSizeImage((Integer)blogVals.get(8)>0);
+            blog.setMaxImageWidth(blogVals.get(9).toString());
+            blog.setMaxImageWidthId((Integer) blogVals.get(10));
+            blog.setRunService((Integer)blogVals.get(11)>0);
+            blog.setRemoteBlogId((Integer) blogVals.get(12));
+            blog.setLocation((Integer)blogVals.get(13)>0);
+            blog.setDotcomFlag((Integer)blogVals.get(14)>0);
+            //these were accidentally set up to contain null values :(
+            if (blogVals.get(15) != null)
+                blog.setDotcom_username(blogVals.get(15).toString());
+            if (blogVals.get(16) != null)
+                blog.setDotcom_password(blogVals.get(16).toString());
+            if (blogVals.get(17) != null)
+                blog.setApi_key(blogVals.get(17).toString());
+            if (blogVals.get(18) != null)
+                blog.setApi_blogid(blogVals.get(18).toString());
+            if (blogVals.get(19) != null)
+                blog.setWpVersion(blogVals.get(19).toString());
+            blog.setPostFormats(blogVals.get(20).toString());
+            blog.setLastCommentId((Integer)blogVals.get(21));
+            if(blogVals.get(22)!=null)
+                blog.setScaledImage((Integer)blogVals.get(22)>0);
+            if(blogVals.get(23)!=null)
+                blog.setScaledImageWidth((Integer)blogVals.get(23));
+            blog.setHomeURL(blogVals.get(24).toString());
+            if(blogVals.get(25) !=null && blogVals.get(25).toString().length() > 0)
+                blog.setBlogOptions(blogVals.get(25).toString());
+            else
+                blog.setBlogOptions("");
+            if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
+                blog.setAdmin(true);
+            if (blogVals.get(27) != null && (Integer) blogVals.get(27) > 0)
+                blog.setHidden(true);
+        } else {
+            throw new Exception();
+        }
+
+        return blog;
+    }
+
+    private List<Object> getBlog(int id) {
         String[] fields = new String[]{"url", "blogName", "username", "password", "httpuser",
                 "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage",
                 "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location",
@@ -603,7 +662,7 @@ public class WordPressDB {
 
         c.close();
         try {
-            return new Blog(id);
+            return getBlogById(id);
         } catch (Exception e) {
             return null;
         }
