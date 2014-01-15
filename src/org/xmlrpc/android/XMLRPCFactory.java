@@ -20,14 +20,5 @@ public class XMLRPCFactory {
             factory = new XMLRPCFactoryDefault();
         }
         return factory.make(uri, httpUser, httpPassword);
-        /*
-        switch (getMode()) {
-            case EMPTY_MOCK:
-                return new XMLRPCClientEmptyMock(uri, httpUser, httpPassword);
-            default:
-            case PRODUCTION:
-                return new XMLRPCClient(uri, httpUser, httpPassword);
-        }
-        */
     }
 }

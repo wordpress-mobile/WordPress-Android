@@ -27,12 +27,12 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         //tearDown() is run after a test case has finished.
         //finishOpenedActivities() will finish all the activities that have been opened during the test execution.
         solo.finishOpenedActivities();
+        // reset XMLRPCFactory state
+        XMLRPCFactory.factory = null;
     }
 
     // TODO: remove this test (we don't want to test production version of XMLRPCClient class)
     public void testWrongCredential() throws Exception {
-        // Use real network call
-        // XMLRPCFactory.setMode(Mode.PRODUCTION);
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
@@ -41,13 +41,11 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
     }
 
     public void testGoodCredential() throws Exception {
-        // Use XMLRPCMock object
-        // XMLRPCFactory.setMode(Mode.EMPTY_MOCK);
         XMLRPCFactory.factory = new XMLRPCFactoryTest();
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        boolean errorMessageFound = solo.searchText("incorrect");
-        assertTrue("Error message found, and that's wrong!", !errorMessageFound);
+        boolean errorMessageFound = solo.searchText("no network");
+        assertTrue("Error message found, and that's wrong!", errorMessageFound);
     }
 }
