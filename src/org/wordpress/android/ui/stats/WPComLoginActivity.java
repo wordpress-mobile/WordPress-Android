@@ -106,7 +106,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 client.call("wp.getUsersBlogs", signInParams);
                 WordPress.currentBlog.setDotcom_username(mUsername);
                 WordPress.currentBlog.setDotcom_password(mPassword);
-                WordPress.currentBlog.save();
+                WordPress.wpDB.saveBlog(WordPress.currentBlog);
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {

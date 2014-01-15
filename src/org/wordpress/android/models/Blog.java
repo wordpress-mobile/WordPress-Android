@@ -14,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Map;
 
 public class Blog {
@@ -48,63 +47,43 @@ public class Blog {
     private boolean isAdmin;
     private boolean isHidden;
 
+    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int lastCommentId, boolean runService, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
+        this.localTableBlogId = localTableBlogId;
+        this.url = url;
+        this.homeURL = homeURL;
+        this.blogName = blogName;
+        this.username = username;
+        this.password = password;
+        this.imagePlacement = imagePlacement;
+        this.featuredImageCapable = featuredImageCapable;
+        this.fullSizeImage = fullSizeImage;
+        this.scaledImage = scaledImage;
+        this.scaledImageWidth = scaledImageWidth;
+        this.maxImageWidth = maxImageWidth;
+        this.maxImageWidthId = maxImageWidthId;
+        this.lastCommentId = lastCommentId;
+        this.runService = runService;
+        this.remoteBlogId = remoteBlogId;
+        this.location = location;
+        this.dotcom_username = dotcom_username;
+        this.dotcom_password = dotcom_password;
+        this.api_key = api_key;
+        this.api_blogid = api_blogid;
+        this.dotcomFlag = dotcomFlag;
+        this.wpVersion = wpVersion;
+        this.httpuser = httpuser;
+        this.httppassword = httppassword;
+        this.postFormats = postFormats;
+        this.blogOptions = blogOptions;
+        this.isAdmin = isAdmin;
+        this.isHidden = isHidden;
+    }
+
     public Blog(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.localTableBlogId = -1;
-    }
-
-    public Blog(int blog_id) throws Exception {
-        // Instantiate an existing blog
-        List<Object> blogVals = WordPress.wpDB.getBlog(blog_id);
-
-        if (blogVals != null) {
-            this.localTableBlogId = blog_id;
-            this.url = blogVals.get(0).toString();
-            this.blogName = blogVals.get(1).toString();
-            this.username = blogVals.get(2).toString();
-            this.password = blogVals.get(3).toString();
-            this.httpuser = blogVals.get(4).toString();
-            this.httppassword = blogVals.get(5).toString();
-            this.imagePlacement = blogVals.get(6).toString();
-            this.featuredImageCapable = (Integer)blogVals.get(7)>0;
-            this.fullSizeImage = (Integer)blogVals.get(8)>0;
-            this.maxImageWidth = blogVals.get(9).toString();
-            this.maxImageWidthId = (Integer) blogVals.get(10);
-            this.runService = (Integer)blogVals.get(11)>0;
-            this.remoteBlogId = (Integer) blogVals.get(12);
-            this.location = (Integer)blogVals.get(13)>0;
-            this.dotcomFlag = (Integer)blogVals.get(14)>0;
-            //these were accidentally set up to contain null values :(
-            if (blogVals.get(15) != null)
-                this.dotcom_username = blogVals.get(15).toString();
-            if (blogVals.get(16) != null)
-                this.dotcom_password = blogVals.get(16).toString();
-            if (blogVals.get(17) != null)
-                this.api_key = blogVals.get(17).toString();
-            if (blogVals.get(18) != null)
-                this.api_blogid = blogVals.get(18).toString();
-            if (blogVals.get(19) != null)
-                this.wpVersion = blogVals.get(19).toString();
-            this.postFormats = blogVals.get(20).toString();
-            this.lastCommentId = (Integer)blogVals.get(21);
-            if(blogVals.get(22)!=null)
-                this.scaledImage = (Integer)blogVals.get(22)>0;
-            if(blogVals.get(23)!=null)
-                this.scaledImageWidth = (Integer)blogVals.get(23);
-            this.homeURL = blogVals.get(24).toString();
-            if(blogVals.get(25) !=null && blogVals.get(25).toString().length() > 0)
-                this.blogOptions = blogVals.get(25).toString();
-            else
-                this.blogOptions = "";
-            if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
-                this.setAdmin(true);
-            if (blogVals.get(27) != null && (Integer) blogVals.get(27) > 0)
-                this.isHidden = true;
-        } else {
-            throw new Exception();
-        }
     }
 
     public int getLocalTableBlogId() {
@@ -315,15 +294,6 @@ public class Blog {
         this.isHidden = isHidden;
     }
 
-    public boolean save() {
-        // Insert new blog to db
-        if (this.localTableBlogId == -1) {
-            return WordPress.wpDB.addBlog(this);
-        } else {
-            return WordPress.wpDB.saveBlog(this);
-        }
-    }
-
     public String getPostFormats() {
         return postFormats;
     }
@@ -401,7 +371,8 @@ public class Blog {
     public String getAdminUrl() {
         String adminUrl = null;
         Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Type type = new TypeToken<Map<?, ?>>() {
+        }.getType();
         Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
         if (blogOptions != null) {
             Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
@@ -459,6 +430,7 @@ public class Blog {
     /**
      * Get the WordPress.com blog ID
      * Stored in blogId for WP.com, api_blogId for Jetpack
+     *
      * @return WP.com blogId string, potentially null for Jetpack sites
      */
     public String getDotComBlogId() {

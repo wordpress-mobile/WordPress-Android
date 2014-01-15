@@ -91,7 +91,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
                     // QuickPress might want to use a different blog than the current blog
                     int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
                     try {
-                        Blog quickPressBlog = new Blog(blogId);
+                        Blog quickPressBlog = WordPress.wpDB.getBlogById(blogId);
                         if (quickPressBlog.isHidden()) {
                             // Don't continue if blog is hidden
                             showErrorAndFinish(R.string.error_blog_hidden);
