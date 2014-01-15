@@ -31,7 +31,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        boolean errorMessageFound = solo.searchText("incorrect");
+        boolean errorMessageFound = solo.waitForText(".*incorrect.*");
         assertTrue("Error message not found, wrong login should fail", errorMessageFound);
     }
 }
