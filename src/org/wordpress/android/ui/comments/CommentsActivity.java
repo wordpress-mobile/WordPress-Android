@@ -54,7 +54,7 @@ public class CommentsActivity extends WPActionBarActivity
             fromNotification = extras.getBoolean("fromNotification");
             if (fromNotification) {
                 try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"));
+                    WordPress.currentBlog = WordPress.wpDB.getBlogById(extras.getInt("id"));
                 } catch (Exception e) {
                     Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                     finish();
@@ -155,7 +155,7 @@ public class CommentsActivity extends WPActionBarActivity
             fromNotification = extras.getBoolean("fromNotification");
             if (fromNotification) {
                 try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"));
+                    WordPress.currentBlog = WordPress.wpDB.getBlogById(extras.getInt("id"));
                 } catch (Exception e) {
                     Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                     finish();

@@ -55,4 +55,8 @@ public class TestUtils {
         }
         return null;
     }
+
+    public static void dropDB(Context targetContext, Context testContext) {
+        targetContext.deleteDatabase(DATABASE_NAME);
+    }
 }

@@ -144,7 +144,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
         blog.setLocation(mLocationCB.isChecked());
 
-        blog.save();
+        WordPress.wpDB.saveBlog(blog);
         
         if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
             WordPress.currentBlog = blog;

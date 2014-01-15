@@ -149,7 +149,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 }
                 mAccountIDs[i] = (Integer) curHash.get("id");
                 try {
-                    blog = new Blog(mAccountIDs[i]);
+                    blog = WordPress.wpDB.getBlogById(mAccountIDs[i]);
                 } catch (Exception e) {
                     ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
                     return null;
@@ -174,7 +174,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
 
     private boolean selectBlog(int blogId) {
         try {
-            WordPress.currentBlog = new Blog(blogId);
+            WordPress.currentBlog = WordPress.wpDB.getBlogById(blogId);
         } catch (Exception e) {
             return false;
         }
