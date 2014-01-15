@@ -38,7 +38,6 @@ android {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             packageNameSuffix ".beta"
-            versionNameSuffix "-beta"
         } //end zbetagroup
 	} //end buildTypes
 
