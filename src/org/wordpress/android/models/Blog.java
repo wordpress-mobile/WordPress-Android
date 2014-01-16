@@ -47,6 +47,10 @@ public class Blog {
     private boolean isAdmin;
     private boolean isHidden;
 
+    public Blog() {
+
+    }
+
     public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int lastCommentId, boolean runService, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
         this.localTableBlogId = localTableBlogId;
         this.url = url;
@@ -263,7 +267,7 @@ public class Blog {
     }
 
     public boolean bsetWpVersion(String wpVersion) {
-        if (this.wpVersion.equals(wpVersion)) {
+        if (org.apache.commons.lang.StringUtils.equals(this.wpVersion, wpVersion)) {
             return false;
         }
         setWpVersion(wpVersion);
@@ -303,13 +307,14 @@ public class Blog {
     }
 
     public boolean bsetPostFormats(String postFormats) {
-        if (this.postFormats.equals(postFormats)) {
+        if (org.apache.commons.lang.StringUtils.equals(this.postFormats, postFormats)) {
             return false;
         }
         setPostFormats(postFormats);
         return true;
     }
 
+    // FIXME - Move to DB
     public int getUnmoderatedCommentCount() {
         return WordPress.wpDB.getUnmoderatedCommentCount(this.localTableBlogId);
     }
@@ -341,7 +346,7 @@ public class Blog {
     // TODO: it's ugly to compare json strings, we have to normalize both strings before
     // comparison or compare JSON objects after parsing
     public boolean bsetBlogOptions(String blogOptions) {
-        if (this.blogOptions.equals(blogOptions)) {
+        if (org.apache.commons.lang.StringUtils.equals(this.blogOptions, blogOptions)) {
             return false;
         }
         setBlogOptions(blogOptions);
@@ -349,7 +354,7 @@ public class Blog {
     }
 
     public boolean isActive() {
-        return !password.equals("");
+        return org.apache.commons.lang.StringUtils.length(password) > 0;
     }
 
     public boolean isAdmin() {
@@ -409,8 +414,12 @@ public class Blog {
     }
 
     public boolean isJetpackPowered() {
+        String optionsString = getBlogOptions();
+        if (optionsString == null)
+            return false;
+
         try {
-            JSONObject options = new JSONObject(getBlogOptions());
+            JSONObject options = new JSONObject(optionsString);
             if (options.has("jetpack_client_id"))
                 return true;
         } catch (JSONException e) {

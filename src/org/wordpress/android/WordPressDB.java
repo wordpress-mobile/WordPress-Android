@@ -538,6 +538,7 @@ public class WordPressDB {
         List<Object> blogVals = getBlog(blog_id);
 
         if (blogVals != null) {
+            blog = new Blog();
             blog.setLocalTableBlogId(blog_id);
             blog.setUrl(blogVals.get(0).toString());
             blog.setBlogName(blogVals.get(1).toString());
