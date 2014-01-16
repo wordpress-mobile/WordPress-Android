@@ -66,8 +66,6 @@ android {
 	    compile 'org.wordpress:slidinguppanel:1.0.0'
 	    compile 'org.wordpress:android-passcodelock:0.0.4'
 	    compile 'org.wordpress:commons-lang:2.6'
-        compile 'com.squareup.dagger:dagger:1.2.+'
-        compile 'com.squareup.dagger:dagger-compiler:1.2.+'
         releaseCompile 'org.wordpress:emailchecker:0.1'
 	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
 	    betagroupCompile 'org.wordpress:emailchecker:0.1'
