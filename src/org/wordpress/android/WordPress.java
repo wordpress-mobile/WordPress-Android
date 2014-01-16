@@ -38,6 +38,9 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.networking.Authenticator;
+import org.wordpress.android.networking.AuthenticatorRequest;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -46,7 +49,6 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
-import org.wordpress.android.util.WPRestClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -73,7 +75,7 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
-    public static WPRestClient restClient;
+    public static RestClientUtils restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static final String TAG = "WordPress";
@@ -114,7 +116,7 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
+        restClient = new RestClientUtils(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature
@@ -187,7 +189,7 @@ public class WordPress extends Application {
             }
         }
     }
-    
+
     /**
      * Get versionName from Manifest.xml
      *
@@ -343,10 +345,9 @@ public class WordPress extends Application {
 
     }
 
-    class OauthAuthenticator implements WPRestClient.Authenticator {
-
+    class OauthAuthenticator implements Authenticator {
         @Override
-        public void authenticate(WPRestClient.Request request) {
+        public void authenticate(AuthenticatorRequest request) {
 
             String siteId = request.getSiteId();
             String token = null;
@@ -387,7 +388,7 @@ public class WordPress extends Application {
 
         }
 
-        public void requestAccessToken(final WPRestClient.Request request, final Blog blog) {
+        public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
 
             Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
 
@@ -476,7 +477,7 @@ public class WordPress extends Application {
 
         //Delete all the Notes
         WordPress.wpDB.clearNotes();
-        
+
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
@@ -523,7 +524,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -531,7 +532,7 @@ public class WordPress extends Application {
                         defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     }
                     headers.putAll(defaultHeaders);
-                    
+
                     return super.performRequest(request, headers);
                 }
             };
@@ -550,7 +551,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -566,23 +567,23 @@ public class WordPress extends Application {
             return stack;
         }
     }
-    
+
     /*
      * Detect when the app goes to the background and come back to the foreground.
-     * 
-     * Turns out that when your app has no more visible UI, a callback is triggered. 
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
+     *
+     * Turns out that when your app has no more visible UI, a callback is triggered.
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
      * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
-     * 
+     *
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
-     * 
+     *
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-        
+
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
-        
+
         boolean background = false;
 
         @Override
@@ -602,24 +603,24 @@ public class WordPress extends Application {
             } else {
                 background = false;
             }
-            
+
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
- 
+
         }
-        
+
         private boolean mustPingPushNotificationsBackend() {
-            
+
             if (WordPress.hasValidWPComCredentials(mContext) == false)
                 return false;
-            
+
             if (background == false)
                 return false;
-            
+
             background = false;
-            
+
             if (lastPingDate == null)
                 return false; //first startup
 
@@ -627,19 +628,19 @@ public class WordPress extends Application {
             long nowInMilliseconds = now.getTime();
             long lastPingDateInMilliseconds = lastPingDate.getTime();
             int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {         
+            if (secondsPassed >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
 
             return false;
         }
-        
+
         @Override
         public void onActivityResumed(Activity arg0) {
             if(mustPingPushNotificationsBackend()) {
                 //uhhh ohhh!
-                
+
                 if (WordPress.hasValidWPComCredentials(mContext)) {
                     String token = null;
                     try {
@@ -659,7 +660,7 @@ public class WordPress extends Application {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                     }
                 }
-                
+
             }
         }
 
@@ -685,6 +686,6 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityStopped(Activity arg0) {
-        }    
+        }
     }
 }

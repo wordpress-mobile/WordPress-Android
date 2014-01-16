@@ -20,6 +20,8 @@ import java.util.Map;
 
 import android.util.Xml;
 
+import com.google.gson.Gson;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

@@ -75,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private static final String TAG = "WPActionBarActivity";
 
     /**
-     * Request code used when no accounts exist, and user is prompted to add an
+     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
      */
     private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
-     * Request code for reloading menu after returning from  the PreferencesActivity.
+     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
      */
     private static final int SETTINGS_REQUEST = 200;
     /**
-     * Request code for re-authentication
+     * AuthenticatorRequest code for re-authentication
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
@@ -103,7 +103,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int VIEW_SITE_ACTIVITY = 9;
     protected static final int DASHBOARD_ACTIVITY = 10;
     protected static final int NOTIFICATIONS_ACTIVITY = 11;
-    
+
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
 
     protected MenuDrawer mMenuDrawer;
@@ -173,7 +173,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         Blog currentBlog = WordPress.getCurrentBlog();
-            
+
         if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getLocalTableBlogId()) {
@@ -184,10 +184,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
     }
-    
+
     /**
      * Create a menu drawer and attach it to the activity.
-     * 
+     *
      * @param contentViewID {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewID) {
@@ -201,18 +201,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     /**
      * Create a menu drawer and attach it to the activity.
-     * 
+     *
      * @param contentView {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(View contentView) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentView);
 
         initMenuDrawer();
     }
-    
+
     /**
      * Attach a menu drawer to the Activity
      * Set to be a static drawer if on a landscape x-large device
@@ -318,7 +318,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mMenuDrawer.invalidate();
             }
         });
-        
+
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
         if (blogSelection != -1 && mBlogSpinner != null) {
@@ -386,7 +386,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mAdapter.notifyDataSetChanged();
 
     }
-        
+
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
 
         MenuAdapter(Context context) {
@@ -447,7 +447,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     /**
      * Get the names of all the blogs configured within the application. If a
      * blog does not have a specific name, the blog URL is returned.
-     * 
+     *
      * @return array of blog names
      */
     private static String[] getBlogNames() {
@@ -564,7 +564,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
         }
     }
-    
+
     private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
 
         @Override
@@ -580,7 +580,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onNothingSelected(IcsAdapterView<?> arg0) { 
+        public void onNothingSelected(IcsAdapterView<?> arg0) {
         }
     };
 
@@ -698,16 +698,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private class ReaderMenuItem extends MenuDrawerItem {
-        
+
         ReaderMenuItem(){
             super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
         }
-        
+
         @Override
         public Boolean isVisible(){
             return WordPress.hasValidWPComCredentials(WPActionBarActivity.this);
         }
-        
+
         @Override
         public Boolean isSelected(){
             return WPActionBarActivity.this instanceof ReaderActivity;
@@ -768,7 +768,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
-    
+
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
             super(PAGES_ACTIVITY, R.string.pages, R.drawable.dashboard_icon_pages);
@@ -832,7 +832,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
-    
+
     private class ThemesMenuItem extends MenuDrawerItem {
         ThemesMenuItem(){
             super(THEMES_ACTIVITY, R.string.themes, R.drawable.dashboard_icon_themes);
@@ -849,7 +849,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
-        
+
         @Override
         public Boolean isVisible() {
             if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isAdmin() && WordPress.getCurrentBlog().isDotcomFlag())
@@ -857,7 +857,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             return false;
         }
     }
-    
+
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
@@ -871,7 +871,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
-            
+
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
             intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);

@@ -22,9 +22,10 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.networking.RestClientUtilsFactory;
+import org.wordpress.android.networking.RestClientUtilsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.WPRestClient;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
@@ -35,7 +36,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected ConnectivityManager mSystemService;
     protected ProgressDialog mProgressDialog;
     protected static RequestQueue requestQueue = null;
-    protected static WPRestClient restClient = null;
+    protected static RestClientUtilsInterface restClient = null;
     protected boolean mPasswordVisible;
 
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
@@ -45,10 +46,12 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         super.onCreate(savedInstanceState);
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (requestQueue == null)
+        if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(getActivity());
-        if (restClient == null)
-            restClient = new WPRestClient(requestQueue, null);
+        }
+        if (restClient == null) {
+            restClient = RestClientUtilsFactory.instantiate(requestQueue, null);
+        }
     }
 
     protected void startProgress(String message) {
@@ -250,7 +253,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             return R.string.blog_title_invalid;
         if (errorCode.equals("username_invalid"))
             return R.string.username_invalid;
-        
+
         return 0;
     }
 }

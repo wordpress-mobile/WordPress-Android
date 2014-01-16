@@ -13,10 +13,10 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtilsInterface;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.WPRestClient;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class CreateUserAndBlog {
     private Context mContext;
     private Callback mCallback;
     private NewAccountAbstractPageFragment.ErrorListener mErrorListener;
-    private WPRestClient mRestClient;
+    private RestClientUtilsInterface mRestClient;
     private ResponseHandler mResponseHandler;
 
     public interface Callback {
@@ -123,7 +123,7 @@ public class CreateUserAndBlog {
     }
 
     public CreateUserAndBlog(String email, String username, String password, String siteUrl,
-                             String siteName, String language, WPRestClient restClient,
+                             String siteName, String language, RestClientUtilsInterface restClient,
                              Context context,
                              NewAccountAbstractPageFragment.ErrorListener errorListener,
                              Callback callback) {
