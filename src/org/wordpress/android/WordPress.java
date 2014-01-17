@@ -40,8 +40,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.Authenticator;
 import org.wordpress.android.networking.AuthenticatorRequest;
-import org.wordpress.android.networking.RestClientUtilsFactory;
-import org.wordpress.android.networking.RestClientUtilsInterface;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -76,7 +75,7 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
-    public static RestClientUtilsInterface restClient;
+    public static RestClientUtils restClient;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static final String TAG = "WordPress";
@@ -117,7 +116,7 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = RestClientUtilsFactory.instantiate(requestQueue, new OauthAuthenticator());
+        restClient = new RestClientUtils(requestQueue, new OauthAuthenticator());
         registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature

@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class RestClientUtils implements RestClientUtilsInterface {
+public class RestClientUtils {
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
 
@@ -60,7 +60,7 @@ public class RestClientUtils implements RestClientUtilsInterface {
     public RestClientUtils(RequestQueue queue, Authenticator authenticator) {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = new RestClient(queue);
+        mRestClient = RestClientFactory.instantiate(queue);
         if (DeviceUtils.getInstance().isBlackBerry()) {
             mRestClient.setUserAgent(DeviceUtils.getBlackBerryUserAgent());
         } else {
@@ -398,8 +398,8 @@ public class RestClientUtils implements RestClientUtilsInterface {
                     ErrorListener errorListener) {
         // turn params into querystring
 
-        RestRequest request = mRestClient
-                .makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, listener, errorListener);
+        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null,
+                                                      listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         }
@@ -420,8 +420,8 @@ public class RestClientUtils implements RestClientUtilsInterface {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request =
-                mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params, listener, errorListener);
+        final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params,
+                                                            listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
                                                  REST_BACKOFF_MULT); //Do not retry on failure

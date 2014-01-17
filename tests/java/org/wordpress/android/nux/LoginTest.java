@@ -4,10 +4,10 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
-import org.wordpress.android.mocks.RestClientUtilsFactoryTest;
+import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest.Mode;
-import org.wordpress.android.networking.RestClientUtilsFactory;
+import org.wordpress.android.networking.RestClientFactory;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.xmlrpc.android.XMLRPCFactory;
 
@@ -17,7 +17,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
     public LoginTest() {
         super(WelcomeActivity.class);
         XMLRPCFactory.factory = new XMLRPCFactoryTest();
-        RestClientUtilsFactory.factory = new RestClientUtilsFactoryTest();
+        RestClientFactory.factory = new RestClientFactoryTest();
     }
 
     @Override

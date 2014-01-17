@@ -22,21 +22,19 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.networking.RestClientUtilsFactory;
-import org.wordpress.android.networking.RestClientUtilsInterface;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
- *
  */
 public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected ConnectivityManager mSystemService;
     protected ProgressDialog mProgressDialog;
     protected static RequestQueue requestQueue = null;
-    protected static RestClientUtilsInterface restClient = null;
+    protected static RestClientUtils restClient = null;
     protected boolean mPasswordVisible;
 
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
@@ -50,7 +48,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             requestQueue = Volley.newRequestQueue(getActivity());
         }
         if (restClient == null) {
-            restClient = RestClientUtilsFactory.instantiate(requestQueue, null);
+            restClient = new RestClientUtils(requestQueue, null);
         }
     }
 
@@ -67,8 +65,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event.getAction() == KeyEvent.ACTION_DOWN &&
-                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
             onDoneAction();
             return true;
         }
@@ -78,7 +75,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected void initPasswordVisibilityButton(View rootView, final EditText passwordEditText) {
         final ImageView passwordVisibility = (ImageView) rootView.findViewById(R.id.password_visibility);
         if (passwordVisibility == null) {
-            return ;
+            return;
         }
         passwordVisibility.setOnClickListener(new OnClickListener() {
             @Override
@@ -93,9 +90,9 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
                 }
                 passwordEditText.setSelection(passwordEditText.length());
             }
-        }
-        );
+        });
     }
+
     protected class ErrorListener implements RestRequest.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -103,14 +100,13 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             int messageId;
             AppLog.e(T.NUX, error);
             if (error.networkResponse != null && error.networkResponse.data != null) {
-                AppLog.e(T.NUX, String.format("Error message: %s",
-                        new String(error.networkResponse.data)));
+                AppLog.e(T.NUX, String.format("Error message: %s", new String(error.networkResponse.data)));
                 String jsonString = new String(error.networkResponse.data);
                 try {
                     JSONObject errorObj = new JSONObject(jsonString);
                     messageId = getErrorMessageForErrorCode((String) errorObj.get("error"));
                     if (messageId == 0) { // Not one of our common errors. Show the error message
-                                           // from the server.
+                        // from the server.
                         message = (String) errorObj.get("message");
                     }
                 } catch (JSONException e) {
@@ -143,7 +139,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected void showError(int messageId) {
         if (specificShowError(messageId)) {
-            return ;
+            return;
         }
         // Failback if it's not a specific error
         showError(getString(messageId));
@@ -151,9 +147,8 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected void showError(String message) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error),
-                message, getString(R.string.nux_tap_continue),
-                R.drawable.nux_icon_alert);
+        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message, getString(
+                R.string.nux_tap_continue), R.drawable.nux_icon_alert);
         nuxAlert.show(ft, "alert");
     }
 
@@ -197,62 +192,90 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     }
 
     protected int getErrorMessageForErrorCode(String errorCode) {
-        if (errorCode.equals("username_only_lowercase_letters_and_numbers"))
+        if (errorCode.equals("username_only_lowercase_letters_and_numbers")) {
             return R.string.username_only_lowercase_letters_and_numbers;
-        if (errorCode.equals("username_required"))
+        }
+        if (errorCode.equals("username_required")) {
             return R.string.username_required;
-        if (errorCode.equals("username_not_allowed"))
+        }
+        if (errorCode.equals("username_not_allowed")) {
             return R.string.username_not_allowed;
-        if (errorCode.equals("email_cant_be_used_to_signup"))
+        }
+        if (errorCode.equals("email_cant_be_used_to_signup")) {
             return R.string.email_cant_be_used_to_signup;
-        if (errorCode.equals("username_must_be_at_least_four_characters"))
+        }
+        if (errorCode.equals("username_must_be_at_least_four_characters")) {
             return R.string.username_must_be_at_least_four_characters;
-        if (errorCode.equals("username_contains_invalid_characters"))
+        }
+        if (errorCode.equals("username_contains_invalid_characters")) {
             return R.string.username_contains_invalid_characters;
-        if (errorCode.equals("username_must_include_letters"))
+        }
+        if (errorCode.equals("username_must_include_letters")) {
             return R.string.username_must_include_letters;
-        if (errorCode.equals("email_invalid"))
+        }
+        if (errorCode.equals("email_invalid")) {
             return R.string.email_invalid;
-        if (errorCode.equals("email_not_allowed"))
+        }
+        if (errorCode.equals("email_not_allowed")) {
             return R.string.email_not_allowed;
-        if (errorCode.equals("username_exists"))
+        }
+        if (errorCode.equals("username_exists")) {
             return R.string.username_exists;
-        if (errorCode.equals("email_exists"))
+        }
+        if (errorCode.equals("email_exists")) {
             return R.string.email_exists;
-        if (errorCode.equals("username_reserved_but_may_be_available"))
+        }
+        if (errorCode.equals("username_reserved_but_may_be_available")) {
             return R.string.username_reserved_but_may_be_available;
-        if (errorCode.equals("email_reserved"))
+        }
+        if (errorCode.equals("email_reserved")) {
             return R.string.email_reserved;
-        if (errorCode.equals("blog_name_required"))
+        }
+        if (errorCode.equals("blog_name_required")) {
             return R.string.blog_name_required;
-        if (errorCode.equals("blog_name_not_allowed"))
+        }
+        if (errorCode.equals("blog_name_not_allowed")) {
             return R.string.blog_name_not_allowed;
-        if (errorCode.equals("blog_name_must_be_at_least_four_characters"))
+        }
+        if (errorCode.equals("blog_name_must_be_at_least_four_characters")) {
             return R.string.blog_name_must_be_at_least_four_characters;
-        if (errorCode.equals("blog_name_must_be_less_than_sixty_four_characters"))
+        }
+        if (errorCode.equals("blog_name_must_be_less_than_sixty_four_characters")) {
             return R.string.blog_name_must_be_less_than_sixty_four_characters;
-        if (errorCode.equals("blog_name_contains_invalid_characters"))
+        }
+        if (errorCode.equals("blog_name_contains_invalid_characters")) {
             return R.string.blog_name_contains_invalid_characters;
-        if (errorCode.equals("blog_name_cant_be_used"))
+        }
+        if (errorCode.equals("blog_name_cant_be_used")) {
             return R.string.blog_name_cant_be_used;
-        if (errorCode.equals("blog_name_only_lowercase_letters_and_numbers"))
+        }
+        if (errorCode.equals("blog_name_only_lowercase_letters_and_numbers")) {
             return R.string.blog_name_only_lowercase_letters_and_numbers;
-        if (errorCode.equals("blog_name_must_include_letters"))
+        }
+        if (errorCode.equals("blog_name_must_include_letters")) {
             return R.string.blog_name_must_include_letters;
-        if (errorCode.equals("blog_name_exists"))
+        }
+        if (errorCode.equals("blog_name_exists")) {
             return R.string.blog_name_exists;
-        if (errorCode.equals("blog_name_reserved"))
+        }
+        if (errorCode.equals("blog_name_reserved")) {
             return R.string.blog_name_reserved;
-        if (errorCode.equals("blog_name_reserved_but_may_be_available"))
+        }
+        if (errorCode.equals("blog_name_reserved_but_may_be_available")) {
             return R.string.blog_name_reserved_but_may_be_available;
-        if (errorCode.equals("password_invalid"))
+        }
+        if (errorCode.equals("password_invalid")) {
             return R.string.password_invalid;
-        if (errorCode.equals("blog_name_invalid"))
+        }
+        if (errorCode.equals("blog_name_invalid")) {
             return R.string.blog_name_invalid;
-        if (errorCode.equals("blog_title_invalid"))
+        }
+        if (errorCode.equals("blog_title_invalid")) {
             return R.string.blog_title_invalid;
-        if (errorCode.equals("username_invalid"))
+        }
+        if (errorCode.equals("username_invalid")) {
             return R.string.username_invalid;
+        }
 
         return 0;
     }

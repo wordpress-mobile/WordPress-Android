@@ -3,24 +3,27 @@ package org.wordpress.android.mocks;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
+import com.wordpress.rest.RestClient;
 
-import org.wordpress.android.networking.Authenticator;
-import org.wordpress.android.networking.RestClientUtilsFactoryAbstract;
-import org.wordpress.android.networking.RestClientUtilsInterface;
+import org.wordpress.android.networking.RestClientFactoryAbstract;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class RestClientUtilsFactoryTest implements RestClientUtilsFactoryAbstract {
+/**
+ * Created by max on 17/01/2014.
+ */
+public class RestClientFactoryTest implements RestClientFactoryAbstract {
     public enum Mode {EMPTY}
+
     public static Mode sMode = Mode.EMPTY;
     public static Context sContext;
 
-    public RestClientUtilsInterface make(RequestQueue queue, Authenticator authenticator) {
+    public RestClient make(RequestQueue queue) {
         switch (sMode) {
             case EMPTY:
             default:
                 AppLog.v(T.TESTS, "make: RestClientUtilsEmptyMock");
-                return new RestClientUtilsEmptyMock();
+                return new RestClientEmptyMock(queue);
         }
     }
 }
