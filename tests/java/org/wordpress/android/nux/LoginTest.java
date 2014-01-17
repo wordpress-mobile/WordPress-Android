@@ -4,8 +4,10 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
+import org.wordpress.android.mocks.RestClientUtilsFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest.Mode;
+import org.wordpress.android.networking.RestClientUtilsFactory;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.xmlrpc.android.XMLRPCFactory;
 
@@ -14,6 +16,8 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
 
     public LoginTest() {
         super(WelcomeActivity.class);
+        XMLRPCFactory.factory = new XMLRPCFactoryTest();
+        RestClientUtilsFactory.factory = new RestClientUtilsFactoryTest();
     }
 
     @Override
@@ -21,10 +25,11 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         // setUp() is run before a test case is started.
         // This is where the solo object is created.
         solo = new Solo(getInstrumentation(), getActivity());
-        // reset XMLRPCFactory state
-        XMLRPCFactory.factory = null;
-        // reset XMLRPCFactoryTest state
+        // reset factory states
+        // XMLRPCFactory.factory = null;
         XMLRPCFactoryTest.sMode = Mode.EMPTY;
+        // RestClientUtilsFactory.factory = null;
+
         // Init XMLRPCFactoryTest context (use instrumentation context)
         XMLRPCFactoryTest.sContext = getInstrumentation().getContext();
     }
@@ -35,6 +40,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         // finishOpenedActivities() will finish all the activities that have been opened during the test execution.
         solo.finishOpenedActivities();
     }
+
 /*
     // TODO: remove this test (we don't want to test production version of XMLRPCClient class)
     public void testWrongCredential() throws Exception {
@@ -57,11 +63,9 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
 
     public void testGoodCredentialsWithXMLRPCCustomMock() throws Exception {
         XMLRPCFactoryTest.sMode = Mode.CUSTOMIZABLE;
-        XMLRPCFactory.factory = new XMLRPCFactoryTest();
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        //solo.waitForText("ekjfoizejfoij");
         boolean errorMessageFound = solo.searchText("no network");
         assertTrue("Error message found, and that's wrong!", errorMessageFound);
     }

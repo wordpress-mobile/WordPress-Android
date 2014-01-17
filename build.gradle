@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.0.1'
     }
 }
 
@@ -13,6 +14,7 @@ repositories {
 }
 
 apply plugin: 'android'
+apply plugin: 'hugo'
 
 android {
     lintOptions {

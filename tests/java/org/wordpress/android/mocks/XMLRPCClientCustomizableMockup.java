@@ -19,7 +19,7 @@ import java.net.URI;
 
 public class XMLRPCClientCustomizableMockup implements XMLRPCClientInterface {
     private Context mContext;
-    private String mPrefix = "default";
+    private String mPrefix;
 
     public void setContext(Context context, String prefix) {
         mContext = context;

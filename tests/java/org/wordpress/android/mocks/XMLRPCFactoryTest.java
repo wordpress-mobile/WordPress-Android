@@ -12,6 +12,7 @@ import java.net.URI;
 public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract  {
     public enum Mode {EMPTY, CUSTOMIZABLE}
     public static Mode sMode = Mode.EMPTY;
+    public static String sPrefix = "default";
     public static Context sContext;
 
     public XMLRPCClientInterface make(URI uri, String httpUser, String httpPassword) {
@@ -19,14 +20,16 @@ public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract  {
             case CUSTOMIZABLE:
                 XMLRPCClientCustomizableMockup client = new XMLRPCClientCustomizableMockup(uri, httpUser, httpPassword);
                 if (sContext != null) {
-                    // TODO: add context string param
-                    client.setContext(sContext, "default");
+                    client.setContext(sContext, sPrefix);
                 } else {
                     AppLog.e(T.TESTS, "You have to set XMLRPCFactoryTest.sContext field before running tests");
+                    throw new IllegalStateException();
                 }
+                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableMockup");
                 return client;
             case EMPTY:
             default:
+                AppLog.v(T.TESTS, "make: XMLRPCClientEmptyMock");
                 return new XMLRPCClientEmptyMock(uri, httpUser, httpPassword);
         }
     }

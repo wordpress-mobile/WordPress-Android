@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
@@ -56,8 +55,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.nux_fragment_welcome, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
@@ -113,14 +111,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private void autocorrectUsername() {
-        if (mEmailAutoCorrected)
+        if (mEmailAutoCorrected) {
             return;
+        }
         final String email = mUsernameEditText.getText().toString().trim();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find()) {
-            return ;
+            return;
         }
         // It looks like an email address, then try to correct it
         String suggest = mEmailChecker.suggestDomainCorrection(email);
@@ -161,8 +160,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void signin() {
         if (!wpcomFieldsFilled()) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            WPAlertDialogFragment alert = WPAlertDialogFragment
-                    .newInstance(getString(R.string.required_fields));
+            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.required_fields));
             alert.show(ft, "alert");
             return;
         }
@@ -196,13 +194,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private boolean wpcomFieldsFilled() {
-        return mUsernameEditText.getText().toString().trim().length() > 0
-                && mPasswordEditText.getText().toString().trim().length() > 0;
+        return mUsernameEditText.getText().toString().trim().length() > 0 &&
+               mPasswordEditText.getText().toString().trim().length() > 0;
     }
 
     private boolean selfHostedFieldsFilled() {
-        return wpcomFieldsFilled()
-                && mUrlEditText.getText().toString().trim().length() > 0;
+        return wpcomFieldsFilled() && mUrlEditText.getText().toString().trim().length() > 0;
     }
 
     private void showPasswordError(int messageId) {
@@ -227,7 +224,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     public void signInDotComUser() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences settings =
+                PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
         if (username != null && password != null) {
@@ -276,7 +274,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 mSetupBlog.setSelfHostedURL(null);
             }
             startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) :
-                    getString(R.string.connecting_wpcom));
+                                  getString(R.string.connecting_wpcom));
         }
 
         @Override
@@ -293,7 +291,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         protected void onPostExecute(final List<Object> userBlogList) {
             if (mSetupBlog.isHttpAuthRequired()) {
                 if (getActivity() == null) {
-                    return ;
+                    return;
                 }
                 // Prompt for http credentials
                 mSetupBlog.setHttpAuthRequired(false);
@@ -309,7 +307,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     public void onClick(DialogInterface dialog, int whichButton) {
                         SetupBlogTask setupBlogTask = new SetupBlogTask();
                         setupBlogTask.setHttpCredentials(usernameEditText.getText().toString(),
-                                passwordEditText.getText().toString());
+                                                         passwordEditText.getText().toString());
                         setupBlogTask.execute();
                     }
                 });
@@ -329,23 +327,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                            R.drawable.nux_icon_alert, true,
-                            getString(R.string.visit_security_settings),
-                            NUXDialogFragment.ACTION_OPEN_URL,
-                            "https://wordpress.com/settings/security/?ssl=forced");
+                    nuxAlert = NUXDialogFragment
+                            .newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
+                                         getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
+                                         getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
+                                         "https://wordpress.com/settings/security/?ssl=forced");
                 } else {
                     if (mErrorMsgId == R.string.username_or_password_incorrect) {
                         showUsernameError(mErrorMsgId);
                         showPasswordError(mErrorMsgId);
                         mErrorMsgId = 0;
                         endProgress();
-                        return ;
+                        return;
                     } else {
-                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                                getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                                R.drawable.nux_icon_alert);
+                        nuxAlert = NUXDialogFragment
+                                .newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
+                                             getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                     }
                 }
                 nuxAlert.show(ft, "alert");
@@ -356,12 +353,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             // Update wp.com credentials
             if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
-                SharedPreferences settings = PreferenceManager.
-                        getDefaultSharedPreferences(getActivity());
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
                 editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE,
-                        WordPressDB.encryptPassword(mSetupBlog.getPassword()));
+                                 WordPressDB.encryptPassword(mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
                 WordPress.restClient.get("me", new RestRequest.Listener() {
