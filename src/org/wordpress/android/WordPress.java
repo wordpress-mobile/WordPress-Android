@@ -21,7 +21,6 @@ import android.preference.PreferenceManager;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
@@ -31,15 +30,14 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wordpress.rest.Oauth;
 
 import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.networking.Authenticator;
-import org.wordpress.android.networking.AuthenticatorRequest;
+import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -116,13 +114,16 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new RestClientUtils(requestQueue, new OauthAuthenticator());
+        OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+        restClient = new RestClientUtils(requestQueue, authenticator);
         registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
-        if (AppLockManager.getInstance().isAppLockFeatureEnabled())
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+                    new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
+        }
 
         WPMobileStatsUtil.initialize();
         WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
@@ -343,110 +344,6 @@ public class WordPress extends Application {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
 
-    }
-
-    class OauthAuthenticator implements Authenticator {
-        @Override
-        public void authenticate(AuthenticatorRequest request) {
-
-            String siteId = request.getSiteId();
-            String token = null;
-            Blog blog = null;
-
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-            if (siteId == null) {
-                // Use the global access token
-                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-            } else {
-                blog = wpDB.getBlogForDotComBlogId(siteId);
-
-                if (blog != null) {
-                    // get the access token from api key field
-                    token = blog.getApi_key();
-
-                    // valid oauth tokens are 64 chars
-                    if (token != null && token.length() < 64 && !blog.isDotcomFlag()) {
-                        token = null;
-                    }
-
-                    // if there is no access token, but this is the dotcom flag
-                    if (token == null && (blog.isDotcomFlag() &&
-                            blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, "")))) {
-                        token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-                    }
-                }
-
-            }
-
-            if (token != null) {
-                // we have an access token, set the request and send it
-                request.sendWithAccessToken(token);
-            } else {
-                // we don't have an access token, let's request one
-                requestAccessToken(request, blog);
-            }
-
-        }
-
-        public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
-
-            Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
-
-            // make oauth volley request
-
-            String username = null, password = null;
-            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-
-            if (blog == null) {
-                // We weren't give a specific blog, so we're going to user the username/password
-                // from the "global" dotcom user account
-                username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-                password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
-            } else {
-                // use the requested blog's username password, if it's a dotcom blog, use the
-                // username and password for the blog. If it's a jetpack blog (not isDotcomFlag)
-                // then use the getDotcom_* methods for username/password
-                if (blog.isDotcomFlag()) {
-                    username = blog.getUsername();
-                    password = blog.getPassword();
-                } else {
-                    username = blog.getDotcom_username();
-                    password = blog.getDotcom_password();
-                }
-            }
-
-            Request oauthRequest = oauth.makeRequest(username, password,
-
-                    new Oauth.Listener() {
-
-                        @Override
-                        public void onResponse(Oauth.Token token) {
-                            if (blog == null) {
-                                settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
-                                        commit();
-                            } else {
-                                blog.setApi_key(token.toString());
-                                WordPress.wpDB.saveBlog(blog);
-                            }
-                            request.sendWithAccessToken(token);
-                        }
-
-                    },
-
-                    new Oauth.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            request.abort(error);
-                        }
-
-                    }
-            );
-
-            // add oauth request to the request queue
-            requestQueue.add(oauthRequest);
-
-        }
     }
 
     /**

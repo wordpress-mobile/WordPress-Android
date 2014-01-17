@@ -20,7 +20,7 @@ public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract  {
             case CUSTOMIZABLE:
                 XMLRPCClientCustomizableMockup client = new XMLRPCClientCustomizableMockup(uri, httpUser, httpPassword);
                 if (sContext != null) {
-                    client.setContext(sContext, sPrefix);
+                    client.setContextAndPrefix(sContext, sPrefix);
                 } else {
                     AppLog.e(T.TESTS, "You have to set XMLRPCFactoryTest.sContext field before running tests");
                     throw new IllegalStateException();

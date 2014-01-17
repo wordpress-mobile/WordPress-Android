@@ -12,7 +12,7 @@ public class XMLRPCFactory {
         if (factory == null) {
             factory = new XMLRPCFactoryDefault();
         }
-        AppLog.v(T.UTILS, "instantiate RestClientUtilsInterface using factory: " + factory.getClass());
+        AppLog.v(T.UTILS, "instantiate XMLRPCClient using factory: " + factory.getClass());
         return factory.make(uri, httpUser, httpPassword);
     }
 }

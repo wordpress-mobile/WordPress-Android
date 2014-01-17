@@ -21,7 +21,7 @@ public class XMLRPCClientCustomizableMockup implements XMLRPCClientInterface {
     private Context mContext;
     private String mPrefix;
 
-    public void setContext(Context context, String prefix) {
+    public void setContextAndPrefix(Context context, String prefix) {
         mContext = context;
         mPrefix = prefix;
     }
