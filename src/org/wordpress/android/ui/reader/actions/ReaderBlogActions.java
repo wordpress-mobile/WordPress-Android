@@ -66,7 +66,7 @@ public class ReaderBlogActions {
                 ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isCurrentlyFollowing);
             }
         };
-        WordPress.restClient.post(path, listener, errorListener);
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
     }
@@ -87,7 +87,7 @@ public class ReaderBlogActions {
                 AppLog.e(T.READER, volleyError);
             }
         };
-        WordPress.restClient.get("/read/following/mine", listener, errorListener);
+        WordPress.getRestClientUtils().get("/read/following/mine", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject) {
         if (jsonObject==null)

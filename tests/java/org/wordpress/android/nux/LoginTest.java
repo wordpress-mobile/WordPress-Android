@@ -78,9 +78,8 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        solo.sleep(10000);
+        solo.waitForActivity(".*post.*");
         boolean errorMessageFound = solo.searchText("no network");
-        solo.sleep(10000);
         assertTrue("Error message found, and that's wrong!", errorMessageFound);
     }
 }

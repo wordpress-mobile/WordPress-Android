@@ -31,25 +31,28 @@ import org.wordpress.android.util.AppLog.T;
  * the page number, along with some dummy text.
  */
 public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
+    protected static RequestQueue requestQueue;
+    protected static RestClientUtils mRestClientUtils;
     protected ConnectivityManager mSystemService;
     protected ProgressDialog mProgressDialog;
-    protected static RequestQueue requestQueue = null;
-    protected static RestClientUtils restClient = null;
     protected boolean mPasswordVisible;
-
-    protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppLog.v(T.NUX, "NewAccountAbstractOage.onCreate()");
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(getActivity());
         }
-        if (restClient == null) {
-            restClient = new RestClientUtils(requestQueue, null);
+    }
+
+    protected RestClientUtils getRestClientUtils() {
+        if (mRestClientUtils == null) {
+            mRestClientUtils = new RestClientUtils(requestQueue, null);
         }
+        return mRestClientUtils;
     }
 
     protected void startProgress(String message) {
@@ -91,46 +94,6 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
                 passwordEditText.setSelection(passwordEditText.length());
             }
         });
-    }
-
-    protected class ErrorListener implements RestRequest.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            String message = null;
-            int messageId;
-            AppLog.e(T.NUX, error);
-            if (error.networkResponse != null && error.networkResponse.data != null) {
-                AppLog.e(T.NUX, String.format("Error message: %s", new String(error.networkResponse.data)));
-                String jsonString = new String(error.networkResponse.data);
-                try {
-                    JSONObject errorObj = new JSONObject(jsonString);
-                    messageId = getErrorMessageForErrorCode((String) errorObj.get("error"));
-                    if (messageId == 0) { // Not one of our common errors. Show the error message
-                        // from the server.
-                        message = (String) errorObj.get("message");
-                    }
-                } catch (JSONException e) {
-                    AppLog.e(T.NUX, e);
-                    messageId = R.string.error_generic;
-                }
-            } else {
-                if (error.getMessage() != null) {
-                    if (error.getMessage().contains("Limit reached")) {
-                        messageId = R.string.limit_reached;
-                    } else {
-                        messageId = R.string.error_generic;
-                    }
-                } else {
-                    messageId = R.string.error_generic;
-                }
-            }
-            endProgress();
-            if (messageId == 0) {
-                showError(message);
-            } else {
-                showError(messageId);
-            }
-        }
     }
 
     protected boolean specificShowError(int messageId) {
@@ -278,5 +241,47 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         }
 
         return 0;
+    }
+
+    protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
+
+    protected class ErrorListener implements RestRequest.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            String message = null;
+            int messageId;
+            AppLog.e(T.NUX, error);
+            if (error.networkResponse != null && error.networkResponse.data != null) {
+                AppLog.e(T.NUX, String.format("Error message: %s", new String(error.networkResponse.data)));
+                String jsonString = new String(error.networkResponse.data);
+                try {
+                    JSONObject errorObj = new JSONObject(jsonString);
+                    messageId = getErrorMessageForErrorCode((String) errorObj.get("error"));
+                    if (messageId == 0) { // Not one of our common errors. Show the error message
+                        // from the server.
+                        message = (String) errorObj.get("message");
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.NUX, e);
+                    messageId = R.string.error_generic;
+                }
+            } else {
+                if (error.getMessage() != null) {
+                    if (error.getMessage().contains("Limit reached")) {
+                        messageId = R.string.limit_reached;
+                    } else {
+                        messageId = R.string.error_generic;
+                    }
+                } else {
+                    messageId = R.string.error_generic;
+                }
+            }
+            endProgress();
+            if (messageId == 0) {
+                showError(message);
+            } else {
+                showError(messageId);
+            }
+        }
     }
 }

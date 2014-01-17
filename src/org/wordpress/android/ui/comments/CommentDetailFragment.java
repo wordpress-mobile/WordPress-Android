@@ -675,6 +675,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         mIsRequestingComment = true;
-        WordPress.restClient.get(path, restListener, restErrListener);
+        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }

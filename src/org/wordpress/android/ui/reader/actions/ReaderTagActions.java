@@ -117,7 +117,7 @@ public class ReaderTagActions {
                     actionListener.onActionResult(false);
             }
         };
-        WordPress.restClient.post(path, listener, errorListener);
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
     }
@@ -163,7 +163,7 @@ public class ReaderTagActions {
             }
         };
         AppLog.d(T.READER, "updating reader tags");
-        WordPress.restClient.get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get("read/menu", null, null, listener, errorListener);
     }
     private static void handleUpdateTagsResponse(final JSONObject jsonObject, final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject==null) {

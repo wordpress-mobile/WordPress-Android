@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.InflaterInputStream;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -24,40 +15,46 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.AppLog;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
-    
+
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
-    
+
     public static void refreshNotifications(final RestRequest.Listener listener,
                                             final RestRequest.ErrorListener errorListener) {
-        WordPress.restClient.getNotifications(
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (listener != null) {
-                            listener.onResponse(response);
-                        }
-                    }
-                },
-                new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (errorListener != null) {
-                            errorListener.onErrorResponse(error);
-                        }
-                    }
-                }
+        WordPress.getRestClientUtils().getNotifications(new RestRequest.Listener() {
+                                                            @Override
+                                                            public void onResponse(JSONObject response) {
+                                                                if (listener != null) {
+                                                                    listener.onResponse(response);
+                                                                }
+                                                            }
+                                                        }, new RestRequest.ErrorListener() {
+                                                            @Override
+                                                            public void onErrorResponse(VolleyError error) {
+                                                                if (errorListener != null) {
+                                                                    errorListener.onErrorResponse(error);
+                                                                }
+                                                            }
+                                                        }
         );
     }
 
@@ -94,36 +91,36 @@ public class NotificationUtils {
         }
         return unzipped;
     }
-    
-    
+
+
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
-        
+
         String gcmToken = GCMRegistrar.getRegistrationId(context);
         if (TextUtils.isEmpty(gcmToken))
             return;
-        
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
             AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
             return;
         }
-        
-        WordPress.restClient.get("/device/"+deviceID,listener, errorListener);
+
+        WordPress.getRestClientUtils().get("/device/" + deviceID, listener, errorListener);
     }
-    
+
     public static void setPushNotificationSettings(Context context) {
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
-        
+
         String gcmToken = GCMRegistrar.getRegistrationId(context);
         if (TextUtils.isEmpty(gcmToken))
             return;
-        
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
@@ -140,7 +137,7 @@ public class NotificationUtils {
         Map<String, Object> updatedSettings = new HashMap<String, Object>();
         if (notificationSettings == null)
             return;
-       
+
 
         // Build the settings object to send back to WP.com
         StringMap<?> mutedBlogsMap = (StringMap<?>) notificationSettings.get("muted_blogs");
@@ -166,20 +163,20 @@ public class NotificationUtils {
                 mutedBlogsList.add(userBlog);
             }
         }
-     
+
         if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
             return;
-        
+
         updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignement.
-        
+
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
         contentStruct.put("settings", gson.toJson(updatedSettings));
-        WordPress.restClient.post("/device/"+deviceID, contentStruct, null, null, null);
+        WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
     }
-    
+
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString(WPCOM_PUSH_DEVICE_UUID, null);
@@ -225,10 +222,10 @@ public class NotificationUtils {
                 AppLog.e(T.NOTIFS, "Register token action failed", volleyError);
             }
         };
-        
-        WordPress.restClient.post("/devices/new", contentStruct, null, listener, errorListener);
+
+        WordPress.getRestClientUtils().post("/devices/new", contentStruct, null, listener, errorListener);
     }
-    
+
     public static void unregisterDevicePushNotifications(final Context ctx) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -247,23 +244,23 @@ public class NotificationUtils {
                 AppLog.e(T.NOTIFS, "Unregister token action failed", volleyError);
             }
         };
-        
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
             AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Unregistration skipped. WTF has appenend here?!?!");
             return;
         }
-        WordPress.restClient.post("/devices/"+deviceID+"/delete", listener, errorListener);
+        WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
-    
+
     public static String getAppPushNotificationsName(){
         //white listing only few keys.
         if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.beta.build"))
                 return "org.wordpress.android.beta.build";
         if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.debug.build"))
             return "org.wordpress.android.debug.build";
-        
-        return "org.wordpress.android.playstore";        
+
+        return "org.wordpress.android.playstore";
     }
 }

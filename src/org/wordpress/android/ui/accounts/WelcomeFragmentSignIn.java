@@ -360,7 +360,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                                  WordPressDB.encryptPassword(mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
-                WordPress.restClient.get("me", new RestRequest.Listener() {
+                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         ReaderUserActions.setCurrentUser(jsonObject);
