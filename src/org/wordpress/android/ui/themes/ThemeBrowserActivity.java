@@ -192,7 +192,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mFetchingThemes = true;
         startAnimatingRefreshButton();
 
-        WordPress.restClient.getThemes(siteId, 0, 0, new Listener() {
+        WordPress.getRestClientUtils().getThemes(siteId, 0, 0, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -229,7 +229,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private void fetchCurrentTheme() {
         final String siteId = getBlogId();
 
-        WordPress.restClient.getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -452,7 +452,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
         mIsActivatingTheme = true;
 
-        WordPress.restClient.setTheme(siteId, themeId,
+        WordPress.getRestClientUtils().setTheme(siteId, themeId,
                 new Listener() {
 
                     @Override

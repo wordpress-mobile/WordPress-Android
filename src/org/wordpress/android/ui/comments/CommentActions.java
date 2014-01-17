@@ -205,7 +205,7 @@ public class CommentActions {
         };
 
         Note.Reply reply = note.buildReply(replyText);
-        WordPress.restClient.replyToComment(reply, listener, errorListener);
+        WordPress.getRestClientUtils().replyToComment(reply, listener, errorListener);
     }
 
     /**

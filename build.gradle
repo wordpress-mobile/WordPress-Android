@@ -55,6 +55,7 @@ android {
 	    compile 'com.google.code.gson:gson:2.2.2'
 	    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 	    compile 'com.android.support:support-v4:18.0.+'
+        instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
 
 	    // These are provided by the WordPress-Android Repository
 	    compile 'org.wordpress:actionbarsherlock:4.4.0'
@@ -71,7 +72,6 @@ android {
         releaseCompile 'org.wordpress:emailchecker:0.1'
 	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
 	    betagroupCompile 'org.wordpress:emailchecker:0.1'
-        instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
 
 	    // Local dependencies
 	    compile files('libs/MixpanelAPI.jar')

@@ -73,7 +73,7 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
-    public static RestClientUtils restClient;
+    public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static final String TAG = "WordPress";
@@ -111,11 +111,9 @@ public class WordPress extends Application {
         imageLoader.setBatchedResponseDelay(0);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getInt("wp_pref_last_activity", -1) >= 0)
+        if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
             shouldRestoreSelectedActivity = true;
-
-        OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-        restClient = new RestClientUtils(requestQueue, authenticator);
+        }
         registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature
@@ -139,6 +137,14 @@ public class WordPress extends Application {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    public static RestClientUtils getRestClientUtils() {
+        if (mRestClientUtils == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
+        }
+        return mRestClientUtils;
     }
 
     /*

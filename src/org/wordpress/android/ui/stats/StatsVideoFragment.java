@@ -207,7 +207,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
 
             final String blogId = String.valueOf(WordPress.getCurrentBlog());
                         
-            WordPress.restClient.getStatsVideoSummary(blogId, 
+            WordPress.getRestClientUtils().getStatsVideoSummary(blogId, 
                     new Listener() {
                         
                         @Override

@@ -197,7 +197,7 @@ public class CreateUserAndBlog {
         editor.commit();
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
         // fire off a request to get an access token
-        WordPress.restClient.get("me", mResponseHandler, mErrorListener);
+        WordPress.getRestClientUtils().get("me", mResponseHandler, mErrorListener);
     }
 
     private void createBlog() {
@@ -211,7 +211,7 @@ public class CreateUserAndBlog {
         params.put("client_id", Config.OAUTH_APP_ID);
         params.put("client_secret", Config.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_SITE);
-        WordPress.restClient.post(path, params, null, mResponseHandler, mErrorListener);
+        WordPress.getRestClientUtils().post(path, params, null, mResponseHandler, mErrorListener);
     }
 
     public static String getDeviceLanguage(Resources resources) {

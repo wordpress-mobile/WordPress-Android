@@ -136,7 +136,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         protected void onPostExecute(Boolean isSignedIn) {
             if (isSignedIn && !isFinishing()) {
                 if (!mIsJetpackAuthRequest) {
-                    WordPress.restClient.get("me", new RestRequest.Listener() {
+                    WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
