@@ -46,7 +46,7 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
     public Object call(String method, Object[] params) throws XMLRPCException {
         AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
         Gson gson = new Gson();
-        if ("fail".equals(mPrefix)) {
+        if ("login-failure".equals(mPrefix)) {
             // Wrong login
             throw new XMLRPCException("code 403");
         }

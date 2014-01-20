@@ -63,8 +63,8 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
     }
 
     public void testBadCredentials() throws Exception {
-        RestClientFactoryTest.setPrefixAllInstances("fail");
-        XMLRPCFactoryTest.setPrefixAllInstances("fail");
+        RestClientFactoryTest.setPrefixAllInstances("login-failure");
+        XMLRPCFactoryTest.setPrefixAllInstances("login-failure");
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
