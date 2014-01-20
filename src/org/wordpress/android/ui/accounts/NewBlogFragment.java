@@ -159,6 +159,9 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         if (!checkUserData())
             return;
 
+        if (View.VISIBLE==mProgressBarSignIn.getVisibility()) //prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard. Samsung S4 for example
+            return;
+        
         startProgress(getString(R.string.validating_site_data));
 
         final String siteUrl = mSiteUrlTextField.getText().toString().trim();
