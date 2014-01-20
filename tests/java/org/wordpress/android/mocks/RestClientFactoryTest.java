@@ -9,9 +9,35 @@ import org.wordpress.android.networking.RestClientFactoryAbstract;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class RestClientFactoryTest implements RestClientFactoryAbstract {
     public static String sPrefix = "default";
     public static Context sContext;
+    // keep a reference to each instances so we can update contexts and prefixes after instantiation
+    public static Set<RestClientCustomizableMock> sInstances = new HashSet<RestClientCustomizableMock>();
+
+    public static void setContextAllInstances(Context context) {
+        sContext = context;
+        if (sMode != Mode.CUSTOMIZABLE) {
+            AppLog.e(T.TESTS, "You try to change context on a non-customizable RestClient mock");
+        }
+        for (RestClientCustomizableMock client : sInstances) {
+            client.setContext(context);
+        }
+    }
+
+    public static void setPrefixAllInstances(String prefix) {
+        sPrefix = prefix;
+        if (sMode != Mode.CUSTOMIZABLE) {
+            AppLog.e(T.TESTS, "You try to change prefix on a non-customizable RestClient mock");
+        }
+        for (RestClientCustomizableMock client : sInstances) {
+            client.setPrefix(prefix);
+        }
+    }
+
     public static Mode sMode = Mode.EMPTY;
 
     public RestClient make(RequestQueue queue) {
@@ -25,6 +51,7 @@ public class RestClientFactoryTest implements RestClientFactoryAbstract {
                     throw new IllegalStateException();
                 }
                 AppLog.v(T.TESTS, "make: RestClientCustomizableMock");
+                sInstances.add(client);
                 return client;
             case EMPTY:
             default:

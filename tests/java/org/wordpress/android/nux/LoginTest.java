@@ -54,32 +54,21 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         solo.finishOpenedActivities();
     }
 
-/*
-    // TODO: remove this test (we don't want to test production version of XMLRPCClient class)
-    public void testWrongCredential() throws Exception {
+    public void testGoodCredentials() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("default");
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        boolean errorMessageFound = solo.waitForText(".*incorrect.*");
-        assertTrue("Error message not found, wrong login should fail", errorMessageFound);
     }
 
-    public void testGoodCredentialsWithXMLRPCEmptyMock() throws Exception {
-        XMLRPCFactory.factory = new XMLRPCFactoryTest();
+    public void testBadCredentials() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("fail");
+        XMLRPCFactoryTest.setPrefixAllInstances("fail");
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        boolean errorMessageFound = solo.searchText("no network");
-        assertTrue("Error message found, and that's wrong!", errorMessageFound);
-    }
-*/
-
-    public void testGoodCredentialsWithXMLRPCCustomMock() throws Exception {
-        solo.enterText(0, "test");
-        solo.enterText(1, "test");
-        solo.clickOnText("Sign in");
-        solo.waitForActivity(".*post.*");
-        boolean errorMessageFound = solo.searchText("no network");
-        assertTrue("Error message found, and that's wrong!", errorMessageFound);
+        boolean errorMessageFound = solo.searchText("username or password");
+        assertTrue("Error message not found", errorMessageFound);
     }
 }

@@ -17,16 +17,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 
-public class XMLRPCClientCustomizableMockup implements XMLRPCClientInterface {
+public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
     private Context mContext;
     private String mPrefix;
+
+    public XMLRPCClientCustomizableMock(URI uri, String httpUser, String httpPassword) {
+    }
 
     public void setContextAndPrefix(Context context, String prefix) {
         mContext = context;
         mPrefix = prefix;
     }
 
-    public XMLRPCClientCustomizableMockup(URI uri, String httpUser, String httpPassword) {
+    public void setPrefix(String prefix) {
+        mPrefix = prefix;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     public void addQuickPostHeader(String type) {
@@ -36,8 +44,12 @@ public class XMLRPCClientCustomizableMockup implements XMLRPCClientInterface {
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException {
-        AppLog.v(T.TESTS, "XMLRPCClientCustomizableMockup: <call(" + method + ", ...)>");
+        AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
         Gson gson = new Gson();
+        if ("fail".equals(mPrefix)) {
+            // Wrong login
+            throw new XMLRPCException("code 403");
+        }
         if ("wp.getUsersBlogs".equals(method)) {
             String filename = mPrefix + "-wp.getUsersBlogs.json";
             try {

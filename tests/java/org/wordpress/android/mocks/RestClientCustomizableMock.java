@@ -15,8 +15,6 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.IOException;
 import java.io.InputStream;
 
-import hugo.weaving.DebugLog;
-
 public class RestClientCustomizableMock extends RestClient {
     private Context mContext;
     private String mPrefix;
@@ -24,6 +22,14 @@ public class RestClientCustomizableMock extends RestClient {
     public void setContextAndPrefix(Context context, String prefix) {
         mContext = context;
         mPrefix = prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        mPrefix = prefix;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     public RestClientCustomizableMock(com.android.volley.RequestQueue queue) {
@@ -34,23 +40,19 @@ public class RestClientCustomizableMock extends RestClient {
         super(queue, token);
     }
 
-    @DebugLog
     public static String getAbsoluteURL(String url) {
         return null;
     }
 
-    @DebugLog
     public static String getAbsoluteURL(String path, java.util.Map<String, String> params) {
         return null;
     }
 
-    @DebugLog
     public RestRequest get(String path, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
         AppLog.v(T.TESTS, this.getClass() + ": get(" + path + ")");
         return new RestRequest(Method.GET, path, null, listener, errorListener);
     }
 
-    @DebugLog
     public RestRequest post(String path, java.util.Map<String, String> body, RestRequest.Listener listener,
                             RestRequest.ErrorListener errorListener) {
         AppLog.v(T.TESTS, this.getClass() + ": post(" + path + ")");
@@ -62,7 +64,6 @@ public class RestClientCustomizableMock extends RestClient {
         return s.hasNext() ? s.next() : "";
     }
 
-    @DebugLog
     public RestRequest makeRequest(int method, String url, java.util.Map<String, String> params,
                                    RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
         AppLog.v(T.TESTS, this.getClass() + ": makeRequest(" + url + ")");
@@ -84,20 +85,16 @@ public class RestClientCustomizableMock extends RestClient {
         return new RestRequest(method, url, params, listener, errorListener);
     }
 
-    @DebugLog
     public RestRequest send(RestRequest request) {
         return request;
     }
 
-    @DebugLog
     public void setUserAgent(String userAgent) {
     }
 
-    @DebugLog
     public void setAccessToken(String token) {
     }
 
-    @DebugLog
     public boolean isAuthenticated() {
         return true;
     }
