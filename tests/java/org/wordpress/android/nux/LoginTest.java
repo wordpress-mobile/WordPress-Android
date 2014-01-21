@@ -60,6 +60,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
+        solo.waitForActivity(".*ost.*");
     }
 
     public void testBadCredentials() throws Exception {
