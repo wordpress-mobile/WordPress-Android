@@ -67,7 +67,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         com.actionbarsherlock.view.ActionMode.Callback {
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
-    
+
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
     private MediaEditFragment mMediaEditFragment;
@@ -136,13 +136,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_QUERY, mQuery);
     }
-    
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
     }
-    
+
     private void uploadSharedFiles() {
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -240,9 +240,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String message = getString(R.string.media_no_video_message);
         String infoTitle = getString(R.string.learn_more);
         String infoURL = Constants.videoPressURL;
-
-        WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL)
-                .show(ft, "alert");
+        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL);
+        ft.add(alert, "alert");
+        ft.commitAllowingStateLoss();
     }
 
     @Override
@@ -294,7 +294,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
 
         getSupportFragmentManager().executePendingTransactions();
-        
+
         // clear item fragment (only visible on phone)
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible())
             getSupportFragmentManager().popBackStack();
@@ -550,7 +550,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String tmpQuery = mQuery;
         onQueryTextChange("");
         mQuery = tmpQuery;
-        
+
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterVisibility(View.VISIBLE);
             mMediaGridFragment.setFilter(Filter.ALL);
@@ -565,25 +565,25 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onDeleteMedia(final List<String> ids) {
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         List<String> sanitizedIds = new ArrayList<String>(ids.size());
-        
+
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             // phone layout: pop the item fragment if it's visible
             getSupportFragmentManager().popBackStack();
         }
-        
+
         //Make sure there are no media in "uploading"
         for (String currentID : ids) {
             if (MediaUtils.canDeleteMedia(blogId, currentID))
                 sanitizedIds.add(currentID);
         }
-        
+
         if( sanitizedIds.size() != ids.size()) {
             if ( ids.size() == 1  )
                 Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
         }
-        
+
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
         WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
