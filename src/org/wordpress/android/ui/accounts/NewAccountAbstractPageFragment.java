@@ -148,10 +148,10 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected void showError(String message) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error),
-                message, getString(R.string.nux_tap_continue),
-                R.drawable.nux_icon_alert);
-        nuxAlert.show(ft, "alert");
+        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message, getString(
+                R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+        ft.add(nuxAlert,  "alert");
+        ft.commitAllowingStateLoss();
     }
 
     protected ErrorType getErrorType(int messageId) {
@@ -250,7 +250,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             return R.string.blog_title_invalid;
         if (errorCode.equals("username_invalid"))
             return R.string.username_invalid;
-        
+
         return 0;
     }
 }
