@@ -134,10 +134,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
-
                 populateOrFetchCategories();
-
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success),
+                        Toast.LENGTH_SHORT).show();
             }
             if (finalResult.equals("addCategory_failed")) {
                 if (pd.isShowing()) {
@@ -308,9 +307,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        pd = ProgressDialog.show(SelectCategoriesActivity.this,
-                                getResources().getText(R.string.cat_adding_category),
-                                getResources().getText(R.string.cat_adding_category), true, true);
+                        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
+                                R.string.cat_adding_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -375,8 +373,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private void refreshCategories() {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
-        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
-                getResources().getText(R.string.refreshing_categories), true, true);
+        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
+                R.string.refreshing_categories), true, true);
         Thread th = new Thread() {
             public void run() {
                 finalResult = fetchCategories();

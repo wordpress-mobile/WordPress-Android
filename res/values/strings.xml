@@ -55,7 +55,7 @@
     <string name="edit_page">Edit Page</string>
     <string name="edit_post">Edit Post</string>
     <string name="add_comment">Add Comment</string>
-    <string name="refreshing_categories">Refreshing Categories</string>
+    <string name="refreshing_categories">Refreshing categories</string>
     <string name="connection_error">Connection Error</string>
     <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
@@ -225,20 +225,20 @@
     <!-- page actions -->
     <string name="page_actions">Page Actions</string>
     <string name="preview_page">Preview Page</string>
-    <string name="delete_page">Delete Page</string>
+    <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page Deleted Successfully</string>
     <string name="delete_sure_page">Are you sure you want to delete the page</string>
 
     <!-- post actions -->
     <string name="post_actions">Post Actions</string>
     <string name="preview_post">Preview Post</string>
-    <string name="delete_post">Delete Post</string>
+    <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post Deleted Successfully</string>
     <string name="comment_added">Comment Added Successfully</string>
     <string name="delete_sure_post">Are you sure you want to delete the post</string>
-    <string name="share_url">Share Post</string>
-    <string name="share_url_page">Share Page</string>
-    <string name="share_link">Share Link</string>
+    <string name="share_url_post">Share post</string>
+    <string name="share_url_page">Share page</string>
+    <string name="share_link">Share link</string>
     <string name="post_not_published">Post status is not published</string>
     <string name="page_not_published">Page status is not published</string>
     <string name="view_in_browser">View in Browser</string>
@@ -281,7 +281,7 @@
     <string name="adding_cat_failed_check">Please check your settings and try again.</string>
     <string name="adding_cat_success">Category added successfully.</string>
     <string name="cat_name_required">The Category Name field is required.</string>
-    <string name="cat_adding_category">Adding Category</string>
+    <string name="cat_adding_category">Adding category</string>
     <string name="category_automatically_renamed">Category name %1$s is not valid. It has been renamed to %2$s</string>
 
     <!-- action from share intents -->

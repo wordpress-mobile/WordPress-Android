@@ -422,13 +422,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     protected Dialog onCreateDialog(int id) {
         mLoadingDialog = new ProgressDialog(this);
         if (id == ID_DIALOG_DELETING) {
-            mLoadingDialog.setTitle(getResources().getText((mIsPage) ? R.string.delete_page : R.string.delete_post));
-            mLoadingDialog.setMessage(getResources().getText((mIsPage) ? R.string.delete_page : R.string.delete_post));
+            mLoadingDialog.setMessage(getResources().getText(
+                    mIsPage ? R.string.deleting_page : R.string.deleting_post));
             mLoadingDialog.setCancelable(false);
             return mLoadingDialog;
         } else if (id == ID_DIALOG_SHARE) {
-            mLoadingDialog.setTitle(mIsPage ? getString(R.string.share_url_page) : getString(R.string.share_url));
-            mLoadingDialog.setMessage(mIsPage ? getString(R.string.share_url_page) : getString(R.string.share_url));
+            mLoadingDialog.setMessage(mIsPage ? getString(R.string.share_url_page) : getString(
+                    R.string.share_url_post));
             mLoadingDialog.setCancelable(false);
             return mLoadingDialog;
         }
