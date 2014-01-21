@@ -354,12 +354,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             // Update wp.com credentials
             if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
-                SharedPreferences settings = PreferenceManager.
-                        getDefaultSharedPreferences(getActivity());
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
-                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE,
-                        WordPressDB.encryptPassword(mSetupBlog.getPassword()));
+                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(
+                        mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
                 WordPress.restClient.get("me", new RestRequest.Listener() {
