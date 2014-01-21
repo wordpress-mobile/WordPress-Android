@@ -16,11 +16,6 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -58,7 +53,10 @@ import android.text.style.URLSpan;
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.models.Post;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -66,10 +64,10 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.MediaGallery;
-import org.wordpress.android.models.Post;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML
@@ -125,7 +123,7 @@ public class WPHtml {
             }
         }
     }
-    
+
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
@@ -453,7 +451,7 @@ public class WPHtml {
     /** Retrieve an image span content for a media file that exists on the server **/
     public static String getContent(WPImageSpan imageSpan) {
         // based on PostUploadService
-        
+
         String content = "";
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
@@ -461,10 +459,10 @@ public class WPHtml {
         String mediaId = mediaFile.getMediaId();
         if (mediaId == null || mediaId.length() == 0)
             return content;
-        
+
         boolean isVideo = mediaFile.isVideo();
         String url = imageSpan.getImageSource().toString();
-        
+
         if (isVideo) {
             if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                 content = mediaFile.getVideoPressShortCode();
@@ -495,7 +493,7 @@ public class WPHtml {
             String title = mediaFile.getTitle();
             String caption = mediaFile.getCaption();
             int width = mediaFile.getWidth();
-            
+
             content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
@@ -504,10 +502,10 @@ public class WPHtml {
                         alignment, width, TextUtils.htmlEncode(caption), content);
             }
         }
-        
+
         return content;
     }
-    
+
     private static void processWPImage(StringBuilder out, Spanned text,
             int start, int end) {
         int next;
@@ -842,7 +840,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
         Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
-        if (mediaData != null || src.contains("video")) {
+        if (mediaData != null || (src != null && src.contains("video"))) {
             Bitmap resizedBitmap;
 
             if (mediaData != null)
