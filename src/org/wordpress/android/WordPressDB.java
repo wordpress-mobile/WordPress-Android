@@ -348,7 +348,7 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
-    public List<Integer> getAccountIDs() {
+    public List<Integer> getAllAccountIDs() {
         Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + SETTINGS_TABLE, null);
         try {
             List<Integer> ids = new ArrayList<Integer>();
@@ -361,25 +361,6 @@ public class WordPressDB {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-    public boolean deactivateAccounts() {
-        List<Integer> ids = getAccountIDs();
-        db.beginTransaction();
-        try {
-            for (int id: ids) {
-                deleteAccount(context, id);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-
-
-        List<Map<String, Object>> accounts = getAllAccounts();
-        for (Map<String, Object> account: accounts) {
-            deleteAccount(context, (Integer) account.get("id"));
-        }
-        return true;
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
@@ -513,9 +494,26 @@ public class WordPressDB {
     }
 
     public boolean deleteAccount(Context ctx, int id) {
+        // TODO: should this also delete posts and other related info?
         int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForAccount(ctx, id);
         return (rowsAffected > 0);
+    }
+
+    public void deleteAllAccounts() {
+        List<Integer> ids = getAllAccountIDs();
+        if (ids.size() == 0)
+            return;
+
+        db.beginTransaction();
+        try {
+            for (int id: ids) {
+                deleteAccount(context, id);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public List<Object> getBlog(int id) {
@@ -1166,10 +1164,10 @@ public class WordPressDB {
 
         List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c = db.query(COMMENTS_TABLE,
-                new String[] { "blogID", "postID", "iCommentID", "author",
+                new String[]{"blogID", "postID", "iCommentID", "author",
                         "comment", "commentDate", "commentDateFormatted",
-                        "status", "url", "email", "postTitle" }, "blogID="
-                        + blogID, null, null, null, null);
+                        "status", "url", "email", "postTitle"}, "blogID="
+                + blogID, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
