@@ -145,11 +145,11 @@ public class PostsListFragment extends ListFragment {
                     refreshPosts(true);
                 } else {
                     if (!getActivity().isFinishing()) {
-                        FragmentTransaction ft = getFragmentManager()
-                                .beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment
-                                .newInstance(getString(R.string.remote_changes), getString(R.string.local_changes), true);
-                        alert.show(ft, "alert");
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(
+                                R.string.remote_changes), getString(R.string.local_changes), true);
+                        ft.add(alert, "alert");
+                        ft.commitAllowingStateLoss();
                     }
                 }
             }
@@ -526,11 +526,10 @@ public class PostsListFragment extends ListFragment {
 
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {
-                FragmentTransaction ft = getFragmentManager()
-                        .beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment
-                        .newInstance(getString(R.string.post_not_found));
-                alert.show(ft, "alert");
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
             }
             return false;
         }
@@ -679,7 +678,8 @@ public class PostsListFragment extends ListFragment {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
-                alert.show(ft, "alert");
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
             }
         }
     }
@@ -691,9 +691,9 @@ public class PostsListFragment extends ListFragment {
             mOnPostSelectedListener.onPostSelected(post);
             FragmentManager fm = getActivity().getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
-            if (f != null && f.isInLayout())
+            if (f != null && f.isInLayout()) {
                 getListView().setItemChecked(0, true);
+            }
         }
     }
-
 }

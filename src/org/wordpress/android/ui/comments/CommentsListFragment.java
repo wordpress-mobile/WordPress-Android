@@ -294,7 +294,7 @@ public class CommentsListFragment extends ListFragment {
                     hideModerationBar();
                     mOnCommentChangeListener.onCommentsModerated(commentsUpdatedList);
 
-                    // update the comment counter on the menu drawer 
+                    // update the comment counter on the menu drawer
                     ((WPActionBarActivity) getActivity()).updateMenuDrawer();
                 } else {
                     // there was an xmlrpc error
@@ -304,10 +304,10 @@ public class CommentsListFragment extends ListFragment {
                         getListView().invalidateViews();
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
-                        alert.show(ft, "alert");
+                        ft.add(alert, "alert");
+                        ft.commitAllowingStateLoss();
                     }
                     moderateErrorMsg = "";
-
                 }
             }
         };
@@ -355,11 +355,8 @@ public class CommentsListFragment extends ListFragment {
                     if (!getActivity().isFinishing()) {
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
-                        try {
-                            alert.show(ft, "alert");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        ft.add(alert, "alert");
+                        ft.commitAllowingStateLoss();
                     }
                 }
             }
