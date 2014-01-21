@@ -348,7 +348,7 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
-    private List<Integer> getAccountIDs() {
+    public List<Integer> getAccountIDs() {
         Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + SETTINGS_TABLE, null);
         try {
             List<Integer> ids = new ArrayList<Integer>();
@@ -362,12 +362,11 @@ public class WordPressDB {
             SqlUtils.closeCursor(c);
         }
     }
-
     public boolean deactivateAccounts() {
-        List<Integer> accountIDs = getAccountIDs();
+        List<Integer> ids = getAccountIDs();
         db.beginTransaction();
         try {
-            for (int id: accountIDs) {
+            for (int id: ids) {
                 deleteAccount(context, id);
             }
             db.setTransactionSuccessful();
@@ -375,6 +374,11 @@ public class WordPressDB {
             db.endTransaction();
         }
 
+
+        List<Map<String, Object>> accounts = getAllAccounts();
+        for (Map<String, Object> account: accounts) {
+            deleteAccount(context, (Integer) account.get("id"));
+        }
         return true;
     }
 
