@@ -512,40 +512,6 @@ public class WordPressDB {
                 + username + "\" AND dotcomFlag=1", null) > 0;
     }
 
-    /*
-     * delete QuickPress home screen shortcuts connected with the passed account
-     */
-    private void deleteQuickPressShortcutsForAccount(Context ctx, int id) {
-        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(id);
-        if (shortcuts.size() == 0)
-            return;
-
-        String packageName = EditPostActivity.class.getPackage().getName();
-        String className = EditPostActivity.class.getName();
-        for (int i = 0; i < shortcuts.size(); i++) {
-            Map<String, Object> shortcutHash = shortcuts.get(i);
-
-            Intent shortcutIntent = new Intent();
-            shortcutIntent.setClassName(packageName, className);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.setAction(Intent.ACTION_VIEW);
-            Intent broadcastShortcutIntent = new Intent();
-            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
-                    shortcutIntent);
-            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                    shortcutHash.get("name").toString());
-            broadcastShortcutIntent.putExtra("duplicate", false);
-            broadcastShortcutIntent
-                    .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            ctx.sendBroadcast(broadcastShortcutIntent);
-
-            // remove from shortcuts table
-            String shortcutId = shortcutHash.get("id").toString();
-            db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=?", new String[]{shortcutId});
-        }
-    }
-
     public boolean deleteAccount(Context ctx, int id) {
         int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForAccount(ctx, id);
@@ -1400,6 +1366,9 @@ public class WordPressDB {
         return (returnValue);
     }
 
+    /*
+     * return all QuickPress shortcuts connected with the passed account
+     */
     public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
@@ -1424,6 +1393,40 @@ public class WordPressDB {
         c.close();
 
         return accounts;
+    }
+
+    /*
+     * delete QuickPress home screen shortcuts connected with the passed account
+     */
+    private void deleteQuickPressShortcutsForAccount(Context ctx, int accountId) {
+        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(accountId);
+        if (shortcuts.size() == 0)
+            return;
+
+        String packageName = EditPostActivity.class.getPackage().getName();
+        String className = EditPostActivity.class.getName();
+        for (int i = 0; i < shortcuts.size(); i++) {
+            Map<String, Object> shortcutHash = shortcuts.get(i);
+
+            Intent shortcutIntent = new Intent();
+            shortcutIntent.setClassName(packageName, className);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            shortcutIntent.setAction(Intent.ACTION_VIEW);
+            Intent broadcastShortcutIntent = new Intent();
+            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
+                    shortcutIntent);
+            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+                    shortcutHash.get("name").toString());
+            broadcastShortcutIntent.putExtra("duplicate", false);
+            broadcastShortcutIntent
+                    .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+            ctx.sendBroadcast(broadcastShortcutIntent);
+
+            // remove from shortcuts table
+            String shortcutId = shortcutHash.get("id").toString();
+            db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=?", new String[]{shortcutId});
+        }
     }
 
     public static String encryptPassword(String clearText) {
