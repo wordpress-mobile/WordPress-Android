@@ -310,7 +310,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                     if (!mCategoryNames.keySet().contains(category_name)) {
                         pd = ProgressDialog.show(SelectCategoriesActivity.this,
                                 getResources().getText(R.string.cat_adding_category),
-                                getResources().getText(R.string.cat_attempt_add_category), true, true);
+                                getResources().getText(R.string.cat_adding_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -376,7 +376,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
-                getResources().getText(R.string.attempting_categories_refresh), true, true);
+                getResources().getText(R.string.refreshing_categories), true, true);
         Thread th = new Thread() {
             public void run() {
                 finalResult = fetchCategories();
