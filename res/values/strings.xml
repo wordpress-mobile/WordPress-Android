@@ -55,8 +55,7 @@
     <string name="edit_page">Edit Page</string>
     <string name="edit_post">Edit Post</string>
     <string name="add_comment">Add Comment</string>
-    <string name="refreshing_categories">Refreshing Categories</string>
-    <string name="attempting_categories_refresh">Attempting to refresh categories</string>
+    <string name="refreshing_categories">Refreshing categories</string>
     <string name="connection_error">Connection Error</string>
     <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
@@ -72,8 +71,8 @@
     <string name="uploading">Uploading</string>
     <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
     <string name="refresh">Refresh</string>
-    <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
-    <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
+    <string name="blog_not_found">Sorry, an error occurred when accessing this blog.</string>
+    <string name="post_not_found">Sorry, an error occurred when loading the post. Please refresh your posts and try again.</string>
     <string name="wpcom" translatable="false">WordPress.com</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
@@ -226,23 +225,20 @@
     <!-- page actions -->
     <string name="page_actions">Page Actions</string>
     <string name="preview_page">Preview Page</string>
-    <string name="delete_page">Delete Page</string>
+    <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page Deleted Successfully</string>
     <string name="delete_sure_page">Are you sure you want to delete the page</string>
-    <string name="attempt_delete_page">Attempting to delete page</string>
 
     <!-- post actions -->
     <string name="post_actions">Post Actions</string>
     <string name="preview_post">Preview Post</string>
-    <string name="delete_post">Delete Post</string>
+    <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post Deleted Successfully</string>
     <string name="comment_added">Comment Added Successfully</string>
     <string name="delete_sure_post">Are you sure you want to delete the post</string>
-    <string name="attempt_delete_post">Attempting to delete post</string>
-    <string name="share_url">Share Post</string>
-    <string name="share_url_page">Share Page</string>
-    <string name="share_link">Share Link</string>
-    <string name="attempting_fetch_url">Attempting to fetch URL</string>
+    <string name="share_url_post">Share post</string>
+    <string name="share_url_page">Share page</string>
+    <string name="share_link">Share link</string>
     <string name="post_not_published">Post status is not published</string>
     <string name="page_not_published">Page status is not published</string>
     <string name="view_in_browser">View in Browser</string>
@@ -285,8 +281,7 @@
     <string name="adding_cat_failed_check">Please check your settings and try again.</string>
     <string name="adding_cat_success">Category added successfully.</string>
     <string name="cat_name_required">The Category Name field is required.</string>
-    <string name="cat_adding_category">Adding Category</string>
-    <string name="cat_attempt_add_category">Attempting to add category</string>
+    <string name="cat_adding_category">Adding category</string>
     <string name="category_automatically_renamed">Category name %1$s is not valid. It has been renamed to %2$s</string>
 
     <!-- action from share intents -->
@@ -526,7 +521,7 @@
     <string name="blogusername">blogusername</string>
 
     <!--  Error Messages -->
-    <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
+    <string name="error_delete_post">Sorry, an error occurred while deleting the %s.</string>
     <!-- The 4 following messages can't be factorized due to i18n -->
     <string name="error_refresh_posts">Posts could not be refreshed at this time.</string>
     <string name="error_refresh_pages">Pages could not be refreshed at this time.</string>
@@ -536,12 +531,12 @@
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
     <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
     <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
-    <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
+    <string name="error_moderate_comment">Sorry, an error occurred while moderating. Please try again later.</string>
     <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
     <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">Sorry, this blog is hidden and could not be loaded. Please enable it again in Settings and try again.</string>
-    <string name="fatal_db_error">So sorry, but an error occurred while attempting to create the app database. Please try reinstalling the app.</string>
+    <string name="fatal_db_error">So sorry, but an error occurred while creating the app database. Please try reinstalling the app.</string>
 
     <!--  Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>

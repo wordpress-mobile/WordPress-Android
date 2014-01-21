@@ -67,7 +67,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             finish();
             return;
         }
-        
+
         // Check if we came from a notification, if so let's launch NotificationsActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
@@ -91,7 +91,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 }
             }).execute(false);
-            
+
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
@@ -123,7 +123,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             mIsPage = extras.getBoolean("viewPages");
             showErrorDialogIfNeeded(extras);
         }
-        
+
         if (mIsPage)
             setTitle(getString(R.string.pages));
         else
@@ -148,7 +148,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
-    
+
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
                                           final String infoURL) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
@@ -176,7 +176,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        
+
         Bundle extras = intent.getExtras();
         if (extras != null) {
             // Check if we came from a notification, if so let's launch NotificationsActivity
@@ -205,7 +205,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(LAST_ACTIVITY_PREFERENCE, NOTIFICATIONS_ACTIVITY);
         editor.commit();
-        
+
         Intent i = new Intent(this, NotificationsActivity.class);
         i.putExtras(extras);
         startActivity(i);
@@ -354,7 +354,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
@@ -422,17 +422,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     protected Dialog onCreateDialog(int id) {
         mLoadingDialog = new ProgressDialog(this);
         if (id == ID_DIALOG_DELETING) {
-            mLoadingDialog.setTitle(getResources().getText(
-                    (mIsPage) ? R.string.delete_page : R.string.delete_post));
             mLoadingDialog.setMessage(getResources().getText(
-                    (mIsPage) ? R.string.attempt_delete_page
-                            : R.string.attempt_delete_post));
+                    mIsPage ? R.string.deleting_page : R.string.deleting_post));
             mLoadingDialog.setCancelable(false);
             return mLoadingDialog;
         } else if (id == ID_DIALOG_SHARE) {
-            mLoadingDialog.setTitle(mIsPage ? getString(R.string.share_url_page) : getString(R.string.share_url));
-            mLoadingDialog.setMessage(getResources().getText(
-                    R.string.attempting_fetch_url));
+            mLoadingDialog.setMessage(mIsPage ? getString(R.string.share_url_page) : getString(
+                    R.string.share_url_post));
             mLoadingDialog.setCancelable(false);
             return mLoadingDialog;
         }
@@ -647,7 +643,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     protected void refreshComments() {
         new refreshCommentsTask().execute();
     }
-    
+
     private String getShortlinkTagHref(String urlString) {
         String html = getHTML(urlString);
 
@@ -693,13 +689,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             //titleBar.stopRotatingRefreshIcon();
             mIsRefreshing = false;
         }
-        
+
         // No post? No service.
         if (post == null) {
             Toast.makeText(PostsActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         if (action == POST_DELETE) {
             WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedDelete);
             if (post.isLocalDraft()) {
