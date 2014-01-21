@@ -840,7 +840,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
         Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
-        if (mediaData != null || src.contains("video")) {
+        if (mediaData != null || (src != null && src.contains("video"))) {
             Bitmap resizedBitmap;
 
             if (mediaData != null)
