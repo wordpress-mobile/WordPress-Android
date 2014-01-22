@@ -400,7 +400,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
+        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;
 
         // update post in array and on screen
@@ -425,7 +425,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
         AniUtils.zoomAction(holder.txtFollow);
 
-        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
+        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
             return;
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
