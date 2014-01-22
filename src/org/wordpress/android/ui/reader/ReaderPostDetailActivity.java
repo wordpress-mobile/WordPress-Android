@@ -657,28 +657,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * get the latest likes for this post
-     */
-    /*private void updateLikes() {
-        if (!hasPost() || !mPost.isWP())
-            return;
-
-        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result== ReaderActions.UpdateResult.CHANGED) {
-                    // get post again since likes have been updated
-                    mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshLikes(false);
-                    mIsPostChanged = true;
-
-                }
-            }
-        };
-        ReaderPostActions.updateLikesForPost(mPost, resultListener);
-    }*/
-
-    /*
      * refresh adapter so latest comments appear
      */
     private void refreshComments() {
