@@ -45,6 +45,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPRestClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -453,6 +454,10 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
+        // cancel all Volley requests - do this before unregistering push since that uses
+        // a Volley request
+        VolleyUtils.cancelAllRequests(requestQueue);
+
         NotificationUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
@@ -460,13 +465,15 @@ public class WordPress extends Application {
         } catch (Exception e) {
             AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
+
         SharedPreferences.Editor editor = PreferenceManager
                 .getDefaultSharedPreferences(context).edit();
         editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
         editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
         editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
         editor.commit();
-        wpDB.deactivateAccounts();
+
+        wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
 
@@ -476,13 +483,12 @@ public class WordPress extends Application {
 
         //Delete all the Notes
         WordPress.wpDB.clearNotes();
-        
+
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
         context.sendBroadcast(broadcastIntent);
-
     }
 
     public static String getLoginUrl(Blog blog) {

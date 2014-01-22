@@ -107,8 +107,14 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * drop & recreate all tables (essentially clears the db of all data)
      */
     private void reset(SQLiteDatabase db) {
-        dropAllTables(db);
-        createAllTables(db);
+        db.beginTransaction();
+        try {
+            dropAllTables(db);
+            createAllTables(db);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /*
