@@ -148,7 +148,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         switch (action) {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
-                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                    if (mIsAddCommentBoxShowing) {
+                                        // user is typing a comment, so don't toggle full-screen
+                                        return false;
+                                    } else if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
                                         // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
@@ -780,6 +783,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
+
+        // disable full-screen when comment box is showing
+        if (mIsFullScreen)
+            setIsFullScreen(false);
 
         // different hint depending on whether user is replying to a comment or commenting on the post
         editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
