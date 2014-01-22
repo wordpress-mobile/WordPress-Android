@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -18,7 +17,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -48,8 +46,7 @@ public class ReaderPostActions {
      * this routines is also non-blocking - it returns before the API call completes, so
      * callers that want to be alerted when the API call completes should pass a listener
      **/
-    public static boolean performPostAction(Context context,
-                                            final PostAction action,
+    public static boolean performPostAction(final PostAction action,
                                             final ReaderPost post,
                                             final ReaderActions.ActionListener actionListener) {
         // get post BEFORE we make changes so we can revert on error
@@ -194,7 +191,7 @@ public class ReaderPostActions {
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
     public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site";
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -248,6 +245,10 @@ public class ReaderPostActions {
                     ReaderPostTable.addOrUpdatePost(updatedPost);
                 }
 
+                // always update liking users regardless of whether changes were detected - this
+                // ensures that the liking avatars are immediately available to post detail
+                handlePostLikes(updatedPost, jsonObject);
+
                 if (resultListener!=null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -259,17 +260,35 @@ public class ReaderPostActions {
         }.start();
     }
 
+    /*
+     * updates local liking users based on the "likes" meta section of the post's json - requires
+     * using the /sites/ endpoint with ?meta=likes
+     */
+    private static void handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
+        if (post == null || jsonPost == null)
+            return;
+
+        JSONObject jsonLikes = JSONUtil.getJSONChild(jsonPost, "meta/data/likes");
+        if (jsonLikes == null)
+            return;
+
+        ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
+        ReaderUserTable.addOrUpdateUsers(likingUsers);
+        ReaderLikeTable.setLikesForPost(post, likingUsers.getUserIds());
+    }
+
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
-        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site";
+        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
                 ReaderPostTable.addOrUpdatePost(post);
+                handlePostLikes(post, jsonObject);
                 if (actionListener!=null)
                     actionListener.onActionResult(true);
             }
@@ -285,62 +304,6 @@ public class ReaderPostActions {
         };
         AppLog.d(T.READER, "requesting post");
         WordPress.restClient.get(path, null, null, listener, errorListener);
-    }
-
-    /**
-     * get the latest likes for this post
-     **/
-    public static void updateLikesForPost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateLikesResponse(jsonObject, post, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener!=null)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-
-            }
-        };
-        AppLog.d(T.READER, "updating likes");
-        WordPress.restClient.get(path, null, null, listener, errorListener);
-    }
-    private static void handleUpdateLikesResponse(final JSONObject jsonObject, final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        if (jsonObject==null)
-            return;
-
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderUserList serverUsers = ReaderUserList.fromJsonLikes(jsonObject);
-                ReaderUserIdList localLikeIDs = ReaderLikeTable.getLikesForPost(post);
-                ReaderUserIdList serverLikeIDs = serverUsers.getUserIds();
-
-                final boolean hasChanges = !localLikeIDs.isSameList(serverLikeIDs);
-                if (hasChanges) {
-                    AppLog.d(T.READER, "new likes found");
-                    post.numLikes = jsonObject.optInt("found");
-                    post.isLikedByCurrentUser = JSONUtil.getBool(jsonObject, "i_like");
-                    ReaderPostTable.addOrUpdatePost(post);
-                    ReaderUserTable.addOrUpdateUsers(serverUsers);
-                    ReaderLikeTable.setLikesForPost(post, serverLikeIDs);
-                }
-
-                if (resultListener!=null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            resultListener.onUpdateResult(hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
-                        }
-                    });
-                }
-            }
-        }.start();
     }
 
     /*
