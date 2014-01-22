@@ -88,13 +88,15 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private ProgressBar mProgressFooter;
     private WebView mWebView;
 
+    private ViewGroup mLayoutCommentBox;
+    private EditText mEditComment;
+
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
     private boolean mIsBlogFollowStatusChanged = false;
-
 
     private Parcelable mListState = null;
 
@@ -149,7 +151,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         switch (action) {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
-                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                    if (mIsAddCommentBoxShowing && mEditComment.hasFocus()) {
+                                        // user is typing a comment, so don't toggle full-screen
+                                        return false;
+                                    } else if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
                                         // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
@@ -285,6 +290,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
 
         mLayoutIcons = (ViewGroup) findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) findViewById(R.id.layout_likes);
+
+        mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        mEditComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
 
         // setup the webView - note that JavaScript is disabled since it's a security risk:
         //    http://developer.android.com/training/articles/security-tips.html#WebView
@@ -806,18 +814,16 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         if (mIsSubmittingComment)
             return;
 
-        final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
-
         // different hint depending on whether user is replying to a comment or commenting on the post
-        editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
+        mEditComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
+        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
         imgBtnComment.setSelected(true);
-        AniUtils.flyIn(layoutCommentBox);
 
-        editComment.requestFocus();
-        editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        AniUtils.flyIn(mLayoutCommentBox);
+
+        mEditComment.requestFocus();
+        mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId==EditorInfo.IME_ACTION_DONE || actionId==EditorInfo.IME_ACTION_SEND)
@@ -836,7 +842,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         });
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editComment, InputMethodManager.SHOW_IMPLICIT);
+        imm.showSoftInput(mEditComment, InputMethodManager.SHOW_IMPLICIT);
 
         // if user is replying to another comment, highlight the comment being replied to and scroll
         // it to the top so the user can see which comment they're replying to - note that scrolling
@@ -854,19 +860,21 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         // mReplyToCommentId must be saved here so it can be stored by onSaveInstanceState()
         mReplyToCommentId = replyToCommentId;
         mIsAddCommentBoxShowing = true;
+
+        // make sure full-screen is disabled (so icons are always visible while commenting)
+        if (mIsFullScreen)
+            setIsFullScreen(false);
     }
 
     private void hideAddCommentBox() {
         if (!mIsAddCommentBoxShowing)
             return;
 
-        final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
-
         imgBtnComment.setSelected(false);
-        AniUtils.flyOut(layoutCommentBox);
-        EditTextUtils.hideSoftInput(editComment);
+
+        AniUtils.flyOut(mLayoutCommentBox);
+        EditTextUtils.hideSoftInput(mEditComment);
 
         getCommentAdapter().setHighlightCommentId(0, false);
 
@@ -897,8 +905,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      */
     private boolean mIsSubmittingComment = false;
     private void submitComment(final long replyToCommentId) {
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
-        final String commentText = EditTextUtils.getText(editComment);
+        final String commentText = EditTextUtils.getText(mEditComment);
         if (TextUtils.isEmpty(commentText))
             return;
 
@@ -924,7 +931,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                 } else {
                     // comment failed to post - show the comment box again with the comment text intact,
                     // and remove the "fake" comment from the adapter
-                    editComment.setText(commentText);
+                    mEditComment.setText(commentText);
                     showAddCommentBox(replyToCommentId);
                     getCommentAdapter().removeComment(fakeCommentId);
                     ToastUtils.showToast(ReaderPostDetailActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
@@ -939,7 +946,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                                                                                 actionListener);
         if (newComment!=null) {
             mIsPostChanged = true;
-            editComment.setText(null);
+            mEditComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
