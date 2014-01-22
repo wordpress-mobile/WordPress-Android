@@ -9,16 +9,16 @@ import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientFactory;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCFactory;
 
-public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
+public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     private Solo solo;
 
     public LoginTest() {
-        super(WelcomeActivity.class);
+        super(PostsActivity.class);
         initMocks();
     }
 
@@ -60,7 +60,9 @@ public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity>
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        solo.waitForActivity(".*ost.*");
+        boolean drawerOpen = solo.searchText("Reader");
+        drawerOpen &= solo.searchText("Reader");
+        assertTrue("Menu drawer seems closed", drawerOpen);
     }
 
     public void testBadCredentials() throws Exception {
