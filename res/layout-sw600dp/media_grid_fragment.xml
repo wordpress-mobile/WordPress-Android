@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/media_filter_spinner_container"
         android:padding="7dp"
-        android:text="@string/empty_fields"
         android:visibility="gone" />
 
     <LinearLayout

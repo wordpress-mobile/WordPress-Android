@@ -182,6 +182,9 @@
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
     <string name="post_settings">Post Settings</string>
+    <string name="delete_post">Delete Post</string>
+    <string name="delete_page">Delete Page</string>
+    <string name="share_url">Share URL</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading&#8230;</string>
