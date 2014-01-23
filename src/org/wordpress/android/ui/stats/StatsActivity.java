@@ -364,8 +364,7 @@ public class StatsActivity extends WPActionBarActivity {
             if (getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
-                boolean isAdmin = WordPress.getCurrentBlog().isAdmin();
-                if (isAdmin == true) {
+                if (WordPress.getCurrentBlog().isAdmin()) {
                     builder.setMessage(getString(R.string.jetpack_message))
                     .setTitle(getString(R.string.jetpack_not_found));
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
