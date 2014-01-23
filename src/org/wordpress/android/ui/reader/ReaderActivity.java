@@ -17,10 +17,12 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -41,6 +43,7 @@ public class ReaderActivity extends WPActionBarActivity {
     private static final String KEY_HAS_PURGED = "has_purged";
 
     private MenuItem mRefreshMenuItem;
+    private boolean mIsUpdating = false;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
 
@@ -85,21 +88,8 @@ public class ReaderActivity extends WPActionBarActivity {
             ReaderDatabase.purgeAsync();
         }
 
-        if (!mHasPerformedInitialUpdate) {
-            mHasPerformedInitialUpdate = true;
-            // update the current user the first time this is shown - ensures we have their user_id
-            // as well as their latest info (in case they changed their avatar, name, etc. since last time)
-            AppLog.i(T.READER, "updating current user");
-            ReaderUserActions.updateCurrentUser(null);
-            // also update cookies so that we can show authenticated images in WebViews
-            AppLog.i(T.READER, "updating cookies");
-            ReaderAuthActions.updateCookies(this);
-            // update followed blogs
-            AppLog.i(T.READER, "updating followed blogs");
-            ReaderBlogActions.updateFollowedBlogs();
-            // update list of followed tags
-            updateTagList();
-        }
+        if (!mHasPerformedInitialUpdate)
+            performInitialUpdate();
     }
 
     @Override
@@ -161,8 +151,9 @@ public class ReaderActivity extends WPActionBarActivity {
     }
 
     protected void setIsUpdating(boolean isUpdating) {
-        if (mRefreshMenuItem==null)
+        if (mRefreshMenuItem == null)
             return;
+        mIsUpdating = isUpdating;
         if (isUpdating) {
             startAnimatingRefreshButton(mRefreshMenuItem);
         } else {
@@ -245,18 +236,49 @@ public class ReaderActivity extends WPActionBarActivity {
     }
 
     /*
-     * request list of tags from the server
+     * initial update performed at startup to ensure we have the latest reader-related info
      */
-    protected void updateTagList() {
+    private void performInitialUpdate() {
+        if (!NetworkUtils.isNetworkAvailable(this))
+            return;
+
+        mHasPerformedInitialUpdate = true;
+
+        // if tags have never been updated, animate the refresh button if it's not already animating
+        // so user knows something is happening (since reader will be blank until tags have updated)
+        final boolean showUpdate = !mIsUpdating && ReaderTagTable.isEmpty();
+        if (showUpdate)
+            setIsUpdating(true);
+
+        // request the list of tags first and don't perform other calls until it returns - this
+        // way changes to tags can be shown as quickly as possible (esp. important when tags
+        // don't already exist)
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                // refresh tags if they've changed
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+            public void onUpdateResult(UpdateResult result) {
+                if (showUpdate)
+                    setIsUpdating(false);
+
+                // make sure post list reflects any tag changes
+                if (result == UpdateResult.CHANGED) {
                     ReaderPostListFragment fragment = getPostListFragment();
                     if (fragment != null)
                         fragment.refreshTags();
                 }
+
+                // now that tags have been retrieved, perform the other requests - first update
+                // the current user to ensure we have their user_id as well as their latest info
+                // in case they changed their avatar, name, etc. since last time
+                AppLog.i(T.READER, "updating current user");
+                ReaderUserActions.updateCurrentUser(null);
+
+                // update followed blogs
+                AppLog.i(T.READER, "updating followed blogs");
+                ReaderBlogActions.updateFollowedBlogs();
+
+                // update cookies so that we can show authenticated images in WebViews
+                AppLog.i(T.READER, "updating cookies");
+                ReaderAuthActions.updateCookies(ReaderActivity.this);
             }
         };
         ReaderTagActions.updateTags(listener);
@@ -267,7 +289,7 @@ public class ReaderActivity extends WPActionBarActivity {
      * post list fragment if the device is rotated while an update is in progress
      */
     protected static final String ACTION_REFRESH_POSTS = "action_refresh_posts";
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {

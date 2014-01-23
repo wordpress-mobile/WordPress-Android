@@ -59,6 +59,13 @@ public class ReaderTagTable {
     }
 
     /*
+     * returns true if tbl_tags is empty
+     */
+    public static boolean isEmpty() {
+        return (SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_tags") == 0);
+    }
+
+    /*
      * replaces all tags with the passed list
      */
     public static void replaceTags(ReaderTagList tags) {
