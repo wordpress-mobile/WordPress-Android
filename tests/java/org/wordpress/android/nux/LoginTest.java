@@ -1,9 +1,12 @@
 package org.wordpress.android.nux;
 
+import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.RenamingDelegatingContext;
 
 import com.robotium.solo.Solo;
 
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.mocks.OAuthAuthenticatorFactoryTest;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
@@ -16,6 +19,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     private Solo solo;
+    private Context targetContext;
 
     public LoginTest() {
         super(PostsActivity.class);
@@ -35,6 +39,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         // setUp() is run before a test case is started.
         // This is where the solo object is created.
         solo = new Solo(getInstrumentation(), getActivity());
+        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
 
         // Init contexts
         XMLRPCFactoryTest.sContext = getInstrumentation().getContext();
@@ -45,6 +50,10 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE;
         RestClientFactoryTest.sMode = RestClientFactoryTest.Mode.CUSTOMIZABLE;
         AppLog.v(T.TESTS, "Modes set to customizable");
+
+        // Clean application state
+        TestUtils.clearDefaultSharedPreferences(targetContext);
+        TestUtils.dropDB(targetContext);
     }
 
     @Override
@@ -54,15 +63,19 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         solo.finishOpenedActivities();
     }
 
+    public void assertMenuDrawerIsOpen() {
+        boolean drawerOpen = solo.searchText("Reader");
+        drawerOpen &= solo.searchText("Posts");
+        assertTrue("Menu drawer seems closed", drawerOpen);
+    }
+
     public void testGoodCredentials() throws Exception {
         RestClientFactoryTest.setPrefixAllInstances("default");
         XMLRPCFactoryTest.setPrefixAllInstances("default");
         solo.enterText(0, "test");
         solo.enterText(1, "test");
         solo.clickOnText("Sign in");
-        boolean drawerOpen = solo.searchText("Reader");
-        drawerOpen &= solo.searchText("Reader");
-        assertTrue("Menu drawer seems closed", drawerOpen);
+        assertMenuDrawerIsOpen();
     }
 
     public void testBadCredentials() throws Exception {
@@ -76,8 +89,6 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     }
 
     public void testCreateAccountInvalidEmail() throws Exception {
-        RestClientFactoryTest.setPrefixAllInstances("default");
-        XMLRPCFactoryTest.setPrefixAllInstances("default");
         solo.clickOnText("Create account");
         solo.waitForText(".*Create an account.*");
         solo.enterText(0, "test");
@@ -121,5 +132,17 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         solo.clickOnText("Create account");
         boolean errorMessageFound = solo.searchText("more secure");
         assertTrue("Error message not found", errorMessageFound);
+    }
+
+    public void testCreateAccountOk() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("default");
+        solo.clickOnText("Create account");
+        solo.waitForText(".*Create an account.*");
+        solo.enterText(0, "test@test.com");
+        solo.enterText(1, "test");
+        solo.enterText(2, "test");
+        solo.clickOnText("Create account");
+        assertMenuDrawerIsOpen();
     }
 }

@@ -1,11 +1,11 @@
 package org.wordpress.android;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
     private static String DATABASE_NAME = "wordpress";
@@ -56,7 +57,14 @@ public class TestUtils {
         return null;
     }
 
-    public static void dropDB(Context targetContext, Context testContext) {
+    public static void clearDefaultSharedPreferences(Context targetContext) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(targetContext);
+        Editor editor = settings.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    public static void dropDB(Context targetContext) {
         targetContext.deleteDatabase(DATABASE_NAME);
     }
 }

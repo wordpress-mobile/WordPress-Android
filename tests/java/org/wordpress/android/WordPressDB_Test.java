@@ -18,8 +18,7 @@ public class WordPressDB_Test extends InstrumentationTestCase {
     @Override
     protected void setUp() {
         // Run tests in an isolated context
-        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(),
-                "test_");
+        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
         testContext = getInstrumentation().getContext();
     }
 }
