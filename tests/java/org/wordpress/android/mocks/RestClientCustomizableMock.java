@@ -2,7 +2,9 @@ package org.wordpress.android.mocks;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
+import com.android.volley.VolleyError;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
@@ -63,25 +65,52 @@ public class RestClientCustomizableMock extends RestClient {
         return s.hasNext() ? s.next() : "";
     }
 
-    public RestRequest makeRequest(int method, String url, java.util.Map<String, String> params,
-                                   RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
-        AppLog.v(T.TESTS, this.getClass() + ": makeRequest(" + url + ")");
-        // URL example: https://public-api.wordpress.com/rest/v1/me
-        // Filename: default-public-api-wordpress-com-rest-v1-me.json
-        String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-").replace("?",
-                "-") + ".json";
+    private VolleyError createVolleyErrorFromFilename(String filename) {
+        String data = fileToString(filename);
+        NetworkResponse networkResponse = new NetworkResponse(400, data.getBytes(), null, false);
+        VolleyError ve = new VolleyError(networkResponse);
+        return ve;
+    }
+
+    private String fileToString(String filename) {
         try {
             InputStream is = mContext.getAssets().open(filename);
             String data = convertStreamToString(is);
             AppLog.v(T.TESTS, "file read:" + filename);
-            JSONObject jsonObj = new JSONObject(data);
-            listener.onResponse(jsonObj);
+            return data;
         } catch (IOException e) {
             AppLog.e(T.TESTS, "can't read file: " + filename + " - " + e.toString());
+        }
+        return null;
+    }
+
+    public RestRequest makeRequest(int method, String url, java.util.Map<String, String> params,
+                                   RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
+        AppLog.v(T.TESTS, this.getClass() + ": makeRequest(" + url + ")");
+        RestRequest dummyReturnValue = new RestRequest(method, url, params, listener, errorListener);
+        // URL example: https://public-api.wordpress.com/rest/v1/me
+        // Filename: default-public-api-wordpress-com-rest-v1-me.json
+        String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-").replace("?",
+                "-") + ".json";
+
+        if ("password-invalid".equals(mPrefix)) {
+            errorListener.onErrorResponse(createVolleyErrorFromFilename(filename));
+            return dummyReturnValue;
+        }
+
+        if ("username-exists".equals(mPrefix)) {
+            errorListener.onErrorResponse(createVolleyErrorFromFilename(filename));
+            return dummyReturnValue;
+        }
+
+        try {
+            String data = fileToString(filename);
+            JSONObject jsonObj = new JSONObject(data);
+            listener.onResponse(jsonObj);
         } catch (JSONException je) {
             AppLog.e(T.TESTS, "can't read file: " + filename + " - " + je.toString());
         }
-        return new RestRequest(method, url, params, listener, errorListener);
+        return dummyReturnValue;
     }
 
     public RestRequest send(RestRequest request) {

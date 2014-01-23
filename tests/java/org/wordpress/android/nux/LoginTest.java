@@ -119,7 +119,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         solo.enterText(1, "test");
         solo.enterText(2, "test");
         solo.clickOnText("Create account");
-        boolean errorMessageFound = solo.searchText("need more secure password");
+        boolean errorMessageFound = solo.searchText("more secure");
         assertTrue("Error message not found", errorMessageFound);
     }
 }
