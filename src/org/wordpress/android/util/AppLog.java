@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, OTHER}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 

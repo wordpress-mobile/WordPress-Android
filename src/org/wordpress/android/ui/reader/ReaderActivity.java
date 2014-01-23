@@ -151,8 +151,9 @@ public class ReaderActivity extends WPActionBarActivity {
     }
 
     protected void setIsUpdating(boolean isUpdating) {
-        if (mRefreshMenuItem == null)
+        if (mRefreshMenuItem == null || isUpdating == mIsUpdating)
             return;
+
         mIsUpdating = isUpdating;
         if (isUpdating) {
             startAnimatingRefreshButton(mRefreshMenuItem);
@@ -167,10 +168,6 @@ public class ReaderActivity extends WPActionBarActivity {
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.reader_native, menu);
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
         return true;
     }
 

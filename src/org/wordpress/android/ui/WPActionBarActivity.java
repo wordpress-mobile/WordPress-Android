@@ -657,6 +657,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void startAnimatingRefreshButton(MenuItem refreshItem) {
         if (refreshItem != null && !isAnimatingRefreshButton) {
             isAnimatingRefreshButton = true;
+
+            // safety check - clear existing actionView
+            if (refreshItem.getActionView() != null) {
+                refreshItem.getActionView().clearAnimation();
+                refreshItem.setActionView(null);
+                AppLog.w(T.OTHER, "refresh animation started with existing actionView");
+            }
+
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             ImageView iv = (ImageView) inflater.inflate(
                     getResources().getLayout(R.layout.menu_refresh_view), null);
