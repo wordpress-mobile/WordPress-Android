@@ -74,6 +74,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mSignupButton.setVisibility(View.GONE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
+        mEmailTextField.setEnabled(false);
+        mPasswordTextField.setEnabled(false);
+        mUsernameTextField.setEnabled(false);
+        mSiteUrlTextField.setEnabled(false);
     }
 
     protected void updateProgress(String message) {
@@ -84,6 +88,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mProgressBarSignIn.setVisibility(View.GONE);
         mProgressTextSignIn.setVisibility(View.GONE);
         mSignupButton.setVisibility(View.VISIBLE);
+        mEmailTextField.setEnabled(true);
+        mPasswordTextField.setEnabled(true);
+        mUsernameTextField.setEnabled(true);
+        mSiteUrlTextField.setEnabled(true);
     }
 
     private boolean checkUserData() {
@@ -213,7 +221,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
         if (View.VISIBLE==mProgressBarSignIn.getVisibility()) //prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard. Samsung S4 for example
             return;
-        
+
         startProgress(getString(R.string.validating_user_data));
 
         final String siteUrl = mSiteUrlTextField.getText().toString().trim();
