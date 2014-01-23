@@ -364,21 +364,28 @@ public class StatsActivity extends WPActionBarActivity {
             if (getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
-                builder.setMessage(getString(R.string.jetpack_message))
-                        .setTitle(getString(R.string.jetpack_not_found));
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent jetpackIntent = new Intent(VerifyJetpackSettingsCallback.this.statsActivityWeakRef.get(), AuthenticatedWebViewActivity.class);
-                        jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
-                                + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
-                        startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+                boolean isAdmin = WordPress.getCurrentBlog().isAdmin();
+                if (isAdmin == true) {
+                    builder.setMessage(getString(R.string.jetpack_message))
+                    .setTitle(getString(R.string.jetpack_not_found));
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent jetpackIntent = new Intent(VerifyJetpackSettingsCallback.this.statsActivityWeakRef.get(), AuthenticatedWebViewActivity.class);
+                            jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
+                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
+                            startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                } else {
+                    builder.setMessage(getString(R.string.jetpack_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_not_found));
+                    builder.setPositiveButton(R.string.yes, null);
+                }
                 builder.create().show();
             }
         }
