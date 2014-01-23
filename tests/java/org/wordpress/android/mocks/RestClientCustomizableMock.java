@@ -3,7 +3,6 @@ package org.wordpress.android.mocks;
 import android.content.Context;
 
 import com.android.volley.Request.Method;
-import com.google.gson.Gson;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
@@ -67,10 +66,10 @@ public class RestClientCustomizableMock extends RestClient {
     public RestRequest makeRequest(int method, String url, java.util.Map<String, String> params,
                                    RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
         AppLog.v(T.TESTS, this.getClass() + ": makeRequest(" + url + ")");
-        Gson gson = new Gson();
         // URL example: https://public-api.wordpress.com/rest/v1/me
         // Filename: default-public-api-wordpress-com-rest-v1-me.json
-        String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-") + ".json";
+        String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-").replace("?",
+                "-") + ".json";
         try {
             InputStream is = mContext.getAssets().open(filename);
             String data = convertStreamToString(is);

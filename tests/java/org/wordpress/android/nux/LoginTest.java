@@ -74,4 +74,52 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         boolean errorMessageFound = solo.searchText("username or password");
         assertTrue("Error message not found", errorMessageFound);
     }
+
+    public void testCreateAccountInvalidEmail() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("default");
+        solo.clickOnText("Create account");
+        solo.waitForText(".*Create an account.*");
+        solo.enterText(0, "test");
+        solo.enterText(1, "test");
+        solo.enterText(2, "test");
+        solo.clickOnText("Create account");
+        boolean errorMessageFound = solo.searchText("address is not valid");
+        assertTrue("Error message not found", errorMessageFound);
+    }
+
+    public void testCreateAccountUsernameExists() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("username-exists");
+        solo.clickOnText("Create account");
+        solo.waitForText(".*Create an account.*");
+        solo.enterText(0, "test@test.com");
+        solo.enterText(1, "test");
+        solo.enterText(2, "test");
+        solo.clickOnText("Create account");
+        boolean errorMessageFound = solo.searchText("username already exists");
+        assertTrue("Error message not found", errorMessageFound);
+    }
+
+    public void testCreateAccountPasswordTooShort() throws Exception {
+        solo.clickOnText("Create account");
+        solo.waitForText(".*Create an account.*");
+        solo.enterText(0, "test@test.com");
+        solo.enterText(1, "test");
+        solo.enterText(2, "tes");
+        solo.clickOnText("Create account");
+        boolean errorMessageFound = solo.searchText("must contain at least 4");
+        assertTrue("Error message not found", errorMessageFound);
+    }
+
+    public void testCreateAccountPasswordTooWeak() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("password-invalid");
+        solo.clickOnText("Create account");
+        solo.waitForText(".*Create an account.*");
+        solo.enterText(0, "test@test.com");
+        solo.enterText(1, "test");
+        solo.enterText(2, "test");
+        solo.clickOnText("Create account");
+        boolean errorMessageFound = solo.searchText("need more secure password");
+        assertTrue("Error message not found", errorMessageFound);
+    }
 }

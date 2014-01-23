@@ -45,21 +45,22 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
 
     public Object call(String method, Object[] params) throws XMLRPCException {
         AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
-        Gson gson = new Gson();
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
             throw new XMLRPCException("code 403");
         }
-        if ("wp.getUsersBlogs".equals(method)) {
-            String filename = mPrefix + "-wp.getUsersBlogs.json";
-            try {
-                InputStream is = mContext.getAssets().open(filename);
-                InputStreamReader inputStreamReader = new InputStreamReader(is);
-                BufferedReader f = new BufferedReader(inputStreamReader);
-                return gson.fromJson(inputStreamReader, Object[].class);
-            } catch (IOException e) {
-                AppLog.e(T.TESTS, "can't read file: " + filename);
-            }
+
+        // method example: wp.getUsersBlogs
+        // Filename: default-wp.getUsersBlogs.json
+        String filename = mPrefix + "-" + method + ".json";
+        try {
+            Gson gson = new Gson();
+            InputStream is = mContext.getAssets().open(filename);
+            InputStreamReader inputStreamReader = new InputStreamReader(is);
+            BufferedReader f = new BufferedReader(inputStreamReader);
+            return gson.fromJson(inputStreamReader, Object[].class);
+        } catch (IOException e) {
+            AppLog.e(T.TESTS, "can't read file: " + filename);
         }
         return null;
     }
