@@ -161,9 +161,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void signin() {
         if (!wpcomFieldsFilled()) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            WPAlertDialogFragment alert = WPAlertDialogFragment
-                    .newInstance(getString(R.string.required_fields));
-            alert.show(ft, "alert");
+            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.required_fields));
+            ft.add(alert, "alert");
+            ft.commitAllowingStateLoss();
             return;
         }
         new SetupBlogTask().execute();
@@ -329,11 +329,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                            getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                            R.drawable.nux_icon_alert, true,
-                            getString(R.string.visit_security_settings),
-                            NUXDialogFragment.ACTION_OPEN_URL,
+                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
+                            getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
                             "https://wordpress.com/settings/security/?ssl=forced");
                 } else {
                     if (mErrorMsgId == R.string.username_or_password_incorrect) {
@@ -341,14 +339,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         showPasswordError(mErrorMsgId);
                         mErrorMsgId = 0;
                         endProgress();
-                        return ;
+                        return;
                     } else {
-                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                                getString(mErrorMsgId), getString(R.string.nux_tap_continue),
-                                R.drawable.nux_icon_alert);
+                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                     }
                 }
-                nuxAlert.show(ft, "alert");
+                ft.add(nuxAlert, "alert");
+                ft.commitAllowingStateLoss();
                 mErrorMsgId = 0;
                 endProgress();
                 return;
@@ -356,12 +354,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             // Update wp.com credentials
             if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
-                SharedPreferences settings = PreferenceManager.
-                        getDefaultSharedPreferences(getActivity());
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
-                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE,
-                        WordPressDB.encryptPassword(mSetupBlog.getPassword()));
+                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(
+                        mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
                 WordPress.restClient.get("me", new RestRequest.Listener() {

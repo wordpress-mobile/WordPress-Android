@@ -95,7 +95,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private boolean mIsPostChanged = false;
     private boolean mIsBlogFollowStatusChanged = false;
 
-
     private Parcelable mListState = null;
 
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
@@ -106,7 +105,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private float mLastMotionY;
 
     private static final int MOVE_MIN_DIFF = 8;
-    private static final long WEBVIEW_DELAY_MS = 2000L;
+    private static final long WEBVIEW_DELAY_MS = 1000L;
 
     /*
      * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
@@ -149,7 +148,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         switch (action) {
                             case MotionEvent.ACTION_MOVE :
                                 if (mIsMoving) {
-                                    if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                    if (mIsAddCommentBoxShowing) {
+                                        // user is typing a comment, so don't toggle full-screen
+                                        return false;
+                                    } else if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
                                         // user is scrolling down, so enable full-screen
                                         setIsFullScreen(true);
                                         return true;
@@ -508,7 +510,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         actionView.setSelected(!isSelected);
         AniUtils.zoomAction(actionView);
 
-        if (!ReaderPostActions.performPostAction(this, action, post, null)) {
+        if (!ReaderPostActions.performPostAction(action, post, null)) {
             actionView.setSelected(isSelected);
             return;
         }
@@ -585,23 +587,21 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                         break;
                 }
 
-                // determine whether we need to update likes/comments - done regardless of
-                // whether the post has changed since local likes/comments could still be
-                // different than what we already have for the post
+                // updating the post will get its liking users, so refresh likes here if any exist
+                // to make sure the correct liking avatars are shown
+                if (origNumLikes > 0 || mPost.numLikes > 0)
+                    refreshLikes(false);
+
+                // determine whether we need to make a separate request to update comments
                 new Thread() {
                     @Override
                     public void run() {
-                        final boolean isLikesChanged = (mPost.numLikes != origNumLikes
-                                                     || mPost.numLikes != ReaderLikeTable.getNumLikesForPost(mPost));
                         final boolean isCommentsChanged = (mPost.numReplies != origNumReplies
                                                         || mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost));
-                        if (isLikesChanged || isCommentsChanged) {
+                        if (isCommentsChanged) {
                             mHandler.post(new Runnable() {
                                 public void run() {
-                                    if (isLikesChanged)
-                                        updateLikes();
-                                    if (isCommentsChanged)
-                                        updateComments();
+                                    updateComments();
                                 }
                             });
                         }
@@ -632,8 +632,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
                 hideProgressFooter();
-                if (result== ReaderActions.UpdateResult.CHANGED)
+                if (result == ReaderActions.UpdateResult.CHANGED) {
+                    mIsPostChanged = true;
                     refreshComments();
+                }
             }
         };
         ReaderCommentActions.updateCommentsForPost(mPost, resultListener);
@@ -658,27 +660,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     }
 
     /*
-     * get the latest likes for this post
-     */
-    private void updateLikes() {
-        if (!hasPost() || !mPost.isWP())
-            return;
-
-        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result== ReaderActions.UpdateResult.CHANGED) {
-                    // get post again since likes have been updated
-                    mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshLikes(false);
-
-                }
-            }
-        };
-        ReaderPostActions.updateLikesForPost(mPost, resultListener);
-    }
-
-    /*
      * refresh adapter so latest comments appear
      */
     private void refreshComments() {
@@ -689,7 +670,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * show latest likes for this post - pass true to force reloading avatars (used when user clicks
      * the like button, to ensure the current user's avatar appears)
      */
-    private static final int NUM_ACTIONBAR_ICONS = 2;
     private void refreshLikes(final boolean forceReload) {
         if (!hasPost() || !mPost.isWP())
             return;
@@ -724,8 +704,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                             }
                         });
 
-                        // nothing more to do if no likes
-                        if (avatars.size()==0 && mPost.numLikes==0) {
+                        // nothing more to do if no likes or liking avatars haven't been retrieved yet
+                        if (avatars.size()==0 || mPost.numLikes==0) {
                             mLayoutLikes.setVisibility(View.GONE);
                             return;
                         }
@@ -741,29 +721,23 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
                             txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
                         }
 
-                        // at this point it's possible that we know the post has likes but we haven't retrieved liking users yet, so
-                        // make sure we have liking avatars before attempting to show them (if there are none, only like text appears)
-                        if (avatars.size() > 0) {
-                            // clicking likes view shows activity displaying all liking users - this is only set
-                            // if we know there are liking avatars, otherwise tapping the likes view would show
-                            // the liking users with "0 people like this"
-                            View.OnClickListener clickListener = new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
-                                }
-                            };
-                            mLayoutLikes.setOnClickListener(clickListener);
+                        // now show the liking avatars - clicking likes view shows activity displaying all liking users
+                        View.OnClickListener clickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ReaderActivityLauncher.showReaderLikingUsers(ReaderPostDetailActivity.this, mPost);
+                            }
+                        };
+                        mLayoutLikes.setOnClickListener(clickListener);
 
-                            // skip adding liking avatars if the view's child count indicates that we've already
-                            // added the max on a previous call to this routine
-                            if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
-                                layoutLikingAvatars.removeAllViews();
-                                for (String url: avatars) {
-                                    WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                                    layoutLikingAvatars.addView(imgAvatar);
-                                    imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
-                                }
+                        // skip adding liking avatars if the view's child count indicates that we've already
+                        // added the max on a previous call to this routine
+                        if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
+                            layoutLikingAvatars.removeAllViews();
+                            for (String url: avatars) {
+                                WPNetworkImageView imgAvatar = (WPNetworkImageView) mInflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                                layoutLikingAvatars.addView(imgAvatar);
+                                imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                             }
                         }
 
@@ -809,6 +783,10 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         final ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
+
+        // disable full-screen when comment box is showing
+        if (mIsFullScreen)
+            setIsFullScreen(false);
 
         // different hint depending on whether user is replying to a comment or commenting on the post
         editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
