@@ -3,18 +3,18 @@ package org.wordpress.android.mocks;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 
 public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
@@ -56,9 +56,14 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
         try {
             Gson gson = new Gson();
             InputStream is = mContext.getAssets().open(filename);
-            InputStreamReader inputStreamReader = new InputStreamReader(is);
-            BufferedReader f = new BufferedReader(inputStreamReader);
-            return gson.fromJson(inputStreamReader, Object[].class);
+            String jsonString = TestUtils.convertStreamToString(is);
+            try {
+                // Try to load a JSONArray
+                return gson.fromJson(jsonString, Object[].class);
+            } catch (Exception e) {
+                // If that fails, try to load a JSONObject
+                return TestUtils.stringMapToHashMap((StringMap) gson.fromJson(jsonString, Object.class));
+            }
         } catch (IOException e) {
             AppLog.e(T.TESTS, "can't read file: " + filename);
         }

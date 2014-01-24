@@ -10,6 +10,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -60,11 +61,6 @@ public class RestClientCustomizableMock extends RestClient {
         return new RestRequest(Method.POST, path, body, listener, errorListener);
     }
 
-    static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-
     private VolleyError createVolleyErrorFromFilename(String filename) {
         String data = fileToString(filename);
         NetworkResponse networkResponse = new NetworkResponse(400, data.getBytes(), null, false);
@@ -75,7 +71,7 @@ public class RestClientCustomizableMock extends RestClient {
     private String fileToString(String filename) {
         try {
             InputStream is = mContext.getAssets().open(filename);
-            String data = convertStreamToString(is);
+            String data = TestUtils.convertStreamToString(is);
             AppLog.v(T.TESTS, "file read:" + filename);
             return data;
         } catch (IOException e) {

@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.google.gson.internal.StringMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -66,5 +69,24 @@ public class TestUtils {
 
     public static void dropDB(Context targetContext) {
         targetContext.deleteDatabase(DATABASE_NAME);
+    }
+
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+    public static HashMap stringMapToHashMap(StringMap<?> stringMap) {
+        HashMap<String, Object> res = new HashMap<String, Object>();
+        for (String key : stringMap.keySet()) {
+            Object value = stringMap.get(key);
+            if (StringMap.class.isInstance(value)) {
+                HashMap newValue = stringMapToHashMap((StringMap<?>) value);
+                res.put(key, newValue);
+            } else {
+                res.put(key, value);
+            }
+        }
+        return res;
     }
 }

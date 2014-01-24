@@ -1,1 +1,32 @@
-{"home_url":{"value":"http://tataliwut.wordpress.com","readonly":true,"desc":"Adresse web du site (URL)"},"post_thumbnail":{"value":true,"readonly":true,"desc":"Miniature d\u0026rsquo;article"},"software_version":{"value":"3.9-alpha","readonly":true,"desc":"Software Version"},"blog_public":{"value":"1","readonly":true,"desc":"Accès aux renseignements confidentiels"},"admin_url":{"value":"https://tataliwut.wordpress.com/wp-admin/","readonly":true,"desc":"L\u0026rsquo;adresse web de la zone d\u0026rsquo;administration"},"login_url":{"value":"https://tataliwut.wordpress.com/wp-login.php","readonly":true,"desc":"Adresse de connexion (URL)"}}
+{
+    "admin_url": {
+        "desc": "L&rsquo;adresse web de la zone d&rsquo;administration",
+        "readonly": true,
+        "value": "https://tataliwut.wordpress.com/wp-admin/"
+    },
+    "blog_public": {
+        "desc": "Acc\u00e8s aux renseignements confidentiels",
+        "readonly": true,
+        "value": "1"
+    },
+    "home_url": {
+        "desc": "Adresse web du site (URL)",
+        "readonly": true,
+        "value": "http://tataliwut.wordpress.com"
+    },
+    "login_url": {
+        "desc": "Adresse de connexion (URL)",
+        "readonly": true,
+        "value": "https://tataliwut.wordpress.com/wp-login.php"
+    },
+    "post_thumbnail": {
+        "desc": "Miniature d&rsquo;article",
+        "readonly": true,
+        "value": true
+    },
+    "software_version": {
+        "desc": "Software Version",
+        "readonly": true,
+        "value": "3.9-alpha"
+    }
+}
