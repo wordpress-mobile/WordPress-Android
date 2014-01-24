@@ -1539,18 +1539,21 @@ public class WordPressDB {
             int result = 0;
             boolean isMarkedForDelete = false;
             if (mf.getMediaId() != null) {
-                Cursor cursor = db.rawQuery("SELECT uploadState FROM " + MEDIA_TABLE + " WHERE mediaId=?", new String[] { mf.getMediaId() });
+                Cursor cursor = db.rawQuery("SELECT uploadState FROM " + MEDIA_TABLE + " WHERE mediaId=?",
+                        new String[]{mf.getMediaId()});
                 if (cursor != null && cursor.moveToFirst()) {
                     isMarkedForDelete = "delete".equals(cursor.getString(0));
                     cursor.close();
                 }
-                
+
                 if (!isMarkedForDelete)
-                    result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{ mf.getBlogId(), mf.getMediaId()});
+                    result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?",
+                            new String[]{mf.getBlogId(), mf.getMediaId()});
             }
-            
+
             if (result == 0 && !isMarkedForDelete) {
-                result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?", new String[]{ String.valueOf(mf.getPostID()), mf.getFilePath() });
+                result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?",
+                        new String[]{String.valueOf(mf.getPostID()), StringUtils.notNullStr(mf.getFilePath())});
                 if (result == 0)
                     db.insert(MEDIA_TABLE, null, values);
             }
