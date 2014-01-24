@@ -294,8 +294,7 @@ public class ApiHelper {
             // Check if user is an admin
             Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfos = (HashMap<String, Object>)
-                        client.call("wp.getProfile", userParams);
+                Map<String, Object> userInfos = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
                 updateBlogAdmin(userInfos);
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);

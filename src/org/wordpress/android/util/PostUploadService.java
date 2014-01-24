@@ -34,7 +34,6 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -518,14 +517,11 @@ public class PostUploadService extends Service {
                 m.put("bits", mf);
                 m.put("overwrite", true);
 
-                Object[] params = {1, blog.getUsername(),
-                        blog.getPassword(), m};
+                Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
 
                 FeatureSet featureSet = synchronousGetFeatureSet();
-                boolean selfHosted = WordPress.currentBlog != null &&
-                        !WordPress.currentBlog.isDotcomFlag();
-                boolean isVideoEnabled = selfHosted ||
-                        (featureSet != null && mFeatureSet.isVideopressEnabled());
+                boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
+                boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
                 if (isVideoEnabled) {
                     Object result = uploadFileHelper(client, params, tempFile);
                     Map<?, ?> resultMap = (HashMap<?, ?>) result;
@@ -534,7 +530,8 @@ public class PostUploadService extends Service {
                         if (resultMap.containsKey("videopress_shortcode")) {
                             resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
                         } else {
-                            resultURL = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                            resultURL = String.format(
+                                    "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
                                     xRes, yRes, resultURL, mimeType, resultURL);
                         }
                         content = content + resultURL;
@@ -796,12 +793,13 @@ public class PostUploadService extends Service {
             return pictureURL;
         }
 
-        private Object uploadFileHelper(XMLRPCClient client, Object[] params, File tempFile) {
+        private Object uploadFileHelper(XMLRPCClientInterface client, Object[] params, File tempFile) {
             final Object result;
             try {
                 result = client.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " +
+                                cleanXMLRPCErrorMessage(e.getMessage());
                 return null;
             }
             return result;
