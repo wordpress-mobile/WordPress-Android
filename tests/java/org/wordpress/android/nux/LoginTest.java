@@ -7,6 +7,7 @@ import android.test.RenamingDelegatingContext;
 import com.robotium.solo.Solo;
 
 import org.wordpress.android.TestUtils;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.mocks.OAuthAuthenticatorFactoryTest;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
@@ -36,10 +37,15 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
 
     @Override
     public void setUp() throws Exception {
+        // Clean application state
+        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
+        TestUtils.clearDefaultSharedPreferences(targetContext);
+        TestUtils.dropDB(targetContext);
+        WordPress.signOut(targetContext);
+
         // setUp() is run before a test case is started.
         // This is where the solo object is created.
         solo = new Solo(getInstrumentation(), getActivity());
-        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
 
         // Init contexts
         XMLRPCFactoryTest.sContext = getInstrumentation().getContext();
@@ -50,10 +56,6 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE;
         RestClientFactoryTest.sMode = RestClientFactoryTest.Mode.CUSTOMIZABLE;
         AppLog.v(T.TESTS, "Modes set to customizable");
-
-        // Clean application state
-        TestUtils.clearDefaultSharedPreferences(targetContext);
-        TestUtils.dropDB(targetContext);
     }
 
     @Override
