@@ -348,12 +348,19 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
-    public boolean deactivateAccounts() {
-        List<Map<String, Object>> accounts = getAllAccounts();
-        for (Map<String, Object> account: accounts) {
-            deleteAccount(context, (Integer) account.get("id"));
+    public List<Integer> getAllAccountIDs() {
+        Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + SETTINGS_TABLE, null);
+        try {
+            List<Integer> ids = new ArrayList<Integer>();
+            if (c.moveToFirst()) {
+                do {
+                    ids.add(c.getInt(0));
+                } while (c.moveToNext());
+            }
+            return ids;
+        } finally {
+            SqlUtils.closeCursor(c);
         }
-        return true;
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
@@ -491,45 +498,26 @@ public class WordPressDB {
     }
 
     public boolean deleteAccount(Context ctx, int id) {
+        // TODO: should this also delete posts and other related info?
+        int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
+        deleteQuickPressShortcutsForAccount(ctx, id);
+        return (rowsAffected > 0);
+    }
 
-        int rowsAffected = 0;
+    public void deleteAllAccounts() {
+        List<Integer> ids = getAllAccountIDs();
+        if (ids.size() == 0)
+            return;
+
+        db.beginTransaction();
         try {
-            rowsAffected = db.delete(SETTINGS_TABLE, "id=" + id, null);
-            // you probably should delete the rest of the data..
+            for (int id: ids) {
+                deleteAccount(context, id);
+            }
+            db.setTransactionSuccessful();
         } finally {
-
+            db.endTransaction();
         }
-
-        boolean returnValue = false;
-        if (rowsAffected > 0) {
-            returnValue = true;
-        }
-
-        // delete QuickPress homescreen shortcuts connected with this account
-        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(id);
-        for (int i = 0; i < shortcuts.size(); i++) {
-            Map<String, Object> shortcutHash = shortcuts.get(i);
-
-            Intent shortcutIntent = new Intent();
-            shortcutIntent.setClassName(EditPostActivity.class.getPackage().getName(),
-                    EditPostActivity.class.getName());
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.setAction(Intent.ACTION_VIEW);
-            Intent broadcastShortcutIntent = new Intent();
-            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
-                    shortcutIntent);
-            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                    shortcutHash.get("name").toString());
-            broadcastShortcutIntent.putExtra("duplicate", false);
-            broadcastShortcutIntent
-                    .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            ctx.sendBroadcast(broadcastShortcutIntent);
-
-            deleteQuickPressShortcut(shortcutHash.get("id").toString());
-        }
-
-        return (returnValue);
     }
 
     public Blog getBlogById(int blog_id) throws Exception {
@@ -1236,10 +1224,10 @@ public class WordPressDB {
 
         List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c = db.query(COMMENTS_TABLE,
-                new String[] { "blogID", "postID", "iCommentID", "author",
+                new String[]{"blogID", "postID", "iCommentID", "author",
                         "comment", "commentDate", "commentDateFormatted",
-                        "status", "url", "email", "postTitle" }, "blogID="
-                        + blogID, null, null, null, null);
+                        "status", "url", "email", "postTitle"}, "blogID="
+                + blogID, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -1436,6 +1424,9 @@ public class WordPressDB {
         return (returnValue);
     }
 
+    /*
+     * return all QuickPress shortcuts connected with the passed account
+     */
     public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
@@ -1462,17 +1453,38 @@ public class WordPressDB {
         return accounts;
     }
 
-    public boolean deleteQuickPressShortcut(String id) {
+    /*
+     * delete QuickPress home screen shortcuts connected with the passed account
+     */
+    private void deleteQuickPressShortcutsForAccount(Context ctx, int accountId) {
+        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(accountId);
+        if (shortcuts.size() == 0)
+            return;
 
-        int rowsAffected = db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=" + id,
-                null);
+        String packageName = EditPostActivity.class.getPackage().getName();
+        String className = EditPostActivity.class.getName();
+        for (int i = 0; i < shortcuts.size(); i++) {
+            Map<String, Object> shortcutHash = shortcuts.get(i);
 
-        boolean returnValue = false;
-        if (rowsAffected > 0) {
-            returnValue = true;
+            Intent shortcutIntent = new Intent();
+            shortcutIntent.setClassName(packageName, className);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            shortcutIntent.setAction(Intent.ACTION_VIEW);
+            Intent broadcastShortcutIntent = new Intent();
+            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
+                    shortcutIntent);
+            broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+                    shortcutHash.get("name").toString());
+            broadcastShortcutIntent.putExtra("duplicate", false);
+            broadcastShortcutIntent
+                    .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+            ctx.sendBroadcast(broadcastShortcutIntent);
+
+            // remove from shortcuts table
+            String shortcutId = shortcutHash.get("id").toString();
+            db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=?", new String[]{shortcutId});
         }
-
-        return (returnValue);
     }
 
     public static String encryptPassword(String clearText) {

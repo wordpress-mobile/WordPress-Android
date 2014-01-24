@@ -182,6 +182,9 @@
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
     <string name="post_settings">Post Settings</string>
+    <string name="delete_post">Delete Post</string>
+    <string name="delete_page">Delete Page</string>
+    <string name="share_url">Share URL</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading&#8230;</string>
@@ -558,6 +561,7 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
+    <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Please contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t Access Stats</string>
     <string name="jetpack_stats_switch_user">This WordPress.com account does not have access to the stats for this blog. Would you like to sign in to a different account?</string>

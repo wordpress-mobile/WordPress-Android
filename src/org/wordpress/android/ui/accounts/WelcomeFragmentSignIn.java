@@ -225,8 +225,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     public void signInDotComUser() {
-        SharedPreferences settings =
-                PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                getActivity().getApplicationContext());
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
         if (username != null && password != null) {
@@ -242,12 +242,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mSignInButton.setVisibility(View.GONE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
+        mUsernameEditText.setEnabled(false);
+        mPasswordEditText.setEnabled(false);
+        mUrlEditText.setEnabled(false);
+        mAddSelfHostedButton.setEnabled(false);
+        mCreateAccountButton.setEnabled(false);
     }
 
     protected void endProgress() {
         mProgressBarSignIn.setVisibility(View.GONE);
         mProgressTextSignIn.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);
+        mUsernameEditText.setEnabled(true);
+        mPasswordEditText.setEnabled(true);
+        mUrlEditText.setEnabled(true);
+        mAddSelfHostedButton.setEnabled(true);
+        mCreateAccountButton.setEnabled(true);
     }
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
