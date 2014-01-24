@@ -23,10 +23,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -47,7 +50,7 @@ public class ApiHelper {
             return;
         }
 
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
 
         Map<String, Object> hPost = new HashMap<String, Object>();
@@ -151,7 +154,7 @@ public class ApiHelper {
         protected Object doInBackground(List<?>... args) {
             List<?> arguments = args[0];
             mBlog = (Blog) arguments.get(0);
-            client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
@@ -252,7 +255,7 @@ public class ApiHelper {
         @Override
         protected Boolean doInBackground(Boolean... params) {
             boolean commentsOnly = params[0];
-            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
             if (!commentsOnly) {
@@ -327,12 +330,18 @@ public class ApiHelper {
         }
     }
 
+    public static Date stringToDate(String sDate) throws ParseException {
+        // Jan 22, 2014 12:46:28 PM
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.ENGLISH);
+        return df.parse(sDate);
+    }
+
     public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null)
             return null;
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         String author, postID, comment, status, authorEmail, authorURL, postTitle;
         int commentID;
@@ -361,7 +370,16 @@ public class ApiHelper {
             status = contentHash.get("status").toString();
             postID = contentHash.get("post_id").toString();
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            d = (Date) contentHash.get("date_created_gmt");
+            Object date = contentHash.get("date_created_gmt");
+            if (Date.class.isInstance(date)) {
+                d = (Date) date;
+            } else {
+                try {
+                    d = stringToDate((String) contentHash.get("date_created_gmt"));
+                } catch (ParseException e) {
+                    AppLog.e(T.API, "Can't parse date: " + contentHash.get("date_created_gmt"));
+                }
+            }
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
@@ -408,7 +426,7 @@ public class ApiHelper {
             return date.toString();
         }
     }
-    
+
     public static class SyncMediaLibraryTask extends HelperAsyncTask<List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);
@@ -423,7 +441,7 @@ public class ApiHelper {
             mCallback = callback;
             mFilter = filter;
         }
-        
+
         @Override
         protected Integer doInBackground(List<?>... params) {
             List<?> arguments = params[0];
@@ -435,12 +453,12 @@ public class ApiHelper {
             }
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Map<String, Object> filter = new HashMap<String, Object>();
             filter.put("number", 50);
             filter.put("offset", mOffset);
-            
+
             if (mFilter == Filter.IMAGES) {
                 filter.put("mime_type","image/*");
             } else if(mFilter == Filter.UNATTACHED) {
@@ -449,7 +467,7 @@ public class ApiHelper {
 
             Object[] apiParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                     filter};
-            
+
             Object[] results = null;
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
@@ -486,7 +504,7 @@ public class ApiHelper {
             WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
             return results.length;
         }
-        
+
         @Override
         protected void onPostExecute(Integer result) {
             if (mCallback != null) {
@@ -498,14 +516,14 @@ public class ApiHelper {
             }
         }
     }
-    
+
     public static class EditMediaItemTask extends HelperAsyncTask<List<?>, Void, Boolean> {
         private GenericCallback mCallback;
         private String mMediaId;
         private String mTitle;
         private String mDescription;
         private String mCaption;
-        
+
         public EditMediaItemTask(String mediaId, String title, String description, String caption,
                                  GenericCallback callback) {
             mMediaId = mediaId;
@@ -519,19 +537,18 @@ public class ApiHelper {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
-            
+
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return null;
             }
-                        
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Map<String, Object> contentStruct = new HashMap<String, Object>();
             contentStruct.put("post_title", mTitle);
             contentStruct.put("post_content", mDescription);
             contentStruct.put("post_excerpt", mCaption);
-            
+
             Object[] apiParams = {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
@@ -539,17 +556,17 @@ public class ApiHelper {
                     mMediaId,
                     contentStruct
             };
-            
+
             Boolean result = null;
             try {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
-            
+
             return result;
         }
-        
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (mCallback != null) {
@@ -561,7 +578,7 @@ public class ApiHelper {
             }
         }
     }
-    
+
     public static class GetMediaItemTask extends HelperAsyncTask<List<?>, Void, MediaFile> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(MediaFile results);
@@ -573,7 +590,7 @@ public class ApiHelper {
             mMediaId = mediaId;
             mCallback = callback;
         }
-        
+
         @Override
         protected MediaFile doInBackground(List<?>... params) {
             List<?> arguments = params[0];
@@ -586,10 +603,8 @@ public class ApiHelper {
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
             Object[] apiParams = {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
@@ -611,7 +626,7 @@ public class ApiHelper {
                 return null;
             }
         }
-        
+
         @Override
         protected void onPostExecute(MediaFile result) {
             if (mCallback != null) {
@@ -623,7 +638,7 @@ public class ApiHelper {
             }
         }
     }
-    
+
     public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(String id);
@@ -631,14 +646,14 @@ public class ApiHelper {
         private Callback mCallback;
         private Context mContext;
         private MediaFile mMediaFile;
-        
+
         public UploadMediaTask(Context applicationContext, MediaFile mediaFile,
                                Callback callback) {
             mContext = applicationContext;
             mMediaFile = mediaFile;
             mCallback = callback;
         }
-        
+
         @Override
         protected String doInBackground(List<?>... params) {
             List<?> arguments = params[0];
@@ -650,27 +665,26 @@ public class ApiHelper {
                 return null;
             }
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-         
+
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
             data.put("type", mMediaFile.getMimeType());
             data.put("bits", mMediaFile);
             data.put("overwrite", true);
-            
-            Object[] apiParams = { 
+
+            Object[] apiParams = {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
                     data
             };
-            
+
             if (mContext == null) {
                 return null;
             }
-            
+
             Map<?, ?> resultMap;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
@@ -678,7 +692,7 @@ public class ApiHelper {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return null;
             }
-            
+
             if (resultMap != null && resultMap.containsKey("id")) {
                 return (String) resultMap.get("id");
             } else {
@@ -719,7 +733,7 @@ public class ApiHelper {
             mMediaId = mediaId;
             mCallback = callback;
         }
-        
+
         @Override
         protected Void doInBackground(List<?>... params) {
             List<?> arguments = params[0];
@@ -730,7 +744,8 @@ public class ApiHelper {
                 return null;
             }
 
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object[] apiParams = new Object[]{blog.getRemoteBlogId(), blog.getUsername(),
                     blog.getPassword(), mMediaId};
 
@@ -746,7 +761,7 @@ public class ApiHelper {
             }
             return null;
         }
-        
+
         @Override
         protected void onPostExecute(Void v) {
             if (mCallback != null) {
@@ -758,7 +773,7 @@ public class ApiHelper {
             }
         }
     }
-    
+
     public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
         public interface Callback {
             void onResult(FeatureSet featureSet);
@@ -781,42 +796,41 @@ public class ApiHelper {
         protected FeatureSet doInBackground(List<?>... params) {
             List<?> arguments = params[0];
             Blog blog = (Blog) arguments.get(0);
-            
+
             if (blog == null)
                 return null;
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            
+
             Object[] apiParams = new Object[] {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
             };
-            
+
             Map<?, ?> resultMap = null;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
             }
-            
+
             if (resultMap != null) {
                 return new FeatureSet(blog.getRemoteBlogId(), resultMap);
             }
-            
+
             return null;
         }
-        
+
         @Override
         protected void onPostExecute(FeatureSet result) {
             if (mCallback != null)
                 mCallback.onResult(result);
         }
-        
+
     }
-    
+
     /**
      * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
      *
@@ -930,14 +944,14 @@ public class ApiHelper {
             return null;
         }
     }
-    
+
     /**
      * Regex pattern for matching the RSD link found in most WordPress sites.
      */
     private static final Pattern rsdLink = Pattern.compile(
             "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    
+
     /**
      * Returns RSD URL based on regex match
      * @param urlString

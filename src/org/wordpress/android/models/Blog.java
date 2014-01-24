@@ -11,9 +11,13 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class Blog {
@@ -104,6 +108,15 @@ public class Blog {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public URI getUri() {
+        try {
+            return new URI(getUrl());
+        } catch (URISyntaxException e) {
+            AppLog.e(T.UTILS, "Blog url is invalid: " + getUrl());
+            return null;
+        }
     }
 
     public String getHomeURL() {
