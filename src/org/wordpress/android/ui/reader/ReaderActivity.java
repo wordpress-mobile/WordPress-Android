@@ -167,8 +167,8 @@ public class ReaderActivity extends WPActionBarActivity {
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.reader_native, menu);
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
@@ -247,8 +247,10 @@ public class ReaderActivity extends WPActionBarActivity {
         // if tags have never been updated, animate the refresh button if it's not already animating
         // so user knows something is happening (since reader will be blank until tags have updated)
         final boolean showUpdate = !mIsUpdating && ReaderTagTable.isEmpty();
-        if (showUpdate)
-            setIsUpdating(true);
+
+        // We can't call setIsUpdating(showUpdate) yet, race condition may occur when mRefreshMenuItem is being
+        // initialized (double animation) or is null (no animation)
+        mShouldAnimateRefreshButton = showUpdate;
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
