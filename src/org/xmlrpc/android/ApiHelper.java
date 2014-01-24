@@ -144,7 +144,7 @@ public class ApiHelper {
         public void onSuccess();
     }
 
-    public static class GetPostFormatsTask extends HelperAsyncTask<List<?>, Void, Object> {
+    public static class GetPostFormatsTask extends HelperAsyncTask<java.util.List<?>, Void, Object> {
         private Blog mBlog;
 
         @Override
@@ -409,7 +409,7 @@ public class ApiHelper {
         }
     }
     
-    public static class SyncMediaLibraryTask extends HelperAsyncTask<List<?>, Void, Integer> {
+    public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);
         }
