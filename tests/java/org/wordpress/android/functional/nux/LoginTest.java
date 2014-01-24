@@ -2,11 +2,16 @@ package org.wordpress.android.functional.nux;
 
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.RenamingDelegatingContext;
 
 import com.robotium.solo.Solo;
 
 import org.wordpress.android.functional.FuncUtils;
+import org.wordpress.android.mocks.RestClientFactoryTest;
+import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     private Solo mSolo;
@@ -16,7 +21,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         super(PostsActivity.class);
         FuncUtils.initWithTestFactories();
     }
-/*
+
     @Override
     public void setUp() throws Exception {
         // Clean application state
@@ -127,5 +132,4 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         mSolo.clickOnText("Create account");
         assertMenuDrawerIsOpen();
     }
-    */
 }
