@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -22,12 +19,16 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
 
@@ -39,9 +40,9 @@ public class EditCommentActivity extends SherlockActivity {
         super.onCreate(icicle);
 
         setContentView(R.layout.edit_comment);
-        
+
         setTitle(getString(R.string.edit_comment));
-        
+
         // Capitalize headers
         ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.comment_content).toUpperCase());
         ((TextView) findViewById(R.id.l_status)).setText(getResources().getString(R.string.status).toUpperCase());
@@ -217,11 +218,10 @@ public class EditCommentActivity extends SherlockActivity {
 
 
     public void updateComment(Map<String, String> postHash){
-
         // Update the comment on the user's blog.
-        XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
+        Blog blog = WordPress.currentBlog;
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                blog.getHttppassword());
 
         Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
                 WordPress.currentBlog.getUsername(),

@@ -26,7 +26,9 @@ import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +36,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
-    private XMLRPCClient client;
     String finalResult = "";
     ProgressDialog pd;
     public String categoryErrorMsg = "";
@@ -46,6 +47,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
+    XMLRPCClientInterface mClient;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -189,13 +191,11 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public String fetchCategories() {
         String returnMessage;
         Object result[] = null;
-        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), };
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+        Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),};
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         boolean success = false;
-
         try {
-            result = (Object[]) client.call("wp.getCategories", params);
+            result = (Object[]) mClient.call("wp.getCategories", params);
             success = true;
         } catch (XMLRPCException e) {
             e.printStackTrace();
@@ -243,14 +243,12 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         struct.put("slug", category_slug);
         struct.put("description", category_desc);
         struct.put("parent_id", parent_id);
-
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), struct };
 
         Object result = null;
         try {
-            result = client.call("wp.newCategory", params);
+            result = mClient.call("wp.newCategory", params);
         } catch (XMLRPCException e) {
             e.printStackTrace();
         }
@@ -356,8 +354,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         String new_category_name = null;
         Map<?, ?> result = null;
         Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         try {
-            result = (Map<?, ?>) client.call("wp.getTerm", params);
+            result = (Map<?, ?>) mClient.call("wp.getTerm", params);
         } catch (XMLRPCException e) {
             e.printStackTrace();
         }

@@ -14,8 +14,9 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,9 +68,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Map<String, Object> commentHash = new HashMap<String, Object>();
@@ -129,9 +128,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Map<String, Object> replyHash = new HashMap<String, Object>();
@@ -229,10 +226,8 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
-                    blog.getHttppassword());
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                        blog.getHttppassword());
 
                 Map<String, String> postHash = new HashMap<String, String>();
                 postHash.put("status", CommentStatus.toString(newStatus));
@@ -289,9 +284,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Object[] params = {

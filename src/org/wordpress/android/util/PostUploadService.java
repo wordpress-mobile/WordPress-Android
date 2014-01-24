@@ -35,7 +35,9 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -65,7 +67,7 @@ public class PostUploadService extends Service {
             listOfPosts.add(currentPost);
         }
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -120,7 +122,7 @@ public class PostUploadService extends Service {
         }
         uploadNextPost();
     }
-    
+
     public static boolean isUploading(Post post) {
         if ( currentUploadingPost != null && currentUploadingPost.equals(post) )
             return true;
@@ -128,7 +130,7 @@ public class PostUploadService extends Service {
             return true;
         return false;
     }
-    
+
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post post;
         private String mErrorMessage = "";
@@ -378,14 +380,14 @@ public class PostUploadService extends Service {
             }
 
             // featured image
-            if (featuredImageID != -1)
+            if (featuredImageID != -1) {
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
-
-            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
-            if (post.getQuickPostType() != null)
+            }
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+            if (post.getQuickPostType() != null) {
                 client.addQuickPostHeader(post.getQuickPostType());
-
+            }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
             nm.notify(notificationID, n);
             if (post.getWP_password() != null) {
@@ -421,13 +423,14 @@ public class PostUploadService extends Service {
             String content = "";
 
             String curImagePath = mf.getFilePath();
-            if (curImagePath == null)
+            if (curImagePath == null) {
                 return null;
+            }
 
             if (curImagePath.contains("video")) {
                 // Upload the video
-                XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                        blog.getHttppassword());
                 // create temp file for media upload
                 String tempFileName = "wp-" + System.currentTimeMillis();
                 try {
@@ -751,11 +754,12 @@ public class PostUploadService extends Service {
             }
             return content;
         }
-   
+
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
-            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
             // create temp file for media upload
             String tempFileName = "wp-" + System.currentTimeMillis();
             try {
@@ -776,7 +780,7 @@ public class PostUploadService extends Service {
 
             Map<?, ?> contentHash = (HashMap<?, ?>) result;
             String pictureURL = contentHash.get("url").toString();
-           
+
             if (mf.isFeatured()) {
                 try {
                     if (contentHash.get("id") != null) {
@@ -788,7 +792,7 @@ public class PostUploadService extends Service {
                     e.printStackTrace();
                 }
             }
-            
+
             return pictureURL;
         }
 

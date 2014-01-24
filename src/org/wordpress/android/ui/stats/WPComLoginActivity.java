@@ -26,8 +26,12 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
@@ -81,7 +85,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             }
         });
     }
-    
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -98,10 +102,15 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
+            URI uri;
+            try {
+                uri = new URI(Constants.wpcomXMLRPCURL);
+            } catch (URISyntaxException e) {
+                AppLog.e(T.API, "Invalid URI syntax: " + Constants.wpcomXMLRPCURL);
+                return false;
+            }
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, "", "");
             Object[] signInParams = { mUsername, mPassword };
-
             try {
                 client.call("wp.getUsersBlogs", signInParams);
                 WordPress.currentBlog.setDotcom_username(mUsername);

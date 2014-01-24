@@ -48,7 +48,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,9 +239,7 @@ public class CommentsListFragment extends ListFragment {
         final List<Comment> commentsUpdatedList = new LinkedList<Comment>();
         while (it.hasNext()) {
             int i = (Integer) it.next();
-            client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Comment listRow = (Comment) getListView().getItemAtPosition(i);
@@ -318,9 +318,9 @@ public class CommentsListFragment extends ListFragment {
     protected void deleteComments() {
         // bulk delete comments
         for (int i : selectedCommentPositions) {
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
 
             Comment listRow = (Comment) getListView().getItemAtPosition(i);
             int curCommentID = listRow.commentID;
@@ -501,13 +501,12 @@ public class CommentsListFragment extends ListFragment {
     }
     public void refreshComments(boolean loadMore) {
         mListScrollPositionManager.saveScrollOffset();
-
         if (!loadMore) {
             mOnAnimateRefreshButton.onAnimateRefreshButton(true);
         }
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                                  WordPress.currentBlog.getHttpuser(),
-                                  WordPress.currentBlog.getHttppassword());
+        Blog blog = WordPress.currentBlog;
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                blog.getHttppassword());
 
         Map<String, Object> hPost = new HashMap<String, Object>();
         if (loadMore) {

@@ -38,8 +38,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -618,17 +619,15 @@ public class PostsListFragment extends ListFragment {
             boolean success = false;
             List<?> arguments = args[0];
             mBlog = (Blog) arguments.get(0);
-            if (mBlog == null)
+            if (mBlog == null) {
                 return false;
+            }
             mIsPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
             mLoadMore = (Boolean) arguments.get(3);
-            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(),
-                    mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
-            Object[] params = {mBlog.getRemoteBlogId(),
-                    mBlog.getUsername(),
-                    mBlog.getPassword(), recordCount};
+            Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), recordCount};
             try {
                 Object[] result = (Object[]) client.call((mIsPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", params);
