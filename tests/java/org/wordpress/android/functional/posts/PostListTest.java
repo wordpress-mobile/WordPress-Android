@@ -62,7 +62,7 @@ public class PostListTest extends ActivityInstrumentationTestCase2<PostsActivity
     public void testCreateNewPost() throws Exception {
         login();
         mSolo.clickOnText("Posts");
-        mSolo.clickOnButton(R.id.menu_new_post);
-        mSolo.clickOnButton(R.id.menu_save_post);
+        mSolo.clickOnActionBarItem(R.id.menu_new_post);
+        mSolo.clickOnActionBarItem(R.id.menu_save_post);
     }
 }
