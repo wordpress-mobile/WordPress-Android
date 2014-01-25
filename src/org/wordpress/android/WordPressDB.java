@@ -1540,7 +1540,7 @@ public class WordPressDB {
             boolean isMarkedForDelete = false;
             if (mf.getMediaId() != null) {
                 Cursor cursor = db.rawQuery("SELECT uploadState FROM " + MEDIA_TABLE + " WHERE mediaId=?",
-                        new String[]{mf.getMediaId()});
+                        new String[]{StringUtils.notNullStr(mf.getMediaId())});
                 if (cursor != null && cursor.moveToFirst()) {
                     isMarkedForDelete = "delete".equals(cursor.getString(0));
                     cursor.close();
@@ -1548,7 +1548,7 @@ public class WordPressDB {
 
                 if (!isMarkedForDelete)
                     result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?",
-                            new String[]{mf.getBlogId(), mf.getMediaId()});
+                            new String[]{StringUtils.notNullStr(mf.getBlogId()), StringUtils.notNullStr(mf.getMediaId())});
             }
 
             if (result == 0 && !isMarkedForDelete) {
