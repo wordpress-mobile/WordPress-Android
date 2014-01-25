@@ -74,7 +74,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.notifications);
-        
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getResources().getString(R.string.notifications));
@@ -134,7 +134,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 return null;
             }
         });
-        
+
         GCMIntentService.activeNotificationsMap.clear();
 
         if (savedInstanceState == null) {
@@ -142,7 +142,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         } else {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
         }
-        
+
         refreshNotificationsListFragment(notes);
 
         if (savedInstanceState != null)
@@ -167,7 +167,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        
+
         GCMIntentService.activeNotificationsMap.clear();
 
         launchWithNoteId();
@@ -236,15 +236,15 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
@@ -297,7 +297,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 }
             );
         }
-        
+
         FragmentManager fm = getSupportFragmentManager();
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0){
@@ -328,7 +328,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
         transaction.commitAllowingStateLoss();
     }
-    
+
     public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
         RestRequest.Listener success = new RestRequest.Listener(){
             @Override
@@ -401,7 +401,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void onCommentModerated(final Comment comment, final Note note) {
         if (isFinishing())
             return;
-        if (note == null) 
+        if (note == null)
             return;
         //update the moderated note by calling the server.
         Map<String, String> params = new HashMap<String, String>();
@@ -425,7 +425,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     public void onCommentsModerated(final List<Comment> comments) {
     }
-        
+
     public void refreshNotificationsListFragment(List<Note> notes) {
         final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
         adapter.clear();
@@ -439,7 +439,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     public void refreshNotes(){
         mFirstLoadComplete = false;
-        shouldAnimateRefreshButton = true;
+        mShouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(mRefreshMenuItem);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
@@ -472,14 +472,14 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 ToastUtils.showToast(getContext(), R.string.error_refresh_notifications,
                         ToastUtils.Duration.LONG);
                 stopAnimatingRefreshButton(mRefreshMenuItem);
-                shouldAnimateRefreshButton = false;
+                mShouldAnimateRefreshButton = false;
             }
         };
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
     }
 
     protected void updateLastSeen(String timestamp){
-        
+
         restClient.markNotificationsSeen(timestamp,
             new RestRequest.Listener(){
                 @Override
@@ -525,14 +525,14 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             }
         }
     }
-    
+
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
             openNote(note);
         }
     }
-    
+
     abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
         NotesResponseHandler(){
             mLoadingMore = true;
@@ -550,7 +550,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 onNotes(notes);
                 return;
             }
-            
+
             try {
                 notes = NotificationUtils.parseNotes(response);
                 onNotes(notes);
@@ -560,7 +560,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 return;
             }
         }
-        
+
         @Override
         public void onErrorResponse(VolleyError error){
             mLoadingMore = false;
@@ -571,12 +571,12 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         public void showError(final String errorMessage){
             Toast.makeText(NotificationsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
         }
-        
+
         public void showError(){
             showError(getString(R.string.error_generic));
         }
     }
-    
+
     private abstract class FragmentDetector {
         abstract public Fragment getFragment(Note note);
     }
@@ -602,7 +602,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         super.onResume();
         registerReceiver(mBroadcastReceiver, new IntentFilter(NOTIFICATION_ACTION));
     }
-    
+
     @Override
     protected void onStart() {
         super.onStart();
