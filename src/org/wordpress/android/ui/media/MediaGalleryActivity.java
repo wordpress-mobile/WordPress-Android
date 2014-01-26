@@ -100,6 +100,12 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
                     mMediaGallerySettingsFragment.onPanelCollapsed();
                     mIsPanelCollapsed = true;
                 }
+
+                @Override
+                public void onPanelAnchored(View panel) {
+                    // TODO Auto-generated method stub
+                    
+                }
             });
         }
 
