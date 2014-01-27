@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -198,7 +199,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
@@ -290,6 +291,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
+            holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (parent instanceof ListView) {
+                        ((ListView) parent).performItemClick(holder.imgBtnComment, position, getItemId(position));
+                    }
+                }
+            });
+
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
