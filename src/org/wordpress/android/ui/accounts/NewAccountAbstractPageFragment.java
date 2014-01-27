@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import org.wordpress.android.util.WPRestClient;
  */
 public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected ConnectivityManager mSystemService;
-    protected ProgressDialog mProgressDialog;
     protected static RequestQueue requestQueue = null;
     protected static WPRestClient restClient = null;
     protected boolean mPasswordVisible;
