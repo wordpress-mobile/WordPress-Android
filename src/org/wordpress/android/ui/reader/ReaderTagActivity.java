@@ -245,7 +245,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
             @Override
             public void onActionResult(boolean succeeded) {
                 // handle failure when adding/removing tags below
-                if (!succeeded) {
+                if (!succeeded && !isFinishing()) {
                     getTagAdapter().refreshTags();
                     switch (action) {
                         case ADD:
