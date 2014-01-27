@@ -629,6 +629,8 @@
     <string name="reader_toast_err_reblog_requires_blog">Please select a blog</string>
     <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
+    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
+    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>

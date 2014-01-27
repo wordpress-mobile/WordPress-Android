@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
@@ -209,7 +210,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         mEditAddTag.setText(null);
         EditTextUtils.hideSoftInput(mEditAddTag);
 
-        onTopicAction(ReaderTagActions.TagAction.ADD, topicName);
+        onTopicAction(TagAction.ADD, topicName);
     }
 
     /*
@@ -217,7 +218,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
      * user chooses to add a topic
      */
     @Override
-    public void onTopicAction(ReaderTagActions.TagAction action, final String topicName) {
+    public void onTopicAction(final TagAction action, final String topicName) {
         if (TextUtils.isEmpty(topicName))
             return;
 
@@ -240,9 +241,28 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         }
         MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
 
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                // handle failure when adding/removing tags below
+                if (!succeeded) {
+                    getTagAdapter().refreshTopics();
+                    switch (action) {
+                        case ADD:
+                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_add_tag);
+                            mLastAddedTag = null;
+                            break;
+                        case DELETE:
+                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_remove_tag);
+                            break;
+                    }
+                }
+            }
+        };
+
         switch (action) {
             case ADD:
-                if (ReaderTagActions.performTagAction(ReaderTagActions.TagAction.ADD, topicName, null)) {
+                if (ReaderTagActions.performTagAction(TagAction.ADD, topicName, actionListener)) {
                     ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                         @Override
                         public void onDataLoaded(boolean isEmpty) {
@@ -261,7 +281,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
                 break;
 
             case DELETE:
-                if (ReaderTagActions.performTagAction(ReaderTagActions.TagAction.DELETE, topicName, null)) {
+                if (ReaderTagActions.performTagAction(TagAction.DELETE, topicName, actionListener)) {
                     getTagAdapter().refreshTopics();
                     if (mLastAddedTag !=null && mLastAddedTag.equals(topicName))
                         mLastAddedTag = null;
