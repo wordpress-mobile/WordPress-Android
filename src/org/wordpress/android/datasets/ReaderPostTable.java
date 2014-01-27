@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -263,35 +262,23 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }
 
-    /*
-     * returns the iso8601 published date of the newest post
-     */
-    /*public static String getNewestPubDateWithTag(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return "";
-
-        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                   + " AND tbl_post_tags.tag_name=? ORDER BY published DESC LIMIT 1";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
-    }*/
-
-    
     public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
-        if (blogId==0)
-            return;
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            // change is_followed in tbl_posts for this blog
+            String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                       + " WHERE blog_id=?";
+            db.execSQL(sql, new String[]{Long.toString(blogId)});
 
-        // change is_followed in tbl_posts for this blog
-        String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                  + " WHERE blog_id=?";
-        String[] args = {Long.toString(blogId)};
-        ReaderDatabase.getWritableDb().execSQL(sql, args);
+            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in tbl_post_tags
+            if (!isFollowed)
+                db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
+                        new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
 
-        // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in tbl_post_tags
-        if (!isFollowed) {
-            String[] argsTags = {Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING};
-            int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", "blog_id=? AND tag_name=?", argsTags);
-            AppLog.d(AppLog.T.READER, numDeleted + " deleted");
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
     }
     
