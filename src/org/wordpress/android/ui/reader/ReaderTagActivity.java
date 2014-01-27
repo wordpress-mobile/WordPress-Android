@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /**
@@ -192,6 +193,9 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         if (TextUtils.isEmpty(topicName))
             return;
 
+        if (!NetworkUtils.checkConnection(this))
+            return;
+
         if (ReaderTagTable.tagExists(topicName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
@@ -215,6 +219,9 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     @Override
     public void onTopicAction(ReaderTagActions.TagAction action, final String topicName) {
         if (TextUtils.isEmpty(topicName))
+            return;
+
+        if (!NetworkUtils.checkConnection(this))
             return;
 
         final String messageBarText;
