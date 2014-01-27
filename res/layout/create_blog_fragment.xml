@@ -40,7 +40,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
-                    android:inputType="text"
+                    android:inputType="textCapSentences"
                     android:hint="@string/title" />
 
                 <ImageView
