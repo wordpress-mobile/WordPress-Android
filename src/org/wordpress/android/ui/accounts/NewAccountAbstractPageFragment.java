@@ -97,14 +97,13 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
             int messageId;
             AppLog.e(T.NUX, error);
             if (error.networkResponse != null && error.networkResponse.data != null) {
-                AppLog.e(T.NUX, String.format("Error message: %s",
-                        new String(error.networkResponse.data)));
+                AppLog.e(T.NUX, String.format("Error message: %s", new String(error.networkResponse.data)));
                 String jsonString = new String(error.networkResponse.data);
                 try {
                     JSONObject errorObj = new JSONObject(jsonString);
                     messageId = getErrorMessageForErrorCode((String) errorObj.get("error"));
                     if (messageId == 0) { // Not one of our common errors. Show the error message
-                                           // from the server.
+                        // from the server.
                         message = (String) errorObj.get("message");
                     }
                 } catch (JSONException e) {
@@ -135,7 +134,14 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         return false;
     }
 
+    protected boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     protected void showError(int messageId) {
+        if (!hasActivity()) {
+            return ;
+        }
         if (specificShowError(messageId)) {
             return ;
         }
