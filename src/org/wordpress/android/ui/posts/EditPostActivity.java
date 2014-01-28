@@ -683,7 +683,27 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         } else if (id == R.id.addPictureButton) {
             mAddPictureButton.performLongClick();
         } else if (id == R.id.pubDateButton) {
+            if(mPubDateText.getText().toString().equals("Immediately"))
             showDialog(ID_DIALOG_DATE);
+            else{
+                CharSequence[] seq = {"Change date/time", "Immediately"};
+                AlertDialog.Builder dispDialog = new AlertDialog.Builder(EditPostActivity.this);
+                dispDialog.setItems(seq, new DialogInterface.OnClickListener() {
+                    
+                    @Override
+                    public void onClick(DialogInterface dialog, int pos) {
+                        // TODO Auto-generated method stub
+                        if(pos==0)
+                            showDialog(ID_DIALOG_DATE);
+                        else if(pos==1)
+                            mPubDateText.setText("Immediately");
+                    }
+                });
+                AlertDialog pubDialog = dispDialog.create();
+                pubDialog.show();
+                
+                }
+            
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", mBlogID);
