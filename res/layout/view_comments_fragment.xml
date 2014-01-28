@@ -14,6 +14,7 @@
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:visibility="gone"
         android:text="@string/empty_list_default" />
 
     <ListView
@@ -34,7 +35,7 @@
         android:layout_alignParentBottom="true"
         android:background="#88000000"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/margin_medium"
+        android:paddingTop="4dp"
         android:visibility="invisible">
 
         <Button
@@ -78,4 +79,11 @@
             android:textSize="@dimen/text_sz_small" />
     </LinearLayout>
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:id="@+id/progress_loading" />
 </RelativeLayout>

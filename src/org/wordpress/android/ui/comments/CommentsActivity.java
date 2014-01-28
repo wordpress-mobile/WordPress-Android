@@ -133,7 +133,7 @@ public class CommentsActivity extends WPActionBarActivity
     protected void onPostResume() {
         super.onPostResume();
         if (WordPress.currentBlog != null) {
-            boolean commentsLoaded = commentList.loadComments();
+            boolean commentsLoaded = commentList.loadComments(false);
             if (!commentsLoaded)
                 refreshCommentList();
         }

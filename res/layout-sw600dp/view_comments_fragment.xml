@@ -3,7 +3,7 @@
     android:id="@+id/moderatecomments"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@id/android:empty"
@@ -14,6 +14,7 @@
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:visibility="gone"
         android:text="@string/empty_list_default" />
 
     <ListView
@@ -25,8 +26,7 @@
         android:divider="@drawable/list_divider"
         android:dividerHeight="1px"
         android:scrollingCache="true"
-        android:textColor="#444444" >
-    </ListView>
+        android:textColor="#444444"></ListView>
 
     <RelativeLayout
         android:id="@+id/moderationBar"
@@ -34,14 +34,14 @@
         android:layout_height="@dimen/comments_moderation_bar_height"
         android:layout_alignParentBottom="true"
         android:background="#88000000"
-        android:paddingTop="@dimen/margin_medium"
-        android:visibility="invisible" >
+        android:paddingTop="4dp"
+        android:visibility="invisible">
 
         <LinearLayout
             android:id="@+id/moderationBar_buttons_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/bulkApproveComment"
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/moderationBar_buttons_1"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/bulkMarkSpam"
@@ -93,5 +93,13 @@
                 android:textSize="11sp" />
         </LinearLayout>
     </RelativeLayout>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:id="@+id/progress_loading" />
 
 </RelativeLayout>
