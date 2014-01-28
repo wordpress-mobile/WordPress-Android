@@ -303,7 +303,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
             if (mSetupBlog.isHttpAuthRequired()) {
-                if (getActivity() == null) {
+                if (!hasActivity()) {
                     return ;
                 }
                 // Prompt for http credentials
@@ -337,7 +337,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (userBlogList == null && mErrorMsgId != 0) {
-                if (getActivity() == null) {
+                if (!hasActivity()) {
                     return ;
                 }
                 FragmentTransaction ft = getFragmentManager().beginTransaction();

@@ -135,8 +135,12 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         return false;
     }
 
+    protected boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     protected void showError(int messageId) {
-        if (getActivity() == null) {
+        if (!hasActivity()) {
             return ;
         }
         if (specificShowError(messageId)) {
