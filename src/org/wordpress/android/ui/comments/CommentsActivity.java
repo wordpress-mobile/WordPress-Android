@@ -133,7 +133,7 @@ public class CommentsActivity extends WPActionBarActivity
     protected void onPostResume() {
         super.onPostResume();
         if (WordPress.currentBlog != null) {
-            boolean commentsLoaded = commentList.loadComments(false, false);
+            boolean commentsLoaded = commentList.loadComments();
             if (!commentsLoaded)
                 refreshCommentList();
         }
@@ -142,8 +142,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (commentList.getCommentsTask != null)
-            commentList.getCommentsTask.cancel(true);
+        commentList.cancelCommentsTask();
     }
 
     @Override
