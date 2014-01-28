@@ -4,7 +4,7 @@
     <string name="app_name" translatable="false">WordPress</string>
 
     <!-- account setup -->
-    <string name="xmlrpc_error">couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
+    <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available.</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
@@ -51,7 +51,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
-    <string name="could_not_remove_account">couldn\'t remove blog.</string>
+    <string name="could_not_remove_account">Couldn\'t remove blog.</string>
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
@@ -79,7 +79,7 @@
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
-    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custome date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
+    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="please_wait_refresh_done">Loading items…</string>
     <string name="learn_more">Learn more</string>
@@ -178,7 +178,7 @@
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="out_of_memory">Device out of memory.</string>
-    <string name="file_not_found">couldn\'t find the media file for upload. Was it deleted or moved?</string>
+    <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
     <string name="post_settings">Post settings</string>
@@ -263,7 +263,7 @@
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>
-    <string name="no_site_error">couldn\'t connect to the WordPress site.</string>
+    <string name="no_site_error">Couldn\'t connect to the WordPress site.</string>
 
     <!-- drafts -->
 
@@ -302,7 +302,7 @@
     <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
-    <string name="file_error_create">couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
+    <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 
     <!-- SD Card errors -->
     <string name="sdcard_title">SD Card Required</string>
@@ -543,7 +543,7 @@
 
     <!--  Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
-    <string name="error_load_comment">couldn\'t load the comment.</string>
+    <string name="error_load_comment">Couldn\'t load the comment.</string>
     <string name="manage">Manage</string>
     <string name="discard">Discard</string>
     <string name="prompt_save_changes">Would you like to save your changes?</string>
