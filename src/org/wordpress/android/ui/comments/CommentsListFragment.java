@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -66,7 +65,7 @@ public class CommentsListFragment extends ListFragment {
     public static final int COMMENTS_PER_PAGE = 30;
     public boolean shouldSelectAfterLoad = false;
     public int numRecords = 0,
-               checkedCommentTotal = 0,
+               checkedCommentTotal = 0, // TODO: this is never set!
                selectedPosition,
                scrollPosition = 0,
                scrollPositionTop = 0;
@@ -74,7 +73,7 @@ public class CommentsListFragment extends ListFragment {
     public getRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
-    private String accountName = "", moderateErrorMsg = "";
+    private String moderateErrorMsg = "";
     private ViewSwitcher switcher;
     private boolean loadMore = false, refreshOnly = false;
     private HashSet<Integer> selectedCommentPositions = new HashSet<Integer>();
@@ -153,8 +152,6 @@ public class CommentsListFragment extends ListFragment {
 
         switcher.addView(footer);
         switcher.addView(progress);
-
-        getActivity().setTitle(accountName + " - Moderate Comments");
 
         Button deleteComments = (Button) v.findViewById(R.id.bulkDeleteComment);
 
@@ -542,38 +539,26 @@ public class CommentsListFragment extends ListFragment {
     }
 
     class CommentAdapter extends ArrayAdapter<Comment> {
-
-        int sdk_version = 7;
-        boolean detailViewVisible = false;
-
+        private LayoutInflater mInflater;
         CommentAdapter() {
-            super(getActivity().getApplicationContext(), R.layout.comment_row, model);
-
-            sdk_version = android.os.Build.VERSION.SDK_INT;
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-            if (f != null && f.isInLayout())
-                detailViewVisible = true;
+            super(getActivity(), R.layout.comment_row, model);
+            mInflater = LayoutInflater.from(getActivity());
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            CommentEntryWrapper wrapper = null;
+            final CommentEntryWrapper wrapper;
 
-            if (row == null || row.getTag() == null) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                row = inflater.inflate(R.layout.comment_row, null);
-                NetworkImageView avatar = (NetworkImageView)row.findViewById(R.id.avatar);
-                avatar.setDefaultImageResId(R.drawable.placeholder);
-                wrapper = new CommentEntryWrapper(row);
-                row.setTag(wrapper);
+            if (convertView == null || convertView.getTag() == null) {
+                convertView = mInflater.inflate(R.layout.comment_row, null);
+                wrapper = new CommentEntryWrapper(convertView);
+                convertView.setTag(wrapper);
             } else {
-                wrapper = (CommentEntryWrapper) row.getTag();
+                wrapper = (CommentEntryWrapper) convertView.getTag();
             }
             Comment commentEntry = getItem(position);
             wrapper.populateFrom(commentEntry, position);
 
-            return (row);
+            return convertView;
         }
     }
 
@@ -596,8 +581,10 @@ public class CommentsListFragment extends ListFragment {
             txtComment = (TextView) row.findViewById(R.id.comment);
             txtStatus = (TextView) row.findViewById(R.id.status); // setTextSize(12)
             txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
-            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
             bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
+
+            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         }
 
         void populateFrom(Comment comment, final int position) {
@@ -646,7 +633,6 @@ public class CommentsListFragment extends ListFragment {
                 }
             });
 
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             if (comment.hasProfileImageUrl()) {
                 imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
             } else {
@@ -766,6 +752,8 @@ public class CommentsListFragment extends ListFragment {
 
         @Override
         protected Map<Integer, Map<?, ?>> doInBackground(Void... args) {
+            if (!hasActivity())
+                return null;
             try {
                 Map<Integer, Map<?, ?>> commentsResult = ApiHelper.refreshComments(getActivity()
                         .getApplicationContext(), commentParams);
