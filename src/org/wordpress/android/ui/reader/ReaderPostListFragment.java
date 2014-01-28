@@ -385,10 +385,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         setIsUpdating(true, updateAction);
         setEmptyTitleAndDecriptionForCurrentTag();
 
-        // if this is "Posts I Like" and it's a manual refresh (user tapped refresh icon), refresh the posts so posts that were unliked
-        // no longer appear
-        if (refreshType == RefreshType.MANUAL && isCurrentTagName(tagName) && tagName.equals((ReaderTag.TAG_NAME_LIKED))) {
-            refreshPosts();
+        // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
+        // refresh the posts so posts that were unliked/unfollowed no longer appear
+        if (refreshType == RefreshType.MANUAL && isCurrentTagName(tagName)) {
+            if (tagName.equals(ReaderTag.TAG_NAME_LIKED) || tagName.equals(ReaderTag.TAG_NAME_FOLLOWING))
+                refreshPosts();
         }
 
         ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {

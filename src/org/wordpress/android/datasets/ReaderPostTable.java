@@ -262,28 +262,24 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }
 
-    /*
-     * returns the iso8601 published date of the newest post
-     */
-    /*public static String getNewestPubDateWithTag(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return "";
-
-        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                   + " AND tbl_post_tags.tag_name=? ORDER BY published DESC LIMIT 1";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
-    }*/
-
-    
     public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
-        if (blogId==0)
-            return;
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            // change is_followed in tbl_posts for this blog
+            String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                       + " WHERE blog_id=?";
+            db.execSQL(sql, new String[]{Long.toString(blogId)});
 
-        String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                  + " WHERE blog_id=?";
-        String[] args = {Long.toString(blogId)};
-        ReaderDatabase.getWritableDb().execSQL(sql, args);
+            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in tbl_post_tags
+            if (!isFollowed)
+                db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
+                        new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
     
     public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
@@ -362,9 +358,13 @@ public class ReaderPostTable {
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=?";
 
-        // skip posts that are no longer liked if this is "Posts I Like"
-        if (tagName.equals(ReaderTag.TAG_NAME_LIKED))
+        if (tagName.equals(ReaderTag.TAG_NAME_LIKED)) {
+            // skip posts that are no longer liked if this is "Posts I Like"
             sql += " AND tbl_posts.is_liked != 0";
+        } else if (tagName.equals(ReaderTag.TAG_NAME_FOLLOWING)) {
+            // skip posts that are no longer followed if this is "Blogs I Follow"
+            sql += " AND tbl_posts.is_followed != 0";
+        }
 
         sql += " ORDER BY tbl_posts.timestamp DESC";
 
