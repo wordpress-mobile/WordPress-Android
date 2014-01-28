@@ -76,7 +76,7 @@ public class CommentsListFragment extends ListFragment {
     private XMLRPCClient client;
     private String accountName = "", moderateErrorMsg = "";
     private ViewSwitcher switcher;
-    private boolean loadMore = false, doInBackground = false, refreshOnly = false;
+    private boolean loadMore = false, refreshOnly = false;
     private HashSet<Integer> selectedCommentPositions = new HashSet<Integer>();
     private Object[] commentParams;
     private OnCommentSelectedListener mOnCommentSelectedListener;
@@ -752,9 +752,7 @@ public class CommentsListFragment extends ListFragment {
                 }
             } else {
                 allComments.putAll(commentsResult);
-                if (!doInBackground) {
-                    loadComments(refreshOnly, loadMore);
-                }
+                loadComments(refreshOnly, loadMore);
             }
 
             mOnAnimateRefreshButton.onAnimateRefreshButton(false);
@@ -763,9 +761,7 @@ public class CommentsListFragment extends ListFragment {
                 switcher.showPrevious();
             }
 
-            if (!doInBackground) {
-                showOrHideModerationBar();
-            }
+            showOrHideModerationBar();
         }
 
         @Override
