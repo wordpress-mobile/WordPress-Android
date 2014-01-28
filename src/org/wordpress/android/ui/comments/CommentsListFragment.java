@@ -17,8 +17,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
-import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -58,23 +56,23 @@ import java.util.Map;
 public class CommentsListFragment extends ListFragment {
     public ArrayList<Comment> model = null;
     public Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
-    public int ID_DIALOG_MODERATING = 1;
-    public int ID_DIALOG_DELETING = 3;
+
+    protected static final int ID_DIALOG_MODERATING = 1;
+    protected static final int ID_DIALOG_DELETING = 3;
     private static final int COMMENTS_PER_PAGE = 30;
+
     protected boolean shouldSelectAfterLoad = false;
+    private String moderateErrorMsg = "";
     private int scrollPosition = 0,
                 scrollPositionTop = 0;
     protected int checkedCommentTotal = 0; // TODO: this is never set!
     private GetRecentCommentsTask mGetCommentsTask;
 
-    private XMLRPCClient client;
-    private String moderateErrorMsg = "";
-    private ViewSwitcher switcher;
+    private ViewSwitcher mSwitcher;
     private HashSet<Integer> selectedCommentPositions = new HashSet<Integer>();
     private OnCommentSelectedListener mOnCommentSelectedListener;
     private OnAnimateRefreshButtonListener mOnAnimateRefreshButton;
     private CommentActions.OnCommentChangeListener mOnCommentChangeListener;
-    private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
 
     // context menu IDs
@@ -123,30 +121,26 @@ public class CommentsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.view_comments_fragment, container, false);
 
-        // create the ViewSwitcher in the current context
-        switcher = new ViewSwitcher(getActivity());
-        Button footer = (Button) View.inflate(getActivity()
-                , R.layout.list_footer_btn, null);
-        footer.setText(getResources().getText(R.string.load_more) + " "
-                + getResources().getText(R.string.tab_comments));
+        mSwitcher = new ViewSwitcher(getActivity());
+
+        Button footer = (Button) View.inflate(getActivity(), R.layout.list_footer_btn, null);
+        footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_comments));
 
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                switcher.showNext();
+                mSwitcher.showNext();
                 refreshComments(true);
             }
         });
 
-        mFooterSpacer = new View(getActivity());
-        mFooterSpacer.setLayoutParams(new AbsListView.LayoutParams(10, 0));
+        View progress = View.inflate(getActivity(), R.layout.list_footer_progress, null);
+        mSwitcher.addView(footer);
+        mSwitcher.addView(progress);
 
-        View progress = View.inflate(getActivity(),
-                R.layout.list_footer_progress, null);
-
-        switcher.addView(footer);
-        switcher.addView(progress);
-
-        Button deleteComments = (Button) v.findViewById(R.id.bulkDeleteComment);
+        final Button deleteComments = (Button) v.findViewById(R.id.bulkDeleteComment);
+        final Button approveComments = (Button) v.findViewById(R.id.bulkApproveComment);
+        final Button unapproveComments = (Button) v.findViewById(R.id.bulkUnapproveComment);
+        final Button spamComments = (Button) v.findViewById(R.id.bulkMarkSpam);
 
         deleteComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -161,9 +155,6 @@ public class CommentsListFragment extends ListFragment {
             }
         });
 
-        Button approveComments = (Button) v
-                .findViewById(R.id.bulkApproveComment);
-
         approveComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 getActivity().showDialog(ID_DIALOG_MODERATING);
@@ -175,9 +166,6 @@ public class CommentsListFragment extends ListFragment {
                 }.start();
             }
         });
-
-        Button unapproveComments = (Button) v
-                .findViewById(R.id.bulkUnapproveComment);
 
         unapproveComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -191,8 +179,6 @@ public class CommentsListFragment extends ListFragment {
             }
         });
 
-        Button spamComments = (Button) v.findViewById(R.id.bulkMarkSpam);
-
         spamComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 getActivity().showDialog(ID_DIALOG_MODERATING);
@@ -204,6 +190,7 @@ public class CommentsListFragment extends ListFragment {
                 }.start();
             }
         });
+
         return v;
     }
 
@@ -223,11 +210,11 @@ public class CommentsListFragment extends ListFragment {
         final Blog blog = WordPress.currentBlog;
 
         // handles bulk moderation
-        Iterator it= selectedCommentPositions.iterator();
+        Iterator it = selectedCommentPositions.iterator();
         final List<Comment> commentsUpdatedList = new LinkedList<Comment>();
         while (it.hasNext()) {
             int i = (Integer) it.next();
-            client = new XMLRPCClient(
+            XMLRPCClient client = new XMLRPCClient(
                     blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
@@ -278,28 +265,25 @@ public class CommentsListFragment extends ListFragment {
         if (hasActivity()) {
             Thread action = new Thread() {
                 public void run() {
+                    hideModerationBar();
                     if (TextUtils.isEmpty(moderateErrorMsg)) {
                         String msg = getResources().getText(R.string.comment_moderated).toString();
                         if (checkedCommentTotal > 1)
                             msg = getResources().getText(R.string.comments_moderated).toString();
                         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                         checkedCommentTotal = 0;
-                        hideModerationBar();
                         mOnCommentChangeListener.onCommentsModerated(commentsUpdatedList);
 
                         // update the comment counter on the menu drawer
                         ((WPActionBarActivity) getActivity()).updateMenuDrawer();
-                    } else {
+                    } else if (!getActivity().isFinishing()) {
                         // there was an xmlrpc error
-                        if (!getActivity().isFinishing()) {
-                            checkedCommentTotal = 0;
-                            hideModerationBar();
-                            getListView().invalidateViews();
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
-                            ft.add(alert, "alert");
-                            ft.commitAllowingStateLoss();
-                        }
+                        checkedCommentTotal = 0;
+                        getListView().invalidateViews();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
+                        ft.add(alert, "alert");
+                        ft.commitAllowingStateLoss();
                     }
                 }
             };
@@ -310,7 +294,7 @@ public class CommentsListFragment extends ListFragment {
     protected void deleteComments() {
         // bulk delete comments
         for (int i : selectedCommentPositions) {
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+            XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
                     WordPress.currentBlog.getHttpuser(),
                     WordPress.currentBlog.getHttppassword());
 
@@ -433,12 +417,11 @@ public class CommentsListFragment extends ListFragment {
 
     private void setUpListView(boolean showSwitcher) {
         ListView listView = this.getListView();
-        listView.removeFooterView(switcher);
-        listView.removeFooterView(mFooterSpacer);
+        listView.removeFooterView(mSwitcher);
         if (showSwitcher) {
-            listView.addFooterView(switcher);
+            listView.addFooterView(mSwitcher);
+            mSwitcher.setDisplayedChild(0);
         }
-        listView.addFooterView(mFooterSpacer);
         setListAdapter(new CommentAdapter());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -491,9 +474,6 @@ public class CommentsListFragment extends ListFragment {
         if (!isLoadingMore) {
             mOnAnimateRefreshButton.onAnimateRefreshButton(true);
         }
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                                  WordPress.currentBlog.getHttpuser(),
-                                  WordPress.currentBlog.getHttppassword());
 
         Map<String, Object> hPost = new HashMap<String, Object>();
         if (isLoadingMore) {
@@ -644,7 +624,6 @@ public class CommentsListFragment extends ListFragment {
         moderationBar.clearAnimation();
         moderationBar.startAnimation(set);
         moderationBar.setVisibility(View.INVISIBLE);
-        setFooterSpacerVisible(false);
     }
 
     protected void showOrHideModerationBar() {
@@ -674,16 +653,6 @@ public class CommentsListFragment extends ListFragment {
         set.addAnimation(animation);
         moderationBar.setVisibility(View.VISIBLE);
         moderationBar.startAnimation(set);
-        setFooterSpacerVisible(true);
-    }
-
-    private void setFooterSpacerVisible(boolean visible) {
-        LayoutParams params = (LayoutParams) mFooterSpacer.getLayoutParams();
-        if (visible)
-            params.height = getResources().getDimensionPixelSize(R.dimen.comments_moderation_bar_height);
-        else
-            params.height = 0;
-        mFooterSpacer.setLayoutParams(params);
     }
 
     protected void cancelCommentsTask() {
@@ -716,7 +685,7 @@ public class CommentsListFragment extends ListFragment {
                 return;
 
             mOnAnimateRefreshButton.onAnimateRefreshButton(false);
-            switcher.showPrevious();
+            mSwitcher.setDisplayedChild(0);
             showOrHideModerationBar();
 
             if (commentsResult == null) {

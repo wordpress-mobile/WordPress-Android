@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:background="#88000000"
         android:orientation="horizontal"
-        android:paddingTop="4dp"
+        android:paddingTop="@dimen/margin_medium"
         android:visibility="invisible">
 
         <Button
