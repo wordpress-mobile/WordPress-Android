@@ -690,6 +690,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     mMenuDrawer.setContentView(content);
                     if (mBlogSpinner != null) {
                         initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
+                    } else {
+                        initMenuDrawer();
                     }
                 }
             }
