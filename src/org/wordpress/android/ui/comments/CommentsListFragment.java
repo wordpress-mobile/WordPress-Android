@@ -464,8 +464,13 @@ public class CommentsListFragment extends ListFragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                // make sure position is in bounds (prevents ArrayIndexOutOfBoundsException that
+                // would otherwise occur when footer is tapped)
+                if (position < 0 || position >= model.size()) {
+                    return;
+                }
                 selectedPosition = position;
-                Comment comment = model.get((int) id);
+                Comment comment = model.get(position);
                 mOnCommentSelectedListener.onCommentSelected(comment);
                 getListView().invalidateViews();
             }
