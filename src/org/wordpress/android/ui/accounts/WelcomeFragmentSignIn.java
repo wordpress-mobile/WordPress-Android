@@ -337,6 +337,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (userBlogList == null && mErrorMsgId != 0) {
+                if (getActivity() == null) {
+                    return ;
+                }
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
