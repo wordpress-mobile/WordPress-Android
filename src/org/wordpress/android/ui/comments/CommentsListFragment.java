@@ -70,7 +70,7 @@ public class CommentsListFragment extends ListFragment {
                scrollPosition = 0,
                scrollPositionTop = 0;
     public ProgressDialog progressDialog;
-    public getRecentCommentsTask getCommentsTask;
+    public GetRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
     private String moderateErrorMsg = "";
@@ -84,6 +84,9 @@ public class CommentsListFragment extends ListFragment {
     private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
 
+    private int mStatusColorSpam;
+    private int mStatusColorUnapproved;
+
     // context menu IDs
     protected static final int MENU_ID_APPROVED = 100;
     protected static final int MENU_ID_UNAPPROVED = 101;
@@ -94,6 +97,8 @@ public class CommentsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        mStatusColorSpam = Color.parseColor("#FF0000");
+        mStatusColorUnapproved = Color.parseColor("#D54E21");
     }
 
     @Override
@@ -375,10 +380,8 @@ public class CommentsListFragment extends ListFragment {
 
         List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getLocalTableBlogId());
 
-        if (refreshOnly) {
-            if (model != null) {
-                model.clear();
-            }
+        if (model != null) {
+            model.clear();
         } else {
             model = new ArrayList<Comment>();
         }
@@ -457,6 +460,7 @@ public class CommentsListFragment extends ListFragment {
         listView.removeFooterView(switcher);
         listView.removeFooterView(mFooterSpacer);
         if (showSwitcher) {
+            switcher.setDisplayedChild(0);
             listView.addFooterView(switcher);
         }
         listView.addFooterView(mFooterSpacer);
@@ -487,6 +491,13 @@ public class CommentsListFragment extends ListFragment {
                     AppLog.e(T.COMMENTS, "bad menuInfo", e);
                     return;
                 }
+
+                // make sure this is a valid position (long-tapping footer will pass invalid position)
+                if (info.position < 0 || info.position >= model.size()) {
+                    menu.clear();
+                    return;
+                }
+
                 WordPress.currentComment = model.get(info.position);
                 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
                 CommentStatus status = WordPress.currentComment.getStatusEnum();
@@ -502,6 +513,14 @@ public class CommentsListFragment extends ListFragment {
                 menu.add(0, MENU_ID_EDIT, 0, getResources().getText(R.string.edit));
             }
         });
+    }
+
+    protected void clearComments() {
+        if (model != null && model.size() > 0) {
+            model.clear();
+            allComments.clear();
+            ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+        }
     }
 
     public void refreshComments() {
@@ -534,7 +553,7 @@ public class CommentsListFragment extends ListFragment {
                 WordPress.currentBlog.getPassword(), hPost };
 
         commentParams = params;
-        getCommentsTask = new getRecentCommentsTask();
+        getCommentsTask = new GetRecentCommentsTask();
         getCommentsTask.execute();
     }
 
@@ -604,26 +623,22 @@ public class CommentsListFragment extends ListFragment {
 
             row.setId(Integer.valueOf(comment.commentID));
 
-            final String status;
-            final String textColor;
-
+            // status is only shown for comments that aren't approved
             switch (comment.getStatusEnum()) {
                 case SPAM :
-                    status = getResources().getText(R.string.spam).toString();
-                    textColor = "#FF0000";
+                    txtStatus.setText(getResources().getText(R.string.spam).toString());
+                    txtStatus.setTextColor(mStatusColorSpam);
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 case UNAPPROVED:
-                    status = getResources().getText(R.string.unapproved).toString();
-                    textColor = "#D54E21";
+                    txtStatus.setText(getResources().getText(R.string.unapproved).toString());
+                    txtStatus.setTextColor(mStatusColorUnapproved);
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 default :
-                    status = getResources().getText(R.string.approved).toString();
-                    textColor = "#006505";
+                    txtStatus.setVisibility(View.GONE);
                     break;
             }
-
-            txtStatus.setText(status);
-            txtStatus.setTextColor(Color.parseColor(textColor));
 
             bulkCheck.setChecked(selectedCommentPositions.contains(position));
             bulkCheck.setTag(position);
@@ -711,7 +726,7 @@ public class CommentsListFragment extends ListFragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
+    class GetRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
             if (isCancelled() || !hasActivity())
                 return;
@@ -722,7 +737,6 @@ public class CommentsListFragment extends ListFragment {
                     model.clear();
                     allComments.clear();
                     getListView().invalidateViews();
-                    //onCommentStatusChangeListener.onCommentStatusChanged("clear");
                     WordPress.currentComment = null;
                     loadComments(false, false);
                 }
