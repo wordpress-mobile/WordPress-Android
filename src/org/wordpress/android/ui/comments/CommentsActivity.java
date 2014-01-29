@@ -347,7 +347,7 @@ public class CommentsActivity extends WPActionBarActivity
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_MODERATING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.getCheckedCommentCount() > 1) {
+            if (commentList.getSelectedCommentCount() > 1) {
                 loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
             } else {
                 loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
@@ -357,7 +357,7 @@ public class CommentsActivity extends WPActionBarActivity
             return loadingDialog;
         } else if (id == ID_DIALOG_DELETING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.getCheckedCommentCount() > 1) {
+            if (commentList.getSelectedCommentCount() > 1) {
                 loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
             } else {
                 loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
