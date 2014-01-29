@@ -455,6 +455,7 @@ public class CommentsListFragment extends ListFragment {
         listView.removeFooterView(switcher);
         listView.removeFooterView(mFooterSpacer);
         if (showSwitcher) {
+            switcher.setDisplayedChild(0);
             listView.addFooterView(switcher);
         }
         listView.addFooterView(mFooterSpacer);
