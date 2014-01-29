@@ -60,9 +60,14 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected abstract void onDoneAction();
 
+    protected abstract boolean isUserDataValid();
+
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN &&
                                                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            if (!isUserDataValid()) {
+                return true;
+            }
             onDoneAction();
             return true;
         }
@@ -90,6 +95,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         }
         );
     }
+
     protected class ErrorListener implements RestRequest.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {

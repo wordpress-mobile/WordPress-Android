@@ -171,7 +171,7 @@
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_medium"/>
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/nux_button_height"
@@ -184,7 +184,6 @@
                     android:layout_width="match_parent"
                     android:text="@string/nux_welcome_create_account"
                     android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center"
                     android:enabled="false"/>
 
