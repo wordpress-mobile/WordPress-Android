@@ -9,9 +9,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.xmlrpc.android.ApiHelper;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class Comment {
     public String postID = "";
     public int commentID;

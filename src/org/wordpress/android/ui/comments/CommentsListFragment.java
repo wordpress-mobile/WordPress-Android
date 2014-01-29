@@ -3,16 +3,11 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -25,6 +20,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -292,26 +288,6 @@ public class CommentsListFragment extends Fragment {
         mGetCommentsTask.execute();
     }
 
-    protected void hideModerationBar() {
-        if (!hasActivity())
-            return;
-        ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
-        if( moderationBar.getVisibility() == View.INVISIBLE )
-            return;
-        AnimationSet set = new AnimationSet(true);
-        Animation animation = new AlphaAnimation(1.0f, 0.0f);
-        animation.setDuration(MODERATION_BAR_ANI_MS);
-        set.addAnimation(animation);
-        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        animation.setDuration(MODERATION_BAR_ANI_MS);
-        set.addAnimation(animation);
-        moderationBar.clearAnimation();
-        moderationBar.startAnimation(set);
-        moderationBar.setVisibility(View.INVISIBLE);
-    }
-
     protected void showOrHideModerationBar() {
         if (getCommentAdapter().getSelectedCommentCount() > 0) {
             showModerationBar();
@@ -320,25 +296,20 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private static final long MODERATION_BAR_ANI_MS = 250;
-
     protected void showModerationBar() {
         if (!hasActivity())
             return;
         ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
-        if( moderationBar.getVisibility() == View.VISIBLE )
+        if (moderationBar.getVisibility() != View.VISIBLE)
+            AniUtils.flyIn(moderationBar);
+    }
+
+    protected void hideModerationBar() {
+        if (!hasActivity())
             return;
-        AnimationSet set = new AnimationSet(true);
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(MODERATION_BAR_ANI_MS);
-        set.addAnimation(animation);
-        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animation.setDuration(MODERATION_BAR_ANI_MS);
-        set.addAnimation(animation);
-        moderationBar.setVisibility(View.VISIBLE);
-        moderationBar.startAnimation(set);
+        ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
+        if (moderationBar.getVisibility() == View.VISIBLE)
+            AniUtils.flyOut(moderationBar);
     }
 
     protected void cancelCommentsTask() {
