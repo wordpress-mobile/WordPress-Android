@@ -70,7 +70,7 @@ public class CommentsListFragment extends ListFragment {
                scrollPosition = 0,
                scrollPositionTop = 0;
     public ProgressDialog progressDialog;
-    public getRecentCommentsTask getCommentsTask;
+    public GetRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
     private String moderateErrorMsg = "";
@@ -375,10 +375,8 @@ public class CommentsListFragment extends ListFragment {
 
         List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getLocalTableBlogId());
 
-        if (refreshOnly) {
-            if (model != null) {
-                model.clear();
-            }
+        if (model != null) {
+            model.clear();
         } else {
             model = new ArrayList<Comment>();
         }
@@ -487,6 +485,13 @@ public class CommentsListFragment extends ListFragment {
                     AppLog.e(T.COMMENTS, "bad menuInfo", e);
                     return;
                 }
+
+                // make sure this is a valid position (long-tapping footer will pass invalid position)
+                if (info.position < 0 || info.position >= model.size()) {
+                    menu.clear();
+                    return;
+                }
+
                 WordPress.currentComment = model.get(info.position);
                 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
                 CommentStatus status = WordPress.currentComment.getStatusEnum();
@@ -502,6 +507,14 @@ public class CommentsListFragment extends ListFragment {
                 menu.add(0, MENU_ID_EDIT, 0, getResources().getText(R.string.edit));
             }
         });
+    }
+
+    protected void clearComments() {
+        if (model != null && model.size() > 0) {
+            model.clear();
+            allComments.clear();
+            ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+        }
     }
 
     public void refreshComments() {
@@ -534,7 +547,7 @@ public class CommentsListFragment extends ListFragment {
                 WordPress.currentBlog.getPassword(), hPost };
 
         commentParams = params;
-        getCommentsTask = new getRecentCommentsTask();
+        getCommentsTask = new GetRecentCommentsTask();
         getCommentsTask.execute();
     }
 
@@ -709,7 +722,7 @@ public class CommentsListFragment extends ListFragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
+    class GetRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
             if (isCancelled() || !hasActivity())
                 return;
