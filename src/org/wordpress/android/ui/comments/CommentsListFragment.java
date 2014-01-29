@@ -604,26 +604,24 @@ public class CommentsListFragment extends ListFragment {
 
             row.setId(Integer.valueOf(comment.commentID));
 
-            final String status;
-            final String textColor;
-
+            // status is only shown for comments that aren't approved
             switch (comment.getStatusEnum()) {
                 case SPAM :
-                    status = getResources().getText(R.string.spam).toString();
-                    textColor = "#FF0000";
+                    txtStatus.setText(getResources().getText(R.string.spam).toString());
+                    txtStatus.setTextColor(Color.parseColor("#FF0000"));
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 case UNAPPROVED:
-                    status = getResources().getText(R.string.unapproved).toString();
-                    textColor = "#D54E21";
+                    txtStatus.setText(getResources().getText(R.string.unapproved).toString());
+                    txtStatus.setTextColor(Color.parseColor("#D54E21"));
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 default :
-                    status = getResources().getText(R.string.approved).toString();
-                    textColor = "#006505";
+                    //status = getResources().getText(R.string.approved).toString();
+                    //textColor = "#006505";
+                    txtStatus.setVisibility(View.GONE);
                     break;
             }
-
-            txtStatus.setText(status);
-            txtStatus.setTextColor(Color.parseColor(textColor));
 
             bulkCheck.setChecked(selectedCommentPositions.contains(position));
             bulkCheck.setTag(position);
@@ -722,7 +720,6 @@ public class CommentsListFragment extends ListFragment {
                     model.clear();
                     allComments.clear();
                     getListView().invalidateViews();
-                    //onCommentStatusChangeListener.onCommentStatusChanged("clear");
                     WordPress.currentComment = null;
                     loadComments(false, false);
                 }
