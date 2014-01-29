@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,33 +18,27 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
     protected boolean shouldSelectAfterLoad = false;
     private boolean mIsRetrievingComments = false;
     private boolean mCanLoadMoreComments = true;
-    private String mModerateErrorMsg = "";
 
     private GetRecentCommentsTask mGetCommentsTask;
     private OnCommentSelectedListener mOnCommentSelectedListener;
@@ -110,6 +102,10 @@ public class CommentsListFragment extends Fragment {
         return getCommentAdapter().getSelectedCommentCount();
     }
 
+    protected void clear() {
+        getCommentAdapter().clear();
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -151,50 +147,22 @@ public class CommentsListFragment extends Fragment {
 
         deleteComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                getActivity().showDialog(ID_DIALOG_DELETING);
-                new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        deleteSelectedComments();
-                    }
-                }.start();
-
+                deleteSelectedComments();
             }
         });
-
         approveComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                getActivity().showDialog(ID_DIALOG_MODERATING);
-                new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        moderateSelectedComments(CommentStatus.APPROVED);
-                    }
-                }.start();
+                moderateSelectedComments(CommentStatus.APPROVED);
             }
         });
-
         unapproveComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                getActivity().showDialog(ID_DIALOG_MODERATING);
-                new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        moderateSelectedComments(CommentStatus.UNAPPROVED);
-                    }
-                }.start();
+                moderateSelectedComments(CommentStatus.UNAPPROVED);
             }
         });
-
         spamComments.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                getActivity().showDialog(ID_DIALOG_MODERATING);
-                new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        moderateSelectedComments(CommentStatus.SPAM);
-                    }
-                }.start();
+                moderateSelectedComments(CommentStatus.SPAM);
             }
         });
 
@@ -213,132 +181,66 @@ public class CommentsListFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     private void moderateSelectedComments(CommentStatus newStatus) {
-        final String newStatusStr = CommentStatus.toString(newStatus);
-        final Blog blog = WordPress.currentBlog;
-        final List<Comment> selectedComments = getCommentAdapter().getSelectedComments();
-        final List<Comment> updatedComments = new LinkedList<Comment>();
+        final CommentList selectedComments = getCommentAdapter().getSelectedComments();
+        final CommentList updateComments = new CommentList();
 
-        mModerateErrorMsg = "";
-
-        for (Comment comment : selectedComments) {
-            XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
-                    blog.getHttppassword());
-
-            // skip if comment status is already same as passed
-            if (newStatusStr.equals(comment.getStatus())) {
-                continue;
-            }
-
-            Map<String, String> postHash = new HashMap<String, String>();
-            postHash.put("status", newStatusStr);
-            postHash.put("content", StringUtils.notNullStr(comment.comment));
-            postHash.put("author", StringUtils.notNullStr(comment.name));
-            postHash.put("author_url", StringUtils.notNullStr(comment.authorURL));
-            postHash.put("author_email", StringUtils.notNullStr(comment.authorEmail));
-
-            Object[] params = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
-                    comment.commentID,
-                    postHash };
-
-            Object result;
-            try {
-                result = client.call("wp.editComment", params);
-                boolean bResult = Boolean.parseBoolean(result.toString());
-                if (bResult) {
-                    comment.setStatus(newStatusStr);
-                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getLocalTableBlogId(), comment.commentID, newStatusStr);
-                    updatedComments.add(comment);
-                }
-            } catch (XMLRPCException e) {
-                mModerateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
-            }
+        // build list of comments whose status is different than passed
+        for (Comment comment: selectedComments) {
+            if (comment.getStatusEnum() != newStatus)
+                updateComments.add(comment);
         }
-        dismissDialog(ID_DIALOG_MODERATING);
+        if (updateComments.size() == 0)
+            return;
 
-        if (hasActivity()) {
-            Thread action = new Thread() {
-                public void run() {
-                    hideModerationBar();
-                    if (TextUtils.isEmpty(mModerateErrorMsg)) {
-                        final String msg;
-                        if (updatedComments.size() > 1) {
-                            msg = getResources().getText(R.string.comments_moderated).toString();
-                        } else {
-                            msg = getResources().getText(R.string.comment_moderated).toString();
-                        }
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                        mOnCommentChangeListener.onCommentsModerated(updatedComments);
+        if (!NetworkUtils.checkConnection(getActivity()))
+            return;
 
-                        // update the comment counter on the menu drawer
+        getActivity().showDialog(ID_DIALOG_MODERATING);
+        CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
+            @Override
+            public void onCommentsModerated(final CommentList moderatedComments) {
+                if (!hasActivity())
+                    return;
+                dismissDialog(ID_DIALOG_MODERATING);
+                if (moderatedComments.size() > 0) {
+                    getCommentAdapter().clearSelectedComments();
+                    getCommentAdapter().replaceComments(moderatedComments);
+                    // update the comment counter on the menu drawer
+                    if (getActivity() instanceof  WPActionBarActivity)
                         ((WPActionBarActivity) getActivity()).updateMenuDrawer();
-                    } else if (!getActivity().isFinishing()) {
-                        // there was an xmlrpc error
-                        getListView().invalidateViews();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(mModerateErrorMsg);
-                        ft.add(alert, "alert");
-                        ft.commitAllowingStateLoss();
-                    }
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
-            };
-            getActivity().runOnUiThread(action);
-        }
+            }
+        };
+        CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), updateComments, newStatus, listener);
     }
 
     private void deleteSelectedComments() {
-        final List<Comment> selectedComments = getCommentAdapter().getSelectedComments();
-        mModerateErrorMsg = "";
+        if (!NetworkUtils.checkConnection(getActivity()))
+            return;
 
-        for (Comment comment : selectedComments) {
-            XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
-            Object[] params = {WordPress.currentBlog.getRemoteBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(), comment.commentID};
-
-            try {
-                client.call("wp.deleteComment", params);
-            } catch (final XMLRPCException e) {
-                mModerateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
-            }
-        }
-        dismissDialog(ID_DIALOG_DELETING);
-
-        if (hasActivity()) {
-            Thread action = new Thread() {
-                public void run() {
-                    if (TextUtils.isEmpty(mModerateErrorMsg)) {
-                        final String msg;
-                        if (selectedComments.size() > 1) {
-                            msg = getResources().getText(R.string.comments_moderated).toString();
-                        } else {
-                            msg = getResources().getText(R.string.comment_moderated).toString();
-                        }
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                        hideModerationBar();
-                        getCommentAdapter().clearSelectedComments();
-                        mOnCommentChangeListener.onCommentDeleted();
-                    } else if (!getActivity().isFinishing()) {
-                        // error occurred during delete request
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(mModerateErrorMsg);
-                        ft.add(alert, "alert");
-                        ft.commitAllowingStateLoss();
-                    }
+        final CommentList selectedComments = getCommentAdapter().getSelectedComments();
+        getActivity().showDialog(ID_DIALOG_DELETING);
+        CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
+            @Override
+            public void onCommentsModerated(final CommentList deletedComments) {
+                if (!hasActivity())
+                    return;
+                dismissDialog(ID_DIALOG_DELETING);
+                if (deletedComments.size() > 0) {
+                    getCommentAdapter().clearSelectedComments();
+                    getCommentAdapter().deleteComments(deletedComments);
+                    // update the comment counter on the menu drawer
+                    if (getActivity() instanceof  WPActionBarActivity)
+                        ((WPActionBarActivity) getActivity()).updateMenuDrawer();
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
-            };
-            getActivity().runOnUiThread(action);
-        }
+            }
+        };
+        CommentActions.deleteComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, listener);
     }
-
-
 
     private void setUpListView() {
         ListView listView = this.getListView();
@@ -447,8 +349,6 @@ public class CommentsListFragment extends Fragment {
     /*
      * task to retrieve latest comments from server
      */
-    private int mPrevLoadedBlogId;
-
     private class GetRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
         boolean isError;
         boolean isLoadingMore;
@@ -460,16 +360,7 @@ public class CommentsListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             mIsRetrievingComments = true;
-
-            // clear adapter if blog has changed
-            int blogId = WordPress.currentBlog.getRemoteBlogId();
-            if (blogId != mPrevLoadedBlogId) {
-                mPrevLoadedBlogId = blogId;
-                getCommentAdapter().clear();
-            }
-
             if (isLoadingMore) {
                 showLoadingProgress();
             } else {

@@ -79,6 +79,8 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+        if (commentList != null)
+            commentList.clear();
         refreshCommentList();
     }
 

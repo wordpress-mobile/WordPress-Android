@@ -15,14 +15,12 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nbradbury on 1/29/14.
@@ -39,7 +37,7 @@ public class CommentAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnSelectionChangeListener mOnSelectionChangeListener;
-    private ArrayList<Comment> mComments = new ArrayList<Comment>();
+    private CommentList mComments = new CommentList();
     private HashSet<Integer> mSelectedCommentPositions = new HashSet<Integer>();
 
     private int mStatusColorSpam;
@@ -90,6 +88,8 @@ public class CommentAdapter extends BaseAdapter {
         if (mSelectedCommentPositions.size() > 0) {
             mSelectedCommentPositions.clear();
             notifyDataSetChanged();
+            if (mOnSelectionChangeListener != null)
+                mOnSelectionChangeListener.onSelectionChanged();
         }
     }
 
@@ -97,8 +97,8 @@ public class CommentAdapter extends BaseAdapter {
         return mSelectedCommentPositions.size();
     }
 
-    protected ArrayList<Comment> getSelectedComments() {
-        ArrayList<Comment> comments = new ArrayList<Comment>();
+    protected CommentList getSelectedComments() {
+        CommentList comments = new CommentList();
 
         Iterator it = mSelectedCommentPositions.iterator();
         while (it.hasNext()) {
@@ -107,6 +107,16 @@ public class CommentAdapter extends BaseAdapter {
         }
 
         return comments;
+    }
+
+    protected void replaceComments(final CommentList comments) {
+        mComments.replaceComments(comments);
+        notifyDataSetChanged();
+    }
+
+    protected void deleteComments(final CommentList comments) {
+        mComments.deleteComments(comments);
+        notifyDataSetChanged();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -207,43 +217,10 @@ public class CommentAdapter extends BaseAdapter {
      * load comments from local db
      */
     protected boolean loadComments() {
-        String author, postID, commentContent, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
-        int commentID;
-
         int blogId = WordPress.currentBlog.getLocalTableBlogId();
-        List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(blogId);
-
-        if (loadedComments == null) {
-            return false;
-        }
-
-        for (int i = 0; i < loadedComments.size(); i++) {
-            Map<String, Object> contentHash = loadedComments.get(i);
-            commentID = (Integer) contentHash.get("commentID");
-            postID = contentHash.get("postID").toString();
-            commentContent = contentHash.get("comment").toString();
-            dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
-            status = contentHash.get("status").toString();
-            author = StringUtils.unescapeHTML(contentHash.get("author").toString());
-            authorEmail = StringUtils.unescapeHTML(contentHash.get("email").toString());
-            authorURL = StringUtils.unescapeHTML(contentHash.get("url").toString());
-            postTitle = StringUtils.unescapeHTML(contentHash.get("postTitle").toString());
-
-            Comment comment = new Comment(postID,
-                    commentID,
-                    i,
-                    author,
-                    dateCreatedFormatted,
-                    commentContent,
-                    status,
-                    postTitle,
-                    authorURL,
-                    authorEmail,
-                    GravatarUtils.gravatarUrlFromEmail(authorEmail, 140));
-            mComments.add(comment);
-        }
-
+        mComments = CommentList.fromMap(WordPress.wpDB.loadComments(blogId));
         notifyDataSetChanged();
+
         return true;
     }
 }

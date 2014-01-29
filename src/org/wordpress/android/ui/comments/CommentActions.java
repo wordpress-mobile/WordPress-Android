@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
@@ -39,6 +40,13 @@ public class CommentActions {
      */
     public interface CommentActionListener {
         public void onActionResult(boolean succeeded);
+    }
+
+    /*
+     * listener when comments are moderated or deleted
+     */
+    public interface OnCommentsModeratedListener {
+        public void onCommentsModerated(final CommentList moderatedComments);
     }
 
     public interface OnCommentChangeListener {
@@ -209,7 +217,7 @@ public class CommentActions {
     }
 
     /**
-     * change the status of a comment
+     * change the status of a single comment
      */
     protected static void moderateComment(final int accountId,
                                           final Comment comment,
@@ -272,6 +280,77 @@ public class CommentActions {
     }
 
     /**
+     * change the status of multiple comments
+     */
+    protected static void moderateComments(final int accountId,
+                                           final CommentList comments,
+                                           final CommentStatus newStatus,
+                                           final OnCommentsModeratedListener actionListener) {
+
+        final Blog blog = WordPress.getBlog(accountId);
+
+        if (blog==null || comments==null || comments.size() == 0 || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
+            if (actionListener != null)
+                actionListener.onCommentsModerated(new CommentList());
+            return;
+        }
+
+        final CommentList moderatedComments = new CommentList();
+        final String newStatusStr = CommentStatus.toString(newStatus);
+        final int localBlogId = blog.getLocalTableBlogId();
+        final int remoteBlogId = blog.getRemoteBlogId();
+
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                XMLRPCClient client = new XMLRPCClient(
+                        blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
+
+                for (Comment comment: comments) {
+                    Map<String, String> postHash = new HashMap<String, String>();
+                    postHash.put("status", newStatusStr);
+                    postHash.put("content", comment.comment);
+                    postHash.put("author", comment.name);
+                    postHash.put("author_url", comment.authorURL);
+                    postHash.put("author_email", comment.authorEmail);
+
+                    Object[] params = {
+                            remoteBlogId,
+                            blog.getUsername(),
+                            blog.getPassword(),
+                            comment.commentID,
+                            postHash};
+
+                    Object result;
+                    try {
+                        result = client.call("wp.editComment", params);
+                        boolean success = (result != null && Boolean.parseBoolean(result.toString()));
+                        if (success) {
+                            WordPress.wpDB.updateCommentStatus(localBlogId, comment.commentID, newStatusStr);
+                            comment.setStatus(newStatusStr);
+                            moderatedComments.add(comment);
+                        }
+                    } catch (final XMLRPCException e) {
+                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    }
+                }
+
+                if (actionListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionListener.onCommentsModerated(moderatedComments);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /**
      * delete (trash) a single comment
      */
     protected static void deleteComment(final int accountId,
@@ -318,6 +397,66 @@ public class CommentActions {
                         @Override
                         public void run() {
                             actionListener.onActionResult(success);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * delete multiple comments
+     */
+    protected static void deleteComments(final int accountId,
+                                         final CommentList comments,
+                                         final OnCommentsModeratedListener actionListener) {
+
+        final Blog blog = WordPress.getBlog(accountId);
+
+        if (blog==null || comments==null || comments.size() == 0) {
+            if (actionListener != null)
+                actionListener.onCommentsModerated(new CommentList());
+            return;
+        }
+
+        final CommentList deletedComments = new CommentList();
+        final int localBlogId = blog.getLocalTableBlogId();
+        final int remoteBlogId = blog.getRemoteBlogId();
+
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                XMLRPCClient client = new XMLRPCClient(
+                        blog.getUrl(),
+                        blog.getHttpuser(),
+                        blog.getHttppassword());
+
+                for (Comment comment: comments) {
+                    Object[] params = {
+                            remoteBlogId,
+                            blog.getUsername(),
+                            blog.getPassword(),
+                            comment.commentID};
+
+                    Object result;
+                    try {
+                        result = client.call("wp.deleteComment", params);
+                        boolean success = (result != null && Boolean.parseBoolean(result.toString()));
+                        if (success) {
+                            WordPress.wpDB.deleteComment(localBlogId, comment.commentID);
+                            deletedComments.add(comment);
+                        }
+                    } catch (final XMLRPCException e) {
+                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    }
+                }
+
+                if (actionListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionListener.onCommentsModerated(deletedComments);
                         }
                     });
                 }
