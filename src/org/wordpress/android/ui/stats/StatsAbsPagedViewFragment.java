@@ -57,6 +57,10 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
+
+        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager);
+        mViewPager.setAdapter(getAdapter());
+        mViewPager.setOnPageChangeListener(mOnPageChangeListener);
         
         setRetainInstance(true);
         
@@ -78,13 +82,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         
         TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
-        
+
         String[] titles = getTabTitles();
-        
+
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
         mRadioGroup.setVisibility(View.VISIBLE);
         mRadioGroup.setOnCheckedChangeListener(this);
-        
+
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
@@ -95,26 +99,44 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
             mRadioGroup.addView(rb);
-            
+
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
-        
-        loadFragmentIndex(mSelectedButtonIndex);
+
+        //loadFragmentIndex(mSelectedButtonIndex);
+        mViewPager.setCurrentItem(mSelectedButtonIndex);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         mSelectedButtonIndex  = group.indexOfChild(group.findViewById(checkedId));
-        loadFragmentIndex(mSelectedButtonIndex);
+        mViewPager.setCurrentItem(mSelectedButtonIndex);
     }
+
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
     
     private void loadFragmentIndex(int index) {
-        mChildIndex = index;
+        /*mChildIndex = index;
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
             Fragment fragment = getFragment(index);
             getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex).commit();
-        }
+        }*/
     }
 
     @Override
@@ -173,8 +195,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         
             setLabel(1, label);
         }
-        
-        
     }
 
     private void setLabel(int position, String label) {

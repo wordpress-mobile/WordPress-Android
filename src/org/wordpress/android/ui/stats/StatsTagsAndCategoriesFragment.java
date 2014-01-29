@@ -47,9 +47,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
 
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.stats_pager_container, fragment, StatsCursorFragment.TAG);
-        ft.commit();
+        //FragmentTransaction ft = fm.beginTransaction();
+        //ft.replace(R.id.stats_pager_container, fragment, StatsCursorFragment.TAG);
+        //ft.commit();
         
         return view;
     }
