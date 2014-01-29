@@ -109,7 +109,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
-    protected boolean shouldAnimateRefreshButton;
+    protected boolean mShouldAnimateRefreshButton;
     protected boolean mShouldFinish;
     private boolean mIsXLargeDevice;
     private boolean mIsStaticMenuDrawer;
@@ -690,6 +690,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     mMenuDrawer.setContentView(content);
                     if (mBlogSpinner != null) {
                         initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
+                    } else {
+                        initMenuDrawer();
                     }
                 }
             }

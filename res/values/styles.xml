@@ -239,7 +239,8 @@
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/nux_primary_button</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:layout_height">@dimen/nux_button_height</item>
+        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/nux_primary_button_selector</item>
     </style>

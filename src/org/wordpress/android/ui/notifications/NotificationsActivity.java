@@ -243,8 +243,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
@@ -439,7 +439,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     public void refreshNotes(){
         mFirstLoadComplete = false;
-        shouldAnimateRefreshButton = true;
+        mShouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(mRefreshMenuItem);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
@@ -472,14 +472,13 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 ToastUtils.showToast(getContext(), R.string.error_refresh_notifications,
                         ToastUtils.Duration.LONG);
                 stopAnimatingRefreshButton(mRefreshMenuItem);
-                shouldAnimateRefreshButton = false;
+                mShouldAnimateRefreshButton = false;
             }
         };
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
     }
 
     protected void updateLastSeen(String timestamp){
-
         getRestClientUtils().markNotificationsSeen(timestamp,
             new RestRequest.Listener(){
                 @Override

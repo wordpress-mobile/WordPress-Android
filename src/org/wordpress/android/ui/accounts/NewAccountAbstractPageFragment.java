@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -34,7 +33,6 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected static RequestQueue requestQueue;
     protected static RestClientUtils mRestClientUtils;
     protected ConnectivityManager mSystemService;
-    protected ProgressDialog mProgressDialog;
     protected boolean mPasswordVisible;
 
     @Override
@@ -66,9 +64,14 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
 
     protected abstract void onDoneAction();
 
+    protected abstract boolean isUserDataValid();
+
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE ||
-            (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+        if (actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN &&
+                                                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            if (!isUserDataValid()) {
+                return true;
+            }
             onDoneAction();
             return true;
         }
@@ -100,7 +103,14 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         return false;
     }
 
+    protected boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     protected void showError(int messageId) {
+        if (!hasActivity()) {
+            return;
+        }
         if (specificShowError(messageId)) {
             return;
         }
@@ -112,7 +122,7 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message, getString(
                 R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-        ft.add(nuxAlert,  "alert");
+        ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }
 

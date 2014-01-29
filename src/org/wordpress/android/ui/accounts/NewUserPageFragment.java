@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -35,7 +35,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     private EditText mUsernameTextField;
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
-    private ProgressBar mProgressBarSignIn;
+    private RelativeLayout mProgressBarSignIn;
 
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
@@ -94,50 +94,57 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mSiteUrlTextField.setEnabled(true);
     }
 
-    private boolean checkUserData() {
+    protected boolean isUserDataValid() {
         // try to create the user
         final String email = mEmailTextField.getText().toString().trim();
         final String password = mPasswordTextField.getText().toString().trim();
         final String username = mUsernameTextField.getText().toString().trim();
+        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        boolean retValue = true;
 
         if (email.equals("")) {
             showEmailError(R.string.required_field);
-            return false;
+            retValue = false;
         }
 
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
             showEmailError(R.string.invalid_email_message);
-            return false;
+            retValue = false;
         }
 
         if (username.equals("")) {
             showUsernameError(R.string.required_field);
-            return false;
+            retValue = false;
         }
 
         if (username.length() < 4) {
             showUsernameError(R.string.invalid_username_too_short);
-            return false;
+            retValue = false;
         }
 
         if (username.length() > 60) {
             showUsernameError(R.string.invalid_username_too_long);
-            return false;
+            retValue = false;
+        }
+
+        if (siteUrl.length() < 4) {
+            showSiteUrlError(R.string.blog_name_must_be_at_least_four_characters);
+            retValue = false;
         }
 
         if (password.equals("")) {
             showPasswordError(R.string.required_field);
-            return false;
+            retValue = false;
         }
 
         if (password.length() < 4) {
             showPasswordError(R.string.invalid_password_message);
-            return false;
+            retValue = false;
         }
 
-        return true;
+        return retValue;
     }
 
     protected void onDoneAction() {
@@ -216,11 +223,14 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     R.string.no_network_message);
             return;
         }
-        if (!checkUserData())
+        if (!isUserDataValid())
             return;
 
-        if (View.VISIBLE==mProgressBarSignIn.getVisibility()) //prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard. Samsung S4 for example
+        // Prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.
+        // Samsung S4 for example
+        if (View.VISIBLE == mProgressBarSignIn.getVisibility()) {
             return;
+        }
 
         startProgress(getString(R.string.validating_user_data));
 
@@ -304,7 +314,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mSignupButton.setEnabled(false);
 
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
-        mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
+        mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
         mEmailTextField.setText(UserEmail.getPrimaryEmail(getActivity()));
@@ -326,6 +336,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // auto fill blog address
+                mSiteUrlTextField.setError(null);
                 mSiteUrlTextField.setText(mUsernameTextField.getText().toString());
             }
 

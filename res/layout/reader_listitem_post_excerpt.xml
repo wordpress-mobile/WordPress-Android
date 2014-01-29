@@ -102,7 +102,7 @@
             android:id="@+id/image_comment_btn"
             style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/margin_small"
-            android:src="@drawable/ic_comment" />
+            android:src="@drawable/reader_button_comment" />
 
         <TextView
             android:id="@+id/text_comment_count"
