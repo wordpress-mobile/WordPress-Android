@@ -12,27 +12,34 @@
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/name"
+    <CheckBox
+        android:id="@+id/bulkCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_toLeftOf="@+id/status"
-        android:layout_toRightOf="@+id/avatar"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/grey_extra_dark"
-        android:textSize="@dimen/text_sz_large" />
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:padding="@dimen/margin_small" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_alignLeft="@+id/name"
         android:textAllCaps="true"
         android:textSize="@dimen/text_sz_small" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toLeftOf="@+id/bulkCheck"
+        android:layout_toRightOf="@+id/avatar"
+        android:layout_below="@+id/status"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/grey_extra_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/email_url"
@@ -40,7 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/reader_hyperlink"
@@ -52,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/email_url"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/grey_medium"
@@ -60,24 +65,14 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/comment"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/postTitle"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:maxLines="4"
         android:paddingTop="@dimen/margin_small"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium" />
-
-    <CheckBox
-        android:id="@+id/bulkCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/comment"
-        android:focusable="false"
-        android:padding="@dimen/margin_small" />
 
 </RelativeLayout>

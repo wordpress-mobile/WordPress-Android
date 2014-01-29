@@ -347,24 +347,20 @@ public class CommentsActivity extends WPActionBarActivity
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_MODERATING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.checkedCommentTotal <= 1) {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.moderating_comment));
+            if (commentList.getCheckedCommentCount() > 1) {
+                loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
             } else {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.moderating_comments));
+                loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
             }
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;
         } else if (id == ID_DIALOG_DELETING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.checkedCommentTotal <= 1) {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.deleting_comment));
+            if (commentList.getCheckedCommentCount() > 1) {
+                loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
             } else {
-                loadingDialog.setMessage(getResources().getText(
-                        R.string.deleting_comments));
+                loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
             }
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
