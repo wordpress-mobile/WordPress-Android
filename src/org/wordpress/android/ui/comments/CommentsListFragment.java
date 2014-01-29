@@ -84,6 +84,9 @@ public class CommentsListFragment extends ListFragment {
     private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
 
+    private int mStatusColorSpam;
+    private int mStatusColorUnapproved;
+
     // context menu IDs
     protected static final int MENU_ID_APPROVED = 100;
     protected static final int MENU_ID_UNAPPROVED = 101;
@@ -94,6 +97,8 @@ public class CommentsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        mStatusColorSpam = Color.parseColor("#FF0000");
+        mStatusColorUnapproved = Color.parseColor("#D54E21");
     }
 
     @Override
@@ -622,17 +627,15 @@ public class CommentsListFragment extends ListFragment {
             switch (comment.getStatusEnum()) {
                 case SPAM :
                     txtStatus.setText(getResources().getText(R.string.spam).toString());
-                    txtStatus.setTextColor(Color.parseColor("#FF0000"));
+                    txtStatus.setTextColor(mStatusColorSpam);
                     txtStatus.setVisibility(View.VISIBLE);
                     break;
                 case UNAPPROVED:
                     txtStatus.setText(getResources().getText(R.string.unapproved).toString());
-                    txtStatus.setTextColor(Color.parseColor("#D54E21"));
+                    txtStatus.setTextColor(mStatusColorUnapproved);
                     txtStatus.setVisibility(View.VISIBLE);
                     break;
                 default :
-                    //status = getResources().getText(R.string.approved).toString();
-                    //textColor = "#006505";
                     txtStatus.setVisibility(View.GONE);
                     break;
             }
