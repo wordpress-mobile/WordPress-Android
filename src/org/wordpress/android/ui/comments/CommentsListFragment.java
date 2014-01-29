@@ -54,7 +54,6 @@ import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
     private ArrayList<Comment> mComments = new ArrayList<Comment>();
-    private Map<Integer, Map<?, ?>> mCommentHashes = new HashMap<Integer, Map<?, ?>>();
 
     protected boolean shouldSelectAfterLoad = false;
     private boolean mCanLoadMoreComments = true;
@@ -210,10 +209,11 @@ public class CommentsListFragment extends Fragment {
         final String newStatusStr = CommentStatus.toString(newStatus);
         final Blog blog = WordPress.currentBlog;
         final int numChecked = getCheckedCommentCount();
+        final List<Comment> updatedComments = new LinkedList<Comment>();
+
         mModerateErrorMsg = "";
 
         Iterator it = selectedCommentPositions.iterator();
-        final List<Comment> updatedComments = new LinkedList<Comment>();
         while (it.hasNext()) {
             int i = (Integer) it.next();
             XMLRPCClient client = new XMLRPCClient(
@@ -221,28 +221,25 @@ public class CommentsListFragment extends Fragment {
                     blog.getHttpuser(),
                     blog.getHttppassword());
 
-            Comment listRow = (Comment) getListView().getItemAtPosition(i);
-            int curCommentID = listRow.commentID;
+            Comment curComment = (Comment) getListView().getItemAtPosition(i);
 
-            Map<String, String> contentHash, postHash = new HashMap<String, String>();
-            contentHash = (Map<String, String>) mCommentHashes.get(curCommentID);
-
-            if (contentHash.get("status").equals(newStatusStr)) {
+            if (newStatusStr.equals(curComment.getStatus())) {
                 it.remove();
                 continue;
             }
 
+            Map<String, String> postHash = new HashMap<String, String>();
             postHash.put("status", newStatusStr);
-            postHash.put("content", contentHash.get("comment"));
-            postHash.put("author", contentHash.get("author"));
-            postHash.put("author_url", contentHash.get("url"));
-            postHash.put("author_email", contentHash.get("email"));
+            postHash.put("content", StringUtils.notNullStr(curComment.comment));
+            postHash.put("author", StringUtils.notNullStr(curComment.name));
+            postHash.put("author_url", StringUtils.notNullStr(curComment.authorURL));
+            postHash.put("author_email", StringUtils.notNullStr(curComment.authorEmail));
 
             Object[] params = {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
-                    curCommentID,
+                    curComment.commentID,
                     postHash };
 
             Object result;
@@ -251,11 +248,10 @@ public class CommentsListFragment extends Fragment {
                 boolean bResult = Boolean.parseBoolean(result.toString());
                 if (bResult) {
                     it.remove();
-                    listRow.setStatus(newStatusStr);
-                    contentHash.put("status", newStatusStr);
-                    mComments.set(i, listRow);
-                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getLocalTableBlogId(), listRow.commentID, newStatusStr);
-                    updatedComments.add(WordPress.wpDB.getComment(WordPress.currentBlog.getLocalTableBlogId(), listRow.commentID));
+                    curComment.setStatus(newStatusStr);
+                    mComments.set(i, curComment);
+                    WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getLocalTableBlogId(), curComment.commentID, newStatusStr);
+                    updatedComments.add(curComment);
                 }
             } catch (XMLRPCException e) {
                 mModerateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
@@ -347,19 +343,12 @@ public class CommentsListFragment extends Fragment {
     /*
      * load comments from local db and add to listView adapter
      */
-    protected boolean loadComments(boolean didLoadMore) {
+    protected boolean loadComments() {
         String author, postID, commentContent, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
         int blogId = WordPress.currentBlog.getLocalTableBlogId();
         List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(blogId);
-
-        // clear the existing comments if this is the initial load
-        if (!didLoadMore) {
-            mComments.clear();
-            mCommentHashes.clear();
-            getCommentAdapter().notifyDataSetChanged();
-        }
 
         if (loadedComments == null) {
             return false;
@@ -389,7 +378,6 @@ public class CommentsListFragment extends Fragment {
                                           authorEmail,
                                           GravatarUtils.gravatarUrlFromEmail(authorEmail, 140));
             mComments.add(comment);
-            mCommentHashes.put((Integer) contentHash.get("commentID"), contentHash);
         }
 
         getCommentAdapter().notifyDataSetChanged();
@@ -489,7 +477,6 @@ public class CommentsListFragment extends Fragment {
         private void clear() {
             if (mComments.size() > 0) {
                 mComments.clear();
-                mCommentHashes.clear();
                 notifyDataSetChanged();
             }
         }
@@ -731,24 +718,19 @@ public class CommentsListFragment extends Fragment {
             mCanLoadMoreComments = (commentsResult != null && commentsResult.size() > 0);
 
             if (commentsResult == null) {
-                if (mComments != null && mComments.size() == 1) {
-                    WordPress.wpDB.clearComments(WordPress.currentBlog.getLocalTableBlogId());
-                    getCommentAdapter().clear();
-                    WordPress.currentComment = null;
-                    loadComments(false);
-                }
+                WordPress.wpDB.clearComments(WordPress.currentBlog.getLocalTableBlogId());
+                getCommentAdapter().clear();
+                WordPress.currentComment = null;
+                loadComments();
 
-                if (isError && !getActivity().isFinishing()) {
+                if (isError && !getActivity().isFinishing())
                     ToastUtils.showToast(getActivity(), R.string.error_refresh_comments, ToastUtils.Duration.LONG);
-                }
 
                 return;
             }
 
-            boolean didLoadMore = (commentsResult.size() > 0);
             if (commentsResult.size() > 0) {
-                mCommentHashes.putAll(commentsResult);
-                loadComments(didLoadMore);
+                loadComments();
             }
         }
     }
