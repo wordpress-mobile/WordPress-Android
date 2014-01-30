@@ -46,6 +46,17 @@ public class CommentList extends ArrayList<Comment> {
     }
 
     /*
+     * returns true if any comments in this list have the passed status
+     */
+    public boolean hasAnyWithStatus(CommentStatus status) {
+        for (Comment comment: this) {
+            if (comment.getStatusEnum().equals(status))
+                return true;
+        }
+        return false;
+    }
+
+    /*
      * use this to convert the results of WordPress.wpDB.loadComments() to a CommentList
      */
     /*public static CommentList fromMap(List<Map<String, Object>> commentMap) {

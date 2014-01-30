@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -52,6 +51,7 @@ public class CommentAdapter extends BaseAdapter {
     private String mAnonymous;
 
     private Drawable mDefaultAvatar;
+    private int mSelectedColor;
 
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
@@ -69,6 +69,7 @@ public class CommentAdapter extends BaseAdapter {
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mDefaultAvatar = context.getResources().getDrawable(R.drawable.placeholder);
+        mSelectedColor = context.getResources().getColor(R.color.blue_extra_light);
     }
 
     @Override
@@ -112,7 +113,8 @@ public class CommentAdapter extends BaseAdapter {
         Iterator it = mCheckedCommentPositions.iterator();
         while (it.hasNext()) {
             int position = (Integer) it.next();
-            comments.add(mComments.get(position));
+            if (isPositionValid(position))
+                comments.add(mComments.get(position));
         }
 
         return comments;
@@ -154,6 +156,10 @@ public class CommentAdapter extends BaseAdapter {
         }
     }
 
+    private boolean isPositionValid(int position) {
+        return (position >= 0 && position < mComments.size());
+    }
+
     protected void replaceComments(final CommentList comments) {
         mComments.replaceComments(comments);
         notifyDataSetChanged();
@@ -166,17 +172,50 @@ public class CommentAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         final Comment comment = mComments.get(position);
-        final CommentEntryWrapper wrapper;
+        final CommentHolder holder;
 
         if (convertView == null || convertView.getTag() == null) {
             convertView = mInflater.inflate(R.layout.comment_row, null);
-            wrapper = new CommentEntryWrapper(convertView);
-            convertView.setTag(wrapper);
+            holder = new CommentHolder(convertView);
+            convertView.setTag(holder);
         } else {
-            wrapper = (CommentEntryWrapper) convertView.getTag();
+            holder = (CommentHolder) convertView.getTag();
         }
 
-        wrapper.populateFrom(comment, position);
+        holder.txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
+        holder.txtPostTitle.setText(comment.getPostTitle());
+        holder.txtComment.setText(comment.getUnescapedCommentText());
+        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
+
+        // status is only shown for comments that haven't been approved
+        switch (comment.getStatusEnum()) {
+            case SPAM :
+                holder.txtStatus.setText(mStatusTextSpam);
+                holder.txtStatus.setTextColor(mStatusColorSpam);
+                holder.txtStatus.setVisibility(View.VISIBLE);
+                break;
+            case UNAPPROVED:
+                holder.txtStatus.setText(mStatusTextUnapproved);
+                holder.txtStatus.setTextColor(mStatusColorUnapproved);
+                holder.txtStatus.setVisibility(View.VISIBLE);
+                break;
+            default :
+                holder.txtStatus.setVisibility(View.GONE);
+                break;
+        }
+
+        String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            holder.imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+        } else {
+            holder.imgAvatar.setImageDrawable(mDefaultAvatar);
+        }
+
+        if (mEnableCheckBoxes && isItemChecked(position)) {
+            convertView.setBackgroundColor(mSelectedColor);
+        } else {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+        }
 
         // request to load more comments when we near the end
         if (mOnLoadMoreListener != null && position >= getCount()-1)
@@ -185,75 +224,22 @@ public class CommentAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class CommentEntryWrapper {
+    private class CommentHolder {
         private TextView txtName;
         private TextView txtComment;
         private TextView txtStatus;
         private TextView txtPostTitle;
         private TextView txtDate;
         private NetworkImageView imgAvatar;
-        private View row;
-        private CheckBox bulkCheck;
 
-        CommentEntryWrapper(View row) {
-            this.row = row;
-
+        private CommentHolder(View row) {
             txtName = (TextView) row.findViewById(R.id.name);
             txtComment = (TextView) row.findViewById(R.id.comment);
             txtStatus = (TextView) row.findViewById(R.id.status);
             txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
             txtDate = (TextView) row.findViewById(R.id.text_date);
-            bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
-
             imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-        }
-
-        void populateFrom(Comment comment, final int position) {
-            txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
-            txtPostTitle.setText(comment.getPostTitle());
-            txtComment.setText(comment.getUnescapedCommentText());
-            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
-
-            row.setId(Integer.valueOf(comment.commentID));
-
-            // status is only shown for comments that haven't been approved
-            switch (comment.getStatusEnum()) {
-                case SPAM :
-                    txtStatus.setText(mStatusTextSpam);
-                    txtStatus.setTextColor(mStatusColorSpam);
-                    txtStatus.setVisibility(View.VISIBLE);
-                    break;
-                case UNAPPROVED:
-                    txtStatus.setText(mStatusTextUnapproved);
-                    txtStatus.setTextColor(mStatusColorUnapproved);
-                    txtStatus.setVisibility(View.VISIBLE);
-                    break;
-                default :
-                    txtStatus.setVisibility(View.GONE);
-                    break;
-            }
-
-            bulkCheck.setVisibility(mEnableCheckBoxes ? View.VISIBLE : View.GONE);
-            if (mEnableCheckBoxes) {
-                bulkCheck.setChecked(mCheckedCommentPositions.contains(position));
-                bulkCheck.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        if (bulkCheck.isChecked()) {
-                            setItemChecked(position, true);
-                        } else {
-                            setItemChecked(position, false);
-                        }
-                    }
-                });
-            }
-
-            String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
-            if (!TextUtils.isEmpty(avatarUrl)) {
-                imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
-            } else {
-                imgAvatar.setImageDrawable(mDefaultAvatar);
-            }
         }
     }
 

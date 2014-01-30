@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -173,6 +174,7 @@ public class CommentsListFragment extends Fragment {
             public void onCommentsModerated(final CommentList moderatedComments) {
                 if (!hasActivity())
                     return;
+                finishActionMode();
                 dismissDialog(ID_DIALOG_MODERATING);
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearCheckedComments();
@@ -201,6 +203,7 @@ public class CommentsListFragment extends Fragment {
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!hasActivity())
                     return;
+                finishActionMode();
                 dismissDialog(ID_DIALOG_DELETING);
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearCheckedComments();
@@ -238,6 +241,7 @@ public class CommentsListFragment extends Fragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // enable CAB if it's not already enabled
                 if (mActionMode == null) {
                     if (getActivity() instanceof WPActionBarActivity) {
                         ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
@@ -386,8 +390,18 @@ public class CommentsListFragment extends Fragment {
     private void updateActionModeTitle() {
         if (mActionMode == null)
             return;
-        mActionMode.setTitle(Integer.toString(getCheckedCommentCount()));
+        int numChecked = getCheckedCommentCount();
+        if (numChecked > 0) {
+            mActionMode.setTitle(Integer.toString(numChecked));
+        } else {
+            mActionMode.setTitle("");
+        }
         mActionMode.invalidate();
+    }
+
+    private void finishActionMode() {
+        if (mActionMode != null)
+            mActionMode.finish();
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
@@ -412,20 +426,17 @@ public class CommentsListFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode actionMode, com.actionbarsherlock.view.MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_approve :
-                    if (moderateSelectedComments(CommentStatus.APPROVED))
-                        actionMode.finish();
+                    moderateSelectedComments(CommentStatus.APPROVED);
                     return true;
                 case R.id.menu_unapprove :
-                    if (moderateSelectedComments(CommentStatus.UNAPPROVED))
-                        actionMode.finish();
+                    moderateSelectedComments(CommentStatus.UNAPPROVED);
                     return true;
+                // TODO: confirm spam/delete
                 case R.id.menu_spam :
-                    if (moderateSelectedComments(CommentStatus.SPAM))
-                        actionMode.finish();
+                    moderateSelectedComments(CommentStatus.SPAM);
                     return true;
                 case R.id.menu_trash :
-                    if (deleteSelectedComments())
-                        actionMode.finish();
+                    deleteSelectedComments();
                     return true;
                 default:
                     return false;

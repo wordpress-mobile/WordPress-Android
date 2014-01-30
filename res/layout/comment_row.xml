@@ -54,7 +54,6 @@
         android:maxLines="4"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium" />
 
@@ -66,14 +65,5 @@
         android:layout_below="@+id/comment"
         android:drawableLeft="@drawable/noticon_clock"
         style="@style/ReaderTextView.Date" />
-
-    <CheckBox
-        android:id="@+id/bulkCheck"
-        android:layout_width="wrap_content"
-        android:layout_alignTop="@+id/comment"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:focusable="false" />
 
 </RelativeLayout>
