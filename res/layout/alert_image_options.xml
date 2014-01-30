@@ -50,12 +50,16 @@
       android:layout_height="wrap_content"
       android:id="@+id/imageWidth"
       android:layout_width="match_parent" />
-    <TextView
-      android:layout_height="wrap_content"
-      android:id="@+id/imageWidthText"
-      android:layout_width="match_parent"
-      android:textColor="@color/image_options_label" />
-    <CheckBox
+      <EditText
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text=""
+              android:imeOptions="actionDone"
+              android:id="@+id/imageWidthText"
+              android:layout_gravity="left|center_vertical"
+              android:singleLine="true"
+              android:inputType="number"/>
+      <CheckBox
       android:layout_gravity="left"
       android:text="@string/featured"
       android:id="@+id/featuredImage"

@@ -29,9 +29,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -40,7 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -50,12 +54,15 @@ public class PostsListFragment extends ListFragment {
             mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
     private int[] mUploaded;
     private int mRowID = 0;
-    private long mSelectedID;
+    private long mSelectedID = -1;
     private PostListAdapter mPostListAdapter;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnRefreshListener mOnRefreshListener;
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
+    private ListScrollPositionManager mListScrollPositionManager;
+    private int mLoadedBlogId;
+
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
     public int totalDrafts = 0;
@@ -63,14 +70,13 @@ public class PostsListFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-    
+
     private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
-    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
+    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
@@ -78,10 +84,23 @@ public class PostsListFragment extends ListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.post_listview, container, false);
+    }
+
+    @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
+        TextView textview = (TextView) getActivity().findViewById(R.id.title_empty);
+        if (textview != null) {
+            if (isPage) {
+                textview.setText(getText(R.string.pages_empty_list));
+            } else {
+                textview.setText(getText(R.string.posts_empty_list));
+            }
+        }
         createSwitcher();
+        mListScrollPositionManager = new ListScrollPositionManager(getListView(), true);
     }
 
     public void onAttach(Activity activity) {
@@ -100,9 +119,12 @@ public class PostsListFragment extends ListFragment {
 
     public void onResume() {
         super.onResume();
-
         mParentActivity = (PostsActivity) getActivity();
-
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null && mLoadedBlogId != currentBlog.getRemoteBlogId()) {
+            WordPress.currentPost = null;
+            loadPosts(false);
+        }
     }
 
     public void createSwitcher() {
@@ -111,12 +133,11 @@ public class PostsListFragment extends ListFragment {
         Button footer = (Button) View.inflate(getActivity()
                 .getApplicationContext(), R.layout.list_footer_btn, null);
         footer.setText(getResources().getText(R.string.load_more) + " "
-                + getResources().getText((isPage)? R.string.tab_pages : R.string.tab_posts));
+                + getResources().getText((isPage) ? R.string.tab_pages : R.string.tab_posts));
 
         footer.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
-                if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getId(), isPage)) {
+                if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), isPage)) {
                     // first view is showing, show the second progress view
                     switcher.showNext();
                     // get 20 more posts
@@ -124,11 +145,11 @@ public class PostsListFragment extends ListFragment {
                     refreshPosts(true);
                 } else {
                     if (!getActivity().isFinishing()) {
-                        FragmentTransaction ft = getFragmentManager()
-                                .beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment
-                                .newInstance(getString(R.string.remote_changes), getString(R.string.local_changes), true);
-                        alert.show(ft, "alert");
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(
+                                R.string.remote_changes), getString(R.string.local_changes), true);
+                        ft.add(alert, "alert");
+                        ft.commitAllowingStateLoss();
                     }
                 }
             }
@@ -143,7 +164,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void refreshPosts(final boolean loadMore) {
-
+        mListScrollPositionManager.saveScrollOffset();
         if (!loadMore) {
             mOnRefreshListener.onRefresh(true);
             numRecords = 20;
@@ -159,13 +180,11 @@ public class PostsListFragment extends ListFragment {
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
         List<Map<String, Object>> loadedPosts;
+        if (WordPress.currentBlog != null) {
+            mLoadedBlogId = WordPress.currentBlog.getRemoteBlogId();
+        }
         try {
-            if (isPage) {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
-            } else {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(),
-                        false);
-            }
+            loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getLocalTableBlogId(), isPage);
         } catch (Exception e1) {
             return false;
         }
@@ -185,41 +204,35 @@ public class PostsListFragment extends ListFragment {
             mStatuses = new String[0];
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
-                mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
-                WordPress.currentPost = null;
+                if (WordPress.currentPost != null) {
+                    mOnPostActionListener.onPostAction(PostsActivity.POST_CLEAR, WordPress.currentPost);
+                    WordPress.currentPost = null;
+                }
             }
         }
         if (loadedPosts != null) {
             Date d = new Date();
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                mTitles[i] = StringUtils.unescapeHTML(contentHash.get("title")
-                        .toString());
+                mTitles[i] = StringUtils.unescapeHTML(contentHash.get("title").toString());
 
                 mPostIDs[i] = contentHash.get("id").toString();
                 mDateCreated[i] = contentHash.get("date_created_gmt").toString();
 
                 if (contentHash.get("post_status") != null) {
-                    String api_status = contentHash.get("post_status")
-                            .toString();
+                    String api_status = contentHash.get("post_status").toString();
                     if (api_status.equals("publish")) {
-                        mStatuses[i] = getResources()
-                                .getText(R.string.published).toString();
+                        mStatuses[i] = getResources().getText(R.string.published).toString();
                     } else if (api_status.equals("draft")) {
-                        mStatuses[i] = getResources().getText(R.string.draft)
-                                .toString();
+                        mStatuses[i] = getResources().getText(R.string.draft).toString();
                     } else if (api_status.equals("pending")) {
-                        mStatuses[i] = getResources().getText(
-                                R.string.pending_review).toString();
+                        mStatuses[i] = getResources().getText(R.string.pending_review).toString();
                     } else if (api_status.equals("private")) {
-                        mStatuses[i] = getResources().getText(
-                                R.string.post_private).toString();
+                        mStatuses[i] = getResources().getText(R.string.post_private).toString();
                     }
 
-                    if ((Long) contentHash.get("date_created_gmt") > d
-                            .getTime() && api_status.equals("publish")) {
-                        mStatuses[i] = getResources()
-                                .getText(R.string.scheduled).toString();
+                    if ((Long) contentHash.get("date_created_gmt") > d.getTime() && api_status.equals("publish")) {
+                        mStatuses[i] = getResources().getText(R.string.scheduled).toString();
                     }
                 }
 
@@ -245,7 +258,6 @@ public class PostsListFragment extends ListFragment {
         if (loadedPosts != null || drafts == true) {
             ListView listView = getListView();
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
             listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
             listView.setDividerHeight(1);
             listView.removeFooterView(switcher);
@@ -262,42 +274,18 @@ public class PostsListFragment extends ListFragment {
                 listView.setAdapter(mPostListAdapter);
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
-
                     public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-                        
                         if (position >= mPostIDs.length) //out of bounds
                             return;
-
                         if (v == null) //view is gone
                             return;
-
-                        if( !mParentActivity.isRefreshing ) { 
+                        if (!mParentActivity.mIsRefreshing) {
                             mSelectedID = v.getId();
-                            Post post = new Post(WordPress.currentBlog
-                                    .getId(), mSelectedID, isPage);
-                            
-                            if( PostUploadService.isUploading(post) ) {
-                                Toast.makeText(mParentActivity, R.string.please_wait_uploading_done, Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            
-                            if (post.getId() >= 0) {
-                                WordPress.currentPost = post;
-                                mOnPostSelectedListener.onPostSelected(post);
-                                mPostListAdapter.notifyDataSetChanged();
-                            } else {
-                                if (!getActivity().isFinishing()) {
-                                    FragmentTransaction ft = getFragmentManager()
-                                            .beginTransaction();
-                                    WPAlertDialogFragment alert = WPAlertDialogFragment
-                                            .newInstance(getString(R.string.post_not_found));
-                                    alert.show(ft, "alert");
-                                }
-                            }
+                            showPost(mSelectedID);
                         } else {
-                            Toast.makeText(mParentActivity, R.string.please_wait_refresh_done, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mParentActivity, R.string.please_wait_refresh_done,
+                                    Toast.LENGTH_SHORT).show();
                         }
-                        
                     }
                 });
 
@@ -309,18 +297,17 @@ public class PostsListFragment extends ListFragment {
                         try {
                             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                         } catch (ClassCastException e) {
-                            // Log.e(TAG, "bad menuInfo", e);
+                            AppLog.e(T.POSTS, "bad menuInfo", e);
                             return;
                         }
 
-                        if (mParentActivity.isRefreshing)
+                        if (mParentActivity.mIsRefreshing)
                             return;
 
-                        Object[] args = { R.id.row_post_id };
+                        Object[] args = {R.id.row_post_id};
 
                         try {
-                            Method m = android.view.View.class
-                                    .getMethod("getTag");
+                            Method m = android.view.View.class.getMethod("getTag");
                             m.invoke(mSelectedID, args);
                         } catch (NoSuchMethodException e) {
                             mSelectedID = info.targetView.getId();
@@ -333,19 +320,19 @@ public class PostsListFragment extends ListFragment {
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
-                        
+
                         // Show comments menu option only if post allows commenting
                         boolean allowComments = false;
                         Post post = new Post(WordPress.currentBlog
-                                .getId(), mSelectedID, isPage);
+                                .getLocalTableBlogId(), mSelectedID, isPage);
                         if (post.getId() >= 0) {
                             allowComments = post.isMt_allow_comments();
                         }
-                        
-                        if( PostUploadService.isUploading(post) ) {
+
+                        if (PostUploadService.isUploading(post)) {
                             return;
                         }
-                        
+
                         mRowID = info.position;
 
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
@@ -358,47 +345,35 @@ public class PostsListFragment extends ListFragment {
                             if (isPage) {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText( R.string.delete_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_page));
                                 menu.add(MENU_GROUP_PAGES, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_page));
-                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                // Post status: publish, draft, pending, private, localdraft
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
+                                }
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_post));
                                 menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_post));
-                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
+                                if ("publish".equals(post.getPost_status())) {
+                                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
+                                }
                             }
                         }
                     }
                 });
             }
 
-            if (this.shouldSelectAfterLoad) {
-                if (mPostIDs != null) {
-                    if (mPostIDs.length >= 1) {
-
-                        Post post = new Post(WordPress.currentBlog.getId(),
-                                Integer.valueOf(mPostIDs[0]), isPage);
-                        if (post.getId() >= 0) {
-                            WordPress.currentPost = post;
-                            mOnPostSelectedListener.onPostSelected(post);
-                            FragmentManager fm = getActivity().getSupportFragmentManager();
-                            ViewPostFragment f = (ViewPostFragment) fm
-                                    .findFragmentById(R.id.postDetail);
-                            if (f != null && f.isInLayout())
-                                getListView().setItemChecked(0, true);
-                        }
-                    }
-                }
+            if (this.shouldSelectAfterLoad && mPostIDs != null && mPostIDs.length >= 1) {
+                selectAndShowFirstPost();
                 shouldSelectAfterLoad = false;
             }
 
             if (loadedPosts == null) {
                 refreshPosts(false);
             }
-
+            mListScrollPositionManager.restoreScrollOffset();
             return true;
         } else {
 
@@ -407,10 +382,9 @@ public class PostsListFragment extends ListFragment {
                 if (!isPage)
                     new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
             }
-
+            mListScrollPositionManager.restoreScrollOffset();
             return false;
         }
-
     }
 
     private String getFormattedDate(long localTime) {
@@ -419,9 +393,7 @@ public class PostsListFragment extends ListFragment {
         flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        String formattedDate = DateUtils
-                .formatDateTime(getActivity().getApplicationContext(),
-                        localTime, flags);
+        String formattedDate = DateUtils.formatDateTime(getActivity().getApplicationContext(), localTime, flags);
         return formattedDate;
     }
 
@@ -462,10 +434,10 @@ public class PostsListFragment extends ListFragment {
         List<Map<String, Object>> loadedPosts;
         if (isPage) {
             loadedPosts = WordPress.wpDB.loadDrafts(
-                    WordPress.currentBlog.getId(), true);
+                    WordPress.currentBlog.getLocalTableBlogId(), true);
         } else {
             loadedPosts = WordPress.wpDB.loadDrafts(
-                    WordPress.currentBlog.getId(), false);
+                    WordPress.currentBlog.getLocalTableBlogId(), false);
         }
         if (loadedPosts != null) {
             mDraftIDs = new String[loadedPosts.size()];
@@ -540,17 +512,24 @@ public class PostsListFragment extends ListFragment {
 
     }
 
+    public String statEventForViewClosing() {
+        if (isPage) {
+            return WPMobileStatsUtil.StatsEventPagesClosed;
+        } else {
+            return WPMobileStatsUtil.StatsEventPostsClosed;
+        }
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Post post = new Post(WordPress.currentBlog.getId(), mSelectedID, isPage);
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), mSelectedID, isPage);
 
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {
-                FragmentTransaction ft = getFragmentManager()
-                        .beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment
-                        .newInstance(getString(R.string.post_not_found));
-                alert.show(ft, "alert");
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
             }
             return false;
         }
@@ -560,37 +539,38 @@ public class PostsListFragment extends ListFragment {
         if (itemGroupID == MENU_GROUP_POSTS || itemGroupID == MENU_GROUP_PAGES || itemGroupID == MENU_GROUP_DRAFTS ) {
             switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-                
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedEdit);
+                Intent i2 = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
+                i2.putExtra(EditPostActivity.EXTRA_POSTID, mSelectedID);
                 if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
-                    i2.putExtra("isPage", true);
+                    i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
-                    if (isPage) 
-                        i2.putExtra("isPage", true);
-                    i2.putExtra("localDraft", true);
+                    if (isPage)
+                        i2.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
                 }
-                
-                startActivityForResult(i2, 0);
+
+                getActivity().startActivityForResult(i2, PostsActivity.ACTIVITY_EDIT_POST);
                 return true;
             case MENU_ITEM_DELETE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedDelete);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case MENU_ITEM_PREVIEW:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedPreview);
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 i.putExtra("isPage", itemGroupID == MENU_GROUP_PAGES ? true : false);
                 i.putExtra("postID", mSelectedID);
-                i.putExtra("blogID", WordPress.currentBlog.getId());
+                i.putExtra("blogID", WordPress.currentBlog.getLocalTableBlogId());
                 startActivity(i);
                 return true;
             case MENU_ITEM_SHARE:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedShare);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
-            case MENU_ITEM_ADD_COMMENT:
+            /*case MENU_ITEM_ADD_COMMENT:
+                WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostMenuClickedComment);
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
-                return true;
+                return true;*/
             default:
                 return false;
             }
@@ -610,15 +590,8 @@ public class PostsListFragment extends ListFragment {
                 if (getActivity() == null)
                     return;
                 if (errorMsg != "" && !getActivity().isFinishing()) {
-                    FragmentTransaction ft = getFragmentManager()
-                            .beginTransaction();
-                    WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newInstance(String.format(getResources().getString(R.string.error_refresh), (mIsPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
-                    try {
-                        alert.show(ft, "alert");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
+                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
                     errorMsg = "";
                 }
                 return;
@@ -630,10 +603,10 @@ public class PostsListFragment extends ListFragment {
             if (isAdded()) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
-                        
+
                         @Override
                         public void run() {
-                            loadPosts(mLoadMore);
+                        loadPosts(mLoadMore);
                         }
                     });
                 }
@@ -653,7 +626,7 @@ public class PostsListFragment extends ListFragment {
             XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(),
                     mBlog.getHttpuser(),
                     mBlog.getHttppassword());
-            Object[] params = {mBlog.getBlogId(),
+            Object[] params = {mBlog.getRemoteBlogId(),
                     mBlog.getUsername(),
                     mBlog.getPassword(), recordCount};
             try {
@@ -664,15 +637,13 @@ public class PostsListFragment extends ListFragment {
                         success = true;
                         List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
                         if (!mLoadMore) {
-                            WordPress.wpDB.deleteUploadedPosts(mBlog.getId(), mIsPage);
+                            WordPress.wpDB.deleteUploadedPosts(mBlog.getLocalTableBlogId(), mIsPage);
                         }
-
                         for (int ctr = 0; ctr < result.length; ctr++) {
                             Map<?, ?> postMap = (Map<?, ?>) result[ctr];
                             postsList.add(ctr, postMap);
                         }
-
-                        WordPress.wpDB.savePosts(postsList, mBlog.getId(), mIsPage);
+                        WordPress.wpDB.savePosts(postsList, mBlog.getLocalTableBlogId(), mIsPage);
                     }
                 }
             } catch (XMLRPCException e) {
@@ -697,4 +668,32 @@ public class PostsListFragment extends ListFragment {
         public void onPostAction(int action, Post post);
     }
 
+    private void showPost(long selectedID) {
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), selectedID, isPage);
+        if (post.getId() >= 0) {
+            WordPress.currentPost = post;
+            mOnPostSelectedListener.onPostSelected(post);
+            mPostListAdapter.notifyDataSetChanged();
+        } else {
+            if (!getActivity().isFinishing()) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
+            }
+        }
+    }
+
+    private void selectAndShowFirstPost() {
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), Integer.valueOf(mPostIDs[0]), isPage);
+        if (post.getId() >= 0) {
+            WordPress.currentPost = post;
+            mOnPostSelectedListener.onPostSelected(post);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
+            if (f != null && f.isInLayout()) {
+                getListView().setItemChecked(0, true);
+            }
+        }
+    }
 }

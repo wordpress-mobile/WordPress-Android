@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,8 +22,10 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.xmlrpc.android.WPComXMLRPCApi;
-import org.xmlrpc.android.XMLRPCCallback;
+import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -74,7 +75,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://jetpack.me/about"));
+                intent.setData(Uri.parse("http://android.wordpress.org/faq"));
                 startActivity(intent);
 
             }
@@ -105,20 +106,18 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 client.call("wp.getUsersBlogs", signInParams);
                 WordPress.currentBlog.setDotcom_username(mUsername);
                 WordPress.currentBlog.setDotcom_password(mPassword);
-                WordPress.currentBlog.save(WordPress.currentBlog.getUsername());
+                WordPress.currentBlog.save();
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {
                     if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
                         // Sign out current user from all services
-                        new WPComXMLRPCApi().unregisterWPComToken(
-                                WPComLoginActivity.this,
-                                GCMRegistrar.getRegistrationId(WPComLoginActivity.this));
+                        NotificationUtils.unregisterDevicePushNotifications(WPComLoginActivity.this);
                         try {
                             GCMRegistrar.checkDevice(WPComLoginActivity.this);
                             GCMRegistrar.unregister(WPComLoginActivity.this);
                         } catch (Exception e) {
-                            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                            AppLog.v(T.NUX, "Could not unregister for GCM: " + e.getMessage());
                         }
                     }
 
@@ -141,6 +140,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
+                            ReaderUserActions.setCurrentUser(jsonObject);
                             finish();
                         }
                     }, null);

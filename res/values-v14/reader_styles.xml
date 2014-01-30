@@ -1,0 +1,11 @@
+<resources>
+    <!--
+        Holo versions of styles defined in values/reader_styles.xml
+    -->
+    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
+    <style name="ReaderProgressBar.Small" parent="@android:style/Widget.Holo.Light.ProgressBar.Small" />
+    <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" />
+
+    <style name="ReaderSpinner" parent="@android:style/Widget.Holo.Light.Spinner" />
+
+</resources>

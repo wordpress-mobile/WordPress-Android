@@ -5,12 +5,11 @@
   android:layout_height="fill_parent"
   android:id="@+id/posts"
   android:padding="0px"
-  android:background="#F4F4F4"
   android:orientation="vertical">
   <LinearLayout
     android:id="@+id/postDetailFragmentContainer"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="horizontal">
     <fragment
       android:name="org.wordpress.android.ui.posts.PostsListFragment"

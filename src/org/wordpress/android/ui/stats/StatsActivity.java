@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -19,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -32,19 +27,25 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StatsRestHelper;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -54,9 +55,13 @@ import org.wordpress.android.util.Utils;
  */
 public class StatsActivity extends WPActionBarActivity {
 
+    // Max number of rows to show in a stats fragment
+    public static final int STATS_GROUP_MAX_ITEMS = 10;
+
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
+    public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
 
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
@@ -65,6 +70,7 @@ public class StatsActivity extends WPActionBarActivity {
     private int mResultCode = -1;
     private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
+    private boolean mNoMenuDrawer = false;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -83,7 +89,14 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         }
 
-        createMenuDrawer(R.layout.stats_activity);
+        mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
+        if (mNoMenuDrawer) {
+            setContentView(R.layout.stats_activity);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            createMenuDrawer(R.layout.stats_activity);
+        }
+
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
         mColumnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
         mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
@@ -171,7 +184,7 @@ public class StatsActivity extends WPActionBarActivity {
                     Map<String, String> args = new HashMap<String, String>();
                     args.put("jetpack_client_id", "jetpack_client_id");
                     Object[] params = {
-                            currentBlog.getBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
+                            currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
                     xmlrpcClient.callAsync(new XMLRPCCallback() {
                         @Override
@@ -182,7 +195,7 @@ public class StatsActivity extends WPActionBarActivity {
                                     String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
                                     if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
                                         currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save("");
+                                        currentBlog.save();
                                         if (!isFinishing())
                                             refreshStats();
                                     }
@@ -191,7 +204,7 @@ public class StatsActivity extends WPActionBarActivity {
                         }
                         @Override
                         public void onFailure(long id, XMLRPCException error) {
-                            Log.e("StatsActivity", "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
+                            AppLog.e(T.STATS, "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
                         }
                     }, "wp.getOptions", params);
                 }
@@ -334,8 +347,7 @@ public class StatsActivity extends WPActionBarActivity {
 
     }
 
-    private class VerifyJetpackSettingsCallback implements ApiHelper.RefreshBlogContentTask.Callback {
-
+    private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> statsActivityWeakRef;
         
         public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
@@ -344,35 +356,41 @@ public class StatsActivity extends WPActionBarActivity {
        
         @Override
         public void onSuccess() {
-            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing() || statsActivityWeakRef.get().mIsInFront == false) {
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
+                    || statsActivityWeakRef.get().mIsInFront == false) {
                 return;
             }
             
             if (getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
-                builder.setMessage(getString(R.string.jetpack_message))
-                        .setTitle(getString(R.string.jetpack_not_found));
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent jetpackIntent = new Intent(VerifyJetpackSettingsCallback.this.statsActivityWeakRef.get(), AuthenticatedWebViewActivity.class);
-                        jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
-                                + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
-                        startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+                if (WordPress.getCurrentBlog().isAdmin()) {
+                    builder.setMessage(getString(R.string.jetpack_message))
+                    .setTitle(getString(R.string.jetpack_not_found));
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent jetpackIntent = new Intent(VerifyJetpackSettingsCallback.this.statsActivityWeakRef.get(), AuthenticatedWebViewActivity.class);
+                            jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
+                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
+                            startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                } else {
+                    builder.setMessage(getString(R.string.jetpack_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_not_found));
+                    builder.setPositiveButton(R.string.yes, null);
+                }
                 builder.create().show();
             }
         }
 
         @Override
-        public void onFailure() {
-
+        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
         }
     }
 
@@ -392,6 +410,9 @@ public class StatsActivity extends WPActionBarActivity {
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
+            return true;
+        } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -445,12 +466,13 @@ public class StatsActivity extends WPActionBarActivity {
         String blogId;
         
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch())
-            blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         else {
             blogId = getBlogId();
             if (blogId == null) {
                 //Refresh Jetpack Settings
-                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new VerifyJetpackSettingsCallback( StatsActivity.this ) ).execute(false);
+                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
+                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
                 return;
             }
         }
@@ -462,8 +484,9 @@ public class StatsActivity extends WPActionBarActivity {
 
             @Override
             public void onFailure(VolleyError error) {
-                if (mSignInDialog != null && mSignInDialog.isShowing())
+                if (mSignInDialog != null && mSignInDialog.isShowing()) {
                     return;
+                }
 
                 if (!isFinishing() && error.networkResponse != null && error.networkResponse.statusCode == 403) {
                     // This site has the wrong WP.com credentials
@@ -482,6 +505,11 @@ public class StatsActivity extends WPActionBarActivity {
                     });
                     mSignInDialog = builder.create();
                     mSignInDialog.show();
+                    return ;
+                }
+                if (!isFinishing()) {
+                    ToastUtils.showToast(getBaseContext(),R.string.error_refresh_stats,
+                            ToastUtils.Duration.LONG);
                 }
             }
         });
@@ -502,7 +530,7 @@ public class StatsActivity extends WPActionBarActivity {
     public String getBlogId() {
         // for dotcom blogs that were added manually
         if (WordPress.getCurrentBlog().isDotcomFlag() && !dotComCredentialsMatch())
-            return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
 
         // for self-hosted blogs
         try {
@@ -517,7 +545,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save("");
+                    currentBlog.save();
                 }
 
                 return jetpackBlogId;

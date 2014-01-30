@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/empty_tags_box_bottom"
+                android:layout_width="86dp"
+                android:layout_height="54dp"
+                android:src="@drawable/box_with_pages_bottom"
+                android:layout_alignParentBottom="true" />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page3"
+                android:layout_width="54dp"
+                android:layout_height="70dp"
+                android:src="@drawable/box_with_pages_page3"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="2dp" />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page2"
+                android:layout_width="53dp"
+                android:layout_height="70dp"
+                android:src="@drawable/box_with_pages_page2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="17dp"
+                android:layout_marginBottom="15dp" />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_page1"
+                android:layout_width="56dp"
+                android:layout_height="73.5dp"
+                android:src="@drawable/box_with_pages_page1"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="28dp" />
+
+            <ImageView
+                android:id="@+id/empty_tags_box_top"
+                android:layout_width="86dp"
+                android:layout_height="54dp"
+                android:src="@drawable/box_with_pages_top"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title_empty"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+            android:layout_marginRight="@dimen/empty_list_title_side_margin"
+            android:text="@string/reader_empty_posts_in_tag" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/description_empty"
+            style="@style/WordPress.EmptyList.Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_list_description_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_description_side_margin"
+            android:layout_marginRight="@dimen/empty_list_description_side_margin"
+            android:text="@string/reader_empty_posts_in_tag" />
+    </LinearLayout>
+
+</LinearLayout>

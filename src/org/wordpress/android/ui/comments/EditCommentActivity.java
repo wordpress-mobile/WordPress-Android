@@ -77,14 +77,17 @@ public class EditCommentActivity extends SherlockActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        String status = comment.status;
+        switch (comment.getStatusEnum()) {
+            case APPROVED:
+                spinner.setSelection(0, true);
+                break;
+            case UNAPPROVED:
+                spinner.setSelection(1, true);
+                break;
+            case SPAM:
+                spinner.setSelection(2, true);
+                break;
 
-        if (status.equals("approve")) {
-            spinner.setSelection(0, true);
-        } else if (status.equals("hold")) {
-            spinner.setSelection(1, true);
-        } else if (status.equals("spam")) {
-            spinner.setSelection(2, true);
         }
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -189,7 +192,7 @@ public class EditCommentActivity extends SherlockActivity {
                 authorEmail.equals(comment.authorEmail) &&
                 authorURL.equals(comment.authorURL) &&
                 content.equals(comment.comment) &&
-                status.equals(comment.status)) {
+                status.equals(comment.getStatus())) {
             return true;
         }
 
@@ -220,7 +223,7 @@ public class EditCommentActivity extends SherlockActivity {
                 WordPress.currentBlog.getHttpuser(),
                 WordPress.currentBlog.getHttppassword());
 
-        Object[] params = { WordPress.currentBlog.getBlogId(),
+        Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
                 WordPress.currentBlog.getUsername(),
                 WordPress.currentBlog.getPassword(),
                 WordPress.currentComment.commentID,
@@ -245,7 +248,7 @@ public class EditCommentActivity extends SherlockActivity {
 
                 // Save the updates
                 WordPress.wpDB.updateComment(
-                        WordPress.currentBlog.getId(),
+                        WordPress.currentBlog.getLocalTableBlogId(),
                         WordPress.currentComment.commentID,
                         postHash);
 
@@ -254,7 +257,7 @@ public class EditCommentActivity extends SherlockActivity {
                 WordPress.currentComment.authorEmail = postHash.get("email");
                 WordPress.currentComment.authorURL = postHash.get("url");
                 WordPress.currentComment.comment = postHash.get("comment");
-                WordPress.currentComment.status = postHash.get("status");
+                WordPress.currentComment.setStatus(postHash.get("status"));
                 WordPress.currentComment.name = postHash.get("author");
             }
         } catch (XMLRPCException e) {

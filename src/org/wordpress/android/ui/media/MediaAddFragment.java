@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +8,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -28,6 +28,9 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.MediaUploadService;
+import org.wordpress.android.util.ToastUtils;
+
+import java.util.List;
 
 /**
  * An invisible fragment in charge of launching the right intents to camera, video, and image library.
@@ -90,12 +93,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION)) {
+            if (MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
                 String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
+                String errorMessage = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
+                if (errorMessage != null) {
+                    ToastUtils.showToast(context, errorMessage, ToastUtils.Duration.SHORT);
+                }
                 mCallback.onMediaAdded(mediaId);
             }
         }
@@ -104,43 +110,77 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+
         if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
-            String path = null;
-            
+            String path;
+
             switch (requestCode) {
-            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-            case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
-                Uri imageUri = data.getData();
-                path = getRealPathFromURI(imageUri);
-                queueFileForUpload(path);
-                break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
-                    path = mMediaCapturePath;
-                    mMediaCapturePath = null;
-                    queueFileForUpload(path);
-                }
-                break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                if (resultCode == Activity.RESULT_OK) {
-                    path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(getActivity()));
-                    queueFileForUpload(path);
-                }
-                break;
+                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                    Uri imageUri = data.getData();
+                    fetchMedia(imageUri);
+                    break;
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        path = mMediaCapturePath;
+                        mMediaCapturePath = null;
+                        queueFileForUpload(path);
+                    }
+                    break;
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(getActivity()));
+                        queueFileForUpload(path);
+                    }
+                    break;
             }
-            
+
         }
     }
-    
-    private String getRealPathFromURI(Uri contentUri) {
+
+    private void fetchMedia(Uri mediaUri) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
+            // Create an AsyncTask to download the file
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            else
+                new DownloadMediaTask().execute(mediaUri);
+        } else {
+            // It is a regular local media file
+            String path = getRealPathFromURI(mediaUri);
+            queueFileForUpload(path);
+        }
+    }
+
+    private String getRealPathFromURI(Uri uri) {
+        String path;
+        if ("content".equals(uri.getScheme())) {
+            path = getRealPathFromContentURI(uri);
+        } else if ("file".equals(uri.getScheme())) {
+            path = uri.getPath();
+        } else {
+            path = uri.toString();
+        }
+        return path;
+    }
+
+    private String getRealPathFromContentURI(Uri contentUri) {
         if (contentUri == null)
             return null;
         
         String[] proj = { MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        if (cursor == null)
+            return null;
+
+        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        if (column_index == -1) {
+            cursor.close();
+            return null;
+        }
+
         cursor.moveToFirst();
         String path = cursor.getString(column_index);
         cursor.close();
@@ -159,14 +199,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String fileType = new String(path).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
         
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(blog.getBlogId()));
+        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
         mediaFile.setFileName(fileName + "." + fileType);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
         mediaFile.setDateCreatedGMT(System.currentTimeMillis());
         mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
-        if (mimeType.startsWith("image")) {
+        if (mimeType != null && mimeType.startsWith("image")) {
             // get width and height
             BitmapFactory.Options bfo = new BitmapFactory.Options();
             bfo.inJustDecodeBounds = true;
@@ -174,8 +214,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setWidth(bfo.outWidth);
             mediaFile.setHeight(bfo.outHeight);
         }
-        
-        mediaFile.setMIMEType(mimeType);
+
+        if (mimeType != null)
+            mediaFile.setMimeType(mimeType);
         mediaFile.save();
         
         mCallback.onMediaAdded(mediaFile.getMediaId());
@@ -209,17 +250,40 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
     
     public void addToQueue(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
         startMediaUploadService();
     }
-    
+
     public void uploadList(List<Uri> uriList) {
-        String path;
         for (Uri uri : uriList) {
-            path = getRealPathFromURI(uri);
-            queueFileForUpload(path);
+            fetchMedia(uri);
         }
     }
-    
+
+    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
+
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Uri imageUri = uris[0];
+            return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(getActivity(), R.string.download, Toast.LENGTH_SHORT).show();
+        }
+
+        protected void onPostExecute(Uri newUri) {
+            if (getActivity() == null)
+                return;
+
+            if (newUri != null) {
+                String path = getRealPathFromURI(newUri);
+                queueFileForUpload(path);
+            }
+            else
+                Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
 }

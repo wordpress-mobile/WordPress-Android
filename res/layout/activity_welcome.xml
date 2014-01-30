@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nux_background"
+    android:orientation="vertical"
+    android:baselineAligned="true">
+
+    <fragment
+        android:name="org.wordpress.android.ui.accounts.WelcomeFragmentSignIn"
+        android:id="@+id/sign_in_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

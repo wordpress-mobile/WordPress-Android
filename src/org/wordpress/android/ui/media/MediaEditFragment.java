@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,13 +25,15 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.xmlrpc.android.ApiHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment for editing media on the Media tab 
@@ -180,7 +179,7 @@ public class MediaEditFragment extends SherlockFragment {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null && getActivity() != null) {
-            String blogId = String.valueOf(blog.getBlogId());
+            String blogId = String.valueOf(blog.getLocalTableBlogId());
 
             Cursor cursor = null;
 
@@ -213,32 +212,32 @@ public class MediaEditFragment extends SherlockFragment {
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
                 description, caption, 
-                new ApiHelper.EditMediaItemTask.Callback() {
-
+                new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(currentBlog.getBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
-
-                        if (getActivity() != null)
+                        String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description,
+                                caption);
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
-
+                        }
                         setMediaUpdating(false);
-                        if (hasCallback())
+                        if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, true);
+                        }
                     }
 
                     @Override
-                    public void onFailure() {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-    
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.media_edit_failure,
+                                    Toast.LENGTH_LONG).show();
+                        }
                         setMediaUpdating(false);
-                        
                         getSherlockActivity().invalidateOptionsMenu();
-                        
-                        if (hasCallback())
+                        if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, false);
+                        }
                     }
                 });
 
@@ -378,7 +377,7 @@ public class MediaEditFragment extends SherlockFragment {
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
-            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
@@ -387,7 +386,7 @@ public class MediaEditFragment extends SherlockFragment {
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);
-                        WordPress.localImageCache.put(path, bitmap);
+                        WordPress.getBitmapCache().put(path, bitmap);
                     }
                 });
                 task.execute(filePath);

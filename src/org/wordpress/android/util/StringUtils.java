@@ -1,15 +1,16 @@
 package org.wordpress.android.util;
 
+import android.text.Html;
+import android.text.TextUtils;
+
+import org.wordpress.android.util.AppLog.T;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
 
 public class StringUtils {
 
@@ -57,35 +58,43 @@ public class StringUtils {
 
     public static String addPTags(String source) {
         String[] asploded = source.split("\n\n");
-        String wrappedHTML = "";
+
         if (asploded.length > 0) {
+            StringBuilder wrappedHTML = new StringBuilder();
             for (int i = 0; i < asploded.length; i++) {
-                if (asploded[i].trim().length() > 0)
-                    wrappedHTML += "<p>" + asploded[i].trim() + "</p>";
+                String trimmed = asploded[i].trim();
+                if (trimmed.length() > 0) {
+                    trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>")
+                            .replace("<br>\n", "<br>").replace("\n", "<br>");
+                    wrappedHTML.append("<p>");
+                    wrappedHTML.append(trimmed);
+                    wrappedHTML.append("</p>");
+                }
             }
+            return wrappedHTML.toString();
         } else {
-            wrappedHTML = source;
+            return source;
         }
-        wrappedHTML = wrappedHTML.replace("<br />", "<br>").replace("<br/>", "<br>");
-        wrappedHTML = wrappedHTML.replace("<br>\n", "<br>").replace("\n", "<br>");
-        return wrappedHTML;
     }
-    
-    public static String getMd5Hash(String input) {
+
+    public static BigInteger getMd5IntHash(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
             BigInteger number = new BigInteger(1, messageDigest);
-            String md5 = number.toString(16);
-
-            while (md5.length() < 32)
-                md5 = "0" + md5;
-
-            return md5;
+            return number;
         } catch (NoSuchAlgorithmException e) {
-            Log.e("MD5", e.getLocalizedMessage());
+            AppLog.e(T.UTILS, e);
             return null;
         }
+    }
+
+    public static String getMd5Hash(String input) {
+        BigInteger number = getMd5IntHash(input);
+        String md5 = number.toString(16);
+        while (md5.length() < 32)
+            md5 = "0" + md5;
+        return md5;
     }
 
     public static String unescapeHTML(String html) {
@@ -95,8 +104,76 @@ public class StringUtils {
             return "";
     }
 
-    // Wrap an image URL in a photon URL
-    // Check out http://developer.wordpress.com/docs/photon/
+    /*
+     * nbradbury - adapted from Html.escapeHtml(), which was added in API Level 16
+     * TODO: not thoroughly tested yet, so marked as private - not sure I like the way
+     * this replaces two spaces with "&nbsp;"
+     */
+    private static String escapeHtml(final String text) {
+        if (text==null)
+            return "";
+
+        StringBuilder out = new StringBuilder();
+        int length = text.length();
+
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+
+            if (c == '<') {
+                out.append("&lt;");
+            } else if (c == '>') {
+                out.append("&gt;");
+            } else if (c == '&') {
+                out.append("&amp;");
+            } else if (c > 0x7E || c < ' ') {
+                out.append("&#").append((int) c).append(";");
+            } else if (c == ' ') {
+                while (i + 1 < length && text.charAt(i + 1) == ' ') {
+                    out.append("&nbsp;");
+                    i++;
+                }
+
+                out.append(' ');
+            } else {
+                out.append(c);
+            }
+        }
+
+        return out.toString();
+    }
+
+    /*
+     * returns empty string if passed string is null, otherwise returns passed string
+     */
+    public static String notNullStr(String s) {
+        if (s==null)
+            return "";
+        return s;
+    }
+
+    /*
+     * capitalizes the first letter in the passed string - based on Apache commons/lang3/StringUtils
+     * http://svn.apache.org/viewvc/commons/proper/lang/trunk/src/main/java/org/apache/commons/lang3/StringUtils.java?revision=1497829&view=markup
+     */
+    public static String capitalize(final String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0)
+            return str;
+
+        char firstChar = str.charAt(0);
+        if (Character.isTitleCase(firstChar))
+            return str;
+
+        return new StringBuilder(strLen)
+                .append(Character.toTitleCase(firstChar))
+                .append(str.substring(1))
+                .toString();
+    }
+
+    /*
+     * Wrap an image URL in a photon URL
+     * Check out http://developer.wordpress.com/docs/photon/
+     */
     public static String getPhotonUrl(String imageUrl, int size) {
         imageUrl = imageUrl.replace("http://", "").replace("https://", "");
         return "http://i0.wp.com/" + imageUrl + "?w=" + size;
@@ -117,14 +194,4 @@ public class StringUtils {
 
         return url.substring(doubleslash, end);
     }
-
-    /*
-     * returns empty string if passed string is null, otherwise returns passed string
-     */
-    public static String notNullStr(String s) {
-        if (s==null)
-            return "";
-        return s;
-    }
-
 }

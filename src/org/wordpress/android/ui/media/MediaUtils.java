@@ -1,23 +1,39 @@
 package org.wordpress.android.ui.media;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
 
 import org.wordpress.android.R;
@@ -107,24 +123,15 @@ public class MediaUtils {
         
         return sdf.format(date);
     }
- 
-    
-    public static void launchPictureLibrary(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        
-        AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
-    }
+
     
     public static void launchPictureLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_photo)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
     public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
@@ -134,17 +141,6 @@ public class MediaUtils {
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
             fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
-            AppLockManager.getInstance().setExtendedTimeout();
-        }
-    }
-    
-    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(activity);
-        } else {
-            Intent intent = prepareLaunchCameraIntent(callback);
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
             AppLockManager.getInstance().setExtendedTimeout();
         }
     }
@@ -186,26 +182,13 @@ public class MediaUtils {
         dialogBuilder.create().show();
     }
     
-    public static void launchVideoLibrary(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("video/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-    
     public static void launchVideoLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("video/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
         AppLockManager.getInstance().setExtendedTimeout();
-    }
-    
-    public static void launchVideoCamera(Activity activity) {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
-        AppLockManager.getInstance().setExtendedTimeout();
+        fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_video)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
     public static void launchVideoCamera(Fragment fragment) {
@@ -279,5 +262,143 @@ public class MediaUtils {
             return false;
         }
         return true;
+    }
+
+    public static WPImageSpan prepareWPImageSpan(Context context, String blogId, final String mediaId) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+        if (cursor == null || !cursor.moveToFirst()){
+            if (cursor != null)
+                cursor.close();
+            return null;
+        }
+
+        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (url == null) {
+            cursor.close();
+            return null;
+        }
+
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        boolean isVideo = mimeType != null && mimeType.contains("video");
+
+        Uri uri = Uri.parse(url);
+        WPImageSpan imageSpan = new WPImageSpan(context, isVideo ? R.drawable.media_movieclip : R.drawable.remote_image, uri);
+        MediaFile mediaFile = imageSpan.getMediaFile();
+        mediaFile.setMediaId(mediaId);
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setMimeType(mimeType);
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL"))); 
+        mediaFile.setVideo(isVideo);
+        mediaFile.save();
+        cursor.close();
+
+        return imageSpan;
+    }
+
+    // Calculate the minimun width between the blog setting and picture real width
+    public static int getMinimumImageWidth(Context context, Uri curStream) {
+        String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
+        int imageWidthBlogSetting = Integer.MAX_VALUE;
+
+        if (!imageWidth.equals("Original Size")) {
+            try {
+                imageWidthBlogSetting = Integer.valueOf(imageWidth);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int[] dimensions = ImageHelper.getImageSize(curStream, context);
+        int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
+
+        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
+            //Default value in case of errors reading the picture size and the blog settings is set to Original size
+            return 1024;
+        } else {
+            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
+        }
+    }
+
+    public static void setWPImageSpanWidth(Context context, Uri curStream, WPImageSpan is) {
+        MediaFile mediaFile = is.getMediaFile();
+        if (mediaFile != null)
+            mediaFile.setWidth(getMinimumImageWidth(context, curStream));
+    }
+
+    public static boolean isInMediaStore(Uri mediaUri) {
+        // Check if the image is externally hosted (Picasa/Google Photos for example)
+        if (mediaUri != null && mediaUri.toString().startsWith("content://media/")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+        File cacheDir;
+        String mimeType = context.getContentResolver().getType(imageUri);
+        boolean isVideo = (mimeType != null && mimeType.contains("video"));
+
+        // If the device has an SD card
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+            String mediaFolder = isVideo ? "video" : "images";
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/" + mediaFolder);
+        } else {
+            // If no SD card
+            cacheDir = context.getApplicationContext().getCacheDir();
+        }
+
+        if (!cacheDir.exists())
+            cacheDir.mkdirs();
+
+        try {
+            InputStream input;
+            // Download the file
+            if (imageUri.toString().startsWith("content://")) {
+                input = context.getContentResolver().openInputStream(imageUri);
+            } else {
+                input = new URL(imageUri.toString()).openStream();
+            }
+
+            String fileName = "wp-" + System.currentTimeMillis();
+            if (isVideo)
+                fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+
+            File f = new File(cacheDir, fileName);
+
+            OutputStream output = new FileOutputStream(f);
+
+            byte data[] = new byte[1024];
+            int count;
+            while ((count = input.read(data)) != -1) {
+                output.write(data, 0, count);
+            }
+
+            output.flush();
+            output.close();
+            input.close();
+
+            Uri newUri = Uri.fromFile(f);
+            return newUri;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getMimeTypeOfInputStream(InputStream stream) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(stream, null, options);
+        return options.outMimeType;
     }
 }

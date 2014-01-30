@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -49,6 +50,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     private CheckBox mLocationCB;
     private Spinner mImageWidthSpinner;
     private EditText mScaledImageWidthET;
+    private Button mRemoveBlogButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,13 +79,14 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mScaledCB = (CheckBox) findViewById(R.id.scaledImage);
         mLocationCB = (CheckBox) findViewById(R.id.location);
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
+        mRemoveBlogButton = (Button) findViewById(R.id.remove_account);
         
         if (blog.isDotcomFlag()) {
             // Hide credentials section
             RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
+            mRemoveBlogButton.setVisibility(View.GONE);
         }
-        
         loadSettingsForBlog();
     }
 
@@ -139,16 +142,11 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
         blog.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
 
-        long maxImageWidthId = mImageWidthSpinner.getSelectedItemId();
-        int maxImageWidthIdInt = (int) maxImageWidthId;
-
-        blog.setMaxImageWidthId(maxImageWidthIdInt);
-
         blog.setLocation(mLocationCB.isChecked());
 
-        blog.save(originalUsername);
+        blog.save();
         
-        if (WordPress.getCurrentBlog().getId() == blog.getId())
+        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
             WordPress.currentBlog = blog;
         
         // exit settings screen
@@ -277,8 +275,9 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             locationLayout.setVisibility(View.GONE);
         }
 
-        mImageWidthSpinner.setSelection(blog.getMaxImageWidthId());
-        if(blog.getMaxImageWidthId() == 0) //Original size selected. Do not show the link to full image.
+        int imageWidthPosition = spinnerArrayAdapter.getPosition(blog.getMaxImageWidth());
+        mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);
+        if (mImageWidthSpinner.getSelectedItemPosition() == 0) //Original size selected. Do not show the link to full image.
             fullSizeImageCheckBox.setVisibility(View.GONE);
         else
             fullSizeImageCheckBox.setVisibility(View.VISIBLE);
@@ -312,7 +311,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getId());
+                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
                             .show();
@@ -349,7 +348,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     public void viewAdmin(View view) {
         mIsViewingAdmin = true;
         Intent i = new Intent(this, DashboardActivity.class);
-        i.putExtra("blogID", blog.getId());
+        i.putExtra("blogID", blog.getLocalTableBlogId());
         startActivity(i);
     }
 }

@@ -1,9 +1,5 @@
 package org.wordpress.android.ui;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -31,9 +27,13 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
@@ -56,7 +56,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     }
 
     private void displayAccounts() {
-        accounts = WordPress.wpDB.getAccounts();
+        accounts = WordPress.wpDB.getVisibleAccounts();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
@@ -100,7 +100,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             }
 
             if (validBlogCtr < accounts.size()){
-                accounts = WordPress.wpDB.getAccounts();
+                accounts = WordPress.wpDB.getVisibleAccounts();
             }
 
             setListAdapter(new HomeListAdapter());
@@ -117,7 +117,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcutActivity.this, NewAccountActivity.class);
+            Intent i = new Intent(AddQuickPressShortcutActivity.this, WelcomeActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }
@@ -142,10 +142,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     Intent shortcutIntent = new Intent(AddQuickPressShortcutActivity.this, EditPostActivity.class);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    shortcutIntent.putExtra("id", accountIDs[position]);
-                    shortcutIntent.putExtra("isQuickPress", true);
-                    shortcutIntent.putExtra("accountName", StringUtils.unescapeHTML(accountNames.get(position)));
-                    shortcutIntent.putExtra("isNew", true);
+                    shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, accountIDs[position]);
+                    shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
 
                     Intent addIntent = new Intent();
                     addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
@@ -183,7 +181,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    accounts = WordPress.wpDB.getAccounts();
+                    accounts = WordPress.wpDB.getVisibleAccounts();
                     if (accounts.size() > 0) {
                         displayAccounts();
                         break;

@@ -3,48 +3,76 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.android.tools.build:gradle:0.7.+'
     }
 }
-
-apply plugin: 'android'
 
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
-dependencies {
-    // Provided by maven central
-    compile 'com.google.code.gson:gson:2.2.2'
-    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v4:18.0.+'
-
-    // These are provided by the WordPress-Android Repository
-    compile 'org.wordpress:actionbarsherlock:4.4.0'
-    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
-    compile 'org.wordpress:gcm:1.0.0'
-    compile 'org.wordpress:volley:wp-0.0.1'
-    compile 'com.automattic:wordpresscom-rest:0.0.3'
-    compile 'org.wordpress:httpmime:4.1.2'
-    compile 'org.wordpress:graphview:3.1.1'
-    compile 'org.wordpress:drag-sort-listview:0.6.1'
-    compile 'org.wordpress:slidinguppanel:1.0.0'
-    compile 'org.wordpress:android-passcodelock:0.0.4'
-}
+apply plugin: 'android'
 
 android {
+    lintOptions {
+        quiet true
+        abortOnError false
+    }
 
-    compileSdkVersion 18
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+    }
+
+	buildTypes {
+	    release {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        }
+        debug {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+        }
+        betagroup {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+        }
+	}
+
+    compileSdkVersion 19
     buildToolsVersion "19"
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.5.1"
-        versionCode 85
+        versionName "2.6"
+        versionCode 91
         minSdkVersion 9
-        targetSdkVersion 18
+        targetSdkVersion 19
     }
+
+	dependencies {
+	    // Provided by maven central
+	    compile 'com.google.code.gson:gson:2.2.2'
+	    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+	    compile 'com.android.support:support-v4:18.0.+'
+
+	    // These are provided by the WordPress-Android Repository
+	    compile 'org.wordpress:actionbarsherlock:4.4.0'
+	    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
+	    compile 'org.wordpress:gcm:1.0.0'
+	    compile 'org.wordpress:volley:wp-0.0.1'
+	    compile 'com.automattic:wordpresscom-rest:0.0.3'
+	    compile 'org.wordpress:httpmime:4.1.2'
+	    compile 'org.wordpress:graphview:3.1.1'
+	    compile 'org.wordpress:drag-sort-listview:0.6.1'
+	    compile 'org.wordpress:slidinguppanel:1.0.0'
+	    compile 'org.wordpress:android-passcodelock:0.0.4'
+	    compile 'org.wordpress:commons-lang:2.6'
+	    releaseCompile 'org.wordpress:emailchecker:0.1'
+	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
+	    betagroupCompile 'org.wordpress:emailchecker:0.1'
+
+	    // Local dependencies
+	    compile files('libs/MixpanelAPI.jar')
+	}
 
     sourceSets {
         main {
@@ -59,12 +87,11 @@ android {
 
         instrumentTest.setRoot('tests')
     }
-
 }
 
 // Generates the Config.java class using properties defined in gradle.properties
 // or by other means provided by Gradle
-task wordpressConfig(group: "build", description: "Generate Config class") {
+task generateWPConfig(group: "generate", description: "Generate Config class") {
     def dir = "${buildDir}/source/wordpress"
     def file = new File(dir, "org/wordpress/android/Config.java")
     android {
@@ -107,13 +134,13 @@ ${config}
     }
 }
 
-// Add the wordpressConfig task to every flavor's compile tasks
+// Add the generateWPConfig task to every flavor's compile tasks
 android.buildTypes.all { buildType ->
-    def name = "compile${buildType.name.capitalize()}"
+    def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
-            task.dependsOn(wordpressConfig)
-            task.mustRunAfter(wordpressConfig)
+            task.dependsOn(generateWPConfig)
+            task.mustRunAfter(generateWPConfig)
         }
     }
 }
@@ -131,4 +158,5 @@ if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.ha
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
+    android.buildTypes.betagroup.signingConfig = android.signingConfigs.release
 }

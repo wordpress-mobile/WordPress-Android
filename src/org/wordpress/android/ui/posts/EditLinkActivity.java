@@ -15,7 +15,7 @@ public class EditLinkActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.link);
+        setContentView(R.layout.alert_create_link);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -29,13 +29,13 @@ public class EditLinkActivity extends Activity {
         final Button cancelButton = (Button) findViewById(R.id.cancel);
         final Button okButton = (Button) findViewById(R.id.ok);
 
-        final EditText linkURLET = (EditText) findViewById(R.id.linkURL);
-        linkURLET.setOnClickListener(new View.OnClickListener() {
+        final EditText urlEditText = (EditText) findViewById(R.id.linkURL);
+        urlEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (linkURLET.getText().toString().equals("")) {
-                    linkURLET.setText("http://");
-                    linkURLET.setSelection(7);
+                if (urlEditText.getText().toString().equals("")) {
+                    urlEditText.setText("http://");
+                    urlEditText.setSelection(7);
                 }
             }
 
@@ -72,6 +72,8 @@ public class EditLinkActivity extends Activity {
             }
         });
 
+        // select end of url
+        urlEditText.performClick();
     }
 
 }

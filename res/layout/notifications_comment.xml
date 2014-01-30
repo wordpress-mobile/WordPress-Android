@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/list_row_bg"
     android:orientation="vertical" >
 
     <ScrollView
@@ -163,7 +162,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@+string/tap_to_reply"
+            android:hint="@string/tap_to_reply"
             android:inputType="text|textMultiLine|textCapSentences"
             android:maxLines="4" />
 

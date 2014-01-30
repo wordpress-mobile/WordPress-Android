@@ -9,7 +9,7 @@ package org.wordpress.android.ui.notifications;
 
 import org.wordpress.android.models.Note;
 
-interface NotificationFragment {
+public interface NotificationFragment {
     public Note getNote();
     public void setNote(Note note);
 }

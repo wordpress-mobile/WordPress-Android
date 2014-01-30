@@ -67,7 +67,7 @@
                 android:gravity="top"
                 android:hint="@string/content"
                 android:minLines="2"
-                android:textColorLink="#21759b" />
+                android:textColorLink="@color/wordpress_blue" />
         </RelativeLayout>
 
         <RelativeLayout

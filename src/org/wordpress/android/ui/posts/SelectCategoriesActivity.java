@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
-import java.util.*;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -10,27 +9,29 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import org.wordpress.android.models.CategoryNode;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
     private XMLRPCClient client;
@@ -40,7 +41,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
-    private int mListViewScrollStateOffset, mListViewScrollStateIndex;
+    private ListScrollPositionManager mListScrollPositionManager;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
@@ -58,6 +59,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mListView = getListView();
+        mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
 
@@ -67,14 +69,14 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (getCheckedItemCount(mListView) > 1) {
                     boolean uncategorizedNeedToBeSelected = false;
                     for (int i = 0; i < mCategoryLevels.size(); i++) {
-                        if ( mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized") ) {
+                        if (mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized")) {
                             mListView.setItemChecked(i, uncategorizedNeedToBeSelected);
                         }
                     }
                 }
             }
         });
-        
+
         mSelectedCategories = new HashSet<String>();
 
         Bundle extras = getIntent().getExtras();
@@ -88,6 +90,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             }
             if (extras.containsKey("categories"))
                 mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
+        }
+        if (mSelectedCategories == null) {
+            mSelectedCategories = new HashSet<String>();
         }
 
         populateOrFetchCategories();
@@ -109,12 +114,12 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 }
             }
         }
-        restoreScrollOffset();
+        mListScrollPositionManager.restoreScrollOffset();
     }
 
 
     private void populateOrFetchCategories() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getId());
+        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
 
         if (mCategories.getChildren().size() > 0) {
             populateCategoryList();
@@ -129,10 +134,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
-
                 populateOrFetchCategories();
-
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success),
+                        Toast.LENGTH_SHORT).show();
             }
             if (finalResult.equals("addCategory_failed")) {
                 if (pd.isShowing()) {
@@ -185,7 +189,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public String fetchCategories() {
         String returnMessage;
         Object result[] = null;
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), };
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
         boolean success = false;
@@ -199,7 +203,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         if (success) {
             // wipe out the categories table
-            WordPress.wpDB.clearCategories(blog.getId());
+            WordPress.wpDB.clearCategories(blog.getLocalTableBlogId());
 
             for (Object aResult : result) {
                 Map<?, ?> curHash = (Map<?, ?>) aResult;
@@ -208,7 +212,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 String categoryParentID = curHash.get("parentId").toString();
                 int convertedCategoryID = Integer.parseInt(categoryID);
                 int convertedCategoryParentID = Integer.parseInt(categoryParentID);
-                WordPress.wpDB.insertCategory(blog.getId(), convertedCategoryID, convertedCategoryParentID, categoryName);
+                WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), convertedCategoryID, convertedCategoryParentID, categoryName);
             }
             returnMessage = "gotCategories";
         } else {
@@ -225,13 +229,13 @@ public class SelectCategoriesActivity extends SherlockListActivity {
      * @return
      * @description Adds a new category
      */
-    public String addCategory(String category_name, String category_slug, String category_desc, int parent_id) {
+    public String addCategory(final String category_name, String category_slug, String category_desc, int parent_id) {
         // Return string
-        String returnString = "";
+        String returnString = "addCategory_failed";
 
         // Save selected categories
         updateSelectedCategoryList();
-        saveScrollOffset();
+        mListScrollPositionManager.saveScrollOffset();
 
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
@@ -242,7 +246,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), struct };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), struct };
 
         Object result = null;
         try {
@@ -251,18 +255,34 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             e.printStackTrace();
         }
 
-        if (result == null) {
-            returnString = "addCategory_failed";
-        } else {
+        if (result != null) {
             // Category successfully created. "result" is the ID of the new category
             // Initialize the category database
             // Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
+
+            // Fetch canonical name, can't to do this asynchronously because the new category_name is needed for
+            // insertCategory
+            final String new_category_name = getCanonicalCategoryName(category_id);
+            if (new_category_name == null) {
+                return returnString;
+            }
+            final Activity that = this;
+            if (!new_category_name.equals(category_name)) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(that, String.format(String.valueOf(getText(R.string.category_automatically_renamed)),
+                                category_name, new_category_name), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
+            WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
-            mSelectedCategories.add(category_name);
+            mSelectedCategories.add(new_category_name);
         }
 
         return returnString;
@@ -287,9 +307,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        pd = ProgressDialog.show(SelectCategoriesActivity.this,
-                                getResources().getText(R.string.cat_adding_category),
-                                getResources().getText(R.string.cat_attempt_add_category), true, true);
+                        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
+                                R.string.cat_adding_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -320,7 +339,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             return true;
         } else if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getId());
+            bundle.putInt("id", blog.getLocalTableBlogId());
             Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
             i.putExtras(bundle);
             startActivityForResult(i, 0);
@@ -333,11 +352,29 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private String getCanonicalCategoryName(int category_id) {
+        String new_category_name = null;
+        Map<?, ?> result = null;
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        try {
+            result = (Map<?, ?>) client.call("wp.getTerm", params);
+        } catch (XMLRPCException e) {
+            e.printStackTrace();
+        }
+
+        if (result != null) {
+            if (result.containsKey("name")) {
+                new_category_name = result.get("name").toString();
+            }
+        }
+        return new_category_name;
+    }
+
     private void refreshCategories() {
-        saveScrollOffset();
+        mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
-        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
-                getResources().getText(R.string.attempting_categories_refresh), true, true);
+        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
+                R.string.refreshing_categories), true, true);
         Thread th = new Thread() {
             public void run() {
                 finalResult = fetchCategories();
@@ -357,19 +394,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();
-    }
-
-    private void saveScrollOffset() {
-        mListViewScrollStateIndex = mListView.getFirstVisiblePosition();
-        View view = mListView.getChildAt(0);
-        mListViewScrollStateOffset = 0;
-        if (view != null) {
-            mListViewScrollStateOffset = view.getTop();
-        }
-    }
-
-    private void restoreScrollOffset() {
-        mListView.setSelectionFromTop(mListViewScrollStateIndex, mListViewScrollStateOffset);
     }
 
     private void updateSelectedCategoryList() {
@@ -394,11 +418,10 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         finish();
     }
 
-    private int getCheckedItemCount(ListView listView)
-    {
-        if (Build.VERSION.SDK_INT >= 11) return listView.getCheckedItemCount();
-        else
-        {
+    private int getCheckedItemCount(ListView listView) {
+        if (Build.VERSION.SDK_INT >= 11) {
+            return listView.getCheckedItemCount();
+        } else {
             int count = 0;
             for (int i = listView.getCount() - 1; i >= 0; i--)
                 if (listView.isItemChecked(i)) count++;

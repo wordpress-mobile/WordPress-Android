@@ -8,4 +8,22 @@
         <attr name="layout_horizontalSpacing" format="dimension"/>
         <attr name="layout_verticalSpacing" format="dimension"/>
     </declare-styleable>
+
+    <!--
+        WPTextView attribute to enable switching between regular and light Open Sans typeface (see widgets/WPTextView)
+    -->
+    <declare-styleable name="WPTypeface">
+        <attr name="fontVariation" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="light" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <!--
+        WPLinearLayoutSizeBound attributes
+    -->
+    <declare-styleable name="WPLinearLayoutSizeBound">
+        <attr name="maxWidth" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
 </resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background drawable for reader post list items
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <stroke android:color="@color/grey_light" android:width="1px"/>
+    <solid android:color="@color/white" />
+
+</shape>

@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/format_bar_bg"
+        android:background="@drawable/view_post_toolbar_bottom"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
         android:paddingTop="6dp" >
@@ -57,12 +57,20 @@
         </FrameLayout>
     </ScrollView>
 
+    <include
+        android:id="@+id/layout_comment_box"
+        layout="@layout/reader_include_comment_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
     <RelativeLayout
         android:id="@+id/footerBar"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/format_bar_bg"
+        android:layout_above="@+id/layout_comment_box"
+        android:layout_alignWithParentIfMissing="true"
+        android:background="@drawable/view_post_toolbar"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
         android:paddingTop="6dp" >

@@ -6,11 +6,12 @@
         android:key="wp_pref_category_blogs"
         android:title="@string/blogs">
     </PreferenceCategory>
-    
+
     <PreferenceCategory
         android:title="@string/wpcom"
         android:key="wp_pref_wpcom_auth" >
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/notifications"
         android:key="wp_pref_notifications_category" >
         <PreferenceScreen
@@ -45,13 +46,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/post_signature" >
+        android:title="@string/post_signature"
+        android:key="wp_post_signature">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wp_pref_signature_enabled"
             android:title="@string/add_tagline" />
 
-        <EditTextPreference
+        <org.wordpress.android.util.WPEditTextPreference
             android:key="wp_pref_post_signature"
             android:title="@string/post_signature" />
     </PreferenceCategory>
@@ -67,6 +69,17 @@
               <intent android:targetClass="org.wordpress.passcodelock.PasscodePreferencesActivity"
                 android:targetPackage="org.wordpress.android"/>
        </CheckBoxPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_share_pref"
+        android:persistent="false"
+        android:title="@string/share_preference_title" >
+        <Preference
+            android:key="wp_reset_share_pref"
+            android:persistent="false"
+            android:title="@string/reset_auto_share_preference">
+        </Preference>
     </PreferenceCategory>
     
 <PreferenceCategory

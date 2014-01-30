@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.IntentCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -20,14 +21,20 @@ import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,11 +44,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.WordPress.restClient;
 
-public class NotificationsActivity extends WPActionBarActivity {
+public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
     public static final String TAG="WPNotifications";
+    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
+    public static final String MD5_NOTE_ID_EXTRA="md5NoteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
     public static final String NOTE_REPLY_EXTRA="replyContent";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
@@ -49,6 +59,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
                                             IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
+    private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -56,12 +67,14 @@ public class NotificationsActivity extends WPActionBarActivity {
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
+    private List<Note> notes;
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.notifications);
-        
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getResources().getString(R.string.notifications));
@@ -72,30 +85,48 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
+        // Load notes
+        notes = WordPress.wpDB.getLatestNotes();
+
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    Fragment fragment = new NoteCommentFragment();
+                    //Fragment fragment = new NoteCommentFragment();
+                    Fragment fragment = CommentDetailFragment.newInstance(note);
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
+                if (note.isMultiLineListTemplate()){
+                    Fragment fragment = null;
+                    if (note.isCommentLikeType())
+                        fragment = new NoteCommentLikeFragment();
+                    else if (note.isAutomattcherType())
+                        fragment = new NoteMatcherFragment();
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector() {
+            @Override
+            public Fragment getFragment(Note note) {
+                if (note.isSingleLineListTemplate()) {
+                    Fragment fragment = new SingleLineListFragment();
                     return fragment;
                 }
                 return null;
             }
         });
         fragmentDetectors.add(new FragmentDetector(){
-           @Override
-           public Fragment getFragment(Note note){
-               if (note.isSingleLineListTemplate()) {
-                   Fragment fragment = new SingleLineListFragment();
-                   return fragment;
-               }
-               return null;
-           } 
-        });
-        fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
-                Log.d(TAG, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
+                AppLog.d(T.NOTIFS, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
                 if (note.isBigBadgeTemplate()) {
                     Fragment fragment = new BigBadgeFragment();
                     return fragment;
@@ -103,57 +134,40 @@ public class NotificationsActivity extends WPActionBarActivity {
                 return null;
             }
         });
-        
+
         GCMIntentService.activeNotificationsMap.clear();
 
-        loadNotes();
-
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             launchWithNoteId();
+        } else {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+        }
+
+        refreshNotificationsListFragment(notes);
 
         if (savedInstanceState != null)
             popNoteDetail();
+        if (mBroadcastReceiver == null)
+            createBroadcastReceiver();
+
+        // remove window background since background color is set in fragment (reduces overdraw)
+        getWindow().setBackgroundDrawable(null);
     }
 
-    /*
-     * loads notes from local cache (parsing notes is expensive so it's done in the background)
-     * then requests the latest notes from the server
-     */
-    private void loadNotes() {
-        new LoadNotesTask().execute();
-    }
-    private class LoadNotesTask extends AsyncTask<Void, Void, Boolean> {
-        List<Note> tmpNotes;
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if (WordPress.latestNotes == null)
-                return false;
-            try {
-                tmpNotes = parseNotes(WordPress.latestNotes);
-                return (tmpNotes != null);
-            } catch (JSONException e) {
-                Log.e(TAG, "No cached notes");
-                return false;
+    private void createBroadcastReceiver() {
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                notes = WordPress.wpDB.getLatestNotes();
+                refreshNotificationsListFragment(notes);
             }
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mNotesList.getNotesAdapter().addAll(tmpNotes);
-                mNotesList.getNotesAdapter().notifyDataSetChanged();
-            }
-
-            // get latest notes from server regardless of whether local notes were loaded
-            refreshNotes();
-        }
+        };
     }
 
-
-    
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        
+
         GCMIntentService.activeNotificationsMap.clear();
 
         launchWithNoteId();
@@ -165,13 +179,20 @@ public class NotificationsActivity extends WPActionBarActivity {
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
+    private boolean mHasPerformedInitialUpdate;
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
     private void launchWithNoteId(){
         final Intent intent = getIntent();
-        if (intent.hasExtra(NOTE_ID_EXTRA)) {
+        if (intent.hasExtra(MD5_NOTE_ID_EXTRA)) {
+            int hashid = Integer.valueOf(intent.getStringExtra(MD5_NOTE_ID_EXTRA));
+            Note note = WordPress.wpDB.getNoteById(hashid);
+            if (note != null) {
+                openNote(note);
+            }
+        } else if (intent.hasExtra(NOTE_ID_EXTRA)) {
             // find it/load it etc
             Map<String, String> params = new HashMap<String, String>();
             params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
@@ -186,8 +207,21 @@ public class NotificationsActivity extends WPActionBarActivity {
                 }
             };
             restClient.getNotifications(params, handler, handler);
+        } else {
+            // on a tablet: open first note if none selected
+            String fragmentTag = mNotesList.getTag();
+            if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
+                if (notes != null && notes.size() > 0) {
+                    Note note = notes.get(0);
+                    if (note != null) {
+                        openNote(note);
+                    }
+                }
+            }
+            refreshNotes();
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.equals(mRefreshMenuItem)) {
@@ -202,15 +236,15 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
@@ -258,12 +292,12 @@ public class NotificationsActivity extends WPActionBarActivity {
                 new RestRequest.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Log.d(TAG, String.format("Failed to mark as read %s", error));
+                        AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
                     }
                 }
             );
         }
-        
+
         FragmentManager fm = getSupportFragmentManager();
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0){
@@ -271,7 +305,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
         Fragment fragment = fragmentForNote(note);
         if (fragment == null) {
-            Log.d(TAG, String.format("No fragment found for %s", note.toJSONObject()));
+            AppLog.d(T.NOTIFS, String.format("No fragment found for %s", note.toJSONObject()));
             return;
         }
         // swap the fragment
@@ -294,7 +328,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
         transaction.commitAllowingStateLoss();
     }
-    
+
     public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
         RestRequest.Listener success = new RestRequest.Listener(){
             @Override
@@ -317,7 +351,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         RestRequest.ErrorListener failure = new RestRequest.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error){
-                Log.d(TAG, String.format("Error moderating comment: %s", error));
+                AppLog.d(T.NOTIFS, String.format("Error moderating comment: %s", error));
                 if (isFinishing())
                     return;
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
@@ -353,23 +387,79 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
     }
 
+
+    /**
+     * these four methods implement OnCommentChangedListener and are triggered from the comment details fragment whenever a comment is changed
+     */
+    @Override
+    public void onCommentAdded() {
+    }
+    @Override
+    public void onCommentDeleted() {
+    }
+    @Override
+    public void onCommentModerated(final Comment comment, final Note note) {
+        if (isFinishing())
+            return;
+        if (note == null)
+            return;
+        //update the moderated note by calling the server.
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("ids", note.getId());
+        NotesResponseHandler handler = new NotesResponseHandler() {
+            @Override
+            public void onNotes(List<Note> notes) {
+                if (isFinishing())
+                    return;
+                // there should only be one note!
+                if (!notes.isEmpty()) {
+                    Note updatedNote = notes.get(0);
+                    final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                    adapter.updateNote(note, updatedNote);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+        WordPress.restClient.getNotifications(params, handler, handler);
+    }
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
+    }
+
+    public void refreshNotificationsListFragment(List<Note> notes) {
+        final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+        adapter.clear();
+        adapter.addAll(notes);
+        adapter.notifyDataSetChanged();
+        // mark last seen timestamp
+        if (!notes.isEmpty()) {
+            updateLastSeen(notes.get(0).getTimestamp());
+        }
+    }
+
     public void refreshNotes(){
         mFirstLoadComplete = false;
-        shouldAnimateRefreshButton = true;
+        mShouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(mRefreshMenuItem);
-        NotesResponseHandler handler = new NotesResponseHandler(){
+        NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
-            public void onNotes(List<Note> notes){
+            public void onNotes(final List<Note> notes) {
                 mFirstLoadComplete = true;
-                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                adapter.clear();
-                adapter.addAll(notes);
-                adapter.notifyDataSetChanged();
-                // mark last seen timestamp
-                if (!notes.isEmpty()) {
-                    updateLastSeen(notes.get(0).getTimestamp());                    
-                }
-                stopAnimatingRefreshButton(mRefreshMenuItem);
+                // nbradbury - saving notes can be slow, so do it in the background
+                new Thread() {
+                    @Override
+                    public void run() {
+                        WordPress.wpDB.clearNotes();
+                        WordPress.wpDB.saveNotes(notes);
+                        NotificationsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshNotificationsListFragment(notes);
+                                stopAnimatingRefreshButton(mRefreshMenuItem);
+                            }
+                        });
+                    }
+                }.start();
             }
             @Override
             public void onErrorResponse(VolleyError error){
@@ -379,35 +469,37 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.clear();
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
-                Toast.makeText(NotificationsActivity.this, String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.notifications).toString().toLowerCase()), Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(getContext(), R.string.error_refresh_notifications,
+                        ToastUtils.Duration.LONG);
                 stopAnimatingRefreshButton(mRefreshMenuItem);
-                shouldAnimateRefreshButton = false;
+                mShouldAnimateRefreshButton = false;
             }
         };
-        WordPress.refreshNotifications(this, handler, handler);
+        NotificationUtils.refreshNotifications(notesHandler, notesHandler);
     }
+
     protected void updateLastSeen(String timestamp){
-        
+
         restClient.markNotificationsSeen(timestamp,
             new RestRequest.Listener(){
                 @Override
                 public void onResponse(JSONObject response){
-                    Log.d(TAG, String.format("Set last seen time %s", response));
+                    AppLog.d(T.NOTIFS, String.format("Set last seen time %s", response));
                 }
             },
             new RestRequest.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error){
-                    Log.d(TAG, String.format("Could not set last seen time %s", error));
+                    AppLog.d(T.NOTIFS, String.format("Could not set last seen time %s", error));
                 }
             }
         );
     }
-    public void requestNotesBefore(Note note){
+    public void requestNotesBefore(final Note note){
         Map<String, String> params = new HashMap<String, String>();
-        Log.d(TAG, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
+        AppLog.d(T.NOTIFS, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
         params.put("before", note.queryJSON("timestamp", ""));
-        NotesResponseHandler handler = new NotesResponseHandler(){
+        NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(List<Note> notes){
                 // API returns 'on or before' timestamp, so remove first item
@@ -418,7 +510,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.notifyDataSetChanged();
             }
         };
-        restClient.getNotifications(params, handler, handler);
+        restClient.getNotifications(params, notesHandler, notesHandler);
     }
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
@@ -433,14 +525,14 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
         }
     }
-    
+
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
             openNote(note);
         }
     }
-    
+
     abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
         NotesResponseHandler(){
             mLoadingMore = true;
@@ -450,55 +542,43 @@ public class NotificationsActivity extends WPActionBarActivity {
         @Override
         public void onResponse(JSONObject response){
             mLoadingMore = false;
-            List<Note> notes = null;
-            
+
             if( response == null ) {
                 //Not sure this could ever happen, but make sure we're catching all response types
-                Log.w(TAG, "Success, but did not receive any notes");
+                AppLog.w(T.NOTIFS, "Success, but did not receive any notes");
                 notes = new ArrayList<Note>(0);
                 onNotes(notes);
                 return;
             }
-            
+
             try {
-                notes = parseNotes(response);
+                notes = NotificationUtils.parseNotes(response);
                 onNotes(notes);
             } catch (JSONException e) {
-                Log.e(TAG, "Success, but can't parse the response", e);
+                AppLog.e(T.NOTIFS, "Success, but can't parse the response", e);
                 showError(getString(R.string.error_parsing_response));
                 return;
             }
         }
-        
+
         @Override
         public void onErrorResponse(VolleyError error){
             mLoadingMore = false;
             showError();
-            Log.d(TAG, String.format("Error retrieving notes: %s", error));
+            AppLog.d(T.NOTIFS, String.format("Error retrieving notes: %s", error));
         }
 
-        public void showError(String errorMessage){
+        public void showError(final String errorMessage){
             Toast.makeText(NotificationsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
         }
-        
+
         public void showError(){
-            Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+            showError(getString(R.string.error_generic));
         }
     }
-    
+
     private abstract class FragmentDetector {
         abstract public Fragment getFragment(Note note);
-    }
-    
-    public static List<Note> parseNotes(JSONObject response) throws JSONException {
-        List<Note> notes = null;
-        JSONArray notesJSON = response.getJSONArray("notes");
-        notes = new ArrayList<Note>(notesJSON.length());
-        for (int i=0; i<notesJSON.length(); i++) {
-            Note n = new Note(notesJSON.getJSONObject(i));
-            notes.add(n);
-        }
-        return notes;
     }
 
     @Override
@@ -506,7 +586,29 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.remove(NOTE_ID_EXTRA);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBroadcastReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(mBroadcastReceiver, new IntentFilter(NOTIFICATION_ACTION));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
+            ReaderAuthActions.updateCookies(this);
+        }
     }
 }

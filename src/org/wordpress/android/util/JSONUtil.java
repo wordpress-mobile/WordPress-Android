@@ -1,13 +1,13 @@
 package org.wordpress.android.util;
 
-import android.util.Log;
+import android.text.TextUtils;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JSONUtil {
     private static String QUERY_SEPERATOR=".";
@@ -15,6 +15,8 @@ public class JSONUtil {
     private static String QUERY_ARRAY_INDEX_END="]";
     private static String QUERY_ARRAY_FIRST="first";
     private static String QUERY_ARRAY_LAST="last";
+
+    private static final String JSON_NULL_STR = "null";
 
     private static final String TAG="JSONUtil";
     /**
@@ -36,10 +38,10 @@ public class JSONUtil {
                     return defaultObject;
                 }
             } catch (JSONException e) {
-                Log.e(TAG, String.format("Could not complete query %s", query), e);
+                AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
                 return defaultObject;
             } catch (ClassCastException e) {
-                Log.e(TAG, String.format("Could not cast object %s", query), e);
+                AppLog.e(T.UTILS, String.format("Could not cast object %s", query), e);
                 return defaultObject;
             }
         }
@@ -52,11 +54,14 @@ public class JSONUtil {
         String nextQuery = query.substring(endQuery);
         String key = query.substring(0, endQuery);
         try {
+            if (source == null) {
+                return defaultObject;
+            }
             if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
                 return queryJSON(source.getJSONObject(key), nextQuery.substring(1), defaultObject);
-            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0){
+            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
                 return queryJSON(source.getJSONArray(key), nextQuery, defaultObject);
-            } else if (!nextQuery.equals("")){
+            } else if (!nextQuery.equals("")) {
                 return defaultObject;
             }
             Object result = source.get(key);
@@ -66,10 +71,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch (java.lang.ClassCastException e) {
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
             return defaultObject;
         } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
     }
@@ -109,7 +114,7 @@ public class JSONUtil {
                 return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
             } else if(!remainingQuery.equals("")){
                 // TODO throw an exception since the query isn't valid?
-                Log.d(TAG, String.format("Incorrect query for next object %s", remainingQuery));
+                AppLog.d(T.UTILS, String.format("Incorrect query for next object %s", remainingQuery));
                 return defaultObject;
             }
             Object result = source.get(index);
@@ -119,10 +124,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch(java.lang.ClassCastException e){
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
             return defaultObject;
         } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
 
@@ -154,5 +159,73 @@ public class JSONUtil {
             }
         
         return jsonArray;
+    }
+
+    /*
+     * wrapper for JSONObject.optString() which handles "null" values
+     */
+    public static String getString(JSONObject json, String name) {
+        String value = json.optString(name);
+        // return empty string for "null"
+        if (JSON_NULL_STR.equals(value))
+            return "";
+        return value;
+    }
+
+    /*
+     * use with strings that contain HTML entities
+     */
+    public static String getStringDecoded(JSONObject json, String name) {
+        String value = getString(json, name);
+        return HtmlUtils.fastUnescapeHtml(value);
+    }
+
+    /*
+     * replacement for JSONObject.optBoolean()  - optBoolean() only checks for "true" and "false",
+     * but our API sometimes uses "0" to denote false
+     */
+    public static boolean getBool(JSONObject json, String name) {
+        String value = getString(json, name);
+        if (TextUtils.isEmpty(value))
+            return false;
+        if (value.equals("0"))
+            return false;
+        if (value.equalsIgnoreCase("false"))
+            return false;
+        return true;
+    }
+
+    /*
+     * returns the JSONObject child of the passed parent that matches the passed query
+     * this is basically an "optJSONObject" that supports nested queries, for example:
+     *
+     *  getJSONChild("meta/data/site")
+     *
+     * would find this:
+     *
+     *  "meta": {
+     *       "data": {
+     *           "site": {
+     *                "ID": 3584907,
+     *                "name": "WordPress.com News",
+     *           }
+     *       }
+     *   }
+     */
+    public static JSONObject getJSONChild(final JSONObject jsonParent, final String query) {
+        if (jsonParent == null || TextUtils.isEmpty(query))
+            return null;
+        String[] names = query.split("/");
+        JSONObject jsonChild = null;
+        for (int i = 0; i < names.length; i++) {
+            if (jsonChild == null) {
+                jsonChild = jsonParent.optJSONObject(names[i]);
+            } else {
+                jsonChild = jsonChild.optJSONObject(names[i]);
+            }
+            if (jsonChild == null)
+                return null;
+        }
+        return jsonChild;
     }
 }

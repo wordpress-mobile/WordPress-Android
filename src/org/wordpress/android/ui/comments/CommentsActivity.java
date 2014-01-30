@@ -1,18 +1,11 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -20,32 +13,32 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentFragment.OnCommentStatusChangeListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
-import org.wordpress.android.ui.comments.CommentsListFragment.OnContextCommentStatusChangeListener;
+import org.wordpress.android.util.ToastUtils;
 
-public class CommentsActivity extends WPActionBarActivity implements
-        OnCommentSelectedListener, OnCommentStatusChangeListener,
-        OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
+import java.util.List;
+
+public class CommentsActivity extends WPActionBarActivity
+        implements OnCommentSelectedListener,
+                   CommentActions.OnCommentChangeListener,
+                   OnAnimateRefreshButtonListener {
 
     protected int id;
-    public int ID_DIALOG_MODERATING = 1;
-    public int ID_DIALOG_REPLYING = 2;
-    public int ID_DIALOG_DELETING = 3;
-    private XMLRPCClient client;
-    public ProgressDialog pd;
+
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
+
+    public static final int ID_DIALOG_MODERATING = 1;
+    public static final int ID_DIALOG_DELETING = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +70,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
         attemptToSelectComment();
         if (fromNotification)
-            commentList.refreshComments(false, false, false);
+            refreshCommentList();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -86,7 +79,8 @@ public class CommentsActivity extends WPActionBarActivity implements
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        commentList.refreshComments(false, false, false);
+        clearCommentList();
+        refreshCommentList();
     }
 
     @Override
@@ -95,8 +89,8 @@ public class CommentsActivity extends WPActionBarActivity implements
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.basic_menu, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(refreshMenuItem);
         }
         return true;
@@ -108,7 +102,7 @@ public class CommentsActivity extends WPActionBarActivity implements
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
             attemptToSelectComment();
-            commentList.refreshComments(false, false, false);
+            refreshCommentList();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -130,8 +124,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        CommentFragment f = (CommentFragment) fm
-                .findFragmentById(R.id.commentDetail);
+        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
         }
@@ -143,7 +136,7 @@ public class CommentsActivity extends WPActionBarActivity implements
         if (WordPress.currentBlog != null) {
             boolean commentsLoaded = commentList.loadComments(false, false);
             if (!commentsLoaded)
-                commentList.refreshComments(false, false, false);
+                refreshCommentList();
         }
     }
 
@@ -168,10 +161,8 @@ public class CommentsActivity extends WPActionBarActivity implements
                     Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                     finish();
                 }
-                //titleBar.refreshBlog();
             }
         }
-
     }
 
     @Override
@@ -179,341 +170,184 @@ public class CommentsActivity extends WPActionBarActivity implements
 
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
-        CommentFragment f = (CommentFragment) fm.findFragmentById(R.id.commentDetail);
-        
-        if (comment != null && fm.getBackStackEntryCount() == 0) {
+        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
 
+        if (comment != null && fm.getBackStackEntryCount() == 0) {
             if (f == null || !f.isInLayout()) {
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(commentList);
-                f = new CommentFragment();
+                f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment);
                 ft.add(R.id.commentDetailFragmentContainer, f);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
-                f.loadComment(comment);
+                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment);
             }
+        }
+    }
+
+    /*
+     * refresh the comment in the detail view if it's showing
+     */
+    private void refreshCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+
+        fragment.refreshComment();
+    }
+
+    /*
+     * clear the comment in the detail view if it's showing
+     */
+    private void clearCommentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (fragment == null)
+            return;
+        fragment.clearComment();
+    }
+
+    private void clearCommentList() {
+        if (commentList != null)
+            commentList.clearComments();
+    }
+
+    private void refreshCommentList() {
+        if (commentList != null)
+            commentList.refreshComments();
+    }
+
+    /**
+     * these three methods implement OnCommentChangedListener and are triggered from this activity,
+     * the list fragment, and the detail fragment whenever a comment is changed
+     */
+    @Override
+    public void onCommentAdded() {
+        refreshCommentList();
+    }
+    @Override
+    public void onCommentDeleted() {
+        refreshCommentList();
+        clearCommentDetail();
+    }
+    @Override
+    public void onCommentModerated(final Comment comment, final Note note) {
+        refreshCommentList();
+        refreshCommentDetail();
+    }
+    @Override
+    public void onCommentsModerated(final List<Comment> comments) {
+        refreshCommentList();
+        refreshCommentDetail();
+    }
+
+    /*
+     * called from CommentListFragment after user selects from ListView's context menu
+     */
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        if (item.getItemId()==CommentsListFragment.MENU_ID_EDIT) {
+            /*
+             * start activity to edit this comment
+             */
+            Intent i = new Intent(
+                    getApplicationContext(),
+                    EditCommentActivity.class);
+            startActivityForResult(i, 0);
+            return true;
+        } else if (item.getItemId()==CommentsListFragment.MENU_ID_DELETE) {
+            /*
+             * fire background action to delete this comment
+             */
+            showDialog(ID_DIALOG_DELETING);
+            CommentActions.deleteComment(
+                    WordPress.getCurrentLocalTableBlogId(),
+                    WordPress.currentComment,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            dismissDialog(ID_DIALOG_DELETING);
+                            if (succeeded) {
+                                onCommentDeleted();
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
+                            } else {
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
+                            }
+                        }
+                    });
+            return true;
+        } else {
+            /*
+             * remainder are all comment moderation actions
+             */
+            showDialog(ID_DIALOG_MODERATING);
+            final CommentStatus status;
+            switch (item.getItemId()) {
+                case CommentsListFragment.MENU_ID_APPROVED:
+                    status = CommentStatus.APPROVED;
+                    break;
+                case CommentsListFragment.MENU_ID_UNAPPROVED:
+                    status = CommentStatus.UNAPPROVED;
+                    break;
+                case CommentsListFragment.MENU_ID_SPAM:
+                    status = CommentStatus.SPAM;
+                    break;
+                default :
+                    return true;
+            }
+
+            CommentActions.moderateComment(WordPress.getCurrentLocalTableBlogId(),
+                                           WordPress.currentComment,
+                                           status,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            dismissDialog(ID_DIALOG_MODERATING);
+                            if (succeeded) {
+                                onCommentModerated(WordPress.currentComment, null);
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
+                            } else {
+                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
+                            }
+                        }
+                    });
+
+            return true;
         }
     }
 
     @Override
-    public void onCommentStatusChanged(final String status) {
-
-        if (WordPress.currentComment != null) {
-
-            final int commentID = WordPress.currentComment.commentID;
-
-            if (status.equals("approve") || status.equals("hold")
-                    || status.equals("spam")) {
-                showDialog(ID_DIALOG_MODERATING);
-                new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        changeCommentStatus(status, commentID);
-                    }
-                }.start();
-            } else if (status.equals("delete")) {
-                Thread action3 = new Thread() {
-                    public void run() {
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                                CommentsActivity.this);
-                        dialogBuilder.setTitle(getResources().getText(
-                                R.string.confirm_delete));
-                        dialogBuilder.setMessage(getResources().getText(R.string.confirm_delete_data));
-                        dialogBuilder.setPositiveButton(getString(R.string.yes),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                                        showDialog(ID_DIALOG_DELETING);
-                                        // pop out of the detail view if on a smaller screen
-                                        FragmentManager fm = getSupportFragmentManager();
-                                        CommentFragment f = (CommentFragment) fm
-                                                .findFragmentById(R.id.commentDetail);
-                                        if (f == null) {
-                                            fm.popBackStack();
-                                        }
-                                        new Thread() {
-                                            public void run() {
-                                                deleteComment(commentID);
-                                            }
-                                        }.start();
-
-
-                                    }
-                                });
-                        dialogBuilder.setNegativeButton(getString(R.string.no),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                                        //Don't delete Comment
-                                    }
-                                });
-                        dialogBuilder.setCancelable(true);
-                        if (!isFinishing()) {
-                            dialogBuilder.create().show();
-                        }
-                    }
-                };
-                runOnUiThread(action3);
-            } else if (status.equals("reply")) {
-
-                Intent i = new Intent(CommentsActivity.this, AddCommentActivity.class);
-                i.putExtra("commentID", commentID);
-                i.putExtra("postID", WordPress.currentComment.postID);
-                startActivityForResult(i, 0);
-            } else if (status.equals("clear")) {
-                FragmentManager fm = getSupportFragmentManager();
-                CommentFragment f = (CommentFragment) fm
-                        .findFragmentById(R.id.commentDetail);
-                if (f != null) {
-                    f.clearContent();
-                }
-            }
-
+    public void onAnimateRefreshButton(boolean start) {
+        if (start) {
+            mShouldAnimateRefreshButton = true;
+            this.startAnimatingRefreshButton(refreshMenuItem);
+        } else {
+            mShouldAnimateRefreshButton = false;
+            this.stopAnimatingRefreshButton(refreshMenuItem);
         }
+
     }
 
-    @SuppressWarnings("unchecked")
-    private void changeCommentStatus(final String newStatus,
-            final int selCommentID) {
-        // for individual comment moderation
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
+    private void attemptToSelectComment() {
+        FragmentManager fm = getSupportFragmentManager();
+        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
 
-        Map<String, String> contentHash, postHash = new HashMap<String, String>();
-        contentHash = (Map<String, String>) commentList.allComments.get(selCommentID);
-        postHash.put("status", newStatus);
-        postHash.put("content", contentHash.get("comment"));
-        postHash.put("author", contentHash.get("author"));
-        postHash.put("author_url", contentHash.get("url"));
-        postHash.put("author_email", contentHash.get("email"));
-
-        Object[] params = { WordPress.currentBlog.getBlogId(),
-                WordPress.currentBlog.getUsername(),
-                WordPress.currentBlog.getPassword(), selCommentID, postHash };
-
-        Object result = null;
-        try {
-            result = (Object) client.call("wp.editComment", params);
-            boolean bResult = Boolean.parseBoolean(result.toString());
-            if (bResult) {
-                WordPress.currentComment.status = newStatus;
-                commentList.model.set(WordPress.currentComment.position,
-                        WordPress.currentComment);
-                WordPress.wpDB.updateCommentStatus(id, WordPress.currentComment.commentID,
-                        newStatus);
-                contentHash.put("status", newStatus);
-            }
-            dismissDialog(ID_DIALOG_MODERATING);
-            Thread action = new Thread() {
-                public void run() {
-                    Toast.makeText(CommentsActivity.this,
-                            getResources().getText(R.string.comment_moderated),
-                            Toast.LENGTH_SHORT).show();
-                    
-                    //Update the UI of the details view
-                    FragmentManager fm = getSupportFragmentManager();
-                    CommentFragment f = (CommentFragment) fm
-                            .findFragmentById(R.id.commentDetail);
-
-                    if (f != null) { //tablets
-                        if(f.isInLayout())
-                            f.processCommentStatus();
-                    } else {//phone
-                        f = (CommentFragment) fm.findFragmentById(R.id.commentDetailFragmentContainer);
-                        if (f != null) 
-                            f.processCommentStatus();
-                    }
-                }
-            };
-            runOnUiThread(action);
-            Thread action2 = new Thread() {
-                public void run() {
-                    commentList.getListView().invalidateViews();
-                }
-            };
-            runOnUiThread(action2);
-
-        } catch (final XMLRPCException e) {
-            dismissDialog(ID_DIALOG_MODERATING);
-            Thread action3 = new Thread() {
-                public void run() {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            CommentsActivity.this);
-                    dialogBuilder.setTitle(getResources().getText(
-                            R.string.connection_error));
-                    dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
-                    dialogBuilder.setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                                    // Just close the window.
-
-                                }
-                            });
-                    dialogBuilder.setCancelable(true);
-                    if (!isFinishing()) {
-                        dialogBuilder.create().show();
-                    }
-                }
-            };
-            runOnUiThread(action3);
+        if (f != null && f.isInLayout()) {
+            commentList.shouldSelectAfterLoad = true;
         }
-    }
-
-    private void deleteComment(int selCommentID) {
-        // delete individual comment
-
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
-
-        Object[] params = { WordPress.currentBlog.getBlogId(),
-                WordPress.currentBlog.getUsername(),
-                WordPress.currentBlog.getPassword(), selCommentID };
-
-        try {
-            client.call("wp.deleteComment", params);
-            dismissDialog(ID_DIALOG_DELETING);
-            attemptToSelectComment();
-            Thread action = new Thread() {
-                public void run() {
-                    Toast.makeText(CommentsActivity.this,
-                            getResources().getText(R.string.comment_moderated),
-                            Toast.LENGTH_SHORT).show();
-                }
-            };
-            runOnUiThread(action);
-            Thread action2 = new Thread() {
-                public void run() {
-                    pd = new ProgressDialog(CommentsActivity.this);
-                    commentList.refreshComments(false, true, false);
-                }
-            };
-            runOnUiThread(action2);
-
-        } catch (final XMLRPCException e) {
-            dismissDialog(ID_DIALOG_DELETING);
-            Thread action3 = new Thread() {
-                public void run() {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            CommentsActivity.this);
-                    dialogBuilder.setTitle(getResources().getText(
-                            R.string.connection_error));
-                    dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
-                    dialogBuilder.setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                                    // Just close the window.
-
-                                }
-                            });
-                    dialogBuilder.setCancelable(true);
-                    if (!isFinishing()) {
-                        dialogBuilder.create().show();
-                    }
-                }
-            };
-            runOnUiThread(action3);
-        }
-    }
-
-    private void replyToComment(final String postID, final int commentID,
-            final String comment) {
-        // reply to individual comment
-        client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
-
-        Map<String, Object> replyHash = new HashMap<String, Object>();
-        replyHash.put("comment_parent", commentID);
-        replyHash.put("content", comment);
-        replyHash.put("author", "");
-        replyHash.put("author_url", "");
-        replyHash.put("author_email", "");
-
-        Object[] params = { WordPress.currentBlog.getBlogId(),
-                WordPress.currentBlog.getUsername(),
-                WordPress.currentBlog.getPassword(), Integer.valueOf(postID),
-                replyHash };
-
-        try {
-            int newCommentID = (Integer) client.call("wp.newComment", params);
-            if (newCommentID >= 0)
-            {
-                WordPress.wpDB.updateLatestCommentID(WordPress.currentBlog.getId(), newCommentID);
-            }
-            dismissDialog(ID_DIALOG_REPLYING);
-            Thread action = new Thread() {
-                public void run() {
-                    Toast.makeText(CommentsActivity.this,
-                            getResources().getText(R.string.reply_added),
-                            Toast.LENGTH_SHORT).show();
-                }
-            };
-            runOnUiThread(action);
-            Thread action2 = new Thread() {
-                public void run() {
-                    pd = new ProgressDialog(CommentsActivity.this); // to avoid
-                    // crash
-                    commentList.refreshComments(false, true, false);
-                }
-            };
-            runOnUiThread(action2);
-
-        } catch (final XMLRPCException e) {
-            dismissDialog(ID_DIALOG_REPLYING);
-            Thread action3 = new Thread() {
-                public void run() {
-
-                    Toast.makeText(CommentsActivity.this, getResources().getText(R.string.connection_error), Toast.LENGTH_SHORT).show();
-
-                    Intent i = new Intent(CommentsActivity.this, AddCommentActivity.class);
-                    i.putExtra("commentID", commentID);
-                    i.putExtra("postID", WordPress.currentComment.postID);
-                    i.putExtra("comment", comment);
-                    startActivityForResult(i, 0);
-                }
-            };
-            runOnUiThread(action3);
-
-        }
-
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-
-            Bundle extras = data.getExtras();
-
-            switch (requestCode) {
-            case 0:
-                final String returnText = extras.getString("commentText");
-
-                if (!returnText.equals("CANCEL")) {
-                    final String postID = extras.getString("postID");
-                    final int commentID = extras.getInt("commentID");
-                    showDialog(ID_DIALOG_REPLYING);
-
-                    new Thread(new Runnable() {
-                        public void run() {
-                            Looper.prepare();
-                            pd = new ProgressDialog(CommentsActivity.this);
-                            replyToComment(postID, commentID, returnText);
-                        }
-                    }).start();
-                }
-
-                break;
-            }
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -530,13 +364,6 @@ public class CommentsActivity extends WPActionBarActivity implements
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;
-        } else if (id == ID_DIALOG_REPLYING) {
-            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            loadingDialog.setMessage(getResources().getText(
-                    R.string.replying_comment));
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
         } else if (id == ID_DIALOG_DELETING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
             if (commentList.checkedCommentTotal <= 1) {
@@ -549,50 +376,8 @@ public class CommentsActivity extends WPActionBarActivity implements
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;
-        }
-
-        return super.onCreateDialog(id);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        /*if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
-            titleBar.hideDashboardOverlay();
-            return false;
-        }*/
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onAnimateRefreshButton(boolean start) {
-
-        if (start) {
-            shouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(refreshMenuItem);
         } else {
-            this.stopAnimatingRefreshButton(refreshMenuItem);
+            return super.onCreateDialog(id);
         }
-
-    }
-
-    private void attemptToSelectComment() {
-
-        FragmentManager fm = getSupportFragmentManager();
-        CommentFragment f = (CommentFragment) fm
-                .findFragmentById(R.id.commentDetail);
-
-        if (f != null && f.isInLayout()) {
-            commentList.shouldSelectAfterLoad = true;
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
-        super.onSaveInstanceState(outState);
     }
 }

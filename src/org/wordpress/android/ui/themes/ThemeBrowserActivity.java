@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
@@ -37,6 +36,8 @@ import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragment
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -212,10 +213,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         ft.add(fragment, "alert");
                         ft.commitAllowingStateLoss();
                     }
-                    Log.d("WordPress", "Failed to fetch themes: failed authenticate user");
+                    AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
                 } else {
                     Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
-                    Log.d("WordPress", "Failed to fetch themes: " + response.toString());
+                    AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
                 }
 
                 mFetchingThemes = false;
@@ -305,7 +306,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private String getBlogId() {
-        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {

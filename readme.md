@@ -1,53 +1,36 @@
 # WordPress for Android #
 
-If you're just looking to install WordPress for Android, you can find it on
-[Google Play][].  If you're a developer wanting to contribute, read on.
-
-[Google Play]: https://play.google.com/store/apps/details?id=org.wordpress.android
-
-
-## Helpful Resources ##
-
-Developer Blog: <http://dev.android.wordpress.org>
-Source Code: <http://android.svn.wordpress.org>
-Issue Tracker and Code Browser: <http://android.trac.wordpress.org/>
-WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/>
-
-
+If you're just looking to install WordPress for Android, you can find
+it on [Google Play][1]. If you're a developer wanting to contribute,
+read on.
 
 ## Build Instructions ##
 
-The full build instructions (including instructions for using Eclipse) can be
-found on the [Tutorials &amp; Guides][] page of the mobile developer handbook.
-Instructions for building on the command line with ant can be found below.
+The [gradle build system][2] will fetch all dependencies and generate
+files you need to build the project. You first need to copy create the
+local.properties file, the easiest way is to copy our example:
 
-[Tutorials &amp; Guides]: http://make.wordpress.org/mobile/handbook/pathways/android/tutorials-guides/
+    $ cp local.properties-example local.properties
 
+Then edit the local.properties file to add your Android
+`sdk.dir`. After this step, you can invoke gradle to build, install
+and test the project:
 
-### Building with Ant ###
+    $ ./gradlew assembleDebug # assemble the debug .apk
+    $ ./gradlew installDebug  # assemble and install the debug .apk if you
+                              # have an emulator or an Android device connected
+    $ ./gradlew cIT           # assemble, install and run unit tests
 
-Once you have the Android SDK installed along with the library dependencies,
-run the following command from the root directory of the WordPress for Android
-project:
+Note: you can use the [Android Studio IDE][3], import the project as a
+Gradle project.
 
-    android update project -p .
+## Need help to build or hack? ##
 
-This will create a `local.properties` file that is specific for your setup.
-You can then build the project by running:
+Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
+[Developer Handbook][4] and [Development Blog][5].
 
-    ant debug
-
-You can install the package onto a connected device or a virtual device by
-running:
-
-    ant installd
-
-Also see the full Android documentation, [Building and Running from the Command
-Line][command-line].
-
-[command-line]: http://developer.android.com/tools/building/building-cmdline.html
-
-## Run Unittests ##
-
-    cd tests
-    ant debug && ant installd && ant test
+[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
+[2]: http://tools.android.com/tech-docs/new-build-system/user-guide
+[3]: http://developer.android.com/sdk/installing/studio.html
+[4]: http://make.wordpress.org/mobile/handbook/
+[5]: http://make.wordpress.org/mobile/

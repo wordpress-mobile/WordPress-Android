@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +15,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +33,10 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StatsRestHelper;
+import org.wordpress.android.util.WPLinkMovementMethod;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
@@ -235,7 +235,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             if (WordPress.getCurrentBlog() == null)
                 return;
             
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             new AsyncTask<Void, Void, StatsSummary>() {
 
                 @Override
@@ -286,7 +286,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             
             Spanned link = Html.fromHtml("<a href=\"" + activePostUrl + "\">" + activePost + "</a>");
             mMostCommentedText.setText(link);
-            mMostCommentedText.setMovementMethod(LinkMovementMethod.getInstance());
+            mMostCommentedText.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
 
         

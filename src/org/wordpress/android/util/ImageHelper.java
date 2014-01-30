@@ -1,16 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,9 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.widget.ImageView;
 
@@ -34,6 +21,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.util.AppLog.T;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImageHelper {
     
@@ -70,7 +69,7 @@ public class ImageHelper {
         return dimensions;
     }
     
-    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny) {
+    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny, String fileExtension) {
         // creates a thumbnail and returns the bytes
 
         int finalHeight = 0;
@@ -146,7 +145,10 @@ public class ImageHelper {
                 }
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                resized.compress(Bitmap.CompressFormat.JPEG, 85, baos);
+                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+                if (fileExtension != null && fileExtension.equalsIgnoreCase("png"))
+                    format = Bitmap.CompressFormat.PNG;
+                resized.compress(format, 85, baos);
 
                 bm.recycle(); // free up memory
                 resized.recycle();
@@ -224,8 +226,8 @@ public class ImageHelper {
             HttpResponse response = client.execute(getRequest);
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                // Log.w("ImageDownloader", "Error " + statusCode +
-                // " while retrieving bitmap from " + url);
+                AppLog.w(T.UTILS, "ImageDownloader Error " + statusCode
+                        + " while retrieving bitmap from " + url);
                 return null;
             }
 
@@ -247,8 +249,7 @@ public class ImageHelper {
             // Could provide a more explicit error message for IOException or
             // IllegalStateException
             getRequest.abort();
-            // Log.w("ImageDownloader", "Error while retrieving bitmap from " +
-            // url);
+            AppLog.w(T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
         }
         return null;
     }
@@ -267,12 +268,15 @@ public class ImageHelper {
         }
         if (curStream != null) {
             if (filePath.contains("video")) {
-                int videoID = Integer.parseInt(curStream.getLastPathSegment());
-                projection = new String[] { Video.Thumbnails._ID, Video.Thumbnails.DATA };
+                int videoId = 0;
+                try {
+                    videoId = Integer.parseInt(curStream.getLastPathSegment());
+                } catch (NumberFormatException e) {
+                }
                 ContentResolver crThumb = ctx.getContentResolver();
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 1;
-                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoID, MediaStore.Video.Thumbnails.MINI_KIND,
+                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
                         options);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -321,7 +325,6 @@ public class ImageHelper {
                 } else {
                     path = filePath.toString().replace("file://", "");
                     jpeg = new File(path);
-
                 }
 
                 title = jpeg.getName();
@@ -448,10 +451,10 @@ public class ImageHelper {
                 return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);                 
             }
             catch (IOException e) {
-                Log.w("WordPress", "-- Error in setting image");
+                AppLog.e(T.UTILS, "Error in setting image", e);
             }   
             catch(OutOfMemoryError oom) {
-                Log.w("WordPress", "-- OOM Error in setting image");
+                AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
             }
             
             return null;
@@ -471,7 +474,14 @@ public class ImageHelper {
         }
     }
 
-    public Bitmap getResizedImageThumbnail(Context ctx, byte[] bytes, String orientation) {
+    /**
+     * Resizes an image to be placed in the Post Content Editor
+     * @param ctx
+     * @param bytes
+     * @param orientation
+     * @return resized bitmap
+     */
+    public Bitmap getThumbnailForWPImageSpan(Context ctx, byte[] bytes, String orientation) {
         Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
@@ -482,13 +492,13 @@ public class ImageHelper {
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
 
-        float conversionFactor = 0.25f;
+        float conversionFactor = 0.40f;
 
         if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.40f;
+            conversionFactor = 0.70f;
 
         byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
-                orientation, true);
+                orientation, true, null);
 
         if (finalBytes == null) {
             return null;
@@ -496,5 +506,18 @@ public class ImageHelper {
 
         return BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
     }
-
+    
+    public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
+        
+        if (largeBitmap.getWidth() < resizeWidth)
+            return largeBitmap; //Do not resize.
+        
+        float percentage = (float) resizeWidth / largeBitmap.getWidth();
+        float proportionateHeight = largeBitmap.getHeight() * percentage;
+        int resizeHeight = (int) Math.rint(proportionateHeight);
+        
+        Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
+        
+        return scaled;
+    }
 }

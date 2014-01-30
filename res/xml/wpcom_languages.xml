@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<languages>
+<language id="1" code="en">en - English</language>
+<language id="2" code="af">af - Afrikaans</language>
+<language id="418" code="als">als - Alemannisch</language>
+<language id="3" code="ar">ar - العربية</language>
+<language id="419" code="arc">arc - Aramaic</language>
+<language id="4" code="as">as - Assamese</language>
+<language id="420" code="ast">ast - Asturianu</language>
+<language id="421" code="av">av - Авар</language>
+<language id="422" code="ay">ay - Aymar</language>
+<language id="423" code="ba">ba - Башҡорт</language>
+<language id="5" code="be">be - Беларуская</language>
+<language id="6" code="bg">bg - Български</language>
+<language id="7" code="bm">bm - Bamanankan</language>
+<language id="8" code="bn">bn - Bengali</language>
+<language id="9" code="bo">bo - Tibetan</language>
+<language id="424" code="br">br - Brezhoneg</language>
+<language id="10" code="ca">ca - Català</language>
+<language id="425" code="ce">ce - Нохчийн</language>
+<language id="11" code="cs">cs - Česky</language>
+<language id="12" code="csb">csb - Kaszëbsczi</language>
+<language id="426" code="cv">cv - Чӑваш</language>
+<language id="13" code="cy">cy - Cymraeg</language>
+<language id="14" code="da">da - Dansk</language>
+<language id="15" code="de">de - Deutsch</language>
+<language id="427" code="dv">dv - Divehi; Dhivehi; Maldivian</language>
+<language id="16" code="dz">dz - Dzongkha</language>
+<language id="17" code="el">el - Ελληνικά</language>
+<language id="18" code="eo">eo - Esperanto</language>
+<language id="19" code="es">es - Español</language>
+<language id="20" code="et">et - Eesti</language>
+<language id="429" code="eu">eu - Euskara</language>
+<language id="21" code="fa">fa - فارسی</language>
+<language id="22" code="fi">fi - Suomi</language>
+<language id="23" code="fo">fo - Føroyskt</language>
+<language id="24" code="fr">fr - Français</language>
+<language id="25" code="fur">fur - Furlan</language>
+<language id="26" code="fy">fy - Frysk</language>
+<language id="27" code="ga">ga - Gaeilge</language>
+<language id="430" code="gn">gn - Avañeẽ</language>
+<language id="28" code="gu">gu - Gujarati</language>
+<language id="29" code="he">he - עברית</language>
+<language id="30" code="hi">hi - Hindi</language>
+<language id="431" code="hr">hr - Hrvatski</language>
+<language id="31" code="hu">hu - Magyar</language>
+<language id="32" code="ia">ia - Interlingua</language>
+<language id="33" code="id">id - Bahasa Indonesia</language>
+<language id="432" code="ii">ii - Sichuan Yi; Nuosu</language>
+<language id="34" code="is">is - Íslenska</language>
+<language id="35" code="it">it - Italiano</language>
+<language id="36" code="ja">ja - 日本語</language>
+<language id="37" code="ka">ka - Georgian</language>
+<language id="38" code="km">km - Central Khmer</language>
+<language id="39" code="kn">kn - Kannada</language>
+<language id="40" code="ko">ko - 한국어</language>
+<language id="433" code="ks">ks - Kashmiri - (كشميري)</language>
+<language id="41" code="ku">ku - Kurdî / كوردي</language>
+<language id="434" code="kv">kv - Коми</language>
+<language id="42" code="la">la - Latina</language>
+<language id="43" code="li">li - Limburgs</language>
+<language id="44" code="lo">lo - Lao</language>
+<language id="45" code="lt">lt - Lietuvių</language>
+<language id="435" code="mk">mk - Македонски</language>
+<language id="46" code="ml">ml - Malayalam</language>
+<language id="47" code="ms">ms - Bahasa Melayu</language>
+<language id="436" code="nah">nah - Nahuatl</language>
+<language id="437" code="nap">nap - Nnapulitano</language>
+<language id="48" code="nds">nds - Plattdüütsch</language>
+<language id="49" code="nl">nl - Nederlands</language>
+<language id="50" code="nn">nn - Norsk (nynorsk)</language>
+<language id="51" code="no">no - Norsk (bokmål)</language>
+<language id="52" code="non">non - Norrǿna</language>
+<language id="53" code="nv">nv - Diné bizaad</language>
+<language id="54" code="oc">oc - Occitan</language>
+<language id="55" code="or">or - Oriya</language>
+<language id="56" code="os">os - Иронау</language>
+<language id="57" code="pa">pa - Punjabi</language>
+<language id="58" code="pl">pl - Polski</language>
+<language id="59" code="ps">ps - Pushto; Pashto</language>
+<language id="60" code="pt">pt - Português</language>
+<language id="438" code="pt-br">pt-br - Português do Brasil</language>
+<language id="439" code="qu">qu - Runa Simi</language>
+<language id="61" code="ro">ro - Română</language>
+<language id="62" code="ru">ru - Русский</language>
+<language id="63" code="sc">sc - Sardu</language>
+<language id="440" code="sd">sd - Sindhi</language>
+<language id="64" code="sk">sk - Slovenčina</language>
+<language id="65" code="sl">sl - Slovenščina</language>
+<language id="66" code="sq">sq - Shqip</language>
+<language id="67" code="sr">sr - Српски / Srpski</language>
+<language id="441" code="su">su - Basa Sunda</language>
+<language id="68" code="sv">sv - Svenska</language>
+<language id="69" code="ta">ta - Tamil</language>
+<language id="70" code="te">te - Telugu</language>
+<language id="71" code="th">th - ไทย</language>
+<language id="78" code="tr">tr - Türkçe</language>
+<language id="72" code="tt">tt - Tatarça</language>
+<language id="442" code="ty">ty - Reo Mā`ohi</language>
+<language id="443" code="udm">udm - Удмурт</language>
+<language id="444" code="ug">ug - Oyghurque</language>
+<language id="73" code="uk">uk - Українська</language>
+<language id="74" code="ur">ur - اردو</language>
+<language id="445" code="vec">vec - Vèneto</language>
+<language id="446" code="vi">vi - Tiếng Việt</language>
+<language id="75" code="wa">wa - Walon</language>
+<language id="447" code="xal">xal - Хальмг</language>
+<language id="76" code="yi">yi - ייִדיש</language>
+<language id="448" code="za">za - (Cuengh)</language>
+<language id="77" code="zh">zh - 中文</language>
+<language id="449" code="zh-cn">zh-cn - 中文(简体)</language>
+<language id="450" code="zh-hk">zh-hk - 中文(繁體)</language>
+<language id="451" code="zh-sg">zh-sg - 中文(简体)</language>
+<language id="452" code="zh-tw">zh-tw - 中文(繁體)</language>
+</languages>

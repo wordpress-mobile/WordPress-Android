@@ -200,7 +200,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     }
     
     protected String getBlogId() {
-        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
     @Override
