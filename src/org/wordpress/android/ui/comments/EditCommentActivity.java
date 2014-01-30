@@ -57,16 +57,16 @@ public class EditCommentActivity extends SherlockActivity {
         }
 
         final EditText authorNameET = (EditText) this.findViewById(R.id.author_name);
-        authorNameET.setText(comment.authorName);
+        authorNameET.setText(comment.getAuthorName());
 
         final EditText authorEmailET = (EditText) this.findViewById(R.id.author_email);
-        authorEmailET.setText(comment.authorEmail);
+        authorEmailET.setText(comment.getAuthorEmail());
 
         final EditText authorURLET = (EditText) this.findViewById(R.id.author_url);
-        authorURLET.setText(comment.authorURL);
+        authorURLET.setText(comment.getAuthorUrl());
 
         final EditText commentContentET = (EditText) this.findViewById(R.id.comment_content);
-        commentContentET.setText(comment.comment);
+        commentContentET.setText(comment.getCommentText());
 
         String[] items = new String[] {
                 getResources().getString(R.string.approved),
@@ -189,10 +189,10 @@ public class EditCommentActivity extends SherlockActivity {
 
         // If nothing has been changed, skip the rest and just return.
         Comment comment = WordPress.currentComment;
-        if(authorName.equals(comment.authorName) &&
-                authorEmail.equals(comment.authorEmail) &&
-                authorURL.equals(comment.authorURL) &&
-                content.equals(comment.comment) &&
+        if(authorName.equals(comment.getAuthorName()) &&
+                authorEmail.equals(comment.getAuthorEmail()) &&
+                authorURL.equals(comment.getAuthorUrl()) &&
+                content.equals(comment.getCommentText()) &&
                 status.equals(comment.getStatus())) {
             return true;
         }
@@ -255,11 +255,11 @@ public class EditCommentActivity extends SherlockActivity {
 
                 // Everything was saved successfully, so now we can update the
                 // current comment.
-                WordPress.currentComment.authorEmail = postHash.get("email");
-                WordPress.currentComment.authorURL = postHash.get("url");
-                WordPress.currentComment.comment = postHash.get("comment");
+                WordPress.currentComment.setAuthorEmail(postHash.get("email"));
+                WordPress.currentComment.setAuthorUrl(postHash.get("url"));
+                WordPress.currentComment.setCommentText(postHash.get("comment"));
                 WordPress.currentComment.setStatus(postHash.get("status"));
-                WordPress.currentComment.authorName = postHash.get("author");
+                WordPress.currentComment.setAuthorName(postHash.get("author"));
             }
         } catch (XMLRPCException e) {
             xmlErrorMessage = getResources().getText(R.string.error_edit_comment).toString();

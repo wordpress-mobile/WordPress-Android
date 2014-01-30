@@ -164,12 +164,12 @@ public class CommentAdapter extends BaseAdapter {
         }
 
         void populateFrom(Comment comment, final int position) {
-            txtName.setText(!TextUtils.isEmpty(comment.authorName) ? comment.authorName : mAnonymous);
-            txtPostTitle.setText(comment.postTitle);
-            txtComment.setText(StringUtils.unescapeHTML(comment.comment));
+            txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
+            txtPostTitle.setText(comment.getPostTitle());
+            txtComment.setText(StringUtils.unescapeHTML(comment.getCommentText()));
 
             // use the email address if the commenter didn't add a url
-            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.authorEmail : comment.authorURL);
+            String fEmailURL = (comment.hasAuthorUrl() ? comment.getAuthorUrl() : comment.getAuthorEmail());
             txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
             txtEmailURL.setText(fEmailURL);
 
@@ -209,7 +209,7 @@ public class CommentAdapter extends BaseAdapter {
             if (comment.hasProfileImageUrl()) {
                 imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
             } else if (comment.hasAuthorEmail()) {
-                imgAvatar.setImageUrl(GravatarUtils.gravatarUrlFromEmail(comment.authorEmail), WordPress.imageLoader);
+                imgAvatar.setImageUrl(GravatarUtils.gravatarUrlFromEmail(comment.getAuthorEmail()), WordPress.imageLoader);
             } else {
                 imgAvatar.setImageResource(R.drawable.placeholder);
             }

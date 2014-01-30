@@ -43,7 +43,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -261,33 +260,35 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        txtName.setText(TextUtils.isEmpty(mComment.authorName) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.authorName));
-        txtDate.setText(mComment.dateCreatedFormatted);
+        txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
+        txtDate.setText(mComment.getPublishedDate());
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         txtContent.setLinksClickable(true);
         txtContent.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(txtContent, mComment.comment, maxImageSz);
+        CommentUtils.displayHtmlComment(txtContent, mComment.getCommentText(), maxImageSz);
 
         imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WordPress.imageLoader);
-        } else {
+        } else if (mComment.hasAuthorEmail()) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.authorEmail, avatarSz);
+            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+        } else {
+            imgAvatar.setImageResource(R.drawable.placeholder);
         }
 
         updateStatusViews();
 
         // navigate to author's home page when avatar or name clicked
-        if (!TextUtils.isEmpty(mComment.authorURL)) {
+        if (mComment.hasAuthorUrl()) {
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mComment.authorURL);
+                    ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
                 }
             };
             imgAvatar.setOnClickListener(authorListener);

@@ -243,10 +243,10 @@ public class CommentActions {
 
                 Map<String, String> postHash = new HashMap<String, String>();
                 postHash.put("status", CommentStatus.toString(newStatus));
-                postHash.put("content", comment.comment);
-                postHash.put("author", comment.authorName);
-                postHash.put("author_url", comment.authorURL);
-                postHash.put("author_email", comment.authorEmail);
+                postHash.put("content", comment.getCommentText());
+                postHash.put("author", comment.getAuthorName());
+                postHash.put("author_url", comment.getAuthorUrl());
+                postHash.put("author_email", comment.getAuthorEmail());
 
                 Object[] params = { blog.getRemoteBlogId(),
                         blog.getUsername(),
@@ -311,10 +311,10 @@ public class CommentActions {
                 for (Comment comment: comments) {
                     Map<String, String> postHash = new HashMap<String, String>();
                     postHash.put("status", newStatusStr);
-                    postHash.put("content", comment.comment);
-                    postHash.put("author", comment.authorName);
-                    postHash.put("author_url", comment.authorURL);
-                    postHash.put("author_email", comment.authorEmail);
+                    postHash.put("content", comment.getCommentText());
+                    postHash.put("author", comment.getAuthorName());
+                    postHash.put("author_url", comment.getAuthorUrl());
+                    postHash.put("author_email", comment.getAuthorEmail());
 
                     Object[] params = {
                             remoteBlogId,

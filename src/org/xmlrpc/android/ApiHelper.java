@@ -2,7 +2,6 @@ package org.xmlrpc.android;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.format.DateUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -252,7 +250,7 @@ public class ApiHelper {
         }
     }
 
-    public static CommentList refreshComments(Context ctx, Object[] commentParams)
+    public static CommentList refreshComments(Context context, Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null)
@@ -271,10 +269,9 @@ public class ApiHelper {
         if (result.length == 0)
             return null;
 
-        int commentID, postID;
-        java.util.Date date;
         Map<?, ?> contentHash;
-        String authorName, content, status, authorEmail, authorURL, postTitle;
+        int commentID, postID;
+        String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
         CommentList comments = new CommentList();
 
         for (int ctr = 0; ctr < result.length; ctr++) {
@@ -283,20 +280,18 @@ public class ApiHelper {
             status = contentHash.get("status").toString();
             postID = Integer.parseInt(contentHash.get("post_id").toString());
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            date = (Date) contentHash.get("date_created_gmt");
+            pubDate = contentHash.get("date_created_gmt").toString();
             authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = getFormattedCommentDate(ctx, date);
-
-            // TODO: store localBlogId and actual date with comment
+            // TODO: store localBlogId with comment
             Comment comment = new Comment(
                     postID,
                     commentID,
                     authorName,
-                    formattedDate,
+                    pubDate,
                     content,
                     status,
                     postTitle,
@@ -333,7 +328,7 @@ public class ApiHelper {
      * @param date
      * @return
      */
-    public static String getFormattedCommentDate(Context context, java.util.Date date) {
+    /*public static String getFormattedCommentDate(Context context, java.util.Date date) {
         if (date == null)
             return "";
         try {
@@ -346,7 +341,7 @@ public class ApiHelper {
         } catch (Exception e) {
             return date.toString();
         }
-    }
+    }*/
     
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
