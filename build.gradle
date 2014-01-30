@@ -27,8 +27,6 @@ android {
 
 	buildTypes {
 	    release {
-            runProguard true
-            proguardFile 'proguard-project.txt'
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
         }
         debug {
