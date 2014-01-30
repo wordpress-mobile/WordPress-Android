@@ -31,19 +31,21 @@ public class CommentAdapter extends BaseAdapter {
         public void onLoadMore();
     }
 
-    protected static interface OnSelectionChangeListener {
-        public void onSelectionChanged();
+    protected static interface OnCheckedItemsChangeListener {
+        public void onCheckedItemsChanged();
     }
 
     private LayoutInflater mInflater;
     private OnLoadMoreListener mOnLoadMoreListener;
-    private OnSelectionChangeListener mOnSelectionChangeListener;
+    private OnCheckedItemsChangeListener mOnCheckedChangeListener;
     private CommentList mComments = new CommentList();
-    private HashSet<Integer> mSelectedCommentPositions = new HashSet<Integer>();
+    private HashSet<Integer> mCheckedCommentPositions = new HashSet<Integer>();
 
     private int mStatusColorSpam;
     private int mStatusColorUnapproved;
     private int mAvatarSz;
+
+    private boolean mEnableCheckBoxes;
 
     private String mStatusTextSpam;
     private String mStatusTextUnapproved;
@@ -53,11 +55,11 @@ public class CommentAdapter extends BaseAdapter {
 
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
-                             OnSelectionChangeListener onChangeListener) {
+                             OnCheckedItemsChangeListener onChangeListener) {
         mInflater = LayoutInflater.from(context);
 
         mOnLoadMoreListener = onLoadMoreListener;
-        mOnSelectionChangeListener = onChangeListener;
+        mOnCheckedChangeListener = onChangeListener;
 
         mStatusColorSpam = Color.parseColor("#FF0000");
         mStatusColorUnapproved = Color.parseColor("#D54E21");
@@ -91,29 +93,65 @@ public class CommentAdapter extends BaseAdapter {
         }
     }
 
-    protected void clearSelectedComments() {
-        if (mSelectedCommentPositions.size() > 0) {
-            mSelectedCommentPositions.clear();
+    protected void clearCheckedComments() {
+        if (mCheckedCommentPositions.size() > 0) {
+            mCheckedCommentPositions.clear();
             notifyDataSetChanged();
-            if (mOnSelectionChangeListener != null)
-                mOnSelectionChangeListener.onSelectionChanged();
+            if (mOnCheckedChangeListener != null)
+                mOnCheckedChangeListener.onCheckedItemsChanged();
         }
     }
 
-    protected int getSelectedCommentCount() {
-        return mSelectedCommentPositions.size();
+    protected int getCheckedCommentCount() {
+        return mCheckedCommentPositions.size();
     }
 
-    protected CommentList getSelectedComments() {
+    protected CommentList getCheckedComments() {
         CommentList comments = new CommentList();
 
-        Iterator it = mSelectedCommentPositions.iterator();
+        Iterator it = mCheckedCommentPositions.iterator();
         while (it.hasNext()) {
             int position = (Integer) it.next();
             comments.add(mComments.get(position));
         }
 
         return comments;
+    }
+
+    protected boolean isItemChecked(int position) {
+        return mCheckedCommentPositions.contains(position);
+    }
+
+    protected void setItemChecked(int position, boolean isChecked) {
+        if (isItemChecked(position) == isChecked)
+            return;
+
+        if (isChecked) {
+            mCheckedCommentPositions.add(position);
+        } else {
+            mCheckedCommentPositions.remove(position);
+        }
+
+        notifyDataSetChanged();
+
+        if (mOnCheckedChangeListener != null)
+            mOnCheckedChangeListener.onCheckedItemsChanged();
+    }
+
+    protected void toggleItemChecked(int position) {
+        setItemChecked(position, !isItemChecked(position));
+    }
+
+    protected void setEnableCheckBoxes(boolean enable) {
+        if (enable == mEnableCheckBoxes)
+            return;
+
+        mEnableCheckBoxes = enable;
+        if (mEnableCheckBoxes) {
+            notifyDataSetChanged();
+        } else {
+            clearCheckedComments();
+        }
     }
 
     protected void replaceComments(final CommentList comments) {
@@ -196,18 +234,19 @@ public class CommentAdapter extends BaseAdapter {
                     break;
             }
 
-            bulkCheck.setChecked(mSelectedCommentPositions.contains(position));
-            bulkCheck.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (bulkCheck.isChecked()) {
-                        mSelectedCommentPositions.add(position);
-                    } else {
-                        mSelectedCommentPositions.remove(position);
+            bulkCheck.setVisibility(mEnableCheckBoxes ? View.VISIBLE : View.GONE);
+            if (mEnableCheckBoxes) {
+                bulkCheck.setChecked(mCheckedCommentPositions.contains(position));
+                bulkCheck.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        if (bulkCheck.isChecked()) {
+                            setItemChecked(position, true);
+                        } else {
+                            setItemChecked(position, false);
+                        }
                     }
-                    if (mOnSelectionChangeListener != null)
-                        mOnSelectionChangeListener.onSelectionChanged();
-                }
-            });
+                });
+            }
 
             String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
             if (!TextUtils.isEmpty(avatarUrl)) {
