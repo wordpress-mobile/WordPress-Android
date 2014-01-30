@@ -300,10 +300,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         int id = v.getId();
         if (id == R.id.pubDateButton) {
             WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
-            if(mPubDateText.getText().toString().equals(getResources().getText(R.string.immediately)))
-                showPostDateSelectionDialog();
-            else
-                showCombinedDateSelectionDialog();
+            showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", WordPress.getCurrentBlog().getLocalTableBlogId());
@@ -339,27 +336,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         }
     }
 
-    private void showCombinedDateSelectionDialog() {
-        CharSequence[] seq = {"Change date/time", "Immediately"};
-        AlertDialog.Builder dispDialog = new AlertDialog.Builder(getActivity());
-        dispDialog.setItems(seq, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                if(pos==0)
-                    showPostDateSelectionDialog();
-                else if(pos==1) {
-                    mIsCustomPubDate=false;
-                    mCustomPubDate=0;
-                    mPubDateText.setText(getResources().getText(R.string.immediately));
-                }
-            }
-        });
-        AlertDialog pubDialog = dispDialog.create();
-        pubDialog.show();
-    }
-
-
-
     private void showPostDateSelectionDialog() {
 
         final DatePicker datePicker = new DatePicker(getActivity());
@@ -380,7 +356,18 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         showPostTimeSelectionDialog();
                     }
                 })
-                .setNegativeButton(android.R.string.cancel,
+                .setNegativeButton(getResources().getText(R.string.immediately),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                mPubDateText.setText(getResources().getText(R.string.immediately));
+                                mCustomPubDate=0;
+                                mIsCustomPubDate=false;
+                            }
+                        })
+                .setNeutralButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
 
                             @Override
