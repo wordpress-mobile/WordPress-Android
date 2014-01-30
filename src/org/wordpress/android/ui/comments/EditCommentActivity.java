@@ -29,6 +29,7 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: update this to support new comment table schema (CommentTable.java)
 public class EditCommentActivity extends SherlockActivity {
 
     private int ID_DIALOG_SAVING = 0;

@@ -12,7 +12,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,17 +22,17 @@ public class CommentTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + COMMENTS_TABLE + " ("
-                 + "   blog_id       INTEGER DEFAULT 0,"
-                 + "   post_id       INTEGER DEFAULT 0,"
+                 + "   blog_id      INTEGER DEFAULT 0," // <- local blog id
+                 + "   post_id      INTEGER DEFAULT 0,"
                  + "   comment_id   INTEGER DEFAULT 0,"
-                 + "   author       TEXT,"
                  + "   comment      TEXT,"
                  + "   commentDate  TEXT,"
                  + "   commentDateFormatted TEXT,"
                  + "   status       TEXT,"
-                 + "   url          TEXT,"
-                 + "   email        TEXT,"
-                 + "   postTitle    TEXT,"
+                 + "   author_name  TEXT,"
+                 + "   author_url   TEXT,"
+                 + "   author_email TEXT,"
+                 + "   post_title   TEXT,"
                  + " PRIMARY KEY (blog_id, post_id, comment_id)"
                  + " );");
     }
@@ -65,20 +64,16 @@ public class CommentTable {
         if (comment == null)
             return;
 
-        // first delete existing comment (necessary since there's no primary key or indexes
-        // on this table, which means we can't rely on using CONFLICT_REPLACE below)
-        deleteComment(localBlogId, comment.commentID);
-
         ContentValues values = new ContentValues();
         values.put("blog_id", localBlogId);
         values.put("post_id", comment.postID);
         values.put("comment_id", comment.commentID);
-        values.put("author", StringUtils.notNullStr(comment.authorName));
-        values.put("url", StringUtils.notNullStr(comment.authorURL));
+        values.put("author_name", StringUtils.notNullStr(comment.authorName));
+        values.put("author_url", StringUtils.notNullStr(comment.authorURL));
         values.put("comment", StringUtils.notNullStr(comment.comment));
         values.put("status", StringUtils.notNullStr(comment.getStatus()));
-        values.put("email", StringUtils.notNullStr(comment.authorEmail));
-        values.put("postTitle", StringUtils.notNullStr(comment.postTitle));
+        values.put("author_email", StringUtils.notNullStr(comment.authorEmail));
+        values.put("post_title", StringUtils.notNullStr(comment.postTitle));
         values.put("commentDateFormatted", StringUtils.notNullStr(comment.dateCreatedFormatted));
         // TODO: store actual date here
         values.put("commentDate", StringUtils.notNullStr(comment.dateCreatedFormatted));
@@ -152,15 +147,15 @@ public class CommentTable {
                     values.put("blog_id", thisHash.get("blog_id").toString());
                     values.put("post_id", thisHash.get("post_id").toString());
                     values.put("comment_id", thisHash.get("comment_id").toString());
-                    values.put("author", thisHash.get("author").toString());
+                    values.put("author_name", thisHash.get("author_name").toString());
                     values.put("comment", thisHash.get("comment").toString());
                     values.put("commentDate", thisHash.get("commentDate").toString());
                     values.put("commentDateFormatted",
                             thisHash.get("commentDateFormatted").toString());
                     values.put("status", thisHash.get("status").toString());
-                    values.put("url", thisHash.get("url").toString());
-                    values.put("email", thisHash.get("email").toString());
-                    values.put("postTitle", thisHash.get("postTitle").toString());
+                    values.put("author_url", thisHash.get("author_url").toString());
+                    values.put("author_email", thisHash.get("author_email").toString());
+                    values.put("post_title", thisHash.get("post_title").toString());
 
                     db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -190,13 +185,13 @@ public class CommentTable {
                     values.put("blog_id", localBlogId);
                     values.put("post_id", comment.postID);
                     values.put("comment_id", comment.commentID);
-                    values.put("author", comment.authorName);
                     values.put("comment", comment.comment);
                     values.put("commentDateFormatted", comment.dateCreatedFormatted);
                     values.put("status", comment.getStatus());
-                    values.put("url", comment.authorURL);
-                    values.put("email", comment.authorEmail);
-                    values.put("postTitle", comment.postTitle);
+                    values.put("author_name", comment.authorName);
+                    values.put("author_url", comment.authorURL);
+                    values.put("author_email", comment.authorEmail);
+                    values.put("post_title", comment.postTitle);
 
                     db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -214,11 +209,11 @@ public class CommentTable {
 
     public static void updateComment(int localBlogId, int commentId, Map<?, ?> commentHash) {
         ContentValues values = new ContentValues();
-        values.put("author", commentHash.get("author").toString());
+        values.put("author_name", commentHash.get("author").toString());
         values.put("comment", commentHash.get("comment").toString());
         values.put("status", commentHash.get("status").toString());
-        values.put("url", commentHash.get("url").toString());
-        values.put("email", commentHash.get("email").toString());
+        values.put("author_url", commentHash.get("url").toString());
+        values.put("author_email", commentHash.get("email").toString());
 
         String[] args = {Integer.toString(localBlogId), Integer.toString(commentId)};
         getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
@@ -244,13 +239,13 @@ public class CommentTable {
     }
 
     private static Comment getCommentFromCursor(Cursor c) {
-        String authorName = c.getString(c.getColumnIndex("author"));
+        String authorName = c.getString(c.getColumnIndex("author_name"));
         String content = c.getString(c.getColumnIndex("comment"));
         String dateCreatedFormatted = c.getString(c.getColumnIndex("commentDateFormatted"));
         String status = c.getString(c.getColumnIndex("status"));
-        String authorUrl = c.getString(c.getColumnIndex("url"));
-        String authorEmail = c.getString(c.getColumnIndex("email"));
-        String postTitle = c.getString(c.getColumnIndex("postTitle"));
+        String authorUrl = c.getString(c.getColumnIndex("author_url"));
+        String authorEmail = c.getString(c.getColumnIndex("author_email"));
+        String postTitle = c.getString(c.getColumnIndex("post_title"));
         int postId = c.getInt(c.getColumnIndex("post_id"));
         int commentId = c.getInt(c.getColumnIndex("comment_id"));
         int localBlogId = c.getInt(c.getColumnIndex("blog_id"));
