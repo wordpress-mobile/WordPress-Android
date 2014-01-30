@@ -4,6 +4,11 @@
 # Don't obfuscate output.
 -dontobfuscate
 
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-keep class **.R$*
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
 -keep class com.actionbarsherlock.** { *; }
