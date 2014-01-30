@@ -40,7 +40,7 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
-    <string name="show_and_hide_blogs">Show/hide blogs</string>
+    <string name="show_and_hide_blogs">Show/hide WordPress.com blogs</string>
     <string name="blogs_visibility">Blogs visibility</string>
     <string name="show_all">Show All</string>
     <string name="hide_all">Hide All</string>
@@ -319,6 +319,8 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open Source Licenses</string>
+    <string name="wpcom_blogs">WordPress.com blogs</string>
+    <string name="self_hosted_blogs">Self-hosted blogs</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
