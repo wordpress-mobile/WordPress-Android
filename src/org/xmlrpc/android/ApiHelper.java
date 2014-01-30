@@ -8,6 +8,7 @@ import android.util.Xml;
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.FeatureSet;
@@ -111,7 +112,7 @@ public class ApiHelper {
                     dbVector.add(ctr, dbValues);
                 }
 
-                WordPress.wpDB.saveComments(dbVector);
+                CommentTable.saveComments(dbVector);
             }
         }
     }
@@ -382,7 +383,7 @@ public class ApiHelper {
             dbVector.add(ctr, dbValues);
         }
 
-        WordPress.wpDB.saveComments(dbVector);
+        CommentTable.saveComments(dbVector);
 
         return allComments;
     }

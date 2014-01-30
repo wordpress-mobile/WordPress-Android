@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -22,12 +19,15 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.models.Comment;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Comment;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
 
@@ -247,7 +247,7 @@ public class EditCommentActivity extends SherlockActivity {
                 postHash.remove("content");
 
                 // Save the updates
-                WordPress.wpDB.updateComment(
+                CommentTable.updateComment(
                         WordPress.currentBlog.getLocalTableBlogId(),
                         WordPress.currentComment.commentID,
                         postHash);

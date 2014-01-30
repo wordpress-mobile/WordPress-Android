@@ -24,8 +24,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshBu
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.List;
-
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    CommentActions.OnCommentChangeListener,
@@ -232,11 +230,6 @@ public class CommentsActivity extends WPActionBarActivity
     }
     @Override
     public void onCommentModerated(final Comment comment, final Note note) {
-        refreshCommentList();
-        refreshCommentDetail();
-    }
-    @Override
-    public void onCommentsModerated(final List<Comment> comments) {
         refreshCommentList();
         refreshCommentDetail();
     }

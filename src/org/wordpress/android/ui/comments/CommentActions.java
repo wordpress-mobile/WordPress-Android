@@ -8,6 +8,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -19,7 +20,6 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,7 +51,6 @@ public class CommentActions {
 
     public interface OnCommentChangeListener {
         public void onCommentModerated(final Comment comment, final Note note);
-        public void onCommentsModerated(final List<Comment> comments);
         public void onCommentAdded();
         public void onCommentDeleted();
     }
@@ -265,7 +264,7 @@ public class CommentActions {
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
-                    WordPress.wpDB.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus.toString(newStatus));
+                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus.toString(newStatus));
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -329,7 +328,7 @@ public class CommentActions {
                         result = client.call("wp.editComment", params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success) {
-                            WordPress.wpDB.updateCommentStatus(localBlogId, comment.commentID, newStatusStr);
+                            CommentTable.updateCommentStatus(localBlogId, comment.commentID, newStatusStr);
                             comment.setStatus(newStatusStr);
                             moderatedComments.add(comment);
                         }
@@ -389,7 +388,7 @@ public class CommentActions {
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success) {
-                    WordPress.wpDB.deleteComment(accountId, comment.commentID);
+                    CommentTable.deleteComment(accountId, comment.commentID);
                 }
 
                 if (actionListener != null) {
@@ -444,7 +443,7 @@ public class CommentActions {
                         result = client.call("wp.deleteComment", params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success) {
-                            WordPress.wpDB.deleteComment(localBlogId, comment.commentID);
+                            CommentTable.deleteComment(localBlogId, comment.commentID);
                             deletedComments.add(comment);
                         }
                     } catch (final XMLRPCException e) {

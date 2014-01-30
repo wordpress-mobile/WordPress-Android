@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.reflect.Type;
@@ -341,7 +342,7 @@ public class Blog {
     }
 
     public int getUnmoderatedCommentCount() {
-        return WordPress.wpDB.getUnmoderatedCommentCount(this.localTableBlogId);
+        return CommentTable.getUnmoderatedCommentCount(this.localTableBlogId);
     }
 
     public boolean isScaledImage() {

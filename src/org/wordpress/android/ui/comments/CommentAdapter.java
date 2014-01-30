@@ -14,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.GravatarUtils;
@@ -218,7 +219,7 @@ public class CommentAdapter extends BaseAdapter {
      */
     protected boolean loadComments() {
         int blogId = WordPress.currentBlog.getLocalTableBlogId();
-        mComments = CommentList.fromMap(WordPress.wpDB.loadComments(blogId));
+        mComments = CommentList.fromMap(CommentTable.loadComments(blogId));
         notifyDataSetChanged();
 
         return true;

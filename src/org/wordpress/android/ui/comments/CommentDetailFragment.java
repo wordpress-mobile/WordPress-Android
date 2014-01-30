@@ -25,6 +25,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
@@ -214,7 +215,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     protected void refreshComment() {
         if (!hasComment())
             return;
-        Comment updatedComment = WordPress.wpDB.getComment(mLocalBlogId, getCommentId());
+        Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
         setComment(mLocalBlogId, updatedComment);
     }
 
@@ -616,7 +617,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
                 // first try to get from local db, if that fails request it from the server
-                Comment comment = WordPress.wpDB.getComment(localBlogId, commentId);
+                Comment comment = CommentTable.getComment(localBlogId, commentId);
                 if (comment != null) {
                     comment.setProfileImageUrl(note.getIconURL());
                     setComment(localBlogId, comment);
@@ -654,7 +655,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (comment != null) {
                         if (profileImageUrl != null)
                             comment.setProfileImageUrl(profileImageUrl);
-                        WordPress.wpDB.addComment(localBlogId, comment);
+                        CommentTable.addComment(localBlogId, comment);
                         setComment(localBlogId, comment);
                     }
                 }
