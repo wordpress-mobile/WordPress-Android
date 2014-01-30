@@ -73,7 +73,6 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">Sorry, an error occurred when accessing this blog.</string>
     <string name="post_not_found">Sorry, an error occurred when loading the post. Please refresh your posts and try again.</string>
-    <string name="wpcom" translatable="false">WordPress.com</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="all">All</string>
@@ -651,13 +650,11 @@
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
-    <string name="create_first_blog_wpcom">Create your first WordPress.com site</string>
     <string name="create_new_blog_wpcom">Create a WordPress.com&#160;blog</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
     <string name="creating_your_account">Creating your account</string>
     <string name="creating_your_site">Creating your site</string>
-    <string name="required_fields">Required Fields</string>
     <string name="required_field">Required Field</string>
     <string name="username_password_required">Please fill in all of the fields before submitting.</string>
     <string name="invalid_email_message">Your email address is not valid.</string>
