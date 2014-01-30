@@ -3,20 +3,24 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Comment {
     public int postID;
     public int commentID;
+
     private String authorName;
     private String status;
     private String comment;
     private String postTitle;
     private String authorUrl;
     private String authorEmail;
-    private String dtPublished;
+    private String published;
     private String profileImageUrl;
 
     public Comment(int postID,
@@ -38,7 +42,7 @@ public class Comment {
         this.authorUrl = authorURL;
         this.authorEmail = authorEmail;
         this.profileImageUrl = profileImageUrl;
-        this.dtPublished = pubDateGmt;
+        this.published = pubDateGmt;
     }
 
     private Comment() {
@@ -56,7 +60,10 @@ public class Comment {
         Comment comment = new Comment();
         comment.commentID = json.optInt("ID");
         comment.status = JSONUtil.getString(json, "status");
-        comment.dtPublished = JSONUtil.getString(json, "date");
+        comment.published = JSONUtil.getString(json, "date");
+
+        //java.util.Date date = (java.util.Date)contentHash.get("date_created_gmt");
+        //pubDate = getFormattedCommentDate(context, date);
 
         // note that the content often contains html, and on rare occasions may contain
         // script blocks that need to be removed (only seen with blogs that use the
@@ -107,11 +114,11 @@ public class Comment {
         this.status = StringUtils.notNullStr(status);
     }
 
-    public String getPublishedDate() {
-        return StringUtils.notNullStr(dtPublished);
+    public String getPublished() {
+        return StringUtils.notNullStr(published);
     }
-    public void setPublishedDate(String pubDate) {
-        dtPublished = StringUtils.notNullStr(pubDate);
+    public void setPublished(String pubDate) {
+        published = StringUtils.notNullStr(pubDate);
     }
 
     public boolean hasAuthorName() {
@@ -158,4 +165,42 @@ public class Comment {
         postTitle = StringUtils.notNullStr(title);
     }
 
+    /****
+     * the following are transient variables whose sole purpose is to cache commonly-used values
+     * for the comment that speeds up accessing them inside adapters
+     ****/
+
+    /*
+     * converts iso8601 published date to an actual java date
+     */
+    private transient java.util.Date dtPublished;
+    public java.util.Date getDatePublished() {
+        if (dtPublished == null)
+            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+        return dtPublished;
+    }
+
+    private transient String unescapedCommentText;
+    public String getUnescapedCommentText() {
+        if (unescapedCommentText == null)
+            unescapedCommentText = StringUtils.unescapeHTML(getCommentText()).trim();
+        return unescapedCommentText;
+    }
+
+    /*
+     * returns the avatar url as a photon/gravatar url set to the passed size
+     */
+    private transient String avatarForDisplay;
+    public String getAvatarForDisplay(int avatarSize) {
+        if (avatarForDisplay==null) {
+            if (hasProfileImageUrl()) {
+                avatarForDisplay = PhotonUtils.fixAvatar(profileImageUrl, avatarSize);
+            } else if (hasAuthorEmail()) {
+                avatarForDisplay = GravatarUtils.gravatarUrlFromEmail(authorEmail, avatarSize);
+            } else {
+                avatarForDisplay = "";
+            }
+        }
+        return avatarForDisplay;
+    }
 }

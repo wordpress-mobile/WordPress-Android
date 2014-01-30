@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,10 +43,13 @@ public class CommentAdapter extends BaseAdapter {
 
     private int mStatusColorSpam;
     private int mStatusColorUnapproved;
+    private int mAvatarSz;
 
     private String mStatusTextSpam;
     private String mStatusTextUnapproved;
     private String mAnonymous;
+
+    private Drawable mDefaultAvatar;
 
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
@@ -61,6 +64,9 @@ public class CommentAdapter extends BaseAdapter {
         mStatusTextSpam = context.getResources().getString(R.string.spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.unapproved);
         mAnonymous = context.getString(R.string.anonymous);
+
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mDefaultAvatar = context.getResources().getDrawable(R.drawable.placeholder);
     }
 
     @Override
@@ -143,10 +149,10 @@ public class CommentAdapter extends BaseAdapter {
 
     class CommentEntryWrapper {
         private TextView txtName;
-        private TextView txtEmailURL;
         private TextView txtComment;
         private TextView txtStatus;
         private TextView txtPostTitle;
+        private TextView txtDate;
         private NetworkImageView imgAvatar;
         private View row;
         private CheckBox bulkCheck;
@@ -155,23 +161,21 @@ public class CommentAdapter extends BaseAdapter {
             this.row = row;
 
             txtName = (TextView) row.findViewById(R.id.name);
-            txtEmailURL = (TextView) row.findViewById(R.id.email_url);
             txtComment = (TextView) row.findViewById(R.id.comment);
             txtStatus = (TextView) row.findViewById(R.id.status);
             txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
+            txtDate = (TextView) row.findViewById(R.id.text_date);
             bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
+
             imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         }
 
         void populateFrom(Comment comment, final int position) {
             txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
             txtPostTitle.setText(comment.getPostTitle());
-            txtComment.setText(StringUtils.unescapeHTML(comment.getCommentText()));
-
-            // use the email address if the commenter didn't add a url
-            String fEmailURL = (comment.hasAuthorUrl() ? comment.getAuthorUrl() : comment.getAuthorEmail());
-            txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
-            txtEmailURL.setText(fEmailURL);
+            txtComment.setText(comment.getUnescapedCommentText());
+            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
             row.setId(Integer.valueOf(comment.commentID));
 
@@ -205,13 +209,11 @@ public class CommentAdapter extends BaseAdapter {
                 }
             });
 
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            if (comment.hasProfileImageUrl()) {
-                imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
-            } else if (comment.hasAuthorEmail()) {
-                imgAvatar.setImageUrl(GravatarUtils.gravatarUrlFromEmail(comment.getAuthorEmail()), WordPress.imageLoader);
+            String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
             } else {
-                imgAvatar.setImageResource(R.drawable.placeholder);
+                imgAvatar.setImageDrawable(mDefaultAvatar);
             }
         }
     }
@@ -221,7 +223,16 @@ public class CommentAdapter extends BaseAdapter {
      */
     protected boolean loadComments() {
         int localBlogId = WordPress.currentBlog.getLocalTableBlogId();
-        mComments = CommentTable.loadComments(localBlogId);
+
+        mComments = CommentTable.getCommentsForBlog(localBlogId);
+
+        // pre-calc transient values so they're cached when used by getView()
+        for (Comment comment: mComments) {
+            comment.getDatePublished();
+            comment.getUnescapedCommentText();
+            comment.getAvatarForDisplay(mAvatarSz);
+        }
+
         notifyDataSetChanged();
 
         return true;

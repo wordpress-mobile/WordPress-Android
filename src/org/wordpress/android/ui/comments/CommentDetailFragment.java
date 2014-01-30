@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MessageBarUtils;
@@ -261,7 +262,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
-        txtDate.setText(mComment.getPublishedDate());
+        txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         txtContent.setLinksClickable(true);

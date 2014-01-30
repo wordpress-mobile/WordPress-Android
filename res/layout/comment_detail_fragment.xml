@@ -76,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:maxLines="1"
+                android:drawableLeft="@drawable/noticon_clock"
                 android:text="text_date" />
 
             <org.wordpress.android.widgets.WPTextView

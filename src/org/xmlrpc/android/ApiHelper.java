@@ -17,6 +17,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.xmlpull.v1.XmlPullParser;
@@ -272,6 +273,7 @@ public class ApiHelper {
         Map<?, ?> contentHash;
         int commentID, postID;
         String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
+        java.util.Date date;
         CommentList comments = new CommentList();
 
         for (int ctr = 0; ctr < result.length; ctr++) {
@@ -280,11 +282,13 @@ public class ApiHelper {
             status = contentHash.get("status").toString();
             postID = Integer.parseInt(contentHash.get("post_id").toString());
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            pubDate = contentHash.get("date_created_gmt").toString();
             authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
+
+            date = (java.util.Date)contentHash.get("date_created_gmt");
+            pubDate = DateTimeUtils.javaDateToIso8601(date);
 
             // TODO: store localBlogId with comment
             Comment comment = new Comment(
@@ -324,9 +328,6 @@ public class ApiHelper {
     /**
      * nbradbury 11/15/13 - this code was originally in refreshComments() above, moved here
      * for re-usability
-     * @param context
-     * @param date
-     * @return
      */
     /*public static String getFormattedCommentDate(Context context, java.util.Date date) {
         if (date == null)

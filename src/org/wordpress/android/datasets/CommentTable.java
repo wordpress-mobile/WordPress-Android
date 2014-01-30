@@ -21,17 +21,17 @@ public class CommentTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + COMMENTS_TABLE + " ("
-                 + "   blog_id      INTEGER DEFAULT 0," // <- local blog id
-                 + "   post_id      INTEGER DEFAULT 0,"
-                 + "   comment_id   INTEGER DEFAULT 0,"
-                 + "   comment      TEXT,"
-                 + "   dt_published TEXT,"
-                 + "   status       TEXT,"
-                 + "   author_name  TEXT,"
-                 + "   author_url   TEXT,"
-                 + "   author_email TEXT,"
-                 + "   post_title   TEXT,"
-                 + " PRIMARY KEY (blog_id, post_id, comment_id)"
+                 + "    blog_id      INTEGER DEFAULT 0," // <- local blog id
+                 + "    post_id      INTEGER DEFAULT 0,"
+                 + "    comment_id   INTEGER DEFAULT 0,"
+                 + "    comment      TEXT,"
+                 + "    published    TEXT,"
+                 + "    status       TEXT,"
+                 + "    author_name  TEXT,"
+                 + "    author_url   TEXT,"
+                 + "    author_email TEXT,"
+                 + "    post_title   TEXT,"
+                 + "    PRIMARY KEY (blog_id, post_id, comment_id)"
                  + " );");
     }
 
@@ -72,7 +72,7 @@ public class CommentTable {
         values.put("status",        comment.getStatus());
         values.put("author_email",  comment.getAuthorEmail());
         values.put("post_title",    comment.getPostTitle());
-        values.put("dt_published",  comment.getPublishedDate());
+        values.put("published",  comment.getPublished());
 
         getWritableDb().insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -108,11 +108,11 @@ public class CommentTable {
         return (count > 0);
     }
 
-    public static CommentList loadComments(int localBlogId) {
+    public static CommentList getCommentsForBlog(int localBlogId) {
         CommentList comments = new CommentList();
 
         String[] args = {Integer.toString(localBlogId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=?", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC", args);
 
         try {
             if (c.moveToFirst()) {
@@ -146,8 +146,8 @@ public class CommentTable {
                     values.put("author_name", thisHash.get("author_name").toString());
                     values.put("comment", thisHash.get("comment").toString());
                     values.put("commentDate", thisHash.get("commentDate").toString());
-                    values.put("dt_published",
-                            thisHash.get("dt_published").toString());
+                    values.put("published",
+                            thisHash.get("published").toString());
                     values.put("status", thisHash.get("status").toString());
                     values.put("author_url", thisHash.get("author_url").toString());
                     values.put("author_email", thisHash.get("author_email").toString());
@@ -182,7 +182,7 @@ public class CommentTable {
                     values.put("post_id",       comment.postID);
                     values.put("comment_id",    comment.commentID);
                     values.put("comment",       comment.getCommentText());
-                    values.put("dt_published",  comment.getPublishedDate());
+                    values.put("published",  comment.getPublished());
                     values.put("status",        comment.getStatus());
                     values.put("author_name",   comment.getAuthorName());
                     values.put("author_url",    comment.getAuthorUrl());
@@ -238,7 +238,7 @@ public class CommentTable {
     private static Comment getCommentFromCursor(Cursor c) {
         final String authorName = c.getString(c.getColumnIndex("author_name"));
         final String content = c.getString(c.getColumnIndex("comment"));
-        final String dtPublished = c.getString(c.getColumnIndex("dt_published"));
+        final String published = c.getString(c.getColumnIndex("published"));
         final String status = c.getString(c.getColumnIndex("status"));
         final String authorUrl = c.getString(c.getColumnIndex("author_url"));
         final String authorEmail = c.getString(c.getColumnIndex("author_email"));
@@ -254,7 +254,7 @@ public class CommentTable {
                 postId,
                 commentId,
                 authorName,
-                dtPublished,
+                published,
                 content,
                 status,
                 postTitle,
