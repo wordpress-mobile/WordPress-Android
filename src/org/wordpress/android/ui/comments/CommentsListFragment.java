@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuInflater;
@@ -52,10 +52,6 @@ public class CommentsListFragment extends Fragment {
     protected static final int MENU_ID_DELETE = 103;
     protected static final int MENU_ID_EDIT = 105;
 
-    // dialog IDs
-    private static final int ID_DIALOG_MODERATING = 1;
-    private static final int ID_DIALOG_DELETING = 2;
-
     private static final int COMMENTS_PER_PAGE = 30;
 
     @Override
@@ -78,10 +74,10 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            // adapter calls this when checked comments have changed
-            CommentAdapter.OnCheckedItemsChangeListener changeListener = new CommentAdapter.OnCheckedItemsChangeListener() {
+            // adapter calls this when selected comments have changed (CAB)
+            CommentAdapter.OnSelectedItemsChangeListener changeListener = new CommentAdapter.OnSelectedItemsChangeListener() {
                 @Override
-                public void onCheckedItemsChanged() {
+                public void onSelectedItemsChanged() {
                     if (mActionMode != null)
                         updateActionModeTitle();
                 }
@@ -96,8 +92,8 @@ public class CommentsListFragment extends Fragment {
         return getCommentAdapter().loadComments();
     }
 
-    protected int getCheckedCommentCount() {
-        return getCommentAdapter().getCheckedCommentCount();
+    protected int getSelectedCommentCount() {
+        return getCommentAdapter().getSelectedCommentCount();
     }
 
     protected void clear() {
@@ -128,12 +124,7 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.view_comments_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-
-        TextView emptyView = (TextView) view.findViewById(android.R.id.empty);
-        if (emptyView != null) {
-            emptyView.setText(getText(R.string.comments_empty_list));
-            mListView.setEmptyView(emptyView);
-        }
+        mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -154,11 +145,11 @@ public class CommentsListFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     private boolean moderateSelectedComments(CommentStatus newStatus) {
-        final CommentList checkedComments = getCommentAdapter().getCheckedComments();
+        final CommentList selectedComments = getCommentAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
 
         // build list of comments whose status is different than passed
-        for (Comment comment: checkedComments) {
+        for (Comment comment: selectedComments) {
             if (comment.getStatusEnum() != newStatus)
                 updateComments.add(comment);
         }
@@ -168,16 +159,16 @@ public class CommentsListFragment extends Fragment {
         if (!NetworkUtils.checkConnection(getActivity()))
             return false;
 
-        getActivity().showDialog(ID_DIALOG_MODERATING);
+        getActivity().showDialog(CommentsActivity.ID_DIALOG_MODERATING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
                 if (!hasActivity())
                     return;
                 finishActionMode();
-                dismissDialog(ID_DIALOG_MODERATING);
+                dismissDialog(CommentsActivity.ID_DIALOG_MODERATING);
                 if (moderatedComments.size() > 0) {
-                    getCommentAdapter().clearCheckedComments();
+                    getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
                     // update the comment counter on the menu drawer
                     if (getActivity() instanceof  WPActionBarActivity)
@@ -192,21 +183,63 @@ public class CommentsListFragment extends Fragment {
         return true;
     }
 
+    private void confirmSpamComments() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dlg_confirm_spam_comments);
+        builder.setTitle(R.string.spam);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.spam_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                moderateSelectedComments(CommentStatus.SPAM);
+            }
+        });
+        builder.setNegativeButton(R.string.spam_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void confirmDeleteComments() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dlg_confirm_delete_comments);
+        builder.setTitle(R.string.delete);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.delete_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                deleteSelectedComments();
+            }
+        });
+        builder.setNegativeButton(R.string.delete_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private boolean deleteSelectedComments() {
         if (!NetworkUtils.checkConnection(getActivity()))
             return false;
 
-        final CommentList checkedComments = getCommentAdapter().getCheckedComments();
-        getActivity().showDialog(ID_DIALOG_DELETING);
+        final CommentList selectedComments = getCommentAdapter().getSelectedComments();
+        getActivity().showDialog(CommentsActivity.ID_DIALOG_DELETING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!hasActivity())
                     return;
                 finishActionMode();
-                dismissDialog(ID_DIALOG_DELETING);
+                dismissDialog(CommentsActivity.ID_DIALOG_DELETING);
                 if (deletedComments.size() > 0) {
-                    getCommentAdapter().clearCheckedComments();
+                    getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
                     // update the comment counter on the menu drawer
                     if (getActivity() instanceof  WPActionBarActivity)
@@ -217,7 +250,7 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
-        CommentActions.deleteComments(WordPress.getCurrentLocalTableBlogId(), checkedComments, listener);
+        CommentActions.deleteComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, listener);
         return true;
     }
 
@@ -232,7 +265,7 @@ public class CommentsListFragment extends Fragment {
                     mOnCommentSelectedListener.onCommentSelected(comment);
                     getListView().invalidateViews();
                 } else {
-                    getCommentAdapter().toggleItemChecked(position);
+                    getCommentAdapter().toggleItemSelected(position);
                     updateActionModeTitle();
                 }
             }
@@ -245,12 +278,12 @@ public class CommentsListFragment extends Fragment {
                 if (mActionMode == null) {
                     if (getActivity() instanceof WPActionBarActivity) {
                         ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
-                        getCommentAdapter().setEnableCheckBoxes(true);
-                        getCommentAdapter().setItemChecked(position, true);
+                        getCommentAdapter().setEnableSelection(true);
+                        getCommentAdapter().setItemSelected(position, true);
                         updateActionModeTitle();
                     }
                 } else {
-                    getCommentAdapter().toggleItemChecked(position);
+                    getCommentAdapter().toggleItemSelected(position);
                 }
                 return true;
             }
@@ -390,9 +423,9 @@ public class CommentsListFragment extends Fragment {
     private void updateActionModeTitle() {
         if (mActionMode == null)
             return;
-        int numChecked = getCheckedCommentCount();
-        if (numChecked > 0) {
-            mActionMode.setTitle(Integer.toString(numChecked));
+        int numSelected = getSelectedCommentCount();
+        if (numSelected > 0) {
+            mActionMode.setTitle(Integer.toString(numSelected));
         } else {
             mActionMode.setTitle("");
         }
@@ -424,6 +457,12 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, com.actionbarsherlock.view.MenuItem menuItem) {
+            int numSelected = getSelectedCommentCount();
+            if (numSelected == 0)
+                return false;
+
+            // note that approve/disapprove happen without confirmation, but confirmation is required
+            // before comments are deleted/spammed
             switch (menuItem.getItemId()) {
                 case R.id.menu_approve :
                     moderateSelectedComments(CommentStatus.APPROVED);
@@ -431,12 +470,11 @@ public class CommentsListFragment extends Fragment {
                 case R.id.menu_unapprove :
                     moderateSelectedComments(CommentStatus.UNAPPROVED);
                     return true;
-                // TODO: confirm spam/delete
                 case R.id.menu_spam :
-                    moderateSelectedComments(CommentStatus.SPAM);
+                    confirmSpamComments();
                     return true;
                 case R.id.menu_trash :
-                    deleteSelectedComments();
+                    confirmDeleteComments();
                     return true;
                 default:
                     return false;
@@ -445,7 +483,7 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            getCommentAdapter().setEnableCheckBoxes(false);
+            getCommentAdapter().setEnableSelection(false);
             mActionMode = null;
         }
     }

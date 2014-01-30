@@ -30,36 +30,35 @@ public class CommentAdapter extends BaseAdapter {
         public void onLoadMore();
     }
 
-    protected static interface OnCheckedItemsChangeListener {
-        public void onCheckedItemsChanged();
+    protected static interface OnSelectedItemsChangeListener {
+        public void onSelectedItemsChanged();
     }
 
     private LayoutInflater mInflater;
     private OnLoadMoreListener mOnLoadMoreListener;
-    private OnCheckedItemsChangeListener mOnCheckedChangeListener;
+    private OnSelectedItemsChangeListener mOnSelectedChangeListener;
     private CommentList mComments = new CommentList();
-    private HashSet<Integer> mCheckedCommentPositions = new HashSet<Integer>();
+    private HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
 
     private int mStatusColorSpam;
     private int mStatusColorUnapproved;
     private int mAvatarSz;
 
-    private boolean mEnableCheckBoxes;
-
     private String mStatusTextSpam;
     private String mStatusTextUnapproved;
     private String mAnonymous;
 
-    private Drawable mDefaultAvatar;
+    private boolean mEnableSelection;
     private int mSelectedColor;
-
+    private Drawable mDefaultAvatar;
+    
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
-                             OnCheckedItemsChangeListener onChangeListener) {
+                             OnSelectedItemsChangeListener onChangeListener) {
         mInflater = LayoutInflater.from(context);
 
         mOnLoadMoreListener = onLoadMoreListener;
-        mOnCheckedChangeListener = onChangeListener;
+        mOnSelectedChangeListener = onChangeListener;
 
         mStatusColorSpam = Color.parseColor("#FF0000");
         mStatusColorUnapproved = Color.parseColor("#D54E21");
@@ -94,23 +93,37 @@ public class CommentAdapter extends BaseAdapter {
         }
     }
 
-    protected void clearCheckedComments() {
-        if (mCheckedCommentPositions.size() > 0) {
-            mCheckedCommentPositions.clear();
+    protected void setEnableSelection(boolean enable) {
+        if (enable == mEnableSelection)
+            return;
+
+        mEnableSelection = enable;
+        if (mEnableSelection) {
             notifyDataSetChanged();
-            if (mOnCheckedChangeListener != null)
-                mOnCheckedChangeListener.onCheckedItemsChanged();
+        } else {
+            clearSelectedComments();
         }
     }
 
-    protected int getCheckedCommentCount() {
-        return mCheckedCommentPositions.size();
+    protected void clearSelectedComments() {
+        if (mSelectedPositions.size() > 0) {
+            mSelectedPositions.clear();
+            notifyDataSetChanged();
+            if (mOnSelectedChangeListener != null)
+                mOnSelectedChangeListener.onSelectedItemsChanged();
+        }
     }
 
-    protected CommentList getCheckedComments() {
-        CommentList comments = new CommentList();
+    protected int getSelectedCommentCount() {
+        return mSelectedPositions.size();
+    }
 
-        Iterator it = mCheckedCommentPositions.iterator();
+    protected CommentList getSelectedComments() {
+        CommentList comments = new CommentList();
+        if (!mEnableSelection)
+            return comments;
+
+        Iterator it = mSelectedPositions.iterator();
         while (it.hasNext()) {
             int position = (Integer) it.next();
             if (isPositionValid(position))
@@ -120,40 +133,28 @@ public class CommentAdapter extends BaseAdapter {
         return comments;
     }
 
-    protected boolean isItemChecked(int position) {
-        return mCheckedCommentPositions.contains(position);
+    protected boolean isItemSelected(int position) {
+        return mSelectedPositions.contains(position);
     }
 
-    protected void setItemChecked(int position, boolean isChecked) {
-        if (isItemChecked(position) == isChecked)
+    protected void setItemSelected(int position, boolean isSelected) {
+        if (isItemSelected(position) == isSelected)
             return;
 
-        if (isChecked) {
-            mCheckedCommentPositions.add(position);
+        if (isSelected) {
+            mSelectedPositions.add(position);
         } else {
-            mCheckedCommentPositions.remove(position);
+            mSelectedPositions.remove(position);
         }
 
         notifyDataSetChanged();
 
-        if (mOnCheckedChangeListener != null)
-            mOnCheckedChangeListener.onCheckedItemsChanged();
+        if (mOnSelectedChangeListener != null)
+            mOnSelectedChangeListener.onSelectedItemsChanged();
     }
 
-    protected void toggleItemChecked(int position) {
-        setItemChecked(position, !isItemChecked(position));
-    }
-
-    protected void setEnableCheckBoxes(boolean enable) {
-        if (enable == mEnableCheckBoxes)
-            return;
-
-        mEnableCheckBoxes = enable;
-        if (mEnableCheckBoxes) {
-            notifyDataSetChanged();
-        } else {
-            clearCheckedComments();
-        }
+    protected void toggleItemSelected(int position) {
+        setItemSelected(position, !isItemSelected(position));
     }
 
     private boolean isPositionValid(int position) {
@@ -211,7 +212,7 @@ public class CommentAdapter extends BaseAdapter {
             holder.imgAvatar.setImageDrawable(mDefaultAvatar);
         }
 
-        if (mEnableCheckBoxes && isItemChecked(position)) {
+        if (mEnableSelection && isItemSelected(position)) {
             convertView.setBackgroundColor(mSelectedColor);
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);

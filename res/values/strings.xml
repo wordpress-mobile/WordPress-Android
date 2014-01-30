@@ -261,6 +261,14 @@
     <string name="approve">Approve</string>
     <string name="unapprove">Unapprove</string>
 
+    <!-- comment moderation confirmation -->
+    <string name="delete_yes">Delete</string>
+    <string name="delete_no">Don\'t Delete</string>
+    <string name="spam_yes">Mark as Spam</string>
+    <string name="spam_no">Don\'t Mark as Spam</string>
+    <string name="dlg_confirm_delete_comments">Delete selected comments?</string>
+    <string name="dlg_confirm_spam_comments">Mark selected comments as spam?</string>
+
     <!-- new account view -->
     <string name="attempting_configure">Signing in&#8230;</string>
     <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
