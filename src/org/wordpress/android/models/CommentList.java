@@ -1,11 +1,6 @@
 package org.wordpress.android.models;
 
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nbradbury on 29-Jan-2014
@@ -53,7 +48,7 @@ public class CommentList extends ArrayList<Comment> {
     /*
      * use this to convert the results of WordPress.wpDB.loadComments() to a CommentList
      */
-    public static CommentList fromMap(List<Map<String, Object>> commentMap) {
+    /*public static CommentList fromMap(List<Map<String, Object>> commentMap) {
         CommentList comments = new CommentList();
         if (commentMap == null || commentMap.size()==0)
             return comments;
@@ -86,6 +81,6 @@ public class CommentList extends ArrayList<Comment> {
         }
 
         return comments;
-    }
+    }*/
 
 }

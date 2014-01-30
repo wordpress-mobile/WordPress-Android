@@ -170,6 +170,9 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
 
+        // TODO: nbradbury - remove this once comment table schema has settings
+        CommentTable.reset(db);
+
         // Update tables for new installs and app updates
         try {
             int currentVersion = db.getVersion();

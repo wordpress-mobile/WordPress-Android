@@ -261,7 +261,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        txtName.setText(TextUtils.isEmpty(mComment.name) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.name));
+        txtName.setText(TextUtils.isEmpty(mComment.authorName) ? getString(R.string.anonymous) : StringUtils.unescapeHTML(mComment.authorName));
         txtDate.setText(mComment.dateCreatedFormatted);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
@@ -651,7 +651,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (hasActivity()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
-                    Comment comment = new Comment(jsonObject);
+                    Comment comment = Comment.fromJSON(jsonObject);
                     if (comment != null) {
                         if (profileImageUrl != null)
                             comment.setProfileImageUrl(profileImageUrl);

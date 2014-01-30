@@ -320,7 +320,7 @@ public class CommentsListFragment extends Fragment {
     /*
      * task to retrieve latest comments from server
      */
-    private class GetRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
+    private class GetRecentCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         boolean isLoadingMore;
 
@@ -346,7 +346,7 @@ public class CommentsListFragment extends Fragment {
         }
 
         @Override
-        protected Map<Integer, Map<?, ?>> doInBackground(Void... args) {
+        protected CommentList doInBackground(Void... args) {
             if (!hasActivity())
                 return null;
 
@@ -371,7 +371,7 @@ public class CommentsListFragment extends Fragment {
             }
         }
 
-        protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
+        protected void onPostExecute(CommentList comments) {
             mIsRetrievingComments = false;
             if (!hasActivity())
                 return;
@@ -386,16 +386,16 @@ public class CommentsListFragment extends Fragment {
             if (isCancelled())
                 return;
 
-            mCanLoadMoreComments = (commentsResult != null && commentsResult.size() > 0);
+            mCanLoadMoreComments = (comments != null && comments.size() > 0);
 
             // result will be null on error OR if no more comments exists
-            if (commentsResult == null) {
+            if (comments == null) {
                 if (isError && !getActivity().isFinishing())
                     ToastUtils.showToast(getActivity(), R.string.error_refresh_comments, ToastUtils.Duration.LONG);
                 return;
             }
 
-            if (commentsResult.size() > 0)
+            if (comments.size() > 0)
                 getCommentAdapter().loadComments();
         }
     }

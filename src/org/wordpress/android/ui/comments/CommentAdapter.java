@@ -164,12 +164,12 @@ public class CommentAdapter extends BaseAdapter {
         }
 
         void populateFrom(Comment comment, final int position) {
-            txtName.setText(!TextUtils.isEmpty(comment.name) ? comment.name : mAnonymous);
+            txtName.setText(!TextUtils.isEmpty(comment.authorName) ? comment.authorName : mAnonymous);
             txtPostTitle.setText(comment.postTitle);
             txtComment.setText(StringUtils.unescapeHTML(comment.comment));
 
             // use the email address if the commenter didn't add a url
-            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.emailURL : comment.authorURL);
+            String fEmailURL = (TextUtils.isEmpty(comment.authorURL) ? comment.authorEmail : comment.authorURL);
             txtEmailURL.setVisibility(TextUtils.isEmpty(fEmailURL) ? View.GONE : View.VISIBLE);
             txtEmailURL.setText(fEmailURL);
 
@@ -194,7 +194,7 @@ public class CommentAdapter extends BaseAdapter {
 
             bulkCheck.setChecked(mSelectedCommentPositions.contains(position));
             bulkCheck.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View arg0) {
+                public void onClick(View view) {
                     if (bulkCheck.isChecked()) {
                         mSelectedCommentPositions.add(position);
                     } else {
@@ -208,6 +208,8 @@ public class CommentAdapter extends BaseAdapter {
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             if (comment.hasProfileImageUrl()) {
                 imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
+            } else if (comment.hasAuthorEmail()) {
+                imgAvatar.setImageUrl(GravatarUtils.gravatarUrlFromEmail(comment.authorEmail), WordPress.imageLoader);
             } else {
                 imgAvatar.setImageResource(R.drawable.placeholder);
             }
@@ -218,8 +220,8 @@ public class CommentAdapter extends BaseAdapter {
      * load comments from local db
      */
     protected boolean loadComments() {
-        int blogId = WordPress.currentBlog.getLocalTableBlogId();
-        mComments = CommentList.fromMap(CommentTable.loadComments(blogId));
+        int localBlogId = WordPress.currentBlog.getLocalTableBlogId();
+        mComments = CommentTable.loadComments(localBlogId);
         notifyDataSetChanged();
 
         return true;

@@ -56,7 +56,7 @@ public class EditCommentActivity extends SherlockActivity {
         }
 
         final EditText authorNameET = (EditText) this.findViewById(R.id.author_name);
-        authorNameET.setText(comment.name);
+        authorNameET.setText(comment.authorName);
 
         final EditText authorEmailET = (EditText) this.findViewById(R.id.author_email);
         authorEmailET.setText(comment.authorEmail);
@@ -188,7 +188,7 @@ public class EditCommentActivity extends SherlockActivity {
 
         // If nothing has been changed, skip the rest and just return.
         Comment comment = WordPress.currentComment;
-        if(authorName.equals(comment.name) &&
+        if(authorName.equals(comment.authorName) &&
                 authorEmail.equals(comment.authorEmail) &&
                 authorURL.equals(comment.authorURL) &&
                 content.equals(comment.comment) &&
@@ -258,7 +258,7 @@ public class EditCommentActivity extends SherlockActivity {
                 WordPress.currentComment.authorURL = postHash.get("url");
                 WordPress.currentComment.comment = postHash.get("comment");
                 WordPress.currentComment.setStatus(postHash.get("status"));
-                WordPress.currentComment.name = postHash.get("author");
+                WordPress.currentComment.authorName = postHash.get("author");
             }
         } catch (XMLRPCException e) {
             xmlErrorMessage = getResources().getText(R.string.error_edit_comment).toString();

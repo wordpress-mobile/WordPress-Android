@@ -7,14 +7,13 @@ import android.database.sqlite.SQLiteException;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * Created by nbradbury on 1/30/14.
@@ -24,18 +23,18 @@ public class CommentTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + COMMENTS_TABLE + " ("
-                 + "   blogID text,"
-                 + "   postID text,"
-                 + "   iCommentID integer,"
-                 + "   author text,"
-                 + "   comment text,"
-                 + "   commentDate text,"
-                 + "   commentDateFormatted text,"
-                 + "   status text,"
-                 + "   url text,"
-                 + "   email text,"
-                 + "   postTitle text,"
-                 + "   PRIMARY KEY (blogID, postID, iCommentID)"
+                 + "   blog_id       INTEGER DEFAULT 0,"
+                 + "   post_id       INTEGER DEFAULT 0,"
+                 + "   comment_id   INTEGER DEFAULT 0,"
+                 + "   author       TEXT,"
+                 + "   comment      TEXT,"
+                 + "   commentDate  TEXT,"
+                 + "   commentDateFormatted TEXT,"
+                 + "   status       TEXT,"
+                 + "   url          TEXT,"
+                 + "   email        TEXT,"
+                 + "   postTitle    TEXT,"
+                 + " PRIMARY KEY (blog_id, post_id, comment_id)"
                  + " );");
     }
 
@@ -62,7 +61,7 @@ public class CommentTable {
      * @param localBlogId - unique id in account table for the blog the comment is from
      * @param comment - comment object to store
      */
-    public static void addComment(int localBlogId, Comment comment) {
+    public static void addComment(int localBlogId, final Comment comment) {
         if (comment == null)
             return;
 
@@ -71,10 +70,10 @@ public class CommentTable {
         deleteComment(localBlogId, comment.commentID);
 
         ContentValues values = new ContentValues();
-        values.put("blogID", localBlogId);
-        values.put("postID", StringUtils.notNullStr(comment.postID));
-        values.put("iCommentID", comment.commentID);
-        values.put("author", StringUtils.notNullStr(comment.name));
+        values.put("blog_id", localBlogId);
+        values.put("post_id", comment.postID);
+        values.put("comment_id", comment.commentID);
+        values.put("author", StringUtils.notNullStr(comment.authorName));
         values.put("url", StringUtils.notNullStr(comment.authorURL));
         values.put("comment", StringUtils.notNullStr(comment.comment));
         values.put("status", StringUtils.notNullStr(comment.getStatus()));
@@ -94,45 +93,15 @@ public class CommentTable {
      * @return Comment if found, null otherwise
      */
     public static Comment getComment(int localBlogId, int commentId) {
-        String[] cols = {"author",
-                "comment",
-                "commentDateFormatted",
-                "status",
-                "url",
-                "email",
-                "postTitle",
-                "postID"};
-        String[] args = {Integer.toString(localBlogId),
-                Integer.toString(commentId)};
-        Cursor c = getReadableDb().query(COMMENTS_TABLE,
-                cols,
-                "blogID=? AND iCommentID=?",
-                args,
-                null, null, null);
-
-        if (!c.moveToFirst())
-            return null;
-
-        String authorName = c.getString(0);
-        String content = c.getString(1);
-        String dateCreatedFormatted = c.getString(2);
-        String status = c.getString(3);
-        String authorUrl = c.getString(4);
-        String authorEmail = c.getString(5);
-        String postTitle = c.getString(6);
-        String postId = c.getString(7);
-
-        return new Comment(postId,
-                           commentId,
-                           0,
-                           authorName,
-                           dateCreatedFormatted,
-                           content,
-                           status,
-                           postTitle,
-                           authorUrl,
-                           authorEmail,
-                           null);
+        String[] args = {Integer.toString(localBlogId), Integer.toString(commentId)};
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND comment_id=?", args);
+        try {
+            if (!c.moveToFirst())
+                return null;
+            return getCommentFromCursor(c);
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
     }
 
     /**
@@ -144,50 +113,35 @@ public class CommentTable {
     public static boolean deleteComment(int localBlogId, int commentId) {
         String[] args = {Integer.toString(localBlogId),
                          Integer.toString(commentId)};
-        int count = getWritableDb().delete(COMMENTS_TABLE, "blogID=? AND iCommentID=?", args);
+        int count = getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND comment_id=?", args);
         return (count > 0);
     }
 
-    public static List<Map<String, Object>> loadComments(int blogID) {
+    public static CommentList loadComments(int localBlogId) {
+        CommentList comments = new CommentList();
 
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c = getReadableDb().query(COMMENTS_TABLE,
-                new String[]{"blogID", "postID", "iCommentID", "author",
-                             "comment", "commentDate", "commentDateFormatted",
-                             "status", "url", "email", "postTitle"}, "blogID="
-                + blogID, null, null, null, null);
+        String[] args = {Integer.toString(localBlogId)};
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=?", args);
 
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; i++) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("blogID", c.getString(0));
-                returnHash.put("postID", c.getInt(1));
-                returnHash.put("commentID", c.getInt(2));
-                returnHash.put("author", c.getString(3));
-                returnHash.put("comment", c.getString(4));
-                returnHash.put("commentDate", c.getString(5));
-                returnHash.put("commentDateFormatted", c.getString(6));
-                returnHash.put("status", c.getString(7));
-                returnHash.put("url", c.getString(8));
-                returnHash.put("email", c.getString(9));
-                returnHash.put("postTitle", c.getString(10));
-                returnVector.add(i, returnHash);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    Comment comment = getCommentFromCursor(c);
+                    comments.add(comment);
+                } while (c.moveToNext());
             }
-            c.moveToNext();
-        }
-        c.close();
 
-        if (numRows == 0) {
-            returnVector = null;
+            return comments;
+        } finally {
+            SqlUtils.closeCursor(c);
         }
-
-        return returnVector;
     }
 
-    public static boolean saveComments(List<?> commentValues) {
+    public static void deleteCommentsForBlog(int localBlogId) {
+        getWritableDb().delete(COMMENTS_TABLE, "blog_id=?", new String[]{Integer.toString(localBlogId)});
+    }
+
+    /*public static boolean saveComments(List<?> commentValues) {
         SQLiteDatabase db = getWritableDb();
         db.beginTransaction();
         try {
@@ -195,9 +149,9 @@ public class CommentTable {
                 for (int i = 0; i < commentValues.size(); i++) {
                     ContentValues values = new ContentValues();
                     Map<?, ?> thisHash = (Map<?, ?>) commentValues.get(i);
-                    values.put("blogID", thisHash.get("blogID").toString());
-                    values.put("postID", thisHash.get("postID").toString());
-                    values.put("iCommentID", thisHash.get("commentID").toString());
+                    values.put("blog_id", thisHash.get("blog_id").toString());
+                    values.put("post_id", thisHash.get("post_id").toString());
+                    values.put("comment_id", thisHash.get("comment_id").toString());
                     values.put("author", thisHash.get("author").toString());
                     values.put("comment", thisHash.get("comment").toString());
                     values.put("commentDate", thisHash.get("commentDate").toString());
@@ -220,9 +174,45 @@ public class CommentTable {
         } finally {
             db.endTransaction();
         }
+    }*/
+
+    public static boolean saveComments(int localBlogId, CommentList comments) {
+        if (comments == null || comments.size() == 0)
+            return false;
+
+        SQLiteDatabase db = getWritableDb();
+        db.beginTransaction();
+        try {
+            try {
+                for (Comment comment: comments) {
+                    ContentValues values = new ContentValues();
+
+                    values.put("blog_id", localBlogId);
+                    values.put("post_id", comment.postID);
+                    values.put("comment_id", comment.commentID);
+                    values.put("author", comment.authorName);
+                    values.put("comment", comment.comment);
+                    values.put("commentDateFormatted", comment.dateCreatedFormatted);
+                    values.put("status", comment.getStatus());
+                    values.put("url", comment.authorURL);
+                    values.put("email", comment.authorEmail);
+                    values.put("postTitle", comment.postTitle);
+
+                    db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+
+                db.setTransactionSuccessful();
+                return true;
+            } catch (SQLiteException e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
+                return false;
+            }
+        } finally {
+            db.endTransaction();
+        }
     }
 
-    public static void updateComment(int blogID, int id, Map<?, ?> commentHash) {
+    public static void updateComment(int localBlogId, int commentId, Map<?, ?> commentHash) {
         ContentValues values = new ContentValues();
         values.put("author", commentHash.get("author").toString());
         values.put("comment", commentHash.get("comment").toString());
@@ -230,23 +220,51 @@ public class CommentTable {
         values.put("url", commentHash.get("url").toString());
         values.put("email", commentHash.get("email").toString());
 
-        getWritableDb().update(COMMENTS_TABLE, values, "blogID=" + blogID
-                + " AND iCommentID=" + id, null);
+        String[] args = {Integer.toString(localBlogId), Integer.toString(commentId)};
+        getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
 
     }
 
-    public static void updateCommentStatus(int blogID, int id, String newStatus) {
+    public static void updateCommentStatus(int localBlogId, int commentId, String newStatus) {
         ContentValues values = new ContentValues();
         values.put("status", newStatus);
-        getWritableDb().update(COMMENTS_TABLE, values, "blogID=" + blogID
-                + " AND iCommentID=" + id, null);
+        String[] args = {Integer.toString(localBlogId),
+                         Integer.toString(commentId)};
+        getWritableDb().update(COMMENTS_TABLE,
+                               values,
+                               "blog_id=? AND comment_id=?",
+                               args);
 
     }
 
-    public static int getUnmoderatedCommentCount(int blogID) {
-        String sql = "SELECT COUNT(*) FROM " + COMMENTS_TABLE + " WHERE blogID=? AND status=?";
-        String[] args = {Integer.toString(blogID), "hold"};
+    public static int getUnmoderatedCommentCount(int localBlogId) {
+        String sql = "SELECT COUNT(*) FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=?";
+        String[] args = {Integer.toString(localBlogId), "hold"};
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
+    private static Comment getCommentFromCursor(Cursor c) {
+        String authorName = c.getString(c.getColumnIndex("author"));
+        String content = c.getString(c.getColumnIndex("comment"));
+        String dateCreatedFormatted = c.getString(c.getColumnIndex("commentDateFormatted"));
+        String status = c.getString(c.getColumnIndex("status"));
+        String authorUrl = c.getString(c.getColumnIndex("url"));
+        String authorEmail = c.getString(c.getColumnIndex("email"));
+        String postTitle = c.getString(c.getColumnIndex("postTitle"));
+        int postId = c.getInt(c.getColumnIndex("post_id"));
+        int commentId = c.getInt(c.getColumnIndex("comment_id"));
+        int localBlogId = c.getInt(c.getColumnIndex("blog_id"));
+
+        return new Comment(
+                postId,
+                commentId,
+                authorName,
+                dateCreatedFormatted,
+                content,
+                status,
+                postTitle,
+                authorUrl,
+                authorEmail,
+                null);
+    }
 }

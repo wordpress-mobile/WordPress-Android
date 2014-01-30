@@ -11,6 +11,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -38,84 +40,6 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
-
-    @SuppressWarnings("unchecked")
-    static void refreshComments(final int id, final Context ctx) {
-        Blog blog;
-        try {
-            blog = new Blog(id);
-        } catch (Exception e1) {
-            return;
-        }
-
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-                blog.getHttppassword());
-
-        Map<String, Object> hPost = new HashMap<String, Object>();
-        hPost.put("status", "");
-        hPost.put("post_id", "");
-        hPost.put("number", 30);
-
-        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
-                blog.getPassword(), hPost };
-        Object[] result = null;
-        try {
-            result = (Object[]) client.call("wp.getComments", params);
-        } catch (XMLRPCException e) {
-        }
-
-        if (result != null) {
-            if (result.length > 0) {
-                String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
-
-                Map<Object, Object> contentHash = new HashMap<Object, Object>();
-                List<Map<String, String>> dbVector = new Vector<Map<String, String>>();
-
-                Date d = new Date();
-                // loop this!
-                for (int ctr = 0; ctr < result.length; ctr++) {
-                    Map<String, String> dbValues = new HashMap<String, String>();
-                    contentHash = (Map<Object, Object>) result[ctr];
-                    comment = contentHash.get("content").toString();
-                    author = contentHash.get("author").toString();
-                    status = contentHash.get("status").toString();
-                    postID = contentHash.get("post_id").toString();
-                    commentID = contentHash.get("comment_id").toString();
-                    d = (Date) contentHash.get("date_created_gmt");
-                    authorURL = contentHash.get("author_url").toString();
-                    authorEmail = contentHash.get("author_email").toString();
-                    postTitle = contentHash.get("post_title").toString();
-
-                    String formattedDate = d.toString();
-                    try {
-                        int flags = 0;
-                        flags |= DateUtils.FORMAT_SHOW_DATE;
-                        flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                        flags |= DateUtils.FORMAT_SHOW_YEAR;
-                        flags |= DateUtils.FORMAT_SHOW_TIME;
-                        formattedDate = DateUtils.formatDateTime(ctx,
-                                d.getTime(), flags);
-                    } catch (Exception e) {
-                    }
-
-                    dbValues.put("blogID", String.valueOf(id));
-                    dbValues.put("postID", postID);
-                    dbValues.put("commentID", commentID);
-                    dbValues.put("author", author);
-                    dbValues.put("comment", comment);
-                    dbValues.put("commentDate", formattedDate);
-                    dbValues.put("commentDateFormatted", formattedDate);
-                    dbValues.put("status", status);
-                    dbValues.put("url", authorURL);
-                    dbValues.put("email", authorEmail);
-                    dbValues.put("postTitle", postTitle);
-                    dbVector.add(ctr, dbValues);
-                }
-
-                CommentTable.saveComments(dbVector);
-            }
-        }
-    }
 
     public static abstract class HelperAsyncTask<Params, Progress, Result>
             extends AsyncTask<Params, Progress, Result> {
@@ -328,20 +252,15 @@ public class ApiHelper {
         }
     }
 
-    public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,Object[] commentParams)
+    public static CommentList refreshComments(Context ctx, Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null)
             return null;
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-                blog.getHttppassword());
-        String author, postID, comment, status, authorEmail, authorURL, postTitle;
-        int commentID;
-        Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
-        Map<?, ?> contentHash = new HashMap<Object, Object>();
-        List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
 
-        Date d = new Date();
+        XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                                               blog.getHttpuser(),
+                                               blog.getHttppassword());
         Object[] result;
         try {
             result = (Object[]) client.call("wp.getComments", commentParams);
@@ -351,28 +270,46 @@ public class ApiHelper {
 
         if (result.length == 0)
             return null;
-        // loop this!
+
+        int commentID, postID;
+        java.util.Date date;
+        Map<?, ?> contentHash;
+        String authorName, content, status, authorEmail, authorURL, postTitle;
+        CommentList comments = new CommentList();
+
         for (int ctr = 0; ctr < result.length; ctr++) {
-            Map<Object, Object> dbValues = new HashMap<Object, Object>();
             contentHash = (Map<?, ?>) result[ctr];
-            allComments.put(Integer.parseInt(contentHash.get("comment_id").toString()),
-                    contentHash);
-            comment = contentHash.get("content").toString();
-            author = contentHash.get("author").toString();
+            content = contentHash.get("content").toString();
             status = contentHash.get("status").toString();
-            postID = contentHash.get("post_id").toString();
+            postID = Integer.parseInt(contentHash.get("post_id").toString());
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            d = (Date) contentHash.get("date_created_gmt");
+            date = (Date) contentHash.get("date_created_gmt");
+            authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = getFormattedCommentDate(ctx, d);
+            String formattedDate = getFormattedCommentDate(ctx, date);
 
-            dbValues.put("blogID", String.valueOf(blog.getLocalTableBlogId()));
-            dbValues.put("postID", postID);
-            dbValues.put("commentID", commentID);
-            dbValues.put("author", author);
+            // TODO: store localBlogId and actual date with comment
+            Comment comment = new Comment(
+                    postID,
+                    commentID,
+                    authorName,
+                    formattedDate,
+                    content,
+                    status,
+                    postTitle,
+                    authorURL,
+                    authorEmail,
+                    null);
+
+            comments.add(comment);
+
+            /*dbValues.put("blog_id", String.valueOf(blog.getLocalTableBlogId()));
+            dbValues.put("post_id", postID);
+            dbValues.put("comment_id", commentID);
+            dbValues.put("author", authorName);
             dbValues.put("comment", comment);
             dbValues.put("commentDate", formattedDate);
             dbValues.put("commentDateFormatted", formattedDate);
@@ -380,12 +317,13 @@ public class ApiHelper {
             dbValues.put("url", authorURL);
             dbValues.put("email", authorEmail);
             dbValues.put("postTitle", postTitle);
-            dbVector.add(ctr, dbValues);
+            dbVector.add(ctr, dbValues);*/
         }
 
-        CommentTable.saveComments(dbVector);
+        int localBlogId = blog.getLocalTableBlogId();
+        CommentTable.saveComments(localBlogId, comments);
 
-        return allComments;
+        return comments;
     }
 
     /**

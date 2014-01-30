@@ -10,11 +10,9 @@ import org.wordpress.android.util.JSONUtil;
 import org.xmlrpc.android.ApiHelper;
 
 public class Comment {
-    public String postID = "";
+    public int postID;
     public int commentID;
-    public int position;
-    public String name = "";
-    public String emailURL = "";
+    public String authorName = "";
     private String status = "";
     public String comment = "";
     public String postTitle = "";
@@ -23,71 +21,74 @@ public class Comment {
     public String dateCreatedFormatted = "";
     private String profileImageUrl = null;
 
-    public Comment(String postID,
-            int commentID,
-            int position,
-            String name,
-            String dateCreatedFormatted,
-            String comment,
-            String status,
-            String postTitle,
-            String authorURL,
-            String authorEmail,
-            String profileImageUrl) {
+    public Comment(int postID,
+                   int commentID,
+                   String authorName,
+                   String dateCreatedFormatted,
+                   String comment,
+                   String status,
+                   String postTitle,
+                   String authorURL,
+                   String authorEmail,
+                   String profileImageUrl) {
         this.postID = postID;
         this.commentID = commentID;
-        this.position = position;
-        this.name = name;
-        this.emailURL = authorEmail;
+        this.authorName = authorName;
         this.status = status;
         this.comment = comment;
         this.postTitle = postTitle;
         this.authorURL = authorURL;
-        this.authorEmail = authorEmail; // why is this the same as emailURL above?
+        this.authorEmail = authorEmail;
         this.profileImageUrl = profileImageUrl;
         this.dateCreatedFormatted = dateCreatedFormatted;
+    }
+
+    private Comment() {
+        // nop
     }
 
     /*
      * nbradbury 11/14/13 - create a comment from JSON (REST response)
      * https://developer.wordpress.com/docs/api/1/get/sites/%24site/comments/%24comment_ID/
      */
-    public Comment(JSONObject json) {
+    public static Comment fromJSON(JSONObject json) {
         if (json == null)
-            return;
+            return null;
 
-        this.commentID = json.optInt("ID");
-        this.status = JSONUtil.getString(json, "status");
+        Comment comment = new Comment();
+        comment.commentID = json.optInt("ID");
+        comment.status = JSONUtil.getString(json, "status");
 
         // note that the content often contains html, and on rare occasions may contain
         // script blocks that need to be removed (only seen with blogs that use the
         // sociable plugin)
-        this.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
+        comment.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
 
         java.util.Date date = DateTimeUtils.iso8601ToJavaDate(JSONUtil.getString(json, "date"));
         if (date != null)
-            this.dateCreatedFormatted = ApiHelper.getFormattedCommentDate(WordPress.getContext(), date);
+            comment.dateCreatedFormatted = ApiHelper.getFormattedCommentDate(WordPress.getContext(), date);
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
-            this.postID = Integer.toString(jsonPost.optInt("ID"));
+            comment.postID = jsonPost.optInt("ID");
             // c.postTitle = ???
         }
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             // author names may contain html entities (esp. pingbacks)
-            this.name = JSONUtil.getStringDecoded(jsonAuthor, "name");
-            this.authorURL = JSONUtil.getString(jsonAuthor, "URL");
+            comment.authorName = JSONUtil.getStringDecoded(jsonAuthor, "name");
+            comment.authorURL = JSONUtil.getString(jsonAuthor, "URL");
 
             // email address will be set to "false" when there isn't an email address
-            this.authorEmail = JSONUtil.getString(jsonAuthor, "email");
-            if (this.authorEmail.equals("false"))
-                this.authorEmail = "";
-            this.emailURL = this.authorEmail;
+            comment.authorEmail = JSONUtil.getString(jsonAuthor, "email");
+            if (comment.authorEmail.equals("false"))
+                comment.authorEmail = "";
 
-            this.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
+            comment.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
         }
+
+        return comment;
     }
 
     public String getProfileImageUrl() {
@@ -98,6 +99,10 @@ public class Comment {
     }
     public boolean hasProfileImageUrl() {
         return !TextUtils.isEmpty(profileImageUrl);
+    }
+
+    public boolean hasAuthorEmail() {
+        return !TextUtils.isEmpty(authorEmail);
     }
 
     public CommentStatus getStatusEnum() {

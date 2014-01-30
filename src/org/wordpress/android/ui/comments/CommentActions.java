@@ -244,7 +244,7 @@ public class CommentActions {
                 Map<String, String> postHash = new HashMap<String, String>();
                 postHash.put("status", CommentStatus.toString(newStatus));
                 postHash.put("content", comment.comment);
-                postHash.put("author", comment.name);
+                postHash.put("author", comment.authorName);
                 postHash.put("author_url", comment.authorURL);
                 postHash.put("author_email", comment.authorEmail);
 
@@ -312,7 +312,7 @@ public class CommentActions {
                     Map<String, String> postHash = new HashMap<String, String>();
                     postHash.put("status", newStatusStr);
                     postHash.put("content", comment.comment);
-                    postHash.put("author", comment.name);
+                    postHash.put("author", comment.authorName);
                     postHash.put("author_url", comment.authorURL);
                     postHash.put("author_email", comment.authorEmail);
 
