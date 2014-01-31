@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by nbradbury on 1/30/14.
  */
 public class CommentTable {
-    private static final String COMMENTS_TABLE = "tbl_comments";
+    private static final String COMMENTS_TABLE = "comments";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + COMMENTS_TABLE + " ("
@@ -38,8 +38,6 @@ public class CommentTable {
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + COMMENTS_TABLE);
-        // drop the "comments" table used in previous versions
-        db.execSQL("DROP TABLE IF EXISTS comments");
     }
 
     public static void reset(SQLiteDatabase db) {

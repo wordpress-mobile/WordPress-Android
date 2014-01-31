@@ -449,23 +449,32 @@ public class CommentsListFragment extends Fragment {
             return true;
         }
 
+        private void setItemEnabled(com.actionbarsherlock.view.Menu menu, int menuId, boolean isEnabled) {
+            final MenuItem item = menu.findItem(menuId);
+            if (item == null || item.isEnabled() == isEnabled)
+                return;
+            item.setEnabled(isEnabled);
+            if (item.getIcon() == null)
+                return;
+            if (isEnabled) {
+                item.getIcon().setAlpha(255);
+            } else {
+                item.getIcon().setAlpha(128);
+            }
+        }
+
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, com.actionbarsherlock.view.Menu menu) {
-            CommentList selectedComments = getCommentAdapter().getSelectedComments();
+            final CommentList selectedComments = getCommentAdapter().getSelectedComments();
             boolean hasSelection = (selectedComments.size() > 0);
             boolean hasApproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.APPROVED);
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
             boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
 
-            MenuItem mnuApprove = menu.findItem(R.id.menu_approve);
-            MenuItem mnuUnapprove = menu.findItem(R.id.menu_unapprove);
-            MenuItem mnuSpam = menu.findItem(R.id.menu_spam);
-            MenuItem mnuTrash = menu.findItem(R.id.menu_trash);
-
-            mnuApprove.setEnabled(hasUnapproved || hasSpam);
-            mnuUnapprove.setEnabled(hasApproved);
-            mnuSpam.setEnabled(hasSelection);
-            mnuTrash.setEnabled(hasSelection);
+            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam);
+            setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
+            setItemEnabled(menu, R.id.menu_spam, hasSelection);
+            setItemEnabled(menu, R.id.menu_trash, hasSelection);
 
             return true;
         }

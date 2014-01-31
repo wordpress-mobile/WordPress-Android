@@ -170,8 +170,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
-
-        //CommentTable.reset(db);
         CommentTable.createTables(db);
 
         // Update tables for new installs and app updates
