@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
@@ -17,11 +18,11 @@ import java.util.Map;
  * Created by nbradbury on 1/30/14.
  */
 public class CommentTable {
-    private static final String COMMENTS_TABLE = "comments";
+    private static final String COMMENTS_TABLE = "tbl_comments";
 
-    protected static void createTables(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + COMMENTS_TABLE + " ("
-                 + "    blog_id      INTEGER DEFAULT 0," // <- local blog id
+    public static void createTables(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + COMMENTS_TABLE + " ("
+                 + "    blog_id      INTEGER DEFAULT 0," // <- TODO: this is the local blog id, need to store remote blog_id as well
                  + "    post_id      INTEGER DEFAULT 0,"
                  + "    comment_id   INTEGER DEFAULT 0,"
                  + "    comment      TEXT,"
@@ -37,6 +38,8 @@ public class CommentTable {
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + COMMENTS_TABLE);
+        // drop the "comments" table used in previous versions
+        db.execSQL("DROP TABLE IF EXISTS comments");
     }
 
     public static void reset(SQLiteDatabase db) {
@@ -48,9 +51,33 @@ public class CommentTable {
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
     }
-
     private static SQLiteDatabase getWritableDb() {
         return WordPress.wpDB.getDatabase();
+    }
+
+    /*
+     * purge comments attached to blogs that no longer exist, and remove older comments
+     * TODO: call after hiding or deleting blogs
+     */
+    private static final int MAX_COMMENTS = 1000;
+    public static int purge(SQLiteDatabase db) {
+        int numDeleted = 0;
+
+        // get rid of comments on blogs that don't exist or are hidden
+        String sql = " blog_id NOT IN (SELECT DISTINCT id FROM " + WordPressDB.SETTINGS_TABLE
+                   + " WHERE " + WordPressDB.COLNAME_IS_HIDDEN + " = 0)";
+        numDeleted += db.delete(COMMENTS_TABLE, sql, null);
+
+        // get rid of older comments if we've reached the max
+        int numExisting = (int)SqlUtils.getRowCount(db, COMMENTS_TABLE);
+        if (numExisting > MAX_COMMENTS) {
+            int numToPurge = numExisting - MAX_COMMENTS;
+            sql = " comment_id IN (SELECT DISTINCT comment_id FROM " + COMMENTS_TABLE
+                + " ORDER BY published LIMIT " + Integer.toString(numToPurge) + ")";
+            numDeleted += db.delete(COMMENTS_TABLE, sql, null);
+        }
+
+        return numDeleted;
     }
 
     /**
@@ -72,7 +99,7 @@ public class CommentTable {
         values.put("status",        comment.getStatus());
         values.put("author_email",  comment.getAuthorEmail());
         values.put("post_title",    comment.getPostTitle());
-        values.put("published",  comment.getPublished());
+        values.put("published",     comment.getPublished());
 
         getWritableDb().insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }

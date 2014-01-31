@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -78,8 +79,10 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnSelectedItemsChangeListener changeListener = new CommentAdapter.OnSelectedItemsChangeListener() {
                 @Override
                 public void onSelectedItemsChanged() {
-                    if (mActionMode != null)
+                    if (mActionMode != null) {
                         updateActionModeTitle();
+                        mActionMode.invalidate();
+                    }
                 }
             };
 
@@ -448,11 +451,23 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, com.actionbarsherlock.view.Menu menu) {
-            if (mActionMode != null) {
-                return true;
-            } else {
-                return false;
-            }
+            CommentList selectedComments = getCommentAdapter().getSelectedComments();
+            boolean hasSelection = (selectedComments.size() > 0);
+            boolean hasApproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.APPROVED);
+            boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
+            boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
+
+            MenuItem mnuApprove = menu.findItem(R.id.menu_approve);
+            MenuItem mnuUnapprove = menu.findItem(R.id.menu_unapprove);
+            MenuItem mnuSpam = menu.findItem(R.id.menu_spam);
+            MenuItem mnuTrash = menu.findItem(R.id.menu_trash);
+
+            mnuApprove.setEnabled(hasUnapproved || hasSpam);
+            mnuUnapprove.setEnabled(hasApproved);
+            mnuSpam.setEnabled(hasSelection);
+            mnuTrash.setEnabled(hasSelection);
+
+            return true;
         }
 
         @Override

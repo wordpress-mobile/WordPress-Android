@@ -57,7 +57,7 @@ public class WordPressDB {
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
-    private static final String SETTINGS_TABLE = "accounts";
+    public static final String SETTINGS_TABLE = "accounts";
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
 
@@ -143,7 +143,8 @@ public class WordPressDB {
             "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
 
     // add hidden flag to blog settings (accounts)
-    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+    public static final String COLNAME_IS_HIDDEN = "isHidden";
+    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add " + COLNAME_IS_HIDDEN + " boolean default 0;";
 
     private SQLiteDatabase db;
 
@@ -170,8 +171,8 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
 
-        // TODO: nbradbury - remove this once comment table schema has settings
-        CommentTable.reset(db);
+        //CommentTable.reset(db);
+        CommentTable.createTables(db);
 
         // Update tables for new installs and app updates
         try {
@@ -418,12 +419,12 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getVisibleAccounts() {
-        return getAccountsBy("isHidden = 0", null);
+        return getAccountsBy(COLNAME_IS_HIDDEN + " = 0", null);
     }
 
     public int getNumVisibleAccounts() {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE
-                + " WHERE isHidden = 0", null);
+                + " WHERE " + COLNAME_IS_HIDDEN + " = 0", null);
     }
 
     public List<Map<String, Object>> getAllAccounts() {
@@ -432,20 +433,20 @@ public class WordPressDB {
 
     public int setAllDotComAccountsVisibility(boolean visible) {
         ContentValues values = new ContentValues();
-        values.put("isHidden", !visible);
+        values.put(COLNAME_IS_HIDDEN, !visible);
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
     }
 
     public int setDotComAccountsVisibility(int id, boolean visible) {
         ContentValues values = new ContentValues();
-        values.put("isHidden", !visible);
+        values.put(COLNAME_IS_HIDDEN, !visible);
         return db.update(SETTINGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
     }
 
     public boolean isDotComAccountVisible(int blogId) {
         String[] args = {Integer.toString(blogId)};
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
-                " WHERE isHidden = 0 AND blogId=?", args);
+                " WHERE " + COLNAME_IS_HIDDEN + " = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
@@ -483,7 +484,7 @@ public class WordPressDB {
         values.put("isScaledImage", blog.isScaledImage());
         values.put("scaledImgWidth", blog.getScaledImageWidth());
         values.put("blog_options", blog.getBlogOptions());
-        values.put("isHidden", blog.isHidden());
+        values.put(COLNAME_IS_HIDDEN, blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
 
@@ -534,7 +535,7 @@ public class WordPressDB {
                 "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location",
                 "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid",
                 "wpVersion", "postFormats", "lastCommentId", "isScaledImage", "scaledImgWidth",
-                "homeURL", "blog_options", "isAdmin", "isHidden"};
+                "homeURL", "blog_options", "isAdmin", COLNAME_IS_HIDDEN};
         Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + id, null, null, null, null);
 
         int numRows = c.getCount();
