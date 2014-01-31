@@ -49,7 +49,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     
     // the active fragment has the tag CHILD_TAG:<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
-    private int mChildIndex = -1;
 
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
@@ -116,14 +115,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     }
     
     private void loadFragmentIndex(int index) {
-        mChildIndex = index;
-        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
+        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
             //set minimum height for container, so we don't get a janky fragment transaction
             mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
             Fragment fragment = getFragment(index);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex);
+            ft.replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + index);
             ft.commit();
         }
     }
