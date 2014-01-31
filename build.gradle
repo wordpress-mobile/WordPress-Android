@@ -25,8 +25,8 @@ android {
         exclude "META-INF/NOTICE.txt"
     }
 
-	buildTypes {
-	    release {
+    buildTypes {
+        release {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
@@ -39,7 +39,7 @@ android {
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             packageNameSuffix ".beta"
         } //end zbetagroup
-	} //end buildTypes
+    } //end buildTypes
 
     compileSdkVersion 19
     buildToolsVersion "19"
@@ -51,34 +51,33 @@ android {
         minSdkVersion 9
         targetSdkVersion 19
     }
-    
-	dependencies {
-	    // Provided by maven central
-	    compile 'com.google.code.gson:gson:2.2.2'
-	    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-	    compile 'com.android.support:support-v4:18.0.+'
 
-	    // These are provided by the WordPress-Android Repository
-	    compile 'org.wordpress:actionbarsherlock:4.4.0'
-	    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
-	    compile 'org.wordpress:gcm:1.0.0'
-	    compile 'org.wordpress:volley:wp-0.0.1'
-	    compile 'com.automattic:wordpresscom-rest:0.0.3'
-	    compile 'org.wordpress:httpmime:4.1.2'
-	    compile 'org.wordpress:graphview:3.1.1'
-	    compile 'org.wordpress:drag-sort-listview:0.6.1'
-	    compile 'org.wordpress:slidinguppanel:1.0.0'
-	    compile 'org.wordpress:android-passcodelock:0.0.4'
-	    compile 'org.wordpress:commons-lang:2.6'
-	    releaseCompile 'org.wordpress:emailchecker:0.1'
-	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
-	    zbetagroupCompile 'org.wordpress:emailchecker:0.1'
+    dependencies {
+        // Provided by maven central
+        compile 'com.google.code.gson:gson:2.2.2'
+        compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+        compile 'com.android.support:support-v4:18.0.+'
 
-	    // Local dependencies
-	    compile files('libs/MixpanelAPI.jar')
-	}
-	
-	
+        // These are provided by the WordPress-Android Repository
+        compile 'org.wordpress:actionbarsherlock:4.4.0'
+        compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
+        compile 'org.wordpress:gcm:1.0.0'
+        compile 'org.wordpress:volley:wp-0.0.1'
+        compile 'com.automattic:wordpresscom-rest:0.0.3'
+        compile 'org.wordpress:httpmime:4.1.2'
+        compile 'org.wordpress:graphview:3.1.1'
+        compile 'org.wordpress:drag-sort-listview:0.6.1'
+        compile 'org.wordpress:slidinguppanel:1.0.0'
+        compile 'org.wordpress:android-passcodelock:0.0.4'
+        compile 'org.wordpress:commons-lang:2.6'
+        releaseCompile 'org.wordpress:emailchecker:0.1'
+        debugCompile 'org.wordpress:emailchecker-debug:0.1'
+        zbetagroupCompile 'org.wordpress:emailchecker:0.1'
+
+        // Local dependencies
+        compile files('libs/MixpanelAPI.jar')
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -90,21 +89,20 @@ android {
             assets.srcDirs = ['assets']
         }
 
-		release {
-		    manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
-		}
-		
-		debug {
-		    manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
-		}
-		
-	    zbetagroup {
-	        res.srcDirs = ['res-zbetagroup']
-	        manifest.srcFile 'AndroidManifestBetagroup.xml'
-	    }
+        release {
+            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+        }
+
+        debug {
+            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+        }
+
+        zbetagroup {
+            res.srcDirs = ['res-zbetagroup']
+            manifest.srcFile 'AndroidManifestBetagroup.xml'
+        }
 
         instrumentTest.setRoot('tests')
-
     }
 
 } //end android
@@ -134,7 +132,7 @@ task generateWPConfig(group: "generate", description: "Generate Config class") {
         properties.propertyNames().each { property ->
             def keys = property.tokenize('.')
             if (keys[0] == 'wp') {
-                def name = property.tokenize('.')[1..-1].collect { key -> key.toUpperCase()}.join('_')
+                def name = property.tokenize('.')[1..-1].collect { key -> key.toUpperCase() }.join('_')
                 constants[name] = properties.getProperty(property)
             }
         }
@@ -166,7 +164,7 @@ android.buildTypes.all { buildType ->
 }
 
 //For app signing
-if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0) {
     android {
         signingConfigs {
             release {
