@@ -13,26 +13,24 @@
         android:layout_height="@dimen/avatar_sz_medium" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_toLeftOf="@+id/status"
-        android:layout_toRightOf="@+id/avatar"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/grey_extra_dark"
-        android:textSize="@dimen/text_sz_large" />
-
-    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_medium"
         android:textAllCaps="true"
         android:textSize="@dimen/text_sz_small" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toRightOf="@+id/avatar"
+        android:layout_toLeftOf="@+id/status"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/grey_extra_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/email_url"
@@ -40,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/reader_hyperlink"
@@ -52,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/email_url"
-        android:layout_toLeftOf="@+id/bulkCheck"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/grey_medium"

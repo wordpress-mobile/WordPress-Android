@@ -134,6 +134,11 @@ public class WordPress extends Application {
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
          }
+        
+        //Enable log recording on beta build
+        if (NotificationUtils.getAppPushNotificationsName().equals("org.wordpress.android.beta.build")) {
+            AppLog.enableRecording(true);
+        }
     }
 
     public static Context getContext() {
@@ -193,7 +198,7 @@ public class WordPress extends Application {
                     AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
-                AppLog.v(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
+                AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
             }
         }
     }

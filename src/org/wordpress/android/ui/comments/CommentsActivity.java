@@ -79,6 +79,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+        clearCommentList();
         refreshCommentList();
     }
 
@@ -209,6 +210,11 @@ public class CommentsActivity extends WPActionBarActivity
         if (fragment == null)
             return;
         fragment.clearComment();
+    }
+
+    private void clearCommentList() {
+        if (commentList != null)
+            commentList.clearComments();
     }
 
     private void refreshCommentList() {
