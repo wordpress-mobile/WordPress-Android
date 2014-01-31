@@ -44,8 +44,8 @@ public class Blog {
     private String api_blogid;
     private boolean dotcomFlag;
     private String wpVersion;
-    private String httpuser;
-    private String httppassword;
+    private String httpuser = "";
+    private String httppassword = "";
     private String postFormats;
     private String blogOptions;
     private boolean isAdmin;
