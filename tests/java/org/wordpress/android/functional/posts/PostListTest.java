@@ -7,7 +7,8 @@ import android.test.RenamingDelegatingContext;
 import com.robotium.solo.Solo;
 
 import org.wordpress.android.R;
-import org.wordpress.android.functional.FuncUtils;
+import org.wordpress.android.TestUtils;
+import org.wordpress.android.functional.FactoryUtils;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -20,14 +21,14 @@ public class PostListTest extends ActivityInstrumentationTestCase2<PostsActivity
 
     public PostListTest() {
         super(PostsActivity.class);
-        FuncUtils.initWithTestFactories();
+        FactoryUtils.initWithTestFactories();
     }
 
     @Override
     public void setUp() throws Exception {
         // Clean application state
         mTargetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
-        FuncUtils.clearApplicationState(mTargetContext);
+        TestUtils.clearApplicationState(mTargetContext);
 
         // setUp() is run before a test case is started.
         // This is where the mSolo object is created.
