@@ -57,41 +57,21 @@ public class CommentList extends ArrayList<Comment> {
     }
 
     /*
-     * use this to convert the results of WordPress.wpDB.loadComments() to a CommentList
+     * does passed list contain the same comments as this list? doesn't do an EXACT match - only
+     * checks whether commentIDs & statuses match
      */
-    /*public static CommentList fromMap(List<Map<String, Object>> commentMap) {
-        CommentList comments = new CommentList();
-        if (commentMap == null || commentMap.size()==0)
-            return comments;
+    public boolean isSameList(CommentList comments) {
+        if (comments == null || comments.size() != this.size())
+            return false;
 
-        String author, postID, commentContent, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
-        int commentID;
-        for (int i = 0; i < commentMap.size(); i++) {
-            Map<String, Object> contentHash = commentMap.get(i);
-            commentID = (Integer) contentHash.get("commentID");
-            postID = contentHash.get("postID").toString();
-            commentContent = contentHash.get("comment").toString();
-            dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
-            status = contentHash.get("status").toString();
-            author = StringUtils.unescapeHTML(contentHash.get("author").toString());
-            authorEmail = StringUtils.unescapeHTML(contentHash.get("email").toString());
-            authorURL = StringUtils.unescapeHTML(contentHash.get("url").toString());
-            postTitle = StringUtils.unescapeHTML(contentHash.get("postTitle").toString());
-
-            comments.add(new Comment(postID,
-                    commentID,
-                    i,
-                    author,
-                    dateCreatedFormatted,
-                    commentContent,
-                    status,
-                    postTitle,
-                    authorURL,
-                    authorEmail,
-                    GravatarUtils.gravatarUrlFromEmail(authorEmail, 140)));
+        for (Comment comment: comments) {
+            int index = this.indexOfCommentId(comment.commentID);
+            if (index == -1)
+                return false;
+            if (! this.get(index).getStatusEnum().equals(comment.getStatusEnum()))
+                return false;
         }
 
-        return comments;
-    }*/
-
+        return true;
+    }
 }

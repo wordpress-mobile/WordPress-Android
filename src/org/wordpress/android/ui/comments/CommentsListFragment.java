@@ -91,8 +91,8 @@ public class CommentsListFragment extends Fragment {
         return mCommentAdapter;
     }
 
-    protected boolean loadComments() {
-        return getCommentAdapter().loadComments();
+    protected void loadComments() {
+        getCommentAdapter().loadComments();
     }
 
     protected int getSelectedCommentCount() {
@@ -101,6 +101,10 @@ public class CommentsListFragment extends Fragment {
 
     protected void clear() {
         getCommentAdapter().clear();
+    }
+
+    protected boolean isEmpty() {
+        return getCommentAdapter().isEmpty();
     }
 
     @Override
@@ -269,7 +273,6 @@ public class CommentsListFragment extends Fragment {
                     getListView().invalidateViews();
                 } else {
                     getCommentAdapter().toggleItemSelected(position);
-                    updateActionModeTitle();
                 }
             }
         });
@@ -283,7 +286,6 @@ public class CommentsListFragment extends Fragment {
                         ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true);
-                        updateActionModeTitle();
                     }
                 } else {
                     getCommentAdapter().toggleItemSelected(position);
@@ -420,9 +422,9 @@ public class CommentsListFragment extends Fragment {
             mProgressLoadMore.setVisibility(View.GONE);
     }
 
-    /*
-     * contextual ActionBar (CAB)
-     */
+    /****
+     * Contextual ActionBar (CAB) routines
+     ***/
     private void updateActionModeTitle() {
         if (mActionMode == null)
             return;
@@ -432,7 +434,6 @@ public class CommentsListFragment extends Fragment {
         } else {
             mActionMode.setTitle("");
         }
-        mActionMode.invalidate();
     }
 
     private void finishActionMode() {
@@ -454,13 +455,8 @@ public class CommentsListFragment extends Fragment {
             if (item == null || item.isEnabled() == isEnabled)
                 return;
             item.setEnabled(isEnabled);
-            if (item.getIcon() == null)
-                return;
-            if (isEnabled) {
-                item.getIcon().setAlpha(255);
-            } else {
-                item.getIcon().setAlpha(128);
-            }
+            if (item.getIcon() != null)
+                item.getIcon().setAlpha(isEnabled ? 255 : 128);
         }
 
         @Override
@@ -471,10 +467,10 @@ public class CommentsListFragment extends Fragment {
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
             boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
 
-            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam);
+            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam, hasSelection);
-            setItemEnabled(menu, R.id.menu_trash, hasSelection);
+            setItemEnabled(menu, R.id.menu_spam,      hasSelection);
+            setItemEnabled(menu, R.id.menu_trash,     hasSelection);
 
             return true;
         }
@@ -486,7 +482,7 @@ public class CommentsListFragment extends Fragment {
                 return false;
 
             // note that approve/disapprove happen without confirmation, but confirmation is required
-            // before comments are deleted/spammed
+            // before comments are deleted or marked as spam
             switch (menuItem.getItemId()) {
                 case R.id.menu_approve :
                     moderateSelectedComments(CommentStatus.APPROVED);

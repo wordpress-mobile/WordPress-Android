@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.comments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +14,18 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.SysUtils;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -245,22 +253,57 @@ public class CommentAdapter extends BaseAdapter {
     }
 
     /*
-     * load comments from local db
+     * load comments using an AsyncTask
      */
-    protected boolean loadComments() {
-        int localBlogId = WordPress.currentBlog.getLocalTableBlogId();
+    @SuppressLint("NewApi")
+    protected void loadComments() {
+        if (mIsLoadTaskRunning)
+            AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
 
-        mComments = CommentTable.getCommentsForBlog(localBlogId);
-
-        // pre-calc transient values so they're cached when used by getView()
-        for (Comment comment: mComments) {
-            comment.getDatePublished();
-            comment.getUnescapedCommentText();
-            comment.getAvatarForDisplay(mAvatarSz);
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new LoadCommentsTask().execute();
         }
+    }
 
-        notifyDataSetChanged();
+    /*
+     * AsyncTask to load comments from SQLite
+     */
+    private boolean mIsLoadTaskRunning = false;
+    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+        CommentList tmpComments;
+        @Override
+        protected void onPreExecute() {
+            mIsLoadTaskRunning = true;
+        }
+        @Override
+        protected void onCancelled() {
+            mIsLoadTaskRunning = false;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            int localBlogId = WordPress.currentBlog.getLocalTableBlogId();
+            tmpComments = CommentTable.getCommentsForBlog(localBlogId);
+            if (mComments.isSameList(tmpComments))
+                return false;
 
-        return true;
+            // pre-calc transient values so they're cached when used by getView()
+            for (Comment comment: tmpComments) {
+                comment.getDatePublished();
+                comment.getUnescapedCommentText();
+                comment.getAvatarForDisplay(mAvatarSz);
+            }
+
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mComments = (CommentList)(tmpComments.clone());
+                notifyDataSetChanged();
+            }
+            mIsLoadTaskRunning = false;
+        }
     }
 }
