@@ -190,7 +190,7 @@ public class CommentAdapter extends BaseAdapter {
         }
 
         holder.txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
-        holder.txtPostTitle.setText(comment.getPostTitle());
+        holder.txtPostTitle.setText(comment.getUnescapedPostTitle());
         holder.txtComment.setText(comment.getUnescapedCommentText());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
@@ -290,6 +290,7 @@ public class CommentAdapter extends BaseAdapter {
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
                 comment.getUnescapedCommentText();
+                comment.getUnescapedPostTitle();
                 comment.getAvatarForDisplay(mAvatarSz);
             }
 

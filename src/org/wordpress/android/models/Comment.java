@@ -187,6 +187,13 @@ public class Comment {
         return unescapedCommentText;
     }
 
+    private transient String unescapedPostTitle;
+    public String getUnescapedPostTitle() {
+        if (unescapedPostTitle == null)
+            unescapedPostTitle = StringUtils.unescapeHTML(getPostTitle().trim());
+        return unescapedPostTitle;
+    }
+
     /*
      * returns the avatar url as a photon/gravatar url set to the passed size
      */
