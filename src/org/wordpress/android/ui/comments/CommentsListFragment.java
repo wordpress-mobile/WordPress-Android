@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCException;
@@ -300,9 +302,14 @@ public class CommentsListFragment extends Fragment {
         getCommentAdapter().notifyDataSetChanged();
         refreshComments(false);
     }
+    @SuppressLint("NewApi")
     private void refreshComments(boolean loadMore) {
         mGetCommentsTask = new GetRecentCommentsTask(loadMore);
-        mGetCommentsTask.execute();
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            mGetCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mGetCommentsTask.execute();
+        }
     }
 
     protected void cancelCommentsTask() {
