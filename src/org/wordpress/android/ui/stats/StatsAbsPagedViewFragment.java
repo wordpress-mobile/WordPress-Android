@@ -2,16 +2,19 @@ package org.wordpress.android.ui.stats;
 
 import java.util.Locale;
 
+import android.support.v4.app.FragmentTransaction;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -47,12 +50,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     // the active fragment has the tag CHILD_TAG:<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
     private int mChildIndex = -1;
-    
+
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
     protected FragmentStatePagerAdapter mAdapter;
 
     private RadioGroup mRadioGroup;
+    private FrameLayout mFragmentContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +84,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
         String[] titles = getTabTitles();
+
+        mFragmentContainer = (FrameLayout) view.findViewById(R.id.stats_pager_container);
         
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
         mRadioGroup.setVisibility(View.VISIBLE);
@@ -112,8 +118,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     private void loadFragmentIndex(int index) {
         mChildIndex = index;
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
+            //set minimum height for container, so we don't get a janky fragment transaction
+            mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
             Fragment fragment = getFragment(index);
-            getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex).commit();
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
+            ft.replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex);
+            ft.commit();
         }
     }
 
