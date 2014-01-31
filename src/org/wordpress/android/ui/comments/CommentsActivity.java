@@ -61,7 +61,6 @@ public class CommentsActivity extends WPActionBarActivity
 
         WordPress.currentComment = null;
 
-        attemptToSelectComment();
         if (fromNotification)
             refreshCommentList();
 
@@ -95,7 +94,6 @@ public class CommentsActivity extends WPActionBarActivity
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
-            attemptToSelectComment();
             refreshCommentList();
             return true;
         } else if (itemId == android.R.id.home) {
@@ -121,15 +119,6 @@ public class CommentsActivity extends WPActionBarActivity
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
-        }
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        // load comment list if it hasn't already been loaded
-        if (WordPress.currentBlog != null && commentList != null && commentList.isEmpty()) {
-            commentList.refreshComments();
         }
     }
 
@@ -228,17 +217,9 @@ public class CommentsActivity extends WPActionBarActivity
 
     }
 
-    private void attemptToSelectComment() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-
-        if (f != null && f.isInLayout()) {
-            commentList.shouldSelectAfterLoad = true;
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        // https://code.google.com/p/android/issues/detail?id=19917
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }

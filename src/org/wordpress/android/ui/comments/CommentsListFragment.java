@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
-    protected boolean shouldSelectAfterLoad = false;
     private boolean mIsRetrievingComments = false;
     private boolean mCanLoadMoreComments = true;
 
@@ -111,6 +110,8 @@ public class CommentsListFragment extends Fragment {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         setUpListView();
+        getCommentAdapter().loadComments();
+        refreshComments(false);
     }
 
     public void onAttach(Activity activity) {
@@ -148,11 +149,6 @@ public class CommentsListFragment extends Fragment {
         } catch (IllegalArgumentException e) {
             // raised when dialog wasn't created
         }
-    }
-
-    private void selectFirstComment() {
-        if (!isEmpty())
-            getListView().setSelection(0);
     }
 
     @SuppressWarnings("unchecked")

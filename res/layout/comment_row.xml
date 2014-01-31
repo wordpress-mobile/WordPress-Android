@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_large"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_marginRight="@dimen/margin_large"
         android:layout_height="@dimen/avatar_sz_medium" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -25,7 +26,6 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toRightOf="@+id/avatar"
         android:layout_toLeftOf="@+id/status"
         android:ellipsize="end"
@@ -52,8 +52,8 @@
         android:layout_below="@+id/postTitle"
         android:ellipsize="end"
         android:maxLines="4"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_extra_small"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium" />
 

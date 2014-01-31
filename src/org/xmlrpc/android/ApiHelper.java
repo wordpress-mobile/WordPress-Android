@@ -304,19 +304,6 @@ public class ApiHelper {
                     null);
 
             comments.add(comment);
-
-            /*dbValues.put("blog_id", String.valueOf(blog.getLocalTableBlogId()));
-            dbValues.put("post_id", postID);
-            dbValues.put("comment_id", commentID);
-            dbValues.put("author", authorName);
-            dbValues.put("comment", comment);
-            dbValues.put("commentDate", formattedDate);
-            dbValues.put("commentDateFormatted", formattedDate);
-            dbValues.put("status", status);
-            dbValues.put("url", authorURL);
-            dbValues.put("email", authorEmail);
-            dbValues.put("postTitle", postTitle);
-            dbVector.add(ctr, dbValues);*/
         }
 
         int localBlogId = blog.getLocalTableBlogId();
