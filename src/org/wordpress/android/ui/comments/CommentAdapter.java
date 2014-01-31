@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -14,15 +15,11 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SysUtils;
@@ -68,15 +65,16 @@ public class CommentAdapter extends BaseAdapter {
         mOnLoadMoreListener = onLoadMoreListener;
         mOnSelectedChangeListener = onChangeListener;
 
-        mStatusColorSpam = Color.parseColor("#FF0000");
-        mStatusColorUnapproved = Color.parseColor("#D54E21");
-        mStatusTextSpam = context.getResources().getString(R.string.spam);
-        mStatusTextUnapproved = context.getResources().getString(R.string.unapproved);
-        mAnonymous = context.getString(R.string.anonymous);
+        final Resources resources = context.getResources();
+        mStatusColorSpam = Color.RED;
+        mStatusColorUnapproved = resources.getColor(R.color.orange_medium);
+        mStatusTextSpam = resources.getString(R.string.spam);
+        mStatusTextUnapproved = resources.getString(R.string.unapproved);
+        mAnonymous = resources.getString(R.string.anonymous);
 
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        mDefaultAvatar = context.getResources().getDrawable(R.drawable.placeholder);
-        mSelectedColor = context.getResources().getColor(R.color.blue_extra_light);
+        mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mDefaultAvatar = resources.getDrawable(R.drawable.placeholder);
+        mSelectedColor = resources.getColor(R.color.blue_extra_light);
     }
 
     @Override

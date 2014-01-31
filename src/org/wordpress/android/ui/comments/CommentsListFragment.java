@@ -23,6 +23,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
+import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
@@ -37,21 +39,14 @@ public class CommentsListFragment extends Fragment {
     private boolean mCanLoadMoreComments = true;
 
     private GetRecentCommentsTask mGetCommentsTask;
-    private OnCommentSelectedListener mOnCommentSelectedListener;
-    private OnAnimateRefreshButtonListener mOnAnimateRefreshButton;
-    private CommentActions.OnCommentChangeListener mOnCommentChangeListener;
     private ProgressBar mProgressLoadMore;
     private ListView mListView;
     private CommentAdapter mCommentAdapter;
-
     private ActionMode mActionMode;
 
-    // context menu IDs
-    protected static final int MENU_ID_APPROVED = 100;
-    protected static final int MENU_ID_UNAPPROVED = 101;
-    protected static final int MENU_ID_SPAM = 102;
-    protected static final int MENU_ID_DELETE = 103;
-    protected static final int MENU_ID_EDIT = 105;
+    private OnCommentSelectedListener mOnCommentSelectedListener;
+    private OnAnimateRefreshButtonListener mOnAnimateRefreshButton;
+    private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
 
@@ -91,8 +86,8 @@ public class CommentsListFragment extends Fragment {
         return mCommentAdapter;
     }
 
-    protected void loadComments() {
-        getCommentAdapter().loadComments();
+    private boolean hasCommentAdapter() {
+        return (mCommentAdapter != null);
     }
 
     protected int getSelectedCommentCount() {
@@ -100,11 +95,16 @@ public class CommentsListFragment extends Fragment {
     }
 
     protected void clear() {
-        getCommentAdapter().clear();
+        if (hasCommentAdapter())
+            getCommentAdapter().clear();
     }
 
     protected boolean isEmpty() {
-        return getCommentAdapter().isEmpty();
+        if (hasCommentAdapter()) {
+            return getCommentAdapter().isEmpty();
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -118,8 +118,8 @@ public class CommentsListFragment extends Fragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentSelectedListener = (OnCommentSelectedListener) activity;
+            mOnCommentChangeListener = (OnCommentChangeListener) activity;
             mOnAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
-            mOnCommentChangeListener = (CommentActions.OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString() + " must implement Callback");
@@ -150,6 +150,11 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
+    private void selectFirstComment() {
+        if (!isEmpty())
+            getListView().setSelection(0);
+    }
+
     @SuppressWarnings("unchecked")
     private boolean moderateSelectedComments(CommentStatus newStatus) {
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
@@ -177,9 +182,8 @@ public class CommentsListFragment extends Fragment {
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
-                    // update the comment counter on the menu drawer
-                    if (getActivity() instanceof  WPActionBarActivity)
-                        ((WPActionBarActivity) getActivity()).updateMenuDrawer();
+                    if (mOnCommentChangeListener != null)
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -248,9 +252,8 @@ public class CommentsListFragment extends Fragment {
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
-                    // update the comment counter on the menu drawer
-                    if (getActivity() instanceof  WPActionBarActivity)
-                        ((WPActionBarActivity) getActivity()).updateMenuDrawer();
+                    if (mOnCommentChangeListener != null)
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -296,6 +299,9 @@ public class CommentsListFragment extends Fragment {
     }
 
     protected void refreshComments() {
+        // this is called from CommentsActivity when a comment was changed in the detail view,
+        // so first tell the adapter to show existing changes then refresh the data
+        getCommentAdapter().notifyDataSetChanged();
         refreshComments(false);
     }
     private void refreshComments(boolean loadMore) {
@@ -462,6 +468,7 @@ public class CommentsListFragment extends Fragment {
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, com.actionbarsherlock.view.Menu menu) {
             final CommentList selectedComments = getCommentAdapter().getSelectedComments();
+
             boolean hasSelection = (selectedComments.size() > 0);
             boolean hasApproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.APPROVED);
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);

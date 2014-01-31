@@ -17,17 +17,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
-import org.wordpress.android.util.ToastUtils;
 
 public class CommentsActivity extends WPActionBarActivity
-        implements OnCommentSelectedListener,
-                   CommentActions.OnCommentChangeListener,
-                   OnAnimateRefreshButtonListener {
+        implements OnCommentSelectedListener, OnAnimateRefreshButtonListener, CommentActions.OnCommentChangeListener {
 
     protected int id;
 
@@ -162,9 +157,29 @@ public class CommentsActivity extends WPActionBarActivity
         }
     }
 
+    /*
+     * called from comment list & comment detail when comments are moderated, added, or deleted
+     */
+    @Override
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+        // update the comment counter on the menu drawer
+        updateMenuDrawer();
+
+        switch (changedFrom) {
+            case COMMENT_LIST:
+                reloadCommentDetail();
+                break;
+            case COMMENT_DETAIL:
+                refreshCommentList();
+                break;
+        }
+    }
+
+    /*
+     * called from comment list when user taps a comment
+     */
     @Override
     public void onCommentSelected(Comment comment) {
-
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
@@ -187,125 +202,18 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
-     * refresh the comment in the detail view if it's showing
+     * reload the comment in the detail view if it's showing
      */
-    private void refreshCommentDetail() {
+    private void reloadCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (fragment == null)
-            return;
-
-        fragment.refreshComment();
-    }
-
-    /*
-     * clear the comment in the detail view if it's showing
-     */
-    private void clearCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (fragment == null)
-            return;
-        fragment.clearComment();
+        if (fragment != null)
+            fragment.reloadComment();
     }
 
     private void refreshCommentList() {
         if (commentList != null)
             commentList.refreshComments();
-    }
-
-    /**
-     * these three methods implement OnCommentChangedListener and are triggered from this activity,
-     * the list fragment, and the detail fragment whenever a comment is changed
-     */
-    @Override
-    public void onCommentAdded() {
-        refreshCommentList();
-    }
-    @Override
-    public void onCommentDeleted() {
-        refreshCommentList();
-        clearCommentDetail();
-    }
-    @Override
-    public void onCommentModerated(final Comment comment, final Note note) {
-        refreshCommentList();
-        refreshCommentDetail();
-    }
-
-    /*
-     * called from CommentListFragment after user selects from ListView's context menu
-     */
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        if (item.getItemId()==CommentsListFragment.MENU_ID_EDIT) {
-            /*
-             * start activity to edit this comment
-             */
-            Intent i = new Intent(
-                    getApplicationContext(),
-                    EditCommentActivity.class);
-            startActivityForResult(i, 0);
-            return true;
-        } else if (item.getItemId()==CommentsListFragment.MENU_ID_DELETE) {
-            /*
-             * fire background action to delete this comment
-             */
-            showDialog(ID_DIALOG_DELETING);
-            CommentActions.deleteComment(
-                    WordPress.getCurrentLocalTableBlogId(),
-                    WordPress.currentComment,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            dismissDialog(ID_DIALOG_DELETING);
-                            if (succeeded) {
-                                onCommentDeleted();
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
-                            } else {
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
-                            }
-                        }
-                    });
-            return true;
-        } else {
-            /*
-             * remainder are all comment moderation actions
-             */
-            showDialog(ID_DIALOG_MODERATING);
-            final CommentStatus status;
-            switch (item.getItemId()) {
-                case CommentsListFragment.MENU_ID_APPROVED:
-                    status = CommentStatus.APPROVED;
-                    break;
-                case CommentsListFragment.MENU_ID_UNAPPROVED:
-                    status = CommentStatus.UNAPPROVED;
-                    break;
-                case CommentsListFragment.MENU_ID_SPAM:
-                    status = CommentStatus.SPAM;
-                    break;
-                default :
-                    return true;
-            }
-
-            CommentActions.moderateComment(WordPress.getCurrentLocalTableBlogId(),
-                                           WordPress.currentComment,
-                                           status,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            dismissDialog(ID_DIALOG_MODERATING);
-                            if (succeeded) {
-                                onCommentModerated(WordPress.currentComment, null);
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.comment_moderated));
-                            } else {
-                                ToastUtils.showToast(CommentsActivity.this, getString(R.string.error_moderate_comment));
-                            }
-                        }
-                    });
-
-            return true;
-        }
     }
 
     @Override
@@ -363,4 +271,5 @@ public class CommentsActivity extends WPActionBarActivity
             return super.onCreateDialog(id);
         }
     }
+
 }

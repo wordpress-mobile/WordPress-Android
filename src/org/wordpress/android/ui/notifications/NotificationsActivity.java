@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -388,39 +387,13 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     }
 
 
-    /**
-     * these four methods implement OnCommentChangedListener and are triggered from the comment details fragment whenever a comment is changed
+    /*
+     * triggered from the comment details fragment whenever a comment is changed (moderated, added,
+     * deleted, etc.) - refresh notifications show changes are reflected here
      */
     @Override
-    public void onCommentAdded() {
-    }
-    @Override
-    public void onCommentDeleted() {
-    }
-    @Override
-    public void onCommentModerated(final Comment comment, final Note note) {
-        if (isFinishing())
-            return;
-        if (note == null)
-            return;
-        //update the moderated note by calling the server.
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("ids", note.getId());
-        NotesResponseHandler handler = new NotesResponseHandler() {
-            @Override
-            public void onNotes(List<Note> notes) {
-                if (isFinishing())
-                    return;
-                // there should only be one note!
-                if (!notes.isEmpty()) {
-                    Note updatedNote = notes.get(0);
-                    final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                    adapter.updateNote(note, updatedNote);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        };
-        WordPress.restClient.getNotifications(params, handler, handler);
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+        refreshNotes();
     }
 
     public void refreshNotificationsListFragment(List<Note> notes) {

@@ -31,6 +31,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
+import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
+import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -76,14 +78,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsRequestingComment = false;
     private boolean mIsUsersBlog = false;
 
+    private OnCommentChangeListener mOnCommentChangeListener;
+
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
      * changed when opened from a notification
      */
     private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
-
-    private CommentActions.OnCommentChangeListener mChangeListener;
 
     /*
      * used when called from comment list
@@ -177,9 +179,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mChangeListener = (CommentActions.OnCommentChangeListener) activity;
+            mOnCommentChangeListener = (OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
-            mChangeListener = null;
+            mOnCommentChangeListener = null;
         }
     }
 
@@ -212,7 +214,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * reload the current comment from the local database
      */
-    protected void refreshComment() {
+    protected void reloadComment() {
         if (!hasComment())
             return;
         Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
@@ -253,6 +255,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mTxtStatus.setText(null);
             mLayoutButtons.setVisibility(View.GONE);
             mLayoutReply.setVisibility(View.GONE);
+            viewDetail.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
             if (mNote != null && !mIsRequestingComment)
@@ -260,6 +263,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
             return;
         }
+
+        viewDetail.setVisibility(View.VISIBLE);
 
         txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
@@ -321,16 +326,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // use notification subject as the title if this was shown from a notification, otherwise
         // user the title of the associated post
-        final boolean hasTitle;
+        final String title;
         if (getNote() != null) {
-            txtPostTitle.setText(getNote().getSubject());
-            hasTitle = true;
+            title = getNote().getSubject();
         } else if (postExists) {
-            txtPostTitle.setText(ReaderPostTable.getPostTitle(blogId, postId));
-            hasTitle = true;
+            title = ReaderPostTable.getPostTitle(blogId, postId);
         } else {
-            hasTitle = false;
+            title = null;
         }
+        final boolean hasTitle = !TextUtils.isEmpty(title);
+        if (hasTitle)
+            txtPostTitle.setText(title);
 
         // make sure this post is available to the reader, and show progress bar in title view
         // if the title wasn't set above so user knows something is happening
@@ -345,8 +351,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         return;
                     progress.setVisibility(View.INVISIBLE);
                     // update title if it wasn't set above
-                    if (succeeded && !hasTitle)
-                        txtPostTitle.setText(ReaderPostTable.getPostTitle(blogId, postId));
+                    if (succeeded && !hasTitle) {
+                        String title = ReaderPostTable.getPostTitle(blogId, postId);
+                        if (!TextUtils.isEmpty(title)) {
+                            txtPostTitle.setText(title);
+                        } else {
+                            txtPostTitle.setText(R.string.untitled);
+                        }
+                    }
                 }
             });
         }
@@ -424,8 +436,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnSpam.setEnabled(true);
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(newStatus));
-                    if (mChangeListener != null)
-                        mChangeListener.onCommentModerated(mComment, mNote);
+                    if (mOnCommentChangeListener != null)
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                 }
@@ -470,8 +482,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 progress.setVisibility(View.GONE);
 
                 if (succeeded) {
-                    if (mChangeListener != null)
-                        mChangeListener.onCommentAdded();
+                    if (mOnCommentChangeListener != null)
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
                     MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
                     mEditReply.setText(null);
                 } else {
