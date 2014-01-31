@@ -561,6 +561,7 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
+    <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Please contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t Access Stats</string>
     <string name="jetpack_stats_switch_user">This WordPress.com account does not have access to the stats for this blog. Would you like to sign in to a different account?</string>
@@ -628,6 +629,8 @@
     <string name="reader_toast_err_reblog_requires_blog">Please select a blog</string>
     <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
+    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
+    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>

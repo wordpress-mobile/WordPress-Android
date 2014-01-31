@@ -84,6 +84,7 @@
 
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
+    <dimen name="nux_button_height">50dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">20dp</dimen>

@@ -79,6 +79,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+        clearCommentList();
         refreshCommentList();
     }
 
@@ -88,8 +89,8 @@ public class CommentsActivity extends WPActionBarActivity
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.basic_menu, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (shouldAnimateRefreshButton) {
-            shouldAnimateRefreshButton = false;
+        if (mShouldAnimateRefreshButton) {
+            mShouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(refreshMenuItem);
         }
         return true;
@@ -211,6 +212,11 @@ public class CommentsActivity extends WPActionBarActivity
         fragment.clearComment();
     }
 
+    private void clearCommentList() {
+        if (commentList != null)
+            commentList.clearComments();
+    }
+
     private void refreshCommentList() {
         if (commentList != null)
             commentList.refreshComments();
@@ -239,7 +245,7 @@ public class CommentsActivity extends WPActionBarActivity
         refreshCommentList();
         refreshCommentDetail();
     }
-    
+
     /*
      * called from CommentListFragment after user selects from ListView's context menu
      */
@@ -318,10 +324,10 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onAnimateRefreshButton(boolean start) {
         if (start) {
-            shouldAnimateRefreshButton = true;
+            mShouldAnimateRefreshButton = true;
             this.startAnimatingRefreshButton(refreshMenuItem);
         } else {
-            shouldAnimateRefreshButton = false;
+            mShouldAnimateRefreshButton = false;
             this.stopAnimatingRefreshButton(refreshMenuItem);
         }
 

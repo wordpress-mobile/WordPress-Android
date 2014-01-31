@@ -29,7 +29,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -159,11 +158,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     };
 
     private void signin() {
-        if (!wpcomFieldsFilled()) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.required_fields));
-            ft.add(alert, "alert");
-            ft.commitAllowingStateLoss();
+        if (!isUserDataValid()) {
             return;
         }
         new SetupBlogTask().execute();
@@ -186,7 +181,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (wpcomFieldsFilled()) {
+        if (fieldsFilled()) {
             mSignInButton.setEnabled(true);
         } else {
             mSignInButton.setEnabled(false);
@@ -195,14 +190,32 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUsernameEditText.setError(null);
     }
 
-    private boolean wpcomFieldsFilled() {
+    private boolean fieldsFilled() {
         return mUsernameEditText.getText().toString().trim().length() > 0
-                && mPasswordEditText.getText().toString().trim().length() > 0;
+               && mPasswordEditText.getText().toString().trim().length() > 0;
+    }
+
+    protected boolean isUserDataValid() {
+        final String username = mUsernameEditText.getText().toString().trim();
+        final String password = mPasswordEditText.getText().toString().trim();
+        boolean retValue = true;
+
+        if (username.equals("")) {
+            mUsernameEditText.setError(getString(R.string.required_field));
+            mUsernameEditText.requestFocus();
+            retValue = false;
+        }
+
+        if (password.equals("")) {
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
+            retValue = false;
+        }
+        return retValue;
     }
 
     private boolean selfHostedFieldsFilled() {
-        return wpcomFieldsFilled()
-                && mUrlEditText.getText().toString().trim().length() > 0;
+        return fieldsFilled() && mUrlEditText.getText().toString().trim().length() > 0;
     }
 
     private void showPasswordError(int messageId) {
@@ -227,7 +240,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     public void signInDotComUser() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                getActivity().getApplicationContext());
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
         if (username != null && password != null) {
@@ -243,12 +257,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mSignInButton.setVisibility(View.GONE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
+        mUsernameEditText.setEnabled(false);
+        mPasswordEditText.setEnabled(false);
+        mUrlEditText.setEnabled(false);
+        mAddSelfHostedButton.setEnabled(false);
+        mCreateAccountButton.setEnabled(false);
     }
 
     protected void endProgress() {
         mProgressBarSignIn.setVisibility(View.GONE);
         mProgressTextSignIn.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);
+        mUsernameEditText.setEnabled(true);
+        mPasswordEditText.setEnabled(true);
+        mUrlEditText.setEnabled(true);
+        mAddSelfHostedButton.setEnabled(true);
+        mCreateAccountButton.setEnabled(true);
     }
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
@@ -292,7 +316,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
             if (mSetupBlog.isHttpAuthRequired()) {
-                if (getActivity() == null) {
+                if (!hasActivity()) {
                     return ;
                 }
                 // Prompt for http credentials
@@ -326,6 +350,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (userBlogList == null && mErrorMsgId != 0) {
+                if (!hasActivity()) {
+                    return ;
+                }
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
