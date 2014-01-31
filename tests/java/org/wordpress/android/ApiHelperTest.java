@@ -61,7 +61,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 countDownLatch.countDown();
-                assertTrue(true);
+                assertTrue(false);
             }
         }).execute(false);
         countDownLatch.await(5, TimeUnit.SECONDS);
