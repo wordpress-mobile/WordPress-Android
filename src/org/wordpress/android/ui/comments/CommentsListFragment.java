@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -66,17 +65,17 @@ public class CommentsListFragment extends ListFragment {
     public static final int COMMENTS_PER_PAGE = 30;
     public boolean shouldSelectAfterLoad = false;
     public int numRecords = 0,
-               checkedCommentTotal = 0,
+               checkedCommentTotal = 0, // TODO: this is never set!
                selectedPosition,
                scrollPosition = 0,
                scrollPositionTop = 0;
     public ProgressDialog progressDialog;
-    public getRecentCommentsTask getCommentsTask;
+    public GetRecentCommentsTask getCommentsTask;
 
     private XMLRPCClient client;
-    private String accountName = "", moderateErrorMsg = "";
+    private String moderateErrorMsg = "";
     private ViewSwitcher switcher;
-    private boolean loadMore = false, doInBackground = false, refreshOnly = false;
+    private boolean loadMore = false, refreshOnly = false;
     private HashSet<Integer> selectedCommentPositions = new HashSet<Integer>();
     private Object[] commentParams;
     private OnCommentSelectedListener mOnCommentSelectedListener;
@@ -84,6 +83,9 @@ public class CommentsListFragment extends ListFragment {
     private CommentActions.OnCommentChangeListener mOnCommentChangeListener;
     private View mFooterSpacer;
     private ListScrollPositionManager mListScrollPositionManager;
+
+    private int mStatusColorSpam;
+    private int mStatusColorUnapproved;
 
     // context menu IDs
     protected static final int MENU_ID_APPROVED = 100;
@@ -95,6 +97,8 @@ public class CommentsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        mStatusColorSpam = Color.parseColor("#FF0000");
+        mStatusColorUnapproved = Color.parseColor("#D54E21");
     }
 
     @Override
@@ -153,8 +157,6 @@ public class CommentsListFragment extends ListFragment {
 
         switcher.addView(footer);
         switcher.addView(progress);
-
-        getActivity().setTitle(accountName + " - Moderate Comments");
 
         Button deleteComments = (Button) v.findViewById(R.id.bulkDeleteComment);
 
@@ -218,7 +220,7 @@ public class CommentsListFragment extends ListFragment {
     }
 
     private void dismissDialog(int id) {
-        if (getActivity()==null)
+        if (!hasActivity())
             return;
         try {
             getActivity().dismissDialog(id);
@@ -283,36 +285,39 @@ public class CommentsListFragment extends ListFragment {
             }
         }
         dismissDialog(ID_DIALOG_MODERATING);
-        Thread action = new Thread() {
-            public void run() {
-                if (moderateErrorMsg == "") {
-                    String msg = getResources().getText(R.string.comment_moderated).toString();
-                    if (checkedCommentTotal > 1)
-                        msg = getResources().getText(R.string.comments_moderated).toString();
-                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    checkedCommentTotal = 0;
-                    hideModerationBar();
-                    mOnCommentChangeListener.onCommentsModerated(commentsUpdatedList);
 
-                    // update the comment counter on the menu drawer
-                    ((WPActionBarActivity) getActivity()).updateMenuDrawer();
-                } else {
-                    // there was an xmlrpc error
-                    if (!getActivity().isFinishing()) {
+        if (hasActivity()) {
+            Thread action = new Thread() {
+                public void run() {
+                    if (moderateErrorMsg == "") {
+                        String msg = getResources().getText(R.string.comment_moderated).toString();
+                        if (checkedCommentTotal > 1)
+                            msg = getResources().getText(R.string.comments_moderated).toString();
+                        Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                         checkedCommentTotal = 0;
                         hideModerationBar();
-                        getListView().invalidateViews();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
-                        ft.add(alert, "alert");
-                        ft.commitAllowingStateLoss();
+                        mOnCommentChangeListener.onCommentsModerated(commentsUpdatedList);
+
+                        // update the comment counter on the menu drawer
+                        ((WPActionBarActivity) getActivity()).updateMenuDrawer();
+                    } else {
+                        // there was an xmlrpc error
+                        if (!getActivity().isFinishing()) {
+                            checkedCommentTotal = 0;
+                            hideModerationBar();
+                            getListView().invalidateViews();
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
+                            ft.add(alert, "alert");
+                            ft.commitAllowingStateLoss();
+                        }
+                        moderateErrorMsg = "";
                     }
-                    moderateErrorMsg = "";
                 }
-            }
-        };
-        getActivity().runOnUiThread(action);
-        progressDialog = new ProgressDialog(getActivity().getApplicationContext());
+            };
+            getActivity().runOnUiThread(action);
+            progressDialog = new ProgressDialog(getActivity().getApplicationContext());
+        }
     }
 
     protected void deleteComments() {
@@ -336,33 +341,36 @@ public class CommentsListFragment extends ListFragment {
             }
         }
         dismissDialog(ID_DIALOG_DELETING);
-        Thread action = new Thread() {
-            public void run() {
-                if (TextUtils.isEmpty(moderateErrorMsg)) {
-                    final String msg;
-                    if (checkedCommentTotal > 1) {
-                        msg = getResources().getText(R.string.comments_moderated).toString();
+
+        if (hasActivity()) {
+            Thread action = new Thread() {
+                public void run() {
+                    if (TextUtils.isEmpty(moderateErrorMsg)) {
+                        final String msg;
+                        if (checkedCommentTotal > 1) {
+                            msg = getResources().getText(R.string.comments_moderated).toString();
+                        } else {
+                            msg = getResources().getText(R.string.comment_moderated).toString();
+                        }
+                        Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                        checkedCommentTotal = 0;
+                        hideModerationBar();
+                        selectedCommentPositions.clear();
+                        mOnCommentChangeListener.onCommentDeleted();
                     } else {
-                        msg = getResources().getText(R.string.comment_moderated).toString();
-                    }
-                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    checkedCommentTotal = 0;
-                    hideModerationBar();
-                    selectedCommentPositions.clear();
-                    mOnCommentChangeListener.onCommentDeleted();
-                } else {
-                    // error occurred during delete request
-                    if (!getActivity().isFinishing()) {
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
-                        ft.add(alert, "alert");
-                        ft.commitAllowingStateLoss();
+                        // error occurred during delete request
+                        if (!getActivity().isFinishing()) {
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(moderateErrorMsg);
+                            ft.add(alert, "alert");
+                            ft.commitAllowingStateLoss();
+                        }
                     }
                 }
-            }
-        };
-        getActivity().runOnUiThread(action);
-        progressDialog = new ProgressDialog(getActivity().getApplicationContext());
+            };
+            getActivity().runOnUiThread(action);
+            progressDialog = new ProgressDialog(getActivity().getApplicationContext());
+        }
     }
 
     public boolean loadComments(boolean refresh, boolean loadMore) {
@@ -372,10 +380,8 @@ public class CommentsListFragment extends ListFragment {
 
         List<Map<String, Object>> loadedComments = WordPress.wpDB.loadComments(WordPress.currentBlog.getLocalTableBlogId());
 
-        if (refreshOnly) {
-            if (model != null) {
-                model.clear();
-            }
+        if (model != null) {
+            model.clear();
         } else {
             model = new ArrayList<Comment>();
         }
@@ -454,6 +460,7 @@ public class CommentsListFragment extends ListFragment {
         listView.removeFooterView(switcher);
         listView.removeFooterView(mFooterSpacer);
         if (showSwitcher) {
+            switcher.setDisplayedChild(0);
             listView.addFooterView(switcher);
         }
         listView.addFooterView(mFooterSpacer);
@@ -461,8 +468,13 @@ public class CommentsListFragment extends ListFragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                // make sure position is in bounds (prevents ArrayIndexOutOfBoundsException that
+                // would otherwise occur when footer is tapped)
+                if (position < 0 || position >= model.size()) {
+                    return;
+                }
                 selectedPosition = position;
-                Comment comment = model.get((int) id);
+                Comment comment = model.get(position);
                 mOnCommentSelectedListener.onCommentSelected(comment);
                 getListView().invalidateViews();
             }
@@ -479,6 +491,13 @@ public class CommentsListFragment extends ListFragment {
                     AppLog.e(T.COMMENTS, "bad menuInfo", e);
                     return;
                 }
+
+                // make sure this is a valid position (long-tapping footer will pass invalid position)
+                if (info.position < 0 || info.position >= model.size()) {
+                    menu.clear();
+                    return;
+                }
+
                 WordPress.currentComment = model.get(info.position);
                 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
                 CommentStatus status = WordPress.currentComment.getStatusEnum();
@@ -494,6 +513,14 @@ public class CommentsListFragment extends ListFragment {
                 menu.add(0, MENU_ID_EDIT, 0, getResources().getText(R.string.edit));
             }
         });
+    }
+
+    protected void clearComments() {
+        if (model != null && model.size() > 0) {
+            model.clear();
+            allComments.clear();
+            ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+        }
     }
 
     public void refreshComments() {
@@ -526,7 +553,7 @@ public class CommentsListFragment extends ListFragment {
                 WordPress.currentBlog.getPassword(), hPost };
 
         commentParams = params;
-        getCommentsTask = new getRecentCommentsTask();
+        getCommentsTask = new GetRecentCommentsTask();
         getCommentsTask.execute();
     }
 
@@ -536,38 +563,26 @@ public class CommentsListFragment extends ListFragment {
     }
 
     class CommentAdapter extends ArrayAdapter<Comment> {
-
-        int sdk_version = 7;
-        boolean detailViewVisible = false;
-
+        private LayoutInflater mInflater;
         CommentAdapter() {
-            super(getActivity().getApplicationContext(), R.layout.comment_row, model);
-
-            sdk_version = android.os.Build.VERSION.SDK_INT;
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-            if (f != null && f.isInLayout())
-                detailViewVisible = true;
+            super(getActivity(), R.layout.comment_row, model);
+            mInflater = LayoutInflater.from(getActivity());
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            CommentEntryWrapper wrapper = null;
+            final CommentEntryWrapper wrapper;
 
-            if (row == null) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                row = inflater.inflate(R.layout.comment_row, null);
-                NetworkImageView avatar = (NetworkImageView)row.findViewById(R.id.avatar);
-                avatar.setDefaultImageResId(R.drawable.placeholder);
-                wrapper = new CommentEntryWrapper(row);
-                row.setTag(wrapper);
+            if (convertView == null || convertView.getTag() == null) {
+                convertView = mInflater.inflate(R.layout.comment_row, null);
+                wrapper = new CommentEntryWrapper(convertView);
+                convertView.setTag(wrapper);
             } else {
-                wrapper = (CommentEntryWrapper) row.getTag();
+                wrapper = (CommentEntryWrapper) convertView.getTag();
             }
             Comment commentEntry = getItem(position);
             wrapper.populateFrom(commentEntry, position);
 
-            return (row);
+            return convertView;
         }
     }
 
@@ -590,8 +605,10 @@ public class CommentsListFragment extends ListFragment {
             txtComment = (TextView) row.findViewById(R.id.comment);
             txtStatus = (TextView) row.findViewById(R.id.status); // setTextSize(12)
             txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
-            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
             bulkCheck = (CheckBox) row.findViewById(R.id.bulkCheck);
+
+            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
+            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         }
 
         void populateFrom(Comment comment, final int position) {
@@ -606,26 +623,22 @@ public class CommentsListFragment extends ListFragment {
 
             row.setId(Integer.valueOf(comment.commentID));
 
-            final String status;
-            final String textColor;
-
+            // status is only shown for comments that aren't approved
             switch (comment.getStatusEnum()) {
                 case SPAM :
-                    status = getResources().getText(R.string.spam).toString();
-                    textColor = "#FF0000";
+                    txtStatus.setText(getResources().getText(R.string.spam).toString());
+                    txtStatus.setTextColor(mStatusColorSpam);
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 case UNAPPROVED:
-                    status = getResources().getText(R.string.unapproved).toString();
-                    textColor = "#D54E21";
+                    txtStatus.setText(getResources().getText(R.string.unapproved).toString());
+                    txtStatus.setTextColor(mStatusColorUnapproved);
+                    txtStatus.setVisibility(View.VISIBLE);
                     break;
                 default :
-                    status = getResources().getText(R.string.approved).toString();
-                    textColor = "#006505";
+                    txtStatus.setVisibility(View.GONE);
                     break;
             }
-
-            txtStatus.setText(status);
-            txtStatus.setTextColor(Color.parseColor(textColor));
 
             bulkCheck.setChecked(selectedCommentPositions.contains(position));
             bulkCheck.setTag(position);
@@ -640,7 +653,6 @@ public class CommentsListFragment extends ListFragment {
                 }
             });
 
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             if (comment.hasProfileImageUrl()) {
                 imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getProfileImageUrl()), WordPress.imageLoader);
             } else {
@@ -650,6 +662,8 @@ public class CommentsListFragment extends ListFragment {
     }
 
     protected void hideModerationBar() {
+        if (!hasActivity())
+            return;
         ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.INVISIBLE )
             return;
@@ -679,6 +693,8 @@ public class CommentsListFragment extends ListFragment {
     private static final long MODERATION_BAR_ANI_MS = 250;
 
     protected void showModerationBar() {
+        if (!hasActivity())
+            return;
         ViewGroup moderationBar = (ViewGroup) getActivity().findViewById(R.id.moderationBar);
         if( moderationBar.getVisibility() == View.VISIBLE )
             return;
@@ -710,9 +726,9 @@ public class CommentsListFragment extends ListFragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    class getRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
+    class GetRecentCommentsTask extends AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
         protected void onPostExecute(Map<Integer, Map<?, ?>> commentsResult) {
-            if (isCancelled())
+            if (isCancelled() || !hasActivity())
                 return;
 
             if (commentsResult == null) {
@@ -721,7 +737,6 @@ public class CommentsListFragment extends ListFragment {
                     model.clear();
                     allComments.clear();
                     getListView().invalidateViews();
-                    //onCommentStatusChangeListener.onCommentStatusChanged("clear");
                     WordPress.currentComment = null;
                     loadComments(false, false);
                 }
@@ -742,9 +757,7 @@ public class CommentsListFragment extends ListFragment {
                 }
             } else {
                 allComments.putAll(commentsResult);
-                if (!doInBackground) {
-                    loadComments(refreshOnly, loadMore);
-                }
+                loadComments(refreshOnly, loadMore);
             }
 
             mOnAnimateRefreshButton.onAnimateRefreshButton(false);
@@ -753,25 +766,21 @@ public class CommentsListFragment extends ListFragment {
                 switcher.showPrevious();
             }
 
-            if (!doInBackground) {
-                showOrHideModerationBar();
-            }
+            showOrHideModerationBar();
         }
 
         @Override
         protected Map<Integer, Map<?, ?>> doInBackground(Void... args) {
-
-            Map<Integer, Map<?, ?>> commentsResult;
+            if (!hasActivity())
+                return null;
             try {
-                commentsResult = ApiHelper.refreshComments(getActivity()
+                Map<Integer, Map<?, ?>> commentsResult = ApiHelper.refreshComments(getActivity()
                         .getApplicationContext(), commentParams);
+                return commentsResult;
             } catch (XMLRPCException e) {
-                if (!getActivity().isFinishing())
-                    moderateErrorMsg = e.getLocalizedMessage();
+                moderateErrorMsg = e.getLocalizedMessage();
                 return null;
             }
-
-            return commentsResult;
         }
     }
 
@@ -805,5 +814,9 @@ public class CommentsListFragment extends ListFragment {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
     }
 }

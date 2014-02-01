@@ -130,24 +130,23 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         return false;
     }
 
-    private boolean checkUserData() {
-        // try to create the user
+    protected boolean isUserDataValid() {
         final String siteTitle = mSiteTitleTextField.getText().toString().trim();
         final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        boolean retValue = true;
 
         if (siteTitle.equals("")) {
             mSiteTitleTextField.setError(getString(R.string.required_field));
             mSiteTitleTextField.requestFocus();
-            return false;
+            retValue = false;
         }
 
         if (siteUrl.equals("")) {
             mSiteUrlTextField.setError(getString(R.string.required_field));
             mSiteUrlTextField.requestFocus();
-            return false;
+            retValue = false;
         }
-
-        return true;
+        return retValue;
     }
 
     private String titleToUrl(String siteUrl) {
@@ -160,7 +159,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     R.string.no_network_message);
             return;
         }
-        if (!checkUserData())
+        if (!isUserDataValid())
             return;
 
         // prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.wordpress.android"
+    android:installLocation="auto" >
+
+    <!-- GCM configuration -->
+    <permission
+        android:name="org.wordpress.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+    
+    <application>
+
+        <provider
+            android:name=".providers.StatsContentProvider"
+            android:authorities="org.wordpress.android.providers.StatsContentProvider"
+            android:exported="false" />
+
+        <service android:name="org.wordpress.android.GCMIntentService" />
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.wordpress.android" />
+            </intent-filter>
+        </receiver>
+        
+    </application>
+
+</manifest>
