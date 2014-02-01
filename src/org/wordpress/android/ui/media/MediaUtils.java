@@ -343,7 +343,11 @@ public class MediaUtils {
     }
 
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+        if (context == null || imageUri == null)
+            return null;
+
         File cacheDir;
+
         String mimeType = context.getContentResolver().getType(imageUri);
         boolean isVideo = (mimeType != null && mimeType.contains("video"));
 
