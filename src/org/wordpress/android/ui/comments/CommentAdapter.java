@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -20,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SysUtils;
@@ -143,7 +145,7 @@ public class CommentAdapter extends BaseAdapter {
         return mSelectedPositions.contains(position);
     }
 
-    protected void setItemSelected(int position, boolean isSelected) {
+    protected void setItemSelected(int position, boolean isSelected, View view) {
         if (isItemSelected(position) == isSelected)
             return;
 
@@ -155,12 +157,26 @@ public class CommentAdapter extends BaseAdapter {
 
         notifyDataSetChanged();
 
+        if (view != null && view.getTag() instanceof CommentHolder) {
+            animateSelection((CommentHolder) view.getTag(), isSelected);
+        }
+
         if (mOnSelectedChangeListener != null)
             mOnSelectedChangeListener.onSelectedItemsChanged();
     }
 
-    protected void toggleItemSelected(int position) {
-        setItemSelected(position, !isItemSelected(position));
+    private void animateSelection(final CommentHolder holder, boolean isSelected) {
+        if (isSelected) {
+            AniUtils.startAnimation(holder.imgCheckmark, R.anim.zoom);
+            holder.imgCheckmark.setVisibility(View.VISIBLE);
+        } else {
+            AniUtils.startAnimation(holder.imgCheckmark, R.anim.rotate_zoom_out);
+            holder.imgCheckmark.setVisibility(View.GONE);
+        }
+    }
+
+    protected void toggleItemSelected(int position, View view) {
+        setItemSelected(position, !isItemSelected(position), view);
     }
 
     private boolean isPositionValid(int position) {
@@ -177,7 +193,7 @@ public class CommentAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Comment comment = mComments.get(position);
         final CommentHolder holder;
 
@@ -211,17 +227,20 @@ public class CommentAdapter extends BaseAdapter {
                 break;
         }
 
-        String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
-        if (!TextUtils.isEmpty(avatarUrl)) {
-            holder.imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
-        } else {
-            holder.imgAvatar.setImageDrawable(mDefaultAvatar);
-        }
-
         if (mEnableSelection && isItemSelected(position)) {
             convertView.setBackgroundColor(mSelectedColor);
+            if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
+                holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);
+            if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
+                holder.imgCheckmark.setVisibility(View.GONE);
+            String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                holder.imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+            } else {
+                holder.imgAvatar.setImageDrawable(mDefaultAvatar);
+            }
         }
 
         // request to load more comments when we near the end
@@ -238,6 +257,7 @@ public class CommentAdapter extends BaseAdapter {
         private TextView txtPostTitle;
         private TextView txtDate;
         private NetworkImageView imgAvatar;
+        private ImageView imgCheckmark;
 
         private CommentHolder(View row) {
             txtName = (TextView) row.findViewById(R.id.name);
@@ -247,6 +267,7 @@ public class CommentAdapter extends BaseAdapter {
             txtDate = (TextView) row.findViewById(R.id.text_date);
             imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
             imgAvatar.setDefaultImageResId(R.drawable.placeholder);
+            imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
         }
     }
 

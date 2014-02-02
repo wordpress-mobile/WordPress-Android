@@ -7,11 +7,27 @@
     android:paddingTop="@dimen/margin_large"
     android:paddingBottom="@dimen/margin_large">
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/avatar"
-        android:layout_width="@dimen/avatar_sz_medium"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/frame_avatar"
         android:layout_marginRight="@dimen/margin_large"
-        android:layout_height="@dimen/avatar_sz_medium" />
+        android:layout_height="wrap_content">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_sz_medium"
+            android:src="@drawable/placeholder"
+            android:layout_height="@dimen/avatar_sz_medium" />
+
+        <ImageView
+            android:layout_width="@dimen/avatar_sz_medium"
+            android:src="@drawable/tab_icon_checkmark"
+            android:background="@color/blue_medium"
+            android:id="@+id/image_checkmark"
+            android:padding="@dimen/margin_medium"
+            android:visibility="gone"
+            android:layout_height="@dimen/avatar_sz_medium" />
+    </FrameLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/status"
@@ -19,7 +35,7 @@
         android:layout_height="wrap_content"
         android:textAllCaps="true"
         android:visibility="gone"
-        android:layout_toRightOf="@+id/avatar"
+        android:layout_toRightOf="@+id/frame_avatar"
         android:textSize="@dimen/text_sz_medium" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -27,7 +43,7 @@
         android:layout_below="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/avatar"
+        android:layout_toRightOf="@+id/frame_avatar"
         android:layout_toLeftOf="@+id/text_date"
         android:ellipsize="end"
         android:singleLine="true"

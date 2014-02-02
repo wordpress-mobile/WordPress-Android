@@ -76,8 +76,11 @@ public class CommentsListFragment extends Fragment {
                 @Override
                 public void onSelectedItemsChanged() {
                     if (mActionMode != null) {
-                        updateActionModeTitle();
-                        mActionMode.invalidate();
+                        if (getSelectedCommentCount() == 0) {
+                            mActionMode.finish();
+                        } else {
+                            updateActionModeTitle();
+                        }
                     }
                 }
             };
@@ -273,7 +276,7 @@ public class CommentsListFragment extends Fragment {
                     mOnCommentSelectedListener.onCommentSelected(comment);
                     getListView().invalidateViews();
                 } else {
-                    getCommentAdapter().toggleItemSelected(position);
+                    getCommentAdapter().toggleItemSelected(position, view);
                 }
             }
         });
@@ -286,10 +289,10 @@ public class CommentsListFragment extends Fragment {
                     if (getActivity() instanceof WPActionBarActivity) {
                         ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
-                        getCommentAdapter().setItemSelected(position, true);
+                        getCommentAdapter().setItemSelected(position, true, view);
                     }
                 } else {
-                    getCommentAdapter().toggleItemSelected(position);
+                    getCommentAdapter().toggleItemSelected(position, view);
                 }
                 return true;
             }
