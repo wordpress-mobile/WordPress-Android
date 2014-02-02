@@ -158,21 +158,15 @@ public class CommentAdapter extends BaseAdapter {
         notifyDataSetChanged();
 
         if (view != null && view.getTag() instanceof CommentHolder) {
-            animateSelection((CommentHolder) view.getTag(), isSelected);
+            CommentHolder holder = (CommentHolder) view.getTag();
+            // animate the selection change on ICS or later (looks wonky on Gingerbread)
+            if (SysUtils.isGteAndroid4())
+                AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.zoom : R.anim.zoom_out);
+            holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 
         if (mOnSelectedChangeListener != null)
             mOnSelectedChangeListener.onSelectedItemsChanged();
-    }
-
-    private void animateSelection(final CommentHolder holder, boolean isSelected) {
-        if (isSelected) {
-            AniUtils.startAnimation(holder.imgCheckmark, R.anim.zoom);
-            holder.imgCheckmark.setVisibility(View.VISIBLE);
-        } else {
-            AniUtils.startAnimation(holder.imgCheckmark, R.anim.zoom_out);
-            holder.imgCheckmark.setVisibility(View.GONE);
-        }
     }
 
     protected void toggleItemSelected(int position, View view) {
