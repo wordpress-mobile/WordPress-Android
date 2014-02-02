@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Counterpart to cab_select.xml
+-->
 <scale xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@android:integer/config_mediumAnimTime"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:interpolator="@android:anim/accelerate_interpolator"
     android:pivotX="50%"
     android:pivotY="50%"
     android:fromXScale="1.0"
