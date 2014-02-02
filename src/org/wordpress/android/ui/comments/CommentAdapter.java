@@ -170,7 +170,7 @@ public class CommentAdapter extends BaseAdapter {
             AniUtils.startAnimation(holder.imgCheckmark, R.anim.zoom);
             holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            AniUtils.startAnimation(holder.imgCheckmark, R.anim.rotate_zoom_out);
+            AniUtils.startAnimation(holder.imgCheckmark, R.anim.zoom_out);
             holder.imgCheckmark.setVisibility(View.GONE);
         }
     }

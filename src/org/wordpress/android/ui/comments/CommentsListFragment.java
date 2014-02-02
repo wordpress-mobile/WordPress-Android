@@ -80,6 +80,8 @@ public class CommentsListFragment extends Fragment {
                             mActionMode.finish();
                         } else {
                             updateActionModeTitle();
+                            // must invalidate to ensure onPrepareActionMode is called
+                            mActionMode.invalidate();
                         }
                     }
                 }
