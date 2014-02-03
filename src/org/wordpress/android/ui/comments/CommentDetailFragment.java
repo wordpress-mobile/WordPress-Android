@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,10 +20,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NetworkImageView;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
@@ -43,12 +44,14 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -241,7 +244,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // and comment detail fragments)
         final ViewGroup viewDetail = (ViewGroup) getActivity().findViewById(R.id.layout_detail);
 
-        final NetworkImageView imgAvatar = (NetworkImageView) viewDetail.findViewById(R.id.image_avatar);
+        final WPNetworkImageView imgAvatar = (WPNetworkImageView) viewDetail.findViewById(R.id.image_avatar);
         final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
         final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
         final TextView txtContent = (TextView) viewDetail.findViewById(R.id.text_content);
@@ -276,13 +279,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
         CommentUtils.displayHtmlComment(txtContent, mComment.getCommentText(), maxImageSz);
 
-        imgAvatar.setDefaultImageResId(R.drawable.placeholder);
         if (mComment.hasProfileImageUrl()) {
-            imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WordPress.imageLoader);
+            imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WPNetworkImageView.ImageType.AVATAR);
         } else if (mComment.hasAuthorEmail()) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
             imgAvatar.setImageResource(R.drawable.placeholder);
         }
@@ -313,6 +315,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             AniUtils.flyIn(mLayoutReply);
     }
 
+    private void setPostTitle(TextView txtTitle, String title) {
+        if (txtTitle == null)
+            return;
+        if (TextUtils.isEmpty(title)) {
+            txtTitle.setText(null);
+            return;
+        }
+        String html = getString(R.string.comment_on)
+                    + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink) + ">"
+                    + title.trim()
+                    + "</font>";
+        txtTitle.setText(Html.fromHtml(html));
+    }
     /*
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
@@ -324,22 +339,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtPostTitle = (TextView) getActivity().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
 
-        // use notification subject as the title if this was shown from a notification, otherwise
-        // user the title of the associated post
-        final String title;
-        if (getNote() != null) {
-            title = getNote().getSubject();
-        } else if (postExists) {
-            title = ReaderPostTable.getPostTitle(blogId, postId);
-        } else {
-            title = null;
-        }
+        final String title = (postExists ? ReaderPostTable.getPostTitle(blogId, postId) : null);
         final boolean hasTitle = !TextUtils.isEmpty(title);
-        if (hasTitle)
-            txtPostTitle.setText(title);
+        if (hasTitle) {
+            setPostTitle(txtPostTitle, title);
+        } else {
+            txtPostTitle.setText(R.string.loading);
+        }
 
-        // make sure this post is available to the reader, and show progress bar in title view
-        // if the title wasn't set above so user knows something is happening
+        // make sure this post is available to the reader, and show progress if we don't already
+        // have the title so user knows something is happening
         if (!postExists) {
             final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_post_title);
             if (!hasTitle)
@@ -354,7 +363,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (succeeded && !hasTitle) {
                         String title = ReaderPostTable.getPostTitle(blogId, postId);
                         if (!TextUtils.isEmpty(title)) {
-                            txtPostTitle.setText(title);
+                            setPostTitle(txtPostTitle, title);
                         } else {
                             txtPostTitle.setText(R.string.untitled);
                         }
