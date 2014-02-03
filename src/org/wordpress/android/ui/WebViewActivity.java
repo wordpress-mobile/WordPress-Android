@@ -8,11 +8,12 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.util.SysUtils;
+
 
 /**
  * Basic activity for displaying a WebView.
@@ -33,6 +34,7 @@ public class WebViewActivity extends WPActionBarActivity {
         ActionBar ab = getSupportActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         ab.setDisplayShowTitleEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
@@ -88,5 +90,13 @@ public class WebViewActivity extends WPActionBarActivity {
         else
             super.onBackPressed();
     }
-
+    
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
