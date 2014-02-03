@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -456,8 +457,12 @@ public class CommentsListFragment extends Fragment {
             if (item == null || item.isEnabled() == isEnabled)
                 return;
             item.setEnabled(isEnabled);
-            if (item.getIcon() != null)
-                item.getIcon().setAlpha(isEnabled ? 255 : 128);
+            if (item.getIcon() != null) {
+                // must mutate the drawable to avoid affecting other instances of it
+                Drawable icon = item.getIcon().mutate();
+                icon.setAlpha(isEnabled ? 255 : 128);
+                item.setIcon(icon);
+            }
         }
 
         @Override

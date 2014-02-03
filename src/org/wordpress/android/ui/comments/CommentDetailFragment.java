@@ -73,6 +73,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Button mBtnSpam;
     private TextView mTxtStatus;
     private EditText mEditReply;
+    private TextView mTxtContent;
     private ImageView mImgSubmitReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
@@ -114,17 +115,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
-
-        mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
-        mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
-        mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+        mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
         mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         mBtnModerate = (Button) mLayoutButtons.findViewById(R.id.text_btn_moderate);
         mBtnSpam = (Button) mLayoutButtons.findViewById(R.id.text_btn_spam);
 
+        mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
+        mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
+        mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
+
+        // this is necessary in order for anchor tags in the comment text to be clickable
+        mTxtContent.setLinksClickable(true);
+        mTxtContent.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         mEditReply.setHint(R.string.reader_hint_comment_on_comment);
         mEditReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -248,14 +254,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) viewDetail.findViewById(R.id.image_avatar);
         final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
         final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
-        final TextView txtContent = (TextView) viewDetail.findViewById(R.id.text_content);
 
         // hide all views when comment is null (will happen when opened from a notification)
         if (mComment == null) {
             imgAvatar.setImageDrawable(null);
             txtName.setText(null);
             txtDate.setText(null);
-            txtContent.setText(null);
+            mTxtContent.setText(null);
             mTxtStatus.setText(null);
             mLayoutButtons.setVisibility(View.GONE);
             mLayoutReply.setVisibility(View.GONE);
@@ -273,12 +278,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
 
-        // this is necessary in order for anchor tags in the comment text to be clickable
-        txtContent.setLinksClickable(true);
-        txtContent.setMovementMethod(WPLinkMovementMethod.getInstance());
-
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(txtContent, mComment.getCommentText(), maxImageSz);
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz);
 
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WPNetworkImageView.ImageType.AVATAR);
@@ -323,7 +324,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtTitle.setText(null);
             return;
         }
-        String html = getString(R.string.comment_on)
+        String html = getString(R.string.on)
                     + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink) + ">"
                     + title.trim()
                     + "</font>";
@@ -348,18 +349,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtPostTitle.setText(R.string.loading);
         }
 
-        // make sure this post is available to the reader, and show progress if we don't already
-        // have the title so user knows something is happening
+        // make sure this post is available to the reader, and once it's retrieved set the title
+        // if it wasn't already set
         if (!postExists) {
-            final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_post_title);
-            if (!hasTitle)
-                progress.setVisibility(View.VISIBLE);
             ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
                 @Override
                 public void onActionResult(boolean succeeded) {
                     if (!hasActivity())
                         return;
-                    progress.setVisibility(View.INVISIBLE);
                     // update title if it wasn't set above
                     if (succeeded && !hasTitle) {
                         String title = ReaderPostTable.getPostTitle(blogId, postId);

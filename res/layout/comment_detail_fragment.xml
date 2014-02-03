@@ -13,26 +13,24 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_bottom"
-        android:fillViewport="true">
+        android:layout_above="@+id/layout_bottom">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_extra_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
+                android:layout_marginRight="@dimen/margin_large"
                 android:layout_width="@dimen/avatar_sz_large"
-                android:layout_height="@dimen/avatar_sz_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:src="@drawable/placeholder" />
+                android:layout_height="@dimen/avatar_sz_large" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_large"
                 android:layout_toRightOf="@+id/image_avatar"
                 android:layout_alignTop="@+id/image_avatar"
                 android:layout_alignBottom="@+id/image_avatar"
@@ -72,38 +70,30 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_post_title"
                 android:layout_below="@+id/image_avatar"
+                android:background="@drawable/reader_transparent_selector"
                 android:layout_width="wrap_content"
-                android:text="@string/comment_on"
-                android:maxLines="2"
+                android:text="text_post_title"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:ellipsize="end"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_alignLeft="@+id/image_avatar"
-                android:layout_marginRight="@dimen/margin_large"
+                android:layout_toLeftOf="@+id/image_edit"
                 android:textColor="@color/grey_medium"
                 android:textSize="@dimen/text_sz_large"
                 android:layout_height="wrap_content" />
 
-            <ProgressBar
-                android:id="@+id/progress_post_title"
-                android:layout_alignBottom="@+id/text_post_title"
-                android:layout_toRightOf="@+id/text_post_title"
-                android:visibility="gone"
-                android:layout_width="@dimen/text_sz_large"
-                android:layout_height="@dimen/text_sz_large" />
-
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/image_avatar"
-                android:layout_marginRight="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_below="@+id/text_post_title"
+                android:layout_height="match_parent"
                 android:text="text_content"
                 android:textColorLink="@color/reader_hyperlink"
                 android:textColor="@color/grey_dark"
                 android:textIsSelectable="true"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_below="@+id/text_post_title"
                 android:textSize="@dimen/text_sz_large" />
+
         </RelativeLayout>
     </ScrollView>
 

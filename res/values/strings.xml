@@ -191,7 +191,6 @@
 
     <!-- comment view -->
     <string name="on">on</string>
-    <string name="comment_on">Comment on</string>
     <string name="approved">Approved</string>
     <string name="unapproved">Pending</string>
     <string name="spam">Spam</string>
