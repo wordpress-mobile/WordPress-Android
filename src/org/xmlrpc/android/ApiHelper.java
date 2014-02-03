@@ -193,12 +193,18 @@ public class ApiHelper {
         private GenericCallback mCallback;
 
         public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
+            if (context == null || blog == null) {
+                cancel(true);
+                return;
+            }
+
             mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
             } else {
                 refreshedBlogs.add(mBlogIdentifier);
             }
+
             mBlog = blog;
             mContext = context;
             mCallback = callback;
@@ -250,10 +256,6 @@ public class ApiHelper {
 
         @Override
         protected Boolean doInBackground(Boolean... params) {
-            if (mBlog == null || mContext == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - invalid blog");
-                return false;
-            }
             boolean commentsOnly = params[0];
             XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
