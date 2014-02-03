@@ -9,7 +9,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="org.wordpress.android.beta.permission.C2D_MESSAGE" />
-    
+
     <application>
 
         <provider
@@ -18,7 +18,7 @@
             android:exported="false" />
 
         <service android:name="org.wordpress.android.GCMIntentService" />
-        
+
         <receiver
             android:name="org.wordpress.android.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" > <!-- We've used a custom receiver here. The one that is bundled in GCM API wasn't able to start the service. -->
@@ -28,8 +28,8 @@
 
                 <category android:name="org.wordpress.android" />
             </intent-filter>
-        </receiver>  
-        
+        </receiver>
+
     </application>
 
 </manifest>
