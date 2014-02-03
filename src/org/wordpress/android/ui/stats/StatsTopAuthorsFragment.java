@@ -27,7 +27,7 @@ import org.wordpress.android.ui.HorizontalTabView.TabListener;
 /**
  * Fragment for top author stats. Has two pages, for Today's and Yesterday's stats.
  */
-public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_TOP_AUTHORS_URI = StatsContentProvider.STATS_TOP_AUTHORS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
