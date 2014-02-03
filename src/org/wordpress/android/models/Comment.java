@@ -62,9 +62,6 @@ public class Comment {
         comment.status = JSONUtil.getString(json, "status");
         comment.published = JSONUtil.getString(json, "date");
 
-        //java.util.Date date = (java.util.Date)contentHash.get("date_created_gmt");
-        //pubDate = getFormattedCommentDate(context, date);
-
         // note that the content often contains html, and on rare occasions may contain
         // script blocks that need to be removed (only seen with blogs that use the
         // sociable plugin)
@@ -73,7 +70,7 @@ public class Comment {
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
             comment.postID = jsonPost.optInt("ID");
-            // c.postTitle = ???
+            // TODO: c.postTitle = ???
         }
 
         JSONObject jsonAuthor = json.optJSONObject("author");

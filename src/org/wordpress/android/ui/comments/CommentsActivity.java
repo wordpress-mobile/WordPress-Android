@@ -22,9 +22,9 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshBu
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 
 public class CommentsActivity extends WPActionBarActivity
-        implements OnCommentSelectedListener, OnAnimateRefreshButtonListener, CommentActions.OnCommentChangeListener {
-
-    protected int id;
+        implements OnCommentSelectedListener,
+                   OnAnimateRefreshButtonListener,
+                   CommentActions.OnCommentChangeListener {
 
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
@@ -107,14 +107,14 @@ public class CommentsActivity extends WPActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0)
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
 
-    protected void popCommentDetail() {
+    private void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
@@ -133,8 +133,7 @@ public class CommentsActivity extends WPActionBarActivity
         super.onNewIntent(intent);
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            boolean fromNotification = false;
-            fromNotification = extras.getBoolean("fromNotification");
+            boolean fromNotification = extras.getBoolean("fromNotification");
             if (fromNotification) {
                 try {
                     WordPress.currentBlog = new Blog(extras.getInt("id"));

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -27,7 +28,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SysUtils;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Created by nbradbury on 1/29/14.
@@ -41,23 +41,24 @@ public class CommentAdapter extends BaseAdapter {
         public void onSelectedItemsChanged();
     }
 
-    private LayoutInflater mInflater;
-    private OnLoadMoreListener mOnLoadMoreListener;
-    private OnSelectedItemsChangeListener mOnSelectedChangeListener;
+    private final LayoutInflater mInflater;
+    private final OnLoadMoreListener mOnLoadMoreListener;
+    private final OnSelectedItemsChangeListener mOnSelectedChangeListener;
+
     private CommentList mComments = new CommentList();
-    private HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
+    private final HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
 
-    private int mStatusColorSpam;
-    private int mStatusColorUnapproved;
-    private int mAvatarSz;
+    private final int mStatusColorSpam;
+    private final int mStatusColorUnapproved;
+    private final int mAvatarSz;
 
-    private String mStatusTextSpam;
-    private String mStatusTextUnapproved;
-    private String mAnonymous;
+    private final String mStatusTextSpam;
+    private final String mStatusTextUnapproved;
+    private final String mAnonymous;
 
     private boolean mEnableSelection;
-    private int mSelectedColor;
-    private Drawable mDefaultAvatar;
+    private final Drawable mSelectedBackground;
+    private final Drawable mDefaultAvatar;
     
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
@@ -76,7 +77,7 @@ public class CommentAdapter extends BaseAdapter {
 
         mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mDefaultAvatar = resources.getDrawable(R.drawable.placeholder);
-        mSelectedColor = resources.getColor(R.color.blue_extra_light);
+        mSelectedBackground = new ColorDrawable(resources.getColor(R.color.blue_extra_light));
     }
 
     @Override
@@ -131,9 +132,7 @@ public class CommentAdapter extends BaseAdapter {
         if (!mEnableSelection)
             return comments;
 
-        Iterator it = mSelectedPositions.iterator();
-        while (it.hasNext()) {
-            int position = (Integer) it.next();
+        for (Integer position: mSelectedPositions) {
             if (isPositionValid(position))
                 comments.add(mComments.get(position));
         }
@@ -141,7 +140,7 @@ public class CommentAdapter extends BaseAdapter {
         return comments;
     }
 
-    protected boolean isItemSelected(int position) {
+    private boolean isItemSelected(int position) {
         return mSelectedPositions.contains(position);
     }
 
@@ -160,8 +159,10 @@ public class CommentAdapter extends BaseAdapter {
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
             // animate the selection change on ICS or later (looks wonky on Gingerbread)
-            if (SysUtils.isGteAndroid4())
+            if (SysUtils.isGteAndroid4()) {
+                holder.imgCheckmark.clearAnimation();
                 AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
+            }
             holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 
@@ -222,11 +223,11 @@ public class CommentAdapter extends BaseAdapter {
         }
 
         if (mEnableSelection && isItemSelected(position)) {
-            convertView.setBackgroundColor(mSelectedColor);
+            convertView.setBackgroundDrawable(mSelectedBackground);
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            convertView.setBackgroundColor(Color.TRANSPARENT);
+            convertView.setBackgroundDrawable(null);
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
@@ -245,13 +246,13 @@ public class CommentAdapter extends BaseAdapter {
     }
 
     private class CommentHolder {
-        private TextView txtName;
-        private TextView txtComment;
-        private TextView txtStatus;
-        private TextView txtPostTitle;
-        private TextView txtDate;
-        private NetworkImageView imgAvatar;
-        private ImageView imgCheckmark;
+        private final TextView txtName;
+        private final TextView txtComment;
+        private final TextView txtStatus;
+        private final TextView txtPostTitle;
+        private final TextView txtDate;
+        private final NetworkImageView imgAvatar;
+        private final ImageView imgCheckmark;
 
         private CommentHolder(View row) {
             txtName = (TextView) row.findViewById(R.id.name);

@@ -51,11 +51,6 @@ public class CommentsListFragment extends Fragment {
 
     private static final int COMMENTS_PER_PAGE = 30;
 
-    @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-    }
-
     private ListView getListView() {
         return mListView;
     }
@@ -103,14 +98,6 @@ public class CommentsListFragment extends Fragment {
     protected void clear() {
         if (hasCommentAdapter())
             getCommentAdapter().clear();
-    }
-
-    protected boolean isEmpty() {
-        if (hasCommentAdapter()) {
-            return getCommentAdapter().isEmpty();
-        } else {
-            return true;
-        }
     }
 
     @Override

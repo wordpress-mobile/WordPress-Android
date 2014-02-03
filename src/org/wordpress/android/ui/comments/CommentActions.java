@@ -53,7 +53,7 @@ public class CommentActions {
      * used by comment fragments to alert container activity of a change to one or more
      * comments (moderated, deleted, added, etc.)
      */
-    public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL};
+    public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
     public static interface OnCommentChangeListener {
         public void onCommentChanged(ChangedFrom changedFrom);
     }

@@ -37,7 +37,7 @@ public class CommentTable {
                  + " );");
     }
 
-    protected static void dropTables(SQLiteDatabase db) {
+    private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + COMMENTS_TABLE);
     }
 
@@ -284,7 +284,7 @@ public class CommentTable {
         int commentId = c.getInt(c.getColumnIndex("comment_id"));
 
         // TODO: store localBlogId with comment
-        int localBlogId = c.getInt(c.getColumnIndex("blog_id"));
+        //int localBlogId = c.getInt(c.getColumnIndex("blog_id"));
 
         return new Comment(
                 postId,

@@ -7,10 +7,6 @@ import java.util.ArrayList;
  */
 public class CommentList extends ArrayList<Comment> {
 
-    private boolean commentIdExists(long commentId) {
-        return (indexOfCommentId(commentId) > -1);
-    }
-
     public int indexOfCommentId(long commentId) {
         for (int i=0; i < this.size(); i++) {
             if (commentId==this.get(i).commentID)
