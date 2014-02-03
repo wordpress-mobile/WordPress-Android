@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -21,7 +20,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
@@ -51,8 +49,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     private static final String CHILD_TAG = "CHILD_TAG";
 
     protected ViewPager mViewPager;
-    protected HorizontalTabView mTabView;
-    protected FragmentStatePagerAdapter mAdapter;
 
     private RadioGroup mRadioGroup;
     private FrameLayout mFragmentContainer;
@@ -187,8 +183,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     }
 
     private void setLabel(int position, String label) {
-        if (mTabView != null)
-            mTabView.setTabText(position, label.toUpperCase(Locale.getDefault()));
         if (mRadioGroup != null) 
             ((RadioButton) mRadioGroup.getChildAt(position)).setText(label);
     }
