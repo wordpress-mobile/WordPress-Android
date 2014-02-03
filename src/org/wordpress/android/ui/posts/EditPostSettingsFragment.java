@@ -40,6 +40,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -502,7 +504,14 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             if (!Geocoder.isPresent())
                 return null;
 
-            Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+            Geocoder gcd;
+            try {
+                gcd = new Geocoder(getActivity(), Locale.getDefault());
+            } catch (NullPointerException cannotIstantiateEx) {
+                AppLog.e(T.EDITOR, "Cannot Istantiate Geocoder", cannotIstantiateEx);
+                return null;
+            }
+            
             List<Address> addresses;
             try {
                 addresses = gcd.getFromLocation(latitude, longitude, 1);
@@ -524,7 +533,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             } catch (IOException e) {
                 // may get "Unable to parse response from server" IOException here if Geocoder
                 // service is hit too frequently
-                e.printStackTrace();
+                AppLog.e(T.EDITOR, "Unable to parse response from server. Is Geocoder service hitting the server too frequently?", e);
                 return null;
             }
         }
