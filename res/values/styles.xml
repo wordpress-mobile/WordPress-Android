@@ -292,4 +292,14 @@
         <item name="android:textSize">@dimen/empty_list_description_text_size</item>
     </style>
 
+
+    <!-- moderation buttons on comment detail -->
+    <style name="WordPress.Button.Moderate" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/moderate_button_text</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:background">@drawable/moderate_button_selector</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:layout_margin">@dimen/margin_small</item>
+    </style>
 </resources>

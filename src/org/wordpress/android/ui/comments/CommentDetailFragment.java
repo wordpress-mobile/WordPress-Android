@@ -3,6 +3,8 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -23,7 +25,6 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
@@ -311,7 +312,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         showPostTitle(blogId, postId);
 
         // make sure reply box is showing
-        if (mLayoutReply.getVisibility() != View.VISIBLE && isReplyingEnabled())
+        if (mLayoutReply.getVisibility() != View.VISIBLE && canReply())
             AniUtils.flyIn(mLayoutReply);
     }
 
@@ -409,8 +410,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         AniUtils.flyOut(mLayoutButtons);
 
         // hide status (updateStatusViews will un-hide it)
-        if (mTxtStatus.getVisibility() == View.VISIBLE)
-            AniUtils.fadeOut(mTxtStatus);
+        if (mTxtStatus.getVisibility() == View.VISIBLE) {
+            mTxtStatus.clearAnimation();
+            AniUtils.startAnimation(mTxtStatus, R.anim.fade_out);
+            mTxtStatus.setVisibility(View.INVISIBLE);
+        }
 
         // immediately show message bar displaying new status
         final int msgResId;
@@ -515,6 +519,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
+     * sets the drawable for buttons with a color filter applied when disabled - avoids having
+     * to include separate disabled drawable resources for the ic_cab_xxx drawables
+     */
+    private void setButtonDrawable(Button button, int resId, boolean isEnabled) {
+        Drawable drawable = getResources().getDrawable(resId).mutate();
+        if (!isEnabled)
+            drawable.setColorFilter(getResources().getColor(R.color.grey_medium), PorterDuff.Mode.SRC_ATOP);
+        button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+    }
+
+    /*
      * update the text, drawable & click listener for mBtnModerate based on
      * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
@@ -523,35 +538,35 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity() || !hasComment())
             return;
 
-        final int btnTextResId;         // string resource id for moderation button
-        final int btnDrawResId;         // drawable resource id for moderation button
+        final int moderationTextResId;  // string resource id for moderation button
+        final int moderationDrawResId;  // drawable resource id for moderation button
         final CommentStatus newStatus;  // status to apply when moderation button is tapped
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
-        final boolean showSpamButton;
+        final boolean enableMarkAsSpam;
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                btnTextResId = R.string.unapprove;
-                btnDrawResId = R.drawable.moderate_unapprove;
+                moderationTextResId = R.string.unapprove;
+                moderationDrawResId = R.drawable.ic_cab_unapprove;
                 newStatus = CommentStatus.UNAPPROVED;
-                showSpamButton = true;
+                enableMarkAsSpam = true;
                 statusTextResId = R.string.approved;
                 statusColor = getActivity().getResources().getColor(R.color.blue_extra_dark);
                 break;
             case UNAPPROVED:
-                btnTextResId = R.string.approve;
-                btnDrawResId = R.drawable.moderate_approve;
+                moderationTextResId = R.string.approve;
+                moderationDrawResId = R.drawable.ic_cab_approve;
                 newStatus = CommentStatus.APPROVED;
-                showSpamButton = true;
+                enableMarkAsSpam = true;
                 statusTextResId = R.string.unapproved;
                 statusColor = getActivity().getResources().getColor(R.color.orange_medium);
                 break;
             case SPAM:
-                btnTextResId = R.string.approve;
-                btnDrawResId = R.drawable.moderate_approve;
+                moderationTextResId = R.string.approve;
+                moderationDrawResId = R.drawable.ic_cab_approve;
                 newStatus = CommentStatus.APPROVED;
-                showSpamButton = false;
+                enableMarkAsSpam = false;
                 statusTextResId = R.string.spam;
                 statusColor = Color.RED;
                 break;
@@ -571,9 +586,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mTxtStatus.setVisibility(View.GONE);
         }
 
-        if (isModerationEnabled()) {
-            mBtnModerate.setText(btnTextResId);
-            mBtnModerate.setCompoundDrawablesWithIntrinsicBounds(btnDrawResId, 0, 0, 0);
+        if (canModerate()) {
+            mBtnModerate.setText(moderationTextResId);
+            setButtonDrawable(mBtnModerate, moderationDrawResId, true);
             mBtnModerate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -585,27 +600,34 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerate.setVisibility(View.GONE);
         }
 
-        mBtnSpam.setVisibility(isMarkSpamEnabled() && showSpamButton ? View.VISIBLE : View.GONE);
+        if (canMarkAsSpam()) {
+            mBtnSpam.setVisibility(View.VISIBLE);
+            mBtnSpam.setEnabled(enableMarkAsSpam);
+            setButtonDrawable(mBtnSpam, R.drawable.ic_cab_spam, enableMarkAsSpam);
+        } else {
+            mBtnSpam.setVisibility(View.GONE);
+        }
 
         // animate the buttons in if they're not visible
-        if (mLayoutButtons.getVisibility() != View.VISIBLE && (isMarkSpamEnabled() || isModerationEnabled())) {
+        if (mLayoutButtons.getVisibility() != View.VISIBLE && (canMarkAsSpam() || canModerate())) {
             mLayoutButtons.clearAnimation();
             AniUtils.flyIn(mLayoutButtons);
         }
     }
 
-    private boolean isModerationEnabled() {
+    /*
+     * does user have permission to moderate/reply/spam this comment?
+     */
+    private boolean canModerate() {
         if (mEnabledActions == null)
             return false;
         return (mEnabledActions.contains(EnabledActions.ACTION_APPROVE)
              || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
     }
-
-    private boolean isMarkSpamEnabled() {
+    private boolean canMarkAsSpam() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_SPAM));
     }
-
-    private boolean isReplyingEnabled() {
+    private boolean canReply() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_REPLY));
     }
 

@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_large">
+            android:paddingTop="@dimen/margin_extra_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
@@ -63,7 +63,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
-                    style="@style/ReaderTextView.Label"
+                    android:textSize="@dimen/text_sz_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="text_status" />
@@ -118,7 +118,7 @@
             android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
             android:orientation="horizontal">
 
             <Button
@@ -126,18 +126,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/moderate_approve"
-                android:text="@string/approve"
-                android:textSize="@dimen/text_sz_medium" />
+                android:drawableLeft="@drawable/ic_cab_approve"
+                style="@style/WordPress.Button.Moderate"
+                android:text="@string/approve" />
 
             <Button
                 android:id="@+id/text_btn_spam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/moderate_spam"
-                android:text="@string/spam"
-                android:textSize="@dimen/text_sz_medium" />
+                android:enabled="false"
+                style="@style/WordPress.Button.Moderate"
+                android:drawableLeft="@drawable/ic_cab_spam"
+                android:text="@string/spam" />
         </LinearLayout>
 
         <include
