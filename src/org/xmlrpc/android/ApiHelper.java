@@ -250,6 +250,10 @@ public class ApiHelper {
 
         @Override
         protected Boolean doInBackground(Boolean... params) {
+            if (mBlog == null || mContext == null) {
+                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - invalid blog");
+                return false;
+            }
             boolean commentsOnly = params[0];
             XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());

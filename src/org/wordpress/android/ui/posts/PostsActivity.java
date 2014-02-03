@@ -341,7 +341,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();
