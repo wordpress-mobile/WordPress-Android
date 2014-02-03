@@ -72,7 +72,6 @@ public class ReaderCommentTable {
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
-                resetColumnIndexes(c);
                 do {
                     comments.add(getCommentFromCursor(c));
                 } while (c.moveToNext());
@@ -157,52 +156,25 @@ public class ReaderCommentTable {
         ReaderDatabase.getWritableDb().delete("tbl_comments", "blog_id=? AND post_id=? AND comment_id=?", args);
     }
 
-    private static int COL_COMMENT_ID;
-    private static int COL_BLOG_ID;
-    private static int COL_POST_ID;
-    private static int COL_PARENT_ID;
-    private static int COL_STATUS;
-    private static int COL_PUBLISHED;
-    private static int COL_TIMESTAMP;
-    private static int COL_AUTHOR_AVATAR;
-    private static int COL_AUTHOR_NAME;
-    private static int COL_AUTHOR_URL;
-    private static int COL_TEXT;
-
-    // see comment in ReaderPostTable.java for purpose
-    private static void resetColumnIndexes(Cursor c) {
-        COL_COMMENT_ID = c.getColumnIndex("comment_id");
-        COL_BLOG_ID = c.getColumnIndex("blog_id");
-        COL_POST_ID = c.getColumnIndex("post_id");
-        COL_PARENT_ID = c.getColumnIndex("parent_id");
-        COL_PUBLISHED = c.getColumnIndex("published");
-        COL_TIMESTAMP = c.getColumnIndex("timestamp");
-        COL_AUTHOR_AVATAR = c.getColumnIndex("author_avatar");
-        COL_AUTHOR_NAME = c.getColumnIndex("author_name");
-        COL_AUTHOR_URL = c.getColumnIndex("author_url");
-        COL_STATUS = c.getColumnIndex("status");
-        COL_TEXT = c.getColumnIndex("text");
-    }
-
     public static ReaderComment getCommentFromCursor(Cursor c) {
         if (c==null)
             throw new IllegalArgumentException("null comment cursor");
 
         ReaderComment comment = new ReaderComment();
 
-        comment.commentId = c.getLong(COL_COMMENT_ID);
-        comment.blogId = c.getLong(COL_BLOG_ID);
-        comment.postId = c.getLong(COL_POST_ID);
-        comment.parentId = c.getLong(COL_PARENT_ID);
+        comment.commentId = c.getLong(c.getColumnIndex("comment_id"));
+        comment.blogId = c.getLong(c.getColumnIndex("blog_id"));
+        comment.postId = c.getLong(c.getColumnIndex("post_id"));
+        comment.parentId = c.getLong(c.getColumnIndex("parent_id"));
 
-        comment.setPublished(c.getString(COL_PUBLISHED));
-        comment.timestamp = c.getLong(COL_TIMESTAMP);
+        comment.setPublished(c.getString(c.getColumnIndex("published")));
+        comment.timestamp = c.getLong(c.getColumnIndex("timestamp"));
 
-        comment.setAuthorAvatar(c.getString(COL_AUTHOR_AVATAR));
-        comment.setAuthorName(c.getString(COL_AUTHOR_NAME));
-        comment.setAuthorUrl(c.getString(COL_AUTHOR_URL));
-        comment.setStatus(c.getString(COL_STATUS));
-        comment.setText(c.getString(COL_TEXT));
+        comment.setAuthorAvatar(c.getString(c.getColumnIndex("author_avatar")));
+        comment.setAuthorName(c.getString(c.getColumnIndex("author_name")));
+        comment.setAuthorUrl(c.getString(c.getColumnIndex("author_url")));
+        comment.setStatus(c.getString(c.getColumnIndex("status")));
+        comment.setText(c.getString(c.getColumnIndex("text")));
 
         return comment;
     }
