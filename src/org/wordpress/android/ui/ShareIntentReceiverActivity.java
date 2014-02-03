@@ -95,8 +95,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
         } else {
-            String[] actions = new String[]{getString(R.string.share_action_post),
-                    getString(R.string.share_action_media)};
+            String[] actions = new String[]{getString(R.string.share_action_post), getString(
+                    R.string.share_action_media)};
             ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext,
                     R.layout.sherlock_spinner_dropdown_item, actions);
             mActionSpinner.setAdapter(actionAdapter);
@@ -124,8 +124,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             startActivity(new Intent(this, WelcomeActivity.class));
             finish();
         } else {
-            ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog,
-                    ToastUtils.Duration.LONG);
+            ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
         }
     }
@@ -241,8 +240,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 shareIt();
                 return true;
             } else { // blog is hidden or has been deleted, reset settings
-                SharedPreferences.Editor editor = PreferenceManager
-                        .getDefaultSharedPreferences(this).edit();
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_TEXT_BLOG_ID_KEY);
                 editor.commit();
                 ToastUtils.showToast(this, R.string.auto_sharing_preference_reset_caused_by_error,
@@ -262,8 +260,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                 shareIt();
                 return true;
             } else { // blog is hidden or has been deleted, reset settings
-                SharedPreferences.Editor editor = PreferenceManager
-                        .getDefaultSharedPreferences(this).edit();
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_IMAGE_BLOG_ID_KEY);
                 editor.remove(SHARE_IMAGE_ADDTO_KEY);
                 editor.commit();
@@ -275,9 +272,12 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     }
 
     private void savePreferences() {
+        // If current blog is not set don't save preferences
+        if (WordPress.currentBlog == null) {
+            return ;
+        }
         if (mAlwaysUseCheckBox.isChecked()) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
-                    .edit();
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             if (isSharingText()) {
                 editor.putInt(SHARE_TEXT_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
             } else {
