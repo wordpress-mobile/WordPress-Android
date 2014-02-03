@@ -327,6 +327,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     public void newPost() {
         WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        if (WordPress.getCurrentBlog() == null) {
+            if (!isFinishing())
+                Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         Intent i = new Intent(this, EditPostActivity.class);
