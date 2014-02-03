@@ -70,9 +70,9 @@ android {
         compile 'org.wordpress:slidinguppanel:1.0.0'
         compile 'org.wordpress:android-passcodelock:0.0.4'
         compile 'org.wordpress:commons-lang:2.6'
-        releaseCompile 'org.wordpress:emailchecker:0.1'
-        debugCompile 'org.wordpress:emailchecker-debug:0.1'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.1'
+        releaseCompile 'org.wordpress:emailchecker:0.2'
+        debugCompile 'org.wordpress:emailchecker-debug:0.2'
+        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')
