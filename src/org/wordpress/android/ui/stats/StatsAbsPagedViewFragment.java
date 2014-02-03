@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView.Tab;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -38,7 +35,7 @@ import org.wordpress.android.util.Utils;
  * The tablet fragments are provided by subclasses implementing {@code getFragment(int)}
  * </p>
  */
-public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorInterface {
+public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements OnCheckedChangeListener, StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -47,8 +44,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     
     // the active fragment has the tag CHILD_TAG:<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
-
-    protected ViewPager mViewPager;
 
     private RadioGroup mRadioGroup;
     private FrameLayout mFragmentContainer;
@@ -120,11 +115,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
             ft.replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + index);
             ft.commit();
         }
-    }
-
-    @Override
-    public void onTabSelected(Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
