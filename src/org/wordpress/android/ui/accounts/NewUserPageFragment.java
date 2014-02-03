@@ -266,13 +266,17 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
                         endProgress();
-                        finishThisStuff(username);
+                        if (hasActivity()) {
+                            finishThisStuff(username);
+                        }
                     }
 
                     @Override
                     public void onError(int messageId) {
                         endProgress();
-                        showError(getString(messageId));
+                        if (hasActivity()) {
+                            showError(getString(messageId));
+                        }
                     }
                 });
         createUserAndBlog.startCreateUserAndBlogProcess();

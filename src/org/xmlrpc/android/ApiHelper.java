@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
+import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
@@ -216,7 +217,7 @@ public class ApiHelper {
             // Software version
             if (!mBlog.isDotcomFlag()) {
                 Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
-                String wpVersion = sv.get("value").toString();
+                String wpVersion = MapUtils.getMapStr(sv, "value");
                 if (wpVersion.length() > 0) {
                     isModified |= mBlog.bsetWpVersion(wpVersion);
                 }
@@ -224,14 +225,12 @@ public class ApiHelper {
             // Featured image support
             Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
             if (featuredImageHash != null) {
-                boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
-                        .get("value").toString());
+                boolean featuredImageCapable = MapUtils.getMapBool(featuredImageHash, "value");
                 isModified |= mBlog.bsetFeaturedImageCapable(featuredImageCapable);
             } else {
                 isModified |= mBlog.bsetFeaturedImageCapable(false);
             }
-            if (isModified && WordPress.getCurrentBlog() != null
-                    && WordPress.getCurrentBlog().isActive()) {
+            if (isModified && WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive()) {
                 WordPress.wpDB.saveBlog(mBlog);
             }
         }

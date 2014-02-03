@@ -1095,8 +1095,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
-                if (str != null)
+                if (str != null) {
+                    if (mSelectionEnd > str.length())
+                        mSelectionEnd = str.length();
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
+                }
                 trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarMoreButton);
             } else if (id == R.id.link) {
                 mSelectionStart = mContentEditText.getSelectionStart();
