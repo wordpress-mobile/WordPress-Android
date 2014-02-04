@@ -237,6 +237,8 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
+            if (!hasActivity())
+                return;
             if (isEmpty) {
                 startBoxAndPagesAnimation();
                 setEmptyTitleAndDecriptionForCurrentTag();

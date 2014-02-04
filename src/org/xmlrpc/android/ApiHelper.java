@@ -196,12 +196,18 @@ public class ApiHelper {
         private GenericCallback mCallback;
 
         public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
+            if (context == null || blog == null) {
+                cancel(true);
+                return;
+            }
+
             mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
             } else {
                 refreshedBlogs.add(mBlogIdentifier);
             }
+
             mBlog = blog;
             mContext = context;
             mCallback = callback;

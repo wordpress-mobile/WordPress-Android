@@ -41,7 +41,7 @@ import java.util.Locale;
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
  */
-public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements TabListener {
+public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;

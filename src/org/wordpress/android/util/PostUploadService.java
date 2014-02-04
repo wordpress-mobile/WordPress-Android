@@ -593,9 +593,12 @@ public class PostUploadService extends Service {
                 String fileName = imageFile.getName();
 
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName);
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
                 if (!TextUtils.isEmpty(fileExtension)) {
-                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                    String newMimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                    if (newMimeType != null) {
+                        mimeType = newMimeType;
+                    }
                 } else {
                     // No file extension? Try and get the mimeType and extension from an InputStream.
                     try {
