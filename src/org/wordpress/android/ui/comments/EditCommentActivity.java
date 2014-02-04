@@ -7,23 +7,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -31,20 +28,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
-
-    private static final int ID_DIALOG_SAVING = 0;
-
     protected static final String ARG_LOCAL_BLOG_ID = "blog_id";
     protected static final String ARG_COMMENT_ID = "comment_id";
+
+    private static final int ID_DIALOG_SAVING = 0;
 
     private int mLocalBlogId;
     private int mCommentId;
     private Comment mComment;
-
-    // spinner indexes
-    private static final int IDX_APPROVED = 0;
-    private static final int IDX_UNAPPROVED = 1;
-    private static final int IDX_SPAM = 2;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -52,35 +43,17 @@ public class EditCommentActivity extends SherlockActivity {
 
         setContentView(R.layout.edit_comment);
         setTitle(getString(R.string.edit_comment));
-        
-        // Capitalize headers
-        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.comment_content).toUpperCase());
-        ((TextView) findViewById(R.id.l_status)).setText(getResources().getString(R.string.status).toUpperCase());
 
-        // populate spinner
-        String[] items = new String[] {
-                getResources().getString(R.string.approved),
-                getResources().getString(R.string.unapproved),
-                getResources().getString(R.string.spam) };
-        Spinner spinner = (Spinner) findViewById(R.id.status);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        if (!loadComment(getIntent())) {
-            Toast.makeText(this, getString(R.string.error_load_comment), Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final Button saveButton = (Button) findViewById(R.id.post);
-        saveButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                saveComment();
-            }
-        });
-
+        if (!loadComment(getIntent())) {
+            ToastUtils.showToast(this, R.string.error_load_comment);
+            finish();
+        }
     }
 
     private boolean loadComment(Intent intent) {
@@ -90,7 +63,6 @@ public class EditCommentActivity extends SherlockActivity {
         mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
         mCommentId = intent.getIntExtra(ARG_COMMENT_ID, 0);
         mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
-
         if (mComment == null)
             return false;
 
@@ -106,23 +78,30 @@ public class EditCommentActivity extends SherlockActivity {
         final EditText commentContentET = (EditText) this.findViewById(R.id.comment_content);
         commentContentET.setText(mComment.getCommentText());
 
-        final Spinner spinner = (Spinner) findViewById(R.id.status);
-        switch (mComment.getStatusEnum()) {
-            case APPROVED:
-                spinner.setSelection(IDX_APPROVED, true);
-                break;
-            case UNAPPROVED:
-                spinner.setSelection(IDX_UNAPPROVED, true);
-                break;
-            case SPAM:
-                spinner.setSelection(IDX_SPAM, true);
-                break;
-
-        }
-
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.edit_comment, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_save_comment:
+                saveComment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -142,32 +121,21 @@ public class EditCommentActivity extends SherlockActivity {
     }
 
     private void saveComment() {
-        // make sure content was entered
+        // make sure comment content was entered
         final EditText editContent = (EditText) findViewById(R.id.comment_content);
         if (EditTextUtils.isEmpty(editContent)) {
             editContent.setError(getString(R.string.content_required));
             return;
         }
 
+        if (mIsUpdateTaskRunning)
+            AppLog.w(AppLog.T.COMMENTS, "update task already running");
         new UpdateCommentTask().execute();
     }
 
-    private String getSelectedStatus() {
-        Spinner spinner = (Spinner) findViewById(R.id.status);
-        int selectedStatus = spinner.getSelectedItemPosition();
-        final String status;
-        switch (selectedStatus) {
-            case IDX_APPROVED:
-                return CommentStatus.toString(CommentStatus.APPROVED);
-            case IDX_UNAPPROVED:
-                return CommentStatus.toString(CommentStatus.UNAPPROVED);
-            case IDX_SPAM:
-                return CommentStatus.toString(CommentStatus.SPAM);
-            default:
-                return CommentStatus.toString(CommentStatus.UNKNOWN);
-        }
-    }
-
+    /*
+     * returns true if user made any changes to the comment
+     */
     private boolean isCommentEdited() {
         if (mComment == null)
             return false;
@@ -176,22 +144,25 @@ public class EditCommentActivity extends SherlockActivity {
         final String authorEmail = getEditTextStr(R.id.author_email);
         final String authorURL = getEditTextStr(R.id.author_url);
         final String content = getEditTextStr(R.id.comment_content);
-        final String status = getSelectedStatus();
 
-        return (authorName.equals(mComment.getAuthorName())
-             && authorEmail.equals(mComment.getAuthorEmail())
-             && authorURL.equals(mComment.getAuthorUrl())
-             && content.equals(mComment.getCommentText())
-             && status.equals(mComment.getStatus()));
+        return !(authorName.equals(mComment.getAuthorName())
+                && authorEmail.equals(mComment.getAuthorEmail())
+                && authorURL.equals(mComment.getAuthorUrl())
+                && content.equals(mComment.getCommentText()));
     }
 
-    private void dismissDialogSafely(int dialogId) {
+    private void showSaveDialog() {
+        showDialog(ID_DIALOG_SAVING);
+    }
+
+    private void dismissSaveDialog() {
         try {
-            dismissDialog(dialogId);
+            dismissDialog(ID_DIALOG_SAVING);
         } catch (IllegalArgumentException e) {
             // dialog doesn't exist
         }
     }
+
     /*
      * AsyncTask to save comment to server
      */
@@ -200,12 +171,12 @@ public class EditCommentActivity extends SherlockActivity {
         @Override
         protected void onPreExecute() {
             mIsUpdateTaskRunning = true;
-            dismissDialogSafely(ID_DIALOG_SAVING);
+            showSaveDialog();
         }
         @Override
         protected void onCancelled() {
             mIsUpdateTaskRunning = false;
-            dismissDialogSafely(ID_DIALOG_SAVING);
+            dismissSaveDialog();
         }
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -225,11 +196,9 @@ public class EditCommentActivity extends SherlockActivity {
             final String authorEmail = getEditTextStr(R.id.author_email);
             final String authorURL = getEditTextStr(R.id.author_url);
             final String content = getEditTextStr(R.id.comment_content);
-            final String status = getSelectedStatus();
 
-            // TODO: update this to support new comment table schema (CommentTable.java)
             final Map<String, String> postHash = new HashMap<String, String>();
-            postHash.put("status",       status);
+            postHash.put("status",       mComment.getStatus());
             postHash.put("content",      content);
             postHash.put("author",       authorName);
             postHash.put("author_url",   authorURL);
@@ -245,7 +214,7 @@ public class EditCommentActivity extends SherlockActivity {
                     blog.getUsername(),
                     blog.getPassword(),
                     mCommentId,
-                    postHash };
+                    postHash};
 
             Object result;
             boolean isSaved;
@@ -256,22 +225,8 @@ public class EditCommentActivity extends SherlockActivity {
                     mComment.setAuthorEmail(authorEmail);
                     mComment.setAuthorUrl(authorURL);
                     mComment.setCommentText(content);
-                    mComment.setStatus(status);
                     mComment.setAuthorName(authorName);
-
-                    postHash.put("url", postHash.get("author_url"));
-                    postHash.put("email", postHash.get("author_email"));
-                    postHash.put("comment", postHash.get("content"));
-
-                    postHash.remove("author_url");
-                    postHash.remove("author_email");
-                    postHash.remove("content");
-
-                    CommentTable.updateComment(
-                            mLocalBlogId,
-                            mCommentId,
-                            postHash);
-
+                    CommentTable.updateComment(mLocalBlogId, mComment);
                 }
                 return isSaved;
             } catch (XMLRPCException e) {
@@ -281,29 +236,28 @@ public class EditCommentActivity extends SherlockActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             mIsUpdateTaskRunning = false;
-            dismissDialogSafely(ID_DIALOG_SAVING);
+            dismissSaveDialog();
 
-            if (!result) {
+            if (result) {
+                setResult(RESULT_OK);
+                finish();
+            } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.error));
                 dialogBuilder.setMessage(R.string.error_edit_comment);
                 dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-
+                        // just close the dialog
                     }
                 });
                 dialogBuilder.setCancelable(true);
                 dialogBuilder.create().show();
-            } else {
-                finish();
             }
         }
     }
 
     @Override
     public void onBackPressed() {
-        // TODO: ask to save changes rather than confirm cancel
         if (isCommentEdited()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     EditCommentActivity.this);
@@ -318,9 +272,8 @@ public class EditCommentActivity extends SherlockActivity {
             dialogBuilder.setNegativeButton(
                     getResources().getText(R.string.no),
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                            // just close the dialog window
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
                         }
                     });
             dialogBuilder.setCancelable(true);

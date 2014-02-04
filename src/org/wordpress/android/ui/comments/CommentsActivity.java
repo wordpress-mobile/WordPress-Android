@@ -228,12 +228,13 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // reload/refresh comment if it was just edited
+        // TODO: doesn't work!
         if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == RESULT_OK) {
             reloadCommentDetail();
             refreshCommentList();
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

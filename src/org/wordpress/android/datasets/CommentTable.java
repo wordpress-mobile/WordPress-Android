@@ -13,8 +13,6 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
-import java.util.Map;
-
 /**
  * Created by nbradbury on 1/30/14.
  */
@@ -80,7 +78,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury 11/15/13 - add a single comment
+     * nbradbury 11/15/13 - add a single comment - will update existing comment with same IDs
      * @param localBlogId - unique id in account table for the blog the comment is from
      * @param comment - comment object to store
      */
@@ -212,22 +210,11 @@ public class CommentTable {
     /**
      * nbradbury - updates the passed comment
      * @param localBlogId - unique id in account table for this blog
-     * @param commentId - id of comment (returned by api)
-     * @param commentHash - values to store
+     * @param comment - comment to update
      */
-    // TODO: replace commentHash with Comment object
-    public static void updateComment(int localBlogId, int commentId, Map<?, ?> commentHash) {
-        ContentValues values = new ContentValues();
-
-        values.put("author_name", commentHash.get("author").toString());
-        values.put("comment", commentHash.get("comment").toString());
-        values.put("status", commentHash.get("status").toString());
-        values.put("author_url", commentHash.get("url").toString());
-        values.put("author_email", commentHash.get("email").toString());
-
-        String[] args = {Integer.toString(localBlogId), Integer.toString(commentId)};
-        getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
-
+    public static void updateComment(int localBlogId, final Comment comment) {
+        // this will replace the existing comment
+        addComment(localBlogId, comment);
     }
 
     /**

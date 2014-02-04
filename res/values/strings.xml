@@ -209,13 +209,14 @@
     <string name="comment_trashed">Comment removed</string>
 
     <!-- edit comment view -->
-    <string name="author_name">Name</string>
-    <string name="author_email">E-mail</string>
-    <string name="author_url">URL</string>
+    <string name="author_name">Author name</string>
+    <string name="author_email">Author email</string>
+    <string name="author_url">Author URL</string>
+    <string name="hint_comment_content">Comment</string>
     <string name="comment_update">Update Comment</string>
     <string name="saving_changes">Saving Changes</string>
-    <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
-    <string name="content_required">Content is required.</string>
+    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="content_required">Comment is required.</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove Blog</string>
