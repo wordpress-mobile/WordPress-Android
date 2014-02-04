@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -223,6 +224,16 @@ public class CommentsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // reload/refresh comment if it was just edited
+        if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == RESULT_OK) {
+            reloadCommentDetail();
+            refreshCommentList();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

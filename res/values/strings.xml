@@ -215,7 +215,7 @@
     <string name="comment_update">Update Comment</string>
     <string name="saving_changes">Saving Changes</string>
     <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
-    <string name="content_required">The comment body is required.</string>
+    <string name="content_required">Content is required.</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove Blog</string>

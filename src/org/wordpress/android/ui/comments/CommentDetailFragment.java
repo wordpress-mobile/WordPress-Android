@@ -75,6 +75,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mTxtStatus;
     private TextView mTxtContent;
     private ImageView mImgSubmitReply;
+    private ImageView mImgEditComment;
     private EditText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
@@ -117,6 +118,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
+        mImgEditComment = (ImageView) view.findViewById(R.id.image_edit_comment);
 
         mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         mTxtBtnModerate = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
@@ -128,6 +130,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
+        mImgEditComment.setVisibility(View.GONE);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         mTxtContent.setLinksClickable(true);
@@ -154,6 +157,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onClick(View v) {
                 moderateComment(CommentStatus.SPAM);
+            }
+        });
+
+        mImgEditComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editComment();
             }
         });
 
@@ -240,6 +250,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
+     * open the comment for editing
+     */
+    private void editComment() {
+        if (!hasActivity() || !hasComment())
+            return;
+        CommentUtils.showCommentEditorForResult(getActivity(), getLocalBlogId(), getCommentId());
+    }
+
+    /*
      * display the current comment
      */
     private void showComment() {
@@ -312,6 +331,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int blogId = getRemoteBlogId();
         int postId = Integer.valueOf(mComment.postID);
         showPostTitle(blogId, postId);
+
+        mImgEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
 
         // make sure reply box is showing
         if (mLayoutReply.getVisibility() != View.VISIBLE && canReply())
@@ -666,6 +687,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean canTrash() {
         return canModerate();
     }
+    private boolean canEdit() {
+        return canModerate();
+    }
+
     /*
      * display the comment associated with the passed notification
      */

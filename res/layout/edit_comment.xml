@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFFFF" >
+    android:background="#FFFFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,14 +12,14 @@
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp" >
+        android:paddingTop="8dp">
 
         <RelativeLayout
             android:id="@+id/sectionContent"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingBottom="8dp" >
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/l_section1"
@@ -63,10 +63,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/author_url"
-                android:inputType="textCapSentences|textAutoCorrect"
+                android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                 android:gravity="top"
                 android:hint="@string/content"
-                android:minLines="2"
+                android:minLines="4"
                 android:textColorLink="@color/wordpress_blue" />
         </RelativeLayout>
 
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:paddingBottom="8dp" >
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/l_status"
@@ -94,10 +94,10 @@
 
         <Button
             android:id="@+id/post"
-            android:layout_width="wrap_content"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/comment_update"
-            android:textSize="20sp" />
+            android:text="@string/comment_update" />
     </LinearLayout>
 
 </ScrollView>
