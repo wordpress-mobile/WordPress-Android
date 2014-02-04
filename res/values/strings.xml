@@ -199,9 +199,9 @@
     <string name="moderating_comments">Moderating comments</string>
     <string name="trashing_comment">Trashing comment</string>
     <string name="trashing_comments">Trashing comments</string>
-    <string name="comment_moderated">Comment Moderated Successfully</string>
-    <string name="comments_moderated">Comments Moderated Successfully</string>
-    <string name="edit_comment">Edit Comment</string>
+    <string name="comment_moderated">Comment moderated successfully</string>
+    <string name="comments_moderated">Comments moderated successfully</string>
+    <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments.</string>
     <string name="comment_approved">Comment approved</string>
     <string name="comment_unapproved">Comment unapproved</string>
@@ -213,8 +213,8 @@
     <string name="author_email">Author email</string>
     <string name="author_url">Author URL</string>
     <string name="hint_comment_content">Comment</string>
-    <string name="comment_update">Update Comment</string>
-    <string name="saving_changes">Saving Changes</string>
+    <string name="comment_update">Update comment</string>
+    <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
@@ -256,9 +256,9 @@
     <string name="preview">Preview</string>
 
     <!-- comment actions -->
-    <string name="comment_actions">Comment Actions</string>
-    <string name="mark_approved">Mark Approved</string>
-    <string name="mark_unapproved">Mark Unapproved</string>
+    <string name="comment_actions">Comment actions</string>
+    <string name="mark_approved">Mark approved</string>
+    <string name="mark_unapproved">Mark unapproved</string>
     <string name="mark_spam">Spam</string>
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
@@ -267,9 +267,9 @@
 
     <!-- comment moderation confirmation -->
     <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t Trash</string>
-    <string name="spam_yes">Mark as Spam</string>
-    <string name="spam_no">Don\'t Mark as Spam</string>
+    <string name="trash_no">Don\'t trash</string>
+    <string name="spam_yes">Mark as spam</string>
+    <string name="spam_no">Don\'t mark as spam</string>
     <string name="dlg_confirm_trash_comment">Trash this comment?</string>
     <string name="dlg_confirm_trash_comment_multi">Trash these comments?</string>
     <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
