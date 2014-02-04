@@ -58,20 +58,25 @@ public class ApiHelper {
 
         Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
                 blog.getPassword(), hPost };
-        Object[] result = null;
+        Object[] result;
         try {
             result = (Object[]) client.call("wp.getComments", params);
+        } catch (ClassCastException cce) {
+            AppLog.e(T.API, cce);
+            result = null;
         } catch (XMLRPCException e) {
+            AppLog.e(T.API, e);
+            result = null;
         }
 
         if (result != null) {
             if (result.length > 0) {
                 String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
 
-                Map<Object, Object> contentHash = new HashMap<Object, Object>();
+                Map<Object, Object> contentHash;
                 List<Map<String, String>> dbVector = new Vector<Map<String, String>>();
 
-                Date d = new Date();
+                Date date;
                 // loop this!
                 for (int ctr = 0; ctr < result.length; ctr++) {
                     Map<String, String> dbValues = new HashMap<String, String>();
@@ -81,12 +86,12 @@ public class ApiHelper {
                     status = contentHash.get("status").toString();
                     postID = contentHash.get("post_id").toString();
                     commentID = contentHash.get("comment_id").toString();
-                    d = (Date) contentHash.get("date_created_gmt");
+                    date = (Date) contentHash.get("date_created_gmt");
                     authorURL = contentHash.get("author_url").toString();
                     authorEmail = contentHash.get("author_email").toString();
                     postTitle = contentHash.get("post_title").toString();
 
-                    String formattedDate = d.toString();
+                    String formattedDate = date.toString();
                     try {
                         int flags = 0;
                         flags |= DateUtils.FORMAT_SHOW_DATE;
@@ -94,7 +99,7 @@ public class ApiHelper {
                         flags |= DateUtils.FORMAT_SHOW_YEAR;
                         flags |= DateUtils.FORMAT_SHOW_TIME;
                         formattedDate = DateUtils.formatDateTime(ctx,
-                                d.getTime(), flags);
+                                date.getTime(), flags);
                     } catch (Exception e) {
                     }
 
@@ -117,8 +122,7 @@ public class ApiHelper {
         }
     }
 
-    public static abstract class HelperAsyncTask<Params, Progress, Result>
-            extends AsyncTask<Params, Progress, Result> {
+    public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
         protected String mErrorMessage;
         protected ErrorType mErrorType = ErrorType.NO_ERROR;
         protected Throwable mThrowable;
@@ -159,6 +163,10 @@ public class ApiHelper {
                     mBlog.getPassword(), "show-supported" };
             try {
                 result = client.call("wp.getPostFormats", params);
+                return null;
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                return null;
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
@@ -276,6 +284,9 @@ public class ApiHelper {
                 Object versionResult = null;
                 try {
                     versionResult = client.call("wp.getOptions", vParams);
+                } catch (ClassCastException cce) {
+                    setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                    return false;
                 } catch (XMLRPCException e) {
                     setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                     return false;
@@ -296,9 +307,11 @@ public class ApiHelper {
             // Check if user is an admin
             Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfos = (HashMap<String, Object>)
-                        client.call("wp.getProfile", userParams);
+                Map<String, Object> userInfos = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
                 updateBlogAdmin(userInfos);
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                return false;
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -321,7 +334,7 @@ public class ApiHelper {
 
         @Override
         protected void onPostExecute(Boolean success) {
-            if(mCallback != null) {
+            if (mCallback != null) {
                 if (success) {
                     mCallback.onSuccess();
                 } else {
@@ -342,19 +355,23 @@ public class ApiHelper {
         String author, postID, comment, status, authorEmail, authorURL, postTitle;
         int commentID;
         Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
-        Map<?, ?> contentHash = new HashMap<Object, Object>();
+        Map<?, ?> contentHash;
         List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
 
-        Date d = new Date();
+        Date date;
         Object[] result;
         try {
             result = (Object[]) client.call("wp.getComments", commentParams);
+        } catch (ClassCastException cce) {
+            AppLog.e(T.API, cce);
+            return null;
         } catch (XMLRPCException e) {
             throw new XMLRPCException(e);
         }
 
-        if (result.length == 0)
+        if (result.length == 0) {
             return null;
+        }
         // loop this!
         for (int ctr = 0; ctr < result.length; ctr++) {
             Map<Object, Object> dbValues = new HashMap<Object, Object>();
@@ -366,12 +383,12 @@ public class ApiHelper {
             status = contentHash.get("status").toString();
             postID = contentHash.get("post_id").toString();
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            d = (Date) contentHash.get("date_created_gmt");
+            date = (Date) contentHash.get("date_created_gmt");
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = getFormattedCommentDate(ctx, d);
+            String formattedDate = getFormattedCommentDate(ctx, date);
 
             dbValues.put("blogID", String.valueOf(blog.getLocalTableBlogId()));
             dbValues.put("postID", postID);
@@ -395,9 +412,6 @@ public class ApiHelper {
     /**
      * nbradbury 11/15/13 - this code was originally in refreshComments() above, moved here
      * for re-usability
-     * @param context
-     * @param date
-     * @return
      */
     public static String getFormattedCommentDate(Context context, java.util.Date date) {
         if (date == null)
@@ -458,6 +472,9 @@ public class ApiHelper {
             Object[] results = null;
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                return 0;
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
                 // user does not have permission to view media gallery
@@ -548,6 +565,8 @@ public class ApiHelper {
             Boolean result = null;
             try {
                 result = (Boolean) client.call("wp.editPost", apiParams);
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
@@ -604,6 +623,8 @@ public class ApiHelper {
             Map<?, ?> results = null;
             try {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
@@ -679,6 +700,9 @@ public class ApiHelper {
             Map<?, ?> resultMap;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                return null;
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return null;
@@ -746,6 +770,8 @@ public class ApiHelper {
                         setError(ErrorType.INVALID_RESULT, "wp.deletePost returned false");
                     }
                 }
+            } catch (ClassCastException cce) {
+                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
@@ -803,8 +829,10 @@ public class ApiHelper {
             Map<?, ?> resultMap = null;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
+            } catch (ClassCastException cce) {
+                AppLog.e(T.API, cce);
             } catch (XMLRPCException e) {
-                AppLog.e(T.API, "XMLRPCException: " + e.getMessage());
+                AppLog.e(T.API, e);
             }
 
             if (resultMap != null) {
@@ -836,8 +864,7 @@ public class ApiHelper {
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
             if (matcher.find()) {
-                String href = matcher.group(1);
-                return href;
+                return matcher.group(1);
             }
         }
         return null; // never found the rsd tag
@@ -857,8 +884,7 @@ public class ApiHelper {
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
             if (matcher.find()) {
-                String href = matcher.group(1);
-                return href;
+                return matcher.group(1);
             }
         }
         return null; // never found the rsd tag
@@ -892,8 +918,7 @@ public class ApiHelper {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
             try {
-                String body = request.body();
-                return body;
+                return request.body();
             } catch (HttpRequestException e) {
                 AppLog.e(T.API, "Cannot load the content of " + urlString, e);
                 return null;
