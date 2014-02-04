@@ -99,9 +99,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(int localBlogId, final Comment comment) {
+    protected static CommentDetailFragment newInstance(int localBlogId, int commentId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setComment(localBlogId, comment);
+        fragment.setComment(localBlogId, commentId);
         return fragment;
     }
 
@@ -172,7 +172,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    protected void setComment(int localBlogId, final Comment comment) {
+    protected void setComment(int localBlogId, int commentId) {
+        setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
+    }
+
+    private void setComment(int localBlogId, final Comment comment) {
         mComment = comment;
         mLocalBlogId = localBlogId;
 

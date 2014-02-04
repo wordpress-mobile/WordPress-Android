@@ -177,16 +177,15 @@ public class CommentsActivity extends WPActionBarActivity
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mCommentListFragment);
-                f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment);
+                f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
                 ft.add(R.id.commentDetailFragmentContainer, f);
-                //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 // tablet mode with list/detail side-by-side - show this comment in the detail view,
                 // and highlight it in the list view
-                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment);
+                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
                 if (mCommentListFragment != null)
                     mCommentListFragment.setHighlightedCommentId(comment.commentID);
             }

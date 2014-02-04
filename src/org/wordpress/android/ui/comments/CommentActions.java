@@ -290,6 +290,7 @@ public class CommentActions {
 
     /**
      * change the status of multiple comments
+     * TODO: investigate using system.multiCall to perform a single call to moderate the list
      */
     protected static void moderateComments(final int accountId,
                                            final CommentList comments,
