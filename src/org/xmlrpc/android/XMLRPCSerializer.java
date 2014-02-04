@@ -26,7 +26,6 @@ import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.StringUtils;
 
 class XMLRPCSerializer {

@@ -20,7 +20,6 @@ public class Emoticons {
     public static final int EMOTICON_COLOR = 0xFF21759B;
     private static final boolean HAS_EMOJI = SDK_INT >= VERSION_CODES.JELLY_BEAN;
     private static final Map<String, String> wpSmilies;
-    //private static final Map<String, String> wpSmiliesHTMLEscape;
     public static final SparseArray<String> wpSmiliesCodePointToText;
     
     static {
