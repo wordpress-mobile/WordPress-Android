@@ -56,7 +56,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_small"
-        android:drawableLeft="@drawable/noticon_clock"
         style="@style/ReaderTextView.Date" />
 
     <org.wordpress.android.widgets.WPTextView

@@ -59,7 +59,6 @@
                 style="@style/ReaderTextView.Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/noticon_clock"
                 android:text="text_date" />
         </LinearLayout>
 
