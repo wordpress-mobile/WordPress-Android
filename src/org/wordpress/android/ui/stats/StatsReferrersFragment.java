@@ -33,7 +33,7 @@ import java.util.Locale;
  * Fragment for referrer stats. Has two pages, for Today's and Yesterday's stats.
  * Referrers contain expandable lists.
  */
-public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     
     private static final Uri STATS_REFERRER_GROUP_URI = StatsContentProvider.STATS_REFERRER_GROUP_URI;
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;

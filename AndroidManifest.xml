@@ -19,12 +19,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
 
-    <!-- GCM configuration -->
-    <permission
-        android:name="org.wordpress.android.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+    <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -270,23 +265,6 @@
             android:name=".util.MediaDeleteService"
             android:label="Media Delete Service" >
         </service>
-
-        <service android:name="org.wordpress.android.GCMIntentService" />
-        <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="org.wordpress.android" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name=".providers.StatsContentProvider"
-            android:authorities="org.wordpress.android.providers.StatsContentProvider"
-            android:exported="false" />
 
     </application>
 

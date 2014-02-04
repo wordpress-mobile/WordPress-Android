@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.wordpress.passcodelock.AppLockManager;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.util.DeviceUtils;
 
 public class AboutActivity extends Activity implements OnClickListener {
@@ -24,6 +26,10 @@ public class AboutActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.about);
+
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         if (DeviceUtils.getInstance().isBlackBerry()) {
             TextView appTitle = (TextView) findViewById(R.id.about_first_line);
@@ -56,5 +62,17 @@ public class AboutActivity extends Activity implements OnClickListener {
         }
         AppLockManager.getInstance().setExtendedTimeout();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+    
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -65,7 +65,7 @@ public class PostUploadService extends Service {
             listOfPosts.add(currentPost);
         }
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -120,7 +120,7 @@ public class PostUploadService extends Service {
         }
         uploadNextPost();
     }
-    
+
     public static boolean isUploading(Post post) {
         if ( currentUploadingPost != null && currentUploadingPost.equals(post) )
             return true;
@@ -128,7 +128,7 @@ public class PostUploadService extends Service {
             return true;
         return false;
     }
-    
+
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post post;
         private String mErrorMessage = "";
@@ -593,9 +593,12 @@ public class PostUploadService extends Service {
                 String fileName = imageFile.getName();
 
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName);
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
                 if (!TextUtils.isEmpty(fileExtension)) {
-                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                    String newMimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                    if (newMimeType != null) {
+                        mimeType = newMimeType;
+                    }
                 } else {
                     // No file extension? Try and get the mimeType and extension from an InputStream.
                     try {
@@ -751,11 +754,11 @@ public class PostUploadService extends Service {
             }
             return content;
         }
-   
+
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            
+
             // create temp file for media upload
             String tempFileName = "wp-" + System.currentTimeMillis();
             try {
@@ -776,7 +779,7 @@ public class PostUploadService extends Service {
 
             Map<?, ?> contentHash = (HashMap<?, ?>) result;
             String pictureURL = contentHash.get("url").toString();
-           
+
             if (mf.isFeatured()) {
                 try {
                     if (contentHash.get("id") != null) {
@@ -788,7 +791,7 @@ public class PostUploadService extends Service {
                     e.printStackTrace();
                 }
             }
-            
+
             return pictureURL;
         }
 

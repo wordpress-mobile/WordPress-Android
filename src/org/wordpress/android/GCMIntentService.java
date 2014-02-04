@@ -53,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context context, String errorId) {
-        AppLog.v(T.NOTIFS, "GCM Error: " + errorId);
+        AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
     private static String mPreviousNoteId = null;

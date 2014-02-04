@@ -512,16 +512,26 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         Post post = mActivity.getPost();
 
-        if (post == null)
+        if (post == null || mContentEditText.getText() == null)
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
-        String content = "";
+        String content;
 
-        Editable postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
+        Editable postContentEditable;
+        try {
+            postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
+        } catch (IndexOutOfBoundsException e) {
+            // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
+            // See https://code.google.com/p/android/issues/detail?id=5164
+            postContentEditable = mContentEditText.getText();
+        }
+
+        if (postContentEditable == null)
+            return;
 
         if (post.isLocalDraft()) {
-            if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 // remove suggestion spans, they cause craziness in WPHtml.toHTML().
                 CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
                 for (CharacterStyle characterStyle : characterStyles) {
@@ -823,7 +833,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (mediaId == null)
             return;
 
-        String imageURL = null;
+        String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
             imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
@@ -856,7 +866,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     return;
                 }
 
-                Bitmap resizedBitmap = null;
+                Bitmap resizedBitmap;
                 if (downloadedBitmap.getWidth() <= maxPictureWidthForContentEditor) {
                     //bitmap is already small in size, do not resize.
                     resizedBitmap = downloadedBitmap;
@@ -987,7 +997,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         Bitmap thumbnailBitmap;
-        String mediaTitle = "";
+        String mediaTitle;
         if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
             thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
@@ -1095,8 +1105,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
-                if (str != null)
+                if (str != null) {
+                    if (mSelectionEnd > str.length())
+                        mSelectionEnd = str.length();
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
+                }
                 trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarMoreButton);
             } else if (id == R.id.link) {
                 mSelectionStart = mContentEditText.getSelectionStart();
