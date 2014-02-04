@@ -375,6 +375,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     + "</font>";
         txtTitle.setText(Html.fromHtml(html));
     }
+
     /*
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
@@ -508,23 +509,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         MessageBarUtils.showMessageBar(getActivity(), getString(msgResId), msgType, null);
 
-        // TODO: clear fragment if comment deleted
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
-                if (!hasActivity())
-                    return;
-                mLayoutButtons.setEnabled(true);
-                if (succeeded) {
-                    mComment.setStatus(CommentStatus.toString(newStatus));
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                if (succeeded && mOnCommentChangeListener != null)
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                if (hasActivity()) {
+                    mLayoutButtons.setEnabled(true);
+                    if (succeeded) {
+                        mComment.setStatus(CommentStatus.toString(newStatus));
+                    } else {
+                        ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+                    }
+                    // note this MUST come after mComment.setStatus
+                    updateStatusViews();
                 }
-                // note this MUST come after mComment.setStatus
-                updateStatusViews();
             }
         };
         mIsModeratingComment = true;
@@ -556,24 +556,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsSubmittingReply = false;
-                if (!hasActivity())
-                    return;
-
-                mEditReply.setEnabled(true);
-                mImgSubmitReply.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-
-                if (succeeded) {
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
-                    MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
-                    mEditReply.setText(null);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
-                    // refocus editor on failure and show soft keyboard
-                    mEditReply.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
+                if (succeeded && mOnCommentChangeListener != null)
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                if (hasActivity()) {
+                    mEditReply.setEnabled(true);
+                    mImgSubmitReply.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
+                    if (succeeded) {
+                        MessageBarUtils.showMessageBar(getActivity(), getString(R.string.note_reply_successful));
+                        mEditReply.setText(null);
+                    } else {
+                        ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                        // refocus editor on failure and show soft keyboard
+                        mEditReply.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
+                    }
                 }
             }
         };
