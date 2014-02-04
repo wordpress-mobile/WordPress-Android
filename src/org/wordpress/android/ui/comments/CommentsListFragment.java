@@ -259,6 +259,10 @@ public class CommentsListFragment extends Fragment {
         return true;
     }
 
+    protected void setHighlightedCommentId(int commentId) {
+        getCommentAdapter().setHighlightedCommentId(commentId);
+    }
+
     private void setUpListView() {
         ListView listView = this.getListView();
         listView.setAdapter(getCommentAdapter());

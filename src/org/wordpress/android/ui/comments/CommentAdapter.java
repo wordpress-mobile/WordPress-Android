@@ -51,6 +51,7 @@ public class CommentAdapter extends BaseAdapter {
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
     private final int mAvatarSz;
+    private int mHighlightedCommentId = -1;
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
@@ -174,6 +175,16 @@ public class CommentAdapter extends BaseAdapter {
         setItemSelected(position, !isItemSelected(position), view);
     }
 
+    /*
+     * this is used for tablet UI to highlight the comment displayed in the detail view
+     */
+    protected void setHighlightedCommentId(int commentId) {
+        if (mHighlightedCommentId == commentId)
+            return;
+        mHighlightedCommentId = commentId;
+        notifyDataSetChanged();
+    }
+
     private boolean isPositionValid(int position) {
         return (position >= 0 && position < mComments.size());
     }
@@ -227,7 +238,11 @@ public class CommentAdapter extends BaseAdapter {
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            convertView.setBackgroundDrawable(null);
+            if (mHighlightedCommentId == comment.commentID) {
+                convertView.setBackgroundDrawable(mSelectedBackground);
+            } else {
+                convertView.setBackgroundDrawable(null);
+            }
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);

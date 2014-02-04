@@ -184,7 +184,11 @@ public class CommentsActivity extends WPActionBarActivity
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
+                // tablet mode with list/detail side-by-side - show this comment in the detail view,
+                // and highlight it in the list view
                 f.setComment(WordPress.getCurrentLocalTableBlogId(), comment);
+                if (mCommentListFragment != null)
+                    mCommentListFragment.setHighlightedCommentId(comment.commentID);
             }
         }
     }
