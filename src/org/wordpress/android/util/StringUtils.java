@@ -195,6 +195,27 @@ public class StringUtils {
         return url.substring(doubleslash, end);
     }
     
+    public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
+        final int length = inputString.length();
+        StringBuffer out = new StringBuffer(); // Used to hold the output.
+        for (int offset = 0; offset < length; ) {
+            final int codepoint = inputString.codePointAt(offset);
+            final char current = inputString.charAt(offset);
+            if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
+                if (Emoticons.wpSmiliesCodePointToText.get(codepoint) != null) {
+                    out.append(Emoticons.wpSmiliesCodePointToText.get(codepoint));
+                } else {
+                    final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
+                    out.append(htmlEscapedChar);
+                }
+            } else {
+                out.append(current);
+            }
+            offset += Character.charCount(codepoint);
+        }
+        return out.toString();
+    }
+    
     /**
      * This method ensures that the output String has only
      * valid XML unicode characters as specified by the

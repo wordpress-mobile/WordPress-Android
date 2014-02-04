@@ -21,7 +21,7 @@ public class Emoticons {
     private static final boolean HAS_EMOJI = SDK_INT >= VERSION_CODES.JELLY_BEAN;
     private static final Map<String, String> wpSmilies;
     //private static final Map<String, String> wpSmiliesHTMLEscape;
-    private static final SparseArray<String> wpSmiliesCodePointToText;
+    public static final SparseArray<String> wpSmiliesCodePointToText;
     
     static {
         Map<String, String> smilies = new HashMap<String, String>();
@@ -106,27 +106,5 @@ public class Emoticons {
         } else {
             return text;
         }
-    }
-    
-    public static String replaceEmojiWithEmoticons(final String inputString) {
-        final int length = inputString.length();
-        StringBuffer out = new StringBuffer(); // Used to hold the output.
-        for (int offset = 0; offset < length; ) {
-            final int codepoint = inputString.codePointAt(offset);
-            final char current = inputString.charAt(offset);
-            if ( Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
-                if (wpSmiliesCodePointToText.get(codepoint) != null) {
-                    out.append(wpSmiliesCodePointToText.get(codepoint));
-                } else {
-                    final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
-                    out.append(htmlEscapedChar);
-                }
-            } else {
-                out.append(current);
-            }
-            offset += Character.charCount(codepoint);
-        }
-        return out.toString();
-    }
-    
+    }    
 }
