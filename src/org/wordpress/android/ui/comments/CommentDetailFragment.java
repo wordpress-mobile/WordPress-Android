@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -69,8 +68,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
-    private Button mBtnModerate;
-    private Button mBtnSpam;
+    private TextView mTxtBtnModerate;
+    private TextView mTxtBtnSpam;
     private TextView mTxtStatus;
     private EditText mEditReply;
     private TextView mTxtContent;
@@ -118,8 +117,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
         mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
-        mBtnModerate = (Button) mLayoutButtons.findViewById(R.id.text_btn_moderate);
-        mBtnSpam = (Button) mLayoutButtons.findViewById(R.id.text_btn_spam);
+        mTxtBtnModerate = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
+        mTxtBtnSpam = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -149,7 +148,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mBtnSpam.setOnClickListener(new View.OnClickListener() {
+        mTxtBtnSpam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moderateComment(CommentStatus.SPAM);
@@ -399,8 +398,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
 
         // disable buttons during request
-        mBtnModerate.setEnabled(false);
-        mBtnSpam.setEnabled(false);
+        mLayoutButtons.setEnabled(false);
 
         // animate the buttons out (updateStatusViews will re-display them when request completes)
         mLayoutButtons.clearAnimation();
@@ -442,8 +440,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsModeratingComment = false;
                 if (!hasActivity())
                     return;
-                mBtnModerate.setEnabled(true);
-                mBtnSpam.setEnabled(true);
+                mLayoutButtons.setEnabled(true);
                 if (succeeded) {
                     mComment.setStatus(CommentStatus.toString(newStatus));
                     if (mOnCommentChangeListener != null)
@@ -516,14 +513,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * sets the drawable for buttons with a color filter applied when disabled - avoids having
+     * sets the drawable for text buttons with a color filter applied when disabled - avoids having
      * to include separate disabled drawable resources for the ic_cab_xxx drawables
      */
-    private void setButtonDrawable(Button button, int resId, boolean isEnabled) {
+    private void setTextDrawable(final TextView view, int resId, boolean isEnabled) {
         Drawable drawable = getResources().getDrawable(resId).mutate();
         if (!isEnabled)
             drawable.setColorFilter(getResources().getColor(R.color.grey_medium), PorterDuff.Mode.SRC_ATOP);
-        button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        view.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
     }
 
     /*
@@ -584,25 +581,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canModerate()) {
-            mBtnModerate.setText(moderationTextResId);
-            setButtonDrawable(mBtnModerate, moderationDrawResId, true);
-            mBtnModerate.setOnClickListener(new View.OnClickListener() {
+            mTxtBtnModerate.setText(moderationTextResId);
+            setTextDrawable(mTxtBtnModerate, moderationDrawResId, true);
+            mTxtBtnModerate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     moderateComment(newStatus);
                 }
             });
-            mBtnModerate.setVisibility(View.VISIBLE);
+            mTxtBtnModerate.setVisibility(View.VISIBLE);
         } else {
-            mBtnModerate.setVisibility(View.GONE);
+            mTxtBtnModerate.setVisibility(View.GONE);
         }
 
         if (canMarkAsSpam()) {
-            mBtnSpam.setVisibility(View.VISIBLE);
-            mBtnSpam.setEnabled(enableMarkAsSpam);
-            setButtonDrawable(mBtnSpam, R.drawable.ic_cab_spam, enableMarkAsSpam);
+            mTxtBtnSpam.setVisibility(View.VISIBLE);
+            mTxtBtnSpam.setEnabled(enableMarkAsSpam);
+            setTextDrawable(mTxtBtnSpam, R.drawable.ic_cab_spam, enableMarkAsSpam);
         } else {
-            mBtnSpam.setVisibility(View.GONE);
+            mTxtBtnSpam.setVisibility(View.GONE);
         }
 
         // animate the buttons in if they're not visible

@@ -9,28 +9,24 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/blue_light" />
             <stroke android:color="@color/blue_medium" android:width="1px" />
-            <corners android:radius="2dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/blue_light" />
             <stroke android:color="@color/blue_medium" android:width="1px" />
-            <corners android:radius="2dp" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/grey_light" />
             <stroke android:color="@color/grey_medium" android:width="1px" />
-            <corners android:radius="2dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/blue_new_kid" />
             <stroke android:color="@color/blue_medium" android:width="1px" />
-            <corners android:radius="2dp" />
         </shape>
     </item>
 </selector>

@@ -111,22 +111,22 @@
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:orientation="horizontal">
 
-            <Button
+            <TextView
                 android:id="@+id/text_btn_moderate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_cab_approve"
-                style="@style/WordPress.Button.Moderate"
+                style="@style/WordPress.ModerateButton"
                 android:text="@string/approve" />
 
-            <Button
+            <TextView
                 android:id="@+id/text_btn_spam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:enabled="false"
-                style="@style/WordPress.Button.Moderate"
+                style="@style/WordPress.ModerateButton"
                 android:drawableLeft="@drawable/ic_cab_spam"
                 android:text="@string/spam" />
         </LinearLayout>
