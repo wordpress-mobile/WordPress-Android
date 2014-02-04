@@ -30,8 +30,8 @@
         tools:listitem="@layout/comment_row" />
 
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
