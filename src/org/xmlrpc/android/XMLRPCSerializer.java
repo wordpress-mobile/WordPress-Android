@@ -76,9 +76,9 @@ class XMLRPCSerializer {
                 AppLog.e(AppLog.T.EDITOR, "There are characters outside the XML unicode charset as specified by the XML 1.0 standard", e );
 
                 //We need to do the following things:
-                //1. Replace emoji with their textual versions.
-                //2. Try to serialize again.
-                //3. If it fails, Strips characters that are not allowed in XML 1.0 and serialize.
+                //1. Replace emoji with their textual versions (if available on WP), or use the HTML Entity.
+                //2. Try to serialize the resulting string.
+                //3. If it fails again, strips characters that are not allowed in XML 1.0 and serialize.
                 final String noEmojiString = Emoticons.replaceEmojiWithEmoticons((String) object);
                 try {
                   serializer.text(noEmojiString);

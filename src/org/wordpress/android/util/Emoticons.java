@@ -5,6 +5,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.util.SparseArray;
 
 import org.wordpress.android.util.AppLog.T;
 
@@ -19,7 +20,8 @@ public class Emoticons {
     public static final int EMOTICON_COLOR = 0xFF21759B;
     private static final boolean HAS_EMOJI = SDK_INT >= VERSION_CODES.JELLY_BEAN;
     private static final Map<String, String> wpSmilies;
-    private static final Map<String, String> wpSmiliesHTMLEscape;
+    //private static final Map<String, String> wpSmiliesHTMLEscape;
+    private static final SparseArray<String> wpSmiliesCodePointToText;
     
     static {
         Map<String, String> smilies = new HashMap<String, String>();
@@ -48,22 +50,24 @@ public class Emoticons {
         
         wpSmilies = Collections.unmodifiableMap(smilies);
         
-        
-        Map<String, String> smiliesHTMLEscape = new HashMap<String, String>();
-        smiliesHTMLEscape.put("&#128512;", ":mrgreen:");
-        smiliesHTMLEscape.put("&#x1f600;", ":mrgreen:");
-        smiliesHTMLEscape.put("&#128532;", ":|");
-        smiliesHTMLEscape.put("&#x1f614;", ":|");
-        smiliesHTMLEscape.put("&#128534;", ":S");
-        smiliesHTMLEscape.put("&#x1f616;", ":S");
-        smiliesHTMLEscape.put("&#10145;", ":arrow:");
-        smiliesHTMLEscape.put("&#x27a1;", ":arrow:");
-        smiliesHTMLEscape.put("&#128562;", "8-O");
-        smiliesHTMLEscape.put("&#x1f632;", "8-O");
-        smiliesHTMLEscape.put("&#128522;", ":)");
-        smiliesHTMLEscape.put("&#x1f60a;", ":)");
-        
-        wpSmiliesHTMLEscape = Collections.unmodifiableMap(smiliesHTMLEscape);
+        wpSmiliesCodePointToText = new SparseArray<String>(20);
+        wpSmiliesCodePointToText.put(10145, ":arrow:");
+        wpSmiliesCodePointToText.put(128161, ":idea:");
+        wpSmiliesCodePointToText.put(128512, ":mrgreen:");
+        wpSmiliesCodePointToText.put(128515, ":D");
+        wpSmiliesCodePointToText.put(128522, ":)");
+        wpSmiliesCodePointToText.put(128521, ";)");
+        wpSmiliesCodePointToText.put(128532, ":|");
+        wpSmiliesCodePointToText.put(128533, ":?");
+        wpSmiliesCodePointToText.put(128534, ":twisted:");
+        wpSmiliesCodePointToText.put(128542, ":(");
+        wpSmiliesCodePointToText.put(128545, ":evil:");
+        wpSmiliesCodePointToText.put(128546, ":'(");
+        wpSmiliesCodePointToText.put(128562, ":o");
+        wpSmiliesCodePointToText.put(128563, ":oops:");
+        wpSmiliesCodePointToText.put(128527, ":roll:");
+        wpSmiliesCodePointToText.put(10071, ":!:");
+        wpSmiliesCodePointToText.put(10067, ":?:");
     }
     
     public static String lookupImageSmiley(String url){
@@ -111,10 +115,10 @@ public class Emoticons {
             final int codepoint = inputString.codePointAt(offset);
             final char current = inputString.charAt(offset);
             if ( Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
-                final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
-                if (wpSmiliesHTMLEscape.containsKey(htmlEscapedChar)) {
-                    out.append(wpSmiliesHTMLEscape.get(htmlEscapedChar));
+                if (wpSmiliesCodePointToText.get(codepoint) != null) {
+                    out.append(wpSmiliesCodePointToText.get(codepoint));
                 } else {
+                    final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
                     out.append(htmlEscapedChar);
                 }
             } else {
