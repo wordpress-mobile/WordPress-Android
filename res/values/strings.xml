@@ -194,6 +194,7 @@
     <string name="approved">Approved</string>
     <string name="unapproved">Pending</string>
     <string name="spam">Spam</string>
+    <string name="deleted">Deleted</string>
     <string name="moderating_comment">Moderating comment</string>
     <string name="moderating_comments">Moderating comments</string>
     <string name="deleting_comment">Deleting comment</string>
@@ -205,6 +206,7 @@
     <string name="comment_approved">Comment approved</string>
     <string name="comment_unapproved">Comment unapproved</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_trashed">Comment removed</string>
 
     <!-- edit comment view -->
     <string name="author_name">Name</string>
@@ -266,8 +268,10 @@
     <string name="delete_no">Don\'t Delete</string>
     <string name="spam_yes">Mark as Spam</string>
     <string name="spam_no">Don\'t Mark as Spam</string>
-    <string name="dlg_confirm_delete_comments">Delete selected comments?</string>
-    <string name="dlg_confirm_spam_comments">Mark selected comments as spam?</string>
+    <string name="dlg_confirm_delete_comment">Delete this comment?</string>
+    <string name="dlg_confirm_delete_comment_multi">Delete these comments?</string>
+    <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
+    <string name="dlg_confirm_spam_comment_multi">Mark these comments as spam?</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in&#8230;</string>

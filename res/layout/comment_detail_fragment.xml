@@ -115,7 +115,7 @@
                 android:id="@+id/text_btn_moderate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:drawableLeft="@drawable/ic_cab_approve"
                 style="@style/WordPress.ModerateButton"
                 android:text="@string/approve" />
@@ -124,7 +124,7 @@
                 android:id="@+id/text_btn_spam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:enabled="false"
                 style="@style/WordPress.ModerateButton"
                 android:drawableLeft="@drawable/ic_cab_spam"

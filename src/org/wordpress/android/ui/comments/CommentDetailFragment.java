@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -71,9 +73,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mTxtBtnModerate;
     private TextView mTxtBtnSpam;
     private TextView mTxtStatus;
-    private EditText mEditReply;
     private TextView mTxtContent;
     private ImageView mImgSubmitReply;
+    private EditText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
@@ -389,6 +391,30 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
+     * TODO: implement deletion UI
+     */
+    private void confirmDeleteComment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dlg_confirm_delete_comment);
+        builder.setTitle(R.string.delete);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.delete_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                moderateComment(CommentStatus.TRASH);
+            }
+        });
+        builder.setNegativeButton(R.string.delete_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /*
      * approve or unapprove the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
@@ -427,6 +453,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 msgResId = R.string.comment_spammed;
                 msgType = MessageBarType.ALERT;
                 break;
+            case TRASH:
+                msgResId = R.string.comment_trashed;
+                msgType = MessageBarType.ALERT;
+                break;
             default :
                 msgResId = R.string.comment_moderated;
                 msgType = MessageBarType.INFO;
@@ -434,6 +464,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         MessageBarUtils.showMessageBar(getActivity(), getString(msgResId), msgType, null);
 
+        // TODO: clear fragment if comment deleted
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -564,6 +595,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 statusTextResId = R.string.spam;
                 statusColor = Color.RED;
                 break;
+            case TRASH:
+                moderationTextResId = R.string.approve;
+                moderationDrawResId = R.drawable.ic_cab_approve;
+                newStatus = CommentStatus.APPROVED;
+                enableMarkAsSpam = false;
+                statusTextResId = R.string.deleted;
+                statusColor = Color.RED;
+                break;
             default:
                 return;
         }
@@ -624,7 +663,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean canReply() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_REPLY));
     }
-
+    private boolean canTrash() {
+        return canModerate();
+    }
     /*
      * display the comment associated with the passed notification
      */

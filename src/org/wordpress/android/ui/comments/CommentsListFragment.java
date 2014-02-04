@@ -186,8 +186,9 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmSpamComments() {
+        boolean isMulti = (getSelectedCommentCount() > 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dlg_confirm_spam_comments);
+        builder.setMessage(isMulti ? R.string.dlg_confirm_spam_comment_multi : R.string.dlg_confirm_spam_comment);
         builder.setTitle(R.string.spam);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.spam_yes, new DialogInterface.OnClickListener() {
@@ -207,8 +208,9 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
+        boolean isMulti = (getSelectedCommentCount() > 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dlg_confirm_delete_comments);
+        builder.setMessage(isMulti ? R.string.dlg_confirm_delete_comment_multi : R.string.dlg_confirm_delete_comment);
         builder.setTitle(R.string.delete);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.delete_yes, new DialogInterface.OnClickListener() {
@@ -251,7 +253,7 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
-        CommentActions.deleteComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, listener);
+        CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
         return true;
     }
 

@@ -227,6 +227,12 @@ public class CommentActions {
                                           final CommentStatus newStatus,
                                           final CommentActionListener actionListener) {
 
+        // deletion is handled separately
+        if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
+            deleteComment(accountId, comment, actionListener);
+            return;
+        }
+
         final Blog blog = WordPress.getBlog(accountId);
 
         if (blog==null || comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
@@ -289,6 +295,12 @@ public class CommentActions {
                                            final CommentList comments,
                                            final CommentStatus newStatus,
                                            final OnCommentsModeratedListener actionListener) {
+
+        // deletion is handled separately
+        if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
+            deleteComments(accountId, comments, actionListener);
+            return;
+        }
 
         final Blog blog = WordPress.getBlog(accountId);
 
@@ -356,7 +368,7 @@ public class CommentActions {
     /**
      * delete (trash) a single comment
      */
-    protected static void deleteComment(final int accountId,
+    private static void deleteComment(final int accountId,
                                         final Comment comment,
                                         final CommentActionListener actionListener) {
         final Blog blog = WordPress.getBlog(accountId);
@@ -410,9 +422,9 @@ public class CommentActions {
     /**
      * delete multiple comments
      */
-    protected static void deleteComments(final int accountId,
-                                         final CommentList comments,
-                                         final OnCommentsModeratedListener actionListener) {
+    private static void deleteComments(final int accountId,
+                                       final CommentList comments,
+                                       final OnCommentsModeratedListener actionListener) {
 
         final Blog blog = WordPress.getBlog(accountId);
 
