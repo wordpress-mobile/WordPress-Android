@@ -212,16 +212,16 @@ public class CommentsListFragment extends Fragment {
     private void confirmDeleteComments() {
         boolean isMulti = (getSelectedCommentCount() > 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(isMulti ? R.string.dlg_confirm_delete_comment_multi : R.string.dlg_confirm_delete_comment);
-        builder.setTitle(R.string.delete);
+        builder.setMessage(isMulti ? R.string.dlg_confirm_trash_comment_multi : R.string.dlg_confirm_trash_comment);
+        builder.setTitle(R.string.trash);
         builder.setCancelable(true);
-        builder.setPositiveButton(R.string.delete_yes, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 deleteSelectedComments();
             }
         });
-        builder.setNegativeButton(R.string.delete_no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
@@ -236,14 +236,14 @@ public class CommentsListFragment extends Fragment {
             return false;
 
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
-        getActivity().showDialog(CommentsActivity.ID_DIALOG_DELETING);
+        getActivity().showDialog(CommentsActivity.ID_DIALOG_TRASHING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!hasActivity())
                     return;
                 finishActionMode();
-                dismissDialog(CommentsActivity.ID_DIALOG_DELETING);
+                dismissDialog(CommentsActivity.ID_DIALOG_TRASHING);
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);

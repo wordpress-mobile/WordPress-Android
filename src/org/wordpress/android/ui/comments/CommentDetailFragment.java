@@ -435,16 +435,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     private void confirmDeleteComment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dlg_confirm_delete_comment);
-        builder.setTitle(R.string.delete);
+        builder.setMessage(R.string.dlg_confirm_trash_comment);
+        builder.setTitle(R.string.trash);
         builder.setCancelable(true);
-        builder.setPositiveButton(R.string.delete_yes, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 moderateComment(CommentStatus.TRASH);
             }
         });
-        builder.setNegativeButton(R.string.delete_no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();

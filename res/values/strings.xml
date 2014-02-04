@@ -197,8 +197,8 @@
     <string name="deleted">Deleted</string>
     <string name="moderating_comment">Moderating comment</string>
     <string name="moderating_comments">Moderating comments</string>
-    <string name="deleting_comment">Deleting comment</string>
-    <string name="deleting_comments">Deleting comments</string>
+    <string name="trashing_comment">Trashing comment</string>
+    <string name="trashing_comments">Trashing comments</string>
     <string name="comment_moderated">Comment Moderated Successfully</string>
     <string name="comments_moderated">Comments Moderated Successfully</string>
     <string name="edit_comment">Edit Comment</string>
@@ -206,7 +206,7 @@
     <string name="comment_approved">Comment approved</string>
     <string name="comment_unapproved">Comment unapproved</string>
     <string name="comment_spammed">Comment marked as spam</string>
-    <string name="comment_trashed">Comment removed</string>
+    <string name="comment_trashed">Comment trashed</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -261,17 +261,17 @@
     <string name="mark_unapproved">Mark Unapproved</string>
     <string name="mark_spam">Spam</string>
     <string name="reply">Reply</string>
-    <string name="delete">Delete</string>
+    <string name="trash">Trash</string>
     <string name="approve">Approve</string>
     <string name="unapprove">Unapprove</string>
 
     <!-- comment moderation confirmation -->
-    <string name="delete_yes">Delete</string>
-    <string name="delete_no">Don\'t Delete</string>
+    <string name="trash_yes">Trash</string>
+    <string name="trash_no">Don\'t Trash</string>
     <string name="spam_yes">Mark as Spam</string>
     <string name="spam_no">Don\'t Mark as Spam</string>
-    <string name="dlg_confirm_delete_comment">Delete this comment?</string>
-    <string name="dlg_confirm_delete_comment_multi">Delete these comments?</string>
+    <string name="dlg_confirm_trash_comment">Trash this comment?</string>
+    <string name="dlg_confirm_trash_comment_multi">Trash these comments?</string>
     <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
     <string name="dlg_confirm_spam_comment_multi">Mark these comments as spam?</string>
 

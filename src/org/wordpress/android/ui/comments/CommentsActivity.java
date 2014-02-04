@@ -30,7 +30,7 @@ public class CommentsActivity extends WPActionBarActivity
     private MenuItem mRefreshMenuItem;
 
     protected static final int ID_DIALOG_MODERATING = 1;
-    protected static final int ID_DIALOG_DELETING = 3;
+    protected static final int ID_DIALOG_TRASHING = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,12 +237,12 @@ public class CommentsActivity extends WPActionBarActivity
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;
-        } else if (id == ID_DIALOG_DELETING) {
+        } else if (id == ID_DIALOG_TRASHING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
             if (mCommentListFragment.getSelectedCommentCount() > 1) {
-                loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
+                loadingDialog.setMessage(getResources().getText(R.string.trashing_comments));
             } else {
-                loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
+                loadingDialog.setMessage(getResources().getText(R.string.trashing_comment));
             }
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
