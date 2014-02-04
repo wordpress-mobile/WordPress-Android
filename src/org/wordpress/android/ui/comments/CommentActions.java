@@ -344,7 +344,6 @@ public class CommentActions {
                         result = client.call("wp.editComment", params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success) {
-                            CommentTable.updateCommentStatus(localBlogId, comment.commentID, newStatusStr);
                             comment.setStatus(newStatusStr);
                             moderatedComments.add(comment);
                         }
@@ -352,6 +351,9 @@ public class CommentActions {
                         AppLog.e(T.COMMENTS, e.getMessage(), e);
                     }
                 }
+
+                // update status in SQLite of successfully moderated comments
+                CommentTable.updateCommentsStatus(localBlogId, moderatedComments, newStatusStr);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -403,9 +405,8 @@ public class CommentActions {
                 }
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                if (success) {
+                if (success)
                     CommentTable.deleteComment(accountId, comment.commentID);
-                }
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -458,14 +459,15 @@ public class CommentActions {
                     try {
                         result = client.call("wp.deleteComment", params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                        if (success) {
-                            CommentTable.deleteComment(localBlogId, comment.commentID);
+                        if (success)
                             deletedComments.add(comment);
-                        }
                     } catch (final XMLRPCException e) {
                         AppLog.e(T.COMMENTS, e.getMessage(), e);
                     }
                 }
+
+                // remove successfully deleted comments from SQLite
+                CommentTable.deleteComments(localBlogId, deletedComments);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {

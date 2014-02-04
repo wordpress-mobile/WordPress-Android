@@ -146,7 +146,6 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private boolean moderateSelectedComments(CommentStatus newStatus) {
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
@@ -162,6 +161,7 @@ public class CommentsListFragment extends Fragment {
         if (!NetworkUtils.checkConnection(getActivity()))
             return false;
 
+        // TODO: dialog should say "approving" or "unapproving"
         getActivity().showDialog(CommentsActivity.ID_DIALOG_MODERATING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
@@ -317,7 +317,7 @@ public class CommentsListFragment extends Fragment {
      */
     private class GetRecentCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
-        boolean isLoadingMore;
+        final boolean isLoadingMore;
 
         private GetRecentCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;

@@ -122,19 +122,6 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury 11/12/13 - delete a single comment
-     * @param localBlogId - unique id in account table for this blog
-     * @param commentId - commentId of the actual comment
-     * @return true if comment deleted, false otherwise
-     */
-    public static boolean deleteComment(int localBlogId, int commentId) {
-        String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
-        int count = getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND comment_id=?", args);
-        return (count > 0);
-    }
-
-    /**
      * nbradbury - get all comments for a blog
      * @param localBlogId - unique id in account table for this blog
      * @return list of comments for this blog
@@ -259,6 +246,58 @@ public class CommentTable {
                                "blog_id=? AND comment_id=?",
                                args);
 
+    }
+
+    /**
+     * nbradbury - updates the status for the passed list of comments
+     * @param localBlogId - unique id in account table for this blog
+     * @param comments - list of comments to update
+     * @param newStatus - status to change to
+     */
+    public static void updateCommentsStatus(int localBlogId, final CommentList comments, String newStatus) {
+        if (comments == null || comments.size() == 0)
+            return;
+        getWritableDb().beginTransaction();
+        try {
+            for (Comment comment: comments) {
+                updateCommentStatus(localBlogId, comment.commentID, newStatus);
+            }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
+        }
+    }
+
+    /**
+     * nbradbury 11/12/13 - delete a single comment
+     * @param localBlogId - unique id in account table for this blog
+     * @param commentId - commentId of the actual comment
+     * @return true if comment deleted, false otherwise
+     */
+    public static boolean deleteComment(int localBlogId, int commentId) {
+        String[] args = {Integer.toString(localBlogId),
+                         Integer.toString(commentId)};
+        int count = getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND comment_id=?", args);
+        return (count > 0);
+    }
+
+    /**
+     * nbradbury - delete a list of comments
+     * @param localBlogId - unique id in account table for this blog
+     * @param comments - list of comments to delete
+     */
+    public static void deleteComments(int localBlogId, final CommentList comments) {
+        if (comments == null || comments.size() == 0)
+            return;
+        getWritableDb().beginTransaction();
+        try {
+            for (Comment comment: comments) {
+                deleteComment(localBlogId, comment.commentID);
+            }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
+        }
     }
 
     /**
