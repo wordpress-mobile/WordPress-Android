@@ -54,14 +54,14 @@ public class ApiHelperTest extends InstrumentationTestCase {
         new ApiHelper.RefreshBlogContentTask(mTargetContext, dummyBlog, new GenericCallback() {
             @Override
             public void onSuccess() {
-                countDownLatch.countDown();
                 assertTrue(true);
+                countDownLatch.countDown();
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
-                countDownLatch.countDown();
                 assertTrue(false);
+                countDownLatch.countDown();
             }
         }).execute(false);
         countDownLatch.await(5, TimeUnit.SECONDS);
@@ -75,14 +75,14 @@ public class ApiHelperTest extends InstrumentationTestCase {
         new ApiHelper.RefreshBlogContentTask(mTargetContext, dummyBlog, new GenericCallback() {
             @Override
             public void onSuccess() {
+                assertTrue(false);
                 countDownLatch.countDown();
-                assertTrue(true);
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
+                assertTrue(true);
                 countDownLatch.countDown();
-                assertTrue(false);
             }
         }).execute(false);
         countDownLatch.await(5, TimeUnit.SECONDS);
