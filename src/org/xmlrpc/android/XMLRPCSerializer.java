@@ -25,6 +25,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.StringUtils;
 
 class XMLRPCSerializer {
     static final String TAG_NAME = "name";
@@ -64,7 +67,26 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_BOOLEAN).text(boolStr).endTag(null, TYPE_BOOLEAN);
         } else
         if (object instanceof String) {
-            serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
+            serializer.startTag(null, TYPE_STRING);
+            try {
+                serializer.text(object.toString()); //try to encode the string as-is. 99.9% of the time it's OK.
+            } catch (IllegalArgumentException e) {
+                //There are characters outside the XML unicode charset as specified by the XML 1.0 standard. 
+                //See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+                AppLog.e(AppLog.T.EDITOR, "There are characters outside the XML unicode charset as specified by the XML 1.0 standard", e );
+
+                //We need to do the following things:
+                //1. Replace emoji with their textual versions.
+                //2. Try to serialize again.
+                //3. If it fails, Strips characters that are not allowed in XML 1.0 and serialize.
+                final String noEmojiString = Emoticons.replaceEmojiWithEmoticons((String) object);
+                try {
+                  serializer.text(noEmojiString);
+                } catch (Exception exNoEmoji) {
+                    serializer.text(StringUtils.stripNonValidXMLCharacters(noEmojiString));
+                }
+            }
+            serializer.endTag(null, TYPE_STRING);
         } else
         if (object instanceof Date || object instanceof Calendar) {
             Date date = (Date) object;
