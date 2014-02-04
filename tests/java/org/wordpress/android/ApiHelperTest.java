@@ -66,4 +66,25 @@ public class ApiHelperTest extends InstrumentationTestCase {
         }).execute(false);
         countDownLatch.await(5, TimeUnit.SECONDS);
     }
+
+    // This test failed before #799 was fixed
+    public void testRefreshBlogContentEmptyResponse() throws InterruptedException {
+        XMLRPCFactoryTest.setPrefixAllInstances("empty");
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        Blog dummyBlog = new Blog("", "", "");
+        new ApiHelper.RefreshBlogContentTask(mTargetContext, dummyBlog, new GenericCallback() {
+            @Override
+            public void onSuccess() {
+                countDownLatch.countDown();
+                assertTrue(true);
+            }
+
+            @Override
+            public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
+                countDownLatch.countDown();
+                assertTrue(false);
+            }
+        }).execute(false);
+        countDownLatch.await(5, TimeUnit.SECONDS);
+    }
 }

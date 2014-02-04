@@ -43,20 +43,15 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
     public void setAuthorizationHeader(String authToken) {
     }
 
-    public Object call(String method, Object[] params) throws XMLRPCException {
-        AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
-        if ("login-failure".equals(mPrefix)) {
-            // Wrong login
-            throw new XMLRPCException("code 403");
-        }
-
+    private Object readFile(String method, String prefix) {
         // method example: wp.getUsersBlogs
         // Filename: default-wp.getUsersBlogs.json
-        String filename = mPrefix + "-" + method + ".json";
+        String filename = prefix + "-" + method + ".json";
         try {
             Gson gson = new Gson();
             InputStream is = mContext.getAssets().open(filename);
             String jsonString = TestUtils.convertStreamToString(is);
+            AppLog.i(T.TESTS, "loading: " + filename);
             try {
                 // Try to load a JSONArray
                 return gson.fromJson(jsonString, Object[].class);
@@ -68,6 +63,22 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
             AppLog.e(T.TESTS, "can't read file: " + filename);
         }
         return null;
+    }
+
+    public Object call(String method, Object[] params) throws XMLRPCException {
+        AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
+        if ("login-failure".equals(mPrefix)) {
+            // Wrong login
+            throw new XMLRPCException("code 403");
+        }
+
+        Object retValue = readFile(method, mPrefix);
+        if (retValue == null) {
+            // failback to default
+            AppLog.w(T.TESTS, "failback to default");
+            retValue = readFile(method, "default");
+        }
+        return retValue;
     }
 
     public Object call(String method) throws XMLRPCException {
