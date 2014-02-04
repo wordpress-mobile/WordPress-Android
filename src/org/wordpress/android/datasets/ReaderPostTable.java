@@ -143,7 +143,6 @@ public class ReaderPostTable {
         try {
             if (!c.moveToFirst())
                 return null;
-            resetColumnIndexes(c);
             return getPostFromCursor(c);
         } finally {
             SqlUtils.closeCursor(c);
@@ -377,7 +376,6 @@ public class ReaderPostTable {
             if (cursor==null || !cursor.moveToFirst())
                 return posts;
 
-            resetColumnIndexes(cursor);
             do {
                 posts.add(getPostFromCursor(cursor));
             } while (cursor.moveToNext());
@@ -398,104 +396,43 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
-    private static int COL_POST_ID;
-    private static int COL_BLOG_ID;
-    private static int COL_PSEUDO_ID;
-    private static int COL_AUTHOR_NAME;
-    private static int COL_BLOG_NAME;
-    private static int COL_BLOG_URL;
-    private static int COL_EXCERPT;
-    private static int COL_FEATURED_IMAGE;
-    private static int COL_FEATURED_VIDEO;
-    private static int COL_TITLE;
-    private static int COL_TEXT;
-    private static int COL_URL;
-    private static int COL_POST_AVATAR;
-    private static int COL_TIMESTAMP;
-    private static int COL_PUBLISHED;
-    private static int COL_NUM_REPLIES;
-    private static int COL_NUM_LIKES;
-    private static int COL_IS_LIKED;
-    private static int COL_IS_FOLLOWED;
-    private static int COL_IS_COMMENTS_OPEN;
-    private static int COL_IS_REBLOGGED;
-    private static int COL_IS_EXTERNAL;
-    private static int COL_IS_PRIVATE;
-    private static int COL_IS_VIDEOPRESS;
-    private static int COL_TAGLIST;
-
-    /*
-     * should be called whenever a cursor is returned above so that column indexes are known - this avoids
-     * calling getColumnIndex() in getPostFromCursor() for each column every time that function is called
-     */
-    private static void resetColumnIndexes(Cursor c) {
-        COL_POST_ID = c.getColumnIndex("post_id");
-        COL_BLOG_ID = c.getColumnIndex("blog_id");
-        COL_PSEUDO_ID = c.getColumnIndex("pseudo_id");
-        COL_AUTHOR_NAME = c.getColumnIndex("author_name");
-        COL_BLOG_NAME = c.getColumnIndex("blog_name");
-        COL_BLOG_URL = c.getColumnIndex("blog_url");
-        COL_EXCERPT = c.getColumnIndex("excerpt");
-        COL_FEATURED_IMAGE = c.getColumnIndex("featured_image");
-        COL_FEATURED_VIDEO = c.getColumnIndex("featured_video");
-        COL_TITLE = c.getColumnIndex("title");
-        COL_TEXT = c.getColumnIndex("text");
-        COL_URL = c.getColumnIndex("url");
-        COL_POST_AVATAR = c.getColumnIndex("post_avatar");
-        COL_TIMESTAMP = c.getColumnIndex("timestamp");
-        COL_PUBLISHED = c.getColumnIndex("published");
-        COL_NUM_REPLIES = c.getColumnIndex("num_replies");
-        COL_NUM_LIKES = c.getColumnIndex("num_likes");
-        COL_IS_LIKED = c.getColumnIndex("is_liked");
-        COL_IS_FOLLOWED = c.getColumnIndex("is_followed");
-        COL_IS_COMMENTS_OPEN = c.getColumnIndex("is_comments_open");
-        COL_IS_REBLOGGED = c.getColumnIndex("is_reblogged");
-        COL_IS_EXTERNAL = c.getColumnIndex("is_external");
-        COL_IS_PRIVATE = c.getColumnIndex("is_private");
-        COL_IS_VIDEOPRESS = c.getColumnIndex("is_videopress");
-        COL_TAGLIST = c.getColumnIndex("tag_list");
-    }
-
-    /*
-     * resetColumnIndexes() MUST be called before this is called for the first time
-     */
     private static ReaderPost getPostFromCursor(Cursor c) {
         if (c==null)
             throw new IllegalArgumentException("null post cursor");
 
         ReaderPost post = new ReaderPost();
 
-        post.postId = c.getLong(COL_POST_ID);
-        post.blogId = c.getLong(COL_BLOG_ID);
-        post.setPseudoId(c.getString(COL_PSEUDO_ID));
+        post.postId = c.getLong(c.getColumnIndex("post_id"));
+        post.blogId = c.getLong(c.getColumnIndex("blog_id"));
+        post.setPseudoId(c.getString(c.getColumnIndex("pseudo_id")));
 
-        post.setAuthorName(c.getString(COL_AUTHOR_NAME));
-        post.setBlogName(c.getString(COL_BLOG_NAME));
-        post.setBlogUrl(c.getString(COL_BLOG_URL));
-        post.setExcerpt(c.getString(COL_EXCERPT));
-        post.setFeaturedImage(c.getString(COL_FEATURED_IMAGE));
-        post.setFeaturedVideo(c.getString(COL_FEATURED_VIDEO));
+        post.setAuthorName(c.getString(c.getColumnIndex("author_name")));
+        post.setBlogName(c.getString(c.getColumnIndex("blog_name")));
+        post.setBlogUrl(c.getString(c.getColumnIndex("blog_url")));
+        post.setExcerpt(c.getString(c.getColumnIndex("excerpt")));
+        post.setFeaturedImage(c.getString(c.getColumnIndex("featured_image")));
+        post.setFeaturedVideo(c.getString(c.getColumnIndex("featured_video")));
 
-        post.setTitle(c.getString(COL_TITLE));
-        post.setText(c.getString(COL_TEXT));
-        post.setUrl(c.getString(COL_URL));
-        post.setPostAvatar(c.getString(COL_POST_AVATAR));
+        post.setTitle(c.getString(c.getColumnIndex("title")));
+        post.setText(c.getString(c.getColumnIndex("text")));
+        post.setUrl(c.getString(c.getColumnIndex("url")));
+        post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.timestamp = c.getLong(COL_TIMESTAMP);
-        post.setPublished(c.getString(COL_PUBLISHED));
+        post.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        post.setPublished(c.getString(c.getColumnIndex("published")));
 
-        post.numReplies = c.getInt(COL_NUM_REPLIES);
-        post.numLikes = c.getInt(COL_NUM_LIKES);
+        post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
+        post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 
-        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(COL_IS_LIKED));
-        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt(COL_IS_FOLLOWED));
-        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(COL_IS_COMMENTS_OPEN));
-        post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(COL_IS_REBLOGGED));
-        post.isExternal = SqlUtils.sqlToBool(c.getInt(COL_IS_EXTERNAL));
-        post.isPrivate = SqlUtils.sqlToBool(c.getInt(COL_IS_PRIVATE));
-        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(COL_IS_VIDEOPRESS));
+        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
+        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_followed")));
+        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
+        post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_reblogged")));
+        post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
+        post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
+        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
 
-        post.setTags(c.getString(COL_TAGLIST));
+        post.setTags(c.getString(c.getColumnIndex("tag_list")));
 
         return post;
     }
