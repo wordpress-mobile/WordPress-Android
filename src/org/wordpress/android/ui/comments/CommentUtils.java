@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.WPImageGetter;
 
@@ -15,12 +12,6 @@ import org.wordpress.android.util.WPImageGetter;
  * Created by nbradbury on 1/9/14.
  */
 public class CommentUtils {
-    protected static void showCommentEditorForResult(Activity activity, int localBlogId, int commentId) {
-        Intent intent = new Intent(activity, EditCommentActivity.class);
-        intent.putExtra(EditCommentActivity.ARG_LOCAL_BLOG_ID, localBlogId);
-        intent.putExtra(EditCommentActivity.ARG_COMMENT_ID, commentId);
-        activity.startActivityForResult(intent, Constants.INTENT_COMMENT_EDITOR);
-    }
 
     /*
      * displays comment text as html, including retrieving images

@@ -86,9 +86,7 @@
             android:name=".ui.comments.CommentsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".ui.comments.EditCommentActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.comments.EditCommentActivity" />
 
         <!-- Posts activities -->
         <activity

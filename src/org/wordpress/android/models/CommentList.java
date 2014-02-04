@@ -53,19 +53,28 @@ public class CommentList extends ArrayList<Comment> {
     }
 
     /*
-     * does passed list contain the same comments as this list? doesn't do an EXACT match - only
-     * checks whether commentIDs & statuses match
+     * does passed list contain the same comments as this list?
      */
     public boolean isSameList(CommentList comments) {
         if (comments == null || comments.size() != this.size())
             return false;
 
-        for (Comment comment: comments) {
+        for (final Comment comment: comments) {
             int index = this.indexOfCommentId(comment.commentID);
             if (index == -1)
                 return false;
-            if (! this.get(index).getStatusEnum().equals(comment.getStatusEnum()))
+            final Comment thisComment = this.get(index);
+            if (!thisComment.getStatus().equals(comment.getStatus()))
                 return false;
+            if (!thisComment.getCommentText().equals(comment.getCommentText()))
+                return false;
+            if (!thisComment.getAuthorName().equals(comment.getAuthorName()))
+                return false;
+            if (!thisComment.getAuthorEmail().equals(comment.getAuthorEmail()))
+                return false;
+            if (!thisComment.getAuthorUrl().equals(comment.getAuthorUrl()))
+                return false;
+
         }
 
         return true;

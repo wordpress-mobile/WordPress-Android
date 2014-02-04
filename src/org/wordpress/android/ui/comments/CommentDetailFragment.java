@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
@@ -212,6 +214,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         showComment();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
+            reloadComment();
+            // tell the host to reload the comment list
+            if (mOnCommentChangeListener != null)
+                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+        }
+    }
+
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
     }
@@ -255,7 +268,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void editComment() {
         if (!hasActivity() || !hasComment())
             return;
-        CommentUtils.showCommentEditorForResult(getActivity(), getLocalBlogId(), getCommentId());
+        // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
+        // won't be called in this fragment
+        // https://code.google.com/p/android/issues/detail?id=15394#c45
+        Intent intent = new Intent(getActivity(), EditCommentActivity.class);
+        intent.putExtra(EditCommentActivity.ARG_LOCAL_BLOG_ID, getLocalBlogId());
+        intent.putExtra(EditCommentActivity.ARG_COMMENT_ID, getCommentId());
+        startActivityForResult(intent, Constants.INTENT_COMMENT_EDITOR);
     }
 
     /*

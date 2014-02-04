@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -20,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -66,17 +69,37 @@ public class EditCommentActivity extends SherlockActivity {
         if (mComment == null)
             return false;
 
-        final EditText authorNameET = (EditText) this.findViewById(R.id.author_name);
-        authorNameET.setText(mComment.getAuthorName());
+        final EditText editAuthorName = (EditText) this.findViewById(R.id.author_name);
+        editAuthorName.setText(mComment.getAuthorName());
 
-        final EditText authorEmailET = (EditText) this.findViewById(R.id.author_email);
-        authorEmailET.setText(mComment.getAuthorEmail());
+        final EditText editAuthorEmail = (EditText) this.findViewById(R.id.author_email);
+        editAuthorEmail.setText(mComment.getAuthorEmail());
 
-        final EditText authorURLET = (EditText) this.findViewById(R.id.author_url);
-        authorURLET.setText(mComment.getAuthorUrl());
+        final EditText editAuthorUrl = (EditText) this.findViewById(R.id.author_url);
+        editAuthorUrl.setText(mComment.getAuthorUrl());
 
-        final EditText commentContentET = (EditText) this.findViewById(R.id.comment_content);
-        commentContentET.setText(mComment.getCommentText());
+        final EditText editContent = (EditText) this.findViewById(R.id.comment_content);
+        editContent.setText(mComment.getCommentText());
+
+        // show error when comment content is empty
+        editContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean hasError = (editContent.getError() != null);
+                boolean hasText = (s != null && s.length() > 0);
+                if (!hasText && !hasError) {
+                    editContent.setError(getString(R.string.content_required));
+                } else if (hasText && hasError) {
+                    editContent.setError(null);
+                }
+            }
+        });
 
         return true;
     }
@@ -103,18 +126,6 @@ public class EditCommentActivity extends SherlockActivity {
         }
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == ID_DIALOG_SAVING) {
-            ProgressDialog savingDialog = new ProgressDialog(this);
-            savingDialog.setMessage(getResources().getText(R.string.saving_changes));
-            savingDialog.setIndeterminate(true);
-            savingDialog.setCancelable(true);
-            return savingDialog;
-        }
-        return super.onCreateDialog(id);
-    }
-
     private String getEditTextStr(int resId) {
         final EditText edit = (EditText) findViewById(resId);
         return EditTextUtils.getText(edit);
@@ -127,6 +138,16 @@ public class EditCommentActivity extends SherlockActivity {
             editContent.setError(getString(R.string.content_required));
             return;
         }
+
+        // return immediately if comment hasn't changed
+        if (!isCommentEdited()) {
+            ToastUtils.showToast(this, R.string.toast_comment_unedited);
+            return;
+        }
+
+        // make sure we have an active connection
+        if (!NetworkUtils.checkConnection(this))
+            return;
 
         if (mIsUpdateTaskRunning)
             AppLog.w(AppLog.T.COMMENTS, "update task already running");
@@ -142,13 +163,25 @@ public class EditCommentActivity extends SherlockActivity {
 
         final String authorName = getEditTextStr(R.id.author_name);
         final String authorEmail = getEditTextStr(R.id.author_email);
-        final String authorURL = getEditTextStr(R.id.author_url);
+        final String authorUrl = getEditTextStr(R.id.author_url);
         final String content = getEditTextStr(R.id.comment_content);
 
         return !(authorName.equals(mComment.getAuthorName())
                 && authorEmail.equals(mComment.getAuthorEmail())
-                && authorURL.equals(mComment.getAuthorUrl())
+                && authorUrl.equals(mComment.getAuthorUrl())
                 && content.equals(mComment.getCommentText()));
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == ID_DIALOG_SAVING) {
+            ProgressDialog savingDialog = new ProgressDialog(this);
+            savingDialog.setMessage(getResources().getText(R.string.saving_changes));
+            savingDialog.setIndeterminate(true);
+            savingDialog.setCancelable(true);
+            return savingDialog;
+        }
+        return super.onCreateDialog(id);
     }
 
     private void showSaveDialog() {
@@ -180,28 +213,24 @@ public class EditCommentActivity extends SherlockActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            // return true immediately if comment hasn't changed
-            if (!isCommentEdited())
-                return true;
-
             final Blog blog;
             try {
                 blog = new Blog(mLocalBlogId);
             } catch (Exception e) {
-                AppLog.e(AppLog.T.COMMENTS, "localTableBlogId: " + mLocalBlogId + " not found");
+                AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
             }
 
             final String authorName = getEditTextStr(R.id.author_name);
             final String authorEmail = getEditTextStr(R.id.author_email);
-            final String authorURL = getEditTextStr(R.id.author_url);
+            final String authorUrl = getEditTextStr(R.id.author_url);
             final String content = getEditTextStr(R.id.comment_content);
 
             final Map<String, String> postHash = new HashMap<String, String>();
             postHash.put("status",       mComment.getStatus());
             postHash.put("content",      content);
             postHash.put("author",       authorName);
-            postHash.put("author_url",   authorURL);
+            postHash.put("author_url",   authorUrl);
             postHash.put("author_email", authorEmail);
 
             XMLRPCClient client = new XMLRPCClient(
@@ -216,20 +245,19 @@ public class EditCommentActivity extends SherlockActivity {
                     mCommentId,
                     postHash};
 
-            Object result;
-            boolean isSaved;
             try {
-                result = client.call("wp.editComment", xmlParams);
-                isSaved = (result != null && Boolean.parseBoolean(result.toString()));
+                Object result = client.call("wp.editComment", xmlParams);
+                boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
                 if (isSaved) {
                     mComment.setAuthorEmail(authorEmail);
-                    mComment.setAuthorUrl(authorURL);
-                    mComment.setCommentText(content);
+                    mComment.setAuthorUrl(authorUrl);
                     mComment.setAuthorName(authorName);
+                    mComment.setCommentText(content);
                     CommentTable.updateComment(mLocalBlogId, mComment);
                 }
                 return isSaved;
             } catch (XMLRPCException e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
             }
         }
@@ -242,6 +270,7 @@ public class EditCommentActivity extends SherlockActivity {
                 setResult(RESULT_OK);
                 finish();
             } else {
+                // alert user to error
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.error));
                 dialogBuilder.setMessage(R.string.error_edit_comment);

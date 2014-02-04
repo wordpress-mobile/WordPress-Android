@@ -13,7 +13,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -27,9 +26,8 @@ public class CommentsActivity extends WPActionBarActivity
                    OnAnimateRefreshButtonListener,
                    CommentActions.OnCommentChangeListener {
 
-    private CommentsListFragment commentList;
-    private boolean fromNotification = false;
-    private MenuItem refreshMenuItem;
+    private CommentsListFragment mCommentListFragment;
+    private MenuItem mRefreshMenuItem;
 
     protected static final int ID_DIALOG_MODERATING = 1;
     protected static final int ID_DIALOG_DELETING = 3;
@@ -43,10 +41,11 @@ public class CommentsActivity extends WPActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_comments));
 
+        boolean isFromNotification = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            fromNotification = extras.getBoolean("fromNotification");
-            if (fromNotification) {
+            isFromNotification = extras.getBoolean("fromNotification");
+            if (isFromNotification) {
                 try {
                     WordPress.currentBlog = new Blog(extras.getInt("id"));
                 } catch (Exception e) {
@@ -58,11 +57,11 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        commentList = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
+        mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
 
-        if (fromNotification)
+        if (isFromNotification)
             refreshCommentList();
 
         if (savedInstanceState != null)
@@ -72,8 +71,8 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        if (commentList != null)
-            commentList.clear();
+        if (mCommentListFragment != null)
+            mCommentListFragment.clear();
         refreshCommentList();
     }
 
@@ -82,10 +81,10 @@ public class CommentsActivity extends WPActionBarActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.basic_menu, menu);
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         if (mShouldAnimateRefreshButton) {
             mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(refreshMenuItem);
+            startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
     }
@@ -126,7 +125,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     protected void onStop() {
         super.onStop();
-        commentList.cancelCommentsTask();
+        mCommentListFragment.cancelCommentsTask();
     }
 
     @Override
@@ -134,8 +133,8 @@ public class CommentsActivity extends WPActionBarActivity
         super.onNewIntent(intent);
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            boolean fromNotification = extras.getBoolean("fromNotification");
-            if (fromNotification) {
+            boolean isFromNotification = extras.getBoolean("fromNotification");
+            if (isFromNotification) {
                 try {
                     WordPress.currentBlog = new Blog(extras.getInt("id"));
                 } catch (Exception e) {
@@ -177,7 +176,7 @@ public class CommentsActivity extends WPActionBarActivity
             if (f == null || !f.isInLayout()) {
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.hide(commentList);
+                ft.hide(mCommentListFragment);
                 f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment);
                 ft.add(R.id.commentDetailFragmentContainer, f);
                 //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -201,18 +200,18 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private void refreshCommentList() {
-        if (commentList != null)
-            commentList.refreshComments();
+        if (mCommentListFragment != null)
+            mCommentListFragment.refreshComments();
     }
 
     @Override
     public void onAnimateRefreshButton(boolean start) {
         if (start) {
             mShouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(refreshMenuItem);
+            this.startAnimatingRefreshButton(mRefreshMenuItem);
         } else {
             mShouldAnimateRefreshButton = false;
-            this.stopAnimatingRefreshButton(refreshMenuItem);
+            this.stopAnimatingRefreshButton(mRefreshMenuItem);
         }
 
     }
@@ -227,21 +226,10 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // reload/refresh comment if it was just edited
-        // TODO: doesn't work!
-        if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == RESULT_OK) {
-            reloadCommentDetail();
-            refreshCommentList();
-        }
-    }
-
-    @Override
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_MODERATING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.getSelectedCommentCount() > 1) {
+            if (mCommentListFragment.getSelectedCommentCount() > 1) {
                 loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
             } else {
                 loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
@@ -251,7 +239,7 @@ public class CommentsActivity extends WPActionBarActivity
             return loadingDialog;
         } else if (id == ID_DIALOG_DELETING) {
             ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (commentList.getSelectedCommentCount() > 1) {
+            if (mCommentListFragment.getSelectedCommentCount() > 1) {
                 loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
             } else {
                 loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));

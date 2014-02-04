@@ -216,7 +216,8 @@
     <string name="comment_update">Update Comment</string>
     <string name="saving_changes">Saving Changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
-    <string name="content_required">Comment is required.</string>
+    <string name="content_required">Comment is required</string>
+    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove Blog</string>
