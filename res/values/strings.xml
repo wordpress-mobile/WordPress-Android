@@ -22,10 +22,6 @@
     <string name="account_details">Account Details</string>
     <string name="status">Status</string>
 
-    <!-- comment form labels -->
-    <string name="comment_content">Comment Content</string>
-    <string name="anonymous">Anonymous</string>
-
     <!-- general strings -->
     <string name="post">Post</string>
     <string name="page">Page</string>
@@ -39,6 +35,7 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
+    <string name="anonymous">Anonymous</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="show_and_hide_blogs">Show/hide blogs</string>
     <string name="blogs_visibility">Blogs visibility</string>
@@ -200,7 +197,6 @@
     <string name="trashing_comment">Trashing comment</string>
     <string name="trashing_comments">Trashing comments</string>
     <string name="comment_moderated">Comment moderated successfully</string>
-    <string name="comments_moderated">Comments moderated successfully</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments.</string>
     <string name="comment_approved">Comment approved</string>
@@ -213,7 +209,6 @@
     <string name="author_email">Author email</string>
     <string name="author_url">Author URL</string>
     <string name="hint_comment_content">Comment</string>
-    <string name="comment_update">Update comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="content_required">Comment is required</string>
@@ -256,10 +251,6 @@
     <string name="preview">Preview</string>
 
     <!-- comment actions -->
-    <string name="comment_actions">Comment actions</string>
-    <string name="mark_approved">Mark approved</string>
-    <string name="mark_unapproved">Mark unapproved</string>
-    <string name="mark_spam">Spam</string>
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
     <string name="approve">Approve</string>
@@ -278,8 +269,6 @@
     <!-- new account view -->
     <string name="attempting_configure">Signing in&#8230;</string>
     <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
-
-    <!-- drafts -->
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
