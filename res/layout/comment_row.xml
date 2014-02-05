@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
@@ -45,7 +45,7 @@
         android:layout_toLeftOf="@+id/text_date"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="Author Name"
+        android:text="Name"
         android:textColor="@color/grey_extra_dark"
         android:textSize="@dimen/text_sz_large" />
 
@@ -56,6 +56,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_small"
+        android:text="date"
         style="@style/ReaderTextView.Date" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -66,6 +67,7 @@
         android:layout_below="@+id/name"
         android:ellipsize="end"
         android:singleLine="true"
+        android:text="postTitle"
         android:textColor="@color/grey_medium"
         android:textSize="@dimen/text_sz_medium" />
 
@@ -76,10 +78,9 @@
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/postTitle"
         android:ellipsize="end"
-        android:maxLines="4"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:layout_marginBottom="@dimen/margin_extra_small"
-        android:textColor="@color/grey_dark"
+        android:text="comment"
+        android:maxLines="2"
+        android:textColor="@color/grey_medium_dark"
         android:textSize="@dimen/text_sz_medium" />
 
 </RelativeLayout>
