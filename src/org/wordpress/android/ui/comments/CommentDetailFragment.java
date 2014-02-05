@@ -219,6 +219,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        EditTextUtils.hideSoftInput(mEditReply);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
