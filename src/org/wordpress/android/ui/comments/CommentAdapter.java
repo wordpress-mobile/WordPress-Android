@@ -15,8 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
@@ -26,6 +24,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
 
@@ -247,7 +246,7 @@ public class CommentAdapter extends BaseAdapter {
                 holder.imgCheckmark.setVisibility(View.GONE);
             String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
             if (!TextUtils.isEmpty(avatarUrl)) {
-                holder.imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+                holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             } else {
                 holder.imgAvatar.setImageDrawable(mDefaultAvatar);
             }
@@ -266,7 +265,7 @@ public class CommentAdapter extends BaseAdapter {
         private final TextView txtStatus;
         private final TextView txtPostTitle;
         private final TextView txtDate;
-        private final NetworkImageView imgAvatar;
+        private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
 
         private CommentHolder(View row) {
@@ -275,9 +274,8 @@ public class CommentAdapter extends BaseAdapter {
             txtStatus = (TextView) row.findViewById(R.id.status);
             txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
             txtDate = (TextView) row.findViewById(R.id.text_date);
-            imgAvatar = (NetworkImageView) row.findViewById(R.id.avatar);
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
             imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
+            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
         }
     }
 

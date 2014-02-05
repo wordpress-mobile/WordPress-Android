@@ -8,24 +8,22 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/frame_avatar"
-        android:layout_marginRight="@dimen/margin_large"
-        android:layout_height="wrap_content">
+        android:layout_marginRight="@dimen/margin_large">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_sz_medium"
-            android:src="@drawable/placeholder"
-            android:layout_height="@dimen/avatar_sz_medium" />
+            style="@style/ReaderImageView.Avatar" />
 
         <ImageView
+            android:id="@+id/image_checkmark"
             android:layout_width="@dimen/avatar_sz_medium"
+            android:layout_height="@dimen/avatar_sz_medium"
             android:src="@drawable/tab_icon_checkmark"
             android:background="@color/blue_medium"
-            android:id="@+id/image_checkmark"
             android:padding="@dimen/margin_medium"
-            android:visibility="gone"
-            android:layout_height="@dimen/avatar_sz_medium" />
+            android:visibility="gone" />
     </FrameLayout>
 
     <org.wordpress.android.widgets.WPTextView
