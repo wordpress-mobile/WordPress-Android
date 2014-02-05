@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -49,6 +48,7 @@ public class CommentAdapter extends BaseAdapter {
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
+    private final int mSelectionColor;
     private final int mAvatarSz;
     private int mHighlightedCommentId = -1;
 
@@ -57,7 +57,6 @@ public class CommentAdapter extends BaseAdapter {
     private final String mAnonymous;
 
     private boolean mEnableSelection;
-    private final Drawable mSelectedBackground;
     private final Drawable mDefaultAvatar;
     
     protected CommentAdapter(Context context,
@@ -71,13 +70,14 @@ public class CommentAdapter extends BaseAdapter {
         final Resources resources = context.getResources();
         mStatusColorSpam = Color.RED;
         mStatusColorUnapproved = resources.getColor(R.color.orange_medium);
+        mSelectionColor = resources.getColor(R.color.blue_extra_light);
+
         mStatusTextSpam = resources.getString(R.string.spam);
         mStatusTextUnapproved = resources.getString(R.string.unapproved);
         mAnonymous = resources.getString(R.string.anonymous);
 
         mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mDefaultAvatar = resources.getDrawable(R.drawable.placeholder);
-        mSelectedBackground = new ColorDrawable(resources.getColor(R.color.blue_extra_light));
     }
 
     @Override
@@ -232,16 +232,13 @@ public class CommentAdapter extends BaseAdapter {
                 break;
         }
 
+        final boolean useSelectionBackground;
         if (mEnableSelection && isItemSelected(position)) {
-            convertView.setBackgroundDrawable(mSelectedBackground);
+            useSelectionBackground = true;
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            if (mHighlightedCommentId == comment.commentID) {
-                convertView.setBackgroundDrawable(mSelectedBackground);
-            } else {
-                convertView.setBackgroundDrawable(null);
-            }
+            useSelectionBackground = (mHighlightedCommentId == comment.commentID);
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
@@ -250,6 +247,12 @@ public class CommentAdapter extends BaseAdapter {
             } else {
                 holder.imgAvatar.setImageDrawable(mDefaultAvatar);
             }
+        }
+
+        if (useSelectionBackground) {
+            convertView.setBackgroundColor(mSelectionColor);
+        } else {
+            convertView.setBackgroundDrawable(null);
         }
 
         // request to load more comments when we near the end
