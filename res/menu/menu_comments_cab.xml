@@ -20,13 +20,13 @@
     <item
         android:id="@+id/menu_spam"
         android:icon="@drawable/ic_cab_spam"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/spam" />
 
     <item
         android:id="@+id/menu_trash"
         android:icon="@drawable/ic_cab_trash"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/trash" />
 
 </menu>

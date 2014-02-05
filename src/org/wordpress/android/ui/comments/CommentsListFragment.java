@@ -481,10 +481,11 @@ public class CommentsListFragment extends Fragment {
             boolean hasApproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.APPROVED);
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
             boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
+            boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
 
             setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam,      hasSelection);
+            setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
             setItemEnabled(menu, R.id.menu_trash,     hasSelection);
 
             return true;

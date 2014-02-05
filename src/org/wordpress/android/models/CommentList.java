@@ -53,6 +53,17 @@ public class CommentList extends ArrayList<Comment> {
     }
 
     /*
+     * returns true if any comments in this list do NOT have the passed status
+     */
+    public boolean hasAnyWithoutStatus(CommentStatus status) {
+        for (Comment comment: this) {
+            if (!comment.getStatusEnum().equals(status))
+                return true;
+        }
+        return false;
+    }
+
+    /*
      * does passed list contain the same comments as this list?
      */
     public boolean isSameList(CommentList comments) {
