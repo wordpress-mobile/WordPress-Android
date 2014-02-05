@@ -28,6 +28,7 @@
         android:layout_height="@dimen/note_avatar_sz"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_toRightOf="@+id/unread_indicator" />
 
     <org.wordpress.android.widgets.WPTextView

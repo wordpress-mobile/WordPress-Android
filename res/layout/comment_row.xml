@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/frame_avatar"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -44,6 +45,7 @@
         android:layout_toLeftOf="@+id/text_date"
         android:ellipsize="end"
         android:singleLine="true"
+        android:text="Author Name"
         android:textColor="@color/grey_extra_dark"
         android:textSize="@dimen/text_sz_large" />
 
