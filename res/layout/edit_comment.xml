@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
@@ -10,14 +10,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.OpenSansEditText
             android:id="@+id/author_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:inputType="textCapWords|textAutoCorrect"
             android:hint="@string/author_name"
             android:singleLine="true" />
@@ -26,7 +26,7 @@
             android:id="@+id/author_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:inputType="textEmailAddress"
             android:hint="@string/author_email"
             android:singleLine="true" />
@@ -35,7 +35,7 @@
             android:id="@+id/author_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:inputType="textUri"
             android:hint="@string/author_url"
             android:singleLine="true" />
@@ -46,6 +46,7 @@
             android:layout_height="match_parent"
             android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
             android:gravity="top|left"
+            android:minLines="4"
             android:hint="@string/hint_comment_content"
             android:textColorLink="@color/reader_hyperlink" />
     </LinearLayout>
