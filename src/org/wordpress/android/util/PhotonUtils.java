@@ -16,19 +16,15 @@ public class PhotonUtils {
      * replace it with a new ?s= parameter which requests the avatar at the exact size needed
      */
     public static String fixAvatar(final String imageUrl, int avatarSz) {
-        if (imageUrl==null)
-            throw new IllegalArgumentException("avatar imageUrl cannot be null");
+        if (imageUrl == null)
+            return "";
 
         // if this isn't a gravatar image, return as resized photon image url
         if (!imageUrl.contains("gravatar.com"))
             return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
 
-        // remove all other params
-        int queryPos = imageUrl.indexOf("?");
-        if (queryPos==-1)
-            return imageUrl + String.format("?s=%d", avatarSz);
-
-        return imageUrl.substring(0, queryPos) + String.format("?s=%d", avatarSz);
+        // remove all other params, then add query string for size and "mystery man" default
+        return UrlUtils.removeQuery(imageUrl) + String.format("?s=%d&d=mm", avatarSz);
     }
 
     /*

@@ -230,6 +230,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+        holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
 
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
@@ -255,12 +256,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.VISIBLE);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-        }
-
-        if (post.hasPostAvatar()) {
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR, false);
         }
 
         /*final String firstTag = post.getFirstTag();
@@ -406,7 +401,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the like button (textView)
      */
-    public void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
+    private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 

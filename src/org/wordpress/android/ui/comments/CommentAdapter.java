@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +55,7 @@ public class CommentAdapter extends BaseAdapter {
     private final String mAnonymous;
 
     private boolean mEnableSelection;
-    private final Drawable mDefaultAvatar;
-    
+
     protected CommentAdapter(Context context,
                              OnLoadMoreListener onLoadMoreListener,
                              OnSelectedItemsChangeListener onChangeListener) {
@@ -77,7 +74,6 @@ public class CommentAdapter extends BaseAdapter {
         mAnonymous = resources.getString(R.string.anonymous);
 
         mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        mDefaultAvatar = resources.getDrawable(R.drawable.placeholder);
     }
 
     @Override
@@ -241,12 +237,7 @@ public class CommentAdapter extends BaseAdapter {
             useSelectionBackground = (mHighlightedCommentId == comment.commentID);
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
-            String avatarUrl = comment.getAvatarForDisplay(mAvatarSz);
-            if (!TextUtils.isEmpty(avatarUrl)) {
-                holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            } else {
-                holder.imgAvatar.setImageDrawable(mDefaultAvatar);
-            }
+            holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         }
 
         if (useSelectionBackground) {
