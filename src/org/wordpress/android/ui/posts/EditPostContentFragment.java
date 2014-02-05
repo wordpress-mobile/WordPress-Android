@@ -805,13 +805,18 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
+                        if (WordPress.getCurrentBlog() == null) {
+                            return;
+                        }
                         String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                         WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
                     }
 
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        if (getActivity() != null && !isRemoving()) { 
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
