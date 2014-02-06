@@ -48,6 +48,7 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
             android:textAllCaps="true"
             android:visibility="gone"
             android:textSize="@dimen/text_sz_small" />

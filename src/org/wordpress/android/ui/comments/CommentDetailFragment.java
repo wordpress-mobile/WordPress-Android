@@ -675,8 +675,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return;
         }
 
-        // comment status is only shown if this comment is from one of this user's blogs
-        if (mIsUsersBlog) {
+        // comment status is only shown if this comment is from one of this user's blogs and the
+        // comment hasn't been approved
+        if (mIsUsersBlog && mComment.getStatusEnum() != CommentStatus.APPROVED) {
             mTxtStatus.setText(getString(statusTextResId).toUpperCase());
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
