@@ -69,8 +69,8 @@ public class CommentAdapter extends BaseAdapter {
         mStatusColorUnapproved = resources.getColor(R.color.orange_medium);
         mSelectionColor = resources.getColor(R.color.blue_extra_light);
 
-        mStatusTextSpam = resources.getString(R.string.spam);
-        mStatusTextUnapproved = resources.getString(R.string.unapproved);
+        mStatusTextSpam = resources.getString(R.string.comment_status_spam);
+        mStatusTextUnapproved = resources.getString(R.string.comment_status_unapproved);
         mAnonymous = resources.getString(R.string.anonymous);
 
         mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);

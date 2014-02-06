@@ -29,8 +29,10 @@ public class CommentsActivity extends WPActionBarActivity
     private CommentsListFragment mCommentListFragment;
     private MenuItem mRefreshMenuItem;
 
-    protected static final int ID_DIALOG_MODERATING = 1;
-    protected static final int ID_DIALOG_TRASHING = 2;
+    protected static final int ID_DIALOG_APPROVING = 1;
+    protected static final int ID_DIALOG_UNAPPROVING = 2;
+    protected static final int ID_DIALOG_SPAMMING = 3;
+    protected static final int ID_DIALOG_TRASHING = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,7 @@ public class CommentsActivity extends WPActionBarActivity
         }
     };
 
-    private void popCommentDetail() {
+    protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
         CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
@@ -230,29 +232,30 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        if (id == ID_DIALOG_MODERATING) {
-            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (mCommentListFragment.getSelectedCommentCount() > 1) {
-                loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
-            } else {
-                loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
-            }
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
-        } else if (id == ID_DIALOG_TRASHING) {
-            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
-            if (mCommentListFragment.getSelectedCommentCount() > 1) {
-                loadingDialog.setMessage(getResources().getText(R.string.trashing_comments));
-            } else {
-                loadingDialog.setMessage(getResources().getText(R.string.trashing_comment));
-            }
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
-        } else {
-            return super.onCreateDialog(id);
+        final int resId;
+        switch (id) {
+            case ID_DIALOG_APPROVING :
+                resId = R.string.dlg_approving_comments;
+                break;
+            case ID_DIALOG_UNAPPROVING:
+                resId = R.string.dlg_unapproving_comments;
+                break;
+            case ID_DIALOG_TRASHING:
+                resId = R.string.dlg_trashing_comments;
+                break;
+            case ID_DIALOG_SPAMMING:
+                resId = R.string.dlg_spamming_comments;
+                break;
+            default :
+                return super.onCreateDialog(id);
         }
+
+        ProgressDialog dialog = new ProgressDialog(CommentsActivity.this);
+        dialog.setMessage(getString(resId));
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+
+        return dialog;
     }
 
 }

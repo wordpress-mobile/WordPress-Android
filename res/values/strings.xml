@@ -188,21 +188,27 @@
 
     <!-- comment view -->
     <string name="on">on</string>
-    <string name="approved">Approved</string>
-    <string name="unapproved">Pending</string>
-    <string name="spam">Spam</string>
-    <string name="deleted">Deleted</string>
-    <string name="moderating_comment">Moderating comment</string>
-    <string name="moderating_comments">Moderating comments</string>
-    <string name="trashing_comment">Trashing comment</string>
-    <string name="trashing_comments">Trashing comments</string>
-    <string name="comment_moderated">Comment moderated successfully</string>
+    <string name="comment_status_approved">Approved</string>
+    <string name="comment_status_unapproved">Pending</string>
+    <string name="comment_status_spam">Spam</string>
+    <string name="comment_status_trash">Trashed</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments.</string>
-    <string name="comment_approved">Comment approved</string>
-    <string name="comment_unapproved">Comment unapproved</string>
-    <string name="comment_spammed">Comment marked as spam</string>
-    <string name="comment_trashed">Comment trashed</string>
+
+    <!-- comment menu -->
+    <string name="mnu_comment_approve">Approve</string>
+    <string name="mnu_comment_unapprove">Unapprove</string>
+    <string name="mnu_comment_spam">Spam</string>
+    <string name="mnu_comment_trash">Trash</string>
+
+    <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
+    <string name="dlg_approving_comments">Approving</string>
+    <string name="dlg_unapproving_comments">Unapproving</string>
+    <string name="dlg_spamming_comments">Marking as spam</string>
+    <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_confirm_trash_comments">Send to trash?</string>
+    <string name="trash_yes">Trash</string>
+    <string name="trash_no">Don\'t trash</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -255,16 +261,6 @@
     <string name="trash">Trash</string>
     <string name="approve">Approve</string>
     <string name="unapprove">Unapprove</string>
-
-    <!-- comment moderation confirmation -->
-    <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
-    <string name="spam_yes">Mark as spam</string>
-    <string name="spam_no">Don\'t mark as spam</string>
-    <string name="dlg_confirm_trash_comment">Trash this comment?</string>
-    <string name="dlg_confirm_trash_comment_multi">Trash these comments?</string>
-    <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
-    <string name="dlg_confirm_spam_comment_multi">Mark these comments as spam?</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in&#8230;</string>

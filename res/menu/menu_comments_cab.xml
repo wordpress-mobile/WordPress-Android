@@ -10,23 +10,21 @@
         android:id="@+id/menu_approve"
         android:icon="@drawable/ic_cab_approve"
         android:showAsAction="always"
-        android:title="@string/approve" />
+        android:title="@string/mnu_comment_approve" />
     <item
         android:id="@+id/menu_unapprove"
         android:icon="@drawable/ic_cab_unapprove"
         android:showAsAction="always"
-        android:title="@string/unapprove" />
-
+        android:title="@string/mnu_comment_unapprove" />
     <item
         android:id="@+id/menu_spam"
         android:icon="@drawable/ic_cab_spam"
         android:showAsAction="ifRoom"
-        android:title="@string/spam" />
-
+        android:title="@string/mnu_comment_spam" />
     <item
         android:id="@+id/menu_trash"
         android:icon="@drawable/ic_cab_trash"
         android:showAsAction="ifRoom"
-        android:title="@string/trash" />
+        android:title="@string/mnu_comment_trash" />
 
 </menu>

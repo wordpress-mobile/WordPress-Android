@@ -293,15 +293,21 @@
     </style>
 
 
-    <!-- moderation buttons on comment detail -->
+    <!--
+        moderation buttons on comment detail
+        designed to work with Buttons, TextViews and ImageViews
+    -->
     <style name="WordPress.ModerateButton">
         <item name="android:textColor">@color/moderate_button_text</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:background">@drawable/moderate_button_selector</item>
-        <item name="android:padding">@dimen/margin_small</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
         <item name="android:layout_margin">@dimen/margin_small</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

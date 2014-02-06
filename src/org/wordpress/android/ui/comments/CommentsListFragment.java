@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
@@ -94,7 +92,7 @@ public class CommentsListFragment extends Fragment {
         return (mCommentAdapter != null);
     }
 
-    protected int getSelectedCommentCount() {
+    private int getSelectedCommentCount() {
         return getCommentAdapter().getSelectedCommentCount();
     }
 
@@ -148,7 +146,7 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private boolean moderateSelectedComments(CommentStatus newStatus) {
+    private void moderateSelectedComments(CommentStatus newStatus) {
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
 
@@ -158,20 +156,38 @@ public class CommentsListFragment extends Fragment {
                 updateComments.add(comment);
         }
         if (updateComments.size() == 0)
-            return false;
+            return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
-            return false;
+            return;
 
-        // TODO: dialog should say "approving" or "unapproving"
-        getActivity().showDialog(CommentsActivity.ID_DIALOG_MODERATING);
+        final int dlgId;
+        switch (newStatus) {
+            case APPROVED:
+                dlgId = CommentsActivity.ID_DIALOG_APPROVING;
+                break;
+            case UNAPPROVED:
+                dlgId = CommentsActivity.ID_DIALOG_UNAPPROVING;
+                break;
+            case SPAM:
+                dlgId = CommentsActivity.ID_DIALOG_SPAMMING;
+                break;
+            case TRASH:
+                dlgId = CommentsActivity.ID_DIALOG_TRASHING;
+                break;
+            default :
+                return;
+        }
+        getActivity().showDialog(dlgId);
+
+
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
                 if (!hasActivity())
                     return;
                 finishActionMode();
-                dismissDialog(CommentsActivity.ID_DIALOG_MODERATING);
+                dismissDialog(dlgId);
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
@@ -184,35 +200,12 @@ public class CommentsListFragment extends Fragment {
         };
 
         CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), updateComments, newStatus, listener);
-        return true;
-    }
-
-    private void confirmSpamComments() {
-        boolean isMulti = (getSelectedCommentCount() > 1);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(isMulti ? R.string.dlg_confirm_spam_comment_multi : R.string.dlg_confirm_spam_comment);
-        builder.setTitle(R.string.spam);
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.spam_yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                moderateSelectedComments(CommentStatus.SPAM);
-            }
-        });
-        builder.setNegativeButton(R.string.spam_no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     private void confirmDeleteComments() {
         boolean isMulti = (getSelectedCommentCount() > 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(isMulti ? R.string.dlg_confirm_trash_comment_multi : R.string.dlg_confirm_trash_comment);
+        builder.setMessage(R.string.dlg_confirm_trash_comments);
         builder.setTitle(R.string.trash);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
@@ -497,8 +490,6 @@ public class CommentsListFragment extends Fragment {
             if (numSelected == 0)
                 return false;
 
-            // note that approve/disapprove happen without confirmation, but confirmation is required
-            // before comments are deleted or marked as spam
             switch (menuItem.getItemId()) {
                 case R.id.menu_approve :
                     moderateSelectedComments(CommentStatus.APPROVED);
@@ -507,9 +498,10 @@ public class CommentsListFragment extends Fragment {
                     moderateSelectedComments(CommentStatus.UNAPPROVED);
                     return true;
                 case R.id.menu_spam :
-                    confirmSpamComments();
+                    moderateSelectedComments(CommentStatus.SPAM);
                     return true;
                 case R.id.menu_trash :
+                    // unlike the other status changes, we ask the user to confirm trashing
                     confirmDeleteComments();
                     return true;
                 default:

@@ -51,7 +51,7 @@
 
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_large">72dp</dimen>
+    <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
     <dimen name="reader_button_icon_small">40dp</dimen>
