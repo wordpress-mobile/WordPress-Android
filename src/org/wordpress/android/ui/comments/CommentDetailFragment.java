@@ -393,7 +393,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtPostTitle = (TextView) getActivity().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
 
-        final String title = (postExists ? ReaderPostTable.getPostTitle(blogId, postId) : null);
+        final String title;
+        if (mComment.hasPostTitle()) {
+            title = mComment.getPostTitle();
+        } else if (postExists) {
+            title = ReaderPostTable.getPostTitle(blogId, postId);
+        } else {
+            title = null;
+        }
         final boolean hasTitle = !TextUtils.isEmpty(title);
         if (hasTitle) {
             setPostTitle(txtPostTitle, title);

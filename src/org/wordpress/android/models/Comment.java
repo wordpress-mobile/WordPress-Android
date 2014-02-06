@@ -155,6 +155,9 @@ public class Comment {
         comment = StringUtils.notNullStr(text);
     }
 
+    public boolean hasPostTitle() {
+        return !TextUtils.isEmpty(postTitle);
+    }
     public String getPostTitle() {
         return StringUtils.notNullStr(postTitle);
     }
