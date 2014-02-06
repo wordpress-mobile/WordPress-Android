@@ -197,7 +197,7 @@ public class StringUtils {
     
     public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
         final int length = inputString.length();
-        StringBuffer out = new StringBuffer(); // Used to hold the output.
+        StringBuilder out = new StringBuilder(); // Used to hold the output.
         for (int offset = 0; offset < length; ) {
             final int codepoint = inputString.codePointAt(offset);
             final char current = inputString.charAt(offset);
