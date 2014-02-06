@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
 
 import android.util.Base64;
+import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -47,6 +48,17 @@ class XMLRPCSerializer {
 
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
+    
+    private static XmlSerializer serializeTester;
+
+    static {
+        serializeTester = Xml.newSerializer();
+        try {
+            serializeTester.setOutput(new NullOutputStream(), "UTF-8");
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.EDITOR, "Unable to set the output stream used in test serializer. This should never happen!", e );
+        }
+    }
 
     @SuppressWarnings("unchecked")
     static void serialize(XmlSerializer serializer, Object object) throws IOException {
@@ -68,7 +80,8 @@ class XMLRPCSerializer {
         if (object instanceof String) {
             serializer.startTag(null, TYPE_STRING);
             try {
-                serializer.text(object.toString()); //try to encode the string as-is. 99.9% of the time it's OK.
+                serializeTester.text(object.toString());  //try to encode the string as-is in a test serializer. 99.9% of the time it's OK.
+                serializer.text(object.toString());
             } catch (IllegalArgumentException e) {
                 //There are characters outside the XML unicode charset as specified by the XML 1.0 standard. 
                 //See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
@@ -81,6 +94,7 @@ class XMLRPCSerializer {
                 //4. If it fails again, strips characters that are not allowed in XML 1.0 and serialize.
                 final String noEmojiString = StringUtils.replaceUnicodeSurrogateBlocksWithHTMLEntities((String) object);
                 try {
+                  serializeTester.text(noEmojiString);  
                   serializer.text(noEmojiString);
                 } catch (Exception exNoEmoji) {
                     serializer.text(StringUtils.stripNonValidXMLCharacters(noEmojiString));

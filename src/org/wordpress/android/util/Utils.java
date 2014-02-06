@@ -2,13 +2,14 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
 import android.util.TypedValue;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.Map;
 
