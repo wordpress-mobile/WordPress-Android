@@ -149,7 +149,6 @@ public class WordPress extends Application {
             editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
             editor.commit();
             if (wpDB != null) {
-                wpDB.deleteAllAccounts();
                 wpDB.updateLastBlogId(-1);
                 wpDB.deleteDatabase(this);
             }
