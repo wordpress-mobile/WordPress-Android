@@ -127,6 +127,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mImgEditComment = (ImageView) mLayoutButtons.findViewById(R.id.image_edit_comment);
         mImgTrashComment = (ImageView) mLayoutButtons.findViewById(R.id.image_trash_comment);
 
+        setImageDrawable(mImgSpamComment, R.drawable.ic_cab_spam, true);
+        setImageDrawable(mImgEditComment, R.drawable.ab_icon_edit, true);
+        setImageDrawable(mImgTrashComment, R.drawable.ic_cab_trash, true);
+
+
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
@@ -353,7 +358,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
-            imgAvatar.setImageResource(R.drawable.placeholder);
+            imgAvatar.setImageUrl(null, WPNetworkImageView.ImageType.AVATAR);
         }
 
         updateStatusViews();
@@ -623,7 +628,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setImageDrawable(final ImageView view, int resId, boolean isEnabled) {
         Drawable drawable = getResources().getDrawable(resId).mutate();
         if (!isEnabled)
-            drawable.setColorFilter(getResources().getColor(R.color.grey_medium), PorterDuff.Mode.SRC_ATOP);
+            drawable.setColorFilter(getResources().getColor(R.color.blue_extra_dark), PorterDuff.Mode.SRC_ATOP);
         view.setImageDrawable(drawable);
     }
 

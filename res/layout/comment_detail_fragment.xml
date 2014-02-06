@@ -54,7 +54,7 @@
                     android:layout_toLeftOf="@+id/text_status"
                     android:layout_alignLeft="@+id/text_name"
                     android:text="text_post_title"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:ellipsize="end"
                     android:textColor="@color/grey_medium"
                     android:textSize="@dimen/text_sz_large" />
@@ -110,7 +110,7 @@
             android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:background="@color/blue_new_kid"
             android:orientation="horizontal">
 
             <ImageView
@@ -126,7 +126,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="false"
                 style="@style/WordPress.ModerateButton"
                 android:src="@drawable/ic_cab_spam" />
 
