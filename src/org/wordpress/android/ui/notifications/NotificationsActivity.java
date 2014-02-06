@@ -287,7 +287,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                     @Override
                     public void onResponse(JSONObject response){
                         Activity notificationsActivity = NotificationsActivity.this;
-                        if (notificationsActivity == null || notificationsActivity.isFinishing() || notificationsActivity.isDestroyed()) {
+                        if (notificationsActivity == null || notificationsActivity.isFinishing()) {
                             return;
                         }
                         final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
