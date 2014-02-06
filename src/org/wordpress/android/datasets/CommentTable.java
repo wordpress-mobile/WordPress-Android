@@ -62,7 +62,7 @@ public class CommentTable {
 
         // get rid of comments on blogs that don't exist or are hidden
         String sql = " blog_id NOT IN (SELECT DISTINCT id FROM " + WordPressDB.SETTINGS_TABLE
-                   + " WHERE " + WordPressDB.COLNAME_IS_HIDDEN + " = 0)";
+                   + " WHERE isHidden = 0)";
         numDeleted += db.delete(COMMENTS_TABLE, sql, null);
 
         // get rid of older comments if we've reached the max

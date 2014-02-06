@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.SparseArray;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressStatsDB;
 import org.wordpress.android.datasets.SQLTable;
@@ -31,21 +32,19 @@ import org.wordpress.android.datasets.StatsVideosTable;
  */
 public class StatsContentProvider extends ContentProvider {
 
-    public static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
-
-    public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICK_GROUPS);
-    public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICKS);
-    public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.GEOVIEWS);
-    public static final Uri STATS_MOST_COMMENTED_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.MOST_COMMENTED);
-    public static final Uri STATS_REFERRER_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRER_GROUPS);
-    public static final Uri STATS_REFERRERS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRERS);
-    public static final Uri STATS_SEARCH_ENGINE_TERMS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.SEARCH_ENGINE_TERMS);
-    public static final Uri STATS_TAGS_AND_CATEGORIES_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TAGS_AND_CATEGORIES);
-    public static final Uri STATS_TOP_AUTHORS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TOP_AUTHORS);
-    public static final Uri STATS_TOP_COMMENTERS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TOP_COMMENTERS);
-    public static final Uri STATS_TOP_POSTS_AND_PAGES_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TOP_POSTS_AND_PAGES);
-    public static final Uri STATS_VIDEOS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.VIDEOS);
-    public static final Uri STATS_BAR_CHART_DATA_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_DATA);
+    public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.CLICK_GROUPS);
+    public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.CLICKS);
+    public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.GEOVIEWS);
+    public static final Uri STATS_MOST_COMMENTED_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.MOST_COMMENTED);
+    public static final Uri STATS_REFERRER_GROUP_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.REFERRER_GROUPS);
+    public static final Uri STATS_REFERRERS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.REFERRERS);
+    public static final Uri STATS_SEARCH_ENGINE_TERMS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.SEARCH_ENGINE_TERMS);
+    public static final Uri STATS_TAGS_AND_CATEGORIES_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.TAGS_AND_CATEGORIES);
+    public static final Uri STATS_TOP_AUTHORS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.TOP_AUTHORS);
+    public static final Uri STATS_TOP_COMMENTERS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.TOP_COMMENTERS);
+    public static final Uri STATS_TOP_POSTS_AND_PAGES_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.TOP_POSTS_AND_PAGES);
+    public static final Uri STATS_VIDEOS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.VIDEOS);
+    public static final Uri STATS_BAR_CHART_DATA_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.BAR_CHART_DATA);
     
     private static final class Paths {
         private static final String CLICK_GROUPS = "click_groups";
@@ -87,7 +86,7 @@ public class StatsContentProvider extends ContentProvider {
     
     private void registerTable(String path, SQLTable table) {
         final int match = URI_MATCH++;
-        sUriMatcher.addURI(AUTHORITY, path, match);
+        sUriMatcher.addURI(BuildConfig.STATS_PROVIDER_AUTHORITY, path, match);
         sUriMatchToSQLTableMap.put(match, table);
     }
 

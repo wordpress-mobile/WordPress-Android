@@ -120,7 +120,6 @@
                     android:layout_width="match_parent"
                     android:text="@string/create_new_blog_wpcom"
                     android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center"
                     android:enabled="false"/>
 

@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.StatsBarChartData;
@@ -134,7 +135,7 @@ public class StatUtils {
             }
             
             ContentResolver resolver = context.getContentResolver();
-            resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
             resolver.notifyChange(uri, null);
         } catch (JSONException e) {
             e.printStackTrace();

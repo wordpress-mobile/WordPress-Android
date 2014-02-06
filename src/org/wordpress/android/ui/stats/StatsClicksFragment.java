@@ -33,7 +33,7 @@ import java.util.Locale;
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
  * Clicks contain expandable lists.
  */
-public class StatsClicksFragment extends StatsAbsPagedViewFragment implements TabListener {
+public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_CLICK_GROUP_URI = StatsContentProvider.STATS_CLICK_GROUP_URI;
     private static final Uri STATS_CLICKS_URI = StatsContentProvider.STATS_CLICKS_URI;

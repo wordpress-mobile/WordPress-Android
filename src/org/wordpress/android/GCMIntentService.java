@@ -53,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context context, String errorId) {
-        AppLog.v(T.NOTIFS, "GCM Error: " + errorId);
+        AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
     private static String mPreviousNoteId = null;
@@ -113,12 +113,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             note = new Note(extras);
             WordPress.wpDB.addNote(note, true);
             refreshNotes();
-        }
-
-        boolean md5GeneratedNoteId = false;
-        if (note_id == null && note != null) {
-            note_id = String.valueOf(WordPressDB.generateIdFor(note));
-            md5GeneratedNoteId = true;
         }
 
         /*
@@ -191,8 +185,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setAutoCancel(true)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            if (md5GeneratedNoteId)
-                resultIntent.putExtra(NotificationsActivity.MD5_NOTE_ID_EXTRA, note_id);
             if (note_id != null)
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
 

@@ -146,7 +146,6 @@
                     android:layout_width="match_parent"
                     android:text="@string/sign_in"
                     android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center"
                     android:enabled="false"/>
 

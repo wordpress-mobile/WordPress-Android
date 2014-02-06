@@ -37,7 +37,7 @@ import java.util.Locale;
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
  */
-public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY, StatsTimeframe.SUMMARY };
