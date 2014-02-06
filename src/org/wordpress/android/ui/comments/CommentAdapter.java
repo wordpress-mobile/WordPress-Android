@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class CommentAdapter extends BaseAdapter {
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
     private final int mSelectionColor;
+
     private final int mAvatarSz;
     private int mHighlightedCommentId = -1;
 
@@ -206,8 +208,7 @@ public class CommentAdapter extends BaseAdapter {
             holder = (CommentHolder) convertView.getTag();
         }
 
-        holder.txtName.setText(comment.hasAuthorName() ? comment.getAuthorName() : mAnonymous);
-        holder.txtPostTitle.setText(comment.getUnescapedPostTitle());
+        holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
         holder.txtComment.setText(comment.getUnescapedCommentText());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
@@ -254,19 +255,17 @@ public class CommentAdapter extends BaseAdapter {
     }
 
     private class CommentHolder {
-        private final TextView txtName;
+        private final TextView txtTitle;
         private final TextView txtComment;
         private final TextView txtStatus;
-        private final TextView txtPostTitle;
         private final TextView txtDate;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
 
         private CommentHolder(View row) {
-            txtName = (TextView) row.findViewById(R.id.name);
+            txtTitle = (TextView) row.findViewById(R.id.title);
             txtComment = (TextView) row.findViewById(R.id.comment);
             txtStatus = (TextView) row.findViewById(R.id.status);
-            txtPostTitle = (TextView) row.findViewById(R.id.postTitle);
             txtDate = (TextView) row.findViewById(R.id.text_date);
             imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
             imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
@@ -315,6 +314,7 @@ public class CommentAdapter extends BaseAdapter {
                 comment.getUnescapedCommentText();
                 comment.getUnescapedPostTitle();
                 comment.getAvatarForDisplay(mAvatarSz);
+                comment.getFormattedTitle();
             }
 
             return true;

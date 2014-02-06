@@ -7,10 +7,10 @@
     android:paddingBottom="@dimen/margin_large">
 
     <FrameLayout
+        android:id="@+id/frame_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/frame_avatar"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -27,60 +27,55 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:visibility="gone"
-        android:layout_toRightOf="@+id/frame_avatar"
-        android:textSize="@dimen/text_sz_medium" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/name"
-        android:layout_below="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/frame_avatar"
-        android:layout_toLeftOf="@+id/text_date"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text="Name"
-        android:textColor="@color/grey_extra_dark"
-        android:textSize="@dimen/text_sz_large" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_date"
+    <LinearLayout
+        android:id="@+id/layout_date_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:orientation="vertical"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:text="date"
-        style="@style/ReaderTextView.Date" />
+        android:gravity="right">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            style="@style/ReaderTextView.Date" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:visibility="gone"
+            android:textSize="@dimen/text_sz_small" />
+    </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/postTitle"
-        android:layout_width="wrap_content"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_below="@+id/name"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:layout_toLeftOf="@+id/layout_date_status"
         android:ellipsize="end"
-        android:singleLine="true"
-        android:text="postTitle"
-        android:textColor="@color/grey_medium"
-        android:textSize="@dimen/text_sz_medium" />
+        android:lines="2"
+        android:text="title"
+        android:textColor="@color/grey_extra_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_below="@+id/postTitle"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:ellipsize="end"
         android:text="comment"
         android:maxLines="2"
-        android:textColor="@color/grey_medium_dark"
+        android:textColor="@color/grey_medium"
         android:textSize="@dimen/text_sz_medium" />
 
 </RelativeLayout>

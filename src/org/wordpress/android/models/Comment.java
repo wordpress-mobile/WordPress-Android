@@ -1,8 +1,11 @@
 package org.wordpress.android.models;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -209,5 +212,26 @@ public class Comment {
             }
         }
         return avatarForDisplay;
+    }
+
+    /*
+     * returns the author + post title as "Author Name on Post Title" - used by comment list
+     */
+    private transient String formattedTitle;
+    public String getFormattedTitle() {
+        if (formattedTitle == null) {
+            Context context = WordPress.getContext();
+            final String author = (hasAuthorName() ? getAuthorName() : context.getString(R.string.anonymous));
+            if (hasPostTitle()) {
+                formattedTitle = author
+                              + "<font color=" + HtmlUtils.colorResToHtmlColor(context, R.color.grey_medium) + ">"
+                              + " " + context.getString(R.string.on) + " "
+                              + "</font>"
+                              + getUnescapedPostTitle();
+            } else {
+                formattedTitle = author;
+            }
+        }
+        return formattedTitle;
     }
 }
