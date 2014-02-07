@@ -95,7 +95,6 @@ android {
 
         release {
             manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
-            prog
         }
 
         debug {
