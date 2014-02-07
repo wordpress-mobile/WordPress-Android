@@ -199,7 +199,9 @@
     <string name="mnu_comment_approve">Approve</string>
     <string name="mnu_comment_unapprove">Unapprove</string>
     <string name="mnu_comment_spam">Spam</string>
+    <string name="mnu_comment_unspam">Unspam</string>
     <string name="mnu_comment_trash">Trash</string>
+    <string name="mnu_comment_edit">Edit</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
     <string name="dlg_approving_comments">Approving</string>
