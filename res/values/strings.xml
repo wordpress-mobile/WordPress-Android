@@ -23,7 +23,6 @@
     <string name="status">Status</string>
 
     <!-- comment form labels -->
-    <string name="comment_content">Comment content</string>
     <string name="anonymous">Anonymous</string>
 
     <!-- general strings -->
@@ -156,7 +155,6 @@
 
     <!-- page view -->
     <string name="title">Title</string>
-    <string name="content">Tap to add text and media</string>
     <string name="pages_empty_list">No pages yet. Why not create&#160;one?</string>
     <string name="page_id">Page</string>
     <string name="page_settings">Page settings</string>
@@ -215,8 +213,6 @@
     <!-- comment actions -->
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
-    <string name="approve">Approve</string>
-    <string name="unapprove">Unapprove</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
