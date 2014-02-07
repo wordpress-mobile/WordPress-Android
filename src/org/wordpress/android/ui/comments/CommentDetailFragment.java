@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -126,9 +124,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
 
-        setTextDrawable(mBtnSpamComment, R.drawable.ic_cab_spam, true);
-        setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit, true);
-        setTextDrawable(mBtnTrashComment, R.drawable.ic_cab_trash, true);
+        setTextDrawable(mBtnSpamComment, R.drawable.ic_cab_spam);
+        setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit);
+        setTextDrawable(mBtnTrashComment, R.drawable.ic_cab_trash);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -624,14 +622,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * sets the drawable for buttons with a color filter applied when disabled - avoids having
-     * to include separate disabled drawable resources for the ic_cab_xxx drawables
+     * sets the drawable for moderation buttons
      */
-    private void setTextDrawable(final TextView view, int resId, boolean isEnabled) {
-        Drawable drawable = getResources().getDrawable(resId).mutate();
-        if (!isEnabled)
-            drawable.setColorFilter(getResources().getColor(R.color.blue_extra_dark), PorterDuff.Mode.SRC_ATOP);
-        view.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+    private void setTextDrawable(final TextView view, int resId) {
+        view.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(resId), null, null);
     }
 
     /*
@@ -697,7 +691,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canModerate()) {
-            setTextDrawable(mBtnModerateComment, moderationDrawResId, true);
+            setTextDrawable(mBtnModerateComment, moderationDrawResId);
             mBtnModerateComment.setText(moderationTextResId);
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
