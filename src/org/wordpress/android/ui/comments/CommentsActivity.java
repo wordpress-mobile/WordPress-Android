@@ -58,7 +58,7 @@ public class CommentsActivity extends WPActionBarActivity
         WordPress.currentComment = null;
 
         if (isFromNotification)
-            refreshCommentList();
+            updateCommentList();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -69,7 +69,7 @@ public class CommentsActivity extends WPActionBarActivity
         super.onBlogChanged();
         if (mCommentListFragment != null)
             mCommentListFragment.clear();
-        refreshCommentList();
+        updateCommentList();
     }
 
     @Override
@@ -90,7 +90,7 @@ public class CommentsActivity extends WPActionBarActivity
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             popCommentDetail();
-            refreshCommentList();
+            updateCommentList();
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -116,12 +116,6 @@ public class CommentsActivity extends WPActionBarActivity
         if (f == null) {
             fm.popBackStack();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mCommentListFragment.cancelCommentsTask();
     }
 
     @Override
@@ -154,7 +148,7 @@ public class CommentsActivity extends WPActionBarActivity
                 reloadCommentDetail();
                 break;
             case COMMENT_DETAIL:
-                refreshCommentList();
+                reloadCommentList();
                 break;
         }
     }
@@ -198,9 +192,20 @@ public class CommentsActivity extends WPActionBarActivity
             fragment.reloadComment();
     }
 
-    private void refreshCommentList() {
+    /*
+     * reload the comment list from existing data
+     */
+    private void reloadCommentList() {
         if (mCommentListFragment != null)
-            mCommentListFragment.refreshComments();
+            mCommentListFragment.loadComments();
+    }
+
+    /*
+     * tell the comment list to get recent comments from server
+     */
+    private void updateCommentList() {
+        if (mCommentListFragment != null)
+            mCommentListFragment.updateComments(false);
     }
 
     @Override
