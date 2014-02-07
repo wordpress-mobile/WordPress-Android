@@ -61,7 +61,7 @@
         android:layout_toRightOf="@+id/frame_avatar"
         android:layout_toLeftOf="@+id/layout_date_status"
         android:ellipsize="end"
-        android:lines="2"
+        android:maxLines="2"
         android:text="title"
         android:textColor="@color/grey_extra_dark"
         android:textSize="@dimen/text_sz_large" />

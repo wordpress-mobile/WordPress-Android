@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -208,21 +209,23 @@ public class CommentAdapter extends BaseAdapter {
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
         // status is only shown for comments that haven't been approved
+        final boolean showStatus;
         switch (comment.getStatusEnum()) {
             case SPAM :
+                showStatus = true;
                 holder.txtStatus.setText(mStatusTextSpam);
                 holder.txtStatus.setTextColor(mStatusColorSpam);
-                holder.txtStatus.setVisibility(View.VISIBLE);
                 break;
             case UNAPPROVED:
+                showStatus = true;
                 holder.txtStatus.setText(mStatusTextUnapproved);
                 holder.txtStatus.setTextColor(mStatusColorUnapproved);
-                holder.txtStatus.setVisibility(View.VISIBLE);
                 break;
             default :
-                holder.txtStatus.setVisibility(View.GONE);
+                showStatus = false;
                 break;
         }
+        holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
         final boolean useSelectionBackground;
         if (mEnableSelection && isItemSelected(position)) {
@@ -240,6 +243,18 @@ public class CommentAdapter extends BaseAdapter {
             convertView.setBackgroundColor(mSelectionColor);
         } else {
             convertView.setBackgroundDrawable(null);
+        }
+
+        // comment text needs to be to the left of date/status when the title is a single line and
+        // the status is displayed or else the status may overlap the comment text - note that
+        // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
+        // check getLineCount() <= 1
+        boolean adjustComment = (showStatus && holder.txtTitle.getLineCount() <= 1);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtComment.getLayoutParams();
+        if (adjustComment) {
+            params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
+        } else {
+            params.addRule(RelativeLayout.LEFT_OF, 0);
         }
 
         // request to load more comments when we near the end
