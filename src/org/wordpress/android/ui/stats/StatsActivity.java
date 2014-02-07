@@ -115,7 +115,8 @@ public class StatsActivity extends WPActionBarActivity {
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
 
         // for self-hosted sites; launch the user into an activity where they can provide their credentials
-        if (!WordPress.getCurrentBlog().isDotcomFlag() && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
+        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag() &&
+                !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
             if (WordPress.hasValidWPComCredentials(this)) {
                 // Let's try the global wpcom credentials them first
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
