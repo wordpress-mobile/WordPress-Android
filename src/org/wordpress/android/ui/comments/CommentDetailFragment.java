@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -508,16 +507,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final int dlgId;
         switch (newStatus) {
             case APPROVED:
-                dlgId = CommentsActivity.ID_DIALOG_APPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
                 break;
             case UNAPPROVED:
-                dlgId = CommentsActivity.ID_DIALOG_UNAPPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
                 break;
             case SPAM:
-                dlgId = CommentsActivity.ID_DIALOG_SPAMMING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
                 break;
             case TRASH:
-                dlgId = CommentsActivity.ID_DIALOG_TRASHING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
                 break;
             default :
                 return;

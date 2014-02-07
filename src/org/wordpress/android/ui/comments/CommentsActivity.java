@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -28,11 +27,6 @@ public class CommentsActivity extends WPActionBarActivity
 
     private CommentsListFragment mCommentListFragment;
     private MenuItem mRefreshMenuItem;
-
-    protected static final int ID_DIALOG_APPROVING = 1;
-    protected static final int ID_DIALOG_UNAPPROVING = 2;
-    protected static final int ID_DIALOG_SPAMMING = 3;
-    protected static final int ID_DIALOG_TRASHING = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -232,30 +226,10 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        final int resId;
-        switch (id) {
-            case ID_DIALOG_APPROVING :
-                resId = R.string.dlg_approving_comments;
-                break;
-            case ID_DIALOG_UNAPPROVING:
-                resId = R.string.dlg_unapproving_comments;
-                break;
-            case ID_DIALOG_TRASHING:
-                resId = R.string.dlg_trashing_comments;
-                break;
-            case ID_DIALOG_SPAMMING:
-                resId = R.string.dlg_spamming_comments;
-                break;
-            default :
-                return super.onCreateDialog(id);
-        }
-
-        ProgressDialog dialog = new ProgressDialog(CommentsActivity.this);
-        dialog.setMessage(getString(resId));
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-
-        return dialog;
+        Dialog dialog = CommentDialogs.createCommentDialog(this, id);
+        if (dialog != null)
+            return dialog;
+        return super.onCreateDialog(id);
     }
 
 }

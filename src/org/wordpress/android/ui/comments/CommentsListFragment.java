@@ -164,16 +164,16 @@ public class CommentsListFragment extends Fragment {
         final int dlgId;
         switch (newStatus) {
             case APPROVED:
-                dlgId = CommentsActivity.ID_DIALOG_APPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
                 break;
             case UNAPPROVED:
-                dlgId = CommentsActivity.ID_DIALOG_UNAPPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
                 break;
             case SPAM:
-                dlgId = CommentsActivity.ID_DIALOG_SPAMMING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
                 break;
             case TRASH:
-                dlgId = CommentsActivity.ID_DIALOG_TRASHING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
                 break;
             default :
                 return;
@@ -203,7 +203,6 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
-        boolean isMulti = (getSelectedCommentCount() > 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dlg_confirm_trash_comments);
         builder.setTitle(R.string.trash);
@@ -224,19 +223,19 @@ public class CommentsListFragment extends Fragment {
         alert.show();
     }
 
-    private boolean deleteSelectedComments() {
+    private void deleteSelectedComments() {
         if (!NetworkUtils.checkConnection(getActivity()))
-            return false;
+            return;
 
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
-        getActivity().showDialog(CommentsActivity.ID_DIALOG_TRASHING);
+        getActivity().showDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!hasActivity())
                     return;
                 finishActionMode();
-                dismissDialog(CommentsActivity.ID_DIALOG_TRASHING);
+                dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
@@ -249,7 +248,6 @@ public class CommentsListFragment extends Fragment {
         };
 
         CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
-        return true;
     }
 
     protected void setHighlightedCommentId(int commentId) {
