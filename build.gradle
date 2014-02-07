@@ -56,7 +56,7 @@ android {
         // Provided by maven central
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-        compile 'com.android.support:support-v4:18.0.+'
+        compile 'com.android.support:support-v4:19.0.+'
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
