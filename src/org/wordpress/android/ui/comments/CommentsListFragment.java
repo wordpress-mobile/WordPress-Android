@@ -302,7 +302,7 @@ public class CommentsListFragment extends Fragment {
     @SuppressLint("NewApi")
     protected void updateComments(boolean loadMore) {
         if (mIsUpdatingComments)
-            AppLog.w(AppLog.T.COMMENTS, "update comment task already running");
+            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
         if (SysUtils.canUseExecuteOnExecutor()) {
             new UpdateCommentsTask(loadMore).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {

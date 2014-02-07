@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -14,11 +13,11 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -37,28 +36,11 @@ public class CommentsActivity extends WPActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_comments));
 
-        boolean isFromNotification = false;
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            isFromNotification = extras.getBoolean("fromNotification");
-            if (isFromNotification) {
-                try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"));
-                } catch (Exception e) {
-                    Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
-
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
-
-        if (isFromNotification)
-            updateCommentList();
 
         if (savedInstanceState != null)
             popCommentDetail();
@@ -121,18 +103,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            boolean isFromNotification = extras.getBoolean("fromNotification");
-            if (isFromNotification) {
-                try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"));
-                } catch (Exception e) {
-                    Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
+        AppLog.d(AppLog.T.COMMENTS, "comment activity new intent");
     }
 
     /*
