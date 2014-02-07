@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    comment box at bottom of comment detail and reader post detail
+    comment box at bottom of comment detail, reader post detail, view post
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -45,9 +45,10 @@
 
     <ProgressBar
         android:id="@+id/progress_submit_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_centerVertical="true"
         android:visibility="gone" />
 

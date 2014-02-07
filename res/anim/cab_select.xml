@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    animation used on checkbox when selecting a list item in CAB mode
+    see ui/Comments/CommentAdapter for example
+-->
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:fromXScale="0.0"
+    android:toXScale="1.0"
+    android:fromYScale="0.0"
+    android:toYScale="1.0" />

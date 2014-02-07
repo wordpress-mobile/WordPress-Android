@@ -2,19 +2,22 @@ package org.xmlrpc.android;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.format.DateUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.wordpress.android.util.MapUtils;
@@ -24,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,89 +40,6 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
-
-    @SuppressWarnings("unchecked")
-    static void refreshComments(final int id, final Context ctx) {
-        Blog blog;
-        try {
-            blog = new Blog(id);
-        } catch (Exception e1) {
-            return;
-        }
-
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-                blog.getHttppassword());
-
-        Map<String, Object> hPost = new HashMap<String, Object>();
-        hPost.put("status", "");
-        hPost.put("post_id", "");
-        hPost.put("number", 30);
-
-        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(),
-                blog.getPassword(), hPost };
-        Object[] result;
-        try {
-            result = (Object[]) client.call("wp.getComments", params);
-        } catch (ClassCastException cce) {
-            AppLog.e(T.API, cce);
-            result = null;
-        } catch (XMLRPCException e) {
-            AppLog.e(T.API, e);
-            result = null;
-        }
-
-        if (result != null) {
-            if (result.length > 0) {
-                String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
-
-                Map<Object, Object> contentHash;
-                List<Map<String, String>> dbVector = new Vector<Map<String, String>>();
-
-                Date date;
-                // loop this!
-                for (int ctr = 0; ctr < result.length; ctr++) {
-                    Map<String, String> dbValues = new HashMap<String, String>();
-                    contentHash = (Map<Object, Object>) result[ctr];
-                    comment = contentHash.get("content").toString();
-                    author = contentHash.get("author").toString();
-                    status = contentHash.get("status").toString();
-                    postID = contentHash.get("post_id").toString();
-                    commentID = contentHash.get("comment_id").toString();
-                    date = (Date) contentHash.get("date_created_gmt");
-                    authorURL = contentHash.get("author_url").toString();
-                    authorEmail = contentHash.get("author_email").toString();
-                    postTitle = contentHash.get("post_title").toString();
-
-                    String formattedDate = date.toString();
-                    try {
-                        int flags = 0;
-                        flags |= DateUtils.FORMAT_SHOW_DATE;
-                        flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                        flags |= DateUtils.FORMAT_SHOW_YEAR;
-                        flags |= DateUtils.FORMAT_SHOW_TIME;
-                        formattedDate = DateUtils.formatDateTime(ctx,
-                                date.getTime(), flags);
-                    } catch (Exception e) {
-                    }
-
-                    dbValues.put("blogID", String.valueOf(id));
-                    dbValues.put("postID", postID);
-                    dbValues.put("commentID", commentID);
-                    dbValues.put("author", author);
-                    dbValues.put("comment", comment);
-                    dbValues.put("commentDate", formattedDate);
-                    dbValues.put("commentDateFormatted", formattedDate);
-                    dbValues.put("status", status);
-                    dbValues.put("url", authorURL);
-                    dbValues.put("email", authorEmail);
-                    dbValues.put("postTitle", postTitle);
-                    dbVector.add(ctr, dbValues);
-                }
-
-                WordPress.wpDB.saveComments(dbVector);
-            }
-        }
-    }
 
     public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
         protected String mErrorMessage;
@@ -345,87 +264,64 @@ public class ApiHelper {
         }
     }
 
-    public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,Object[] commentParams)
+    public static CommentList refreshComments(Context context, Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null)
             return null;
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-                blog.getHttppassword());
-        String author, postID, comment, status, authorEmail, authorURL, postTitle;
-        int commentID;
-        Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
-        Map<?, ?> contentHash;
-        List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
 
-        Date date;
+        XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                blog.getHttpuser(),
+                blog.getHttppassword());
         Object[] result;
         try {
             result = (Object[]) client.call("wp.getComments", commentParams);
-        } catch (ClassCastException cce) {
-            AppLog.e(T.API, cce);
-            return null;
         } catch (XMLRPCException e) {
             throw new XMLRPCException(e);
         }
 
-        if (result.length == 0) {
+        if (result.length == 0)
             return null;
-        }
-        // loop this!
+
+        Map<?, ?> contentHash;
+        int commentID, postID;
+        String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
+        java.util.Date date;
+        CommentList comments = new CommentList();
+
         for (int ctr = 0; ctr < result.length; ctr++) {
-            Map<Object, Object> dbValues = new HashMap<Object, Object>();
             contentHash = (Map<?, ?>) result[ctr];
-            allComments.put(Integer.parseInt(contentHash.get("comment_id").toString()),
-                    contentHash);
-            comment = contentHash.get("content").toString();
-            author = contentHash.get("author").toString();
+            content = contentHash.get("content").toString();
             status = contentHash.get("status").toString();
-            postID = contentHash.get("post_id").toString();
+            postID = Integer.parseInt(contentHash.get("post_id").toString());
             commentID = Integer.parseInt(contentHash.get("comment_id").toString());
-            date = (Date) contentHash.get("date_created_gmt");
+            authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
 
-            String formattedDate = getFormattedCommentDate(ctx, date);
+            date = (java.util.Date)contentHash.get("date_created_gmt");
+            pubDate = DateTimeUtils.javaDateToIso8601(date);
 
-            dbValues.put("blogID", String.valueOf(blog.getLocalTableBlogId()));
-            dbValues.put("postID", postID);
-            dbValues.put("commentID", commentID);
-            dbValues.put("author", author);
-            dbValues.put("comment", comment);
-            dbValues.put("commentDate", formattedDate);
-            dbValues.put("commentDateFormatted", formattedDate);
-            dbValues.put("status", status);
-            dbValues.put("url", authorURL);
-            dbValues.put("email", authorEmail);
-            dbValues.put("postTitle", postTitle);
-            dbVector.add(ctr, dbValues);
+            Comment comment = new Comment(
+                    postID,
+                    commentID,
+                    authorName,
+                    pubDate,
+                    content,
+                    status,
+                    postTitle,
+                    authorURL,
+                    authorEmail,
+                    null);
+
+            comments.add(comment);
         }
 
-        WordPress.wpDB.saveComments(dbVector);
+        int localBlogId = blog.getLocalTableBlogId();
+        CommentTable.saveComments(localBlogId, comments);
 
-        return allComments;
-    }
-
-    /**
-     * nbradbury 11/15/13 - this code was originally in refreshComments() above, moved here
-     * for re-usability
-     */
-    public static String getFormattedCommentDate(Context context, java.util.Date date) {
-        if (date == null)
-            return "";
-        try {
-            int flags = 0;
-            flags |= DateUtils.FORMAT_SHOW_DATE;
-            flags |= DateUtils.FORMAT_ABBREV_MONTH;
-            flags |= DateUtils.FORMAT_SHOW_YEAR;
-            flags |= DateUtils.FORMAT_SHOW_TIME;
-            return DateUtils.formatDateTime(context, date.getTime(), flags);
-        } catch (Exception e) {
-            return date.toString();
-        }
+        return comments;
     }
 
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {

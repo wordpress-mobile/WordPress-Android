@@ -190,29 +190,43 @@
 
     <!-- comment view -->
     <string name="on">on</string>
-    <string name="approved">Approved</string>
-    <string name="unapproved">Pending</string>
-    <string name="spam">Spam</string>
-    <string name="moderating_comment">Moderating comment</string>
-    <string name="moderating_comments">Moderating comments</string>
-    <string name="deleting_comment">Deleting comment</string>
-    <string name="deleting_comments">Deleting comments</string>
-    <string name="comment_moderated">Comment moderated successfully</string>
-    <string name="comments_moderated">Comments moderated successfully</string>
+    <string name="comment_status_approved">Approved</string>
+    <string name="comment_status_unapproved">Pending</string>
+    <string name="comment_status_spam">Spam</string>
+    <string name="comment_status_trash">Trashed</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments.</string>
-    <string name="comment_approved">Comment approved</string>
-    <string name="comment_unapproved">Comment unapproved</string>
-    <string name="comment_spammed">Comment marked as spam</string>
+
+    <!-- comment menu -->
+    <string name="mnu_comment_approve">Approve</string>
+    <string name="mnu_comment_unapprove">Unapprove</string>
+    <string name="mnu_comment_spam">Spam</string>
+    <string name="mnu_comment_trash">Trash</string>
+
+    <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
+    <string name="dlg_approving_comments">Approving</string>
+    <string name="dlg_unapproving_comments">Unapproving</string>
+    <string name="dlg_spamming_comments">Marking as spam</string>
+    <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_confirm_trash_comments">Send to trash?</string>
+    <string name="trash_yes">Trash</string>
+    <string name="trash_no">Don\'t trash</string>
+
+    <!-- comment actions -->
+    <string name="reply">Reply</string>
+    <string name="trash">Trash</string>
+    <string name="approve">Approve</string>
+    <string name="unapprove">Unapprove</string>
 
     <!-- edit comment view -->
-    <string name="author_name">Name</string>
-    <string name="author_email">E-mail</string>
-    <string name="author_url">URL</string>
-    <string name="comment_update">Update Comment</string>
-    <string name="saving_changes">Saving Changes</string>
-    <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
-    <string name="content_required">The comment body is required.</string>
+    <string name="author_name">Author name</string>
+    <string name="author_email">Author email</string>
+    <string name="author_url">Author URL</string>
+    <string name="hint_comment_content">Comment</string>
+    <string name="saving_changes">Saving changes</string>
+    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="content_required">Comment is required</string>
+    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove blog</string>
@@ -249,16 +263,6 @@
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
     <string name="preview">Preview</string>
-
-    <!-- comment actions -->
-    <string name="comment_actions">Comment actions</string>
-    <string name="mark_approved">Mark approved</string>
-    <string name="mark_unapproved">Mark unapproved</string>
-    <string name="mark_spam">Spam</string>
-    <string name="reply">Reply</string>
-    <string name="delete">Delete</string>
-    <string name="approve">Approve</string>
-    <string name="unapprove">Unapprove</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>

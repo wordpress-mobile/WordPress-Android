@@ -1,103 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFFFF" >
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_large"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp" >
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/sectionContent"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingBottom="8dp" >
-
-            <TextView
-                android:id="@+id/l_section1"
-                style="@style/WordPressSectionHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/comment_content" />
-
-            <EditText
-                android:id="@+id/author_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/l_section1"
-                android:layout_marginBottom="8dp"
-                android:inputType="textCapWords|textAutoCorrect"
-                android:hint="@string/author_name"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/author_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/author_name"
-                android:layout_marginBottom="8dp"
-                android:inputType="textEmailAddress"
-                android:hint="@string/author_email"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/author_url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/author_email"
-                android:layout_marginBottom="8dp"
-                android:inputType="textUri"
-                android:hint="@string/author_url"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/comment_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/author_url"
-                android:inputType="textCapSentences|textAutoCorrect"
-                android:gravity="top"
-                android:hint="@string/content"
-                android:minLines="2"
-                android:textColorLink="@color/wordpress_blue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/section5"
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/author_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingBottom="8dp" >
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:inputType="textPersonName|textNoSuggestions"
+            android:hint="@string/author_name"
+            android:singleLine="true" />
 
-            <TextView
-                android:id="@+id/l_status"
-                style="@style/WordPressSectionHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings" />
-
-            <Spinner
-                android:id="@+id/status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/l_status" />
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/post"
-            android:layout_width="wrap_content"
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/author_email"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/comment_update"
-            android:textSize="20sp" />
-    </LinearLayout>
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:inputType="textEmailAddress"
+            android:hint="@string/author_email"
+            android:singleLine="true" />
 
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/author_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:inputType="textUri"
+            android:hint="@string/author_url"
+            android:singleLine="true" />
+
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+            android:gravity="top|left"
+            android:minLines="4"
+            android:hint="@string/hint_comment_content"
+            android:textColorLink="@color/reader_hyperlink" />
+    </LinearLayout>
 </ScrollView>

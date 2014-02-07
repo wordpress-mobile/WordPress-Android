@@ -1,120 +1,176 @@
 package org.wordpress.android.ui.comments;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.android.R;
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Comment;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
+    protected static final String ARG_LOCAL_BLOG_ID = "blog_id";
+    protected static final String ARG_COMMENT_ID = "comment_id";
 
-    private int ID_DIALOG_SAVING = 0;
-    private String xmlErrorMessage;
+    private static final int ID_DIALOG_SAVING = 0;
+
+    private int mLocalBlogId;
+    private int mCommentId;
+    private Comment mComment;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         setContentView(R.layout.edit_comment);
-        
         setTitle(getString(R.string.edit_comment));
-        
-        // Capitalize headers
-        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.comment_content).toUpperCase());
-        ((TextView) findViewById(R.id.l_status)).setText(getResources().getString(R.string.status).toUpperCase());
 
-        // Retrieve a reference to the current comment.
-        Comment comment = WordPress.currentComment;
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        if (comment == null) {
-            Toast.makeText(this, getString(R.string.error_load_comment), Toast.LENGTH_SHORT).show();
+        if (!loadComment(getIntent())) {
+            ToastUtils.showToast(this, R.string.error_load_comment);
             finish();
-            return;
         }
+    }
 
-        final EditText authorNameET = (EditText) this.findViewById(R.id.author_name);
-        authorNameET.setText(comment.name);
+    private boolean loadComment(Intent intent) {
+        if (intent == null)
+            return false;
 
-        final EditText authorEmailET = (EditText) this.findViewById(R.id.author_email);
-        authorEmailET.setText(comment.authorEmail);
+        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+        mCommentId = intent.getIntExtra(ARG_COMMENT_ID, 0);
+        mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
+        if (mComment == null)
+            return false;
 
-        final EditText authorURLET = (EditText) this.findViewById(R.id.author_url);
-        authorURLET.setText(comment.authorURL);
+        final EditText editAuthorName = (EditText) this.findViewById(R.id.author_name);
+        editAuthorName.setText(mComment.getAuthorName());
 
-        final EditText commentContentET = (EditText) this.findViewById(R.id.comment_content);
-        commentContentET.setText(comment.comment);
+        final EditText editAuthorEmail = (EditText) this.findViewById(R.id.author_email);
+        editAuthorEmail.setText(mComment.getAuthorEmail());
 
-        String[] items = new String[] {
-                getResources().getString(R.string.approved),
-                getResources().getString(R.string.pending_review),
-                getResources().getString(R.string.spam) };
-        Spinner spinner = (Spinner) findViewById(R.id.status);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        final EditText editAuthorUrl = (EditText) this.findViewById(R.id.author_url);
+        editAuthorUrl.setText(mComment.getAuthorUrl());
 
-        switch (comment.getStatusEnum()) {
-            case APPROVED:
-                spinner.setSelection(0, true);
-                break;
-            case UNAPPROVED:
-                spinner.setSelection(1, true);
-                break;
-            case SPAM:
-                spinner.setSelection(2, true);
-                break;
+        final EditText editContent = (EditText) this.findViewById(R.id.comment_content);
+        editContent.setText(mComment.getCommentText());
 
-        }
-
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        // show error when comment content is empty
+        editContent.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                        int arg2, long arg3) {
-                // do nothing
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // do nothing
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-        });
-
-        final Button saveButton = (Button) findViewById(R.id.post);
-        saveButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                boolean result = saveComment();
-                if (result) {
-                    finish();
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean hasError = (editContent.getError() != null);
+                boolean hasText = (s != null && s.length() > 0);
+                if (!hasText && !hasError) {
+                    editContent.setError(getString(R.string.content_required));
+                } else if (hasText && hasError) {
+                    editContent.setError(null);
                 }
             }
         });
 
+        return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.edit_comment, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_save_comment:
+                saveComment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private String getEditTextStr(int resId) {
+        final EditText edit = (EditText) findViewById(resId);
+        return EditTextUtils.getText(edit);
+    }
+
+    private void saveComment() {
+        // make sure comment content was entered
+        final EditText editContent = (EditText) findViewById(R.id.comment_content);
+        if (EditTextUtils.isEmpty(editContent)) {
+            editContent.setError(getString(R.string.content_required));
+            return;
+        }
+
+        // return immediately if comment hasn't changed
+        if (!isCommentEdited()) {
+            ToastUtils.showToast(this, R.string.toast_comment_unedited);
+            return;
+        }
+
+        // make sure we have an active connection
+        if (!NetworkUtils.checkConnection(this))
+            return;
+
+        if (mIsUpdateTaskRunning)
+            AppLog.w(AppLog.T.COMMENTS, "update task already running");
+        new UpdateCommentTask().execute();
+    }
+
+    /*
+     * returns true if user made any changes to the comment
+     */
+    private boolean isCommentEdited() {
+        if (mComment == null)
+            return false;
+
+        final String authorName = getEditTextStr(R.id.author_name);
+        final String authorEmail = getEditTextStr(R.id.author_email);
+        final String authorUrl = getEditTextStr(R.id.author_url);
+        final String content = getEditTextStr(R.id.comment_content);
+
+        return !(authorName.equals(mComment.getAuthorName())
+                && authorEmail.equals(mComment.getAuthorEmail())
+                && authorUrl.equals(mComment.getAuthorUrl())
+                && content.equals(mComment.getCommentText()));
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -128,174 +184,110 @@ public class EditCommentActivity extends SherlockActivity {
         return super.onCreateDialog(id);
     }
 
-    public boolean saveComment() {
-
-        // grab the form data
-        EditText authorNameET = (EditText) findViewById(R.id.author_name);
-        String authorName = authorNameET.getText().toString();
-
-        EditText authorEmailET = (EditText) findViewById(R.id.author_email);
-        String authorEmail = authorEmailET.getText().toString();
-
-        EditText authorURLET = (EditText) findViewById(R.id.author_url);
-        String authorURL = authorURLET.getText().toString();
-
-        EditText contentET = (EditText) findViewById(R.id.comment_content);
-        String content = contentET.getText().toString();
-
-        Spinner spinner = (Spinner) findViewById(R.id.status);
-        int selectedStatus = spinner.getSelectedItemPosition();
-        String status = "";
-        switch (selectedStatus) {
-        case 0:
-            status = "approve";
-            break;
-        case 1:
-            status = "hold";
-            break;
-        case 2:
-            status = "spam";
-            break;
-        }
-
-        // Sanity check the edited fields before we save.
-        CharSequence dialogMsg = "";
-        if (content.equals("")) {
-            dialogMsg = getResources().getText(R.string.content_required);
-//        } else if(authorName.equals("")) {
-//            dialogMsg = getResources().getText(R.string.author_name_required);
-//        } else if(authorEmail.equals("")) {
-//            dialogMsg = getResources().getText(R.string.author_email_required);
-        }
-        if (!dialogMsg.equals("")) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
-            dialogBuilder.setTitle(getResources()
-                         .getText(R.string.required_field));
-            dialogBuilder.setMessage(dialogMsg);
-            dialogBuilder.setPositiveButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                int whichButton) {
-                            // Just close the window
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-
-            // Short circuit and let the user address the issue.
-            return false;
-        }
-
-        // If nothing has been changed, skip the rest and just return.
-        Comment comment = WordPress.currentComment;
-        if(authorName.equals(comment.name) &&
-                authorEmail.equals(comment.authorEmail) &&
-                authorURL.equals(comment.authorURL) &&
-                content.equals(comment.comment) &&
-                status.equals(comment.getStatus())) {
-            return true;
-        }
-
-        final Map<String, String> postHash = new HashMap<String, String>();
-        postHash.put("status", status);
-        postHash.put("content", content);
-        postHash.put("author", authorName);
-        postHash.put("author_url", authorURL);
-        postHash.put("author_email", authorEmail);
-
-        // show loading message, then do the work
+    private void showSaveDialog() {
         showDialog(ID_DIALOG_SAVING);
-
-        new Thread() {
-            public void run() {
-                updateComment(postHash);
-            }
-        }.start();
-
-        return false;
     }
 
-
-    public void updateComment(Map<String, String> postHash){
-
-        // Update the comment on the user's blog.
-        XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                WordPress.currentBlog.getHttpuser(),
-                WordPress.currentBlog.getHttppassword());
-
-        Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
-                WordPress.currentBlog.getUsername(),
-                WordPress.currentBlog.getPassword(),
-                WordPress.currentComment.commentID,
-                postHash };
-
-        xmlErrorMessage = "";
-        Object result = null;
+    private void dismissSaveDialog() {
         try {
-            result = (Object) client.call("wp.editComment", params);
-            boolean bResult = Boolean.parseBoolean(result.toString());
-            if (bResult) {
-
-                // Our database expects different values in the hash than the xmlrpc request.
-                // Make the necessary adjustments, and clean up the old keys.
-                postHash.put("url", postHash.get("author_url"));
-                postHash.put("email", postHash.get("author_email"));
-                postHash.put("comment", postHash.get("content"));
-
-                postHash.remove("author_url");
-                postHash.remove("author_email");
-                postHash.remove("content");
-
-                // Save the updates
-                WordPress.wpDB.updateComment(
-                        WordPress.currentBlog.getLocalTableBlogId(),
-                        WordPress.currentComment.commentID,
-                        postHash);
-
-                // Everything was saved successfully, so now we can update the
-                // current comment.
-                WordPress.currentComment.authorEmail = postHash.get("email");
-                WordPress.currentComment.authorURL = postHash.get("url");
-                WordPress.currentComment.comment = postHash.get("comment");
-                WordPress.currentComment.setStatus(postHash.get("status"));
-                WordPress.currentComment.name = postHash.get("author");
-            }
-        } catch (XMLRPCException e) {
-            xmlErrorMessage = getResources().getText(R.string.error_edit_comment).toString();
+            dismissDialog(ID_DIALOG_SAVING);
+        } catch (IllegalArgumentException e) {
+            // dialog doesn't exist
         }
-        dismissDialog(ID_DIALOG_SAVING);
-
-        if(xmlErrorMessage != "") {
-
-            Thread dialogThread = new Thread() {
-                public void run() {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
-                    dialogBuilder.setTitle(getResources().getText(R.string.error));
-                    dialogBuilder.setMessage(xmlErrorMessage);
-                    dialogBuilder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              // Just close the window.
-
-                          }
-                      });
-                     dialogBuilder.setCancelable(true);
-                     dialogBuilder.create().show();
-                }
-            };
-            runOnUiThread(dialogThread);
-        } else {
-            finish();
-        }
-
     }
 
+    /*
+     * AsyncTask to save comment to server
+     */
+    private boolean mIsUpdateTaskRunning = false;
+    private class UpdateCommentTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            mIsUpdateTaskRunning = true;
+            showSaveDialog();
+        }
+        @Override
+        protected void onCancelled() {
+            mIsUpdateTaskRunning = false;
+            dismissSaveDialog();
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            final Blog blog;
+            try {
+                blog = new Blog(mLocalBlogId);
+            } catch (Exception e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
+                return false;
+            }
+
+            final String authorName = getEditTextStr(R.id.author_name);
+            final String authorEmail = getEditTextStr(R.id.author_email);
+            final String authorUrl = getEditTextStr(R.id.author_url);
+            final String content = getEditTextStr(R.id.comment_content);
+
+            final Map<String, String> postHash = new HashMap<String, String>();
+            postHash.put("status",       mComment.getStatus());
+            postHash.put("content",      content);
+            postHash.put("author",       authorName);
+            postHash.put("author_url",   authorUrl);
+            postHash.put("author_email", authorEmail);
+
+            XMLRPCClient client = new XMLRPCClient(
+                    blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] xmlParams = {
+                    blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    mCommentId,
+                    postHash};
+
+            try {
+                Object result = client.call("wp.editComment", xmlParams);
+                boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
+                if (isSaved) {
+                    mComment.setAuthorEmail(authorEmail);
+                    mComment.setAuthorUrl(authorUrl);
+                    mComment.setAuthorName(authorName);
+                    mComment.setCommentText(content);
+                    CommentTable.updateComment(mLocalBlogId, mComment);
+                }
+                return isSaved;
+            } catch (XMLRPCException e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
+                return false;
+            }
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mIsUpdateTaskRunning = false;
+            dismissSaveDialog();
+
+            if (result) {
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                // alert user to error
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
+                dialogBuilder.setTitle(getResources().getText(R.string.error));
+                dialogBuilder.setMessage(R.string.error_edit_comment);
+                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // just close the dialog
+                    }
+                });
+                dialogBuilder.setCancelable(true);
+                dialogBuilder.create().show();
+            }
+        }
+    }
 
     @Override
-    public boolean onKeyDown(int i, KeyEvent event) {
-
-        // only intercept back button press
-        if (i == KeyEvent.KEYCODE_BACK) {
-
+    public void onBackPressed() {
+        if (isCommentEdited()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     EditCommentActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
@@ -303,28 +295,21 @@ public class EditCommentActivity extends SherlockActivity {
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Bundle bundle = new Bundle();
-
-                            bundle.putString("returnStatus", "CANCEL");
-                            Intent mIntent = new Intent();
-                            mIntent.putExtras(bundle);
-                            setResult(RESULT_OK, mIntent);
                             finish();
                         }
                     });
             dialogBuilder.setNegativeButton(
                     getResources().getText(R.string.no),
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                int whichButton) {
-                            // just close the dialog window
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
                         }
                     });
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
+        } else {
+            super.onBackPressed();
         }
-
-        return false;
     }
 
 }

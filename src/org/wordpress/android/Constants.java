@@ -37,9 +37,10 @@ public class Constants {
     public static final int READER_MAX_USERS_TO_DISPLAY    = 500;                         // max #users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 15;                       // 15 minute delay between automatic updates
 
-    // Reader intent IDs
+    // intent IDs
     public static final int INTENT_READER_POST_DETAIL = 1000;
     public static final int INTENT_READER_TAGS        = 1001;
     public static final int INTENT_READER_REBLOG      = 1002;
+    public static final int INTENT_COMMENT_EDITOR     = 1010;
 
 }

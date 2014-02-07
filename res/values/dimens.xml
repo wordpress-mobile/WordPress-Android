@@ -25,7 +25,6 @@
     <dimen name="graph_font_size">8sp</dimen>
 
     <dimen name="share_action_dialog_width">280dp</dimen>
-    <dimen name="comments_moderation_bar_height">52dp</dimen>
 
     <!--
         native reader dimens
@@ -34,6 +33,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_extra_large">16dp</dimen>
 
     <!-- left/right margin for posts in both list and detail views -->
     <dimen name="reader_list_margin_normal">8dp</dimen>
@@ -51,7 +51,7 @@
 
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_large">72dp</dimen>
+    <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
     <dimen name="reader_button_icon_small">40dp</dimen>

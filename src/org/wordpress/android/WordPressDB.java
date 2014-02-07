@@ -15,8 +15,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
@@ -49,13 +49,13 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 23;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
-    private static final String SETTINGS_TABLE = "accounts";
+    public static final String SETTINGS_TABLE = "accounts";
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
 
@@ -66,9 +66,7 @@ public class WordPressDB {
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
             + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
 
-    private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, postID text, iCommentID integer, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
     private static final String POSTS_TABLE = "posts";
-    private static final String COMMENTS_TABLE = "comments";
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
@@ -158,12 +156,12 @@ public class WordPressDB {
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_SETTINGS);
         db.execSQL(CREATE_TABLE_POSTS);
-        db.execSQL(CREATE_TABLE_COMMENTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
+        CommentTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -235,10 +233,16 @@ public class WordPressDB {
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                 currentVersion++;
+            case 22 :
+                CommentTable.reset(db);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
 
+    public SQLiteDatabase getDatabase() {
+        return db;
+    }
 
     public void deleteDatabase(Context ctx) {
         ctx.deleteDatabase(DATABASE_NAME);
@@ -575,7 +579,7 @@ public class WordPressDB {
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" }, "api_blogid=? OR (blogId=? AND dotcomFlag=1)", new String[] {dotComBlogId, dotComBlogId}, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)", new String[]{dotComBlogId, dotComBlogId}, null, null, null);
 
         int id = -1;
         int numRows = c.getCount();
@@ -1064,216 +1068,6 @@ public class WordPressDB {
         c.close();
 
         return values;
-    }
-
-    /**
-     * nbradbury 11/15/13 - add a single comment
-     * @param localBlogId - unique id in account table for the blog the comment is from
-     * @param comment - comment object to store
-     */
-    public void addComment(int localBlogId, Comment comment) {
-        if (comment == null)
-            return;
-
-        // first delete existing comment (necessary since there's no primary key or indexes
-        // on this table, which means we can't rely on using CONFLICT_REPLACE below)
-        deleteComment(localBlogId, comment.commentID);
-
-        ContentValues values = new ContentValues();
-        values.put("blogID", localBlogId);
-        values.put("postID", StringUtils.notNullStr(comment.postID));
-        values.put("iCommentID", comment.commentID);
-        values.put("author", StringUtils.notNullStr(comment.name));
-        values.put("url", StringUtils.notNullStr(comment.authorURL));
-        values.put("comment", StringUtils.notNullStr(comment.comment));
-        values.put("status", StringUtils.notNullStr(comment.getStatus()));
-        values.put("email", StringUtils.notNullStr(comment.authorEmail));
-        values.put("postTitle", StringUtils.notNullStr(comment.postTitle));
-        values.put("commentDateFormatted", StringUtils.notNullStr(comment.dateCreatedFormatted));
-        values.put("commentDate", StringUtils.notNullStr(comment.dateCreatedFormatted));
-
-        db.insertWithOnConflict(COMMENTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
-    /**
-     * nbradbury 11/11/13 - retrieve a single comment
-     * @param localBlogId - unique id in account table for the blog the comment is from
-     * @param commentId - commentId of the actual comment
-     * @return Comment if found, null otherwise
-     */
-    public Comment getComment(int localBlogId, int commentId) {
-        String[] cols = {"author",
-                         "comment",
-                         "commentDateFormatted",
-                         "status",
-                         "url",
-                         "email",
-                         "postTitle",
-                         "postID"};
-        String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
-        Cursor c = db.query(COMMENTS_TABLE,
-                            cols,
-                            "blogID=? AND iCommentID=?",
-                            args,
-                            null, null, null);
-
-        if (!c.moveToFirst())
-            return null;
-
-        String authorName = c.getString(0);
-        String content = c.getString(1);
-        String dateCreatedFormatted = c.getString(2);
-        String status = c.getString(3);
-        String authorUrl = c.getString(4);
-        String authorEmail = c.getString(5);
-        String postTitle = c.getString(6);
-        String postId = c.getString(7);
-
-        return new Comment(postId,
-                           commentId,
-                           0,
-                           authorName,
-                           dateCreatedFormatted,
-                           content,
-                           status,
-                           postTitle,
-                           authorUrl,
-                           authorEmail,
-                           null);
-    }
-
-    /**
-     * nbradbury 11/12/13 - delete a single comment
-     * @param localBlogId - unique id in account table for this blog
-     * @param commentId - commentId of the actual comment
-     * @return true if comment deleted, false otherwise
-     */
-    public boolean deleteComment(int localBlogId, int commentId) {
-        String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
-        int count = db.delete(COMMENTS_TABLE, "blogID=? AND iCommentID=?", args);
-        return (count > 0);
-    }
-
-    public List<Map<String, Object>> loadComments(int blogID) {
-
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c = db.query(COMMENTS_TABLE,
-                new String[]{"blogID", "postID", "iCommentID", "author",
-                        "comment", "commentDate", "commentDateFormatted",
-                        "status", "url", "email", "postTitle"}, "blogID="
-                + blogID, null, null, null, null);
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; i++) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("blogID", c.getString(0));
-                returnHash.put("postID", c.getInt(1));
-                returnHash.put("commentID", c.getInt(2));
-                returnHash.put("author", c.getString(3));
-                returnHash.put("comment", c.getString(4));
-                returnHash.put("commentDate", c.getString(5));
-                returnHash.put("commentDateFormatted", c.getString(6));
-                returnHash.put("status", c.getString(7));
-                returnHash.put("url", c.getString(8));
-                returnHash.put("email", c.getString(9));
-                returnHash.put("postTitle", c.getString(10));
-                returnVector.add(i, returnHash);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        if (numRows == 0) {
-            returnVector = null;
-        }
-
-        return returnVector;
-    }
-
-    public boolean saveComments(List<?> commentValues) {
-        boolean returnValue = false;
-
-        Map<?, ?> firstHash = (Map<?, ?>) commentValues.get(0);
-        String blogID = firstHash.get("blogID").toString();
-        // delete existing values, if user hit refresh button
-
-        try {
-            db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
-        } catch (Exception e) {
-
-            return false;
-        }
-
-        for (int i = 0; i < commentValues.size(); i++) {
-            try {
-                ContentValues values = new ContentValues();
-                Map<?, ?> thisHash = (Map<?, ?>) commentValues.get(i);
-                values.put("blogID", thisHash.get("blogID").toString());
-                values.put("postID", thisHash.get("postID").toString());
-                values.put("iCommentID", thisHash.get("commentID").toString());
-                values.put("author", thisHash.get("author").toString());
-                values.put("comment", thisHash.get("comment").toString());
-                values.put("commentDate", thisHash.get("commentDate").toString());
-                values.put("commentDateFormatted",
-                        thisHash.get("commentDateFormatted").toString());
-                values.put("status", thisHash.get("status").toString());
-                values.put("url", thisHash.get("url").toString());
-                values.put("email", thisHash.get("email").toString());
-                values.put("postTitle", thisHash.get("postTitle").toString());
-                synchronized (this) {
-                    try {
-                        returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
-                    } catch (Exception e) {
-
-                        return false;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return (returnValue);
-
-    }
-
-    public void updateComment(int blogID, int id, Map<?, ?> commentHash) {
-
-        ContentValues values = new ContentValues();
-        values.put("author", commentHash.get("author").toString());
-        values.put("comment", commentHash.get("comment").toString());
-        values.put("status", commentHash.get("status").toString());
-        values.put("url", commentHash.get("url").toString());
-        values.put("email", commentHash.get("email").toString());
-
-        synchronized (this) {
-            db.update(COMMENTS_TABLE, values, "blogID=" + blogID
-                    + " AND iCommentID=" + id, null);
-        }
-
-    }
-
-    public void updateCommentStatus(int blogID, int id, String newStatus) {
-
-        ContentValues values = new ContentValues();
-        values.put("status", newStatus);
-        synchronized (this) {
-            db.update(COMMENTS_TABLE, values, "blogID=" + blogID
-                    + " AND iCommentID=" + id, null);
-        }
-
-    }
-
-    public void clearPosts(String blogID) {
-
-        // delete existing values
-        db.delete(POSTS_TABLE, "blogID=" + blogID, null);
-
     }
 
     // Categories
@@ -1805,12 +1599,6 @@ public class WordPressDB {
         c.close();
 
         return id;
-    }
-
-    public void clearComments(int blogID) {
-
-        db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
-
     }
 
     public boolean findLocalChanges(int blogId, boolean isPage) {
