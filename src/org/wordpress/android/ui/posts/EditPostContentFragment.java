@@ -512,16 +512,26 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         Post post = mActivity.getPost();
 
-        if (post == null)
+        if (post == null || mContentEditText.getText() == null)
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
-        String content = "";
+        String content;
 
-        Editable postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
+        Editable postContentEditable;
+        try {
+            postContentEditable = new SpannableStringBuilder(mContentEditText.getText());
+        } catch (IndexOutOfBoundsException e) {
+            // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
+            // See https://code.google.com/p/android/issues/detail?id=5164
+            postContentEditable = mContentEditText.getText();
+        }
+
+        if (postContentEditable == null)
+            return;
 
         if (post.isLocalDraft()) {
-            if (android.os.Build.VERSION.SDK_INT >= 14 && postContentEditable != null) {
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 // remove suggestion spans, they cause craziness in WPHtml.toHTML().
                 CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
                 for (CharacterStyle characterStyle : characterStyles) {
@@ -795,13 +805,18 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
+                        if (WordPress.getCurrentBlog() == null) {
+                            return;
+                        }
                         String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                         WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
                     }
 
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        if (getActivity() != null && !isRemoving()) { 
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -823,7 +838,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         if (mediaId == null)
             return;
 
-        String imageURL = null;
+        String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
             imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
@@ -856,7 +871,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     return;
                 }
 
-                Bitmap resizedBitmap = null;
+                Bitmap resizedBitmap;
                 if (downloadedBitmap.getWidth() <= maxPictureWidthForContentEditor) {
                     //bitmap is already small in size, do not resize.
                     resizedBitmap = downloadedBitmap;
@@ -987,7 +1002,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         Bitmap thumbnailBitmap;
-        String mediaTitle = "";
+        String mediaTitle;
         if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
             thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);

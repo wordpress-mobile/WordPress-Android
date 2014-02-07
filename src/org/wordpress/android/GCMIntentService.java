@@ -115,12 +115,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             refreshNotes();
         }
 
-        boolean md5GeneratedNoteId = false;
-        if (note_id == null && note != null) {
-            note_id = String.valueOf(WordPressDB.generateIdFor(note));
-            md5GeneratedNoteId = true;
-        }
-
         /*
          * if this has the same note_id as the previous notification, and the previous notification
          * was received within the last second, then skip showing it - this handles duplicate
@@ -191,8 +185,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setAutoCancel(true)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            if (md5GeneratedNoteId)
-                resultIntent.putExtra(NotificationsActivity.MD5_NOTE_ID_EXTRA, note_id);
             if (note_id != null)
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
 

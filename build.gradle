@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 
@@ -60,7 +60,7 @@ android {
         // Provided by maven central
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-        compile 'com.android.support:support-v4:18.0.+'
+        compile 'com.android.support:support-v4:19.0.+'
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
@@ -74,9 +74,9 @@ android {
         compile 'org.wordpress:slidinguppanel:1.0.0'
         compile 'org.wordpress:android-passcodelock:0.0.4'
         compile 'org.wordpress:commons-lang:2.6'
-        releaseCompile 'org.wordpress:emailchecker:0.1'
-        debugCompile 'org.wordpress:emailchecker-debug:0.1'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.1'
+        releaseCompile 'org.wordpress:emailchecker:0.2'
+        debugCompile 'org.wordpress:emailchecker-debug:0.2'
+        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')

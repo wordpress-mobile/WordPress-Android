@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
@@ -155,13 +153,7 @@ public class WordPressDB {
 
     public WordPressDB(Context ctx) {
         this.context = ctx;
-
-        try {
-            db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-        } catch (SQLiteException e) {
-            db = null;
-            return;
-        }
+        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_SETTINGS);
@@ -174,81 +166,82 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_NOTES);
 
         // Update tables for new installs and app updates
-        try {
-            int currentVersion = db.getVersion();
-            switch (currentVersion) {
-                case 0:
-                    // New install
-                    currentVersion++;
-                case 1:
-                    // Add columns that were added in very early releases, then move on to version 9
-                    db.execSQL(ADD_BLOGID);
-                    db.execSQL(UPDATE_BLOGID);
-                    db.execSQL(ADD_LOCATION_FLAG);
-                    db.execSQL(ADD_DOTCOM_USERNAME);
-                    db.execSQL(ADD_DOTCOM_PASSWORD);
-                    db.execSQL(ADD_API_KEY);
-                    db.execSQL(ADD_API_BLOGID);
-                    db.execSQL(ADD_DOTCOM_FLAG);
-                    db.execSQL(ADD_WP_VERSION);
-                    currentVersion = 9;
-                case 9:
-                    db.execSQL(ADD_HTTPUSER);
-                    db.execSQL(ADD_HTTPPASSWORD);
-                    migratePasswords();
-                    currentVersion++;
-                case 10:
-                    db.delete(POSTS_TABLE, null, null);
-                    db.execSQL(CREATE_TABLE_POSTS);
-                    migrateDrafts();
-                    db.execSQL(ADD_POST_FORMATS);
-                    currentVersion++;
-                case 11:
-                    db.execSQL(ADD_SCALED_IMAGE);
-                    db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                    db.execSQL(ADD_LOCAL_POST_CHANGES);
-                    currentVersion++;
-                case 12:
-                    db.execSQL(ADD_FEATURED_IN_POST);
-                    currentVersion++;
-                case 13:
-                    db.execSQL(ADD_HOME_URL);
-                    currentVersion++;
-                case 14:
-                    db.execSQL(ADD_BLOG_OPTIONS);
-                    currentVersion++;
-                case 15:
-                    // No longer used (preferences migration)
-                    currentVersion++;
-                case 16:
-                    migrateWPComAccount();
-                    currentVersion++;
-                case 17:
-                    db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                    currentVersion++;
-                case 18:
-                    db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
-                    db.execSQL(ADD_MEDIA_FILE_URL);
-                    db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
-                    db.execSQL(ADD_MEDIA_UNIQUE_ID);
-                    db.execSQL(ADD_MEDIA_BLOG_ID);
-                    db.execSQL(ADD_MEDIA_DATE_GMT);
-                    db.execSQL(ADD_MEDIA_UPLOAD_STATE);
-                    currentVersion++;
-                case 19:
-                    // revision 20: create table "notes"
-                    currentVersion++;
-                case 20:
-                    db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
-                    currentVersion++;
-                case 21:
-                    db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
-                    currentVersion++;
-            }
-            db.setVersion(DATABASE_VERSION);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        int currentVersion = db.getVersion();
+        switch (currentVersion) {
+            case 0:
+                // New install
+                currentVersion++;
+            case 1:
+                // Add columns that were added in very early releases, then move on to version 9
+                db.execSQL(ADD_BLOGID);
+                db.execSQL(UPDATE_BLOGID);
+                db.execSQL(ADD_LOCATION_FLAG);
+                db.execSQL(ADD_DOTCOM_USERNAME);
+                db.execSQL(ADD_DOTCOM_PASSWORD);
+                db.execSQL(ADD_API_KEY);
+                db.execSQL(ADD_API_BLOGID);
+                db.execSQL(ADD_DOTCOM_FLAG);
+                db.execSQL(ADD_WP_VERSION);
+                currentVersion = 9;
+            case 9:
+                db.execSQL(ADD_HTTPUSER);
+                db.execSQL(ADD_HTTPPASSWORD);
+                migratePasswords();
+                currentVersion++;
+            case 10:
+                db.delete(POSTS_TABLE, null, null);
+                db.execSQL(CREATE_TABLE_POSTS);
+                migrateDrafts();
+                db.execSQL(ADD_POST_FORMATS);
+                currentVersion++;
+            case 11:
+                db.execSQL(ADD_SCALED_IMAGE);
+                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+                db.execSQL(ADD_LOCAL_POST_CHANGES);
+                currentVersion++;
+            case 12:
+                db.execSQL(ADD_FEATURED_IN_POST);
+                currentVersion++;
+            case 13:
+                db.execSQL(ADD_HOME_URL);
+                currentVersion++;
+            case 14:
+                db.execSQL(ADD_BLOG_OPTIONS);
+                currentVersion++;
+            case 15:
+                // No longer used (preferences migration)
+                currentVersion++;
+            case 16:
+                migrateWPComAccount();
+                currentVersion++;
+            case 17:
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
+                currentVersion++;
+            case 18:
+                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
+                db.execSQL(ADD_MEDIA_FILE_URL);
+                db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
+                db.execSQL(ADD_MEDIA_UNIQUE_ID);
+                db.execSQL(ADD_MEDIA_BLOG_ID);
+                db.execSQL(ADD_MEDIA_DATE_GMT);
+                db.execSQL(ADD_MEDIA_UPLOAD_STATE);
+                currentVersion++;
+            case 19:
+                // revision 20: create table "notes"
+                currentVersion++;
+            case 20:
+                db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
+                currentVersion++;
+            case 21:
+                db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
+                currentVersion++;
         }
+        db.setVersion(DATABASE_VERSION);
+    }
+
+
+    public void deleteDatabase(Context ctx) {
+        ctx.deleteDatabase(DATABASE_NAME);
     }
 
     private void migrateWPComAccount() {
@@ -1566,8 +1559,9 @@ public class WordPressDB {
 
     /** For a given blogId, get the first media files **/
     public Cursor getFirstMediaFileForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
-               + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC LIMIT 1", new String[] { blogId, "uploading" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND " +
+                           "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC LIMIT 1",
+                new String[]{blogId, "uploading"});
     }
 
     /** For a given blogId, get all the media files **/
@@ -1793,7 +1787,8 @@ public class WordPressDB {
 
     /** Get a media file scheduled for delete for a given blogId **/
     public Cursor getMediaDeleteQueueItem(String blogId) {
-        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=? LIMIT 1", new String[] {"delete", blogId});
+        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=? LIMIT 1",
+                new String[]{"delete", blogId});
     }
 
 

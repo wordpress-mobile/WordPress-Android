@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.notifications.NotificationsListFragment.NotesAdapter;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -51,7 +53,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public static final String TAG="WPNotifications";
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
-    public static final String MD5_NOTE_ID_EXTRA="md5NoteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
     public static final String NOTE_REPLY_EXTRA="replyContent";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
@@ -186,27 +187,27 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
      */
     private void launchWithNoteId(){
         final Intent intent = getIntent();
-        if (intent.hasExtra(MD5_NOTE_ID_EXTRA)) {
-            int hashid = Integer.valueOf(intent.getStringExtra(MD5_NOTE_ID_EXTRA));
-            Note note = WordPress.wpDB.getNoteById(hashid);
+        if (intent.hasExtra(NOTE_ID_EXTRA)) {
+            int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+            Note note = WordPress.wpDB.getNoteById(noteID);
             if (note != null) {
                 openNote(note);
-            }
-        } else if (intent.hasExtra(NOTE_ID_EXTRA)) {
-            // find it/load it etc
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
-            NotesResponseHandler handler = new NotesResponseHandler(){
-                @Override
-                public void onNotes(List<Note> notes){
-                    // there should only be one note!
-                    if (!notes.isEmpty()) {
-                        Note note = notes.get(0);
-                        openNote(note);
+            } else {
+                // find it/load it etc
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
+                NotesResponseHandler handler = new NotesResponseHandler(){
+                    @Override
+                    public void onNotes(List<Note> notes){
+                        // there should only be one note!
+                        if (!notes.isEmpty()) {
+                            Note note = notes.get(0);
+                            openNote(note);
+                        }
                     }
-                }
-            };
-            restClient.getNotifications(params, handler, handler);
+                };
+                restClient.getNotifications(params, handler, handler);
+            }
         } else {
             // on a tablet: open first note if none selected
             String fragmentTag = mNotesList.getTag();
@@ -285,8 +286,26 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 new RestRequest.Listener(){
                     @Override
                     public void onResponse(JSONObject response){
+                        Activity notificationsActivity = NotificationsActivity.this;
+                        if (notificationsActivity == null || notificationsActivity.isFinishing()) {
+                            return;
+                        }
+                        final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
+
                         note.setUnreadCount("0");
-                        mNotesList.getNotesAdapter().notifyDataSetChanged();
+                        if (notesAdapter.getPosition(note) < 0) {
+                            //Edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes in the adapter and find a match with the noteID
+                            for (int i=0; i<notesAdapter.getCount(); i++) {
+                                Note item = notesAdapter.getItem(i);
+                                if( item.getId().equals(note.getId()) ) {
+                                    item.setUnreadCount("0");
+                                    break;
+                                }
+                            }
+                        }
+                       
+                        WordPress.wpDB.addNote(note, false); //Update the DB
+                        notesAdapter.notifyDataSetChanged();
                     }
                 },
                 new RestRequest.ErrorListener(){
