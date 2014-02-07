@@ -2,8 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -54,7 +52,6 @@ public class CommentAdapter extends BaseAdapter {
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
-    private final String mAnonymous;
 
     private boolean mEnableSelection;
 
@@ -66,16 +63,14 @@ public class CommentAdapter extends BaseAdapter {
         mOnLoadMoreListener = onLoadMoreListener;
         mOnSelectedChangeListener = onChangeListener;
 
-        final Resources resources = context.getResources();
-        mStatusColorSpam = Color.RED;
-        mStatusColorUnapproved = resources.getColor(R.color.orange_medium);
-        mSelectionColor = resources.getColor(R.color.blue_extra_light);
+        mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
+        mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
+        mSelectionColor = context.getResources().getColor(R.color.blue_extra_light);
 
-        mStatusTextSpam = resources.getString(R.string.comment_status_spam);
-        mStatusTextUnapproved = resources.getString(R.string.comment_status_unapproved);
-        mAnonymous = resources.getString(R.string.anonymous);
+        mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
+        mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
 
-        mAvatarSz = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
     }
 
     @Override

@@ -653,28 +653,29 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 newStatus = CommentStatus.UNAPPROVED;
                 enableMarkAsSpam = true;
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = getActivity().getResources().getColor(R.color.blue_extra_dark);
+                statusColor = getActivity().getResources().getColor(R.color.comment_status_approved);
                 break;
             case UNAPPROVED:
                 moderationDrawResId = R.drawable.ic_cab_approve;
                 newStatus = CommentStatus.APPROVED;
                 enableMarkAsSpam = true;
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = getActivity().getResources().getColor(R.color.orange_medium);
+                statusColor = getActivity().getResources().getColor(R.color.comment_status_unapproved);
                 break;
             case SPAM:
                 moderationDrawResId = R.drawable.ic_cab_approve;
                 newStatus = CommentStatus.APPROVED;
                 enableMarkAsSpam = false;
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = Color.RED;
+                statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
             case TRASH:
+                // should never get here
                 moderationDrawResId = R.drawable.ic_cab_approve;
                 newStatus = CommentStatus.APPROVED;
                 enableMarkAsSpam = false;
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = Color.RED;
+                statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
             default:
                 return;
