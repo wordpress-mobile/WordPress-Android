@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,7 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -44,12 +45,13 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * Created by nbradbury on 6/30/13.
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
-public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
+public class ReaderPostListFragment extends SherlockFragment implements AbsListView.OnScrollListener {
 
     protected static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
@@ -63,6 +65,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+    private MenuItem mRefreshMenuItem;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
@@ -115,18 +118,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setupActionBar();
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
 
         if (activity instanceof OnPostSelectedListener)
             mPostSelectedListener = (OnPostSelectedListener) activity;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -158,6 +155,32 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         hideLoadingProgress();
     }
 
+    @Override
+    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.reader_native, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
+        setupActionBar();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_tags :
+                ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
+                return true;
+            case R.id.menu_refresh :
+                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
+                } else {
+                    updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                }
+                return true;
+            default :
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -473,15 +496,22 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     protected void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
-        if (mIsUpdating==isUpdating)
+        if (mIsUpdating == isUpdating)
             return;
         if (!hasActivity())
             return;
+
         mIsUpdating = isUpdating;
+
         switch (updateAction) {
             case LOAD_NEWER:
-                if (getActivity() instanceof ReaderActivity)
-                    ((ReaderActivity)getActivity()).setIsUpdating(isUpdating);
+                if (mRefreshMenuItem != null && getActivity() instanceof WPActionBarActivity) {
+                    if (isUpdating) {
+                        ((WPActionBarActivity)getActivity()).startAnimatingRefreshButton(mRefreshMenuItem);
+                    } else {
+                        ((WPActionBarActivity)getActivity()).stopAnimatingRefreshButton(mRefreshMenuItem);
+                    }
+                }
                 break;
 
             case LOAD_OLDER:
@@ -584,8 +614,10 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
 
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
-        if (actionBar==null)
+        if (actionBar == null) {
+            AppLog.w(T.READER, "null actionbar in reader post list");
             return;
+        }
 
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);

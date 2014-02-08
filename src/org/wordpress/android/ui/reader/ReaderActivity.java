@@ -13,18 +13,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -35,7 +32,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.ToastUtils;
 
 /*
  * created by nbradbury
@@ -50,8 +46,6 @@ public class ReaderActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
 
-    private MenuItem mRefreshMenuItem;
-    private boolean mIsUpdating = false;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
     private boolean mIsFullScreen = false;
@@ -76,7 +70,10 @@ public class ReaderActivity extends WPActionBarActivity
             @Override
             public void onBackStackChanged() {
                 // disable fullscreen when moving between fragments
-                onRequestFullScreen(false);
+                if (isFullScreen())
+                    onRequestFullScreen(false);
+                boolean showIndicator = (getSupportFragmentManager().getBackStackEntryCount() == 0);
+                mMenuDrawer.setDrawerIndicatorEnabled(showIndicator);
             }
         });
     }
@@ -114,6 +111,19 @@ public class ReaderActivity extends WPActionBarActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -171,52 +181,6 @@ public class ReaderActivity extends WPActionBarActivity
         }
     }
 
-    protected void setIsUpdating(boolean isUpdating) {
-        if (mRefreshMenuItem == null)
-            return;
-        mIsUpdating = isUpdating;
-        if (isUpdating) {
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        } else {
-            stopAnimatingRefreshButton(mRefreshMenuItem);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.reader_native, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(this, null);
-                return true;
-            case R.id.menu_refresh :
-                ReaderPostListFragment fragment = getPostListFragment();
-                if (fragment!=null) {
-                    if (!NetworkUtils.isNetworkAvailable(this)) {
-                        ToastUtils.showToast(this, R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
-                    } else {
-                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
-                    }
-                    return true;
-                }
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onSignout() {
         super.onSignout();
@@ -266,7 +230,7 @@ public class ReaderActivity extends WPActionBarActivity
                 .beginTransaction()
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .add(R.id.fragment_container, ReaderPostDetailFragment.newInstance(this, blogId, postId), TAG_FRAGMENT_POST_DETAIL)
-                .addToBackStack(null)
+                .addToBackStack(TAG_FRAGMENT_POST_DETAIL)
                 .commit();
     }
 
@@ -295,15 +259,8 @@ public class ReaderActivity extends WPActionBarActivity
         if (!NetworkUtils.isNetworkAvailable(this))
             return;
 
+        // TODO: animate refresh button in post list fragment if tags are being updated for the first time
         mHasPerformedInitialUpdate = true;
-
-        // if tags have never been updated, animate the refresh button if it's not already animating
-        // so user knows something is happening (since reader will be blank until tags have updated)
-        final boolean showUpdate = !mIsUpdating && ReaderTagTable.isEmpty();
-
-        // We can't call setIsUpdating(showUpdate) yet, race condition may occur when mRefreshMenuItem is being
-        // initialized (double animation) or is null (no animation)
-        mShouldAnimateRefreshButton = showUpdate;
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -311,9 +268,6 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                if (showUpdate)
-                    setIsUpdating(false);
-
                 // make sure post list reflects any tag changes
                 if (result == UpdateResult.CHANGED) {
                     ReaderPostListFragment fragment = getPostListFragment();
