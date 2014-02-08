@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,8 +48,14 @@ import org.wordpress.android.util.StringUtils;
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
 public class ReaderPostListFragment extends Fragment implements AbsListView.OnScrollListener {
+
+    protected static interface OnPostSelectedListener {
+        public void onPostSelected(long blogId, long postId);
+    }
+
     private ReaderPostAdapter mPostAdapter;
     private ReaderActionBarTagAdapter mActionBarAdapter;
+    private OnPostSelectedListener mPostSelectedListener;
 
     private TextView mNewPostsBar;
     private View mEmptyView;
@@ -104,6 +111,17 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mPostSelectedListener = (OnPostSelectedListener) activity;
+        } catch (ClassCastException e) {
+            mPostSelectedListener = null;
+            AppLog.w(T.READER, "activity does not implement post selected listener");
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -138,6 +156,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         final ListView listView = (ListView) view.findViewById(android.R.id.list);
 
+        // add a header to the listView that's the same height as the ActionBar when fullscreen
+        // mode is supported
+        if (ReaderActivity.isFullScreenSupported()) {
+            ReaderActivity.addListViewHeader(container.getContext(), listView);
+        }
+
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
@@ -166,7 +190,9 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 // take header into account
                 position -= listView.getHeaderViewsCount();
                 ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
+                if (post != null && mPostSelectedListener != null)
+                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                //ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
             }
         });
 
