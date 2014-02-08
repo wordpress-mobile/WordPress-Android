@@ -1,21 +1,18 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.view.Window;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -26,6 +23,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -35,17 +33,17 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /*
  * created by nbradbury
- * this activity serves as the host for ReaderPostListFragment
+ * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
  */
 
-public class ReaderActivity extends WPActionBarActivity implements ReaderPostListFragment.OnPostSelectedListener {
+public class ReaderActivity extends WPActionBarActivity
+                            implements OnPostSelectedListener, ReaderFullScreenUtils.FullScreenListener {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String TAG_FRAGMENT_POST_DETAIL = "reader_post_detail";
 
@@ -56,26 +54,31 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
     private boolean mIsUpdating = false;
     private boolean mHasPerformedInitialUpdate = false;
     private boolean mHasPerformedPurge = false;
+    private boolean mIsFullScreen = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         // must be called before setContentView()
         if (isFullScreenSupported())
-            enableActionBarOverlay();
+            ReaderFullScreenUtils.enableActionBarOverlay(this);
+
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_main);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setSupportProgressBarVisibility(false);
-
         createMenuDrawer(R.layout.reader_activity_main);
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
             mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                // disable fullscreen when moving between fragments
+                onRequestFullScreen(false);
+            }
+        });
     }
 
     @Override
@@ -118,19 +121,19 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
         super.onActivityResult(requestCode, resultCode, data);
 
         boolean isResultOK = (resultCode==Activity.RESULT_OK);
-        final ReaderPostListFragment postListFragment = getPostListFragment();
-        //final ReaderPostDetailFragment detailFragment = getPostDetailFragment();
+        final ReaderPostListFragment listFragment = getPostListFragment();
+        final ReaderPostDetailFragment detailFragment = getPostDetailFragment();
 
         switch (requestCode) {
             // user just returned from the tag editor
             case Constants.INTENT_READER_TAGS :
-                if (isResultOK && postListFragment!=null && data!=null) {
+                if (isResultOK && listFragment != null && data != null) {
                     // reload tags if they were changed, and set the last tag added as the current one
                     if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
-                        postListFragment.reloadTags();
+                        listFragment.reloadTags();
                         String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
                         if (!TextUtils.isEmpty(lastAddedTag))
-                            postListFragment.setCurrentTag(lastAddedTag);
+                            listFragment.setCurrentTag(lastAddedTag);
                     }
                 }
                 break;
@@ -138,16 +141,16 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
             // user just returned from post detail, reload the displayed post if it changed (will
             // only be RESULT_OK if changed)
             case Constants.INTENT_READER_POST_DETAIL:
-                if (isResultOK && postListFragment!=null && data!=null) {
+                if (isResultOK && listFragment != null && data!=null) {
                     long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
                     boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailActivity.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
                     ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
                     if (updatedPost != null) {
-                        postListFragment.reloadPost(updatedPost);
-                        //Update 'following' status on all other posts in the same blog.
+                        listFragment.reloadPost(updatedPost);
+                        // update 'following' status on all other posts in the same blog.
                         if (isBlogFollowStatusChanged) {
-                            postListFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
+                            listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
                         }
                     }
                 }
@@ -156,10 +159,13 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
             case Constants.INTENT_READER_REBLOG:
-                if (isResultOK && postListFragment!=null && data!=null) {
+                if (isResultOK && data!=null) {
                     long blogId = data.getLongExtra(ReaderReblogActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderReblogActivity.ARG_POST_ID, 0);
-                    postListFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    if (listFragment != null)
+                        listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    if (detailFragment != null)
+                        detailFragment.reloadPost();
                 }
                 break;
         }
@@ -219,6 +225,7 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
         // reader database will have been cleared by the time this is called, but the fragment must
         // be removed or else it will continue to show the same articles - onResume() will take care
         // of re-displaying the fragment if necessary
+        removePostDetailFragment();
         removePostListFragment();
     }
 
@@ -257,9 +264,9 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
         // TODO: reuse existing detail fragment
         getSupportFragmentManager()
                 .beginTransaction()
+                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .add(R.id.fragment_container, ReaderPostDetailFragment.newInstance(this, blogId, postId), TAG_FRAGMENT_POST_DETAIL)
-                .addToBackStack(TAG_FRAGMENT_POST_DETAIL)
-                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -333,6 +340,49 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
     }
 
     /*
+     * user tapped a post in the post list fragment
+     */
+    @Override
+    public void onPostSelected(long blogId, long postId) {
+        showPostDetailFragment(blogId, postId);
+    }
+
+    /*
+     * post detail is requesting fullscreen mode
+     */
+    @Override
+    public boolean onRequestFullScreen(boolean enableFullScreen) {
+        if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen)
+            return false;
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null)
+            return false;
+
+        if (enableFullScreen) {
+            actionBar.hide();
+        } else {
+            actionBar.show();
+        }
+
+        mIsFullScreen = enableFullScreen;
+        return true;
+    }
+
+    @Override
+    public boolean isFullScreen() {
+        return mIsFullScreen;
+    }
+
+    /*
+     * auto-hiding the ActionBar is jittery/buggy on Gingerbread (and probably other
+     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
+     */
+    public boolean isFullScreenSupported() {
+        return (SysUtils.isGteAndroid4());
+    }
+
+    /*
      * this broadcast receiver handles the ACTION_REFRESH_POSTS action, which may be called from the
      * post list fragment if the device is rotated while an update is in progress
      */
@@ -348,37 +398,4 @@ public class ReaderActivity extends WPActionBarActivity implements ReaderPostLis
             }
         }
     };
-
-    /*
-     * user tapped a post in the post list fragment
-     */
-    @Override
-    public void onPostSelected(long blogId, long postId) {
-        showPostDetailFragment(blogId, postId);
-    }
-
-    /*
-     * auto-hiding the ActionBar and icon bar is jittery/buggy on Gingerbread (and probably other
-     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
-     */
-    protected static boolean isFullScreenSupported() {
-        return (SysUtils.isGteAndroid4());
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    protected void enableActionBarOverlay() {
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-    }
-
-    /*
-     * add a header to the listView that's the same height as the ActionBar - used when fullscreen
-     * mode is supported
-     */
-    protected static void addListViewHeader(Context context, ListView listView) {
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-        RelativeLayout headerFake = new RelativeLayout(context);
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
-        listView.addHeaderView(headerFake, null, false);
-    }
-
 }

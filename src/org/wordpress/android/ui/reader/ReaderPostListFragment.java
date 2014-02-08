@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -56,6 +58,7 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     private ReaderPostAdapter mPostAdapter;
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private OnPostSelectedListener mPostSelectedListener;
+    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private TextView mNewPostsBar;
     private View mEmptyView;
@@ -101,24 +104,29 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
 
         if (savedInstanceState!=null) {
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
-
-        setupActionBar();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
+        setupActionBar();
+
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+
+        if (activity instanceof OnPostSelectedListener)
             mPostSelectedListener = (OnPostSelectedListener) activity;
-        } catch (ClassCastException e) {
-            mPostSelectedListener = null;
-            AppLog.w(T.READER, "activity does not implement post selected listener");
-        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override
@@ -156,12 +164,6 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         final ListView listView = (ListView) view.findViewById(android.R.id.list);
 
-        // add a header to the listView that's the same height as the ActionBar when fullscreen
-        // mode is supported
-        if (ReaderActivity.isFullScreenSupported()) {
-            ReaderActivity.addListViewHeader(container.getContext(), listView);
-        }
-
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
@@ -172,6 +174,16 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
                 hideNewPostsBar();
             }
         });
+
+        // add a header to the listView and margin to new posts bar that's the same height as
+        // the ActionBar when fullscreen mode is supported
+        if (isFullScreenSupported()) {
+            Context context = container.getContext();
+            ReaderFullScreenUtils.addListViewHeader(context, listView);
+            final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
+            params.topMargin = actionbarHeight;
+        }
 
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
@@ -555,6 +567,12 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
         if (actionBar==null)
             return;
 
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            // TODO: this happens after rotating detail fragment
+            AppLog.w(T.READER, "expected ActionBar.NAVIGATION_MODE_LIST");
+            return;
+        }
+
         int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1)
             return;
@@ -659,5 +677,11 @@ public class ReaderPostListFragment extends Fragment implements AbsListView.OnSc
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         // nop
+    }
+
+    private boolean isFullScreenSupported() {
+        if (mFullScreenListener == null)
+            return false;
+        return mFullScreenListener.isFullScreenSupported();
     }
 }

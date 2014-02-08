@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -16,11 +14,11 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -28,12 +26,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -103,33 +99,13 @@ public class ReaderPostDetailFragment extends Fragment {
     private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
 
-    private boolean mIsFullScreen;
     private boolean mIsMoving;
     private float mLastMotionY;
 
+    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
+
     private static final int MOVE_MIN_DIFF = 8;
     private static final long WEBVIEW_DELAY_MS = 1000L;
-
-    /*
-     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
-     * because canScrollVertically() requires API 14
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static boolean canScrollUp(ListView listView) {
-        if (listView == null)
-            return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
-        return listView.canScrollVertically(-1);
-    }
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static boolean canScrollDown(ListView listView) {
-        if (listView == null)
-            return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
-        return listView.canScrollVertically(1);
-    }
 
     private ListView getListView() {
         return mListView;
@@ -140,13 +116,14 @@ public class ReaderPostDetailFragment extends Fragment {
          * if full-screen mode is supported, enable full-screen when user scrolls down
          * and disable full-screen when user scrolls up
          */
-        if (ReaderActivity.isFullScreenSupported()) {
+        if (isFullScreenSupported()) {
             listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     int action = event.getAction() & MotionEvent.ACTION_MASK;
                     final float y = event.getY();
                     final int yDiff = (int) (y - mLastMotionY);
+                    final boolean isFullScreen = isFullScreen();
                     mLastMotionY = y;
 
                     switch (action) {
@@ -155,17 +132,17 @@ public class ReaderPostDetailFragment extends Fragment {
                                 if (mIsAddCommentBoxShowing) {
                                     // user is typing a comment, so don't toggle full-screen
                                     return false;
-                                } else if (yDiff < -MOVE_MIN_DIFF && !mIsFullScreen && canScrollDown(mListView)) {
+                                } else if (yDiff < -MOVE_MIN_DIFF && !isFullScreen && ReaderFullScreenUtils.canScrollDown(mListView)) {
                                     // user is scrolling down, so enable full-screen
                                     setIsFullScreen(true);
                                     return true;
-                                } else if (mIsFullScreen && !canScrollUp(mListView)) {
+                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollUp(mListView)) {
                                     // disable full-screen if user scrolls to the top
                                     setIsFullScreen(false);
-                                } else if (mIsFullScreen && !canScrollDown(mListView)) {
+                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollDown(mListView)) {
                                     // disable full-screen if user scrolls to the bottom
                                     setIsFullScreen(false);
-                                } else if (yDiff > MOVE_MIN_DIFF && mIsFullScreen) {
+                                } else if (yDiff > MOVE_MIN_DIFF && isFullScreen) {
                                     // user is scrolling up, so disable full-screen
                                     setIsFullScreen(false);
                                     return true;
@@ -251,8 +228,7 @@ public class ReaderPostDetailFragment extends Fragment {
 
 
     protected static ReaderPostDetailFragment newInstance(Context context, long blogId, long postId) {
-        AppLog.d(T.READER, "post detail newInstance");
-
+        AppLog.d(T.READER, "post detail fragment newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ARG_BLOG_ID, blogId);
@@ -273,6 +249,10 @@ public class ReaderPostDetailFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -285,8 +265,8 @@ public class ReaderPostDetailFragment extends Fragment {
 
         // add a header to the listView that's the same height as the ActionBar when fullscreen
         // mode is supported
-        if (ReaderActivity.isFullScreenSupported()) {
-            ReaderActivity.addListViewHeader(container.getContext(), mListView);
+        if (isFullScreenSupported()) {
+            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -346,16 +326,26 @@ public class ReaderPostDetailFragment extends Fragment {
         return (mPost != null);
     }
 
+    protected void reloadPost() {
+        if (!hasPost() || !hasActivity())
+            return;
+        showPost();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-
         if (!hasPost() && !mIsPostTaskRunning)
             showPost();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, android.view.MenuInflater inflater) {
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.reader_native_detail, menu);
     }
@@ -390,24 +380,25 @@ public class ReaderPostDetailFragment extends Fragment {
     /*
      * full-screen mode hides the ActionBar and icon bar
      */
-    private void setIsFullScreen(boolean isFullScreen) {
-        if (isFullScreen == mIsFullScreen || !ReaderActivity.isFullScreenSupported())
-            return;
+    private boolean isFullScreen() {
+        if (mFullScreenListener == null)
+            return false;
+        return mFullScreenListener.isFullScreen();
+    }
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
+    private boolean isFullScreenSupported() {
+        if (mFullScreenListener == null)
+            return false;
+        return mFullScreenListener.isFullScreenSupported();
+    }
 
+    private void setIsFullScreen(boolean enableFullScreen) {
+        if (mFullScreenListener == null)
+            return;
+        if (!mFullScreenListener.onRequestFullScreen(enableFullScreen))
+            return;
         if (mPost.isWP())
-            animateIconBar(!isFullScreen);
-
-        if (isFullScreen) {
-            actionBar.hide();
-        } else {
-            actionBar.show();
-        }
-
-        mIsFullScreen = isFullScreen;
+            animateIconBar(!enableFullScreen);
     }
 
     /*
@@ -447,6 +438,8 @@ public class ReaderPostDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putLong(ARG_BLOG_ID, mBlogId);
+        outState.putLong(ARG_POST_ID, mPostId);
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_IS_POST_CHANGED, mIsPostChanged);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
@@ -465,8 +458,11 @@ public class ReaderPostDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
+            mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mIsPostChanged = savedInstanceState.getBoolean(KEY_IS_POST_CHANGED);
             mIsBlogFollowStatusChanged = savedInstanceState.getBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED);
@@ -481,8 +477,22 @@ public class ReaderPostDetailFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        setupActionBar();
     }
 
+    private void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    }
+
+    // TODO: post list needs to know when the post has been changed
     /*@Override
     public void onBackPressed() {
         // if comment box is showing, cancel it rather than backing out of this activity
@@ -504,27 +514,6 @@ public class ReaderPostDetailFragment extends Fragment {
             super.onBackPressed();
         }
     }*/
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case Constants.INTENT_READER_REBLOG :
-                // user just returned from reblog activity - if post was successfully reblogged,
-                // then update the local post and select the reblog button
-                ImageView imgBtnReblog = (ImageView) getActivity().findViewById(R.id.image_reblog_btn);
-                if (imgBtnReblog != null) {
-                    if (resultCode == Activity.RESULT_OK) {
-                        mPost.isRebloggedByCurrentUser = true;
-                        imgBtnReblog.setSelected(true);
-                    } else {
-                        imgBtnReblog.setSelected(false);
-                    }
-                }
-                break;
-        }
-    }
 
     /*
      * triggered when user chooses to like or follow - actionView is the ImageView or TextView
@@ -835,7 +824,7 @@ public class ReaderPostDetailFragment extends Fragment {
         final ImageView imgBtnComment = (ImageView) container.findViewById(R.id.image_comment_btn);
 
         // disable full-screen when comment box is showing
-        if (mIsFullScreen)
+        if (isFullScreen())
             setIsFullScreen(false);
 
         // different hint depending on whether user is replying to a comment or commenting on the post
