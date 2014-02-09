@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -44,13 +45,12 @@ import org.wordpress.android.util.SysUtils;
 public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
                                        ActionBar.OnNavigationListener,
+                                       FragmentManager.OnBackStackChangedListener,
                                        ReaderFullScreenUtils.FullScreenListener {
 
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL, UNKNOWN }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
-    private static final String KEY_INITIAL_UPDATE = "initial_update";
-    private static final String KEY_HAS_PURGED = "has_purged";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
@@ -58,16 +58,14 @@ public class ReaderActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // must be called before setContentView()
         if (isFullScreenSupported())
             ReaderFullScreenUtils.enableActionBarOverlay(this);
 
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.reader_activity_main);
         createMenuDrawer(R.layout.reader_activity_main);
 
-        getSupportActionBar().setListNavigationCallbacks(getActionBarTagAdapter(), this);
+        //getSupportActionBar().setListNavigationCallbacks(getActionBarTagAdapter(), this);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState == null) {
             // determine which fragment to show, default to post list
@@ -84,26 +82,16 @@ public class ReaderActivity extends WPActionBarActivity
                         tagName = UserPrefs.getReaderTag();
                     if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
                         tagName = ReaderTag.TAG_NAME_DEFAULT;
-                    showPostListFragment(tagName);
+                    showListFragment(tagName);
                     break;
                 case POST_DETAIL:
                     long blogId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
                     long postId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
-                    showPostDetailFragment(blogId, postId);
+                    showDetailFragment(blogId, postId);
                     break;
             }
-        } else {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-            mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
     }
-
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-        setupActionBarForFragment(fragment);
-    }
-
 
     @Override
     public void onResume() {
@@ -115,6 +103,12 @@ public class ReaderActivity extends WPActionBarActivity
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        setupActionBar();
     }
 
     @Override
@@ -132,19 +126,19 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
+    public void onBackStackChanged() {
+        // return from full-screen when backstack changes
+        if (isFullScreen())
+            onRequestFullScreen(false);
+        setupActionBar();
     }
 
     @Override
     public void onBackPressed() {
-        Fragment listFragment = getPostListFragment();
-        Fragment detailFragment = getPostDetailFragment();
-        if (listFragment != null && detailFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
-            setupActionBarForFragmentType(ReaderFragmentType.POST_LIST);
+        if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
+            super.onBackPressed();
+        } else if (hasDetailFragment()) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -152,13 +146,9 @@ public class ReaderActivity extends WPActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (!mMenuDrawer.isDrawerIndicatorEnabled()) {
-                    onBackPressed();
-                    return true;
-                }
-                break;
+        if (item.getItemId() == android.R.id.home && hasDetailFragment()) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -168,8 +158,8 @@ public class ReaderActivity extends WPActionBarActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         boolean isResultOK = (resultCode==Activity.RESULT_OK);
-        final ReaderPostListFragment listFragment = getPostListFragment();
-        final ReaderPostDetailFragment detailFragment = getPostDetailFragment();
+        final ReaderPostListFragment listFragment = getListFragment();
+        final ReaderPostDetailFragment detailFragment = getDetailFragment();
 
         switch (requestCode) {
             // user just returned from the tag editor
@@ -233,34 +223,34 @@ public class ReaderActivity extends WPActionBarActivity
      * remove both the list & detail fragments
      */
     private void removeFragments() {
-        Fragment listFragment = getPostListFragment();
-        Fragment detailFragment = getPostDetailFragment();
+        Fragment listFragment = getListFragment();
+        Fragment detailFragment = getDetailFragment();
         if (listFragment == null && detailFragment == null)
             return;
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (listFragment != null)
-            ft.remove(listFragment);
         if (detailFragment != null)
             ft.remove(detailFragment);
+        if (listFragment != null)
+            ft.remove(listFragment);
+
         ft.commit();
     }
 
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showPostListFragment(final String tagName) {
+    private void showListFragment(final String tagName) {
         String tagForFragment = ReaderFragmentType.POST_LIST.toString();
         Fragment fragment = ReaderPostListFragment.newInstance(tagName);
 
-        FragmentTransaction ft = getSupportFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, fragment, tagForFragment);
-
-        ft.commit();
+                .replace(R.id.fragment_container, fragment, tagForFragment)
+                .commit();
     }
 
-    private ReaderPostListFragment getPostListFragment() {
+    private ReaderPostListFragment getListFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReaderFragmentType.POST_LIST.toString());
         if (fragment == null)
             return null;
@@ -270,23 +260,27 @@ public class ReaderActivity extends WPActionBarActivity
     /*
      * show fragment containing detail for passed post
      */
-    private void showPostDetailFragment(long blogId, long postId) {
+    private void showDetailFragment(long blogId, long postId) {
         String tagForFragment = ReaderFragmentType.POST_DETAIL.toString();
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
 
-        FragmentTransaction ft = getSupportFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, fragment, tagForFragment)
-                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-        ft.commit();
+                .replace(R.id.fragment_container, fragment, tagForFragment)
+                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(tagForFragment)
+                .commit();
     }
 
-    private ReaderPostDetailFragment getPostDetailFragment() {
+    private ReaderPostDetailFragment getDetailFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReaderFragmentType.POST_DETAIL.toString());
         if (fragment == null)
             return null;
         return ((ReaderPostDetailFragment) fragment);
+    }
+
+    private boolean hasDetailFragment() {
+        return (getDetailFragment() != null);
     }
 
     /*
@@ -299,7 +293,7 @@ public class ReaderActivity extends WPActionBarActivity
         mHasPerformedInitialUpdate = true;
 
         // animate refresh button in post list if tags are being updated for the first time
-        ReaderPostListFragment listFragment = getPostListFragment();
+        ReaderPostListFragment listFragment = getListFragment();
         final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
         if (animateRefresh && listFragment != null)
             listFragment.animateRefreshButton(true);
@@ -310,7 +304,7 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                ReaderPostListFragment listFragment = getPostListFragment();
+                ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
                     if (animateRefresh)
                         listFragment.animateRefreshButton(false);
@@ -341,7 +335,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onPostSelected(long blogId, long postId) {
-        showPostDetailFragment(blogId, postId);
+        showDetailFragment(blogId, postId);
     }
 
     /*
@@ -389,59 +383,41 @@ public class ReaderActivity extends WPActionBarActivity
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
                 AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
-                ReaderPostListFragment listFragment = getPostListFragment();
+                ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null)
                     listFragment.refreshPosts();
             }
         }
     };
 
-    private ReaderFragmentType getFragmentType(Fragment fragment) {
-        if (fragment instanceof ReaderPostListFragment) {
-            return ReaderFragmentType.POST_LIST;
-        } else if (fragment instanceof ReaderPostDetailFragment) {
-            return ReaderFragmentType.POST_DETAIL;
-        } else {
-            return ReaderFragmentType.UNKNOWN;
-        }
-    }
-
     /*
-     * configure ActionBar for the passed fragment
+     * configure ActionBar based on whether detail fragment exists
      */
-    private void setupActionBarForFragment(Fragment fragment) {
-        setupActionBarForFragmentType(getFragmentType(fragment));
-    }
-    private void setupActionBarForFragmentType(final ReaderFragmentType fragmentType) {
-        if (fragmentType == null || fragmentType == ReaderFragmentType.UNKNOWN)
-            return;
-
+    private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
             AppLog.w(T.READER, "null actionbar in reader");
             return;
         }
 
-        switch (fragmentType) {
-            case POST_LIST:
-                actionBar.setDisplayShowTitleEnabled(false);
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-                break;
-            case POST_DETAIL:
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                break;
+        if (hasDetailFragment()) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setListNavigationCallbacks(null, null);
+        } else {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            actionBar.setListNavigationCallbacks(getActionBarTagAdapter(), this);
         }
 
-        if (mMenuDrawer != null) {
-            mMenuDrawer.setDrawerIndicatorEnabled(fragmentType == ReaderFragmentType.POST_LIST);
-        }
+        if (mMenuDrawer != null)
+            mMenuDrawer.setDrawerIndicatorEnabled(!hasDetailFragment());
     }
 
     /*
      * ActionBar tag dropdown adapter used by reader post list
      */
-    private static ReaderActionBarTagAdapter mActionBarTagAdapter;
+    private ReaderActionBarTagAdapter mActionBarTagAdapter;
     protected ReaderActionBarTagAdapter getActionBarTagAdapter() {
         if (mActionBarTagAdapter == null) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
@@ -469,7 +445,7 @@ public class ReaderActivity extends WPActionBarActivity
             return;
 
         if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "unexpected navigation mode");
+            AppLog.w(T.READER, "unexpected ActionBar navigation mode");
             return;
         }
 
@@ -489,7 +465,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (tag == null)
             return false;
 
-        ReaderPostListFragment listFragment = getPostListFragment();
+        ReaderPostListFragment listFragment = getListFragment();
         if (listFragment == null)
             return false;
 

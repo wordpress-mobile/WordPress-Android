@@ -89,15 +89,9 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         super.setArguments(args);
 
         // note that setCurrentTag() should NOT be called here since it's automatically
-        // called from the actionbar navigation handler
+        // called from the actionbar navigation handler in ReaderActivity
         if (args != null && args.containsKey(KEY_TAG_NAME))
             mCurrentTag = args.getString(KEY_TAG_NAME);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override

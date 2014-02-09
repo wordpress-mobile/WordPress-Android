@@ -211,10 +211,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return mAdapter;
     }
 
-    private boolean hasCommentAdapter() {
-        return mAdapter!=null;
-    }
-
     private boolean isCommentAdapterEmpty() {
         return (mAdapter==null || mAdapter.isEmpty());
     }
@@ -239,12 +235,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mBlogId = args.getLong(ARG_BLOG_ID);
             mPostId = args.getLong(ARG_POST_ID);
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
