@@ -91,7 +91,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private Parcelable mListState = null;
 
-    private ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
+    private final ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final Handler mHandler = new Handler();
 
     private boolean mIsMoving;
@@ -222,7 +222,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
 
 
-    protected static ReaderPostDetailFragment newInstance(Context context, long blogId, long postId) {
+    protected static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         AppLog.d(T.READER, "post detail fragment newInstance");
 
         Bundle args = new Bundle();
@@ -242,11 +242,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mBlogId = args.getLong(ARG_BLOG_ID);
             mPostId = args.getLong(ARG_POST_ID);
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -336,11 +331,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
@@ -370,15 +360,11 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * full-screen mode hides the ActionBar and icon bar
      */
     private boolean isFullScreen() {
-        if (mFullScreenListener == null)
-            return false;
-        return mFullScreenListener.isFullScreen();
+        return (mFullScreenListener != null && mFullScreenListener.isFullScreen());
     }
 
     private boolean isFullScreenSupported() {
-        if (mFullScreenListener == null)
-            return false;
-        return mFullScreenListener.isFullScreenSupported();
+        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
     private void setIsFullScreen(boolean enableFullScreen) {
@@ -470,11 +456,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         activity.setTitle(null);
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     // TODO: post list needs to know when the post has been changed
@@ -980,7 +961,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         });
     }
 
-    private static final String getAttribute(final String html, final String attribute, int tagStart, int tagEnd) {
+    private static String getAttribute(final String html, final String attribute, int tagStart, int tagEnd) {
         // hack to determine whether html uses single-quoted attributes
         boolean usesSingleQuotes = html.contains(attribute + "='");
 
@@ -1253,7 +1234,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         ImageView imgBtnReblog;
         ImageView imgBtnComment;
-        ImageView imgBtnLike;
 
         WPNetworkImageView imgAvatar;
         WPNetworkImageView imgFeatured;
@@ -1285,7 +1265,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
-            imgBtnLike = (ImageView) mLayoutIcons.findViewById(R.id.image_like_btn);
 
             // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);

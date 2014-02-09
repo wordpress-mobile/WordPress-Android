@@ -47,7 +47,7 @@ public class ReaderActivity extends WPActionBarActivity
                                        ActionBar.OnNavigationListener,
                                        ReaderFullScreenUtils.FullScreenListener {
 
-    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
+    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL, UNKNOWN }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
@@ -67,11 +67,6 @@ public class ReaderActivity extends WPActionBarActivity
 
         setContentView(R.layout.reader_activity_main);
         createMenuDrawer(R.layout.reader_activity_main);
-
-        if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-            mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
-        }
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -93,10 +88,10 @@ public class ReaderActivity extends WPActionBarActivity
             }
         });
 
-        getSupportActionBar().setListNavigationCallbacks(getActionBarAdapter(), this);
+        getSupportActionBar().setListNavigationCallbacks(getActionBarTagAdapter(), this);
 
-        // determine which fragment to show, default to post list
         if (savedInstanceState == null) {
+            // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
                 fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
@@ -113,6 +108,9 @@ public class ReaderActivity extends WPActionBarActivity
                     showPostDetailFragment(blogId, postId);
                     break;
             }
+        } else {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+            mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
         }
     }
 
@@ -393,8 +391,27 @@ public class ReaderActivity extends WPActionBarActivity
         }
     };
 
+    private ReaderFragmentType getFragmentType(Fragment fragment) {
+        if (fragment instanceof ReaderPostListFragment) {
+            return ReaderFragmentType.POST_LIST;
+        } else if (fragment instanceof ReaderPostDetailFragment) {
+            return ReaderFragmentType.POST_DETAIL;
+        } else {
+            return ReaderFragmentType.UNKNOWN;
+        }
+    }
+
+    /*
+     * configure ActionBar for the passed fragment - post list uses the action bar adapter,
+     * post detail uses no adapter
+     */
+    private ReaderFragmentType mPrevFragmentType = ReaderFragmentType.UNKNOWN;
     private void setupActionBarForFragment(Fragment fragment) {
         if (fragment == null)
+            return;
+
+        final ReaderFragmentType fragmentType = getFragmentType(fragment);
+        if (fragmentType.equals(mPrevFragmentType))
             return;
 
         ActionBar actionBar = getSupportActionBar();
@@ -403,25 +420,26 @@ public class ReaderActivity extends WPActionBarActivity
             return;
         }
 
-        if (fragment instanceof ReaderPostListFragment) {
-            if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+        mPrevFragmentType = fragmentType;
+
+        switch (fragmentType) {
+            case POST_LIST:
                 actionBar.setDisplayShowTitleEnabled(false);
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            }
-        } else if (fragment instanceof ReaderPostDetailFragment) {
-            if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
+                break;
+            case POST_DETAIL:
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            }
+                break;
         }
     }
 
     /*
      * ActionBar tag dropdown adapter used by reader post list
      */
-    private ReaderActionBarTagAdapter mActionBarAdapter;
-    protected ReaderActionBarTagAdapter getActionBarAdapter() {
-        if (mActionBarAdapter == null) {
+    private static ReaderActionBarTagAdapter mActionBarTagAdapter;
+    protected ReaderActionBarTagAdapter getActionBarTagAdapter() {
+        if (mActionBarTagAdapter == null) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
@@ -429,10 +447,10 @@ public class ReaderActivity extends WPActionBarActivity
                 }
             };
 
-            mActionBarAdapter = new ReaderActionBarTagAdapter(this, isStaticMenuDrawer(), dataListener);
+            mActionBarTagAdapter = new ReaderActionBarTagAdapter(this, isStaticMenuDrawer(), dataListener);
         }
 
-        return mActionBarAdapter;
+        return mActionBarTagAdapter;
     }
 
     /*
@@ -451,7 +469,7 @@ public class ReaderActivity extends WPActionBarActivity
             return;
         }
 
-        int position = getActionBarAdapter().getIndexOfTagName(tagName);
+        int position = getActionBarTagAdapter().getIndexOfTagName(tagName);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex())
             return;
 
@@ -463,7 +481,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
+        final ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(itemPosition);
         if (tag == null)
             return false;
 

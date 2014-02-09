@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -21,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -59,7 +57,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
-    private ActionBar.OnNavigationListener mOnNavigationListener;
 
     private TextView mNewPostsBar;
     private View mEmptyView;
@@ -74,7 +71,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
-    protected static enum RefreshType {AUTOMATIC, MANUAL};
+    protected static enum RefreshType {AUTOMATIC, MANUAL}
 
     protected static ReaderPostListFragment newInstance(final String tagName) {
         AppLog.d(T.READER, "post list newInstance");
@@ -117,9 +114,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
 
         if (activity instanceof OnPostSelectedListener)
             mPostSelectedListener = (OnPostSelectedListener) activity;
-
-        if (activity instanceof ActionBar.OnNavigationListener)
-            mOnNavigationListener = (ActionBar.OnNavigationListener) activity;
     }
 
     @Override
@@ -139,15 +133,8 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        scheduleAutoUpdate();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        unscheduleAutoUpdate();
         hideLoadingProgress();
         animateRefreshButton(false);
     }
@@ -248,7 +235,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         page3.startAnimation(animPage3);
     }
 
-    private void setEmptyTitleAndDecriptionForCurrentTag() {
+    private void setEmptyTitleAndDescriptionForCurrentTag() {
         if (!isPostAdapterEmpty()) {
             return ;
         }
@@ -290,14 +277,14 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /*
      * called by post adapter when data has been loaded
      */
-    private ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (!hasActivity())
                 return;
             if (isEmpty) {
                 startBoxAndPagesAnimation();
-                setEmptyTitleAndDecriptionForCurrentTag();
+                setEmptyTitleAndDescriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
@@ -314,7 +301,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
-    ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
+    private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
         @Override
         public void onRequestData(ReaderActions.RequestDataAction action) {
             // skip if update is already in progress
@@ -331,7 +318,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /*
      * called by post adapter when user requests to reblog a post
      */
-    ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
+    private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post) {
             if (hasActivity())
@@ -355,26 +342,26 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         return (mPostAdapter==null || mPostAdapter.isEmpty());
     }
 
-    private boolean isCurrentTagName(String tagName) {
-        if (!hasCurrentTag())
-            return false;
-        if (tagName==null || mCurrentTag ==null)
+    private boolean isCurrentTagName(final String tagName) {
+        if (!hasCurrentTag() || TextUtils.isEmpty(tagName))
             return false;
         return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    protected String getCurrentTagName() {
+    private String getCurrentTagName() {
         if (!hasCurrentTag())
             return "";
         return StringUtils.notNullStr(mCurrentTag);
     }
 
     private boolean hasCurrentTag() {
-        return mCurrentTag !=null;
+        return !TextUtils.isEmpty(mCurrentTag);
     }
 
-    protected void setCurrentTag(String tagName) {
+    protected void setCurrentTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
+            return;
+        if (isCurrentTagName(tagName))
             return;
 
         mCurrentTag = tagName;
@@ -424,7 +411,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /*
      * get latest posts for this tag from the server
      */
-    protected void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
+    private void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
         if (hasCurrentTag())
             updatePostsWithTag(mCurrentTag, updateAction, refreshType);
     }
@@ -432,16 +419,13 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         if (TextUtils.isEmpty(tagName))
             return;
 
-        unscheduleAutoUpdate();
-
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.i(T.READER, "network unavailable, rescheduling reader update");
-            scheduleAutoUpdate();
+            AppLog.i(T.READER, "network unavailable, canceled tag update");
             return;
         }
 
         setIsUpdating(true, updateAction);
-        setEmptyTitleAndDecriptionForCurrentTag();
+        setEmptyTitleAndDescriptionForCurrentTag();
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
@@ -476,17 +460,13 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
                     }
                 } else {
                     // update empty view title and description if the the post list is empty
-                    setEmptyTitleAndDecriptionForCurrentTag();
+                    setEmptyTitleAndDescriptionForCurrentTag();
                 }
-
-                // schedule the next update in this tag
-                if (result != ReaderActions.UpdateResult.FAILED)
-                    scheduleAutoUpdate();
             }
         });
     }
 
-    protected void animateRefreshButton(boolean animate) {
+    private void animateRefreshButton(boolean animate) {
         if (mRefreshMenuItem == null || !(getActivity() instanceof WPActionBarActivity))
             return;
         if (animate) {
@@ -496,11 +476,11 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         }
     }
 
-    protected boolean isUpdating() {
+    private boolean isUpdating() {
         return mIsUpdating;
     }
 
-    protected void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
+    private void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating)
             return;
 
@@ -553,7 +533,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /**
      * automatic updating
      **/
-    private Handler mAutoUpdateHandler = new Handler();
+    /*private Handler mAutoUpdateHandler = new Handler();
     private Runnable mAutoUpdateTask = new Runnable() {
         public void run() {
             if (hasCurrentTag()) {
@@ -571,14 +551,14 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
 
     public final void unscheduleAutoUpdate() {
         mAutoUpdateHandler.removeCallbacks(mAutoUpdateTask);
-    }
+    }*/
 
     /*
      * ActionBar tag adapter is owned by the activity
      */
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (getActivity() instanceof ReaderActivity) {
-            return ((ReaderActivity)getActivity()).getActionBarAdapter();
+            return ((ReaderActivity)getActivity()).getActionBarTagAdapter();
         } else {
             return null;
         }
@@ -615,11 +595,11 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     /*
      * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
-    protected void showLoadingProgress() {
+    private void showLoadingProgress() {
         if (hasActivity() && mProgress != null)
             mProgress.setVisibility(View.VISIBLE);
     }
-    protected void hideLoadingProgress() {
+    private void hideLoadingProgress() {
         if (hasActivity() && mProgress != null)
             mProgress.setVisibility(View.GONE);
     }
@@ -640,8 +620,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     }
 
     private boolean isFullScreenSupported() {
-        if (mFullScreenListener == null)
-            return false;
-        return mFullScreenListener.isFullScreenSupported();
+        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 }
