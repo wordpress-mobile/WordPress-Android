@@ -287,6 +287,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.setVisibility(View.INVISIBLE);
 
         // detect image taps so we can open images in the photo viewer activity
         mWebView.setOnTouchListener(new View.OnTouchListener() {
@@ -346,7 +347,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.reader_native_detail, menu);
-        setupActionBar();
     }
 
     @Override
@@ -478,6 +478,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         super.onAttach(activity);
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupActionBar();
     }
 
     private void setupActionBar() {

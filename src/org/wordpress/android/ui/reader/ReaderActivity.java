@@ -19,8 +19,11 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -39,7 +43,9 @@ import org.wordpress.android.util.SysUtils;
  */
 
 public class ReaderActivity extends WPActionBarActivity
-                            implements OnPostSelectedListener, ReaderFullScreenUtils.FullScreenListener {
+                            implements OnPostSelectedListener,
+                                       ActionBar.OnNavigationListener,
+                                       ReaderFullScreenUtils.FullScreenListener {
     private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
     private static final String TAG_FRAGMENT_POST_DETAIL = "reader_post_detail";
 
@@ -72,8 +78,10 @@ public class ReaderActivity extends WPActionBarActivity
                 // disable fullscreen when moving between fragments
                 if (isFullScreen())
                     onRequestFullScreen(false);
-                boolean showIndicator = (getSupportFragmentManager().getBackStackEntryCount() == 0);
-                mMenuDrawer.setDrawerIndicatorEnabled(showIndicator);
+                FragmentManager fm = getSupportFragmentManager();
+                int entryCount = fm.getBackStackEntryCount();
+                // show menu drawer indicator if there are no more fragments on the back stack
+                mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
             }
         });
     }
@@ -186,37 +194,31 @@ public class ReaderActivity extends WPActionBarActivity
         super.onSignout();
         mHasPerformedInitialUpdate = false;
 
-        // reader database will have been cleared by the time this is called, but the fragment must
-        // be removed or else it will continue to show the same articles - onResume() will take care
-        // of re-displaying the fragment if necessary
-        removePostDetailFragment();
-        removePostListFragment();
+        // reader database will have been cleared by the time this is called, but the fragments must
+        // be removed or else they will continue to show the same articles - onResume() will take care
+        // of re-displaying the correct fragment if necessary
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     /*
      * show fragment containing list of latest posts
      */
     private void showPostListFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, ReaderPostListFragment.newInstance(this), TAG_FRAGMENT_POST_LIST)
-                .commit();
-    }
+        // restore the previously-chosen tag, revert to default if not set or doesn't exist
+        String tagName = UserPrefs.getReaderTag();
+        if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+            tagName = ReaderTag.TAG_NAME_DEFAULT;
 
-    private void removePostListFragment() {
-        ReaderPostListFragment fragment = getPostListFragment();
-        if (fragment==null)
-            return;
-
-        getSupportFragmentManager()
+        FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .remove(fragment)
-                .commit();
+                .replace(R.id.fragment_container, ReaderPostListFragment.newInstance(tagName), TAG_FRAGMENT_POST_LIST);
+        ft.commit();
     }
 
     private ReaderPostListFragment getPostListFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_POST_LIST);
-        if (fragment==null)
+        if (fragment == null)
             return null;
         return ((ReaderPostListFragment) fragment);
     }
@@ -226,23 +228,14 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showPostDetailFragment(long blogId, long postId) {
         // TODO: reuse existing detail fragment
-        getSupportFragmentManager()
+        FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.fragment_container, ReaderPostDetailFragment.newInstance(this, blogId, postId), TAG_FRAGMENT_POST_DETAIL)
-                .addToBackStack(TAG_FRAGMENT_POST_DETAIL)
-                .commit();
-    }
-
-    private void removePostDetailFragment() {
-        ReaderPostDetailFragment fragment = getPostDetailFragment();
-        if (fragment==null)
-            return;
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .remove(fragment)
-                .commit();
+                .replace(R.id.fragment_container, ReaderPostDetailFragment.newInstance(this, blogId, postId), TAG_FRAGMENT_POST_DETAIL)
+                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // add detail to the back stack if list fragment exists
+        if (getPostListFragment() != null)
+            ft.addToBackStack(TAG_FRAGMENT_POST_DETAIL);
+        ft.commit();
     }
 
     private ReaderPostDetailFragment getPostDetailFragment() {
@@ -352,4 +345,60 @@ public class ReaderActivity extends WPActionBarActivity
             }
         }
     };
+
+    /*
+     * ActionBar tag dropdown adapter
+     */
+    private ReaderActionBarTagAdapter mActionBarAdapter;
+    protected ReaderActionBarTagAdapter getActionBarAdapter() {
+        if (mActionBarAdapter == null) {
+            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    selectTagInActionBar(UserPrefs.getReaderTag());
+                }
+            };
+
+            mActionBarAdapter = new ReaderActionBarTagAdapter(this, isStaticMenuDrawer(), dataListener);
+        }
+
+        return mActionBarAdapter;
+    }
+
+    /*
+     * make sure the passed tag is the one selected in the actionbar
+     */
+    protected void selectTagInActionBar(String tagName) {
+        if (TextUtils.isEmpty(tagName))
+            return;
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null)
+            return;
+
+        int position = getActionBarAdapter().getIndexOfTagName(tagName);
+        if (position == -1 || position == actionBar.getSelectedNavigationIndex())
+            return;
+
+        actionBar.setSelectedNavigationItem(position);
+    }
+
+    /*
+     * called from post list when user selects a tag from the ActionBar dropdown
+     */
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
+        if (tag == null)
+            return false;
+
+        ReaderPostListFragment listFragment = getPostListFragment();
+        if (listFragment == null)
+            return false;
+
+        listFragment.setCurrentTag(tag.getTagName());
+        AppLog.d(T.READER, "tag chosen from actionbar: " + tag.getTagName());
+
+        return true;
+    }
 }
