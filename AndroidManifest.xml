@@ -164,10 +164,6 @@
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".ui.reader.ReaderPostDetailActivity"
-            android:theme="@style/WordPress.Theme.NoBackground"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity

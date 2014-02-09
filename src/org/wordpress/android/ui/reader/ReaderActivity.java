@@ -200,9 +200,9 @@ public class ReaderActivity extends WPActionBarActivity
             // only be RESULT_OK if changed)
             case Constants.INTENT_READER_POST_DETAIL:
                 if (isResultOK && listFragment != null && data!=null) {
-                    long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
-                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailActivity.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
+                    long blogId = data.getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
+                    long postId = data.getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
+                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailFragment.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
                     ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
                     if (updatedPost != null) {
                         listFragment.reloadPost(updatedPost);
@@ -271,7 +271,7 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing detail for passed post
      */
     private void showPostDetailFragment(long blogId, long postId) {
-        Fragment fragment = ReaderPostDetailFragment.newInstance(this, blogId, postId);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         String tagForFragment = ReaderFragmentType.POST_DETAIL.toString();
 
         FragmentTransaction ft = getSupportFragmentManager()

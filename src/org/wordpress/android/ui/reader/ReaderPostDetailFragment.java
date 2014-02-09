@@ -246,7 +246,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.reader_activity_post_detail, container, false);
+        final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         // locate & init listView, hide it until post is loaded
         mListView = (ListView) view.findViewById(android.R.id.list);
