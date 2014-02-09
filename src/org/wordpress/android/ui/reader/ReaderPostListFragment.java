@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
@@ -142,7 +141,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     @Override
     public void onResume() {
         super.onResume();
-        setupActionBar();
         scheduleAutoUpdate();
     }
 
@@ -151,6 +149,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         super.onPause();
         unscheduleAutoUpdate();
         hideLoadingProgress();
+        animateRefreshButton(false);
     }
 
     @Override
@@ -224,7 +223,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
                 ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                 if (post != null && mPostSelectedListener != null)
                     mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-                //ReaderActivityLauncher.showReaderPostDetailForResult(getActivity(), post);
             }
         });
 
@@ -488,27 +486,29 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         });
     }
 
+    protected void animateRefreshButton(boolean animate) {
+        if (mRefreshMenuItem == null || !(getActivity() instanceof WPActionBarActivity))
+            return;
+        if (animate) {
+            ((WPActionBarActivity)getActivity()).startAnimatingRefreshButton(mRefreshMenuItem);
+        } else {
+            ((WPActionBarActivity)getActivity()).stopAnimatingRefreshButton(mRefreshMenuItem);
+        }
+    }
+
     protected boolean isUpdating() {
         return mIsUpdating;
     }
 
     protected void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
-        if (mIsUpdating == isUpdating)
-            return;
-        if (!hasActivity())
+        if (!hasActivity() || mIsUpdating == isUpdating)
             return;
 
         mIsUpdating = isUpdating;
 
         switch (updateAction) {
             case LOAD_NEWER:
-                if (mRefreshMenuItem != null && getActivity() instanceof WPActionBarActivity) {
-                    if (isUpdating) {
-                        ((WPActionBarActivity)getActivity()).startAnimatingRefreshButton(mRefreshMenuItem);
-                    } else {
-                        ((WPActionBarActivity)getActivity()).stopAnimatingRefreshButton(mRefreshMenuItem);
-                    }
-                }
+                animateRefreshButton(isUpdating);
                 break;
 
             case LOAD_OLDER:
@@ -573,26 +573,9 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         mAutoUpdateHandler.removeCallbacks(mAutoUpdateTask);
     }
 
-    private ActionBar getActionBar() {
-        if (hasActivity() && (getActivity() instanceof SherlockFragmentActivity)) {
-            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
-        } else {
-            return null;
-        }
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            AppLog.w(T.READER, "null actionbar in reader post list");
-            return;
-        }
-
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(getActionBarAdapter(), mOnNavigationListener);
-    }
-
+    /*
+     * ActionBar tag adapter is owned by the activity
+     */
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (getActivity() instanceof ReaderActivity) {
             return ((ReaderActivity)getActivity()).getActionBarAdapter();

@@ -134,7 +134,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
             if (result) {
                 mTags = (ReaderTagList) tmpTags.clone();
                 notifyDataSetChanged();
-                if (mDataListener!=null)
+                if (mDataListener != null)
                     mDataListener.onDataLoaded(mTags.isEmpty());
             }
             mIsTaskRunning = false;

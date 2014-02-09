@@ -46,9 +46,10 @@ public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
                                        ActionBar.OnNavigationListener,
                                        ReaderFullScreenUtils.FullScreenListener {
-    private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
-    private static final String TAG_FRAGMENT_POST_DETAIL = "reader_post_detail";
 
+    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
+
+    public static final String ARG_READER_FRAGMENT = "reader_fragment";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
 
@@ -78,20 +79,53 @@ public class ReaderActivity extends WPActionBarActivity
                 // disable fullscreen when moving between fragments
                 if (isFullScreen())
                     onRequestFullScreen(false);
-                FragmentManager fm = getSupportFragmentManager();
-                int entryCount = fm.getBackStackEntryCount();
+
                 // show menu drawer indicator if there are no more fragments on the back stack
-                mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
+                int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+                mMenuDrawer.setDrawerIndicatorEnabled(entryCount <= 1);
+
+                // configure the ActionBar for the newly active fragment
+                if (entryCount > 0) {
+                    Fragment fragment = getSupportFragmentManager().getFragments().get(entryCount - 1);
+                    setupActionBarForFragment(fragment);
+                }
+
             }
         });
+
+        getSupportActionBar().setListNavigationCallbacks(getActionBarAdapter(), this);
+
+        // determine which fragment to show, default to post list
+        if (savedInstanceState == null) {
+            final ReaderFragmentType fragmentType;
+            if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
+                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
+            } else {
+                fragmentType = ReaderFragmentType.POST_LIST;
+            }
+            switch (fragmentType) {
+                case POST_LIST:
+                    showPostListFragment();
+                    break;
+                case POST_DETAIL:
+                    long blogId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
+                    long postId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
+                    showPostDetailFragment(blogId, postId);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        setupActionBarForFragment(fragment);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_REFRESH_POSTS));
-        if (getPostListFragment() == null)
-            showPostListFragment();
     }
 
     @Override
@@ -122,15 +156,23 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                return true;
-            }
-        }
+    public void onBackPressed() {
+        super.onBackPressed();
+        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (entryCount == 0)
+            finish();
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (!mMenuDrawer.isDrawerIndicatorEnabled()) {
+                    onBackPressed();
+                    return true;
+                }
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -202,7 +244,7 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     /*
-     * show fragment containing list of latest posts
+     * show fragment containing list of latest posts for a specific tag
      */
     private void showPostListFragment() {
         // restore the previously-chosen tag, revert to default if not set or doesn't exist
@@ -210,14 +252,18 @@ public class ReaderActivity extends WPActionBarActivity
         if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
             tagName = ReaderTag.TAG_NAME_DEFAULT;
 
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName);
+        String tagForFragment = ReaderFragmentType.POST_LIST.toString();
+
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ReaderPostListFragment.newInstance(tagName), TAG_FRAGMENT_POST_LIST);
+                .replace(R.id.fragment_container, fragment, tagForFragment)
+                .addToBackStack(tagForFragment);
         ft.commit();
     }
 
     private ReaderPostListFragment getPostListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_POST_LIST);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReaderFragmentType.POST_LIST.toString());
         if (fragment == null)
             return null;
         return ((ReaderPostListFragment) fragment);
@@ -227,19 +273,20 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing detail for passed post
      */
     private void showPostDetailFragment(long blogId, long postId) {
-        // TODO: reuse existing detail fragment
+        Fragment fragment = ReaderPostDetailFragment.newInstance(this, blogId, postId);
+        String tagForFragment = ReaderFragmentType.POST_DETAIL.toString();
+
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ReaderPostDetailFragment.newInstance(this, blogId, postId), TAG_FRAGMENT_POST_DETAIL)
+                .replace(R.id.fragment_container, fragment, tagForFragment)
+                .addToBackStack(tagForFragment)
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        // add detail to the back stack if list fragment exists
-        if (getPostListFragment() != null)
-            ft.addToBackStack(TAG_FRAGMENT_POST_DETAIL);
+
         ft.commit();
     }
 
     private ReaderPostDetailFragment getPostDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_POST_DETAIL);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReaderFragmentType.POST_DETAIL.toString());
         if (fragment==null)
             return null;
         return ((ReaderPostDetailFragment) fragment);
@@ -346,8 +393,31 @@ public class ReaderActivity extends WPActionBarActivity
         }
     };
 
+    private void setupActionBarForFragment(Fragment fragment) {
+        if (fragment == null)
+            return;
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            AppLog.w(T.READER, "null actionbar in reader");
+            return;
+        }
+
+        if (fragment instanceof ReaderPostListFragment) {
+            if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+                actionBar.setDisplayShowTitleEnabled(false);
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            }
+        } else if (fragment instanceof ReaderPostDetailFragment) {
+            if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            }
+        }
+    }
+
     /*
-     * ActionBar tag dropdown adapter
+     * ActionBar tag dropdown adapter used by reader post list
      */
     private ReaderActionBarTagAdapter mActionBarAdapter;
     protected ReaderActionBarTagAdapter getActionBarAdapter() {
@@ -368,13 +438,18 @@ public class ReaderActivity extends WPActionBarActivity
     /*
      * make sure the passed tag is the one selected in the actionbar
      */
-    protected void selectTagInActionBar(String tagName) {
+    private void selectTagInActionBar(final String tagName) {
         if (TextUtils.isEmpty(tagName))
             return;
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
+
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            AppLog.w(T.READER, "unexpected navigation mode");
+            return;
+        }
 
         int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex())

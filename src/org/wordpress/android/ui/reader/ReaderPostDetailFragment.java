@@ -28,9 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -368,14 +366,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return (getActivity() != null && !isRemoving());
     }
 
-    private ActionBar getActionBar() {
-        if (hasActivity() && (getActivity() instanceof SherlockFragmentActivity)) {
-            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
-        } else {
-            return null;
-        }
-    }
-
     /*
      * full-screen mode hides the ActionBar and icon bar
      */
@@ -476,6 +466,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        // clear title until post is loaded
+        activity.setTitle(null);
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
     }
@@ -483,17 +475,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setupActionBar();
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            AppLog.w(T.READER, "null actionbar in reader post detail");
-            return;
-        }
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
     }
 
     // TODO: post list needs to know when the post has been changed
