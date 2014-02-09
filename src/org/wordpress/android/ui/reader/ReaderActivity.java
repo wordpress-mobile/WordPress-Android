@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -53,8 +52,8 @@ public class ReaderActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_HAS_PURGED = "has_purged";
 
-    private boolean mHasPerformedInitialUpdate = false;
-    private boolean mHasPerformedPurge = false;
+    private static boolean mHasPerformedInitialUpdate = false;
+    private static boolean mHasPerformedPurge = false;
     private boolean mIsFullScreen = false;
 
     @Override
@@ -68,26 +67,6 @@ public class ReaderActivity extends WPActionBarActivity
         setContentView(R.layout.reader_activity_main);
         createMenuDrawer(R.layout.reader_activity_main);
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                // disable fullscreen when moving between fragments
-                if (isFullScreen())
-                    onRequestFullScreen(false);
-
-                // show menu drawer indicator if there are no more fragments on the back stack
-                int entryCount = getSupportFragmentManager().getBackStackEntryCount();
-                mMenuDrawer.setDrawerIndicatorEnabled(entryCount <= 1);
-
-                // configure the ActionBar for the newly active fragment
-                if (entryCount > 0) {
-                    Fragment fragment = getSupportFragmentManager().getFragments().get(entryCount - 1);
-                    setupActionBarForFragment(fragment);
-                }
-
-            }
-        });
-
         getSupportActionBar().setListNavigationCallbacks(getActionBarTagAdapter(), this);
 
         if (savedInstanceState == null) {
@@ -100,7 +79,12 @@ public class ReaderActivity extends WPActionBarActivity
             }
             switch (fragmentType) {
                 case POST_LIST:
-                    showPostListFragment();
+                    String tagName = getIntent().getStringExtra(ReaderPostListFragment.KEY_TAG_NAME);
+                    if (TextUtils.isEmpty(tagName))
+                        tagName = UserPrefs.getReaderTag();
+                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+                        tagName = ReaderTag.TAG_NAME_DEFAULT;
+                    showPostListFragment(tagName);
                     break;
                 case POST_DETAIL:
                     long blogId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
@@ -119,6 +103,7 @@ public class ReaderActivity extends WPActionBarActivity
         super.onAttachFragment(fragment);
         setupActionBarForFragment(fragment);
     }
+
 
     @Override
     public void onResume() {
@@ -155,10 +140,14 @@ public class ReaderActivity extends WPActionBarActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if (entryCount == 0)
-            finish();
+        Fragment listFragment = getPostListFragment();
+        Fragment detailFragment = getPostDetailFragment();
+        if (listFragment != null && detailFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+            setupActionBarForFragmentType(ReaderFragmentType.POST_LIST);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -237,26 +226,37 @@ public class ReaderActivity extends WPActionBarActivity
         // reader database will have been cleared by the time this is called, but the fragments must
         // be removed or else they will continue to show the same articles - onResume() will take care
         // of re-displaying the correct fragment if necessary
-        FragmentManager fm = getSupportFragmentManager();
-        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        removeFragments();
+    }
+
+    /*
+     * remove both the list & detail fragments
+     */
+    private void removeFragments() {
+        Fragment listFragment = getPostListFragment();
+        Fragment detailFragment = getPostDetailFragment();
+        if (listFragment == null && detailFragment == null)
+            return;
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (listFragment != null)
+            ft.remove(listFragment);
+        if (detailFragment != null)
+            ft.remove(detailFragment);
+        ft.commit();
     }
 
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showPostListFragment() {
-        // restore the previously-chosen tag, revert to default if not set or doesn't exist
-        String tagName = UserPrefs.getReaderTag();
-        if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
-            tagName = ReaderTag.TAG_NAME_DEFAULT;
-
-        Fragment fragment = ReaderPostListFragment.newInstance(tagName);
+    private void showPostListFragment(final String tagName) {
         String tagForFragment = ReaderFragmentType.POST_LIST.toString();
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName);
 
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment, tagForFragment)
-                .addToBackStack(tagForFragment);
+                .add(R.id.fragment_container, fragment, tagForFragment);
+
         ft.commit();
     }
 
@@ -271,13 +271,12 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing detail for passed post
      */
     private void showPostDetailFragment(long blogId, long postId) {
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         String tagForFragment = ReaderFragmentType.POST_DETAIL.toString();
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
 
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment, tagForFragment)
-                .addToBackStack(tagForFragment)
+                .add(R.id.fragment_container, fragment, tagForFragment)
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         ft.commit();
@@ -285,7 +284,7 @@ public class ReaderActivity extends WPActionBarActivity
 
     private ReaderPostDetailFragment getPostDetailFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReaderFragmentType.POST_DETAIL.toString());
-        if (fragment==null)
+        if (fragment == null)
             return null;
         return ((ReaderPostDetailFragment) fragment);
     }
@@ -297,8 +296,13 @@ public class ReaderActivity extends WPActionBarActivity
         if (!NetworkUtils.isNetworkAvailable(this))
             return;
 
-        // TODO: animate refresh button in post list fragment if tags are being updated for the first time
         mHasPerformedInitialUpdate = true;
+
+        // animate refresh button in post list if tags are being updated for the first time
+        ReaderPostListFragment listFragment = getPostListFragment();
+        final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
+        if (animateRefresh && listFragment != null)
+            listFragment.animateRefreshButton(true);
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -306,11 +310,12 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                // make sure post list reflects any tag changes
-                if (result == UpdateResult.CHANGED) {
-                    ReaderPostListFragment fragment = getPostListFragment();
-                    if (fragment != null)
-                        fragment.refreshTags();
+                ReaderPostListFragment listFragment = getPostListFragment();
+                if (listFragment != null) {
+                    if (animateRefresh)
+                        listFragment.animateRefreshButton(false);
+                    if (result == UpdateResult.CHANGED)
+                        listFragment.refreshTags();
                 }
 
                 // now that tags have been retrieved, perform the other requests - first update
@@ -384,9 +389,9 @@ public class ReaderActivity extends WPActionBarActivity
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
                 AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
-                ReaderPostListFragment fragment = getPostListFragment();
-                if (fragment != null)
-                    fragment.refreshPosts();
+                ReaderPostListFragment listFragment = getPostListFragment();
+                if (listFragment != null)
+                    listFragment.refreshPosts();
             }
         }
     };
@@ -402,16 +407,13 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     /*
-     * configure ActionBar for the passed fragment - post list uses the action bar adapter,
-     * post detail uses no adapter
+     * configure ActionBar for the passed fragment
      */
-    private ReaderFragmentType mPrevFragmentType = ReaderFragmentType.UNKNOWN;
     private void setupActionBarForFragment(Fragment fragment) {
-        if (fragment == null)
-            return;
-
-        final ReaderFragmentType fragmentType = getFragmentType(fragment);
-        if (fragmentType.equals(mPrevFragmentType))
+        setupActionBarForFragmentType(getFragmentType(fragment));
+    }
+    private void setupActionBarForFragmentType(final ReaderFragmentType fragmentType) {
+        if (fragmentType == null || fragmentType == ReaderFragmentType.UNKNOWN)
             return;
 
         ActionBar actionBar = getSupportActionBar();
@@ -419,8 +421,6 @@ public class ReaderActivity extends WPActionBarActivity
             AppLog.w(T.READER, "null actionbar in reader");
             return;
         }
-
-        mPrevFragmentType = fragmentType;
 
         switch (fragmentType) {
             case POST_LIST:
@@ -431,6 +431,10 @@ public class ReaderActivity extends WPActionBarActivity
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                 break;
+        }
+
+        if (mMenuDrawer != null) {
+            mMenuDrawer.setDrawerIndicatorEnabled(fragmentType == ReaderFragmentType.POST_LIST);
         }
     }
 

@@ -84,7 +84,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
-    private boolean mHasAlreadyUpdatedPost = false;
+    private static boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
     private boolean mIsBlogFollowStatusChanged = false;
@@ -100,7 +100,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private static final int MOVE_MIN_DIFF = 8;
-    private static final long WEBVIEW_DELAY_MS = 1000L;
+    private static final long WEBVIEW_DELAY_MS = 500L;
 
     private ListView getListView() {
         return mListView;
@@ -219,9 +219,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return (mAdapter==null || mAdapter.isEmpty());
     }
 
-
-
-
     protected static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         AppLog.d(T.READER, "post detail fragment newInstance");
 
@@ -242,6 +239,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mBlogId = args.getLong(ARG_BLOG_ID);
             mPostId = args.getLong(ARG_POST_ID);
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -321,13 +324,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (!hasPost() || !hasActivity())
             return;
         showPost();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!hasPost() && !mIsPostTaskRunning)
-            showPost();
     }
 
     @Override
@@ -447,6 +443,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
             mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
         }
+
+        showPost();
     }
 
     @Override
@@ -657,6 +655,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * returns the top-level parent view for the post detail views
      */
     private ViewGroup getContainerView() {
+        if (!hasActivity()) {
+            AppLog.w(T.READER, "container view is null");
+            return null;
+        }
         return (ViewGroup) getActivity().findViewById(R.id.layout_post_detail_container);
     }
 
@@ -1268,7 +1270,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
             // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-            if (mPost==null)
+            if (mPost == null)
                 return false;
 
             postHtml = getPostHtml(mPost);
@@ -1397,33 +1399,17 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
             // webView is invisible at design time, don't show it until the page finishes loading so it
             // has time to layout the post before it appears...
-            mWebView.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    if (mWebView.getVisibility()!=View.VISIBLE)
-                        mWebView.setVisibility(View.VISIBLE);
-                }
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    // open clicked urls in default browser or else urls will open in this webView,
-                    // but only do this when webView has loaded (is visible) - have seen some posts
-                    // containing iframes automatically try to open urls (without being clicked)
-                    // before the page has loaded
-                    if (view.getVisibility() == View.VISIBLE) {
-                        ReaderActivityLauncher.openUrl(getActivity(), url);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
+            mWebView.setWebViewClient(readerWebViewClient);
 
             //...but force it to appear after a short delay to ensure user never has to be faced
             // with a blank post for too long (very important on slow connections)
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (mWebView.getVisibility()!=View.VISIBLE) {
+                    // make sure the adapter is assigned now that we've retrieved the post and updated views
+                    if (getListView().getAdapter() == null)
+                        getListView().setAdapter(getCommentAdapter());
+                    if (mWebView.getVisibility() != View.VISIBLE) {
                         mWebView.setVisibility(View.VISIBLE);
                         AppLog.w(T.READER, "forced webView to appear before page finished");
                     }
@@ -1436,10 +1422,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-
-            // make sure the adapter is assigned now that we've retrieved the post and updated views
-            if (!hasCommentAdapter())
-                getListView().setAdapter(getCommentAdapter());
 
             refreshLikes(false);
             refreshComments();
@@ -1454,4 +1436,27 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             getListView().setVisibility(View.VISIBLE);
         }
     }
+
+    private static final WebViewClient readerWebViewClient = new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            // webView is invisible at design time, don't show it until the page finishes loading so it
+            // has time to layout the post before it appears...
+            if (view.getVisibility() != View.VISIBLE)
+                view.setVisibility(View.VISIBLE);
+        }
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // open clicked urls in default browser or else urls will open in this webView,
+            // but only do this when webView has loaded (is visible) - have seen some posts
+            // containing iframes automatically try to open urls (without being clicked)
+            // before the page has loaded
+            if (view.getVisibility() == View.VISIBLE) {
+                ReaderActivityLauncher.openUrl(view.getContext(), url);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 }

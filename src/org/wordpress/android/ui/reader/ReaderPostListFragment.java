@@ -67,7 +67,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
 
-    private static final String KEY_TAG_NAME = "tag_name";
+    protected static final String KEY_TAG_NAME = "tag_name";
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
@@ -76,7 +76,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     protected static ReaderPostListFragment newInstance(final String tagName) {
         AppLog.d(T.READER, "post list newInstance");
         Bundle args = new Bundle();
-        args.putString(KEY_TAG_NAME, tagName);
+        args.putString(KEY_TAG_NAME, StringUtils.notNullStr(tagName));
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -95,11 +95,17 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
@@ -349,8 +355,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     }
 
     private String getCurrentTagName() {
-        if (!hasCurrentTag())
-            return "";
         return StringUtils.notNullStr(mCurrentTag);
     }
 
@@ -361,7 +365,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     protected void setCurrentTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
             return;
-        if (isCurrentTagName(tagName))
+        if (isCurrentTagName(tagName) && !isPostAdapterEmpty())
             return;
 
         mCurrentTag = tagName;
@@ -466,7 +470,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         });
     }
 
-    private void animateRefreshButton(boolean animate) {
+    protected void animateRefreshButton(boolean animate) {
         if (mRefreshMenuItem == null || !(getActivity() instanceof WPActionBarActivity))
             return;
         if (animate) {
