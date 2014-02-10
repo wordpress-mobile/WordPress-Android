@@ -379,10 +379,6 @@ public class Blog {
         return true;
     }
 
-    public boolean isActive() {
-        return !TextUtils.isEmpty(password);
-    }
-
     public boolean isAdmin() {
         return isAdmin;
     }
