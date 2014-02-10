@@ -62,6 +62,8 @@ public class ReaderActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_main);
 
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
         if (savedInstanceState == null) {
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
@@ -148,9 +150,12 @@ public class ReaderActivity extends WPActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * show the drawer indicator if there isn't a detail fragment
+     */
     private void checkMenuDrawer() {
         if (mMenuDrawer == null) {
-            AppLog.w(T.READER, "null menu drawer");
+            AppLog.w(T.READER, "reader activity > null menu drawer");
             return;
         }
         mMenuDrawer.setDrawerIndicatorEnabled(!hasDetailFragment());
@@ -319,15 +324,15 @@ public class ReaderActivity extends WPActionBarActivity
                 // now that tags have been retrieved, perform the other requests - first update
                 // the current user to ensure we have their user_id as well as their latest info
                 // in case they changed their avatar, name, etc. since last time
-                AppLog.i(T.READER, "updating current user");
+                AppLog.i(T.READER, "reader activity > updating current user");
                 ReaderUserActions.updateCurrentUser(null);
 
                 // update followed blogs
-                AppLog.i(T.READER, "updating followed blogs");
+                AppLog.i(T.READER, "reader activity > updating followed blogs");
                 ReaderBlogActions.updateFollowedBlogs();
 
                 // update cookies so that we can show authenticated images in WebViews
-                AppLog.i(T.READER, "updating cookies");
+                AppLog.i(T.READER, "reader activity > updating cookies");
                 ReaderAuthActions.updateCookies(ReaderActivity.this);
             }
         };
@@ -386,7 +391,7 @@ public class ReaderActivity extends WPActionBarActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
+                AppLog.i(T.READER, "reader activity > received ACTION_REFRESH_POSTS");
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null)
                     listFragment.refreshPosts();

@@ -82,7 +82,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshComments() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "Load comments task already running");
+            AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -59,7 +59,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshTags() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "Load tags task already running");
+            AppLog.w(T.READER, "reader tag adapter > Load tags task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

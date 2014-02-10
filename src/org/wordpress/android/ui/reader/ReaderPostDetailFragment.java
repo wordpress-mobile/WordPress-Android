@@ -167,7 +167,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter == null) {
             if (mPost == null)
-                AppLog.w(T.READER, "comment adapter created before post loaded");
+                AppLog.w(T.READER, "reader post detail > comment adapter created before post loaded");
 
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -204,7 +204,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 public void onRequestData(ReaderActions.RequestDataAction action) {
                     if (mIsUpdatingComments)
                         return;
-                    AppLog.i(T.READER, "requesting newer comments");
+                    AppLog.i(T.READER, "reader post detail > requesting newer comments");
                     updateComments();
                 }
             };
@@ -218,7 +218,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     protected static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        AppLog.d(T.READER, "post detail fragment newInstance");
+        AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ARG_BLOG_ID, blogId);
@@ -649,7 +649,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      */
     private ViewGroup getContainerView() {
         if (!hasActivity()) {
-            AppLog.w(T.READER, "container view is null");
+            AppLog.w(T.READER, "reader post detail > container view is null");
             return null;
         }
         return (ViewGroup) getActivity().findViewById(R.id.layout_post_detail_container);
@@ -1211,7 +1211,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @SuppressLint("NewApi")
     private void showPost() {
         if (mIsPostTaskRunning)
-            AppLog.w(T.READER, "post task already running");
+            AppLog.w(T.READER, "reader post detail > show post task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1404,7 +1404,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                         getListView().setAdapter(getCommentAdapter());
                     if (mWebView.getVisibility() != View.VISIBLE) {
                         mWebView.setVisibility(View.VISIBLE);
-                        AppLog.w(T.READER, "forced webView to appear before page finished");
+                        AppLog.w(T.READER, "reader post detail > forced webView to appear before page finished");
                     }
                 }
             }, WEBVIEW_DELAY_MS);
@@ -1457,16 +1457,15 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (getActivity() instanceof SherlockFragmentActivity) {
             return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
         } else {
+            AppLog.w(T.READER, "reader post detail > null ActionBar");
             return null;
         }
     }
 
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            AppLog.w(T.READER, "null actionbar in reader detail");
+        if (actionBar == null)
             return;
-        }
 
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);

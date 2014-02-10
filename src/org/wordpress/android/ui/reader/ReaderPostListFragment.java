@@ -62,6 +62,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private OnPostSelectedListener mPostSelectedListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
+    private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
@@ -78,9 +79,11 @@ public class ReaderPostListFragment extends SherlockFragment
     protected static enum RefreshType {AUTOMATIC, MANUAL}
 
     protected static ReaderPostListFragment newInstance(final String tagName) {
-        AppLog.d(T.READER, "post list newInstance");
+        AppLog.d(T.READER, "reader post list > newInstance");
+
         Bundle args = new Bundle();
-        args.putString(KEY_TAG_NAME, StringUtils.notNullStr(tagName));
+        if (!TextUtils.isEmpty(tagName))
+            args.putString(KEY_TAG_NAME, tagName);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -93,21 +96,33 @@ public class ReaderPostListFragment extends SherlockFragment
         super.setArguments(args);
 
         // note that setCurrentTag() should NOT be called here since it's automatically
-        // called from the actionbar navigation handler in ReaderActivity
+        // called from the actionbar navigation handler
         if (args != null && args.containsKey(KEY_TAG_NAME))
             mCurrentTag = args.getString(KEY_TAG_NAME);
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setHasOptionsMenu(true);
         setupActionBar();
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+            actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
 
         if (savedInstanceState != null) {
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
+
+        selectTagInActionBar(getCurrentTagName());
     }
 
     @Override
@@ -124,17 +139,15 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (hasCurrentTag())
             outState.putString(KEY_TAG_NAME, mCurrentTag);
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
-        if (hasActivity()) {
-            final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
-            if (listView.getFirstVisiblePosition() > 0)
-                outState.putParcelable(LIST_STATE, listView.onSaveInstanceState());
-        }
+        if (mListView != null && mListView.getFirstVisiblePosition() > 0)
+            outState.putParcelable(LIST_STATE, mListView.onSaveInstanceState());
     }
 
     @Override
@@ -142,6 +155,11 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onPause();
         hideLoadingProgress();
         animateRefreshButton(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -173,7 +191,7 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-        final ListView listView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (ListView) view.findViewById(android.R.id.list);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -190,7 +208,7 @@ public class ReaderPostListFragment extends SherlockFragment
         // the ActionBar when fullscreen mode is supported
         if (isFullScreenSupported()) {
             Context context = container.getContext();
-            ReaderFullScreenUtils.addListViewHeader(context, listView);
+            ReaderFullScreenUtils.addListViewHeader(context, mListView);
             final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
             params.topMargin = actionbarHeight;
@@ -204,26 +222,29 @@ public class ReaderPostListFragment extends SherlockFragment
         mProgress.setVisibility(View.GONE);
 
         // set the listView's scroll listeners so we can detect up/down scrolling
-        listView.setOnScrollListener(this);
+        mListView.setOnScrollListener(this);
 
         // tapping a post opens the detail view
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // take header into account
-                position -= listView.getHeaderViewsCount();
+                position -= mListView.getHeaderViewsCount();
                 ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                 if (post != null && mPostSelectedListener != null)
                     mPostSelectedListener.onPostSelected(post.blogId, post.postId);
             }
         });
 
-        listView.setAdapter(getPostAdapter());
+        mListView.setAdapter(getPostAdapter());
 
         return view;
     }
 
     private void startBoxAndPagesAnimation() {
+        if (!hasActivity())
+            return;
+
         Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.box_with_pages_slide_up_page1);
         ImageView page1 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page1);
@@ -241,18 +262,20 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!isPostAdapterEmpty()) {
-            return ;
-        }
+        if (!isPostAdapterEmpty())
+            return;
+        if (!hasActivity())
+            return;
+
         int title, description = -1;
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
         } else {
-            int tagIndex = getActionBarTagAdapter().getIndexOfTagName(mCurrentTag);
+            int tagIndex = getActionBarAdapter().getIndexOfTagName(mCurrentTag);
 
             final String tagId;
             if (tagIndex > -1) {
-                ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(tagIndex);
+                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
                 tagId = tag.getStringIdFromEndpoint();
             } else {
                 tagId = "";
@@ -294,9 +317,8 @@ public class ReaderPostListFragment extends SherlockFragment
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 // restore listView state - this returns to the previously scrolled-to item
-                if (mListState != null) {
-                    final ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
-                    listView.onRestoreInstanceState(mListState);
+                if (mListState != null && mListView != null) {
+                    mListView.onRestoreInstanceState(mListState);
                     mListState = null;
                 }
             }
@@ -423,7 +445,7 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.i(T.READER, "network unavailable, canceled tag update");
+            AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
         }
 
@@ -441,7 +463,7 @@ public class ReaderPostListFragment extends SherlockFragment
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
-                    AppLog.w(T.READER, "volley response when fragment has no activity");
+                    AppLog.w(T.READER, "reader post list > volley response when fragment has no activity");
                     // this fragment is no longer valid, so send a broadcast that tells the host
                     // ReaderActivity that it needs to refresh the list of posts - this
                     // situation occurs when the user rotates the device while the update is
@@ -540,7 +562,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private Runnable mAutoUpdateTask = new Runnable() {
         public void run() {
             if (hasCurrentTag()) {
-                AppLog.d(T.READER, "performing automatic update");
+                AppLog.d(T.READER, "reader post list > performing automatic update");
                 updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, ReaderPostListFragment.RefreshType.AUTOMATIC);
             }
         }
@@ -571,7 +593,7 @@ public class ReaderPostListFragment extends SherlockFragment
         if (!hasActivity())
             return;
         checkCurrentTag();
-        getActionBarTagAdapter().refreshTags();
+        getActionBarAdapter().refreshTags();
     }
 
     /*
@@ -581,7 +603,7 @@ public class ReaderPostListFragment extends SherlockFragment
         if (!hasActivity())
             return;
         checkCurrentTag();
-        getActionBarTagAdapter().reloadTags();
+        getActionBarAdapter().reloadTags();
     }
 
     /*
@@ -618,13 +640,14 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * ActionBar tag dropdown adapter
      */
-    private static ReaderActionBarTagAdapter mActionBarTagAdapter;
-    private ReaderActionBarTagAdapter getActionBarTagAdapter() {
-        if (mActionBarTagAdapter == null) {
+    private ReaderActionBarTagAdapter mActionBarAdapter;
+    private ReaderActionBarTagAdapter getActionBarAdapter() {
+        if (mActionBarAdapter == null) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    selectTagInActionBar(UserPrefs.getReaderTag());
+                    AppLog.d(T.READER, "reader post list > ActionBar adapter loaded");
+                    selectTagInActionBar(getCurrentTagName());
                 }
             };
 
@@ -634,16 +657,17 @@ public class ReaderPostListFragment extends SherlockFragment
             } else {
                 isStaticMenuDrawer = false;
             }
-            mActionBarTagAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
+            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
         }
 
-        return mActionBarTagAdapter;
+        return mActionBarAdapter;
     }
 
     private ActionBar getActionBar() {
         if (getActivity() instanceof SherlockFragmentActivity) {
             return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
         } else {
+            AppLog.w(T.READER, "reader post list > null ActionBar");
             return null;
         }
     }
@@ -660,11 +684,11 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
 
         if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "unexpected ActionBar navigation mode");
+            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
             return;
         }
 
-        int position = getActionBarTagAdapter().getIndexOfTagName(tagName);
+        int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex())
             return;
 
@@ -676,25 +700,22 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(itemPosition);
+        final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
         if (tag == null)
             return false;
 
         setCurrentTag(tag.getTagName());
-        AppLog.d(T.READER, "tag chosen from actionbar: " + tag.getTagName());
+        AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
         return true;
     }
 
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            AppLog.w(T.READER, "null actionbar in reader list");
+        if (actionBar == null)
             return;
-        }
 
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(getActionBarTagAdapter(), this);
     }
 }
