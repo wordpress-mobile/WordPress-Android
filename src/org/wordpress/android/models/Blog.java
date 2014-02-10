@@ -380,7 +380,7 @@ public class Blog {
     }
 
     public boolean isActive() {
-        return !password.equals("");
+        return !TextUtils.isEmpty(password);
     }
 
     public boolean isAdmin() {
@@ -429,7 +429,7 @@ public class Blog {
             Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
             StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
             String blogPublicOptionValue = blogPublicOption.get("value").toString();
-            if (blogPublicOptionValue.equals("-1")) {
+            if ("-1".equals(blogPublicOptionValue)) {
                 return true;
             }
         } catch (Exception e) {
