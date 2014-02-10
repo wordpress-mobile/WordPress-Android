@@ -102,7 +102,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private static final int MOVE_MIN_DIFF = 8;
-    private static final long WEBVIEW_DELAY_MS = 500L;
 
     private ListView getListView() {
         return mListView;
@@ -275,7 +274,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
-        mWebView.setVisibility(View.INVISIBLE);
 
         // detect image taps so we can open images in the photo viewer activity
         mWebView.setOnTouchListener(new View.OnTouchListener() {
@@ -738,22 +736,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-                            // if the webView hasn't been made visible yet (ie: it hasn't loaded),
-                            // delay the appearance of the likes view (otherwise it may appear before
-                            // the webView content appears, causing it to be pushed down once the
-                            // content loads)
-                            if (mWebView.getVisibility() == View.VISIBLE) {
-                                mLayoutLikes.setVisibility(View.VISIBLE);
-                            } else {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mLayoutLikes.setVisibility(View.VISIBLE);
-                                    }
-                                }, WEBVIEW_DELAY_MS);
-                            }
-                        }
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE)
+                            mLayoutLikes.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -1390,32 +1374,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 imgAvatar.setOnClickListener(clickListener);
             }
 
-            // webView is invisible at design time, don't show it until the page finishes loading so it
-            // has time to layout the post before it appears...
-            mWebView.setWebViewClient(readerWebViewClient);
-
-            //...but force it to appear after a short delay to ensure user never has to be faced
-            // with a blank post for too long (very important on slow connections)
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // make sure the adapter is assigned now that we've retrieved the post and updated views
-                    if (getListView().getAdapter() == null)
-                        getListView().setAdapter(getCommentAdapter());
-                    if (mWebView.getVisibility() != View.VISIBLE) {
-                        mWebView.setVisibility(View.VISIBLE);
-                        AppLog.w(T.READER, "reader post detail > forced webView to appear before page finished");
-                    }
-                }
-            }, WEBVIEW_DELAY_MS);
-
             // IMPORTANT: must use loadDataWithBaseURL() rather than loadData() since the latter often fails
             // https://code.google.com/p/android/issues/detail?id=4401
+            mWebView.setWebViewClient(readerWebViewClient);
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
-            // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            // make sure the adapter is assigned
+            if (getListView().getAdapter() == null)
+                getListView().setAdapter(getCommentAdapter());
 
+            // now get likes & comments
             refreshLikes(false);
             refreshComments();
 
@@ -1425,18 +1393,27 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 mHasAlreadyUpdatedPost = true;
             }
 
-            // show listView now that post is loaded
-            getListView().setVisibility(View.VISIBLE);
+            // only show action buttons for WP posts
+            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+
+            // listView is hidden in onCreateView(), show it after a brief delay to give webView
+            // content a short time to load before it appears
+            if (getListView().getVisibility() != View.VISIBLE) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hasActivity())
+                            getListView().setVisibility(View.VISIBLE);
+                    }
+                }, 500L);
+            }
         }
     }
 
     private static final WebViewClient readerWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
-            // webView is invisible at design time, don't show it until the page finishes loading so it
-            // has time to layout the post before it appears...
-            if (view.getVisibility() != View.VISIBLE)
-                view.setVisibility(View.VISIBLE);
+            // nop
         }
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
