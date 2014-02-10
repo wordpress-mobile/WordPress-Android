@@ -396,7 +396,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_IS_POST_CHANGED = "is_post_changed";
     private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -462,7 +462,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             data.putExtra(ARG_BLOG_ID, mBlogId);
             data.putExtra(ARG_POST_ID, mPostId);
             data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
-            
+
             if (mIsPostChanged) {
                 setResult(RESULT_OK, data);
             } else {
@@ -981,7 +981,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * this isn't very performance-friendly due to all the string creation, but it does the job
      * and performance isn't critical since this is only called once (from inside the AsyncTask)
      */
-    private static final String OVERLAY_IMG = "file:///android_res/drawable/ic_reader_video_overlay.png";
+    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
     private String processVideos(String text) {
         if (text==null)
             return "";
