@@ -6,7 +6,7 @@
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
-    <string name="no_network_message">There is no network available.</string>
+    <string name="no_network_message">There is no network available</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="please_sign_in">Sign in again.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
@@ -50,7 +50,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
-    <string name="could_not_remove_account">Couldn\'t remove blog.</string>
+    <string name="could_not_remove_account">Couldn\'t remove blog</string>
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
@@ -68,9 +68,9 @@
     <string name="load_settings">Load settings now?</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
-    <string name="gallery_error">The media item couldn\'t be retrieved.</string>
+    <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
-    <string name="blog_not_found">An error occurred when accessing this blog.</string>
+    <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
@@ -122,10 +122,10 @@
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
     <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
-    <string name="wait_until_upload_completes">Wait until upload completes.</string>
+    <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
-    <string name="media_empty_list">No Media.</string>
-    <string name="media_empty_list_custom_date">No media in this time&#160;interval.</string>
+    <string name="media_empty_list">No Media</string>
+    <string name="media_empty_list_custom_date">No media in this time&#160;interval</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
@@ -139,14 +139,14 @@
     <string name="themes_features_label">Features</string>
     <string name="theme_activate_button">Activate</string>
     <string name="theme_activating_button">Activating</string>
-    <string name="theme_fetch_failed">Failed to fetch themes.</string>
-    <string name="theme_set_failed">Failed to set theme.</string>
+    <string name="theme_fetch_failed">Failed to fetch themes</string>
+    <string name="theme_set_failed">Failed to set theme</string>
     <string name="theme_set_success">Successfully set theme!</string>
     <string name="theme_auth_error_title">Failed to fetch themes</string>
-    <string name="theme_auth_error_message">Ensure you have the privilege to set themes.</string>
+    <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
-    <string name="theme_no_search_result_found">No results found.</string>
+    <string name="theme_no_search_result_found">No results found</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>
@@ -163,7 +163,7 @@
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
     <string name="posts_empty_list">No posts yet. Why not create&#160;one?</string>
-    <string name="empty_list_default">This list is empty.</string>
+    <string name="empty_list_default">This list is empty</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
@@ -174,7 +174,7 @@
     <string name="width">Width</string>
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
-    <string name="out_of_memory">Device out of memory.</string>
+    <string name="out_of_memory">Device out of memory</string>
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
@@ -193,7 +193,7 @@
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
     <string name="edit_comment">Edit comment</string>
-    <string name="comments_empty_list">No comments.</string>
+    <string name="comments_empty_list">No comments</string>
 
     <!-- comment menu -->
     <string name="mnu_comment_approve">Approve</string>
@@ -262,7 +262,7 @@
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site.</string>
+    <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
     <!-- drafts -->
 
@@ -279,12 +279,12 @@
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
     <string name="none">None</string>
-    <string name="adding_cat_failed">Adding category failed.</string>
-    <string name="adding_cat_failed_check">Check your settings and try again.</string>
-    <string name="adding_cat_success">Category added successfully.</string>
-    <string name="cat_name_required">The Category Name field is required.</string>
+    <string name="adding_cat_failed">Adding category failed</string>
+    <string name="adding_cat_failed_check">Check your settings and try again</string>
+    <string name="adding_cat_success">Category added successfully</string>
+    <string name="cat_name_required">The category name field is required</string>
     <string name="cat_adding_category">Adding category</string>
-    <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s</string>
+    <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
     <string name="select_a_blog">Select a blog</string>
@@ -293,11 +293,11 @@
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
-    <string name="no_account">No WordPress account found, add an account and try again.</string>
+    <string name="no_account">No WordPress account found, add an account and try again</string>
     <string name="share_preference_title">Share to WordPress</string>
     <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-    <string name="auto_sharing_preference_reset">Auto-sharing settings reset.</string>
-    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible.</string>
+    <string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
+    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
     <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
@@ -305,7 +305,7 @@
 
     <!-- SD Card errors -->
     <string name="sdcard_title">SD Card Required</string>
-    <string name="sdcard_message">A mounted SD card is required to upload media.</string>
+    <string name="sdcard_message">A mounted SD card is required to upload media</string>
 
     <!-- location -->
     <string name="location">Location</string>
@@ -405,19 +405,19 @@
     <string name="stats_video_summary_header">Aggregated stats for %s</string>
 
     <!-- stats: empty list strings -->
-    <string name="stats_empty_geoviews">No posts viewed.</string>
+    <string name="stats_empty_geoviews">No posts viewed</string>
     <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages found yet.</b> This view shows your most viewed posts and pages.]]></string>
     <string name="stats_empty_referrers"><![CDATA[<b>No referrers.</b> A referrer is a click from another site that links to yours.]]></string>
     <string name="stats_empty_clicks"><![CDATA[<b>No clicks recorded.</b> "Clicks" are viewers clicking outbound links on your site.]]></string>
-    <string name="stats_empty_top_authors">No posts viewed.</string>
-    <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
-    <string name="stats_empty_video">No videos have been played yet.</string>
+    <string name="stats_empty_top_authors">No posts viewed</string>
+    <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet</string>
+    <string name="stats_empty_video">No videos have been played yet</string>
     <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
-    <string name="stats_empty_comments">No comments yet.</string>
-    <string name="stats_bar_graph_empty">No stats available.</string>
+    <string name="stats_empty_comments">No comments yet</string>
+    <string name="stats_bar_graph_empty">No stats available</string>
 
     <!-- invalid_url -->
-    <string name="invalid_url_message">Check that the blog URL entered is valid.</string>
+    <string name="invalid_url_message">Check that the blog URL entered is valid</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -465,9 +465,9 @@
     <string name="moderate_comment">Moderate comment</string>
     <string name="tooltip_follow">Follow or unfollow this blog</string>
     <string name="retry_reply">Reply failed. Tap to retry.</string>
-    <string name="reply_failed">Reply failed.</string>
-    <string name="tap_retry">Tap to retry.</string>
-    <string name="notifications_empty_list">No notifications.</string>
+    <string name="reply_failed">Reply failed</string>
+    <string name="tap_retry">Tap to retry</string>
+    <string name="notifications_empty_list">No notifications</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -525,30 +525,30 @@
     <string name="blogusername">blogusername</string>
 
     <!--  Error Messages -->
-    <string name="error_delete_post">An error occurred while deleting the %s.</string>
+    <string name="error_delete_post">An error occurred while deleting the %s</string>
     <!-- The 4 following messages can\'t be factorized due to i18n -->
-    <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time.</string>
-    <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time.</string>
-    <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time.</string>
-    <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time.</string>
-    <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time.</string>
+    <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
-    <string name="error_generic">An error occurred.</string>
-    <string name="error_parsing_response">An error occurred while fetching data.</string>
-    <string name="error_moderate_comment">An error occurred while moderating.</string>
-    <string name="error_edit_comment">An error occurred while editing the comment.</string>
-    <string name="error_upload">An error occurred while uploading the %s.</string>
+    <string name="error_generic">An error occurred</string>
+    <string name="error_parsing_response">An error occurred while fetching data</string>
+    <string name="error_moderate_comment">An error occurred while moderating</string>
+    <string name="error_edit_comment">An error occurred while editing the comment</string>
+    <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 
     <!--  Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
-    <string name="error_load_comment">Couldn\'t load the comment.</string>
+    <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="manage">Manage</string>
     <string name="discard">Discard</string>
     <string name="prompt_save_changes">Would you like to save your changes?</string>
-    <string name="error_downloading_image">Error downloading image.</string>
+    <string name="error_downloading_image">Error downloading image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -557,7 +557,7 @@
     <string name="passcode_re_enter_passcode">Re-enter your PIN</string>
     <string name="passcode_change_passcode">Change PIN</string>
     <string name="passcode_set">PIN set</string>
-    <string name="passcode_wrong_passcode">Wrong PIN.</string>
+    <string name="passcode_wrong_passcode">Wrong PIN</string>
     <string name="passcode_preference_title">PIN lock</string>
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
@@ -640,13 +640,13 @@
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag.</string>
+    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags.</string>
-    <string name="reader_empty_popular_tags">No popular tags.</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet.</string>
+    <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags</string>
+    <string name="reader_empty_popular_tags">No popular tags</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
-    <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts.</string>
+    <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
@@ -656,48 +656,48 @@
     <string name="creating_your_account">Creating your account</string>
     <string name="creating_your_site">Creating your site</string>
     <string name="required_field">Required field</string>
-    <string name="username_password_required">Fill in all of the fields before submitting.</string>
-    <string name="invalid_email_message">Your email address isn\'t valid.</string>
-    <string name="invalid_password_message">Password must contain at least 4 characters.</string>
-    <string name="invalid_username_too_short">Username must be longer than 4 characters.</string>
-    <string name="invalid_username_too_long">Username must be shorter than 61 characters.</string>
+    <string name="username_password_required">Fill in all of the fields before submitting</string>
+    <string name="invalid_email_message">Your email address isn\'t valid</string>
+    <string name="invalid_password_message">Password must contain at least 4 characters</string>
+    <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
+    <string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
     <string name="email_hint">Email address</string>
-    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms&#160;of&#160;Service%2$s.</string>
+    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms&#160;of&#160;Service%2$s</string>
     <string name="username_email">Username or email</string>
     <string name="site_address">Your self-hosted address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
-    <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers.</string>
-    <string name="username_required">Enter a username.</string>
-    <string name="username_not_allowed">Username not allowed.</string>
+    <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
+    <string name="username_required">Enter a username</string>
+    <string name="username_not_allowed">Username not allowed</string>
     <string name="email_cant_be_used_to_signup">You can\'t use that email address to signup. We are having problems with them blocking some of our email. Use another email provider.</string>
-    <string name="username_must_be_at_least_four_characters">Username must be at least 4 characters.</string>
-    <string name="username_contains_invalid_characters">Username may not contain the character &#8220;_&#8221;.</string>
-    <string name="username_must_include_letters">Username must have a least 1 letter (a-z).</string>
-    <string name="email_invalid">Enter a valid email address.</string>
-    <string name="email_not_allowed">That email address isn\'t allowed.</string>
-    <string name="username_exists">That username already exists.</string>
-    <string name="email_exists">That email address is already being used.</string>
-    <string name="username_reserved_but_may_be_available">That username is currently reserved but may be available in a couple of days.</string>
+    <string name="username_must_be_at_least_four_characters">Username must be at least 4 characters</string>
+    <string name="username_contains_invalid_characters">Username may not contain the character &#8220;_&#8221;</string>
+    <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
+    <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_not_allowed">That email address isn\'t allowed</string>
+    <string name="username_exists">That username already exists</string>
+    <string name="email_exists">That email address is already being used</string>
+    <string name="username_reserved_but_may_be_available">That username is currently reserved but may be available in a couple of days</string>
     <string name="email_reserved">That email address has already been used. Check your inbox for an activation email. If you don\'t activate you can try again in a few days.</string>
-    <string name="blog_name_required">Enter a site address.</string>
-    <string name="blog_name_not_allowed">That site address isn\'t allowed.</string>
-    <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters.</string>
-    <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters.</string>
-    <string name="blog_name_contains_invalid_characters">Site address may not contain the character &#8220;_&#8221;.</string>
-    <string name="blog_name_cant_be_used">You may not use that site address.</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">Site address can only contain lowercase letters (a-z) and numbers.</string>
+    <string name="blog_name_required">Enter a site address</string>
+    <string name="blog_name_not_allowed">That site address isn\'t allowed</string>
+    <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters</string>
+    <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters</string>
+    <string name="blog_name_contains_invalid_characters">Site address may not contain the character &#8220;_&#8221;</string>
+    <string name="blog_name_cant_be_used">You may not use that site address</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">Site address can only contain lowercase letters (a-z) and numbers</string>
     <string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
-    <string name="blog_name_exists">That site already exists.</string>
-    <string name="blog_name_reserved">That site is reserved.</string>
-    <string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days.</string>
+    <string name="blog_name_exists">That site already exists</string>
+    <string name="blog_name_reserved">That site is reserved</string>
+    <string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days</string>
     <string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
     <string name="blog_name_invalid">Invalid site address</string>
     <string name="blog_title_invalid">Invalid site title</string>
     <string name="username_invalid">Invalid username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
-    <string name="username_or_password_incorrect">The username or password you entered is incorrect.</string>
+    <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="nux_tap_continue">Continue</string>
-    <string name="nux_cannot_log_in">We can\'t log you in.</string>
+    <string name="nux_cannot_log_in">We can\'t log you in</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
