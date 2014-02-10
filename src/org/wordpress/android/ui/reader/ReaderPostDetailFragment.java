@@ -28,7 +28,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -420,6 +422,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        setupActionBar();
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
@@ -1449,4 +1452,23 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
         }
     };
+
+    private ActionBar getActionBar() {
+        if (getActivity() instanceof SherlockFragmentActivity) {
+            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            AppLog.w(T.READER, "null actionbar in reader detail");
+            return;
+        }
+
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    }
 }

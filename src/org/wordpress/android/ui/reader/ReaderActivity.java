@@ -31,7 +31,6 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -44,7 +43,6 @@ import org.wordpress.android.util.SysUtils;
 
 public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
-                                       ActionBar.OnNavigationListener,
                                        FragmentManager.OnBackStackChangedListener,
                                        ReaderFullScreenUtils.FullScreenListener {
 
@@ -63,9 +61,6 @@ public class ReaderActivity extends WPActionBarActivity
 
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_main);
-
-        //getSupportActionBar().setListNavigationCallbacks(getActionBarTagAdapter(), this);
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState == null) {
             // determine which fragment to show, default to post list
@@ -100,15 +95,15 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        checkMenuDrawer();
     }
 
     @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        setupActionBar();
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -127,10 +122,10 @@ public class ReaderActivity extends WPActionBarActivity
 
     @Override
     public void onBackStackChanged() {
+        checkMenuDrawer();
         // return from full-screen when backstack changes
         if (isFullScreen())
             onRequestFullScreen(false);
-        setupActionBar();
     }
 
     @Override
@@ -151,6 +146,14 @@ public class ReaderActivity extends WPActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkMenuDrawer() {
+        if (mMenuDrawer == null) {
+            AppLog.w(T.READER, "null menu drawer");
+            return;
+        }
+        mMenuDrawer.setDrawerIndicatorEnabled(!hasDetailFragment());
     }
 
     @Override
@@ -177,6 +180,7 @@ public class ReaderActivity extends WPActionBarActivity
 
             // user just returned from post detail, reload the displayed post if it changed (will
             // only be RESULT_OK if changed)
+            // TODO: no longer works now that detail is a fragment
             case Constants.INTENT_READER_POST_DETAIL:
                 if (isResultOK && listFragment != null && data!=null) {
                     long blogId = data.getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
@@ -295,7 +299,7 @@ public class ReaderActivity extends WPActionBarActivity
         // animate refresh button in post list if tags are being updated for the first time
         ReaderPostListFragment listFragment = getListFragment();
         final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
-        if (animateRefresh && listFragment != null)
+        if (animateRefresh)
             listFragment.animateRefreshButton(true);
 
         // request the list of tags first and don't perform other calls until it returns - this
@@ -390,88 +394,4 @@ public class ReaderActivity extends WPActionBarActivity
         }
     };
 
-    /*
-     * configure ActionBar based on whether detail fragment exists
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            AppLog.w(T.READER, "null actionbar in reader");
-            return;
-        }
-
-        if (hasDetailFragment()) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            actionBar.setListNavigationCallbacks(null, null);
-        } else {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            actionBar.setListNavigationCallbacks(getActionBarTagAdapter(), this);
-        }
-
-        if (mMenuDrawer != null)
-            mMenuDrawer.setDrawerIndicatorEnabled(!hasDetailFragment());
-    }
-
-    /*
-     * ActionBar tag dropdown adapter used by reader post list
-     */
-    private ReaderActionBarTagAdapter mActionBarTagAdapter;
-    protected ReaderActionBarTagAdapter getActionBarTagAdapter() {
-        if (mActionBarTagAdapter == null) {
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    selectTagInActionBar(UserPrefs.getReaderTag());
-                }
-            };
-
-            mActionBarTagAdapter = new ReaderActionBarTagAdapter(this, isStaticMenuDrawer(), dataListener);
-        }
-
-        return mActionBarTagAdapter;
-    }
-
-    /*
-     * make sure the passed tag is the one selected in the actionbar
-     */
-    private void selectTagInActionBar(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return;
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
-            return;
-
-        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "unexpected ActionBar navigation mode");
-            return;
-        }
-
-        int position = getActionBarTagAdapter().getIndexOfTagName(tagName);
-        if (position == -1 || position == actionBar.getSelectedNavigationIndex())
-            return;
-
-        actionBar.setSelectedNavigationItem(position);
-    }
-
-    /*
-     * called from post list when user selects a tag from the ActionBar dropdown
-     */
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(itemPosition);
-        if (tag == null)
-            return false;
-
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment == null)
-            return false;
-
-        listFragment.setCurrentTag(tag.getTagName());
-        AppLog.d(T.READER, "tag chosen from actionbar: " + tag.getTagName());
-
-        return true;
-    }
 }

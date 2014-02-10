@@ -20,7 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
@@ -48,7 +50,9 @@ import org.wordpress.android.util.ToastUtils;
  * Created by nbradbury on 6/30/13.
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
-public class ReaderPostListFragment extends SherlockFragment implements AbsListView.OnScrollListener {
+public class ReaderPostListFragment extends SherlockFragment
+                                    implements AbsListView.OnScrollListener,
+                                               ActionBar.OnNavigationListener {
 
     protected static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
@@ -98,6 +102,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        setupActionBar();
 
         if (savedInstanceState != null) {
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
@@ -243,11 +248,11 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
         } else {
-            int tagIndex = getActionBarAdapter().getIndexOfTagName(mCurrentTag);
+            int tagIndex = getActionBarTagAdapter().getIndexOfTagName(mCurrentTag);
 
             final String tagId;
             if (tagIndex > -1) {
-                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+                ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(tagIndex);
                 tagId = tag.getStringIdFromEndpoint();
             } else {
                 tagId = "";
@@ -552,17 +557,6 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
     }*/
 
     /*
-     * ActionBar tag adapter is owned by the activity
-     */
-    private ReaderActionBarTagAdapter getActionBarAdapter() {
-        if (getActivity() instanceof ReaderActivity) {
-            return ((ReaderActivity)getActivity()).getActionBarTagAdapter();
-        } else {
-            return null;
-        }
-    }
-
-    /*
      * make sure current tag still exists, reset to default if it doesn't
      */
     private void checkCurrentTag() {
@@ -577,7 +571,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         if (!hasActivity())
             return;
         checkCurrentTag();
-        getActionBarAdapter().refreshTags();
+        getActionBarTagAdapter().refreshTags();
     }
 
     /*
@@ -587,7 +581,7 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
         if (!hasActivity())
             return;
         checkCurrentTag();
-        getActionBarAdapter().reloadTags();
+        getActionBarTagAdapter().reloadTags();
     }
 
     /*
@@ -619,5 +613,88 @@ public class ReaderPostListFragment extends SherlockFragment implements AbsListV
 
     private boolean isFullScreenSupported() {
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
+    }
+
+    /*
+     * ActionBar tag dropdown adapter
+     */
+    private static ReaderActionBarTagAdapter mActionBarTagAdapter;
+    private ReaderActionBarTagAdapter getActionBarTagAdapter() {
+        if (mActionBarTagAdapter == null) {
+            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    selectTagInActionBar(UserPrefs.getReaderTag());
+                }
+            };
+
+            boolean isStaticMenuDrawer;
+            if (getActivity() instanceof WPActionBarActivity) {
+                isStaticMenuDrawer = ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
+            } else {
+                isStaticMenuDrawer = false;
+            }
+            mActionBarTagAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
+        }
+
+        return mActionBarTagAdapter;
+    }
+
+    private ActionBar getActionBar() {
+        if (getActivity() instanceof SherlockFragmentActivity) {
+            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * make sure the passed tag is the one selected in the actionbar
+     */
+    private void selectTagInActionBar(final String tagName) {
+        if (TextUtils.isEmpty(tagName))
+            return;
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            AppLog.w(T.READER, "unexpected ActionBar navigation mode");
+            return;
+        }
+
+        int position = getActionBarTagAdapter().getIndexOfTagName(tagName);
+        if (position == -1 || position == actionBar.getSelectedNavigationIndex())
+            return;
+
+        actionBar.setSelectedNavigationItem(position);
+    }
+
+    /*
+     * called when user selects a tag from the ActionBar dropdown
+     */
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        final ReaderTag tag = (ReaderTag) getActionBarTagAdapter().getItem(itemPosition);
+        if (tag == null)
+            return false;
+
+        setCurrentTag(tag.getTagName());
+        AppLog.d(T.READER, "tag chosen from actionbar: " + tag.getTagName());
+
+        return true;
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            AppLog.w(T.READER, "null actionbar in reader list");
+            return;
+        }
+
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(getActionBarTagAdapter(), this);
     }
 }
