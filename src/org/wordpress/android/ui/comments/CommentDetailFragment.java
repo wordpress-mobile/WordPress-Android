@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -76,10 +74,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
-    private ImageView mImgModerateComment;
-    private ImageView mImgSpamComment;
-    private ImageView mImgEditComment;
-    private ImageView mImgTrashComment;
+    private TextView mBtnModerateComment;
+    private TextView mBtnSpamComment;
+    private TextView mBtnEditComment;
+    private TextView mBtnTrashComment;
 
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
@@ -121,15 +119,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
         mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
-        mImgModerateComment = (ImageView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
-        mImgSpamComment = (ImageView) mLayoutButtons.findViewById(R.id.text_btn_spam);
-        mImgEditComment = (ImageView) mLayoutButtons.findViewById(R.id.image_edit_comment);
-        mImgTrashComment = (ImageView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+        mBtnModerateComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
+        mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
+        mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
+        mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
 
-        setImageDrawable(mImgSpamComment, R.drawable.ic_cab_spam, true);
-        setImageDrawable(mImgEditComment, R.drawable.ab_icon_edit, true);
-        setImageDrawable(mImgTrashComment, R.drawable.ic_cab_trash, true);
-
+        setTextDrawable(mBtnSpamComment, R.drawable.ic_cab_spam);
+        setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit);
+        setTextDrawable(mBtnTrashComment, R.drawable.ic_cab_trash);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -137,7 +134,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
-        mImgEditComment.setVisibility(View.GONE);
+        mBtnEditComment.setVisibility(View.GONE);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         mTxtContent.setLinksClickable(true);
@@ -160,21 +157,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mImgSpamComment.setOnClickListener(new View.OnClickListener() {
+        mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moderateComment(CommentStatus.SPAM);
+                if (mComment.getStatusEnum() == CommentStatus.SPAM) {
+                    moderateComment(CommentStatus.APPROVED);
+                } else {
+                    moderateComment(CommentStatus.SPAM);
+                }
             }
         });
 
-        mImgEditComment.setOnClickListener(new View.OnClickListener() {
+        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editComment();
             }
         });
 
-        mImgTrashComment.setOnClickListener(new View.OnClickListener() {
+        mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDeleteComment();
@@ -621,14 +622,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * sets the drawable for buttons with a color filter applied when disabled - avoids having
-     * to include separate disabled drawable resources for the ic_cab_xxx drawables
+     * sets the drawable for moderation buttons
      */
-    private void setImageDrawable(final ImageView view, int resId, boolean isEnabled) {
-        Drawable drawable = getResources().getDrawable(resId).mutate();
-        if (!isEnabled)
-            drawable.setColorFilter(getResources().getColor(R.color.blue_extra_dark), PorterDuff.Mode.SRC_ATOP);
-        view.setImageDrawable(drawable);
+    private void setTextDrawable(final TextView view, int resId) {
+        view.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(resId), null, null);
     }
 
     /*
@@ -641,38 +638,38 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
 
         final int moderationDrawResId;  // drawable resource id for moderation button
+        final int moderationTextResId;  // string resource id for moderation button
         final CommentStatus newStatus;  // status to apply when moderation button is tapped
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
-        final boolean enableMarkAsSpam;
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
                 moderationDrawResId = R.drawable.ic_cab_unapprove;
+                moderationTextResId = R.string.mnu_comment_unapprove;
                 newStatus = CommentStatus.UNAPPROVED;
-                enableMarkAsSpam = true;
                 statusTextResId = R.string.comment_status_approved;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_approved);
                 break;
             case UNAPPROVED:
                 moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
-                enableMarkAsSpam = true;
                 statusTextResId = R.string.comment_status_unapproved;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_unapproved);
                 break;
             case SPAM:
                 moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
-                enableMarkAsSpam = false;
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
             case TRASH:
                 // should never get here
                 moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
-                enableMarkAsSpam = false;
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
@@ -694,28 +691,32 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canModerate()) {
-            setImageDrawable(mImgModerateComment, moderationDrawResId, true);
-            mImgModerateComment.setOnClickListener(new View.OnClickListener() {
+            setTextDrawable(mBtnModerateComment, moderationDrawResId);
+            mBtnModerateComment.setText(moderationTextResId);
+            mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     moderateComment(newStatus);
                 }
             });
-            mImgModerateComment.setVisibility(View.VISIBLE);
+            mBtnModerateComment.setVisibility(View.VISIBLE);
         } else {
-            mImgModerateComment.setVisibility(View.GONE);
+            mBtnModerateComment.setVisibility(View.GONE);
         }
 
         if (canMarkAsSpam()) {
-            mImgSpamComment.setVisibility(View.VISIBLE);
-            mImgSpamComment.setEnabled(enableMarkAsSpam);
-            setImageDrawable(mImgSpamComment, R.drawable.ic_cab_spam, enableMarkAsSpam);
+            mBtnSpamComment.setVisibility(View.VISIBLE);
+            if (mComment.getStatusEnum() == CommentStatus.SPAM) {
+                mBtnSpamComment.setText(R.string.mnu_comment_unspam);
+            } else {
+                mBtnSpamComment.setText(R.string.mnu_comment_spam);
+            }
         } else {
-            mImgSpamComment.setVisibility(View.GONE);
+            mBtnSpamComment.setVisibility(View.GONE);
         }
 
-        mImgTrashComment.setVisibility(canTrash() ? View.VISIBLE : View.GONE);
-        mImgEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
+        mBtnTrashComment.setVisibility(canTrash() ? View.VISIBLE : View.GONE);
+        mBtnEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
 
         // animate the buttons in if they're not visible
         if (mLayoutButtons.getVisibility() != View.VISIBLE && (canMarkAsSpam() || canModerate())) {
