@@ -27,6 +27,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -37,10 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
-    private boolean mIsRetrievingComments = false;
+    private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
 
-    private GetRecentCommentsTask mGetCommentsTask;
     private ProgressBar mProgressLoadMore;
     private ListView mListView;
     private CommentAdapter mCommentAdapter;
@@ -62,8 +62,8 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
-                    if (mCanLoadMoreComments && !mIsRetrievingComments)
-                        refreshComments(true);
+                    if (mCanLoadMoreComments && !mIsUpdatingComments)
+                        updateComments(true);
                 }
             };
 
@@ -106,7 +106,7 @@ public class CommentsListFragment extends Fragment {
         super.onActivityCreated(bundle);
         setUpListView();
         getCommentAdapter().loadComments();
-        refreshComments(false);
+        updateComments(false);
     }
 
     public void onAttach(Activity activity) {
@@ -288,42 +288,43 @@ public class CommentsListFragment extends Fragment {
         });
     }
 
-    protected void refreshComments() {
+    protected void loadComments() {
         // this is called from CommentsActivity when a comment was changed in the detail view,
-        // so first tell the adapter to show existing changes then refresh the data
-        getCommentAdapter().notifyDataSetChanged();
-        refreshComments(false);
-    }
-    @SuppressLint("NewApi")
-    private void refreshComments(boolean loadMore) {
-        mGetCommentsTask = new GetRecentCommentsTask(loadMore);
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            mGetCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetCommentsTask.execute();
-        }
+        // and the change will already be in SQLite so simply reload the comment adapter
+        // to show the change
+        getCommentAdapter().loadComments();
     }
 
-    protected void cancelCommentsTask() {
-        if (mGetCommentsTask != null && !mGetCommentsTask.isCancelled())
-            mGetCommentsTask.cancel(true);
+    /*
+     * get latest comments from server, or pass loadMore=true to get comments beyond the
+     * existing ones
+     */
+    @SuppressLint("NewApi")
+    protected void updateComments(boolean loadMore) {
+        if (mIsUpdatingComments)
+            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            new UpdateCommentsTask(loadMore).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new UpdateCommentsTask(loadMore).execute();
+        }
     }
 
     /*
      * task to retrieve latest comments from server
      */
-    private class GetRecentCommentsTask extends AsyncTask<Void, Void, CommentList> {
+    private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         final boolean isLoadingMore;
 
-        private GetRecentCommentsTask(boolean loadMore) {
+        private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mIsRetrievingComments = true;
+            mIsUpdatingComments = true;
             if (isLoadingMore) {
                 showLoadingProgress();
             } else {
@@ -334,7 +335,7 @@ public class CommentsListFragment extends Fragment {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mIsRetrievingComments = false;
+            mIsUpdatingComments = false;
         }
 
         @Override
@@ -364,7 +365,7 @@ public class CommentsListFragment extends Fragment {
         }
 
         protected void onPostExecute(CommentList comments) {
-            mIsRetrievingComments = false;
+            mIsUpdatingComments = false;
             if (!hasActivity())
                 return;
 
