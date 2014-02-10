@@ -86,7 +86,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
-    private static boolean mHasAlreadyUpdatedPost = false;
+    private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mIsPostChanged = false;
     private boolean mIsBlogFollowStatusChanged = false;
