@@ -364,17 +364,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                             @Override
                             public void onClick(DialogInterface dialogInterface,
                                                 int i) {
-                                mPubDateText.setText(getResources().getText(R.string.immediately));
-                                Calendar c = Calendar.getInstance();
-                                mYear = c.get(Calendar.YEAR);
-                                mMonth = c.get(Calendar.MONTH);
-                                mDay = c.get(Calendar.DAY_OF_MONTH);
-                                mHour = c.get(Calendar.HOUR_OF_DAY);
-                                mMinute = c.get(Calendar.MINUTE);
-                                Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                                long timestamp = d.getTime();
-                                mCustomPubDate = timestamp;
                                 mIsCustomPubDate = true;
+                                mPubDateText.setText(R.string.immediately);
                             }
                         })
                 .setNeutralButton(android.R.string.cancel,
@@ -441,10 +432,22 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
-        if (mIsCustomPubDate)
-            pubDateTimestamp = mCustomPubDate;
-        else if (post.getDate_created_gmt() > 0 && !pubDate.equals(getResources().getText(R.string.immediately)))
-            pubDateTimestamp = post.getDate_created_gmt();
+        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately))) {
+            Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+            Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+            long timestamp = d.getTime();
+            pubDateTimestamp = timestamp;
+        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+            if (mIsCustomPubDate)
+                pubDateTimestamp = mCustomPubDate;
+            else if (post.getDate_created_gmt() > 0)
+                pubDateTimestamp = post.getDate_created_gmt();
+        }
 
         String tags = "", postFormat = "";
         if (!post.isPage()) {
@@ -528,7 +531,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 AppLog.e(T.EDITOR, "Cannot Istantiate Geocoder", cannotIstantiateEx);
                 return null;
             }
-            
+
             List<Address> addresses;
             try {
                 addresses = gcd.getFromLocation(latitude, longitude, 1);
