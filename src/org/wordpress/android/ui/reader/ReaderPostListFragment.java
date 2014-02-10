@@ -386,14 +386,14 @@ public class ReaderPostListFragment extends SherlockFragment
     protected void setCurrentTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
             return;
-        if (isCurrentTagName(tagName) && !isPostAdapterEmpty())
+        if (isCurrentTagName(tagName) && tagName.equals(getPostAdapter().getCurrentTag()))
             return;
 
         mCurrentTag = tagName;
         UserPrefs.setReaderTag(tagName);
 
         hideLoadingProgress();
-        getPostAdapter().setTag(tagName);
+        getPostAdapter().setCurrentTag(tagName);
         hideNewPostsBar();
 
         // update posts in this tag if it's time to do so
@@ -597,14 +597,15 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * similar to refreshTags except that the adapter always re-creates its underlying data
+     * called from ReaderActivity after user adds/removes tags
      */
-    protected void reloadTags() {
-        if (!hasActivity())
-            return;
+    protected void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
+        if (!TextUtils.isEmpty(newCurrentTag))
+            setCurrentTag(newCurrentTag);
     }
+
 
     /*
      * show/hide progress bar which appears at the bottom of the activity when loading more posts

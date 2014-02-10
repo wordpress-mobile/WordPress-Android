@@ -31,6 +31,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -99,8 +100,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
-    public void setTag(String tagName) {
-        mCurrentTag = tagName;
+    public String getCurrentTag() {
+        return StringUtils.notNullStr(mCurrentTag);
+    }
+
+    public void setCurrentTag(String tagName) {
+        mCurrentTag = StringUtils.notNullStr(tagName);
         reload(false);
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -175,10 +176,8 @@ public class ReaderActivity extends WPActionBarActivity
                 if (isResultOK && listFragment != null && data != null) {
                     // reload tags if they were changed, and set the last tag added as the current one
                     if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
-                        listFragment.reloadTags();
-                        String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
-                        if (!TextUtils.isEmpty(lastAddedTag))
-                            listFragment.setCurrentTag(lastAddedTag);
+                        final String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
+                        listFragment.doTagsChanged(lastAddedTag);
                     }
                 }
                 break;
