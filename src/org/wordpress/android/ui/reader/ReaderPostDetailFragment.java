@@ -165,8 +165,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private ReaderCommentAdapter mAdapter;
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter == null) {
-            if (mPost == null)
-                AppLog.w(T.READER, "reader post detail > comment adapter created before post loaded");
+            if (!hasActivity())
+                AppLog.w(T.READER, "reader post detail > comment adapter created before activity");
 
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -272,6 +272,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // setup the webView - note that JavaScript is disabled since it's a security risk
         // http://developer.android.com/training/articles/security-tips.html#WebView
         mWebView = (WebView) view.findViewById(R.id.webView);
+        mWebView.setWebViewClient(readerWebViewClient);
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
 
@@ -1376,7 +1377,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
             // IMPORTANT: must use loadDataWithBaseURL() rather than loadData() since the latter often fails
             // https://code.google.com/p/android/issues/detail?id=4401
-            mWebView.setWebViewClient(readerWebViewClient);
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // make sure the adapter is assigned
@@ -1396,18 +1396,24 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
-            // listView is hidden in onCreateView(), show it after a brief delay to give webView
-            // content a short time to load before it appears
-            if (getListView().getVisibility() != View.VISIBLE) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (hasActivity())
-                            getListView().setVisibility(View.VISIBLE);
-                    }
-                }, 500L);
-            }
+            // display listView after a short delay (to give time for content to appear)
+            if (getListView().getVisibility() != View.VISIBLE)
+                showListViewDelayed();
         }
+    }
+
+    /*
+     * listView is hidden in onCreateView() and then shown after a brief delay once post is loaded
+     * to give webView content a short time to load before it appears
+     */
+    private void showListViewDelayed() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (hasActivity())
+                    getListView().setVisibility(View.VISIBLE);
+            }
+        }, 500L);
     }
 
     private static final WebViewClient readerWebViewClient = new WebViewClient() {

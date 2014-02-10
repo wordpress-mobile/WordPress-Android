@@ -94,8 +94,7 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
-        android:scrollbars="none"
-        android:visibility="invisible" />
+        android:scrollbars="none" />
 
     <RelativeLayout
         android:id="@+id/layout_likes"
