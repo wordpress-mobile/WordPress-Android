@@ -20,6 +20,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AppLog;
@@ -890,6 +891,34 @@ public class WordPressDB {
 
         }
         return (returnValue);
+    }
+
+    public List<PostsListPost> getPostsListPosts(int blogID, boolean loadPages) {
+
+        List<PostsListPost> posts = new ArrayList<PostsListPost>();
+        Cursor c;
+        c = db.query(POSTS_TABLE,
+                new String[] { "id", "blogID", "title",
+                        "date_created_gmt", "post_status" },
+                "blogID=? AND isPage=?",
+                new String[] {String.valueOf(blogID), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        for (int i = 0; i < numRows; ++i) {
+            if (c.getString(0) != null) {
+                PostsListPost post = new PostsListPost(c.getInt(0), c.getInt(1), c.getString(2), c.getLong(3), c.getString(4));
+                posts.add(i, post);
+            }
+            c.moveToNext();
+        }
+        c.close();
+
+        if (numRows == 0) {
+            posts = null;
+        }
+
+        return posts;
     }
 
     public long savePost(Post post, int blogID) {

@@ -7,34 +7,36 @@
     android:paddingRight="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    style="@style/WordPressListRowBackground" >
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#464646"
-        android:textSize="18sp" />
+    style="@style/WordPressListRowBackground">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="6dp" >
+        android:orientation="horizontal">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            style="@style/ReaderTextView.Post.Title" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#777777"
-            android:textSize="12sp" />
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#777777"
-            android:textSize="12sp"
-            android:gravity="right" />
+            style="@style/ReaderTextView.Date" />
+
     </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/status"
+        android:layout_marginTop="6dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/text_sz_small" />
 
 </LinearLayout>

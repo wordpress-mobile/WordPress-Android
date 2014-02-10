@@ -47,11 +47,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
-    private EmailChecker mEmailChecker;
+    //private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
     public WelcomeFragmentSignIn() {
-        mEmailChecker = new EmailChecker();
+        //mEmailChecker = new EmailChecker();
     }
 
     @Override
@@ -122,12 +122,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             return ;
         }
         // It looks like an email address, then try to correct it
-        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        /*String suggest = mEmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mUsernameEditText.setText(suggest);
             mUsernameEditText.setSelection(suggest.length());
-        }
+        }*/
     }
 
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
