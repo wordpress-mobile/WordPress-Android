@@ -285,7 +285,7 @@ public class Blog {
     }
 
     public boolean bsetWpVersion(String wpVersion) {
-        if (this.wpVersion.equals(wpVersion)) {
+        if (StringUtils.equals(this.wpVersion, wpVersion)) {
             return false;
         }
         setWpVersion(wpVersion);
@@ -334,7 +334,7 @@ public class Blog {
     }
 
     public boolean bsetPostFormats(String postFormats) {
-        if (this.postFormats.equals(postFormats)) {
+        if (StringUtils.equals(this.postFormats, postFormats)) {
             return false;
         }
         setPostFormats(postFormats);
@@ -372,7 +372,7 @@ public class Blog {
     // TODO: it's ugly to compare json strings, we have to normalize both strings before
     // comparison or compare JSON objects after parsing
     public boolean bsetBlogOptions(String blogOptions) {
-        if (this.blogOptions.equals(blogOptions)) {
+        if (StringUtils.equals(this.blogOptions, blogOptions)) {
             return false;
         }
         setBlogOptions(blogOptions);
@@ -380,7 +380,7 @@ public class Blog {
     }
 
     public boolean isActive() {
-        return !password.equals("");
+        return !TextUtils.isEmpty(password);
     }
 
     public boolean isAdmin() {
@@ -429,7 +429,7 @@ public class Blog {
             Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
             StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
             String blogPublicOptionValue = blogPublicOption.get("value").toString();
-            if (blogPublicOptionValue.equals("-1")) {
+            if ("-1".equals(blogPublicOptionValue)) {
                 return true;
             }
         } catch (Exception e) {
