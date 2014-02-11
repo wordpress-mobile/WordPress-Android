@@ -173,7 +173,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                style="@style/WordPress.NUXTos"/>
+                style="@style/WordPress.NUXGreyButtonNoBg"/>
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXWhiteButtonNoBg"

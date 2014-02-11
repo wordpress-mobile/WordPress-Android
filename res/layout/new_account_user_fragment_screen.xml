@@ -219,7 +219,7 @@
                 android:text="@string/agree_terms_of_service"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                style="@style/WordPress.NUXTos"/>
+                style="@style/WordPress.NUXGreyButtonNoBg"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>

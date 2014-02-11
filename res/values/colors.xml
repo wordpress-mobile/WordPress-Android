@@ -90,7 +90,7 @@
     <color name="comment_status_spam">#dd3d36</color>
 
     <!-- NUX Colors -->
-    <color name="nux_disabled">#bbdded</color>
+    <color name="nux_grey_button">#bbdded</color>
     <color name="nux_alert_bg">#EE000000</color>
     <color name="nux_background">@color/blue_new_kid</color>
     <color name="nux_eye_icon_color">#c7c7c7</color>
