@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
+    final private static String FAQ_URL = "http://android.wordpress.org/faq/";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -97,6 +100,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
         initPasswordVisibilityButton(rootView, mPasswordEditText);
+        initInfoButton(rootView);
         return rootView;
     }
 
@@ -109,6 +113,16 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         mSelfHosted = true;
+    }
+
+    private void initInfoButton(View rootView) {
+        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoBUtton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FAQ_URL)));
+            }
+        });
     }
 
     private void autocorrectUsername() {
