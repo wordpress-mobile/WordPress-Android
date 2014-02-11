@@ -13,9 +13,7 @@
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         android:gravity="center"
-        android:baselineAligned="false"
-        >
-
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -31,6 +29,7 @@
                 android:src="@drawable/dashicon_info"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/help"
                 android:tint="@color/blue_dark"/>
         </LinearLayout>
 
