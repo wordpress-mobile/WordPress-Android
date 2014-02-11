@@ -110,6 +110,19 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private static final int MOVE_MIN_DIFF = 8;
 
+    public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
+        AppLog.d(T.READER, "reader post detail > newInstance");
+
+        Bundle args = new Bundle();
+        args.putLong(ARG_BLOG_ID, blogId);
+        args.putLong(ARG_POST_ID, postId);
+
+        ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     private ListView getListView() {
         return mListView;
     }
@@ -221,19 +234,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private boolean isCommentAdapterEmpty() {
         return (mAdapter==null || mAdapter.isEmpty());
-    }
-
-    protected static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        AppLog.d(T.READER, "reader post detail > newInstance");
-
-        Bundle args = new Bundle();
-        args.putLong(ARG_BLOG_ID, blogId);
-        args.putLong(ARG_POST_ID, postId);
-
-        ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
-        fragment.setArguments(args);
-
-        return fragment;
     }
 
     @Override
@@ -364,6 +364,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private void setIsFullScreen(boolean enableFullScreen) {
         if (mFullScreenListener == null)
             return;
+        // this tells ReaderActivity to enable/disable fullscreen
         if (!mFullScreenListener.onRequestFullScreen(enableFullScreen))
             return;
         if (mPost.isWP())
@@ -419,8 +420,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setHasOptionsMenu(true);
-        setupActionBar();
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        }
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
@@ -450,38 +457,18 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mPostChangeListener = (PostChangeListener) activity;
     }
 
-
+    /*
+     * called by this fragment whenever the post is changed - notifies ReaderActivity of the
+     * change so it can tell the list fragment to reflect the change
+     */
     private void doPostChanged(PostChangeType changeType) {
         if (mPostChangeListener == null || !hasPost() || changeType == null)
             return;
         mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
     }
 
-    // TODO: post list needs to know when the post has been changed
-    /*@Override
-    public void onBackPressed() {
-        // if comment box is showing, cancel it rather than backing out of this activity
-        if (mIsAddCommentBoxShowing) {
-            hideAddCommentBox();
-        } else {
-            // return blogId/postId to caller, but only set to RESULT_OK if the post has changed
-            // so the calling activity can refresh the displayed post
-            Intent data = new Intent();
-            data.putExtra(ARG_BLOG_ID, mBlogId);
-            data.putExtra(ARG_POST_ID, mPostId);
-            data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
-
-            if (mIsPostChanged) {
-                setResult(RESULT_OK, data);
-            } else {
-                setResult(RESULT_CANCELED, data);
-            }
-            super.onBackPressed();
-        }
-    }*/
-
     /*
-     * triggered when user chooses to like or follow - actionView is the ImageView or TextView
+     * called when user chooses to like or follow - actionView is the ImageView or TextView
      * associated with the action (ex: like button)
      */
     private void doPostAction(View actionView, ReaderPostActions.PostAction action, final ReaderPost post) {
@@ -520,7 +507,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-     * triggered when user chooses to reblog the post
+     * called when user chooses to reblog the post
      */
     private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
         if (!hasActivity())
@@ -661,14 +648,17 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-     * returns the top-level parent view for the post detail views
+     * returns the root container view for the post detail views
      */
-    private ViewGroup getContainerView() {
+    private View getContainerView() {
         if (!hasActivity()) {
-            AppLog.w(T.READER, "reader post detail > container view is null");
+            AppLog.w(T.READER, "reader post detail > no activity for container view");
             return null;
         }
-        return (ViewGroup) getActivity().findViewById(R.id.layout_post_detail_container);
+        View container = getView().findViewById(R.id.layout_post_detail_container);
+        if (container == null)
+            AppLog.w(T.READER, "reader post detail > container view is null");
+        return container;
     }
 
     /*
@@ -684,7 +674,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         new Thread() {
             @Override
             public void run() {
-                final ViewGroup container = getContainerView();
+                final View container = getContainerView();
                 final ImageView imgBtnLike = (ImageView) container.findViewById(R.id.image_like_btn);
                 final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
@@ -781,7 +771,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (mIsSubmittingComment)
             return;
 
-        final ViewGroup container = getContainerView();
+        final View container = getContainerView();
         final ViewGroup layoutCommentBox = (ViewGroup) container.findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) container.findViewById(R.id.image_comment_btn);
@@ -842,7 +832,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (!mIsAddCommentBoxShowing)
             return;
 
-        final ViewGroup container = getContainerView();
+        final View container = getContainerView();
         final ViewGroup layoutCommentBox = (ViewGroup) container.findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) container.findViewById(R.id.image_comment_btn);
@@ -876,11 +866,11 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-     * post the text typed into the comment box as a comment on the current post
+     * submit the text typed into the comment box as a comment on the current post
      */
     private boolean mIsSubmittingComment = false;
     private void submitComment(final long replyToCommentId) {
-        final ViewGroup container = getContainerView();
+        final View container = getContainerView();
         final EditText editComment = (EditText) container.findViewById(R.id.edit_comment);
         final String commentText = EditTextUtils.getText(editComment);
         if (TextUtils.isEmpty(commentText))
@@ -1208,7 +1198,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-     * AsyncTask to retrieve & display this post
+     * AsyncTask to retrieve this post from SQLite and display it
      */
     @SuppressLint("NewApi")
     private void showPost() {
@@ -1249,7 +1239,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            final ViewGroup container = getContainerView();
+            final View container = getContainerView();
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
@@ -1263,7 +1253,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
-            // retrieve this post - return false if not found
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
             if (mPost == null)
                 return false;
@@ -1314,7 +1303,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 txtTitle.setText(R.string.reader_untitled_post);
             }
 
-            txtBlogName.setText(mPost.getBlogName());
+            if (mPost.hasBlogName()) {
+                txtBlogName.setText(mPost.getBlogName());
+                txtBlogName.setVisibility(View.VISIBLE);
+            } else {
+                txtBlogName.setVisibility(View.GONE);
+            }
+
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
             // show author name if it exists and is different than the blog name
@@ -1460,14 +1455,5 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             AppLog.w(T.READER, "reader post detail > null ActionBar");
             return null;
         }
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 }

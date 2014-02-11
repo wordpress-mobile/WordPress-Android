@@ -347,7 +347,7 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     /*
-     * called from post detail when user changes a post (like/unlikes/follows/unfollows) so we can
+     * called from post detail when user changes a post (like/unlike/follow/unfollow) so we can
      * update the list fragment to reflect the change - note that by the time this has been called,
      * the post will already have been changed in SQLite
      */

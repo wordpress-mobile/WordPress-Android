@@ -103,11 +103,13 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-        setupActionBar();
 
         ActionBar actionBar = getActionBar();
-        if (actionBar != null)
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
             actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+        }
 
         if (savedInstanceState != null) {
             mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
@@ -234,17 +236,17 @@ public class ReaderPostListFragment extends SherlockFragment
 
         Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.box_with_pages_slide_up_page1);
-        ImageView page1 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page1);
+        ImageView page1 = (ImageView) getView().findViewById(R.id.empty_tags_box_page1);
         page1.startAnimation(animPage1);
 
         Animation animPage2 = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.box_with_pages_slide_up_page2);
-        ImageView page2 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page2);
+        ImageView page2 = (ImageView) getView().findViewById(R.id.empty_tags_box_page2);
         page2.startAnimation(animPage2);
 
         Animation animPage3 = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.box_with_pages_slide_up_page3);
-        ImageView page3 = (ImageView) getActivity().findViewById(R.id.empty_tags_box_page3);
+        ImageView page3 = (ImageView) getView().findViewById(R.id.empty_tags_box_page3);
         page3.startAnimation(animPage3);
     }
 
@@ -278,8 +280,8 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         }
-        TextView titleView = (TextView) getActivity().findViewById(R.id.title_empty);
-        TextView descriptionView = (TextView) getActivity().findViewById(R.id.description_empty);
+        TextView titleView = (TextView) getView().findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) getView().findViewById(R.id.description_empty);
         titleView.setText(getString(title));
         if (description == -1) {
             descriptionView.setVisibility(View.INVISIBLE);
@@ -509,6 +511,9 @@ public class ReaderPostListFragment extends SherlockFragment
         }
     }
 
+    /*
+     * bar that appears at the top when new posts have been retrieved
+     */
     private void showNewPostsBar(int numNewPosts) {
         if (mNewPostsBar==null || mNewPostsBar.getVisibility()==View.VISIBLE)
             return;
@@ -537,29 +542,6 @@ public class ReaderPostListFragment extends SherlockFragment
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
     }
 
-    /**
-     * automatic updating
-     **/
-    /*private Handler mAutoUpdateHandler = new Handler();
-    private Runnable mAutoUpdateTask = new Runnable() {
-        public void run() {
-            if (hasCurrentTag()) {
-                AppLog.d(T.READER, "reader post list > performing automatic update");
-                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, ReaderPostListFragment.RefreshType.AUTOMATIC);
-            }
-        }
-    };
-
-    public final void scheduleAutoUpdate() {
-        if (!hasCurrentTag())
-            return;
-        mAutoUpdateHandler.postDelayed(mAutoUpdateTask, 60000 * Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
-    }
-
-    public final void unscheduleAutoUpdate() {
-        mAutoUpdateHandler.removeCallbacks(mAutoUpdateTask);
-    }*/
-
     /*
      * make sure current tag still exists, reset to default if it doesn't
      */
@@ -587,7 +569,6 @@ public class ReaderPostListFragment extends SherlockFragment
         if (!TextUtils.isEmpty(newCurrentTag))
             setCurrentTag(newCurrentTag);
     }
-
 
     /*
      * show/hide progress bar which appears at the bottom of the activity when loading more posts
@@ -666,11 +647,6 @@ public class ReaderPostListFragment extends SherlockFragment
         if (actionBar == null)
             return;
 
-        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
-            return;
-        }
-
         int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex())
             return;
@@ -691,14 +667,5 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
         return true;
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 }

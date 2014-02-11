@@ -28,8 +28,8 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
-    private int mPaddingForStaticDrawer;
-    private boolean mIsStaticMenuDrawer;
+    private final int mPaddingForStaticDrawer;
+    private final boolean mIsStaticMenuDrawer;
 
     public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderActions.DataLoadedListener dataListener) {
         mDataListener = dataListener;

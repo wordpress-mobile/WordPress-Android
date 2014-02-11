@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -36,7 +37,9 @@ import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
@@ -61,6 +64,11 @@ import java.util.Map;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
+
+    public static interface OnPostClickListener {
+        public void onPostClicked(long remoteBlogId, long postId);
+    }
+
     private int mLocalBlogId;
     private int mRemoteBlogId;
 
@@ -85,6 +93,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
 
     private OnCommentChangeListener mOnCommentChangeListener;
+    private OnPostClickListener mOnPostClickListener;
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -218,11 +227,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
+        if (activity instanceof OnCommentChangeListener)
             mOnCommentChangeListener = (OnCommentChangeListener) activity;
-        } catch (ClassCastException e) {
-            mOnCommentChangeListener = null;
-        }
+        if (activity instanceof OnPostClickListener)
+            mOnPostClickListener = (OnPostClickListener) activity;
     }
 
     @Override
@@ -450,18 +458,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtPostTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewPostInReader();
+                if (mOnPostClickListener != null)
+                    mOnPostClickListener.onPostClicked(mRemoteBlogId, mComment.postID);
             }
         });
-    }
-
-    /*
-     * open the post associated with this comment in the reader
-     */
-    private void viewPostInReader() {
-        if (!hasActivity() || !hasComment())
-            return;
-        ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
     }
 
     private void confirmDeleteComment() {

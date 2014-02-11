@@ -17,11 +17,13 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    OnAnimateRefreshButtonListener,
+                   CommentDetailFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
 
     private CommentsListFragment mCommentListFragment;
@@ -208,4 +210,17 @@ public class CommentsActivity extends WPActionBarActivity
         return super.onCreateDialog(id);
     }
 
+    /*
+     * called from comment detail when user taps a link to a post - show the post in the reader
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.commentDetailFragmentContainer, ReaderPostDetailFragment.newInstance(remoteBlogId, postId));
+        ft.addToBackStack(null);
+        ft.commit();
+        mMenuDrawer.setDrawerIndicatorEnabled(false);
+        // ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
+    }
 }
