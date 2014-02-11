@@ -163,7 +163,8 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
-        // TODO: broken on tablet
+        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId);
+        // TODO: show as a fragment (code below breaks on tablet)
         /*FragmentManager fm = getSupportFragmentManager();
         final int id;
         if (fm.findFragmentById(R.id.commentDetailFragmentContainer) != null) {
@@ -181,7 +182,6 @@ public class CommentsActivity extends WPActionBarActivity
             .replace(id, ReaderPostDetailFragment.newInstance(remoteBlogId, postId))
             .addToBackStack(null)
             .commit();*/
-        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId);
     }
 
     /*

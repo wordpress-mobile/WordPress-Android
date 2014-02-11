@@ -24,6 +24,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_DETAIL);
         intent.putExtra(ReaderPostDetailFragment.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderPostDetailFragment.ARG_POST_ID, postId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         context.startActivity(intent);
     }
 

@@ -127,6 +127,12 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home && hasDetailFragment()) {
             onBackPressed();

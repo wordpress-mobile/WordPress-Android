@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -37,9 +36,7 @@ import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
-import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
@@ -473,8 +470,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtPostTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnPostClickListener != null)
+                if (mOnPostClickListener != null) {
                     mOnPostClickListener.onPostClicked(mRemoteBlogId, mComment.postID);
+                } else {
+                    // right now this will happen from notifications
+                    AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
+                }
             }
         });
     }
