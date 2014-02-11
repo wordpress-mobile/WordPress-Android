@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,13 +10,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.comments.CommentAdapter;
+import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.adapters.PostListAdapter;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -84,6 +85,23 @@ public class PostsListFragment extends ListFragment {
         getListView().addFooterView(mProgressFooterView, null, false);
         getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
         getListView().setDividerHeight(1);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
+                if (position >= getPostListAdapter().getCount()) //out of bounds
+                    return;
+                if (v == null) //view is gone
+                    return;
+                PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
+                if (postsListPost == null)
+                    return;
+                if (!mParentActivity.mIsRefreshing) {
+                    showPost(postsListPost.getPostId());
+                } else {
+                    Toast.makeText(mParentActivity, R.string.please_wait_refresh_done,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         TextView textview = (TextView) getListView().getEmptyView();
         if (textview != null) {
             if (isPage) {
@@ -180,8 +198,28 @@ public class PostsListFragment extends ListFragment {
         return false;
     }
 
+    private void showPost(long selectedID) {
+        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), selectedID, isPage);
+        if (post.getId() >= 0) {
+            WordPress.currentPost = post;
+            mOnPostSelectedListener.onPostSelected(post);
+            mPostListAdapter.notifyDataSetChanged();
+        } else {
+            if (!getActivity().isFinishing()) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
+            }
+        }
+    }
+
     public void refreshPosts(boolean loadMore) {
         int postCount = getPostListAdapter().getCount() + POSTS_REQUEST_COUNT;
+        if (!loadMore) {
+            mOnRefreshListener.onRefresh(true);
+            postCount = POSTS_REQUEST_COUNT;
+        }
         List<Object> apiArgs = new Vector<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(isPage);
