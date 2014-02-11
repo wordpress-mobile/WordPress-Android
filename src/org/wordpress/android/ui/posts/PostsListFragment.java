@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.adapters.PostListAdapter;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.XMLRPCClient;
@@ -85,6 +87,7 @@ public class PostsListFragment extends ListFragment {
         getListView().addFooterView(mProgressFooterView, null, false);
         getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
         getListView().setDividerHeight(1);
+
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
                 if (position >= getPostListAdapter().getCount()) //out of bounds
@@ -102,6 +105,41 @@ public class PostsListFragment extends ListFragment {
                 }
             }
         });
+
+        getListView().setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info;
+                try {
+                    info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                } catch (ClassCastException e) {
+                    AppLog.e(AppLog.T.POSTS, "bad menuInfo", e);
+                    return;
+                }
+                PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(info.position);
+                if (postsListPost == null)
+                    return;
+
+                Post post = new Post(postsListPost.getBlogId(), postsListPost.getPostId(), isPage);
+
+                if (post.isLocalDraft()) {
+                    menu.clear();
+                    menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
+                    menu.add(MENU_GROUP_DRAFTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_draft));
+                    menu.add(MENU_GROUP_DRAFTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_draft));
+                } else {
+                    menu.clear();
+                    menu.setHeaderTitle(getResources().getText(R.string.post_actions));
+                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(isPage ? R.string.edit_page : R.string.edit_post));
+                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(isPage ? R.string.delete_page : R.string.delete_post));
+                    menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(isPage ? R.string.preview_page : R.string.preview_post));
+                    if ("publish".equals(post.getPost_status())) {
+                        menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
+                    }
+                }
+            }
+        });
+
         TextView textview = (TextView) getListView().getEmptyView();
         if (textview != null) {
             if (isPage) {

@@ -899,7 +899,7 @@ public class WordPressDB {
         Cursor c;
         c = db.query(POSTS_TABLE,
                 new String[] { "id", "blogID", "title",
-                        "date_created_gmt", "post_status" },
+                        "date_created_gmt", "post_status", "localDraft" },
                 "blogID=? AND isPage=?",
                 new String[] {String.valueOf(blogID), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
@@ -907,7 +907,7 @@ public class WordPressDB {
 
         for (int i = 0; i < numRows; ++i) {
             if (c.getString(0) != null) {
-                PostsListPost post = new PostsListPost(c.getInt(0), c.getInt(1), c.getString(2), c.getLong(3), c.getString(4));
+                PostsListPost post = new PostsListPost(c.getInt(0), c.getInt(1), c.getString(2), c.getLong(3), c.getString(4), SqlUtils.sqlToBool(c.getInt(5)));
                 posts.add(i, post);
             }
             c.moveToNext();

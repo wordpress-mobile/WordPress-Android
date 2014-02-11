@@ -80,7 +80,9 @@ public class PostListAdapter extends BaseAdapter {
         String status = post.getStatus();
 
         String formattedStatus = "";
-        if (status.equals("publish")) {
+        if (post.isLocalDraft()) {
+            formattedStatus = mContext.getResources().getText(R.string.local_draft).toString();
+        } else if (status.equals("publish")) {
             formattedStatus = mContext.getResources().getText(R.string.published).toString();
         } else if (status.equals("draft")) {
             formattedStatus = mContext.getResources().getText(R.string.draft).toString();
@@ -94,7 +96,12 @@ public class PostListAdapter extends BaseAdapter {
         if (titleText.equals(""))
             titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
         wrapper.getTitle().setText(titleText);
-        wrapper.getDate().setText(date);
+        if (post.isLocalDraft()) {
+            wrapper.getDate().setVisibility(View.GONE);
+        } else {
+            wrapper.getDate().setText(date);
+            wrapper.getDate().setVisibility(View.VISIBLE);
+        }
         wrapper.getStatus().setText(formattedStatus);
 
         // request to load more comments when we near the end

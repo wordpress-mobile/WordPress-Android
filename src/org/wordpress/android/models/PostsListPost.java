@@ -16,14 +16,16 @@ public class PostsListPost {
     long dateCreatedGmt;
     String status;
     String formattedDate;
+    boolean isLocalDraft;
 
-    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status) {
+    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft) {
         setPostId(postId);
         setBlogId(blogId);
         setTitle(title);
         setDateCreatedGmt(dateCreatedGmt);
         setStatus(status);
         setFormattedDate();
+        setLocalDraft(localDraft);
     }
 
     public int getPostId() {
@@ -73,6 +75,14 @@ public class PostsListPost {
 
     public void setFormattedDate() {
         formattedDate = DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
+    }
+
+    public boolean isLocalDraft() {
+        return isLocalDraft;
+    }
+
+    public void setLocalDraft(boolean isLocalDraft) {
+        this.isLocalDraft = isLocalDraft;
     }
 
 }
