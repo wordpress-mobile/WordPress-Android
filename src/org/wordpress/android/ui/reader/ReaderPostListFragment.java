@@ -2,10 +2,8 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
@@ -102,11 +99,6 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -155,11 +147,6 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onPause();
         hideLoadingProgress();
         animateRefreshButton(false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -383,7 +370,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return !TextUtils.isEmpty(mCurrentTag);
     }
 
-    protected void setCurrentTag(final String tagName) {
+    private void setCurrentTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
             return;
         if (isCurrentTagName(tagName) && tagName.equals(getPostAdapter().getCurrentTag()))
@@ -413,7 +400,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * post may have been changed (either by the user, or because it updated)
      */
     protected void reloadPost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return;
         getPostAdapter().reloadPost(post);
     }
@@ -430,7 +417,8 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     protected void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
-        getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
+        if (hasPostAdapter())
+            getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
     }
     
     /*
@@ -464,12 +452,6 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
                     AppLog.w(T.READER, "reader post list > volley response when fragment has no activity");
-                    // this fragment is no longer valid, so send a broadcast that tells the host
-                    // ReaderActivity that it needs to refresh the list of posts - this
-                    // situation occurs when the user rotates the device while the update is
-                    // still in progress
-                    if (numNewPosts > 0)
-                        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(new Intent(ReaderActivity.ACTION_REFRESH_POSTS));
                     return;
                 }
 

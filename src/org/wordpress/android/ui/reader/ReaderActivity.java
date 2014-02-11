@@ -1,16 +1,11 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -45,9 +40,10 @@ import org.wordpress.android.util.SysUtils;
 public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
                                        FragmentManager.OnBackStackChangedListener,
+                                       ReaderPostDetailFragment.PostChangeListener,
                                        ReaderFullScreenUtils.FullScreenListener {
 
-    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL, UNKNOWN }
+    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
 
@@ -92,33 +88,21 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_REFRESH_POSTS));
-    }
-
-    @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
         checkMenuDrawer();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
 
-        // purge the database of older data at startup
+        // at startup, purge the database of older data and perform an initial update - note
+        // that these booleans are static
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
-
         if (!mHasPerformedInitialUpdate)
             performInitialUpdate();
     }
@@ -176,27 +160,8 @@ public class ReaderActivity extends WPActionBarActivity
                 if (isResultOK && listFragment != null && data != null) {
                     // reload tags if they were changed, and set the last tag added as the current one
                     if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
-                        final String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
+                        String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
                         listFragment.doTagsChanged(lastAddedTag);
-                    }
-                }
-                break;
-
-            // user just returned from post detail, reload the displayed post if it changed (will
-            // only be RESULT_OK if changed)
-            // TODO: no longer works now that detail is a fragment
-            case Constants.INTENT_READER_POST_DETAIL:
-                if (isResultOK && listFragment != null && data!=null) {
-                    long blogId = data.getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
-                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailFragment.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
-                    ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
-                    if (updatedPost != null) {
-                        listFragment.reloadPost(updatedPost);
-                        // update 'following' status on all other posts in the same blog.
-                        if (isBlogFollowStatusChanged) {
-                            listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
-                        }
                     }
                 }
                 break;
@@ -382,20 +347,27 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     /*
-     * this broadcast receiver handles the ACTION_REFRESH_POSTS action, which may be called from the
-     * post list fragment if the device is rotated while an update is in progress
+     * called from post detail when user changes a post (like/unlikes/follows/unfollows) so we can
+     * update the list fragment to reflect the change - note that by the time this has been called,
+     * the post will already have been changed in SQLite
      */
-    protected static final String ACTION_REFRESH_POSTS = "action_refresh_posts";
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                AppLog.i(T.READER, "reader activity > received ACTION_REFRESH_POSTS");
-                ReaderPostListFragment listFragment = getListFragment();
-                if (listFragment != null)
-                    listFragment.refreshPosts();
-            }
+    @Override
+    public void onPostChanged(long blogId, long postId, ReaderPostDetailFragment.PostChangeType changeType) {
+        ReaderPostListFragment listFragment = getListFragment();
+        if (listFragment == null)
+            return;
+
+        switch (changeType) {
+            case FOLLOWED:
+            case UNFOLLOWED:
+                // if follow status has changed, update the follow status on other posts in this blog
+                listFragment.updateFollowStatusOnPostsForBlog(blogId, changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                break;
+            default:
+                // otherwise, reload the updated post so that changes are reflected
+                final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
+                listFragment.reloadPost(updatedPost);
         }
-    };
+    }
 
 }

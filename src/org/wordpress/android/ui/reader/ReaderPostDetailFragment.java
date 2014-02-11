@@ -68,10 +68,19 @@ import java.util.ArrayList;
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderPostDetailFragment extends SherlockFragment {
+
+    protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
+    protected static interface PostChangeListener {
+        public void onPostChanged(long blogId, long postId, PostChangeType changeType);
+    }
+
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
-    protected static final String ARG_BLOG_FOLLOW_STATUS_CHANGED = "blog_follow_status_changed";
     private static final String ARG_LIST_STATE = "list_state";
+
+    private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
+    private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
+    private static final String KEY_ALREADY_UPDATED = "already_updated";
 
     private long mPostId;
     private long mBlogId;
@@ -88,9 +97,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
-    private boolean mIsPostChanged = false;
-    private boolean mIsBlogFollowStatusChanged = false;
-
     private Parcelable mListState = null;
 
     private final ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
@@ -100,6 +106,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private float mLastMotionY;
 
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
+    private PostChangeListener mPostChangeListener;
 
     private static final int MOVE_MIN_DIFF = 8;
 
@@ -390,12 +397,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
-    private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
-    private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_ALREADY_UPDATED = "already_updated";
-    private static final String KEY_IS_POST_CHANGED = "is_post_changed";
-    private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -403,9 +404,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         outState.putLong(ARG_BLOG_ID, mBlogId);
         outState.putLong(ARG_POST_ID, mPostId);
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
-        outState.putBoolean(KEY_IS_POST_CHANGED, mIsPostChanged);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
-        outState.putBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
 
@@ -427,8 +426,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
-            mIsPostChanged = savedInstanceState.getBoolean(KEY_IS_POST_CHANGED);
-            mIsBlogFollowStatusChanged = savedInstanceState.getBoolean(KEY_IS_BLOG_FOLLOW_STATUS_CHANGED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -442,10 +439,22 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         // clear title until post is loaded
         activity.setTitle(null);
+
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+
+        if (activity instanceof PostChangeListener)
+            mPostChangeListener = (PostChangeListener) activity;
+    }
+
+
+    private void doPostChanged(PostChangeType changeType) {
+        if (mPostChangeListener == null || !hasPost() || changeType == null)
+            return;
+        mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
     }
 
     // TODO: post list needs to know when the post has been changed
@@ -475,7 +484,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * triggered when user chooses to like or follow - actionView is the ImageView or TextView
      * associated with the action (ex: like button)
      */
-    private void doPostAction(View actionView, ReaderPostActions.PostAction action, ReaderPost post) {
+    private void doPostAction(View actionView, ReaderPostActions.PostAction action, final ReaderPost post) {
         boolean isSelected = actionView.isSelected();
         actionView.setSelected(!isSelected);
         AniUtils.zoomAction(actionView);
@@ -487,7 +496,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         // get the post again, since it has changed
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-        mIsPostChanged = true;
+
+        // fire listener so host knows about the change
+        switch (action) {
+            case TOGGLE_LIKE:
+                doPostChanged(mPost.isLikedByCurrentUser ? PostChangeType.LIKED : PostChangeType.UNLIKED);
+                break;
+            case TOGGLE_FOLLOW:
+                doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
+                break;
+        }
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
@@ -496,7 +514,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 refreshLikes(true);
                 break;
             case TOGGLE_FOLLOW:
-                mIsBlogFollowStatusChanged = true;
                 refreshFollowed();
                 break;
         }
@@ -553,7 +570,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                     case CHANGED :
                         // post has changed, so get latest version
                         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                        mIsPostChanged = true;
+                        doPostChanged(PostChangeType.CONTENT);
                         break;
                     case FAILED:
                         // failed to get post, so do nothing here
@@ -610,7 +627,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                     return;
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    mIsPostChanged = true;
+                    doPostChanged(PostChangeType.CONTENT);
                     refreshComments();
                 }
             }
@@ -907,7 +924,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                                                                                 replyToCommentId,
                                                                                 actionListener);
         if (newComment!=null) {
-            mIsPostChanged = true;
+            doPostChanged(PostChangeType.CONTENT);
             editComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
