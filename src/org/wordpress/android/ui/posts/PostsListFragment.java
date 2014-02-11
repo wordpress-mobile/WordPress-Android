@@ -193,6 +193,11 @@ public class PostsListFragment extends ListFragment {
         fetchPostsTaskTask.execute(apiArgs);
     }
 
+    protected void clear() {
+        if (getPostListAdapter() != null)
+            getPostListAdapter().clear();
+    }
+
     private boolean hasActivity() {
         return getActivity() != null;
     }

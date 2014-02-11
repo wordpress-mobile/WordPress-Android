@@ -800,7 +800,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onBlogChanged();
         popPostDetail();
         attemptToSelectPost();
+        mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
     }
 }

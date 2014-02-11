@@ -27,7 +27,6 @@ public class PostListAdapter extends BaseAdapter {
 
     private final OnLoadMoreListener mOnLoadMoreListener;
     private Context mContext;
-    private int mBlogId;
     private boolean mIsPage;
     private LayoutInflater mLayoutInflater;
 
@@ -36,7 +35,6 @@ public class PostListAdapter extends BaseAdapter {
 
     public PostListAdapter(Context context, int blogId, boolean isPage, OnLoadMoreListener onLoadMoreListener) {
         mContext = context;
-        mBlogId = blogId;
         mIsPage = isPage;
         mOnLoadMoreListener = onLoadMoreListener;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -118,6 +116,13 @@ public class PostListAdapter extends BaseAdapter {
         new LoadPostsTask().execute();
     }
 
+    public void clear() {
+        if (mPosts.size() > 0) {
+            mPosts.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     class PostViewWrapper {
         View base;
         TextView title = null;
@@ -153,7 +158,8 @@ public class PostListAdapter extends BaseAdapter {
     private class LoadPostsTask extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] params) {
-            setPosts(WordPress.wpDB.getPostsListPosts(mBlogId, mIsPage));
+            if (WordPress.getCurrentBlog() != null)
+                setPosts(WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage));
             return null;
         }
 
