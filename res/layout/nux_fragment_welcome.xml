@@ -19,7 +19,7 @@
 
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
-            app:maxWidth="600dp"
+            app:maxWidth="@dimen/nux_width"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
@@ -185,7 +185,8 @@
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="@dimen/nux_width"
             android:id="@+id/nux_bottom_buttons"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -219,6 +220,6 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"/>
-        </LinearLayout>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>
