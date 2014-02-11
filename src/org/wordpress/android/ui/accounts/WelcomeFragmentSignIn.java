@@ -285,6 +285,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText.setEnabled(false);
         mAddSelfHostedButton.setEnabled(false);
         mCreateAccountButton.setEnabled(false);
+        mForgotPassword.setEnabled(false);
     }
 
     protected void endProgress() {
@@ -296,6 +297,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText.setEnabled(true);
         mAddSelfHostedButton.setEnabled(true);
         mCreateAccountButton.setEnabled(true);
+        mForgotPassword.setEnabled(true);
     }
 
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
