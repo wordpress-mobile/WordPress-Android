@@ -119,7 +119,7 @@ public class ReaderActivity extends WPActionBarActivity
     public void onBackPressed() {
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
-        } else if (hasDetailFragment()) {
+        } else if (hasListFragment() && hasDetailFragment()) {
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -230,6 +230,10 @@ public class ReaderActivity extends WPActionBarActivity
         return ((ReaderPostListFragment) fragment);
     }
 
+    private boolean hasListFragment() {
+        return (getListFragment() != null);
+    }
+
     /*
      * show fragment containing detail for passed post
      */
@@ -237,12 +241,12 @@ public class ReaderActivity extends WPActionBarActivity
         String tagForFragment = ReaderFragmentType.POST_DETAIL.toString();
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment, tagForFragment)
-                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(tagForFragment)
-                .commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, fragment, tagForFragment);
+        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        if (hasListFragment())
+            ft.addToBackStack(tagForFragment);
+        ft.commit();
     }
 
     private ReaderPostDetailFragment getDetailFragment() {

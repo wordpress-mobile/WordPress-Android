@@ -3,8 +3,10 @@ package org.wordpress.android.ui.comments;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -17,6 +19,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
@@ -96,7 +99,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
         }
@@ -133,7 +136,7 @@ public class CommentsActivity extends WPActionBarActivity
     public void onCommentSelected(Comment comment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.commentDetail);
 
         if (comment != null && fm.getBackStackEntryCount() == 0) {
             if (f == null || !f.isInLayout()) {
@@ -148,7 +151,7 @@ public class CommentsActivity extends WPActionBarActivity
             } else {
                 // tablet mode with list/detail side-by-side - show this comment in the detail view,
                 // and highlight it in the list view
-                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
+                ((CommentDetailFragment)f).setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
                 if (mCommentListFragment != null)
                     mCommentListFragment.setHighlightedCommentId(comment.commentID);
             }
@@ -156,13 +159,39 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
+     * called from comment detail when user taps a link to a post - show the post in the reader
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        // TODO: broken on tablet
+        /*FragmentManager fm = getSupportFragmentManager();
+        final int id;
+        if (fm.findFragmentById(R.id.commentDetailFragmentContainer) != null) {
+            // standard ui
+            id = R.id.commentDetailFragmentContainer;
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        } else if (fm.findFragmentById(R.id.commentDetail) != null) {
+            // tablet ui
+            id = R.id.commentDetail;
+        } else {
+            return;
+        }
+
+        fm.beginTransaction()
+            .replace(id, ReaderPostDetailFragment.newInstance(remoteBlogId, postId))
+            .addToBackStack(null)
+            .commit();*/
+        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId);
+    }
+
+    /*
      * reload the comment in the detail view if it's showing
      */
     private void reloadCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        Fragment fragment = fm.findFragmentById(R.id.commentDetail);
         if (fragment != null)
-            fragment.reloadComment();
+            ((CommentDetailFragment) fragment).reloadComment();
     }
 
     /*
@@ -208,19 +237,5 @@ public class CommentsActivity extends WPActionBarActivity
         if (dialog != null)
             return dialog;
         return super.onCreateDialog(id);
-    }
-
-    /*
-     * called from comment detail when user taps a link to a post - show the post in the reader
-     */
-    @Override
-    public void onPostClicked(long remoteBlogId, long postId) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.commentDetailFragmentContainer, ReaderPostDetailFragment.newInstance(remoteBlogId, postId));
-        ft.addToBackStack(null);
-        ft.commit();
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
-        // ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
     }
 }
