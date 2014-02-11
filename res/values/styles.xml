@@ -263,7 +263,7 @@
     <style name="WordPress.NUXTos">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/nux_tos</item>
+        <item name="android:textColor">@color/nux_disabled</item>
     </style>
 
     <style name="WordPress.NUXTitle">
