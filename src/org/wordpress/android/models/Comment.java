@@ -94,10 +94,10 @@ public class Comment {
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return StringUtils.notNullStr(profileImageUrl);
     }
     public void setProfileImageUrl(String url) {
-        profileImageUrl = url;
+        profileImageUrl = StringUtils.notNullStr(url);
     }
     public boolean hasProfileImageUrl() {
         return !TextUtils.isEmpty(profileImageUrl);

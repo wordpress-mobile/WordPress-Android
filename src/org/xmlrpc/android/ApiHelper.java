@@ -6,6 +6,7 @@ import android.util.Xml;
 
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -160,7 +162,7 @@ public class ApiHelper {
             } else {
                 isModified |= mBlog.bsetFeaturedImageCapable(false);
             }
-            if (isModified && WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive()) {
+            if (isModified) {
                 WordPress.wpDB.saveBlog(mBlog);
             }
         }
@@ -322,6 +324,77 @@ public class ApiHelper {
         CommentTable.saveComments(localBlogId, comments);
 
         return comments;
+    }
+
+    public static class FetchPostsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess();
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+
+        public FetchPostsTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            boolean isPage = (Boolean) arguments.get(1);
+            int recordCount = (Integer) arguments.get(2);
+            boolean loadMore = (Boolean) arguments.get(3);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] result;
+            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), recordCount };
+            try {
+                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                        : "metaWeblog.getRecentPosts", xmlrpcParams);
+                if (result != null) {
+                    if (result.length > 0) {
+                        List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+
+                        if (!loadMore) {
+                            WordPress.wpDB.deleteUploadedPosts(
+                                    blog.getLocalTableBlogId(), isPage);
+                        }
+
+                        for (int ctr = 0; ctr < result.length; ctr++) {
+                            Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                            postsList.add(ctr, postMap);
+                        }
+
+                        WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage);
+                    }
+                }
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess();
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
     }
 
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {

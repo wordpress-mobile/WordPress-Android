@@ -9,6 +9,7 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -25,6 +26,7 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
@@ -50,7 +52,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 24;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -234,7 +236,10 @@ public class WordPressDB {
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                 currentVersion++;
+            // version 23 added CommentTable.java, version 24 changed the comment table schema
             case 22 :
+                currentVersion++;
+            case 23:
                 CommentTable.reset(db);
                 currentVersion++;
         }
@@ -771,126 +776,105 @@ public class WordPressDB {
         return (result == 1);
     }
 
-    public boolean savePosts(List<?> postValues, int blogID, boolean isPage) {
-        boolean returnValue = false;
-        if (postValues.size() != 0) {
-            for (int i = 0; i < postValues.size(); i++) {
-                try {
-                    ContentValues values = new ContentValues();
-                    Map<?, ?> thisHash = (Map<?, ?>) postValues.get(i);
-                    values.put("blogID", blogID);
-                    if (thisHash.get((isPage) ? "page_id" : "postid") == null)
-                        return false;
-                    String postID = thisHash.get((isPage) ? "page_id" : "postid")
-                            .toString();
-                    values.put("postid", postID);
-                    values.put("title", thisHash.get("title").toString());
-                    Date d;
-                    try {
-                        d = (Date) thisHash.get("dateCreated");
-                        values.put("dateCreated", d.getTime());
-                    } catch (Exception e) {
-                        Date now = new Date();
-                        values.put("dateCreated", now.getTime());
-                    }
-                    try {
-                        d = (Date) thisHash.get("date_created_gmt");
-                        values.put("date_created_gmt", d.getTime());
-                    } catch (Exception e) {
-                        d = new Date((Long) values.get("dateCreated"));
-                        values.put("date_created_gmt",
-                                d.getTime() + (d.getTimezoneOffset() * 60000));
-                    }
-                    values.put("description", thisHash.get("description")
-                            .toString());
-                    values.put("link", thisHash.get("link").toString());
-                    values.put("permaLink", thisHash.get("permaLink").toString());
+    /**
+     * Saves a list of posts to the db
+     * @param postsList: list of post objects
+     * @param localBlogId: the posts table blog id
+     * @param isPage: boolean to save as pages
+     */
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage) {
+        if (postsList.size() != 0) {
+            for (Object post : postsList) {
+                ContentValues values = new ContentValues();
 
-                    Object[] cats = (Object[]) thisHash.get("categories");
-                    JSONArray jsonArray = new JSONArray();
-                    if (cats != null) {
-                        for (int x = 0; x < cats.length; x++) {
-                            jsonArray.put(cats[x].toString());
-                        }
-                    }
-                    values.put("categories", jsonArray.toString());
-
-                    Object[] custom_fields = (Object[]) thisHash
-                            .get("custom_fields");
-                    jsonArray = new JSONArray();
-                    if (custom_fields != null) {
-                        for (int x = 0; x < custom_fields.length; x++) {
-                            jsonArray.put(custom_fields[x].toString());
-                            // Update geo_long and geo_lat from custom fields, if
-                            // found:
-                            Map<?, ?> customField = (Map<?, ?>) custom_fields[x];
-                            if (customField.get("key") != null
-                                    && customField.get("value") != null) {
-                                if (customField.get("key").equals("geo_longitude"))
-                                    values.put("longitude", customField
-                                            .get("value").toString());
-                                if (customField.get("key").equals("geo_latitude"))
-                                    values.put("latitude", customField.get("value")
-                                            .toString());
-                            }
-                        }
-                    }
-                    values.put("custom_fields", jsonArray.toString());
-
-                    values.put("mt_excerpt",
-                            thisHash.get((isPage) ? "excerpt" : "mt_excerpt")
-                                    .toString());
-                    values.put("mt_text_more",
-                            thisHash.get((isPage) ? "text_more" : "mt_text_more")
-                                    .toString());
-                    values.put("mt_allow_comments",
-                            (Integer) thisHash.get("mt_allow_comments"));
-                    values.put("mt_allow_pings",
-                            (Integer) thisHash.get("mt_allow_pings"));
-                    values.put("wp_slug", thisHash.get("wp_slug").toString());
-                    values.put("wp_password", thisHash.get("wp_password")
-                            .toString());
-                    values.put("wp_author_id", thisHash.get("wp_author_id")
-                            .toString());
-                    values.put("wp_author_display_name",
-                            thisHash.get("wp_author_display_name").toString());
-                    values.put("post_status",
-                            thisHash.get((isPage) ? "page_status" : "post_status")
-                                    .toString());
-                    values.put("userid", thisHash.get("userid").toString());
-
-                    int isPageInt = 0;
-                    if (isPage) {
-                        isPageInt = 1;
-                        values.put("isPage", true);
-                        values.put("wp_page_parent_id",
-                                thisHash.get("wp_page_parent_id").toString());
-                        values.put("wp_page_parent_title",
-                                thisHash.get("wp_page_parent_title").toString());
-                    } else {
-                        values.put("mt_keywords", thisHash.get("mt_keywords")
-                                .toString());
-                        try {
-                            values.put("wp_post_format",
-                                    thisHash.get("wp_post_format").toString());
-                        } catch (Exception e) {
-                            values.put("wp_post_format", "");
-                        }
-                    }
-
-                    int result = db.update(POSTS_TABLE, values, "postID=" + postID
-                            + " AND isPage=" + isPageInt, null);
-                    if (result == 0)
-                        returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-                    else
-                        returnValue = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Sanity checks
+                if (!(post instanceof Map)) {
+                    continue;
                 }
-            }
+                Map<?, ?> postMap = (Map<?, ?>) post;
+                String postID = MapUtils.getMapStr(postMap, (isPage) ? "page_id" : "postid");
+                if (TextUtils.isEmpty(postID)) {
+                    // If we don't have a post or page ID, move on
+                    continue;
+                }
 
+                values.put("blogID", localBlogId);
+                values.put("postid", postID);
+                values.put("title", MapUtils.getMapStr(postMap, "title"));
+                Date dateCreated = MapUtils.getMapDate(postMap, "dateCreated");
+                if (dateCreated != null) {
+                    values.put("dateCreated", dateCreated.getTime());
+                } else {
+                    Date now = new Date();
+                    values.put("dateCreated", now.getTime());
+                }
+
+                Date dateCreatedGmt = MapUtils.getMapDate(postMap, "date_created_gmt");
+                if (dateCreatedGmt != null) {
+                    values.put("date_created_gmt", dateCreatedGmt.getTime());
+                } else {
+                    dateCreatedGmt = new Date((Long) values.get("dateCreated"));
+                    values.put("date_created_gmt", dateCreatedGmt.getTime() + (dateCreatedGmt.getTimezoneOffset() * 60000));
+                }
+
+                values.put("description", MapUtils.getMapStr(postMap, "description"));
+                values.put("link", MapUtils.getMapStr(postMap, "link"));
+                values.put("permaLink", MapUtils.getMapStr(postMap, "permaLink"));
+
+                Object[] postCategories = (Object[]) postMap.get("categories");
+                JSONArray jsonCategoriesArray = new JSONArray();
+                if (postCategories != null) {
+                    for (Object postCategory : postCategories) {
+                        jsonCategoriesArray.put(postCategory.toString());
+                    }
+                }
+                values.put("categories", jsonCategoriesArray.toString());
+
+                Object[] custom_fields = (Object[]) postMap.get("custom_fields");
+                JSONArray jsonCustomFieldsArray = new JSONArray();
+                if (custom_fields != null) {
+                    for (Object custom_field : custom_fields) {
+                        jsonCustomFieldsArray.put(custom_field.toString());
+                        // Update geo_long and geo_lat from custom fields
+                        if (!(custom_field instanceof Map))
+                            continue;
+                        Map<?, ?> customField = (Map<?, ?>) custom_field;
+                        if (customField.get("key") != null && customField.get("value") != null) {
+                            if (customField.get("key").equals("geo_longitude"))
+                                values.put("longitude", customField.get("value").toString());
+                            if (customField.get("key").equals("geo_latitude"))
+                                values.put("latitude", customField.get("value").toString());
+                        }
+                    }
+                }
+                values.put("custom_fields", jsonCustomFieldsArray.toString());
+
+                values.put("mt_excerpt", MapUtils.getMapStr(postMap, (isPage) ? "excerpt" : "mt_excerpt"));
+                values.put("mt_text_more", MapUtils.getMapStr(postMap, (isPage) ? "text_more" : "mt_text_more"));
+                values.put("mt_allow_comments", MapUtils.getMapInt(postMap, "mt_allow_comments", 0));
+                values.put("mt_allow_pings", MapUtils.getMapInt(postMap, "mt_allow_pings", 0));
+                values.put("wp_slug", MapUtils.getMapStr(postMap, "wp_slug"));
+                values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
+                values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
+                values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
+                values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
+                values.put("userid", MapUtils.getMapStr(postMap, "userid"));
+
+                if (isPage) {
+                    values.put("isPage", true);
+                    values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "wp_page_parent_id"));
+                    values.put("wp_page_parent_title", MapUtils.getMapStr(postMap, "wp_page_parent_title"));
+                } else {
+                    values.put("mt_keywords", MapUtils.getMapStr(postMap, "mt_keywords"));
+                    values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
+                }
+
+                int result = db.update(POSTS_TABLE, values, "postID=? AND isPage=?",
+                        new String[]{postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                if (result == 0)
+                    db.insert(POSTS_TABLE, null, values);
+            }
         }
-        return (returnValue);
     }
 
     public List<PostsListPost> getPostsListPosts(int blogID, boolean loadPages) {

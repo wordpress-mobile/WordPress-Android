@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Adapter for Posts/Pages list
  * Created by Dan Roundhill on 11/5/13.
  */
 public class PostListAdapter extends BaseAdapter {
@@ -46,7 +47,8 @@ public class PostListAdapter extends BaseAdapter {
     }
 
     public void setPosts(List<PostsListPost> postsList) {
-        this.mPosts = postsList;
+        if (postsList != null)
+            this.mPosts = postsList;
     }
 
     @Override
