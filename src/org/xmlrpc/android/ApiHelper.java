@@ -160,7 +160,7 @@ public class ApiHelper {
             } else {
                 isModified |= mBlog.bsetFeaturedImageCapable(false);
             }
-            if (isModified && WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive()) {
+            if (isModified) {
                 WordPress.wpDB.saveBlog(mBlog);
             }
         }

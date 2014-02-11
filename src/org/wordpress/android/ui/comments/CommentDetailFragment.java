@@ -50,6 +50,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -323,11 +324,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity())
             return;
 
-        // locate detail view, which contains all the other views - important to search for other
-        // views within this view rather than the activity itself, since the activity may contain
-        // fragments which use the same view names (ex: text_date in both the notification list
-        // and comment detail fragments)
-        final ViewGroup viewDetail = (ViewGroup) getActivity().findViewById(R.id.layout_detail);
+        // locate detail view, which contains all the other views
+        final ViewGroup viewDetail = (ViewGroup) getView().findViewById(R.id.layout_detail);
 
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) viewDetail.findViewById(R.id.image_avatar);
         final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
@@ -359,10 +357,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
         CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz);
 
+        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         if (mComment.hasProfileImageUrl()) {
-            imgAvatar.setImageUrl(mComment.getProfileImageUrl(), WPNetworkImageView.ImageType.AVATAR);
+            imgAvatar.setImageUrl(PhotonUtils.fixAvatar(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else if (mComment.hasAuthorEmail()) {
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
@@ -393,16 +391,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             AniUtils.flyIn(mLayoutReply);
     }
 
-    private void setPostTitle(TextView txtTitle, String title) {
-        if (txtTitle == null)
+    /*
+     * displays the passed post title for the current comment, updates stored title if one doesn't exist
+     */
+    private void setPostTitle(TextView txtTitle, final String postTitle) {
+        if (txtTitle == null || !hasActivity())
             return;
-        if (TextUtils.isEmpty(title)) {
-            txtTitle.setText(null);
+        if (TextUtils.isEmpty(postTitle)) {
+            txtTitle.setText(R.string.untitled);
             return;
         }
+
+        // if comment doesn't have a post title, set it to the passed one and save to comment table
+        if (hasComment() && !mComment.hasPostTitle()) {
+            mComment.setPostTitle(postTitle);
+            CommentTable.updateCommentPostTitle(getLocalBlogId(), getCommentId(), postTitle);
+        }
+
+        // display "on [Post Title]..."
         String html = getString(R.string.on)
                     + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink) + ">"
-                    + title.trim()
+                    + postTitle.trim()
                     + "</font>";
         txtTitle.setText(Html.fromHtml(html));
     }
@@ -415,37 +424,43 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity())
             return;
 
-        final TextView txtPostTitle = (TextView) getActivity().findViewById(R.id.text_post_title);
+        final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
 
         final String title;
+        final boolean hasTitle;
         if (mComment.hasPostTitle()) {
+            // use comment's stored post title if available
             title = mComment.getPostTitle();
+            hasTitle = true;
         } else if (postExists) {
+            // use title from post if available
             title = ReaderPostTable.getPostTitle(blogId, postId);
+            hasTitle = !TextUtils.isEmpty(title);
         } else {
             title = null;
+            hasTitle = false;
         }
-        final boolean hasTitle = !TextUtils.isEmpty(title);
         if (hasTitle) {
             setPostTitle(txtPostTitle, title);
         } else {
-            txtPostTitle.setText(R.string.loading);
+            txtPostTitle.setText(postExists? R.string.untitled : R.string.loading);
         }
 
         // make sure this post is available to the reader, and once it's retrieved set the title
         // if it wasn't already set
         if (!postExists) {
+            AppLog.d(T.COMMENTS, "comment detail > retrieving post");
             ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
                 @Override
                 public void onActionResult(boolean succeeded) {
                     if (!hasActivity())
                         return;
                     // update title if it wasn't set above
-                    if (succeeded && !hasTitle) {
-                        String title = ReaderPostTable.getPostTitle(blogId, postId);
-                        if (!TextUtils.isEmpty(title)) {
-                            setPostTitle(txtPostTitle, title);
+                    if (!hasTitle) {
+                        String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                        if (!TextUtils.isEmpty(postTitle)) {
+                            setPostTitle(txtPostTitle, postTitle);
                         } else {
                             txtPostTitle.setText(R.string.untitled);
                         }
@@ -585,7 +600,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
         mImgSubmitReply.setVisibility(View.GONE);
-        final ProgressBar progress = (ProgressBar) getActivity().findViewById(R.id.progress_submit_comment);
+        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
@@ -780,10 +795,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // first try to get from local db, if that fails request it from the server
                 Comment comment = CommentTable.getComment(localBlogId, commentId);
                 if (comment != null) {
-                    comment.setProfileImageUrl(note.getIconURL());
                     setComment(localBlogId, comment);
                 } else {
-                    requestComment(localBlogId, mRemoteBlogId, commentId, note.getIconURL());
+                    requestComment(localBlogId, mRemoteBlogId, commentId);
                 }
             }
         } else {
@@ -799,9 +813,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     private void requestComment(final int localBlogId,
                                 final int remoteBlogId,
-                                final int commentId,
-                                final String profileImageUrl) {
-        final ProgressBar progress = (hasActivity() ? (ProgressBar) getActivity().findViewById(R.id.progress_loading) : null);
+                                final int commentId) {
+        final ProgressBar progress = (hasActivity() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
 
@@ -814,8 +827,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     Comment comment = Comment.fromJSON(jsonObject);
                     if (comment != null) {
-                        if (profileImageUrl != null)
-                            comment.setProfileImageUrl(profileImageUrl);
                         CommentTable.addComment(localBlogId, comment);
                         setComment(localBlogId, comment);
                     }
