@@ -6,11 +6,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -33,10 +35,13 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
+    final private static String DOT_COM_BASE_URL = "https://wordpress.com";
+    final private static String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -45,6 +50,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
+    private WPTextView mForgotPassword;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
     private EmailChecker mEmailChecker;
@@ -86,7 +92,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
-
+        mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
+        mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
@@ -114,7 +121,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void autocorrectUsername() {
         if (mEmailAutoCorrected)
             return;
-        final String email = mUsernameEditText.getText().toString().trim();
+        final String email = getEditTextString(mUsernameEditText).trim();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
@@ -135,6 +142,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         public void onClick(View v) {
             Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
             startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+        }
+    };
+
+    private View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String baseUrl = DOT_COM_BASE_URL;
+            if (mSelfHosted && !TextUtils.isEmpty(getEditTextString(mUrlEditText).trim())) {
+                baseUrl = getEditTextString(mUrlEditText).trim();
+                String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
+                if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
+                    baseUrl = "http://" + baseUrl;
+                }
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + FORGOT_PASSWORD_RELATIVE_URL));
+            startActivity(intent);
         }
     };
 
@@ -191,13 +214,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private boolean fieldsFilled() {
-        return mUsernameEditText.getText().toString().trim().length() > 0
-               && mPasswordEditText.getText().toString().trim().length() > 0;
+        return getEditTextString(mUsernameEditText).trim().length() > 0
+               && getEditTextString(mPasswordEditText).trim().length() > 0;
     }
 
     protected boolean isUserDataValid() {
-        final String username = mUsernameEditText.getText().toString().trim();
-        final String password = mPasswordEditText.getText().toString().trim();
+        final String username = getEditTextString(mUsernameEditText).trim();
+        final String password = getEditTextString(mPasswordEditText).trim();
         boolean retValue = true;
 
         if (username.equals("")) {
@@ -215,7 +238,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private boolean selfHostedFieldsFilled() {
-        return fieldsFilled() && mUrlEditText.getText().toString().trim().length() > 0;
+        return fieldsFilled() && getEditTextString(mUrlEditText).trim().length() > 0;
     }
 
     private void showPasswordError(int messageId) {
@@ -292,10 +315,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (mSetupBlog == null) {
                 mSetupBlog = new SetupBlog();
             }
-            mSetupBlog.setUsername(mUsernameEditText.getText().toString().trim());
-            mSetupBlog.setPassword(mPasswordEditText.getText().toString().trim());
+            mSetupBlog.setUsername(getEditTextString(mUsernameEditText).trim());
+            mSetupBlog.setPassword(getEditTextString(mPasswordEditText).trim());
             if (mSelfHosted) {
-                mSetupBlog.setSelfHostedURL(mUrlEditText.getText().toString().trim());
+                mSetupBlog.setSelfHostedURL(getEditTextString(mUrlEditText).trim());
             } else {
                 mSetupBlog.setSelfHostedURL(null);
             }
@@ -332,8 +355,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         SetupBlogTask setupBlogTask = new SetupBlogTask();
-                        setupBlogTask.setHttpCredentials(usernameEditText.getText().toString(),
-                                passwordEditText.getText().toString());
+                        setupBlogTask.setHttpCredentials(getEditTextString(usernameEditText),
+                                getEditTextString(passwordEditText));
                         setupBlogTask.execute();
                     }
                 });
