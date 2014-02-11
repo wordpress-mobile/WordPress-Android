@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,6 +54,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
+    private LinearLayout mBottomButtonsLayout;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
     private EmailChecker mEmailChecker;
@@ -104,7 +107,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         });
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
+        mBottomButtonsLayout = (LinearLayout) rootView.findViewById(R.id.nux_bottom_buttons);
         initPasswordVisibilityButton(rootView, mPasswordEditText);
+        moveBottomButtons();
         return rootView;
     }
 
@@ -117,6 +122,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         mSelfHosted = true;
+    }
+
+    private void moveBottomButtons() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mBottomButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        } else {
+            mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
+        }
     }
 
     private void autocorrectUsername() {

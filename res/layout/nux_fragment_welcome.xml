@@ -186,12 +186,12 @@
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/nux_bottom_buttons"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
             android:animateLayoutChanges="true"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXWhiteButtonNoBg"
@@ -200,7 +200,14 @@
                 android:layout_height="48dp"
                 android:text="@string/nux_add_selfhosted_blog"
                 android:gravity="center|top"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXWhiteButtonNoBg"
@@ -209,7 +216,9 @@
                 android:layout_height="48dp"
                 android:text="@string/nux_welcome_create_account"
                 android:gravity="center|top"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

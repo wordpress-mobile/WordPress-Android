@@ -51,7 +51,7 @@
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.WelcomeActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
