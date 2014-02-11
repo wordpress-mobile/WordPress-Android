@@ -235,7 +235,6 @@ public class WordPressDB {
                 currentVersion++;
             // version 23 added CommentTable.java, version 24 changed the comment table schema
             case 22 :
-                CommentTable.reset(db);
                 currentVersion++;
             case 23:
                 CommentTable.reset(db);
