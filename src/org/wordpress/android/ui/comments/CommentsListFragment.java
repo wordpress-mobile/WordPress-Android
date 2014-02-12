@@ -25,6 +25,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.util.AppLog;
@@ -146,7 +147,7 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private void moderateSelectedComments(CommentStatus newStatus) {
+    private void moderateSelectedComments(final CommentStatus newStatus) {
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
 
@@ -191,8 +192,10 @@ public class CommentsListFragment extends Fragment {
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
+                    if (mOnCommentChangeListener != null) {
+                        ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, changeType);
+                    }
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -240,7 +243,7 @@ public class CommentsListFragment extends Fragment {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
                     if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, ChangeType.TRASHED);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }

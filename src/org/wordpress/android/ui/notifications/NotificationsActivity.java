@@ -400,10 +400,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     /*
      * triggered from the comment details fragment whenever a comment is changed (moderated, added,
-     * deleted, etc.) - refresh notifications show changes are reflected here
+     * deleted, etc.) - refresh notifications so changes are reflected here
      */
     @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         refreshNotes();
     }
 

@@ -54,8 +54,9 @@ public class CommentActions {
      * comments (moderated, deleted, added, etc.)
      */
     public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
+    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED}
     public static interface OnCommentChangeListener {
-        public void onCommentChanged(ChangedFrom changedFrom);
+        public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
     }
 
 

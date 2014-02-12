@@ -42,9 +42,6 @@ public class CommentsActivity extends WPActionBarActivity
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
         WordPress.currentComment = null;
-
-        if (savedInstanceState != null)
-            popCommentDetail();
     }
 
     @Override
@@ -73,12 +70,12 @@ public class CommentsActivity extends WPActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                popCommentDetail();
                 updateCommentList();
                 return true;
             case android.R.id.home:
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    popCommentDetail();
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
                     return true;
                 }
                 break;
@@ -94,11 +91,11 @@ public class CommentsActivity extends WPActionBarActivity
         }
     };
 
+    // TODO: DOESN'T WORK - this is used to close the detail fragment when user trashes comment
     protected void popCommentDetail() {
-        CommentDetailFragment detailFragment = getDetailFragment();
-        if (detailFragment != null) {
-            getSupportFragmentManager().popBackStack();
-        }
+        FragmentManager fm = getSupportFragmentManager();
+        if (hasDetailFragment() && fm.getBackStackEntryCount() > 0)
+            fm.popBackStack();
     }
 
     @Override
@@ -111,7 +108,7 @@ public class CommentsActivity extends WPActionBarActivity
      * called from comment list & comment detail when comments are moderated, added, or deleted
      */
     @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         // update the comment counter on the menu drawer
         updateMenuDrawer();
 
@@ -120,7 +117,22 @@ public class CommentsActivity extends WPActionBarActivity
                 reloadCommentDetail();
                 break;
             case COMMENT_DETAIL:
-                reloadCommentList();
+                switch (changeType) {
+                    case TRASHED:
+                        updateCommentList();
+                        // remove the detail view since comment was deleted
+                        FragmentManager fm = getSupportFragmentManager();
+                        if (fm.getBackStackEntryCount() > 0) {
+                            fm.popBackStack();
+                        }
+                        break;
+                    case REPLIED:
+                        updateCommentList();
+                        break;
+                    default:
+                        reloadCommentList();
+                        break;
+                }
                 break;
         }
     }
@@ -130,6 +142,10 @@ public class CommentsActivity extends WPActionBarActivity
         if (fragment == null)
             return null;
         return (CommentDetailFragment)fragment;
+    }
+
+    private boolean hasDetailFragment() {
+        return (getDetailFragment() != null);
     }
 
     private CommentsListFragment getListFragment() {
@@ -163,7 +179,7 @@ public class CommentsActivity extends WPActionBarActivity
             if (listFragment != null)
                 ft.hide(listFragment);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-            ft.add(R.id.layout_comment_detail_container, detailFragment);
+            ft.add(R.id.layout_comment_fragment_container, detailFragment);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);

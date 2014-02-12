@@ -33,6 +33,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
+import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
@@ -250,7 +251,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             reloadComment();
             // tell the host to reload the comment list
             if (mOnCommentChangeListener != null)
-                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
     }
 
@@ -287,16 +288,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void clearComment() {
         setNote(null);
         setComment(0, null);
-    }
-
-    /*
-     * called after comment trashed to remove this fragment
-     */
-    private void closeThisFragment() {
-        if (!hasActivity())
-            return;
-        if (getActivity() instanceof CommentsActivity)
-            ((CommentsActivity)getActivity()).popCommentDetail();
     }
 
     /*
@@ -559,8 +550,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
-                if (succeeded && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
                 if (hasActivity()) {
                     dismissDialog(dlgId);
                     mLayoutButtons.setEnabled(true);
@@ -570,13 +559,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                     }
                     if (newStatus == CommentStatus.TRASH) {
-                        // clear the comment and remove this detail fragment if comment was trashed
+                        // clear the comment if it was trashed
                         clearComment();
-                        closeThisFragment();
                     } else {
                         // reflect the new status - note this MUST come after mComment.setStatus
                         updateStatusViews();
                     }
+                }
+
+                if (succeeded && mOnCommentChangeListener != null) {
+                    ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, changeType);
                 }
             }
         };
@@ -605,16 +598,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
+        // animate the buttons out (updateStatusViews will re-display them when request completes)
+        mLayoutButtons.clearAnimation();
+        AniUtils.flyOut(mLayoutButtons);
+
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsSubmittingReply = false;
                 if (succeeded && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
                 if (hasActivity()) {
                     mEditReply.setEnabled(true);
                     mImgSubmitReply.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
+                    updateStatusViews();
                     if (succeeded) {
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
