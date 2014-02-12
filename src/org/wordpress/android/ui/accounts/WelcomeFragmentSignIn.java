@@ -58,6 +58,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private LinearLayout mBottomButtonsLayout;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
+    private ImageView mInfoButton;
+    private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
 
@@ -79,7 +81,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mSignInButton.setOnClickListener(mSignInClickListener);
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
-
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
         mAddSelfHostedButton = (WPTextView) rootView.findViewById(R.id.nux_add_selfhosted_button);
@@ -110,7 +111,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText.setOnEditorActionListener(mEditorAction);
         mBottomButtonsLayout = (LinearLayout) rootView.findViewById(R.id.nux_bottom_buttons);
         initPasswordVisibilityButton(rootView, mPasswordEditText);
-        initInfoButton(rootView);
+        initInfoButtons(rootView);
         moveBottomButtons();
         return rootView;
     }
@@ -132,22 +133,36 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         moveBottomButtons();
     }
 
-    private void initInfoButton(View rootView) {
-        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
-        infoBUtton.setOnClickListener(new OnClickListener() {
+    private void initInfoButtons(View rootView) {
+        OnClickListener infoButtonListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
                 startActivity(newAccountIntent);
             }
-        });
+        };
+        mInfoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        mInfoButtonSecondary = (ImageView) rootView.findViewById(R.id.info_button_secondary);
+        mInfoButton.setOnClickListener(infoButtonListener);
+        mInfoButtonSecondary.setOnClickListener(infoButtonListener);
+    }
+
+    private void setSecondaryButtonVisible(boolean visible) {
+        mInfoButtonSecondary.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mInfoButton.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private void moveBottomButtons() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mBottomButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+            if (getResources().getInteger(R.integer.isTablet) == 0) {
+                setSecondaryButtonVisible(true);
+            } else {
+                setSecondaryButtonVisible(false);
+            }
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
+            setSecondaryButtonVisible(false);
         }
     }
 
