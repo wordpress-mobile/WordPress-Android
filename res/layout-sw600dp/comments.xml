@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    tablet layout for comments
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,14 +40,4 @@
             android:layout_height="match_parent"
             android:layout_weight="0.6" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue_new_kid"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:padding="4dp"
-        android:gravity="center"
-        android:text="This is sw600dp"/>
 </RelativeLayout>
