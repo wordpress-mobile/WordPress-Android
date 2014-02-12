@@ -4,7 +4,7 @@
     non-tablet layout for comments
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_comment_fragment_container"
+    android:id="@+id/layout_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_grey">
@@ -13,6 +13,5 @@
         android:id="@+id/fragment_comment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="org.wordpress.android.ui.comments.CommentsListFragment"/>
-
+        android:name="org.wordpress.android.ui.comments.CommentsListFragment" />
 </RelativeLayout>

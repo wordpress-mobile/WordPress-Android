@@ -285,7 +285,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setComment(mLocalBlogId, updatedComment);
     }
 
-    private void clearComment() {
+    /*
+     * resets to no comment
+     */
+    protected void clear() {
         setNote(null);
         setComment(0, null);
     }
@@ -560,7 +563,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     }
                     if (newStatus == CommentStatus.TRASH) {
                         // clear the comment if it was trashed
-                        clearComment();
+                        clear();
                     } else {
                         // reflect the new status - note this MUST come after mComment.setStatus
                         updateStatusViews();

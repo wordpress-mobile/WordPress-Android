@@ -18,7 +18,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
@@ -28,6 +29,10 @@ public class CommentsActivity extends WPActionBarActivity
                    CommentActions.OnCommentChangeListener {
 
     private MenuItem mRefreshMenuItem;
+
+    private static final String FRAGMENT_TAG_COMMENT_DETAIL = "comment_detail";
+    private static final String FRAGMENT_TAG_READER_DETAIL = ReaderActivity.FRAGMENT_TAG_POST_DETAIL;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +52,20 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
+
+        // clear the backstack
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        // clear and update the comment list
         if (hasListFragment()) {
             getListFragment().clear();
             updateCommentList();
+        }
+
+        // clear comment detail
+        if (hasDetailFragment()) {
+            getDetailFragment().clear();
         }
     }
 
@@ -98,7 +114,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
-     * called from comment list & comment detail when comments are moderated, added, or deleted
+     * called from comment list & comment detail when comments are moderated/replied/trashed
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
@@ -152,6 +168,17 @@ public class CommentsActivity extends WPActionBarActivity
         return (getListFragment() != null);
     }
 
+    private ReaderPostDetailFragment getReaderFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_READER_DETAIL);
+        if (fragment == null)
+            return null;
+        return (ReaderPostDetailFragment)fragment;
+    }
+
+    private boolean hasReaderFragment() {
+        return (getReaderFragment() != null);
+    }
+
     /*
      * called from comment list when user taps a comment
      */
@@ -160,7 +187,6 @@ public class CommentsActivity extends WPActionBarActivity
         if (comment == null)
             return;
 
-        // if (fm.getBackStackEntryCount() > 0) return
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
         CommentDetailFragment detailFragment = getDetailFragment();
@@ -172,8 +198,8 @@ public class CommentsActivity extends WPActionBarActivity
             if (listFragment != null)
                 ft.hide(listFragment);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-            ft.add(R.id.layout_comment_fragment_container, detailFragment);
-            ft.addToBackStack(null);
+            ft.add(R.id.layout_fragment_container, detailFragment, FRAGMENT_TAG_COMMENT_DETAIL);
+            ft.addToBackStack(FRAGMENT_TAG_COMMENT_DETAIL);
             ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
@@ -186,12 +212,17 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
-     * called from comment detail when user taps a link to a post - show the post in the reader
+     * called from comment detail when user taps a link to a post - show the post in a
+     * reader detail fragment
      */
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
-        // TODO: show as a fragment
-        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId);
+        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+          .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
+          .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
+          .commit();
     }
 
     /*

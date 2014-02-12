@@ -21,10 +21,17 @@
         android:layout_height="match_parent"
         android:background="@drawable/right_shadow" />
 
-    <fragment
-        android:id="@+id/fragment_comment_detail"
-        android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
+    <RelativeLayout
+        android:id="@+id/layout_fragment_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2" />
+        android:layout_weight="2">
+
+        <fragment
+            android:id="@+id/fragment_comment_detail"
+            android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
 </LinearLayout>
