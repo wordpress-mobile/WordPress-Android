@@ -786,7 +786,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
             intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
             intent.putExtra("isNew", true);
-            intent.putExtra("viewPages", true);
+            intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

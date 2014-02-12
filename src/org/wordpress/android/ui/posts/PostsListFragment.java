@@ -41,7 +41,7 @@ public class PostsListFragment extends ListFragment {
         super.onCreate(icicle);
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
-            mIsPage = extras.getBoolean("viewPages");
+            mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
         }
     }
 

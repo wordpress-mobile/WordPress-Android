@@ -45,6 +45,8 @@ import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+    public static final String EXTRA_VIEW_PAGES = "viewPages";
+
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3,
             POST_VIEW = 5;
@@ -120,7 +122,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         if (extras != null) {
-            mIsPage = extras.getBoolean("viewPages");
+            mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
             showErrorDialogIfNeeded(extras);
         }
 
