@@ -279,6 +279,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // setup the webView - note that JavaScript is disabled since it's a security risk
         // http://developer.android.com/training/articles/security-tips.html#WebView
         mWebView = (WebView) view.findViewById(R.id.webView);
+        mWebView.setVisibility(View.INVISIBLE);
         mWebView.setWebViewClient(readerWebViewClient);
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
@@ -1391,47 +1392,68 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             // https://code.google.com/p/android/issues/detail?id=4401
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
+            // only show action buttons for WP posts
+            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+
             // make sure the adapter is assigned
             if (getListView().getAdapter() == null)
                 getListView().setAdapter(getCommentAdapter());
 
-            // now get likes & comments
-            refreshLikes(false);
-            refreshComments();
-
-            // get the latest info for this post if we haven't updated it already
-            if (!mHasAlreadyUpdatedPost) {
-                updatePost();
-                mHasAlreadyUpdatedPost = true;
-            }
-
-            // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-
-            // display listView after a short delay (to give time for content to appear)
+            // listView is hidden in onCreateView()
             if (getListView().getVisibility() != View.VISIBLE)
-                showListViewDelayed();
+                getListView().setVisibility(View.VISIBLE);
+
+            // webView is hidden in oCreateView() and will be made visible by readerWebViewClient
+            // once it finishes loading, so if it's already visible go ahead and show likes/comments
+            // right away, otherwise show them after a brief delay - this gives content time to
+            // load before likes/comments appear
+            if (mWebView.getVisibility() == View.VISIBLE) {
+                showContent();
+            } else {
+                showContentDelayed();
+            }
         }
     }
 
     /*
-     * listView is hidden in onCreateView() and then shown after a brief delay once post is loaded
-     * to give webView content a short time to load before it appears
+     * webView is hidden in onCreateView() and then shown after a brief delay once post is loaded
+     * to give webView content a short time to load before it appears - after it appears we can
+     * then get likes & comments
      */
-    private void showListViewDelayed() {
+    private void showContentDelayed() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (hasActivity())
-                    getListView().setVisibility(View.VISIBLE);
+                if (mWebView.getVisibility() != View.VISIBLE)
+                    AppLog.d(T.READER, "reader post detail > webView shown before page finished");
+                showContent();
             }
         }, 500L);
+    }
+
+    private void showContent() {
+        if (!hasActivity())
+            return;
+
+        mWebView.setVisibility(View.VISIBLE);
+
+        // show likes & comments
+        refreshLikes(false);
+        refreshComments();
+
+        // request the latest info for this post if we haven't updated it already
+        if (!mHasAlreadyUpdatedPost) {
+            updatePost();
+            mHasAlreadyUpdatedPost = true;
+        }
     }
 
     private static final WebViewClient readerWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
-            // nop
+            // show the webView now that it has loaded
+            if (view.getVisibility() != View.VISIBLE)
+                view.setVisibility(View.VISIBLE);
         }
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

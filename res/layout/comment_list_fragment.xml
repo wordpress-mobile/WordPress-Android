@@ -27,13 +27,13 @@
         android:listSelector="@drawable/reader_list_selector"
         android:scrollingCache="true"
         android:textColor="#444444"
-        tools:listitem="@layout/comment_row" />
+        tools:listitem="@layout/comment_listitem" />
 
     <ProgressBar
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_medium"
         android:id="@+id/progress_loading" />
 </RelativeLayout>

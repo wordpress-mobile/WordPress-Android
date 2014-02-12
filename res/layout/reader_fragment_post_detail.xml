@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_post_detail_container"
-    android:background="@android:color/white">
+    android:background="@color/white"
+    android:id="@+id/layout_post_detail_container">
 
     <ListView
         android:id="@id/android:list"

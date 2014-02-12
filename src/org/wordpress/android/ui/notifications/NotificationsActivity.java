@@ -341,6 +341,8 @@ public class NotificationsActivity extends WPActionBarActivity
         if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             transaction.addToBackStack(null);
+            if (mNotesList != null)
+                transaction.hide(mNotesList);
         }
         transaction.commitAllowingStateLoss();
     }
@@ -500,19 +502,6 @@ public class NotificationsActivity extends WPActionBarActivity
         restClient.getNotifications(params, notesHandler, notesHandler);
     }
 
-    /*
-     * called when a link to a post is tapped - shows the post in a reader detail fragment
-     */
-    @Override
-    public void onPostClicked(long remoteBlogId, long postId) {
-        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
-                .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
-                .commit();
-    }
-
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
         @Override
         public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
@@ -618,4 +607,19 @@ public class NotificationsActivity extends WPActionBarActivity
             return dialog;
         return super.onCreateDialog(id);
     }
+
+    /*
+     * called when a link to a post is tapped - shows the post in a reader detail fragment
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
+                .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
 }
