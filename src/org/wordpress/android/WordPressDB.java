@@ -877,7 +877,7 @@ public class WordPressDB {
         }
     }
 
-    public List<PostsListPost> getPostsListPosts(int blogID, boolean loadPages) {
+    public List<PostsListPost> getPostsListPosts(int blogId, boolean loadPages) {
 
         List<PostsListPost> posts = new ArrayList<PostsListPost>();
         Cursor c;
@@ -885,7 +885,7 @@ public class WordPressDB {
                 new String[] { "id", "blogID", "title",
                         "date_created_gmt", "post_status", "localDraft" },
                 "blogID=? AND isPage=?",
-                new String[] {String.valueOf(blogID), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
+                new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -897,10 +897,6 @@ public class WordPressDB {
             c.moveToNext();
         }
         c.close();
-
-        if (numRows == 0) {
-            posts = null;
-        }
 
         return posts;
     }

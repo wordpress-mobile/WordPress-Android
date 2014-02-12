@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Adapter for Posts/Pages list
@@ -22,7 +24,7 @@ import java.util.List;
  */
 public class PostListAdapter extends BaseAdapter {
     public static interface OnLoadMoreListener {
-        public void onLoadMore();
+        public void onLoadMore(boolean loadMore);
     }
 
     private final OnLoadMoreListener mOnLoadMoreListener;
@@ -33,7 +35,7 @@ public class PostListAdapter extends BaseAdapter {
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
 
-    public PostListAdapter(Context context, int blogId, boolean isPage, OnLoadMoreListener onLoadMoreListener) {
+    public PostListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener) {
         mContext = context;
         mIsPage = isPage;
         mOnLoadMoreListener = onLoadMoreListener;
@@ -79,6 +81,17 @@ public class PostListAdapter extends BaseAdapter {
         String date = post.getFormattedDate();
         String status = post.getStatus();
 
+        String titleText = post.getTitle();
+        if (titleText.equals(""))
+            titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
+        wrapper.getTitle().setText(titleText);
+        if (post.isLocalDraft()) {
+            wrapper.getDate().setVisibility(View.GONE);
+        } else {
+            wrapper.getDate().setText(date);
+            wrapper.getDate().setVisibility(View.VISIBLE);
+        }
+
         String formattedStatus = "";
         if (post.isLocalDraft()) {
             formattedStatus = mContext.getResources().getText(R.string.local_draft).toString();
@@ -91,22 +104,13 @@ public class PostListAdapter extends BaseAdapter {
         } else if (status.equals("private")) {
             formattedStatus = mContext.getResources().getText(R.string.post_private).toString();
         }
-
-        String titleText = post.getTitle();
-        if (titleText.equals(""))
-            titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
-        wrapper.getTitle().setText(titleText);
-        if (post.isLocalDraft()) {
-            wrapper.getDate().setVisibility(View.GONE);
-        } else {
-            wrapper.getDate().setText(date);
-            wrapper.getDate().setVisibility(View.VISIBLE);
-        }
+        formattedStatus = formattedStatus.toUpperCase(Locale.getDefault());
         wrapper.getStatus().setText(formattedStatus);
 
-        // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getCount()-1)
-            mOnLoadMoreListener.onLoadMore();
+        // load more posts when we near the end
+        if (mOnLoadMoreListener != null && position >= getCount() - 1
+                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1)
+            mOnLoadMoreListener.onLoadMore(true);
 
         return view;
     }
@@ -155,16 +159,23 @@ public class PostListAdapter extends BaseAdapter {
         }
     }
 
-    private class LoadPostsTask extends AsyncTask {
+    private class LoadPostsTask extends AsyncTask <Void, Void, Void> {
         @Override
-        protected Object doInBackground(Object[] params) {
-            if (WordPress.getCurrentBlog() != null)
-                setPosts(WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage));
+        protected Void doInBackground(Void... nada) {
+            if (WordPress.getCurrentBlog() != null) {
+                List<PostsListPost> postsList = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+                if (postsList.size() == 0) {
+                    mOnLoadMoreListener.onLoadMore(false);
+                } else {
+                    setPosts(postsList);
+                }
+            }
+
             return null;
         }
 
         @Override
-        protected void onPostExecute(Object o) {
+        protected void onPostExecute(Void nada) {
             notifyDataSetChanged();
         }
     }

@@ -328,11 +328,12 @@ public class ApiHelper {
 
     public static class FetchPostsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
         public interface Callback extends GenericErrorCallback {
-            public void onSuccess();
+            public void onSuccess(int postCount);
         }
 
         private Callback mCallback;
         private String mErrorMessage;
+        private int mPostCount;
 
         public FetchPostsTask(Callback callback) {
             mCallback = callback;
@@ -375,6 +376,7 @@ public class ApiHelper {
                         }
 
                         WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage);
+                        mPostCount = postsList.size();
                     }
                 }
                 return true;
@@ -389,7 +391,7 @@ public class ApiHelper {
         protected void onPostExecute(Boolean success) {
             if (mCallback != null) {
                 if (success) {
-                    mCallback.onSuccess();
+                    mCallback.onSuccess(mPostCount);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }

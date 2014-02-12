@@ -237,7 +237,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                                 int whichButton) {
                             popPostDetail();
                             attemptToSelectPost();
-                            mPostList.refreshPosts(false);
+                            mPostList.requestPosts(false);
                         }
                     });
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
@@ -255,7 +255,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             popPostDetail();
             attemptToSelectPost();
             mShouldAnimateRefreshButton = true;
-            mPostList.refreshPosts(false);
+            mPostList.requestPosts(false);
         }
     }
 
@@ -784,7 +784,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public void onDialogConfirm() {
        // mPostList.switcher.showNext();
         //mPostList.numRecords += 30;
-        mPostList.refreshPosts(true);
+        mPostList.requestPosts(true);
     }
 
     @Override
