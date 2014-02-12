@@ -81,6 +81,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
+    private static final String KEY_ORIGINAL_TITLE = "original_title";
 
     private long mPostId;
     private long mBlogId;
@@ -97,6 +98,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
+    private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
 
     private final ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
@@ -412,6 +414,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
+        if (mOriginalTitle != null)
+            outState.putCharSequence(KEY_ORIGINAL_TITLE, mOriginalTitle);
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is loaded
@@ -441,6 +445,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
+            if (savedInstanceState.containsKey(KEY_ORIGINAL_TITLE))
+                mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
             mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
         }
 
@@ -452,8 +458,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         super.onAttach(activity);
 
         // clear title until post is loaded
-        if (activity instanceof ReaderActivity)
-            activity.setTitle(null);
+        mOriginalTitle = activity.getTitle();
+        activity.setTitle(null);
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
@@ -462,10 +468,18 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mPostChangeListener = (PostChangeListener) activity;
     }
 
+    @Override
+    public void onDetach() {
+        // return the activity's title to what it was
+        if (getActivity() != null && mOriginalTitle != null)
+            getActivity().setTitle(mOriginalTitle);
+        super.onDetach();
+    }
+
     /*
-     * called by this fragment whenever the post is changed - notifies ReaderActivity of the
-     * change so it can tell the list fragment to reflect the change
-     */
+         * called by this fragment whenever the post is changed - notifies ReaderActivity of the
+         * change so it can tell the list fragment to reflect the change
+         */
     private void doPostChanged(PostChangeType changeType) {
         if (mPostChangeListener == null || !hasPost() || changeType == null)
             return;
@@ -1293,8 +1307,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
 
             // set the activity title to the post's title
-            if (getActivity() instanceof ReaderActivity)
-                getActivity().setTitle(mPost.getTitle());
+            getActivity().setTitle(mPost.getTitle());
 
             showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
 

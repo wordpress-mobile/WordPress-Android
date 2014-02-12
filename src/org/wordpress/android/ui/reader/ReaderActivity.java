@@ -247,7 +247,7 @@ public class ReaderActivity extends WPActionBarActivity
         // add to backstack if there's already a list fragment
         if (hasListFragment()) {
             ft.addToBackStack(FRAGMENT_TAG_POST_DETAIL);
-            ft.hide(getListFragment());
+            //ft.hide(getListFragment());
             //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         }
 
