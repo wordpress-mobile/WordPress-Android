@@ -44,8 +44,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
-    final private static String FAQ_URL = "http://android.wordpress.org/faq/";
-    final private static String FORUM_URL = "http://android.forums.wordpress.org/";
     final private static String DOT_COM_BASE_URL = "https://wordpress.com";
     final private static String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private EditText mUsernameEditText;
@@ -139,7 +137,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         infoBUtton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FAQ_URL)));
+                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                startActivity(newAccountIntent);
             }
         });
     }

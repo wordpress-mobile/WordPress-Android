@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:id="@+id/create_account_label"
                 android:text="@string/create_account_wpcom"
                 style="@style/WordPress.NUXTitle"
-                app:fontVariation="light" />
+                app:fontVariation="light"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/email_hint"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textUri"
-                    android:hint="@string/username" />
+                    android:hint="@string/username"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                     android:inputType="textPassword"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/password"
-                    android:layout_marginRight="38dp" />
+                    android:layout_marginRight="38dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
                     android:paddingTop="12dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
-                    android:layout_toLeftOf="@+id/textView" />
+                    android:layout_toLeftOf="@+id/textView"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -157,7 +157,7 @@
                     android:layout_marginRight="4dp"
                     android:textColor="@color/grey_medium"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/nux_edit_field_font_size" />
+                    android:textSize="@dimen/nux_edit_field_font_size"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -198,7 +198,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true" />
+                        android:layout_centerHorizontal="true"/>
                 </RelativeLayout>
 
             </RelativeLayout>

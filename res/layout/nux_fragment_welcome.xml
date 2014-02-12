@@ -16,12 +16,14 @@
         android:gravity="center"
         android:baselineAligned="false">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="@dimen/nux_width"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:gravity="right"
-            android:layout_weight="3">
+            android:baselineAligned="true"
+            android:layout_gravity="center_horizontal|bottom">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -32,7 +34,7 @@
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
                 android:tint="@color/blue_dark"/>
-        </LinearLayout>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
             app:maxWidth="@dimen/nux_width"
