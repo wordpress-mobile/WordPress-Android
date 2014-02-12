@@ -128,6 +128,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mSelfHosted = true;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        moveBottomButtons();
+    }
+
     private void initInfoButton(View rootView) {
         ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
         infoBUtton.setOnClickListener(new OnClickListener() {
