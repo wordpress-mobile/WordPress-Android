@@ -884,7 +884,7 @@ public class WordPressDB {
         c = db.query(POSTS_TABLE,
                 new String[] { "id", "blogID", "title",
                         "date_created_gmt", "post_status", "localDraft" },
-                "blogID=? AND isPage=?",
+                "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
         c.moveToFirst();
