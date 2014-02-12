@@ -76,7 +76,7 @@
 	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="validating_site_data">Convalida dati sito in corso</string>
 	<string name="comment_approved">Commento approvato</string>
-	<string name="stats_empty_top_posts">&lt;b>Nessuna pagina o post più popolare trovata.&lt;/b> In questa visualizzazione sono riportati i post e le pagine più visualizzati.</string>
+	<string name="stats_empty_top_posts"><b>Nessuna pagina o post più popolare trovata.</b> In questa visualizzazione sono riportati i post e le pagine più visualizzati.</string>
 	<string name="unapproved">In attesa</string>
 	<string name="invalid_username_too_short">Il nome utente deve essere lungo più di 4 caratteri.</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>
@@ -281,12 +281,12 @@
 	<string name="stats_video_summary_label_bandwidth">Larghezza di banda</string>
 	<string name="stats_video_summary_header">Statistiche aggregate per %s</string>
 	<string name="stats_empty_geoviews">Nessun articolo visualizzato.</string>
-	<string name="stats_empty_referrers">&lt;b>Nessun referrer.&lt;/b> Un referrer è un click verso il tuo sito proveniente da un altro.</string>
-	<string name="stats_empty_clicks">&lt;b>Nessun click registrato.&lt;/b> I "Click" sono visitatori che cliccano su link diretti verso altri siti.</string>
+	<string name="stats_empty_referrers"><b>Nessun referrer.</b> Un referrer è un click verso il tuo sito proveniente da un altro.</string>
+	<string name="stats_empty_clicks"><b>Nessun click registrato.</b> I "Click" sono visitatori che cliccano su link diretti verso altri siti.</string>
 	<string name="stats_empty_top_authors">Nessun articolo visualizzato.</string>
 	<string name="stats_empty_tags_and_categories">Nessun articolo o pagina con etichette è stato visualizzato.</string>
 	<string name="stats_empty_video">Nessun video è stato visualizzato.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Nessun termine di ricerca.&lt;/b> I termini di ricerca sono parole o frasi che gli utenti hanno usato quando sono arrivati sul tuo sito da un motore di ricerca.</string>
+	<string name="stats_empty_search_engine_terms"><b>Nessun termine di ricerca.</b> I termini di ricerca sono parole o frasi che gli utenti hanno usato quando sono arrivati sul tuo sito da un motore di ricerca.</string>
 	<string name="stats_empty_comments">Nessun commento ancora.</string>
 	<string name="stats_bar_graph_empty">Nessuna statistica disponibile.</string>
 	<string name="new_media">Nuovo elemento media</string>

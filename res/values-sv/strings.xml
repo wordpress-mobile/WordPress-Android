@@ -76,7 +76,7 @@
 	<string name="validating_user_data">Validerar användarinformation</string>
 	<string name="validating_site_data">Validerar webbplats</string>
 	<string name="comment_approved">Kommentar godkänd</string>
-	<string name="stats_empty_top_posts">&lt;b>Inga populära inlägg eller sidor än.&lt;/b> Denna sektion visar dina mest visade inlägg och sidor.</string>
+	<string name="stats_empty_top_posts"><b>Inga populära inlägg eller sidor än.</b> Denna sektion visar dina mest visade inlägg och sidor.</string>
 	<string name="unapproved">Väntande</string>
 	<string name="invalid_username_too_short">Användarnamn måste vara längre än 4 tecken.</string>
 	<string name="password_invalid">Du måste använda ett säkrare lösenord. Se till att det består av minst 7 tecken och blanda versaler, gemener, siffror, och specialtecken.</string>
@@ -281,12 +281,12 @@
 	<string name="stats_video_summary_label_bandwidth">Bandbredd</string>
 	<string name="stats_video_summary_header">Sammanfattad statistik för %s</string>
 	<string name="stats_empty_geoviews">Inga inlägg visades.</string>
-	<string name="stats_empty_referrers">&lt;b>Inga hänvisningar&lt;/b> En hänvisning är ett klick från en annan webbplats som länkar till din.</string>
-	<string name="stats_empty_clicks">&lt;b>Inga klick än.&lt;/b> Ett "klick" är en besökare som klickat på en extern länk på din webbplats.</string>
+	<string name="stats_empty_referrers"><b>Inga hänvisningar</b> En hänvisning är ett klick från en annan webbplats som länkar till din.</string>
+	<string name="stats_empty_clicks"><b>Inga klick än.</b> Ett "klick" är en besökare som klickat på en extern länk på din webbplats.</string>
 	<string name="stats_empty_top_authors">Inga inlägg visade.</string>
 	<string name="stats_empty_tags_and_categories">Inga inlägg eller sidor med etiketter har visats än.</string>
 	<string name="stats_empty_video">Inga videoklipp har spelats upp än.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Inga sökmotor-termer.&lt;/b> Sökmotor-termer är ord och meningar som besökare hittar din webbplats med när de söker.</string>
+	<string name="stats_empty_search_engine_terms"><b>Inga sökmotor-termer.</b> Sökmotor-termer är ord och meningar som besökare hittar din webbplats med när de söker.</string>
 	<string name="stats_empty_comments">Inga kommentarer än.</string>
 	<string name="stats_bar_graph_empty">Ingen statistik tillgänglig.</string>
 	<string name="new_media">Nytt medieobjekt</string>

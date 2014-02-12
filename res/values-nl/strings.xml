@@ -65,7 +65,7 @@
 	<string name="select_date">Selecteer datum</string>
 	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
 	<string name="comment_approved">Reactie goedgekeurd </string>
-	<string name="stats_empty_top_posts">&lt;b>Geen top berichten of pagina\'s gevonden&lt;/b> Deze weergave laat je de meest bekeken berichten en pagina\'s zien.</string>
+	<string name="stats_empty_top_posts"><b>Geen top berichten of pagina\'s gevonden</b> Deze weergave laat je de meest bekeken berichten en pagina\'s zien.</string>
 	<string name="unapproved">Wachtend</string>
 	<string name="invalid_username_too_short">De gebruikersnaam moet langer dan 4 karakters zijn.</string>
 	<string name="password_invalid">Je hebt een veiliger wachtwoord nodig. Let erop dat je 7 of meer karakters gebruikt, gebruik hoofd- en kleine letters, nummers of speciale karakters.</string>
@@ -233,8 +233,8 @@
 	<string name="stats_video_summary_label_bandwidth">Bandbreedte</string>
 	<string name="stats_video_summary_header">Geaggregeerde statistieken voor %s</string>
 	<string name="stats_empty_geoviews">Geen berichten bekeken.</string>
-	<string name="stats_empty_referrers">&lt;b>Geen referrers.&lt;/b> Een referrer is een klik van een andere site die naar jouw site linkt.</string>
-	<string name="stats_empty_clicks">&lt;b>Geen kliks geregistreerd.&lt;/b> Kliks zijn lezers die op uitgaande links op je site klikken.</string>
+	<string name="stats_empty_referrers"><b>Geen referrers.</b> Een referrer is een klik van een andere site die naar jouw site linkt.</string>
+	<string name="stats_empty_clicks"><b>Geen kliks geregistreerd.</b> Kliks zijn lezers die op uitgaande links op je site klikken.</string>
 	<string name="passcode_wrong_passcode">Verkeerde PIN, probeer opnieuw.</string>
 	<string name="passcode_preference_title">PIN slot</string>
 	<string name="passcode_turn_off">Zet PIN slot uit</string>
@@ -242,7 +242,7 @@
 	<string name="stats_empty_top_authors">Geen berichten bekeken.</string>
 	<string name="stats_empty_tags_and_categories">Er zijn nog geen getagde berichten of pagina\'s bekeken. </string>
 	<string name="stats_empty_video">Er zijn nog geen video\'s afgespeeld.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Geen zoektermen.&lt;/b> Zoektermen zijn woorden of zinnen waarmee gebruikers je vinden wanneer ze zoeken.</string>
+	<string name="stats_empty_search_engine_terms"><b>Geen zoektermen.</b> Zoektermen zijn woorden of zinnen waarmee gebruikers je vinden wanneer ze zoeken.</string>
 	<string name="stats_empty_comments">Nog geen reacties.</string>
 	<string name="stats_bar_graph_empty">Geen statistieken beschikbaar.</string>
 	<string name="new_media">Nieuw media bestand.</string>
