@@ -200,6 +200,7 @@ public class CommentsActivity extends WPActionBarActivity
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
             ft.add(R.id.layout_fragment_container, detailFragment, FRAGMENT_TAG_COMMENT_DETAIL);
             ft.addToBackStack(FRAGMENT_TAG_COMMENT_DETAIL);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
@@ -222,6 +223,7 @@ public class CommentsActivity extends WPActionBarActivity
         fm.beginTransaction()
           .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
           .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .commit();
     }
 

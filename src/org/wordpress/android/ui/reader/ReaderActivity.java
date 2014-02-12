@@ -129,12 +129,6 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home && hasDetailFragment()) {
             onBackPressed();
@@ -248,11 +242,14 @@ public class ReaderActivity extends WPActionBarActivity
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, fragment, FRAGMENT_TAG_POST_DETAIL);
+        ft.add(R.id.fragment_container, fragment, FRAGMENT_TAG_POST_DETAIL);
 
         // add to backstack if there's already a list fragment
-        if (hasListFragment())
+        if (hasListFragment()) {
             ft.addToBackStack(FRAGMENT_TAG_POST_DETAIL);
+            ft.hide(getListFragment());
+            //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        }
 
         ft.commit();
     }

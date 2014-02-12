@@ -249,10 +249,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        // locate & init listView, hide it until post is loaded
+        // locate & init listView
         mListView = (ListView) view.findViewById(android.R.id.list);
         setupListView(mListView);
-        mListView.setVisibility(View.INVISIBLE);
 
         // add a header to the listView that's the same height as the ActionBar when fullscreen
         // mode is supported
@@ -279,10 +278,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // setup the webView - note that JavaScript is disabled since it's a security risk
         // http://developer.android.com/training/articles/security-tips.html#WebView
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setVisibility(View.INVISIBLE);
         mWebView.setWebViewClient(readerWebViewClient);
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+
+        // hide these views until the post is loaded
+        mListView.setVisibility(View.INVISIBLE);
+        mWebView.setVisibility(View.INVISIBLE);
+        mLayoutIcons.setVisibility(View.GONE);
 
         // detect image taps so we can open images in the photo viewer activity
         mWebView.setOnTouchListener(new View.OnTouchListener() {
@@ -449,7 +452,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         super.onAttach(activity);
 
         // clear title until post is loaded
-        activity.setTitle(null);
+        if (activity instanceof ReaderActivity)
+            activity.setTitle(null);
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
@@ -1289,7 +1293,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
 
             // set the activity title to the post's title
-            getActivity().setTitle(mPost.getTitle());
+            if (getActivity() instanceof ReaderActivity)
+                getActivity().setTitle(mPost.getTitle());
 
             showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
 
@@ -1393,7 +1398,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            if (mPost.isWP() && mLayoutIcons.getVisibility() != View.VISIBLE)
+                animateIconBar(true);
 
             // make sure the adapter is assigned
             if (getListView().getAdapter() == null)
