@@ -32,7 +32,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createMenuDrawer(R.layout.comments);
+        createMenuDrawer(R.layout.comment_activity);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -90,13 +90,6 @@ public class CommentsActivity extends WPActionBarActivity
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
-
-    // TODO: DOESN'T WORK - this is used to close the detail fragment when user trashes comment
-    protected void popCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (hasDetailFragment() && fm.getBackStackEntryCount() > 0)
-            fm.popBackStack();
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {

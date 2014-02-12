@@ -125,7 +125,7 @@ public class CommentsListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_comments_fragment, container, false);
+        View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));

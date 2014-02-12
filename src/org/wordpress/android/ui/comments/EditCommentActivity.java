@@ -44,7 +44,7 @@ public class EditCommentActivity extends SherlockActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setContentView(R.layout.edit_comment);
+        setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
 
         ActionBar actionBar = getSupportActionBar();

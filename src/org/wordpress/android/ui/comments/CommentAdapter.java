@@ -197,7 +197,7 @@ public class CommentAdapter extends BaseAdapter {
         final CommentHolder holder;
 
         if (convertView == null || convertView.getTag() == null) {
-            convertView = mInflater.inflate(R.layout.comment_row, null);
+            convertView = mInflater.inflate(R.layout.comment_listitem, null);
             holder = new CommentHolder(convertView);
             convertView.setTag(holder);
         } else {
