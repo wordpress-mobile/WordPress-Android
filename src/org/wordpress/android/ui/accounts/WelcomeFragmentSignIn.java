@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -109,6 +110,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUrlEditText.setOnEditorActionListener(mEditorAction);
         mBottomButtonsLayout = (LinearLayout) rootView.findViewById(R.id.nux_bottom_buttons);
         initPasswordVisibilityButton(rootView, mPasswordEditText);
+        initInfoButton(rootView);
         moveBottomButtons();
         return rootView;
     }
@@ -122,6 +124,23 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         mSelfHosted = true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        moveBottomButtons();
+    }
+
+    private void initInfoButton(View rootView) {
+        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoBUtton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                startActivity(newAccountIntent);
+            }
+        });
     }
 
     private void moveBottomButtons() {

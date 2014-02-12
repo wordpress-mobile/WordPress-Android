@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:fillViewport="true"
-    android:animateLayoutChanges="true"
-    >
+    android:animateLayoutChanges="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,9 +13,27 @@
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         android:gravity="center"
-        android:baselineAligned="false"
-        >
+        android:baselineAligned="false">
 
+        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+            app:maxWidth="@dimen/nux_width"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:baselineAligned="true"
+            android:layout_gravity="center_horizontal|bottom">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_button"
+                android:src="@drawable/dashicon_info"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/help"
+                android:tint="@color/blue_dark"/>
+        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
             app:maxWidth="@dimen/nux_width"

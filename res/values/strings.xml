@@ -704,5 +704,9 @@
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
+    <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
+    <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
+    <string name="forums">Forums</string>
+    <string name="help_center">Help center</string>
 </resources>
