@@ -115,13 +115,7 @@
 	<string name="comment_status_approved">Approuvé</string>
 	<string name="comment_status_unapproved">En attente</string>
 	<string name="edit_comment">Modifier le commentaire</string>
-	<string name="mnu_comment_approve">Approuvé</string>
-	<string name="mnu_comment_unapprove">Désapprouvé</string>
 	<string name="mnu_comment_spam">Indésirable</string>
-	<string name="dlg_approving_comments">Approuver</string>
-	<string name="dlg_unapproving_comments">Désapprouver</string>
-	<string name="dlg_spamming_comments">Marqué comme indésirable</string>
-	<string name="dlg_trashing_comments">Envoyé à la corbeille</string>
 	<string name="learn_more">En savoir plus</string>
 	<string name="hint_comment_content">Commentaire</string>
 	<string name="share_action_post">Nouvel article</string>
@@ -228,6 +222,12 @@
 	<string name="email_reserved">Cette adresse de messagerie a déjà été utilisée. Vérifiez dans votre boite de réception si un message d\'activation s\'y trouve. Si vous n\'activez pas, vous pouvez essayer de nouveau dans quelques jours.</string>
 	<string name="reader_title_applog">Journal de l\'application</string>
 	<string name="pending_review">En attente de relecture</string>
+	<string name="mnu_comment_approve">Approuver</string>
+	<string name="mnu_comment_unapprove">Désapprouver</string>
+	<string name="dlg_trashing_comments">Envoie à la corbeille</string>
+	<string name="dlg_spamming_comments">Marquage comme indésirable</string>
+	<string name="dlg_approving_comments">Approbation</string>
+	<string name="dlg_unapproving_comments">Désapprobation</string>
 	<string name="refreshing_categories">Actualisation des catégories</string>
 	<string name="cat_adding_category">Ajout de catégorie</string>
 	<string name="deleting_page">Suppression de la page</string>
