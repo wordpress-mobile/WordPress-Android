@@ -4,24 +4,15 @@
     non-tablet layout for comments
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/background_grey"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_comment_detail_container"
+    android:background="@color/background_grey">
 
-    <LinearLayout
-        android:id="@+id/layout_comment_detail_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <fragment
-            android:id="@+id/fragment_comment_list"
-            android:name="org.wordpress.android.ui.comments.CommentsListFragment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#00FF00" />
-    </LinearLayout>
+    <fragment
+        android:id="@+id/fragment_comment_list"
+        android:name="org.wordpress.android.ui.comments.CommentsListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
