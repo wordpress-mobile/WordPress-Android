@@ -145,9 +145,9 @@
     <string name="stats_view_search_engine_terms">Axtarış Sisteminin Şərtləri</string>
     <string name="stats_visitors_and_views_header_best_ever">Bütün zamanlarda ən yaxşısı</string>
     <string name="stats_comments_summary_label_most_active_time">Günün ən aktiv zamanı</string>
-    <string name="stats_empty_top_posts">&lt;b> Heç bir yuxarı yazı və ya səhifə. &lt;/b>Bu panel ən çox izlənən yazıları və səhifələri göstərir.</string>
-    <string name="stats_empty_referrers">&lt;b>Yönləndirmə yoxdur.&lt;/b>  başqa bir saytdan bir tıklama olduğu zaman sizin üçün yönləndirmə bağlantıları.</string>
-    <string name="stats_empty_clicks">&lt;b>Yazılmış tıklamalar yoxdur.&lt;/b> Sizin saytdan çıxan bağlantılara ziyarətçiləriniz tərəfindən edilən "Tıklamalar".</string>
+    <string name="stats_empty_top_posts"><b> Heç bir yuxarı yazı və ya səhifə. </b>Bu panel ən çox izlənən yazıları və səhifələri göstərir.</string>
+    <string name="stats_empty_referrers"><b>Yönləndirmə yoxdur.</b>  başqa bir saytdan bir tıklama olduğu zaman sizin üçün yönləndirmə bağlantıları.</string>
+    <string name="stats_empty_clicks"><b>Yazılmış tıklamalar yoxdur.</b> Sizin saytdan çıxan bağlantılara ziyarətçiləriniz tərəfindən edilən "Tıklamalar".</string>
     <string name="passcode_re_enter_passcode">PIN kodunu təkrar daxil et</string>
     <string name="passcode_enter_passcode">PIN kodunu daxil et</string>
     <string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
@@ -158,9 +158,8 @@
     <string name="stats_empty_comments">Hələ ki heç bir şərh yoxdur.</string>
     <string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
     <string name="stats_empty_top_authors">Göstəriləcək yazı yoxdur.</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>Axtarış terminləri yoxdur.&lt;/b> İstifadəçiləri axtardığınız zaman kəlmə və frazalardan istifadə edərək axtarış terminləri ilə onları tapa bilərsiniz.</string>
+    <string name="stats_empty_search_engine_terms"><b>Axtarış terminləri yoxdur.</b> İstifadəçiləri axtardığınız zaman kəlmə və frazalardan istifadə edərək axtarış terminləri ilə onları tapa bilərsiniz.</string>
     <string name="media_add_new_post">Yeni yazı</string>
-    <string name="stats_totals_followers_shares_header_followers_publicize">\n      \n      →	İzləyicilər \n      →	&lt;font color="#9E9E9E">(ehtiva edir &lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">Bəyannamə&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	\n  </string>
     <string name="media_edit_fragment_tag">MediaFraqmentRedaktoru</string>
     <string name="category">Kateqoriya</string>
     <string name="remote_changes">Hələ ki sayta yükləmədiyiniz bir yazıda dəyişikliklər etdiniz. Yeniləmə ilə davam edib lokal dəyişikliklərin üzərinə yazılsınmı?</string>

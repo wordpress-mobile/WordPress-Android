@@ -115,10 +115,10 @@
     <string name="theme_auth_error_message">Upewnij się, że masz prawa do aktywowania motywów.</string>
     <string name="stats_comments_summary_label_most_active_day">Najbardziej aktywni dzisiaj</string>
     <string name="stats_video_summary_label_impressions">Osiągnięcia</string>
-    <string name="stats_empty_top_posts">&lt;b>Brak najbardziej popularnych wpisów i stron.&lt;/b> Tutaj możesz zobaczyć najbardziej popularne wpisy i strony. </string>
-    <string name="stats_empty_referrers">&lt;b>Brak poleceń.&lt;/b> "Polecenia" to zbiór kliknięć z innych stron, prowadzących do Twojej strony.</string>
-    <string name="stats_empty_clicks">&lt;b>Brak kliknięć.&lt;/b> "Kliknięcia" to zbiór kliknięć na Twojej stronie, prowadzących do innych witryn.</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>Nic nie znaleziono.&lt;/b> Frazy i słowa kluczowe, które użytkownicy mogą znaleźć poprzez wyszukiwarkę.</string>
+    <string name="stats_empty_top_posts"><b>Brak najbardziej popularnych wpisów i stron.</b> Tutaj możesz zobaczyć najbardziej popularne wpisy i strony. </string>
+    <string name="stats_empty_referrers"><b>Brak poleceń.</b> "Polecenia" to zbiór kliknięć z innych stron, prowadzących do Twojej strony.</string>
+    <string name="stats_empty_clicks"><b>Brak kliknięć.</b> "Kliknięcia" to zbiór kliknięć na Twojej stronie, prowadzących do innych witryn.</string>
+    <string name="stats_empty_search_engine_terms"><b>Nic nie znaleziono.</b> Frazy i słowa kluczowe, które użytkownicy mogą znaleźć poprzez wyszukiwarkę.</string>
     <string name="gallery_error">Przykro nam, nie uzyskano dostępu do pliku.</string>
     <string name="images">Obrazy</string>
     <string name="custom_date">Własna data</string>

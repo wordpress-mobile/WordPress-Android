@@ -119,7 +119,6 @@
     <string name="stats_visitors_and_views_header_all_time">เวลาทั้งหมด</string>
     <string name="stats_totals_followers_shares_header_content">บทความ</string>
     <string name="stats_totals_followers_shares_header_followers">ผู้ติดตาม</string>
-    <string name="stats_totals_followers_shares_header_followers_publicize">      →	ผู้เยี่ยมชม \n      →	&lt;font color="#9E9E9E">(รวม &lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">การเผยแพร่&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	</string>
     <string name="stats_totals_followers_shares_header_shares">แบ่งปัน</string>
     <string name="stats_totals_followers_shares_label_posts">เรื่อง</string>
     <string name="stats_totals_followers_shares_label_categories">หมวดหมู่</string>
@@ -140,13 +139,13 @@
     <string name="stats_video_summary_label_bandwidth">Bandwidth</string>
     <string name="stats_video_summary_header">สถิติที่รวบรวมสำหรับ %s</string>
     <string name="stats_empty_geoviews">ไม่มีเรื่องที่ดู</string>
-    <string name="stats_empty_top_posts">&lt;b>ไม่มีเรื่องหรือหน้าที่คนดูมากสุด&lt;/b> ส่วนนี้จะแสดงเรื่องหรือหน้าของเว็บคุณที่มีการดูมากที่สุด</string>
-    <string name="stats_empty_referrers">&lt;b>ไม่มีลิงก์อ้างอิง&lt;/b> ลิงก์อ้างอิงคือการกดลิงก์บนเว็บอื่นที่ลิงก์มาหาเว็บคุณ</string>
-    <string name="stats_empty_clicks">&lt;b>ไม่มีบันทึกการกด&lt;/b> "การกด" คือลิงก์ออกที่ผู้เยี่ยมชมกดบนเว็บไซต์ของคุณ</string>
+    <string name="stats_empty_top_posts"><b>ไม่มีเรื่องหรือหน้าที่คนดูมากสุด</b> ส่วนนี้จะแสดงเรื่องหรือหน้าของเว็บคุณที่มีการดูมากที่สุด</string>
+    <string name="stats_empty_referrers"><b>ไม่มีลิงก์อ้างอิง</b> ลิงก์อ้างอิงคือการกดลิงก์บนเว็บอื่นที่ลิงก์มาหาเว็บคุณ</string>
+    <string name="stats_empty_clicks"><b>ไม่มีบันทึกการกด</b> "การกด" คือลิงก์ออกที่ผู้เยี่ยมชมกดบนเว็บไซต์ของคุณ</string>
     <string name="stats_empty_top_authors">ไม่มีเรื่องที่ดู</string>
     <string name="stats_empty_tags_and_categories">ยังไม่มีป้ายกำกับเรื่องหรือหน้าที่ดูแล้ว</string>
     <string name="stats_empty_video">ยังไม่มีวีดีโอที่ดูแล้ว</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>ไม่มีเงื่อนไขการค้นหา&lt;/b> เงื่อไขการค้นหาคือคำหรือวลีที่ผู้ใช้ ใช้ค้นหาจนมาเจอเว็บคุณ</string>
+    <string name="stats_empty_search_engine_terms"><b>ไม่มีเงื่อนไขการค้นหา</b> เงื่อไขการค้นหาคือคำหรือวลีที่ผู้ใช้ ใช้ค้นหาจนมาเจอเว็บคุณ</string>
     <string name="stats_empty_comments">ยังไม่มีความเห็น</string>
     <string name="stats_bar_graph_empty">ไม่มีสถิติในตอนนี้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>

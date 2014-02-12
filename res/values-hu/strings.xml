@@ -133,8 +133,8 @@
     <string name="stats_comments_summary_footer">* a legutóbbi 1000 hozzászólás alapján</string>
     <string name="stats_video_summary_header">%s egyesített statisztika </string>
     <string name="stats_empty_geoviews">Nincsenek megtekintések.</string>
-    <string name="stats_empty_top_posts">&lt;b>Nincsenek népszerű bejegyzések vagy oldalak.&lt;/b> Ezen az oldalon a legtöbb megtekintéssel rendelkező bejegyzések láthatóak</string>
-    <string name="stats_empty_referrers">&lt;b>Nincsenek hivatkozók.&lt;/b> A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
+    <string name="stats_empty_top_posts"><b>Nincsenek népszerű bejegyzések vagy oldalak.</b> Ezen az oldalon a legtöbb megtekintéssel rendelkező bejegyzések láthatóak</string>
+    <string name="stats_empty_referrers"><b>Nincsenek hivatkozók.</b> A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
     <string name="stats_empty_top_authors">Nincsenek megtekintett bejegyzések</string>
     <string name="stats_empty_tags_and_categories">Még nincsenek címkével ellátott bejegyzésekre vagy oldalakra megtekintések.</string>
     <string name="stats_empty_video">Még nincsenek videólejátszások.</string>
@@ -151,15 +151,14 @@
     <string name="passcode_preference_title">Azonosítókódzár</string>
     <string name="passcode_turn_off">Azonosító kódos védelem kikapcsolása</string>
     <string name="passcode_turn_on">Azonosító kódos védelem bekapcsolása</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>Nincsenek keresési kifejezések.&lt;/b> A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
-    <string name="stats_empty_clicks">&lt;b>Nincsenek kattintások.&lt;/b> A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
+    <string name="stats_empty_search_engine_terms"><b>Nincsenek keresési kifejezések.</b> A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
+    <string name="stats_empty_clicks"><b>Nincsenek kattintások.</b> A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
     <string name="stats_entry_posts_and_pages">Fejléc</string>
     <string name="gallery_error">Sajnos, a média elemet nem lehet betölteni.</string>
     <string name="media_gallery_type_slideshow">Diavetítés</string>
     <string name="media_upload_clear_uploaded">Feltöltöttek kiürítése</string>
     <string name="media_gallery_type_tiled">Mozaik</string>
     <string name="media_gallery_type_thumbnail_grid">Előnézeti rács</string>
-    <string name="stats_totals_followers_shares_header_followers_publicize">\n      \n      →	Követők\n      →	&lt;font color="#9E9E9E">(beleértve&lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">Publicize&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	\n  </string>
     <string name="media_edit_fragment_tag">MediaEditFragment</string>
     <string name="account_two_step_auth_enabled">Ezen a felhasználói fiókon be van kapcsolva a kétlépcsős beléptetés. Nyissuk meg a böngészőben a WordPress.com-ot, és generáljunk egy jelszót az alkalmazás használatához.\n(Lépjünk be a WordPress.com-on, majd, Beállítások->biztonság).</string>
     <string name="category">Kategória</string>

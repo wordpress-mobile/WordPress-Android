@@ -142,13 +142,13 @@
     <string name="passcode_preference_title">Kunci PIN</string>
     <string name="passcode_turn_off">Matikan kunci PIN</string>
     <string name="passcode_turn_on">Nyalakan kunci PIN</string>
-    <string name="stats_empty_top_posts">&lt;b>Tidak ada tulisan atau halaman teratas.&lt;/b> Panel ini menunjukkan tulisan dan halaman yang paling banyak dilihat.</string>
-    <string name="stats_empty_referrers">&lt;b>Tidak ada pengacu.&lt;/b> Pengacu adalah klik dari situs lain yang terhubung dengan situs Anda.</string>
-    <string name="stats_empty_clicks">&lt;b>Tidak ada klik dalam catatan.&lt;/b> "Klik" adalah pengunjung mengklik tautan ke luar dari situs Anda.</string>
+    <string name="stats_empty_top_posts"><b>Tidak ada tulisan atau halaman teratas.</b> Panel ini menunjukkan tulisan dan halaman yang paling banyak dilihat.</string>
+    <string name="stats_empty_referrers"><b>Tidak ada pengacu.</b> Pengacu adalah klik dari situs lain yang terhubung dengan situs Anda.</string>
+    <string name="stats_empty_clicks"><b>Tidak ada klik dalam catatan.</b> "Klik" adalah pengunjung mengklik tautan ke luar dari situs Anda.</string>
     <string name="stats_empty_top_authors">Tidak ada tulisan yang dilihat.</string>
     <string name="stats_empty_tags_and_categories">Belum ada tulisan atau halaman ter-tag yang dilihat.</string>
     <string name="stats_empty_video">Belum ada video yang dimainkan.</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>Tidak ada istilah pencarian.&lt;/b> Istilah pencarian adalah kata atau frase yang digunakan pengguna untuk menemukan Anda dalam pencariannya.</string>
+    <string name="stats_empty_search_engine_terms"><b>Tidak ada istilah pencarian.</b> Istilah pencarian adalah kata atau frase yang digunakan pengguna untuk menemukan Anda dalam pencariannya.</string>
     <string name="stats_empty_comments">Belum ada komentar.</string>
     <string name="stats_bar_graph_empty">Tidak ada stat tersedia.</string>
     <string name="error_downloading_image">Galat mengunduh gambar. Silahkan coba lagi.</string>

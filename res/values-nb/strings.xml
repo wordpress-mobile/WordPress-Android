@@ -122,7 +122,6 @@
     <string name="stats_visitors_and_views_header_best_ever">Beste</string>
     <string name="stats_visitors_and_views_header_all_time">Totalt</string>
     <string name="stats_totals_followers_shares_header_followers">Følgere</string>
-    <string name="stats_totals_followers_shares_header_followers_publicize">\n      \n     \n      →	Følgere \n      →	&lt;font color="#9E9E9E">(includes &lt;/font>\n      →	&lt;font color="#21759B">&lt;a href="http://support.wordpress.com/publicize/">Publicize&lt;/a>&lt;/font>\n      →	&lt;font color="#9E9E9E">)&lt;/font>\n    →	\n  \n  </string>
     <string name="stats_totals_followers_shares_header_shares">Delinger</string>
     <string name="stats_totals_followers_shares_label_posts">Innlegg</string>
     <string name="stats_totals_followers_shares_label_tags">Stikkord</string>
@@ -139,13 +138,13 @@
     <string name="stats_video_summary_label_impressions">Sammendrag</string>
     <string name="stats_video_summary_header">Statistikk for %s</string>
     <string name="stats_empty_geoviews">Ingen viste innlegg</string>
-    <string name="stats_empty_top_posts">&lt;b>Ingen.&lt;/b> Denne boksen viser dine mest viste innlegg og sider..</string>
-    <string name="stats_empty_clicks">&lt;b>Ingen klikk.&lt;/b> "Klikk" er klikk fra visninger utenfor ditt eget nettsted.</string>
+    <string name="stats_empty_top_posts"><b>Ingen.</b> Denne boksen viser dine mest viste innlegg og sider..</string>
+    <string name="stats_empty_clicks"><b>Ingen klikk.</b> "Klikk" er klikk fra visninger utenfor ditt eget nettsted.</string>
     <string name="stats_empty_top_authors">Ingen viste innlegg</string>
     <string name="stats_empty_tags_and_categories">Ingen merkede innlegg eler sider er vist ennå.</string>
-    <string name="stats_empty_referrers">&lt;b>Ingen henvisninger.&lt;/b> En henvisning er klikk fra et nettsted som lenker til ditt..</string>
+    <string name="stats_empty_referrers"><b>Ingen henvisninger.</b> En henvisning er klikk fra et nettsted som lenker til ditt..</string>
     <string name="stats_empty_video">Ingen videoer er spilt ennå.</string>
-    <string name="stats_empty_search_engine_terms">&lt;b>Ingen søkeord.&lt;/b> Søkeord er ord og fraser som bruker finner nettstedet ditt når de søker.</string>
+    <string name="stats_empty_search_engine_terms"><b>Ingen søkeord.</b> Søkeord er ord og fraser som bruker finner nettstedet ditt når de søker.</string>
     <string name="stats_empty_comments">Ingen kommentarer ennå.</string>
     <string name="stats_bar_graph_empty">Ingen statistikk tilgjengelig.</string>
     <string name="new_media">Last opp nytt media</string>
