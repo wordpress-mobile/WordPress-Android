@@ -250,8 +250,11 @@ public class ReaderActivity extends WPActionBarActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment, tagForFragment);
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        // add to backstack if there's already a list fragment
         if (hasListFragment())
             ft.addToBackStack(tagForFragment);
+
         ft.commit();
     }
 

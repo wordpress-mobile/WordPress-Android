@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/commentsRL"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background_grey"
-    android:orientation="vertical"
-    android:padding="0px">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/commentFragmentContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -19,24 +16,34 @@
             android:layout_weight="0.4">
 
             <fragment
-                android:id="@+id/commentList"
+                android:id="@+id/fragment_comment_list"
                 android:name="org.wordpress.android.ui.comments.CommentsListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00FF00" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="@drawable/right_shadow"
-                android:orientation="vertical" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/right_shadow" />
         </FrameLayout>
 
         <fragment
-            android:id="@+id/commentDetail"
+            android:id="@+id/fragment_comment_detail"
             android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6" />
     </LinearLayout>
+
+    <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_new_kid"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:padding="4dp"
+        android:gravity="center"
+        android:text="This is sw600dp"/>-->
 </RelativeLayout>

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -20,7 +19,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
@@ -43,7 +41,7 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
+        mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.fragment_comment_list);
 
         WordPress.currentComment = null;
 
@@ -99,7 +97,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
             fm.popBackStack();
         }
@@ -136,7 +134,7 @@ public class CommentsActivity extends WPActionBarActivity
     public void onCommentSelected(Comment comment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
-        Fragment f = fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
 
         if (comment != null && fm.getBackStackEntryCount() == 0) {
             if (f == null || !f.isInLayout()) {
@@ -144,7 +142,7 @@ public class CommentsActivity extends WPActionBarActivity
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mCommentListFragment);
                 f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-                ft.add(R.id.commentDetailFragmentContainer, f);
+                ft.add(R.id.layout_comment_detail_container, f);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
@@ -167,11 +165,11 @@ public class CommentsActivity extends WPActionBarActivity
         // TODO: show as a fragment (code below breaks on tablet)
         /*FragmentManager fm = getSupportFragmentManager();
         final int id;
-        if (fm.findFragmentById(R.id.commentDetailFragmentContainer) != null) {
+        if (fm.findFragmentById(R.id.layout_comment_detail_container) != null) {
             // standard ui
-            id = R.id.commentDetailFragmentContainer;
+            id = R.id.layout_comment_detail_container;
             mMenuDrawer.setDrawerIndicatorEnabled(false);
-        } else if (fm.findFragmentById(R.id.commentDetail) != null) {
+        } else if (fm.findFragmentById(R.id.fragment_comment_detail) != null) {
             // tablet ui
             id = R.id.commentDetail;
         } else {
@@ -189,7 +187,7 @@ public class CommentsActivity extends WPActionBarActivity
      */
     private void reloadCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.commentDetail);
+        Fragment fragment = fm.findFragmentById(R.id.fragment_comment_detail);
         if (fragment != null)
             ((CommentDetailFragment) fragment).reloadComment();
     }

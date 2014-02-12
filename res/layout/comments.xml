@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/comments"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_grey"
-    android:orientation="vertical"
-    android:padding="0px">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/commentDetailFragmentContainer"
+        android:id="@+id/layout_comment_detail_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <fragment
-            android:id="@+id/commentList"
+            android:id="@+id/fragment_comment_list"
             android:name="org.wordpress.android.ui.comments.CommentsListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"

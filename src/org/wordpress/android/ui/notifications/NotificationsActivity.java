@@ -247,7 +247,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     public void popNoteDetail(){
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
             fm.popBackStack();
         }
