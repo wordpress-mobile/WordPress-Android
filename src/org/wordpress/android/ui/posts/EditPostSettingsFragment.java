@@ -447,6 +447,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 pubDateTimestamp = mCustomPubDate;
             else if (post.getDate_created_gmt() > 0)
                 pubDateTimestamp = post.getDate_created_gmt();
+        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
+            post.setDate_created_gmt(0);
+            post.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
