@@ -64,7 +64,7 @@
 	<string name="validating_user_data">Επικύρωση των στοιχείων του χρήστη.</string>
 	<string name="validating_site_data">Επικύρωση στοιχείων του ιστότοπου</string>
 	<string name="comment_approved">Το σχόλιο εγκρίθηκε</string>
-	<string name="stats_empty_top_posts">&lt;b>Κανένα άρθρο ή σελίδα δεν βρέθηκε.&lt;/b> Αυτός ο τρόπος προβολής δείχνει τα άρθρα και τις σελίδες με τις πιο πολλές εμφανίσεις.</string>
+	<string name="stats_empty_top_posts"><b>Κανένα άρθρο ή σελίδα δεν βρέθηκε.</b> Αυτός ο τρόπος προβολής δείχνει τα άρθρα και τις σελίδες με τις πιο πολλές εμφανίσεις.</string>
 	<string name="unapproved">Αναμένει</string>
 	<string name="invalid_username_too_short">Το Όνομα Χρήστη πρέπει να είναι μεγαλύτερο από 4 χαρακτήρες.</string>
 	<string name="password_invalid">Χρειάζεστε έναν πιο ασφαλή κωδικό πρόσβασης. Χρησιμοποιήστε 7 ή περισσότερους χαρακτήρες, μέσα στους οποίους υπάρχουν κεφαλαία και μικρά γράμματα, αριθμοί ή ειδικοί χαρακτήρες.</string>
@@ -269,12 +269,12 @@
 	<string name="stats_video_summary_label_bandwidth">Όγκος Δεδομένων</string>
 	<string name="stats_video_summary_header">Συνολικά στατιστικά για το %s</string>
 	<string name="stats_empty_geoviews">Κανένα άρθρο δεν έχει αναγνωστεί.</string>
-	<string name="stats_empty_referrers">&lt;b>Καθόλου ιστότοποι που σας αναφέρουν.&lt;/b> Είναι οι ιστότοποι που θέτουν συνδέσμους προς το δικό σας.</string>
-	<string name="stats_empty_clicks">&lt;b>Κανένα κλικ δεν έχει καταγραφεί.&lt;/b> Είναι τα κλικ που γίνονται πάνω σε συνδέσμους που βρίσκονται στον ιστότοπό σας προς άλλους.</string>
+	<string name="stats_empty_referrers"><b>Καθόλου ιστότοποι που σας αναφέρουν.</b> Είναι οι ιστότοποι που θέτουν συνδέσμους προς το δικό σας.</string>
+	<string name="stats_empty_clicks"><b>Κανένα κλικ δεν έχει καταγραφεί.</b> Είναι τα κλικ που γίνονται πάνω σε συνδέσμους που βρίσκονται στον ιστότοπό σας προς άλλους.</string>
 	<string name="stats_empty_top_authors">Κανένα άρθρο δεν έχει αναγνωστεί.</string>
 	<string name="stats_empty_tags_and_categories">Κανένα άρθρο με ετικέτες ή σελίδα δεν έχει αναγνωστεί ακόμη.</string>
 	<string name="stats_empty_video">Κανένα video δεν έχει παιχθεί ακόμη.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Κανένας όρος αναζήτησης.&lt;/b> Είναι οι λέξεις ή οι φράσεις μέσω των οποίων οι χρήστες σας βρήκαν στις αναζητήσεις τους.</string>
+	<string name="stats_empty_search_engine_terms"><b>Κανένας όρος αναζήτησης.</b> Είναι οι λέξεις ή οι φράσεις μέσω των οποίων οι χρήστες σας βρήκαν στις αναζητήσεις τους.</string>
 	<string name="stats_empty_comments">Καθόλου σχόλια ακόμη.</string>
 	<string name="stats_bar_graph_empty">Καθόλου στατιστικά διαθέσιμα.</string>
 	<string name="new_media">Νέα Πολυμέσα</string>

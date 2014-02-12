@@ -251,11 +251,11 @@
 	<string name="stats_view_referrers">Referrerlar</string>
 	<string name="stats_entry_referrers">Referrer</string>
 	<string name="stats_video_summary_label_bandwidth">Traffik</string>
-	<string name="stats_empty_referrers">&lt;b>Referrerlar yo‘q.&lt;/b> Referrer - bu boshqa saytlardagi sizning saytingizga qo‘yilgan havola orqali kirishdir.</string>
-	<string name="stats_empty_clicks">&lt;b>Ro‘yxatdan o‘tgan kliklar yo‘q.&lt;/b> "Kliklar" - bu saytingiz foydalanuvchilarining tashqi havolalarga bosishlaridir.</string>
+	<string name="stats_empty_referrers"><b>Referrerlar yo‘q.</b> Referrer - bu boshqa saytlardagi sizning saytingizga qo‘yilgan havola orqali kirishdir.</string>
+	<string name="stats_empty_clicks"><b>Ro‘yxatdan o‘tgan kliklar yo‘q.</b> "Kliklar" - bu saytingiz foydalanuvchilarining tashqi havolalarga bosishlaridir.</string>
 	<string name="stats_empty_tags_and_categories">Hanuz teg bilan belgilangan birorta ham post yoki sahifa ko‘rilmagan.</string>
 	<string name="stats_empty_video">Hanuz birorta ham video ko‘rilmagan.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Izlash terminlari yo‘q.&lt;/b> Izlash terminlari - bu foydalanuvchilar sizning saytingizni topishda izlash uchun qo‘llagan so‘z yoki iboralardir.</string>
+	<string name="stats_empty_search_engine_terms"><b>Izlash terminlari yo‘q.</b> Izlash terminlari - bu foydalanuvchilar sizning saytingizni topishda izlash uchun qo‘llagan so‘z yoki iboralardir.</string>
 	<string name="stats_empty_comments">Hanuz birorta ham mulohaza yo‘q.</string>
 	<string name="stats_bar_graph_empty">Statistik ma’lumotlar yo‘q.</string>
 	<string name="new_media">Yangi media</string>

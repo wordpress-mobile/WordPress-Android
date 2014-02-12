@@ -46,7 +46,7 @@
 	<string name="nux_welcome_create_account">Crear cuenta</string>
 	<string name="add_account_blog_url">Dirección del blog</string>
 	<string name="comment_approved">Comentario aprobado</string>
-	<string name="stats_empty_top_posts">&lt;b>No se encontró ningún top de página o entradas.&lt;/b> Esta vista muestra las entradas y páginas más visitadas.</string>
+	<string name="stats_empty_top_posts"><b>No se encontró ningún top de página o entradas.</b> Esta vista muestra las entradas y páginas más visitadas.</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 o más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="http_authorization_required">Se requiere autorización</string>
@@ -223,12 +223,12 @@
 	<string name="stats_video_summary_label_bandwidth">Ancho de banda</string>
 	<string name="stats_video_summary_header">Estadísticas combinadas para %s</string>
 	<string name="stats_empty_geoviews">Entradas no vistas.</string>
-	<string name="stats_empty_referrers">&lt;b>Sin referidos.&lt;/b> Un referido es un click desde otro sitio que enlaza al tuyo.</string>
-	<string name="stats_empty_clicks">&lt;b>No hay clics registrados.&lt;/b> Los "Clics" son visitantes cliqueando desde enlaces externos a tu sitio.</string>
+	<string name="stats_empty_referrers"><b>Sin referidos.</b> Un referido es un click desde otro sitio que enlaza al tuyo.</string>
+	<string name="stats_empty_clicks"><b>No hay clics registrados.</b> Los "Clics" son visitantes cliqueando desde enlaces externos a tu sitio.</string>
 	<string name="stats_empty_top_authors">No hay entradas vistas.</string>
 	<string name="stats_empty_tags_and_categories">Todavía no hay entradas o páginas etiquetadas vistas.</string>
 	<string name="stats_empty_video">Todavía no hay vídeos vistos.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>No hay términos de búsqueda.&lt;/b> Los términos de búsqueda son palabras o frases que los usuarios encuentran cuando buscan.</string>
+	<string name="stats_empty_search_engine_terms"><b>No hay términos de búsqueda.</b> Los términos de búsqueda son palabras o frases que los usuarios encuentran cuando buscan.</string>
 	<string name="stats_empty_comments">Todavía no hay comentarios.</string>
 	<string name="stats_bar_graph_empty">No hay estadísticas disponibles.</string>
 	<string name="new_media">Nuevo Objeto</string>

@@ -52,7 +52,7 @@
         <activity
             android:name=".ui.accounts.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock"
@@ -61,6 +61,7 @@
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.accounts.NuxHelpActivity"/>
 
         <!-- Preferences activities -->
         <activity android:name=".ui.prefs.AboutActivity" />
