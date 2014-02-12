@@ -49,7 +49,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 24;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -233,7 +233,10 @@ public class WordPressDB {
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                 currentVersion++;
+            // version 23 added CommentTable.java, version 24 changed the comment table schema
             case 22 :
+                currentVersion++;
+            case 23:
                 CommentTable.reset(db);
                 currentVersion++;
         }

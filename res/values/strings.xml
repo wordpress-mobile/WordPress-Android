@@ -705,4 +705,5 @@
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="help">Help</string>
+    <string name="forgot_password">Lost your password?</string>
 </resources>
