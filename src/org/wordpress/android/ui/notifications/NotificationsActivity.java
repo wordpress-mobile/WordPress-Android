@@ -33,6 +33,8 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.NotificationsListFragment.NotesAdapter;
+import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -48,7 +50,9 @@ import java.util.Set;
 import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.WordPress.restClient;
 
-public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
+public class NotificationsActivity extends WPActionBarActivity
+                                   implements CommentActions.OnCommentChangeListener,
+                                              CommentDetailFragment.OnPostClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
@@ -59,6 +63,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
                                             IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
     private static final String KEY_INITIAL_UPDATE = "initial_update";
+
+    private static final String FRAGMENT_TAG_READER_DETAIL = ReaderActivity.FRAGMENT_TAG_POST_DETAIL;
 
     private final Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -80,7 +86,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
+        mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
@@ -328,11 +334,11 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
         noteFragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
-        View container = findViewById(R.id.note_fragment_container);
-        transaction.replace(R.id.note_fragment_container, fragment);
+        View container = findViewById(R.id.layout_fragment_container);
+        transaction.replace(R.id.layout_fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         // only add to backstack if we're removing the list view from the fragment container
-        if (container.findViewById(R.id.notes_list) != null) {
+        if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             transaction.addToBackStack(null);
         }
@@ -366,7 +372,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                     return;
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
                 FragmentManager fm = getSupportFragmentManager();
-                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
+                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.layout_fragment_container);
                 if (f != null) {
                     f.animateModeration(false);
                 }
@@ -385,7 +391,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         // TODO: position will be -1 for notes displayed from push notification, even though the note exists
         int position = mNotesList.getNotesAdapter().updateNote(originalNote, updatedNote);
 
-        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.layout_fragment_container);
         if (f != null) {
             // if this is the active note, update it in the fragment
             if (position >= 0 && position == mNotesList.getListView().getCheckedItemPosition()) {
@@ -492,6 +498,19 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             }
         };
         restClient.getNotifications(params, notesHandler, notesHandler);
+    }
+
+    /*
+     * called when a link to a post is tapped - shows the post in a reader detail fragment
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
+                .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
+                .commit();
     }
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
