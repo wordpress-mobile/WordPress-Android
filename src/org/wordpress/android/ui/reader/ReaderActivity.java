@@ -145,7 +145,8 @@ public class ReaderActivity extends WPActionBarActivity
             AppLog.w(T.READER, "reader activity > null menu drawer");
             return;
         }
-        mMenuDrawer.setDrawerIndicatorEnabled(!hasDetailFragment());
+        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+        mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
     }
 
     @Override
@@ -247,8 +248,8 @@ public class ReaderActivity extends WPActionBarActivity
         // add to backstack if there's already a list fragment
         if (hasListFragment()) {
             ft.addToBackStack(FRAGMENT_TAG_POST_DETAIL);
-            //ft.hide(getListFragment());
-            //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.hide(getListFragment());
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         }
 
         ft.commit();

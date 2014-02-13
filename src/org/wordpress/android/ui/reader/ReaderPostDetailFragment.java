@@ -457,9 +457,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // clear title until post is loaded
-        mOriginalTitle = activity.getTitle();
-        activity.setTitle(null);
+        // retain title of the host activity, then clear it until post is loaded
+        mOriginalTitle = getTitle();
+        setTitle(null);
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
@@ -471,8 +471,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onDetach() {
         // return the activity's title to what it was
-        if (getActivity() != null && mOriginalTitle != null)
-            getActivity().setTitle(mOriginalTitle);
+        if (getActivity() != null && mOriginalTitle != null) {
+            setTitle(mOriginalTitle);
+        }
         super.onDetach();
     }
 
@@ -1299,16 +1300,17 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 return;
 
             if (!result) {
-                /*
-                 * post couldn't be loaded, which means it doesn't exist in db - so request it from the server
-                 */
+                // post couldn't be loaded, which means it doesn't exist in db - so request it from the server
                 requestPost();
                 return;
             }
 
             // set the activity title to the post's title
-            getActivity().setTitle(mPost.getTitle());
+            final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
+            setTitle(postTitle);
 
+            txtTitle.setText(postTitle);
+            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
             showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
 
             // if we know refreshLikes() is going to show the liking layout, force it to take up
@@ -1316,20 +1318,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
                 mLayoutLikes.setVisibility(View.INVISIBLE);
 
-            if (mPost.hasTitle()) {
-                txtTitle.setText(mPost.getTitle());
-            } else {
-                txtTitle.setText(R.string.reader_untitled_post);
-            }
-
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
                 txtBlogName.setVisibility(View.VISIBLE);
             } else {
                 txtBlogName.setVisibility(View.GONE);
             }
-
-            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
             // show author name if it exists and is different than the blog name
             if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
@@ -1489,9 +1483,23 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
     };
 
+    private CharSequence getTitle() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return null;
+        return actionBar.getTitle();
+    }
+
+    private void setTitle(CharSequence title) {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+        actionBar.setTitle(title);
+    }
+
     private ActionBar getActionBar() {
         if (getActivity() instanceof SherlockFragmentActivity) {
-            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+            return ((SherlockFragmentActivity) getActivity()).getSupportActionBar();
         } else {
             AppLog.w(T.READER, "reader post detail > null ActionBar");
             return null;

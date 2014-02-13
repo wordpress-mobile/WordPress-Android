@@ -70,7 +70,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean mIsFlinging = false;
 
     protected static final String KEY_TAG_NAME = "tag_name";
-    private static final String LIST_STATE = "list_state";
+    private static final String KEY_LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
     protected static enum RefreshType {AUTOMATIC, MANUAL}
@@ -96,85 +96,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // called from the actionbar navigation handler
         if (args != null && args.containsKey(KEY_TAG_NAME))
             mCurrentTag = args.getString(KEY_TAG_NAME);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
-        }
-
-        if (savedInstanceState != null) {
-            mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
-            mListState = savedInstanceState.getParcelable(LIST_STATE);
-        }
-
-        selectTagInActionBar(getCurrentTagName());
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-
-        if (activity instanceof OnPostSelectedListener)
-            mPostSelectedListener = (OnPostSelectedListener) activity;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        AppLog.d(T.READER, "reader post list > saving instance state");
-
-        if (hasCurrentTag())
-            outState.putString(KEY_TAG_NAME, mCurrentTag);
-
-        // retain list state so we can return to this position
-        // http://stackoverflow.com/a/5694441/1673548
-        if (mListView != null && mListView.getFirstVisiblePosition() > 0)
-            outState.putParcelable(LIST_STATE, mListView.onSaveInstanceState());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        hideLoadingProgress();
-        animateRefreshButton(false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.reader_native, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
-                return true;
-            case R.id.menu_refresh :
-                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
-                } else {
-                    updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
-                }
-                return true;
-            default :
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -229,6 +150,97 @@ public class ReaderPostListFragment extends SherlockFragment
 
         return view;
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            AppLog.d(T.READER, "reader post list > restoring instance state");
+            mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
+            mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
+        }
+
+        setHasOptionsMenu(true);
+        checkActionBar();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+
+        if (activity instanceof OnPostSelectedListener)
+            mPostSelectedListener = (OnPostSelectedListener) activity;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        AppLog.d(T.READER, "reader post list > saving instance state");
+
+        if (hasCurrentTag())
+            outState.putString(KEY_TAG_NAME, mCurrentTag);
+
+        // retain list state so we can return to this position
+        // http://stackoverflow.com/a/5694441/1673548
+        if (mListView != null && mListView.getFirstVisiblePosition() > 0)
+            outState.putParcelable(KEY_LIST_STATE, mListView.onSaveInstanceState());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideLoadingProgress();
+        animateRefreshButton(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.reader_native, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
+        checkActionBar();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_tags :
+                ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
+                return true;
+            case R.id.menu_refresh :
+                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
+                } else {
+                    updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                }
+                return true;
+            default :
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+     * ensures that the ActionBar is correctly set to list navigation mode using the tag adapter
+     */
+    private void checkActionBar() {
+        // skip out if we're in list navigation mode, since that means the actionBar is
+        // already correctly configured
+        final ActionBar actionBar = getActionBar();
+        if (actionBar == null || actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
+            return;
+
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+
+        selectTagInActionBar(getCurrentTag());
+    }
+
 
     private void startBoxAndPagesAnimation() {
         if (!hasActivity())
@@ -358,13 +370,13 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mPostAdapter==null || mPostAdapter.isEmpty());
     }
 
-    private boolean isCurrentTagName(final String tagName) {
+    private boolean isCurrentTag(final String tagName) {
         if (!hasCurrentTag() || TextUtils.isEmpty(tagName))
             return false;
         return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    private String getCurrentTagName() {
+    private String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
@@ -375,7 +387,13 @@ public class ReaderPostListFragment extends SherlockFragment
     private void setCurrentTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
             return;
-        if (isCurrentTagName(tagName) && tagName.equals(getPostAdapter().getCurrentTag()))
+
+        // skip if this is already the current tag and the post adapter is already showing it - this
+        // will happen when the list fragment is restored and the current tag is re-selected in the
+        // actionBar dropdown
+        if (isCurrentTag(tagName)
+                && hasPostAdapter()
+                && tagName.equals(getPostAdapter().getCurrentTag()))
             return;
 
         mCurrentTag = tagName;
@@ -393,7 +411,7 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * refresh adapter so latest posts appear
      */
-    protected void refreshPosts() {
+    private void refreshPosts() {
         getPostAdapter().refresh();
     }
 
@@ -444,7 +462,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
-        if (refreshType == RefreshType.MANUAL && isCurrentTagName(tagName)) {
+        if (refreshType == RefreshType.MANUAL && isCurrentTag(tagName)) {
             if (tagName.equals(ReaderTag.TAG_NAME_LIKED) || tagName.equals(ReaderTag.TAG_NAME_FOLLOWING))
                 refreshPosts();
         }
@@ -459,7 +477,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
                 setIsUpdating(false, updateAction);
 
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTagName(tagName)) {
+                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
                     if (!isPostAdapterEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
@@ -546,7 +564,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * make sure current tag still exists, reset to default if it doesn't
      */
     private void checkCurrentTag() {
-        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTagName()))
+        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTag()))
             mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
     }
 
@@ -611,7 +629,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     AppLog.d(T.READER, "reader post list > ActionBar adapter loaded");
-                    selectTagInActionBar(getCurrentTagName());
+                    selectTagInActionBar(getCurrentTag());
                 }
             };
 
@@ -650,6 +668,11 @@ public class ReaderPostListFragment extends SherlockFragment
         int position = getActionBarAdapter().getIndexOfTagName(tagName);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex())
             return;
+
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
+            return;
+        }
 
         actionBar.setSelectedNavigationItem(position);
     }
