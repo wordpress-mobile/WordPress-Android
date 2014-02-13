@@ -154,7 +154,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (WPViewPager) findViewById(R.id.pager);
+        mViewPager = (WPViewPager) findViewById(R.id.edit_post_pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setPagingEnabled(false);
