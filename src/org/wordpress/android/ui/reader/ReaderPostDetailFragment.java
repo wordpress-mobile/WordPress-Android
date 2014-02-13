@@ -753,6 +753,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
                         // skip adding liking avatars if the view's child count indicates that we've already
                         // added the max on a previous call to this routine
+                        // TODO: prevent flicker during subsequent calls by comparing previously
+                        // retrieved avatars to these ones
                         if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
                             layoutLikingAvatars.removeAllViews();
                             LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -1127,8 +1129,15 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
 
         sbHtml.append("<style type='text/css'>")
-              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
+              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
+
+        // this prevents long links from overflowing the content - without this either:
+        //   (1) the font size of the entire post will be reduced to accommodate the long link
+        // or
+        //   (2) the content will first render with the link extended beyond the viewport, and
+        //       then quickly reflow to show the link wrapped
+        sbHtml.append("  p { overflow-x: hidden; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
