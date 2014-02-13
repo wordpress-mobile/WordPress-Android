@@ -660,7 +660,11 @@ public class WordPressDB {
 
         return returnVector;
     }
-    
+
+    /*
+     * Jetpack blogs have the "wpcom" blog_id stored in options->api_blogid. This is because self-hosted blogs have both
+     * a blogID (local to their network), and a unique blogID on wpcom.
+     */
     private int getLocalTableBlogIdForJetpackRemoteID(int remoteBlogId, String xmlRpcUrl) {
         if (TextUtils.isEmpty(xmlRpcUrl)) {
             String sql = "SELECT id FROM " + SETTINGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=?";
@@ -672,7 +676,7 @@ public class WordPressDB {
             return SqlUtils.intForQuery(db, sql, args);
         }
    }
-    
+
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(remoteBlogId)});
         if (localBlogID==0) { 
