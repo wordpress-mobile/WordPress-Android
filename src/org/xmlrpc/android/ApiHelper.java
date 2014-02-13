@@ -94,10 +94,8 @@ public class ApiHelper {
                     mBlog.getPassword(), "show-supported" };
             try {
                 result = client.call("wp.getPostFormats", params);
-                return null;
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-                return null;
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
