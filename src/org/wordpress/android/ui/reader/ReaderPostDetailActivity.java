@@ -1109,15 +1109,22 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
+        // use a consistent top/bottom margin for paragraphs
+        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
+
+        // this prevents long links in paragraphs from overflowing - without this either:
+        //   (1) the font size of the entire post will be reduced to accommodate the long link
+        // or
+        //   (2) the content will first render with the link extended beyond the viewport, and
+        //       then quickly reflow to show the link wrapped
+        sbHtml.append("  p { overflow-x: hidden; }");
+
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
               .append("        border: 1px solid ").append(greyLight).append("; ")
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
-
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // css for video div when no video thumb available (see processVideos)
         sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
