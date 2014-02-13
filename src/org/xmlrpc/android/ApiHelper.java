@@ -103,7 +103,7 @@ public class ApiHelper {
         }
 
         protected void onPostExecute(Object result) {
-            if (result != null) {
+            if (result != null && result instanceof HashMap) {
                 Map<?, ?> postFormats = (HashMap<?, ?>) result;
                 if (postFormats.size() > 0) {
                     Gson gson = new Gson();
