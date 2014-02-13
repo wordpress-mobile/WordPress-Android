@@ -1112,13 +1112,6 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
-        // this prevents long links in paragraphs from overflowing - without this either:
-        //   (1) the font size of the entire post will be reduced to accommodate the long link
-        // or
-        //   (2) the content will first render with the link extended beyond the viewport, and
-        //       then quickly reflow to show the link wrapped
-        sbHtml.append("  p { overflow-x: hidden; }");
-
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
@@ -1130,8 +1123,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
         sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
               .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
 
-        // make sure links are shown in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
+        // make sure links don't overflow and are shown in the same color they are elsewhere in the app
+        sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
         // hide iframes & embeds (they won't work since script is disabled)
         sbHtml.append("  iframe, embed { display: none; }");
