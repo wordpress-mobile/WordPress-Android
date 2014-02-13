@@ -44,12 +44,30 @@
             android:animateLayoutChanges="true"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/nux_fragment_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/nux_icon_wp" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/nux_fragment_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/nux_icon_wp"
+                    android:layout_centerInParent="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/info_button_secondary"
+                    android:src="@drawable/dashicon_info"
+                    android:layout_marginRight="16dp"
+                    android:contentDescription="@string/help"
+                    android:tint="@color/blue_dark"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignTop="@+id/nux_fragment_icon"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -75,14 +93,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_medium"/>
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:id="@+id/relativeLayout2">
+                android:background="@color/white">
 
                 <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/nux_password"
