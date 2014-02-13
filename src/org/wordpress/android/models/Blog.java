@@ -15,6 +15,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -367,6 +368,14 @@ public class Blog {
 
     public void setBlogOptions(String blogOptions) {
         this.blogOptions = blogOptions;
+        try {
+            JSONObject options = new JSONObject(blogOptions);
+            String  jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+            if (jetpackBlogId != null)
+                this.setApi_blogid(jetpackBlogId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // TODO: it's ugly to compare json strings, we have to normalize both strings before

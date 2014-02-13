@@ -182,8 +182,7 @@ public class StatsActivity extends WPActionBarActivity {
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
-                    Map<String, String> args = new HashMap<String, String>();
-                    args.put("jetpack_client_id", "jetpack_client_id");
+                    Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
@@ -192,15 +191,9 @@ public class StatsActivity extends WPActionBarActivity {
                         public void onSuccess(long id, Object result) {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
-                                if ( blogOptions.containsKey("jetpack_client_id") ) {
-                                    String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
-                                    if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
-                                        currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save();
-                                        if (!isFinishing())
-                                            refreshStats();
-                                    }
-                                }
+                                ApiHelper.updateBlogOptions(currentBlog, blogOptions);
+                                if (!isFinishing())
+                                    refreshStats();
                             }
                         }
                         @Override
