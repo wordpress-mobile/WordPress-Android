@@ -660,20 +660,18 @@ public class WordPressDB {
 
         return returnVector;
     }
-
+    
     private int getLocalTableBlogIdForJetpackRemoteID(int remoteBlogId, String xmlRpcUrl) {
-        //Jetpack blogs have the "wpcom" blog_id stored in options->api_blogid. This is because self-hosted blogs have both a blogID (local to their network), and a unique blogID on wpcom. 
-        int localBlogID = 0;
-        List<Map<String,Object>> allAccounts = this.getAccountsBy("dotcomFlag=0", new String[]{"api_blogid","url"});
-        for (Map<String, Object> currentAccount : allAccounts) {
-            if (MapUtils.getMapInt(currentAccount, "api_blogid") == remoteBlogId && 
-                    (xmlRpcUrl == null || xmlRpcUrl.equals(MapUtils.getMapStr(currentAccount, "url")))) {
-                localBlogID = MapUtils.getMapInt(currentAccount, "id");
-                break;
-            }
+        if (TextUtils.isEmpty(xmlRpcUrl)) {
+            String sql = "SELECT id FROM " + SETTINGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=?";
+            String[] args = {Integer.toString(remoteBlogId)};
+            return SqlUtils.intForQuery(db, sql, args);
+        } else {
+            String sql = "SELECT id FROM " + SETTINGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=? AND url=?";
+            String[] args = {Integer.toString(remoteBlogId), xmlRpcUrl};
+            return SqlUtils.intForQuery(db, sql, args);
         }
-        return localBlogID;
-    }
+   }
     
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(remoteBlogId)});
