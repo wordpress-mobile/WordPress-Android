@@ -10,16 +10,16 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.functional.FactoryUtils;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
-import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
+public class LoginTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
     private Solo mSolo;
     private Context mTargetContext;
 
     public LoginTest() {
-        super(PostsActivity.class);
+        super(WelcomeActivity.class);
         FactoryUtils.initWithTestFactories();
     }
 

@@ -112,7 +112,7 @@ public class TestUtils {
         }
     }
 
-    public static Date parseString(String value) {
+    public static Date parseStringToDate(String value) {
         // try do parseit as a Date
         Date newValue = DateTimeUtils.iso8601ToJavaDate(value);
         if (newValue != null) {
@@ -125,27 +125,36 @@ public class TestUtils {
         return null;
     }
 
+    public static Object castIt(Object value) {
+        if (value instanceof HashMap) {
+            HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
+            return newValue;
+        } else if (value instanceof String) {
+            Date newValue = parseStringToDate((String) value);
+            if (newValue != null) {
+                return newValue;
+            } else {
+                return value;
+            }
+        } else if (value instanceof Double) {
+            Integer newValue = Integer.valueOf((int) Math.round((Double) value));
+            if (newValue != null) {
+                return newValue;
+            } else {
+                return value;
+            }
+        } else if (value instanceof Object[]) {
+            return injectDateInArray((Object[]) value);
+        } else if (value instanceof StringMap) {
+            return injectDateInHashMap(stringMapToHashMap((StringMap) value));
+        }
+        return value;
+    }
+
     public static Object[] injectDateInArray(Object[] array) {
         HashSet<Object> res = new HashSet<Object>();
         for (Object value : array) {
-            if (value instanceof HashMap) {
-                HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
-                res.add(newValue);
-            } else if (value instanceof String) {
-                // try do parseit as a Date
-                Date newValue = parseString((String) value);
-                if (newValue != null) {
-                    res.add(newValue);
-                } else {
-                    res.add(value);
-                }
-            } else if (value instanceof Object[]) {
-                res.add(injectDateInArray((Object[]) value));
-            } else if (value instanceof StringMap) {
-                res.add(injectDateInHashMap(stringMapToHashMap((StringMap) value)));
-            } else {
-                res.add(value);
-            }
+            res.add(castIt(value));
         }
         return res.toArray();
     }
@@ -154,24 +163,7 @@ public class TestUtils {
         HashMap<String, Object> res = new HashMap<String, Object>();
         for (String key : hashMap.keySet()) {
             Object value = hashMap.get(key);
-            if (value instanceof HashMap) {
-                HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
-                res.put(key, newValue);
-            } else if (value instanceof String) {
-                // try do parseit as a Date
-                Date newValue = parseString((String) value);
-                if (newValue != null) {
-                    res.put(key, newValue);
-                } else {
-                    res.put(key, value);
-                }
-            } else if (value instanceof Object[]) {
-                res.put(key, injectDateInArray((Object[]) value));
-            } else if (value instanceof StringMap) {
-                res.put(key, injectDateInHashMap(stringMapToHashMap((StringMap) value)));
-            } else {
-                res.put(key, value);
-            }
+            res.put(key, castIt(value));
         }
         return res;
     }
