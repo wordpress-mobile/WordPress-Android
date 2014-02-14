@@ -193,14 +193,14 @@ public class CommentsActivity extends WPActionBarActivity
         if (detailFragment == null) {
             WordPress.currentComment = comment;
             FragmentTransaction ft = fm.beginTransaction();
-            if (listFragment != null)
-                ft.hide(listFragment);
             String tagForFragment = getString(R.string.fragment_tag_comment_detail);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
             ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment)
               .addToBackStack(tagForFragment)
-              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-              .commitAllowingStateLoss();
+              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            if (listFragment != null)
+                ft.hide(listFragment);
+            ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
             // tablet mode with list/detail side-by-side - show this comment in the detail view,

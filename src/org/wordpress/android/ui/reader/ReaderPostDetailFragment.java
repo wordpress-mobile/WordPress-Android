@@ -102,6 +102,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private Parcelable mListState = null;
 
     private final ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
+    private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
     private boolean mIsMoving;
@@ -682,8 +683,20 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
+     * used in refreshLikes() to determine whether liking avatars are the same as the last
+     * time they were displayed
+     */
+    private boolean isSameAvatars(final ArrayList<String> avatarUrls) {
+        if (mPrevAvatarUrls == null || avatarUrls == null)
+            return false;
+        if (mPrevAvatarUrls.size() != avatarUrls.size())
+            return false;
+        return mPrevAvatarUrls.containsAll(avatarUrls);
+    }
+
+    /*
      * show latest likes for this post - pass true to force reloading avatars (used when user clicks
-     * the like button, to ensure the current user's avatar appears)
+     * the like button, to ensure the current user's avatar appears first)
      */
     private void refreshLikes(final boolean forceReload) {
         if (!hasActivity())
@@ -751,11 +764,23 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                         };
                         mLayoutLikes.setOnClickListener(clickListener);
 
-                        // skip adding liking avatars if the view's child count indicates that we've already
-                        // added the max on a previous call to this routine
-                        // TODO: prevent flicker during subsequent calls by comparing previously
-                        // retrieved avatars to these ones
-                        if (forceReload || layoutLikingAvatars.getChildCount() < maxAvatars) {
+                        // determine whether avatars need to be loaded - goal is to avoid reloading
+                        // them when they're already displayed to prevent flicker
+                        final boolean reloadAvatars;
+                        if (forceReload) {
+                            // always reload avatars if when reload is forced
+                            reloadAvatars = true;
+                        } else if (isSameAvatars(avatars)) {
+                            // don't reload if these avatars are the same as last time
+                            reloadAvatars = false;
+                        } else {
+                            // avatars aren't the same as last time, but we can still skip showing
+                            // them if the view's child count indicates that we've already added
+                            // the max on a previous call to this routine
+                            reloadAvatars = (layoutLikingAvatars.getChildCount() < maxAvatars);
+                        }
+                        if (reloadAvatars) {
+                            AppLog.d(T.READER, "reader post detail > displaying liking avatars");
                             layoutLikingAvatars.removeAllViews();
                             LayoutInflater inflater = getActivity().getLayoutInflater();
                             for (String url: avatars) {
@@ -763,6 +788,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                                 layoutLikingAvatars.addView(imgAvatar);
                                 imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                             }
+
+                            // remember these avatars for isSameAvatars() comparison
+                            mPrevAvatarUrls.clear();
+                            mPrevAvatarUrls.addAll(avatars);
                         }
 
                         // show the liking layout if it's not already showing
