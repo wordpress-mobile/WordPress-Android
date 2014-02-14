@@ -30,9 +30,6 @@ public class CommentsActivity extends WPActionBarActivity
 
     private MenuItem mRefreshMenuItem;
 
-    private static final String FRAGMENT_TAG_COMMENT_DETAIL = "comment_detail";
-    private static final String FRAGMENT_TAG_READER_DETAIL = ReaderActivity.FRAGMENT_TAG_POST_DETAIL;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +144,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_comment_detail);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_detail));
         if (fragment == null)
             return null;
         return (CommentDetailFragment)fragment;
@@ -158,7 +155,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentsListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_comment_list);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_list));
         if (fragment == null)
             return null;
         return (CommentsListFragment)fragment;
@@ -169,7 +166,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getReaderFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_READER_DETAIL);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
         if (fragment == null)
             return null;
         return (ReaderPostDetailFragment)fragment;
@@ -189,6 +186,7 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
+
         CommentDetailFragment detailFragment = getDetailFragment();
         CommentsListFragment listFragment = getListFragment();
 
@@ -197,11 +195,12 @@ public class CommentsActivity extends WPActionBarActivity
             FragmentTransaction ft = fm.beginTransaction();
             if (listFragment != null)
                 ft.hide(listFragment);
+            String tagForFragment = getString(R.string.fragment_tag_comment_detail);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-            ft.add(R.id.layout_fragment_container, detailFragment, FRAGMENT_TAG_COMMENT_DETAIL);
-            ft.addToBackStack(FRAGMENT_TAG_COMMENT_DETAIL);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commitAllowingStateLoss();
+            ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment)
+              .addToBackStack(tagForFragment)
+              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+              .commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
             // tablet mode with list/detail side-by-side - show this comment in the detail view,
@@ -219,12 +218,14 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-          .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
-          .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-          .commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (hasDetailFragment())
+            ft.hide(getDetailFragment());
+        ft.commit();
     }
 
     /*

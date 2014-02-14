@@ -33,7 +33,6 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.NotificationsListFragment.NotesAdapter;
-import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
@@ -63,8 +62,6 @@ public class NotificationsActivity extends WPActionBarActivity
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
                                             IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
     private static final String KEY_INITIAL_UPDATE = "initial_update";
-
-    private static final String FRAGMENT_TAG_READER_DETAIL = ReaderActivity.FRAGMENT_TAG_POST_DETAIL;
 
     private final Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -614,12 +611,13 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .add(R.id.layout_fragment_container, readerFragment, FRAGMENT_TAG_READER_DETAIL)
-                .addToBackStack(FRAGMENT_TAG_READER_DETAIL)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        // TODO: hide detail fragment if it exists to reduce overdraw
+        ft.commit();
     }
 
 }

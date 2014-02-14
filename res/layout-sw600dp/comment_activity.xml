@@ -12,6 +12,7 @@
     <fragment
         android:id="@+id/fragment_comment_list"
         android:name="org.wordpress.android.ui.comments.CommentsListFragment"
+        android:tag="@string/fragment_tag_comment_list"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
@@ -29,6 +30,7 @@
 
         <fragment
             android:id="@+id/fragment_comment_detail"
+            android:tag="@string/fragment_tag_comment_detail"
             android:name="org.wordpress.android.ui.comments.CommentDetailFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

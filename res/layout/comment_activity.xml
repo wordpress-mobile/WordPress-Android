@@ -10,6 +10,7 @@
 
     <fragment
         android:id="@+id/fragment_comment_list"
+        android:tag="@string/fragment_tag_comment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="org.wordpress.android.ui.comments.CommentsListFragment" />

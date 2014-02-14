@@ -46,8 +46,6 @@ public class ReaderActivity extends WPActionBarActivity
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
-    public static final String FRAGMENT_TAG_POST_LIST = "reader_post_list";
-    public static final String FRAGMENT_TAG_POST_DETAIL = "reader_post_detail";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
@@ -218,15 +216,14 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragment(final String tagName) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment, FRAGMENT_TAG_POST_LIST)
+                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_POST_LIST);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null)
             return null;
         return ((ReaderPostListFragment) fragment);
@@ -240,14 +237,14 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing detail for passed post
      */
     private void showDetailFragment(long blogId, long postId) {
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_container, fragment, FRAGMENT_TAG_POST_DETAIL);
+        ft.add(R.id.fragment_container, fragment, tagForFragment);
 
         // add to backstack if there's already a list fragment
         if (hasListFragment()) {
-            ft.addToBackStack(FRAGMENT_TAG_POST_DETAIL);
+            ft.addToBackStack(tagForFragment);
             ft.hide(getListFragment());
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         }
@@ -256,7 +253,7 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_POST_DETAIL);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
         if (fragment == null)
             return null;
         return ((ReaderPostDetailFragment) fragment);
