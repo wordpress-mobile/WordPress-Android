@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -315,23 +316,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!hasActivity())
             return;
 
-        // locate detail view, which contains all the other views
-        final ViewGroup viewDetail = (ViewGroup) getView().findViewById(R.id.layout_detail);
+        // these two views contain all the other views except the progress bar
+        final ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
+        final View layoutBottom = getView().findViewById(R.id.layout_bottom);
 
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) viewDetail.findViewById(R.id.image_avatar);
-        final TextView txtName = (TextView) viewDetail.findViewById(R.id.text_name);
-        final TextView txtDate = (TextView) viewDetail.findViewById(R.id.text_date);
-
-        // hide all views when comment is null (will happen when opened from a notification)
+        // hide container views when comment is null (will happen when opened from a notification)
         if (mComment == null) {
-            imgAvatar.setImageDrawable(null);
-            txtName.setText(null);
-            txtDate.setText(null);
-            mTxtContent.setText(null);
-            mTxtStatus.setText(null);
-            mLayoutButtons.setVisibility(View.GONE);
-            mLayoutReply.setVisibility(View.GONE);
-            viewDetail.setVisibility(View.GONE);
+            scrollView.setVisibility(View.GONE);
+            layoutBottom.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
             if (mNote != null && !mIsRequestingComment)
@@ -340,7 +332,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        viewDetail.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.VISIBLE);
+        layoutBottom.setVisibility(View.VISIBLE);
+
+        final WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
+        final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
+        final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
 
         txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
