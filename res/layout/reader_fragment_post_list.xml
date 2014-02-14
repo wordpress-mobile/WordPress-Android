@@ -7,7 +7,7 @@
 
     <ListView
         android:id="@android:id/list"
-        style="@style/ReaderListView"
+        style="@style/ReaderListView.PostList"
         android:paddingLeft="@dimen/reader_list_margin"
         android:paddingRight="@dimen/reader_list_margin"
         android:divider="@color/reader_divider_grey"
