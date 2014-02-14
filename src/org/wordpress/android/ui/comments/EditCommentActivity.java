@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -26,8 +25,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,12 +47,7 @@ public class EditCommentActivity extends SherlockActivity {
         super.onCreate(icicle);
 
         setContentView(R.layout.edit_comment);
-
         setTitle(getString(R.string.edit_comment));
-
-        // Capitalize headers
-        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.comment_content).toUpperCase());
-        ((TextView) findViewById(R.id.l_status)).setText(getResources().getString(R.string.status).toUpperCase());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -240,18 +235,9 @@ public class EditCommentActivity extends SherlockActivity {
             postHash.put("author_url",   authorUrl);
             postHash.put("author_email", authorEmail);
 
-            XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
-            Object[] xmlParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
-                    mCommentId,
-                    postHash};
-
+            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), mCommentId, postHash};
             try {
                 Object result = client.call("wp.editComment", xmlParams);
                 boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
@@ -318,5 +304,4 @@ public class EditCommentActivity extends SherlockActivity {
             super.onBackPressed();
         }
     }
-
 }
