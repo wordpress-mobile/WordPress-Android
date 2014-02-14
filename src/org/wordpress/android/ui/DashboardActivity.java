@@ -19,19 +19,15 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
-import java.util.Map;
 
 /**
  * Basic activity for displaying a WebView.
@@ -71,7 +67,7 @@ public class DashboardActivity extends SherlockActivity {
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey("blogID")) {
             try {
-                mBlog = WordPress.wpDB.getBlogById(extras.getInt("blogID", -1));
+                mBlog = WordPress.wpDB.instantiateBlogByLocalId(extras.getInt("blogID", -1));
             } catch (Exception e) {
                 mBlog = WordPress.getCurrentBlog();
             }
@@ -92,12 +88,12 @@ public class DashboardActivity extends SherlockActivity {
         loadDashboard();
     }
 
-    
+
     private void loadDashboard() {
         String dashboardUrl = mBlog.getAdminUrl();
         loadAuthenticatedUrl(dashboardUrl);
     }
-    
+
     /**
      * Load the specified URL in the webview.
      *

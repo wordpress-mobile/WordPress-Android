@@ -243,7 +243,7 @@ public class SetupBlog {
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
                     Integer.parseInt(blogId), xmlRpcUrl);
             try {
-                blog = WordPress.wpDB.getBlogById(localTableBlogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(localTableBlogId);
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
                     WordPress.wpDB.saveBlog(blog);

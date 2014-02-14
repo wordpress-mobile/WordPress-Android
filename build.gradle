@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 
@@ -38,16 +38,16 @@ android {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             packageNameSuffix ".beta"
-        } // end zbetagroup
-    } // end buildTypes
+        }
+    }
 
     compileSdkVersion 19
     buildToolsVersion "19"
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.6"
-        versionCode 91
+        versionName "2.6.1"
+        versionCode 93
         minSdkVersion 9
         targetSdkVersion 19
     }
@@ -56,7 +56,7 @@ android {
         // Provided by maven central
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-        compile 'com.android.support:support-v4:18.0.+'
+        compile 'com.android.support:support-v4:19.0.+'
         instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
 
         // These are provided by the WordPress-Android Repository

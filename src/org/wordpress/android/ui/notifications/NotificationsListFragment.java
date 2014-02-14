@@ -15,20 +15,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class NotificationsListFragment extends ListFragment {
@@ -62,8 +58,7 @@ public class NotificationsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
+        return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
     @Override
@@ -94,16 +89,6 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
-    @Override
-    public void setListAdapter(ListAdapter adapter) {
-        super.setListAdapter(adapter);
-    }
-
-    public void setNotesAdapter(NotesAdapter adapter) {
-        mNotesAdapter = adapter;
-        this.setListAdapter(adapter);
-    }
-
     public NotesAdapter getNotesAdapter() {
         return mNotesAdapter;
     }
@@ -116,7 +101,7 @@ public class NotificationsListFragment extends ListFragment {
         mNoteClickListener = listener;
     }
 
-    protected void requestMoreNotifications() {
+    private void requestMoreNotifications() {
         if (mNoteProvider != null) {
             mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
         }
@@ -135,7 +120,7 @@ public class NotificationsListFragment extends ListFragment {
 
         NotesAdapter(Context context, List<Note> notes) {
             super(context, R.layout.note_list_item, R.id.note_label, notes);
-            mAvatarSz = DisplayUtils.dpToPx(context, 48);
+            mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         }
 
         @Override
@@ -147,7 +132,7 @@ public class NotificationsListFragment extends ListFragment {
             final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
             final TextView txtDate = (TextView) view.findViewById(R.id.text_date);
             final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            final NetworkImageView imgAvatar = (NetworkImageView) view.findViewById(R.id.note_avatar);
+            final WPNetworkImageView imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             final ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
 
             if (note.isCommentType()) {
@@ -158,16 +143,10 @@ public class NotificationsListFragment extends ListFragment {
             }
 
             txtDate.setText(note.getTimeSpan());
-
-            // gravatars default to having s=256 which is considerably larger than we need here, so
-            // change the s= param to the actual size used here
-            String avatarUrl = note.getIconURL();
-            if (avatarUrl!=null && avatarUrl.contains("s=256"))
-                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(avatarUrl), WordPress.imageLoader);
-
             imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
+
+            String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
             unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
             placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
@@ -187,10 +166,8 @@ public class NotificationsListFragment extends ListFragment {
                 // will be triggered for each added note
                 setNotifyOnChange(false);
                 try {
-                    Iterator<Note> noteIterator = notes.iterator();
-                    while(noteIterator.hasNext()){
-                        add(noteIterator.next());
-                    }
+                    for (Note note: notes)
+                        add(note);
                 } finally {
                     setNotifyOnChange(true);
                 }

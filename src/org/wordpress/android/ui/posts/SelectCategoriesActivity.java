@@ -85,7 +85,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         if (extras != null) {
             int blogId = extras.getInt("id");
             try {
-                blog = WordPress.wpDB.getBlogById(blogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();

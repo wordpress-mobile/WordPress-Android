@@ -425,7 +425,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_IS_POST_CHANGED = "is_post_changed";
     private static final String KEY_IS_BLOG_FOLLOW_STATUS_CHANGED = "is_blog_follow_status_changed";
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -472,7 +472,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
             data.putExtra(ARG_BLOG_ID, mBlogId);
             data.putExtra(ARG_POST_ID, mPostId);
             data.putExtra(ARG_BLOG_FOLLOW_STATUS_CHANGED, mIsBlogFollowStatusChanged);
-            
+
             if (mIsPostChanged) {
                 setResult(RESULT_OK, data);
             } else {
@@ -975,7 +975,7 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * this isn't very performance-friendly due to all the string creation, but it does the job
      * and performance isn't critical since this is only called once (from inside the AsyncTask)
      */
-    private static final String OVERLAY_IMG = "file:///android_res/drawable/ic_reader_video_overlay.png";
+    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
     private String processVideos(String text) {
         if (text==null)
             return "";
@@ -1109,6 +1109,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
+        // use a consistent top/bottom margin for paragraphs
+        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
+
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
@@ -1116,15 +1119,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
 
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
-
         // css for video div when no video thumb available (see processVideos)
         sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
               .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
 
-        // make sure links are shown in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
+        // make sure links don't overflow and are shown in the same color they are elsewhere in the app
+        sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
         // hide iframes & embeds (they won't work since script is disabled)
         sbHtml.append("  iframe, embed { display: none; }");

@@ -40,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -115,7 +116,8 @@ public class StatsActivity extends WPActionBarActivity {
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
 
         // for self-hosted sites; launch the user into an activity where they can provide their credentials
-        if (!WordPress.getCurrentBlog().isDotcomFlag() && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
+        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag() &&
+                !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
             if (WordPress.hasValidWPComCredentials(this)) {
                 // Let's try the global wpcom credentials them first
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -181,9 +183,7 @@ public class StatsActivity extends WPActionBarActivity {
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
-
-                    Map<String, String> args = new HashMap<String, String>();
-                    args.put("jetpack_client_id", "jetpack_client_id");
+                    Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
@@ -192,15 +192,9 @@ public class StatsActivity extends WPActionBarActivity {
                         public void onSuccess(long id, Object result) {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
-                                if ( blogOptions.containsKey("jetpack_client_id") ) {
-                                    String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
-                                    if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
-                                        currentBlog.setApi_blogid(apiBlogId);
-                                        WordPress.wpDB.saveBlog(currentBlog);
-                                        if (!isFinishing())
-                                            refreshStats();
-                                    }
-                                }
+                                ApiHelper.updateBlogOptions(currentBlog, blogOptions);
+                                if (!isFinishing())
+                                    refreshStats();
                             }
                         }
                         @Override

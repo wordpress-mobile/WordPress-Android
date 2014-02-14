@@ -1,103 +1,103 @@
 package org.wordpress.android.models;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.xmlrpc.android.ApiHelper;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 
 public class Comment {
-    public String postID = "";
+    public int postID;
     public int commentID;
-    public int position;
-    public String name = "";
-    public String emailURL = "";
-    private String status = "";
-    public String comment = "";
-    public String postTitle = "";
-    public String authorURL = "";
-    public String authorEmail = "";
-    public String dateCreatedFormatted = "";
-    private String profileImageUrl = null;
 
-    public Comment(String postID,
-            int commentID,
-            int position,
-            String name,
-            String dateCreatedFormatted,
-            String comment,
-            String status,
-            String postTitle,
-            String authorURL,
-            String authorEmail,
-            String profileImageUrl) {
+    private String authorName;
+    private String status;
+    private String comment;
+    private String postTitle;
+    private String authorUrl;
+    private String authorEmail;
+    private String published;
+    private String profileImageUrl;
+
+    public Comment(int postID,
+                   int commentID,
+                   String authorName,
+                   String pubDateGmt,
+                   String comment,
+                   String status,
+                   String postTitle,
+                   String authorURL,
+                   String authorEmail,
+                   String profileImageUrl) {
         this.postID = postID;
         this.commentID = commentID;
-        this.position = position;
-        this.name = name;
-        this.emailURL = authorEmail;
+        this.authorName = authorName;
         this.status = status;
         this.comment = comment;
         this.postTitle = postTitle;
-        this.authorURL = authorURL;
-        this.authorEmail = authorEmail; // why is this the same as emailURL above?
+        this.authorUrl = authorURL;
+        this.authorEmail = authorEmail;
         this.profileImageUrl = profileImageUrl;
-        this.dateCreatedFormatted = dateCreatedFormatted;
+        this.published = pubDateGmt;
+    }
+
+    private Comment() {
+        // nop
     }
 
     /*
      * nbradbury 11/14/13 - create a comment from JSON (REST response)
      * https://developer.wordpress.com/docs/api/1/get/sites/%24site/comments/%24comment_ID/
      */
-    public Comment(JSONObject json) {
+    public static Comment fromJSON(JSONObject json) {
         if (json == null)
-            return;
+            return null;
 
-        this.commentID = json.optInt("ID");
-        this.status = JSONUtil.getString(json, "status");
+        Comment comment = new Comment();
+        comment.commentID = json.optInt("ID");
+        comment.status = JSONUtil.getString(json, "status");
+        comment.published = JSONUtil.getString(json, "date");
 
         // note that the content often contains html, and on rare occasions may contain
         // script blocks that need to be removed (only seen with blogs that use the
         // sociable plugin)
-        this.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
-
-        java.util.Date date = DateTimeUtils.iso8601ToJavaDate(JSONUtil.getString(json, "date"));
-        if (date != null)
-            this.dateCreatedFormatted = ApiHelper.getFormattedCommentDate(WordPress.getContext(), date);
+        comment.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
-            this.postID = Integer.toString(jsonPost.optInt("ID"));
-            // c.postTitle = ???
+            comment.postID = jsonPost.optInt("ID");
+            // TODO: c.postTitle = ???
         }
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             // author names may contain html entities (esp. pingbacks)
-            this.name = JSONUtil.getStringDecoded(jsonAuthor, "name");
-            this.authorURL = JSONUtil.getString(jsonAuthor, "URL");
+            comment.authorName = JSONUtil.getStringDecoded(jsonAuthor, "name");
+            comment.authorUrl = JSONUtil.getString(jsonAuthor, "URL");
 
             // email address will be set to "false" when there isn't an email address
-            this.authorEmail = JSONUtil.getString(jsonAuthor, "email");
-            if (this.authorEmail.equals("false"))
-                this.authorEmail = "";
-            this.emailURL = this.authorEmail;
+            comment.authorEmail = JSONUtil.getString(jsonAuthor, "email");
+            if (comment.authorEmail.equals("false"))
+                comment.authorEmail = "";
 
-            this.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
+            comment.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
         }
+
+        return comment;
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return StringUtils.notNullStr(profileImageUrl);
     }
     public void setProfileImageUrl(String url) {
-        profileImageUrl = url;
+        profileImageUrl = StringUtils.notNullStr(url);
     }
     public boolean hasProfileImageUrl() {
         return !TextUtils.isEmpty(profileImageUrl);
@@ -108,12 +108,130 @@ public class Comment {
     }
 
     public String getStatus() {
-        return status;
+        return StringUtils.notNullStr(status);
     }
     public void setStatus(String status) {
-        this.status = status;
+        this.status = StringUtils.notNullStr(status);
     }
 
+    public String getPublished() {
+        return StringUtils.notNullStr(published);
+    }
+    public void setPublished(String pubDate) {
+        published = StringUtils.notNullStr(pubDate);
+    }
 
+    public boolean hasAuthorName() {
+        return !TextUtils.isEmpty(authorName);
+    }
+    public String getAuthorName() {
+        return StringUtils.notNullStr(authorName);
+    }
+    public void setAuthorName(String name) {
+        authorName = StringUtils.notNullStr(name);
+    }
 
+    public boolean hasAuthorEmail() {
+        return !TextUtils.isEmpty(authorEmail);
+    }
+    public String getAuthorEmail() {
+        return StringUtils.notNullStr(authorEmail);
+    }
+    public void setAuthorEmail(String email) {
+        authorEmail = StringUtils.notNullStr(email);
+    }
+
+    public boolean hasAuthorUrl() {
+        return !TextUtils.isEmpty(authorUrl);
+    }
+    public String getAuthorUrl() {
+        return StringUtils.notNullStr(authorUrl);
+    }
+    public void setAuthorUrl(String url) {
+        authorUrl = StringUtils.notNullStr(url);
+    }
+
+    public String getCommentText() {
+        return StringUtils.notNullStr(comment);
+    }
+    public void setCommentText(String text) {
+        comment = StringUtils.notNullStr(text);
+    }
+
+    public boolean hasPostTitle() {
+        return !TextUtils.isEmpty(postTitle);
+    }
+    public String getPostTitle() {
+        return StringUtils.notNullStr(postTitle);
+    }
+    public void setPostTitle(String title) {
+        postTitle = StringUtils.notNullStr(title);
+    }
+
+    /****
+     * the following are transient variables whose sole purpose is to cache commonly-used values
+     * for the comment that speeds up accessing them inside adapters
+     ****/
+
+    /*
+     * converts iso8601 published date to an actual java date
+     */
+    private transient java.util.Date dtPublished;
+    public java.util.Date getDatePublished() {
+        if (dtPublished == null)
+            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+        return dtPublished;
+    }
+
+    private transient String unescapedCommentText;
+    public String getUnescapedCommentText() {
+        if (unescapedCommentText == null)
+            unescapedCommentText = StringUtils.unescapeHTML(getCommentText()).trim();
+        return unescapedCommentText;
+    }
+
+    private transient String unescapedPostTitle;
+    public String getUnescapedPostTitle() {
+        if (unescapedPostTitle == null)
+            unescapedPostTitle = StringUtils.unescapeHTML(getPostTitle().trim());
+        return unescapedPostTitle;
+    }
+
+    /*
+     * returns the avatar url as a photon/gravatar url set to the passed size
+     */
+    private transient String avatarForDisplay;
+    public String getAvatarForDisplay(int avatarSize) {
+        if (avatarForDisplay==null) {
+            if (hasProfileImageUrl()) {
+                avatarForDisplay = PhotonUtils.fixAvatar(profileImageUrl, avatarSize);
+            } else if (hasAuthorEmail()) {
+                avatarForDisplay = GravatarUtils.gravatarUrlFromEmail(authorEmail, avatarSize);
+            } else {
+                avatarForDisplay = "";
+            }
+        }
+        return avatarForDisplay;
+    }
+
+    /*
+     * returns the author + post title as "Author Name on Post Title" - used by comment list
+     */
+    private transient String formattedTitle;
+    public String getFormattedTitle() {
+        if (formattedTitle == null) {
+            Context context = WordPress.getContext();
+            final String author = (hasAuthorName() ? getAuthorName() : context.getString(R.string.anonymous));
+            if (hasPostTitle()) {
+                formattedTitle = author
+                              + "<font color=" + HtmlUtils.colorResToHtmlColor(context, R.color.grey_medium) + ">"
+                              + " " + context.getString(R.string.on) + " "
+                              + "</font>"
+                              + getUnescapedPostTitle();
+            } else {
+                formattedTitle = author;
+            }
+        }
+        return formattedTitle;
+    }
 }

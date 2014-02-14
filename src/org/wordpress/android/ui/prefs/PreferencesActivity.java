@@ -309,9 +309,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        // WordPress.com auth area and notifications
-        refreshWPComAuthCategory();
-
         // Post signature
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             hidePostSignatureCategory();
@@ -587,6 +584,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
         rootScreen.addPreference(mNotificationsGroup);
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference("wp_pref_notification_types");
+        notificationTypesCategory.removeAll();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         String settingsJson = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
@@ -617,6 +615,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 }
 
                 PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
+                selectBlogsCategory.removeAll();
                 for (int i = 0; i < mMutedBlogsList.size(); i++) {
                     StringMap<?> blogMap = (StringMap<?>) mMutedBlogsList.get(i);
                     String blogName = (String) blogMap.get("blog_name");

@@ -27,7 +27,8 @@ public class OAuthAuthenticator implements Authenticator {
             blog = WordPress.wpDB.getBlogForDotComBlogId(siteId);
 
             if (blog != null) {
-                // get the access token from api key field
+                // get the access token from api key field. Jetpack blogs linked with a different wpcom
+                // account have the token stored here.
                 token = blog.getApi_key();
 
                 // valid oauth tokens are 64 chars
@@ -35,14 +36,21 @@ public class OAuthAuthenticator implements Authenticator {
                     token = null;
                 }
 
-                // if there is no access token, but this is the dotcom flag
-                if (token == null && (blog.isDotcomFlag() && blog.getUsername().equals(settings.getString(
-                        WordPress.WPCOM_USERNAME_PREFERENCE, "")))) {
-                    token = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+                // if there is no access token, we need to check if it is a dotcom blog, or a jetpack
+                // blog linked with the main wpcom account.
+                if (token == null) {
+                    if (blog.isDotcomFlag() && blog.getUsername().equals(settings.getString(
+                            WordPress.WPCOM_USERNAME_PREFERENCE, ""))) {
+                        token = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+                    } else if (blog.isJetpackPowered()) {
+                        if (blog.getDotcom_username() == null || blog.getDotcom_username().equals(settings.getString(
+                                WordPress.WPCOM_USERNAME_PREFERENCE, ""))) {
+                            token = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+                        }
+                    }
                 }
             }
         }
-
         if (token != null) {
             // we have an access token, set the request and send it
             request.sendWithAccessToken(token);
@@ -54,7 +62,6 @@ public class OAuthAuthenticator implements Authenticator {
 
     public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
         Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
-        // make oauth volley request
         String username;
         String password;
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -76,31 +83,27 @@ public class OAuthAuthenticator implements Authenticator {
             }
         }
 
-        Request oauthRequest = oauth.makeRequest(username, password, new Oauth.Listener() {
-                                                     @Override
-                                                     public void onResponse(Oauth.Token token) {
-                                                         if (blog == null) {
-                                                             settings.edit().putString(
-                                                                     WordPress.ACCESS_TOKEN_PREFERENCE,
-                                                                     token.toString()).
-                                                                             commit();
-                                                         } else {
-                                                             blog.setApi_key(token.toString());
-                                                             WordPress.wpDB.saveBlog(blog);
-                                                         }
-                                                         request.sendWithAccessToken(token);
-                                                     }
-                                                 },
+        Request oauthRequest = oauth.makeRequest(username, password,
+                new Oauth.Listener() {
+                    @Override
+                    public void onResponse(Oauth.Token token) {
+                        if (blog == null) {
+                            settings.edit().putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString()).commit();
+                        } else {
+                            blog.setApi_key(token.toString());
+                            WordPress.wpDB.saveBlog(blog);
+                        }
+                        request.sendWithAccessToken(token);
+                    }
+                },
 
-                                                 new Oauth.ErrorListener() {
-
-                                                     @Override
-                                                     public void onErrorResponse(VolleyError error) {
-                                                         request.abort(error);
-                                                     }
-                                                 }
+                new Oauth.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        request.abort(error);
+                    }
+                }
         );
-
         // add oauth request to the request queue
         WordPress.requestQueue.add(oauthRequest);
     }

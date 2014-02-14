@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -294,6 +295,17 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         }
     }
 
+    private void initInfoButton(View rootView) {
+        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoBUtton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                startActivity(newAccountIntent);
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -357,6 +369,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             }
         });
         initPasswordVisibilityButton(rootView, mPasswordTextField);
+        initInfoButton(rootView);
         return rootView;
     }
 }
