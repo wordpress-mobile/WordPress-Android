@@ -416,8 +416,7 @@ public class Blog {
     public boolean isPrivate() {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
+            Type type = new TypeToken<Map<String, Object>>() {}.getType();
             Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
             StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
             String blogPublicOptionValue = blogPublicOption.get("value").toString();

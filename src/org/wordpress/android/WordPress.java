@@ -417,16 +417,16 @@ public class WordPress extends Application {
         editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
         editor.commit();
 
-        wpDB.deleteAllAccounts();
-        wpDB.updateLastBlogId(-1);
+        if (wpDB != null) {
+            wpDB.deleteAllAccounts();
+            wpDB.updateLastBlogId(-1);
+            wpDB.clearNotes();
+        }
         currentBlog = null;
 
         // reset all reader-related prefs & data
         UserPrefs.reset();
         ReaderDatabase.reset();
-
-        //Delete all the Notes
-        WordPress.wpDB.clearNotes();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants

@@ -824,6 +824,13 @@ public class WordPressDB {
         return (result == 1);
     }
 
+    public Object[] arrayListToArray(Object array) {
+        if (array instanceof ArrayList) {
+            return ((ArrayList) array).toArray();
+        }
+        return (Object[]) array;
+    }
+
     public boolean savePosts(List<?> postValues, int blogID, boolean isPage) {
         boolean returnValue = false;
         if (postValues.size() != 0) {
@@ -832,10 +839,10 @@ public class WordPressDB {
                     ContentValues values = new ContentValues();
                     Map<?, ?> thisHash = (Map<?, ?>) postValues.get(i);
                     values.put("blogID", blogID);
-                    if (thisHash.get((isPage) ? "page_id" : "postid") == null)
+                    if (thisHash.get((isPage) ? "page_id" : "postid") == null) {
                         return false;
-                    String postID = thisHash.get((isPage) ? "page_id" : "postid")
-                            .toString();
+                    }
+                    String postID = thisHash.get((isPage) ? "page_id" : "postid").toString();
                     values.put("postid", postID);
                     values.put("title", thisHash.get("title").toString());
                     Date d;
@@ -851,25 +858,22 @@ public class WordPressDB {
                         values.put("date_created_gmt", d.getTime());
                     } catch (Exception e) {
                         d = new Date((Long) values.get("dateCreated"));
-                        values.put("date_created_gmt",
-                                d.getTime() + (d.getTimezoneOffset() * 60000));
+                        values.put("date_created_gmt", d.getTime() + (d.getTimezoneOffset() * 60000));
                     }
-                    values.put("description", thisHash.get("description")
-                            .toString());
+                    values.put("description", thisHash.get("description").toString());
                     values.put("link", thisHash.get("link").toString());
                     values.put("permaLink", thisHash.get("permaLink").toString());
 
-                    Object[] cats = (Object[]) thisHash.get("categories");
+                    Object[] categories = arrayListToArray(thisHash.get("categories"));
                     JSONArray jsonArray = new JSONArray();
-                    if (cats != null) {
-                        for (int x = 0; x < cats.length; x++) {
-                            jsonArray.put(cats[x].toString());
+                    if (categories != null) {
+                        for (int x = 0; x < categories.length; x++) {
+                            jsonArray.put(categories[x].toString());
                         }
                     }
                     values.put("categories", jsonArray.toString());
 
-                    Object[] custom_fields = (Object[]) thisHash
-                            .get("custom_fields");
+                    Object[] custom_fields = arrayListToArray(thisHash.get("custom_fields"));
                     jsonArray = new JSONArray();
                     if (custom_fields != null) {
                         for (int x = 0; x < custom_fields.length; x++) {
@@ -877,71 +881,54 @@ public class WordPressDB {
                             // Update geo_long and geo_lat from custom fields, if
                             // found:
                             Map<?, ?> customField = (Map<?, ?>) custom_fields[x];
-                            if (customField.get("key") != null
-                                    && customField.get("value") != null) {
-                                if (customField.get("key").equals("geo_longitude"))
-                                    values.put("longitude", customField
-                                            .get("value").toString());
-                                if (customField.get("key").equals("geo_latitude"))
-                                    values.put("latitude", customField.get("value")
-                                            .toString());
+                            if (customField.get("key") != null && customField.get("value") != null) {
+                                if (customField.get("key").equals("geo_longitude")) {
+                                    values.put("longitude", customField.get("value").toString());
+                                }
+                                if (customField.get("key").equals("geo_latitude")) {
+                                    values.put("latitude", customField.get("value").toString());
+                                }
                             }
                         }
                     }
                     values.put("custom_fields", jsonArray.toString());
 
-                    values.put("mt_excerpt",
-                            thisHash.get((isPage) ? "excerpt" : "mt_excerpt")
-                                    .toString());
-                    values.put("mt_text_more",
-                            thisHash.get((isPage) ? "text_more" : "mt_text_more")
-                                    .toString());
-                    values.put("mt_allow_comments",
-                            (Integer) thisHash.get("mt_allow_comments"));
-                    values.put("mt_allow_pings",
-                            (Integer) thisHash.get("mt_allow_pings"));
+                    values.put("mt_excerpt", thisHash.get((isPage) ? "excerpt" : "mt_excerpt").toString());
+                    values.put("mt_text_more", thisHash.get((isPage) ? "text_more" : "mt_text_more").toString());
+                    values.put("mt_allow_comments", (Integer) thisHash.get("mt_allow_comments"));
+                    values.put("mt_allow_pings", (Integer) thisHash.get("mt_allow_pings"));
                     values.put("wp_slug", thisHash.get("wp_slug").toString());
-                    values.put("wp_password", thisHash.get("wp_password")
-                            .toString());
-                    values.put("wp_author_id", thisHash.get("wp_author_id")
-                            .toString());
-                    values.put("wp_author_display_name",
-                            thisHash.get("wp_author_display_name").toString());
-                    values.put("post_status",
-                            thisHash.get((isPage) ? "page_status" : "post_status")
-                                    .toString());
+                    values.put("wp_password", thisHash.get("wp_password").toString());
+                    values.put("wp_author_id", thisHash.get("wp_author_id").toString());
+                    values.put("wp_author_display_name", thisHash.get("wp_author_display_name").toString());
+                    values.put("post_status", thisHash.get((isPage) ? "page_status" : "post_status").toString());
                     values.put("userid", thisHash.get("userid").toString());
 
                     int isPageInt = 0;
                     if (isPage) {
                         isPageInt = 1;
                         values.put("isPage", true);
-                        values.put("wp_page_parent_id",
-                                thisHash.get("wp_page_parent_id").toString());
-                        values.put("wp_page_parent_title",
-                                thisHash.get("wp_page_parent_title").toString());
+                        values.put("wp_page_parent_id", thisHash.get("wp_page_parent_id").toString());
+                        values.put("wp_page_parent_title", thisHash.get("wp_page_parent_title").toString());
                     } else {
-                        values.put("mt_keywords", thisHash.get("mt_keywords")
-                                .toString());
+                        values.put("mt_keywords", thisHash.get("mt_keywords").toString());
                         try {
-                            values.put("wp_post_format",
-                                    thisHash.get("wp_post_format").toString());
+                            values.put("wp_post_format", thisHash.get("wp_post_format").toString());
                         } catch (Exception e) {
                             values.put("wp_post_format", "");
                         }
                     }
 
-                    int result = db.update(POSTS_TABLE, values, "postID=" + postID
-                            + " AND isPage=" + isPageInt, null);
-                    if (result == 0)
+                    int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
+                    if (result == 0) {
                         returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-                    else
+                    } else {
                         returnValue = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
         }
         return (returnValue);
     }
