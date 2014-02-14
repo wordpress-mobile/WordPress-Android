@@ -101,6 +101,10 @@ public class RestClientCustomizableMock extends RestClient {
 
         try {
             String data = fileToString(filename);
+            if (data == null) {
+                AppLog.e(T.TESTS, "can't read file: " + filename);
+                return dummyReturnValue;
+            }
             JSONObject jsonObj = new JSONObject(data);
             listener.onResponse(jsonObj);
         } catch (JSONException je) {

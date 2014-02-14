@@ -54,10 +54,10 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
             AppLog.i(T.TESTS, "loading: " + filename);
             try {
                 // Try to load a JSONArray
-                return gson.fromJson(jsonString, Object[].class);
+                return TestUtils.injectDateInArray(gson.fromJson(jsonString, Object[].class));
             } catch (Exception e) {
                 // If that fails, try to load a JSONObject
-                return TestUtils.stringMapToHashMap((StringMap) gson.fromJson(jsonString, Object.class));
+                return TestUtils.injectDateInHashMap(TestUtils.stringMapToHashMap((StringMap) gson.fromJson(jsonString, Object.class)));
             }
         } catch (IOException e) {
             AppLog.e(T.TESTS, "can't read file: " + filename);

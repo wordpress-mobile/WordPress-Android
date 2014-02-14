@@ -64,7 +64,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
                 countDownLatch.countDown();
             }
         }).execute(false);
-        countDownLatch.await(5, TimeUnit.SECONDS);
+        countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 
     // This test failed before #799 was fixed
@@ -85,6 +85,6 @@ public class ApiHelperTest extends InstrumentationTestCase {
                 countDownLatch.countDown();
             }
         }).execute(false);
-        countDownLatch.await(5, TimeUnit.SECONDS);
+        countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 }

@@ -51,10 +51,9 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         mSolo.finishOpenedActivities();
     }
 
-    public void assertMenuDrawerIsOpen() {
-        boolean drawerOpen = mSolo.searchText("Reader");
-        drawerOpen &= mSolo.searchText("Posts");
-        assertTrue("Menu drawer seems closed", drawerOpen);
+    public void assertLoggedIn() {
+        mSolo.waitForActivity("WPActionBar");
+        assertTrue(true);
     }
 
     public void testGoodCredentials() throws Exception {
@@ -63,7 +62,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         mSolo.enterText(0, "test");
         mSolo.enterText(1, "test");
         mSolo.clickOnText("Sign in");
-        assertMenuDrawerIsOpen();
+        assertLoggedIn();
     }
 
     public void testBadCredentials() throws Exception {
@@ -79,11 +78,12 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     public void testCreateAccountInvalidEmail() throws Exception {
         mSolo.clickOnText("Create account");
         mSolo.waitForText(".*Create an account.*");
+        mSolo.clearEditText(0);
         mSolo.enterText(0, "test");
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "test");
         mSolo.clickOnText("Create account");
-        boolean errorMessageFound = mSolo.searchText("address is not valid");
+        boolean errorMessageFound = mSolo.searchText("address isn't valid");
         assertTrue("Error message not found", errorMessageFound);
     }
 
@@ -91,6 +91,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         RestClientFactoryTest.setPrefixAllInstances("username-exists");
         mSolo.clickOnText("Create account");
         mSolo.waitForText(".*Create an account.*");
+        mSolo.clearEditText(0);
         mSolo.enterText(0, "test@test.com");
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "test");
@@ -102,6 +103,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
     public void testCreateAccountPasswordTooShort() throws Exception {
         mSolo.clickOnText("Create account");
         mSolo.waitForText(".*Create an account.*");
+        mSolo.clearEditText(0);
         mSolo.enterText(0, "test@test.com");
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "tes");
@@ -114,6 +116,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         RestClientFactoryTest.setPrefixAllInstances("password-invalid");
         mSolo.clickOnText("Create account");
         mSolo.waitForText(".*Create an account.*");
+        mSolo.clearEditText(0);
         mSolo.enterText(0, "test@test.com");
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "test");
@@ -127,10 +130,11 @@ public class LoginTest extends ActivityInstrumentationTestCase2<PostsActivity> {
         XMLRPCFactoryTest.setPrefixAllInstances("default");
         mSolo.clickOnText("Create account");
         mSolo.waitForText(".*Create an account.*");
+        mSolo.clearEditText(0);
         mSolo.enterText(0, "test@test.com");
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "test");
         mSolo.clickOnText("Create account");
-        assertMenuDrawerIsOpen();
+        assertLoggedIn();
     }
 }

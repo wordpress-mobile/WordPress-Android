@@ -9,12 +9,19 @@ import android.text.TextUtils;
 
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.util.DateTimeUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -82,13 +89,86 @@ public class TestUtils {
         return s.hasNext() ? s.next() : "";
     }
 
-    public static HashMap stringMapToHashMap(StringMap<?> stringMap) {
+    public static HashMap<String, Object> stringMapToHashMap(StringMap<?> stringMap) {
         HashMap<String, Object> res = new HashMap<String, Object>();
         for (String key : stringMap.keySet()) {
             Object value = stringMap.get(key);
             if (StringMap.class.isInstance(value)) {
                 HashMap newValue = stringMapToHashMap((StringMap<?>) value);
                 res.put(key, newValue);
+            } else {
+                res.put(key, value);
+            }
+        }
+        return res;
+    }
+
+    public static Date gsonStringToJavaDate(final String strDate) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.ENGLISH);
+            return df.parse(strDate);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static Date parseString(String value) {
+        // try do parseit as a Date
+        Date newValue = DateTimeUtils.iso8601ToJavaDate(value);
+        if (newValue != null) {
+            return newValue;
+        }
+        newValue = gsonStringToJavaDate(value);
+        if (newValue != null) {
+            return newValue;
+        }
+        return null;
+    }
+
+    public static Object[] injectDateInArray(Object[] array) {
+        HashSet<Object> res = new HashSet<Object>();
+        for (Object value : array) {
+            if (value instanceof HashMap) {
+                HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
+                res.add(newValue);
+            } else if (value instanceof String) {
+                // try do parseit as a Date
+                Date newValue = parseString((String) value);
+                if (newValue != null) {
+                    res.add(newValue);
+                } else {
+                    res.add(value);
+                }
+            } else if (value instanceof Object[]) {
+                res.add(injectDateInArray((Object[]) value));
+            } else if (value instanceof StringMap) {
+                res.add(injectDateInHashMap(stringMapToHashMap((StringMap) value)));
+            } else {
+                res.add(value);
+            }
+        }
+        return res.toArray();
+    }
+
+    public static HashMap<String, Object> injectDateInHashMap(HashMap<String, Object> hashMap) {
+        HashMap<String, Object> res = new HashMap<String, Object>();
+        for (String key : hashMap.keySet()) {
+            Object value = hashMap.get(key);
+            if (value instanceof HashMap) {
+                HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
+                res.put(key, newValue);
+            } else if (value instanceof String) {
+                // try do parseit as a Date
+                Date newValue = parseString((String) value);
+                if (newValue != null) {
+                    res.put(key, newValue);
+                } else {
+                    res.put(key, value);
+                }
+            } else if (value instanceof Object[]) {
+                res.put(key, injectDateInArray((Object[]) value));
+            } else if (value instanceof StringMap) {
+                res.put(key, injectDateInHashMap(stringMapToHashMap((StringMap) value)));
             } else {
                 res.put(key, value);
             }

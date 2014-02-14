@@ -2,8 +2,6 @@ package org.wordpress.android.models;
 
 import android.test.InstrumentationTestCase;
 
-import org.wordpress.android.TestUtils;
-
 /**
  * Created by aaron on 1/14/14.
  */
@@ -174,13 +172,13 @@ public class BlogTest extends InstrumentationTestCase {
     }
 
     public void testGetSetHttpuser() {
-        assertNull(blog.getHttpuser());
+        assertEquals(blog.getHttpuser(), "");
         blog.setHttpuser("user");
         assertEquals("user", blog.getHttpuser());
     }
 
     public void testGetSetHttppassword() {
-        assertNull(blog.getHttppassword());
+        assertEquals(blog.getHttppassword(), "");
         blog.setHttppassword("password");
         assertEquals("password", blog.getHttppassword());
     }
@@ -236,14 +234,6 @@ public class BlogTest extends InstrumentationTestCase {
         assertTrue(val);
     }
 
-    public void testGetSetActive() {
-        assertTrue(blog.isActive());
-        blog.setPassword("");
-        assertFalse(blog.isActive());
-        blog.setPassword(null);
-        assertFalse(blog.isActive());
-    }
-
     public void testGetSetAdmin() {
         assertFalse(blog.isAdmin());
         blog.setAdmin(true);
@@ -286,9 +276,8 @@ public class BlogTest extends InstrumentationTestCase {
 
     public void testIsPhotonCapableWPComPublic() {
         assertFalse(blog.isPhotonCapable());
-
         assertFalse(blog.isPrivate());
-        blog.setBlogOptions(null);
+        blog.setBlogOptions("");
         blog.setDotcomFlag(true);
         assertTrue(blog.isPhotonCapable());
     }
