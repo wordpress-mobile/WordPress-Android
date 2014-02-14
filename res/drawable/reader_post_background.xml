@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    background drawable for reader post list items
+    selector for reader post list items
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-
-    <stroke android:color="@color/grey_light" android:width="1px"/>
-    <solid android:color="@color/white" />
-
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/reader_list_selector" />
+            <stroke android:color="@color/blue_light" android:width="1px" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <stroke android:color="@color/grey_light" android:width="1px" />
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</selector>
