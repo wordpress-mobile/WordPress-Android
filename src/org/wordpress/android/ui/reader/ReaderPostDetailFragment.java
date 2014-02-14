@@ -43,6 +43,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
+import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -669,31 +670,51 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-     * returns the root container view for the post detail views
+     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
+     * display (never called when there are no likes)
      */
-    private View getContainerView() {
-        if (!hasActivity()) {
-            AppLog.w(T.READER, "reader post detail > no activity for container view");
-            return null;
+    private void showLikingAvatars(final ArrayList<String> avatarUrls,
+                                   int maxAvatars,
+                                   boolean forceReload) {
+        final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+
+        // determine whether avatars need to be shown - goal is to avoid reloading them when
+        // they're already displayed to prevent flicker
+        final boolean reloadAvatars;
+        if (forceReload) {
+            // always reload avatars if force reload requested
+            reloadAvatars = true;
+        } else if (mPrevAvatarUrls.size() == avatarUrls.size()
+                && mPrevAvatarUrls.containsAll(avatarUrls)) {
+            // don't reload if these avatars are the same as last time
+            reloadAvatars = false;
+        } else {
+            // avatars aren't the same as last time, but we can still skip showing
+            // them if the view's child count indicates that we've already added
+            // the max on a previous call to this routine
+            reloadAvatars = (layoutLikingAvatars.getChildCount() < maxAvatars);
         }
-        View container = getView().findViewById(R.id.layout_post_detail_container);
-        if (container == null)
-            AppLog.w(T.READER, "reader post detail > container view is null");
-        return container;
-    }
 
-    /*
-     * used in refreshLikes() to determine whether liking avatars are the same as the last
-     * time they were displayed
-     */
-    private boolean isSameAvatars(final ArrayList<String> avatarUrls) {
-        if (mPrevAvatarUrls == null || avatarUrls == null)
-            return false;
-        if (mPrevAvatarUrls.size() != avatarUrls.size())
-            return false;
-        return mPrevAvatarUrls.containsAll(avatarUrls);
-    }
+        if (reloadAvatars) {
+            AppLog.d(T.READER, "reader post detail > displaying liking avatars");
+            layoutLikingAvatars.removeAllViews();
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            for (final String url: avatarUrls) {
+                WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                layoutLikingAvatars.addView(imgAvatar);
+                imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+            }
 
+            // remember these avatars for isSameAvatars() comparison
+            mPrevAvatarUrls.clear();
+            mPrevAvatarUrls.addAll(avatarUrls);
+        }
+
+        // show the liking layout if it's not already showing
+        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mLayoutLikes);
+        }
+    }
     /*
      * show latest likes for this post - pass true to force reloading avatars (used when user clicks
      * the like button, to ensure the current user's avatar appears first)
@@ -707,9 +728,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         new Thread() {
             @Override
             public void run() {
-                final View container = getContainerView();
-                final ImageView imgBtnLike = (ImageView) container.findViewById(R.id.image_like_btn);
-                final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+                final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
                 final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
@@ -722,8 +741,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 final int spaceForAvatars = displayWidth - (marginLarge * 2);
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
-                // get avatars of liking users up to the max
-                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(ReaderLikeTable.getLikesForPost(mPost), maxAvatars);
+                // get avatar URLs of liking users up to the max, sized to fit
+                ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(mPost);
+                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, likeAvatarSize);
 
                 mHandler.post(new Runnable() {
                     public void run() {
@@ -755,50 +775,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                             txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
                         }
 
-                        // now show the liking avatars - clicking likes view shows activity displaying all liking users
-                        View.OnClickListener clickListener = new View.OnClickListener() {
+                        // clicking likes view shows activity displaying all liking users
+                        mLayoutLikes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
                             }
-                        };
-                        mLayoutLikes.setOnClickListener(clickListener);
+                        });
 
-                        // determine whether avatars need to be loaded - goal is to avoid reloading
-                        // them when they're already displayed to prevent flicker
-                        final boolean reloadAvatars;
-                        if (forceReload) {
-                            // always reload avatars if when reload is forced
-                            reloadAvatars = true;
-                        } else if (isSameAvatars(avatars)) {
-                            // don't reload if these avatars are the same as last time
-                            reloadAvatars = false;
-                        } else {
-                            // avatars aren't the same as last time, but we can still skip showing
-                            // them if the view's child count indicates that we've already added
-                            // the max on a previous call to this routine
-                            reloadAvatars = (layoutLikingAvatars.getChildCount() < maxAvatars);
-                        }
-                        if (reloadAvatars) {
-                            AppLog.d(T.READER, "reader post detail > displaying liking avatars");
-                            layoutLikingAvatars.removeAllViews();
-                            LayoutInflater inflater = getActivity().getLayoutInflater();
-                            for (String url: avatars) {
-                                WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                                layoutLikingAvatars.addView(imgAvatar);
-                                imgAvatar.setImageUrl(PhotonUtils.fixAvatar(url, likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
-                            }
-
-                            // remember these avatars for isSameAvatars() comparison
-                            mPrevAvatarUrls.clear();
-                            mPrevAvatarUrls.addAll(avatars);
-                        }
-
-                        // show the liking layout if it's not already showing
-                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-                            //mLayoutLikes.setVisibility(View.VISIBLE);
-                            AniUtils.fadeIn(mLayoutLikes);
-                        }
+                        // now show the liking avatars
+                        showLikingAvatars(avatars, maxAvatars, forceReload);
                     }
                 });
             }
@@ -823,10 +809,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (mIsSubmittingComment)
             return;
 
-        final View container = getContainerView();
-        final ViewGroup layoutCommentBox = (ViewGroup) container.findViewById(R.id.layout_comment_box);
+        final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) container.findViewById(R.id.image_comment_btn);
+        final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
 
         // disable full-screen when comment box is showing
         if (isFullScreen())
@@ -849,7 +834,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         });
 
         // submit comment when image tapped
-        final ImageView imgPostComment = (ImageView) container.findViewById(R.id.image_post_comment);
+        final ImageView imgPostComment = (ImageView) getView().findViewById(R.id.image_post_comment);
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -884,10 +869,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (!mIsAddCommentBoxShowing)
             return;
 
-        final View container = getContainerView();
-        final ViewGroup layoutCommentBox = (ViewGroup) container.findViewById(R.id.layout_comment_box);
+        final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) container.findViewById(R.id.image_comment_btn);
+        final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
 
         imgBtnComment.setSelected(false);
         AniUtils.flyOut(layoutCommentBox);
@@ -922,8 +906,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      */
     private boolean mIsSubmittingComment = false;
     private void submitComment(final long replyToCommentId) {
-        final View container = getContainerView();
-        final EditText editComment = (EditText) container.findViewById(R.id.edit_comment);
+        final EditText editComment = (EditText) getView().findViewById(R.id.edit_comment);
         final String commentText = EditTextUtils.getText(editComment);
         if (TextUtils.isEmpty(commentText))
             return;
@@ -981,7 +964,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        final TextView txtFollow = (TextView) getContainerView().findViewById(R.id.text_follow);
+        final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
         showFollowedStatus(txtFollow, isFollowed);
     }
@@ -1222,7 +1205,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      *  called when the post doesn't exist in local db, need to get it from server
      */
     private void requestPost() {
-        final ProgressBar progress = (ProgressBar) getContainerView().findViewById(R.id.progress_loading);
+        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
         progress.setVisibility(View.VISIBLE);
         progress.bringToFront();
 
@@ -1291,7 +1274,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            final View container = getContainerView();
+            final View container = getView();
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);

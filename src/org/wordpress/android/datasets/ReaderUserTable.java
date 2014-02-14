@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ReaderUserTable {
     /*
      * returns avatar urls for the passed user ids - used by post detail to show avatars for liking users
      */
-    public static ArrayList<String> getAvatarUrls(ReaderUserIdList userIds, int max) {
+    public static ArrayList<String> getAvatarUrls(ReaderUserIdList userIds, int max, int avatarSz) {
         ArrayList<String> avatars = new ArrayList<String>();
         if (userIds==null || userIds.size()==0)
             return avatars;
@@ -108,11 +109,12 @@ public class ReaderUserTable {
             if (c.moveToFirst()) {
                 do {
                     long userId = c.getLong(0);
+                    String url = PhotonUtils.fixAvatar(c.getString(1), avatarSz);
                     // add current user to the top
                     if (userId==currentUserId) {
-                        avatars.add(0, c.getString(1));
+                        avatars.add(0, url);
                     } else {
-                        avatars.add(c.getString(1));
+                        avatars.add(url);
                     }
                 } while (c.moveToNext());
             }
