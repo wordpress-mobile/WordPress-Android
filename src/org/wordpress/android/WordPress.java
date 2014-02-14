@@ -402,7 +402,7 @@ public class WordPress extends Application {
                 blog = wpDB.getBlogForDotComBlogId(siteId);
 
                 if (blog != null) {
-                    // get the access token from api key field
+                    // get the access token from api key field. Hetpack blogs likned with a different wpcom account have the token stored here.
                     token = blog.getApi_key();
 
                     // valid oauth tokens are 64 chars
@@ -410,15 +410,18 @@ public class WordPress extends Application {
                         token = null;
                     }
 
-                    // if there is no access token, but this is the dotcom flag
-                    if (token == null && (blog.isDotcomFlag() &&
-                            blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, "")))) {
-                        token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                    // if there is no access token, we need to check if it is a dotcom blog, or a jetpack blog linked with the main wpcom account.
+                    if (token == null){ 
+                        if (blog.isDotcomFlag() && blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))){ 
+                            token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                        } else if (blog.isJetpackPowered()) {
+                            if (blog.getDotcom_username() == null ||  blog.getDotcom_username().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))) {
+                                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                            }
+                        }
                     }
                 }
-
             }
-
             if (token != null) {
                 // we have an access token, set the request and send it
                 request.sendWithAccessToken(token);

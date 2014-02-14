@@ -29,8 +29,6 @@ android {
         release {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
-            runProguard true
-            proguardFile 'proguard-project.txt'
         }
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
@@ -40,8 +38,6 @@ android {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             packageNameSuffix ".beta"
-            runProguard true
-            proguardFile 'proguard-project.txt'
         }
     }
 
@@ -51,7 +47,7 @@ android {
     defaultConfig {
         packageName "org.wordpress.android"
         versionName "2.6.1"
-        versionCode 92
+        versionCode 93
         minSdkVersion 9
         targetSdkVersion 19
     }
