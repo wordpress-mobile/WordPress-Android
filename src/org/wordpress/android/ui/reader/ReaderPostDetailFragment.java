@@ -795,14 +795,15 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                         }
 
                         // show the liking layout if it's not already showing
-                        if (mLayoutLikes.getVisibility() != View.VISIBLE)
-                            mLayoutLikes.setVisibility(View.VISIBLE);
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+                            //mLayoutLikes.setVisibility(View.VISIBLE);
+                            AniUtils.fadeIn(mLayoutLikes);
+                        }
                     }
                 });
             }
         }.start();
     }
-
 
     /*
      * show the view enabling adding a comment - triggered when user hits comment icon/count in header
