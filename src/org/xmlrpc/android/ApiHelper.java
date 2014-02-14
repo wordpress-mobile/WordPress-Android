@@ -27,13 +27,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -271,12 +267,6 @@ public class ApiHelper {
         }
     }
 
-    public static Date stringToDate(String sDate) throws ParseException {
-        // Jan 22, 2014 12:46:28 PM
-        SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.ENGLISH);
-        return df.parse(sDate);
-    }
-
     public static CommentList refreshComments(Context context, Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
@@ -312,8 +302,7 @@ public class ApiHelper {
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
-
-            date = (java.util.Date)contentHash.get("date_created_gmt");
+            date = (java.util.Date) contentHash.get("date_created_gmt");
             pubDate = DateTimeUtils.javaDateToIso8601(date);
 
             Comment comment = new Comment(
