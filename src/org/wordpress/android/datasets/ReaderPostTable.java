@@ -168,23 +168,14 @@ public class ReaderPostTable {
      * returns a count of which posts in the passed list don't already exist in the db for the passed tag
      */
     public static int getNumNewPostsWithTag(String tagName, ReaderPostList posts) {
-        if (posts==null || posts.size()==0)
-            return 0;
-        if (TextUtils.isEmpty(tagName))
+        if (posts == null || posts.size() == 0 || TextUtils.isEmpty(tagName))
             return 0;
 
         // if there aren't any posts in this tag, then all passed posts are new
-        if (getNumPostsWithTag(tagName)==0)
+        if (getNumPostsWithTag(tagName) == 0)
             return posts.size();
 
-        // build sql that tells us which posts *do* exist in the database
-        // TODO: may be able to simplify by using pseudo_id here
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT COUNT(*) FROM tbl_post_tags")
-          .append(" WHERE tag_name=?")
-          .append(" AND (CAST(post_id AS TEXT) || '-' || CAST(blog_id AS TEXT))") // concatenated string, post_id-blog_id
-          .append(" IN (");
-
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM tbl_post_tags WHERE tag_name=? AND pseudo_id IN (");
         boolean isFirst = true;
         for (ReaderPost post: posts) {
             if (isFirst) {
@@ -192,7 +183,7 @@ public class ReaderPostTable {
             } else {
                 sb.append(",");
             }
-            sb.append("'").append(post.postId).append("-").append(post.blogId).append("'");
+            sb.append("'").append(post.getPseudoId()).append("'");
         }
         sb.append(")");
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.os.Debug;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -313,6 +314,7 @@ public class ReaderPostActions {
     public static void updatePostsWithTag(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
+//Debug.startMethodTracing("wp-update-reader-posts");
         final ReaderTag topic = ReaderTagTable.getTag(tagName);
         if (topic==null) {
             if (resultListener!=null)
@@ -389,8 +391,6 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-//Debug.startMethodTracing("WPReader");
-
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 final boolean responseHasPosts = (serverPosts.size() > 0);
 
@@ -439,7 +439,7 @@ public class ReaderPostActions {
 
                 // save the posts even if none are new in order to update comment counts, likes, etc., on existing posts
                 ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
-//Debug.stopMethodTracing();
+
                 if (resultListener!=null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -449,6 +449,7 @@ public class ReaderPostActions {
                         }
                     });
                 }
+//Debug.stopMethodTracing();
             }
         }.start();
     }
