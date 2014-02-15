@@ -39,10 +39,10 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     private boolean mIsShowingFollowedTags = true;
     private boolean mAlreadyUpdatedTagList;
 
-    protected static final String ARG_TAG_NAME       = "tag_name";
+    static final String ARG_TAG_NAME       = "tag_name";
 
-    protected static final String KEY_TAGS_CHANGED   = "tags_changed";
-    protected static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    static final String KEY_TAGS_CHANGED   = "tags_changed";
+    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_SHOWING_FOLLOWED = "showing_followed";
 
@@ -294,7 +294,7 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     /*
      * request latest list of tags from the server
      */
-    protected void updateTagList() {
+    void updateTagList() {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {

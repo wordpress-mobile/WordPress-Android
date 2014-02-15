@@ -15,7 +15,7 @@ import org.wordpress.android.util.SysUtils;
 /**
  * Created by nbradbury on 2/8/14.
  */
-public class ReaderFullScreenUtils {
+class ReaderFullScreenUtils {
     public static interface FullScreenListener {
         public boolean onRequestFullScreen(boolean enable);
         public boolean isFullScreen();
@@ -23,7 +23,7 @@ public class ReaderFullScreenUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    protected static void enableActionBarOverlay(Activity activity) {
+    static void enableActionBarOverlay(Activity activity) {
         if ((SysUtils.isGteAndroid4()))
             activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
@@ -32,7 +32,7 @@ public class ReaderFullScreenUtils {
      * add a header to the listView that's the same height as the ActionBar - used when fullscreen
      * mode is supported, should be called before adding any other listView headers
      */
-    protected static void addListViewHeader(Context context, ListView listView) {
+    static void addListViewHeader(Context context, ListView listView) {
         final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
         RelativeLayout headerFake = new RelativeLayout(context);
         headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
@@ -44,7 +44,7 @@ public class ReaderFullScreenUtils {
      * because canScrollVertically() requires API 14
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    protected static boolean canScrollUp(ListView listView) {
+    static boolean canScrollUp(ListView listView) {
         if (listView == null)
             return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -52,7 +52,7 @@ public class ReaderFullScreenUtils {
         return listView.canScrollVertically(-1);
     }
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    protected static boolean canScrollDown(ListView listView) {
+    static boolean canScrollDown(ListView listView) {
         if (listView == null)
             return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)

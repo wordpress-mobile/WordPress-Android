@@ -700,7 +700,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private class ReaderMenuItem extends MenuDrawerItem {
-
         ReaderMenuItem(){
             super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
         }
@@ -716,8 +715,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
-            Intent intent;
-            intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+            if (!isSelected())
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

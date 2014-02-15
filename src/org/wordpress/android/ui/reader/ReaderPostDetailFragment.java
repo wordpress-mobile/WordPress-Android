@@ -71,12 +71,12 @@ import java.util.ArrayList;
 public class ReaderPostDetailFragment extends SherlockFragment {
 
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
-    protected static interface PostChangeListener {
+    static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_POST_ID = "post_id";
     private static final String ARG_LIST_STATE = "list_state";
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
@@ -326,7 +326,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return (mPost != null);
     }
 
-    protected void reloadPost() {
+    void reloadPost() {
         if (!hasPost() || !hasActivity())
             return;
         showPost();
@@ -420,10 +420,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             outState.putCharSequence(KEY_ORIGINAL_TITLE, mOriginalTitle);
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
-        // the scroll position after comment data is loaded
+        // the scroll position after comment data is reloaded
         if (getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
             outState.putParcelable(ARG_LIST_STATE, mListState);
+        } else {
+            mListState = null;
         }
     }
 
@@ -671,7 +673,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     /*
      * used by refreshLikes() to display the liking avatars - called only when there are avatars to
-     * display (never called when there are no likes)
+     * display (never called when there are no likes) - note that the passed list of avatar urls
+     * has already been Photon-ized, so there's no need to do that here
      */
     private void showLikingAvatars(final ArrayList<String> avatarUrls,
                                    int maxAvatars,
@@ -705,7 +708,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
             }
 
-            // remember these avatars for isSameAvatars() comparison
+            // remember these avatars for next comparison
             mPrevAvatarUrls.clear();
             mPrevAvatarUrls.addAll(avatarUrls);
         }

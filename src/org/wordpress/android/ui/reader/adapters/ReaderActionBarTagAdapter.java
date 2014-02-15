@@ -112,7 +112,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
 
     private boolean mIsTaskRunning = false;
     private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderTagList tmpTags = new ReaderTagList();
+        private final ReaderTagList tmpTags = new ReaderTagList();
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;

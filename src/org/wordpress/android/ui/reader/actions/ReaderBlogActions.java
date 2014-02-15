@@ -29,7 +29,7 @@ public class ReaderBlogActions {
             return false;
 
         final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
-        final boolean isAskingToFollow = (action== BlogAction.FOLLOW ? true : false);
+        final boolean isAskingToFollow = (action == BlogAction.FOLLOW);
 
         if (isCurrentlyFollowing==isAskingToFollow)
             return true;

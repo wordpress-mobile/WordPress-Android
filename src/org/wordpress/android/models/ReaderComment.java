@@ -109,12 +109,6 @@ public class ReaderComment {
         this.published = StringUtils.notNullStr(published);
     }
 
-    //
-
-    public boolean hasAvatar() {
-        return !TextUtils.isEmpty(authorAvatar);
-    }
-
     public boolean hasAuthorUrl() {
         return !TextUtils.isEmpty(authorUrl);
     }

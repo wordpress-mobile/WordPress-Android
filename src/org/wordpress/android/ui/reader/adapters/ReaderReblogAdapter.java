@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class ReaderReblogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
-    SimpleAccountList mAccounts = new SimpleAccountList();
+    private SimpleAccountList mAccounts = new SimpleAccountList();
 
     public ReaderReblogAdapter(Context context) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -80,8 +80,8 @@ public class ReaderReblogAdapter extends BaseAdapter {
     }
 
     private class SimpleAccountItem {
-        int blogId;
-        String blogName;
+        final int blogId;
+        final String blogName;
 
         private SimpleAccountItem(int blogId, String blogName) {
             this.blogId = blogId;
@@ -96,7 +96,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
      */
     private boolean mIsTaskRunning;
     private class LoadAccountsTask extends AsyncTask<Void, Void, Boolean> {
-        SimpleAccountList tmpAccounts = new SimpleAccountList();
+        final SimpleAccountList tmpAccounts = new SimpleAccountList();
 
         @Override
         protected void onPreExecute() {
@@ -117,10 +117,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
             Blog blog = WordPress.getCurrentBlog();
             int currentBlogId = (blog != null ? blog.getRemoteBlogId() : 0);
 
-            Iterator<Map<String, Object>> it = accounts.iterator();
-            while (it.hasNext()) {
-                Map<String, Object> curHash = it.next();
-
+            for (Map<String, Object> curHash : accounts) {
                 int blogId = (Integer) curHash.get("blogId");
                 String blogName = StringUtils.unescapeHTML(curHash.get("blogName").toString());
                 if (TextUtils.isEmpty(blogName))

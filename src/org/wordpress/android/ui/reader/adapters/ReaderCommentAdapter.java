@@ -32,31 +32,31 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * Created by nbradbury on 6/27/13.
  */
 public class ReaderCommentAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
-    private ReaderPost mPost;
+    private final LayoutInflater mInflater;
+    private final ReaderPost mPost;
     private boolean mMoreCommentsExist;
 
     private static final int MAX_INDENT_LEVEL = 2;
-    private int mIndentPerLevel;
-    private int mAvatarSz;
-    private int mMaxImageSz;
+    private final int mIndentPerLevel;
+    private final int mAvatarSz;
+    private final int mMaxImageSz;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
 
-    private int mBgColorNormal;
-    private int mBgColorHighlight;
-    private int mLinkColor;
-    private int mNoLinkColor;
+    private final int mBgColorNormal;
+    private final int mBgColorHighlight;
+    private final int mLinkColor;
+    private final int mNoLinkColor;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();
-    private RequestReplyListener mReplyListener;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderActions.DataRequestedListener mDataRequestedListener;
+    private final RequestReplyListener mReplyListener;
+    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,

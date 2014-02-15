@@ -128,7 +128,7 @@ public class ReaderUserTable {
         return getUser(UserPrefs.getCurrentUserId());
     }
 
-    public static ReaderUser getUser(long userId) {
+    private static ReaderUser getUser(long userId) {
         String args[] = {Long.toString(userId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT " + COLUMN_NAMES + " FROM tbl_users WHERE user_id=?", args);
         try {
@@ -175,7 +175,7 @@ public class ReaderUserTable {
     private static final int COL_PROFILE_URL = 4;
     private static final int COL_AVATAR_URL = 5;
 
-    public static ReaderUser getUserFromCursor(Cursor c) {
+    private static ReaderUser getUserFromCursor(Cursor c) {
         ReaderUser user = new ReaderUser();
 
         user.userId = c.getLong(COL_USER_ID);

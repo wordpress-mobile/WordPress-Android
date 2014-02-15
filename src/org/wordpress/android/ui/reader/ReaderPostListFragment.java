@@ -51,7 +51,7 @@ public class ReaderPostListFragment extends SherlockFragment
                                     implements AbsListView.OnScrollListener,
                                                ActionBar.OnNavigationListener {
 
-    protected static interface OnPostSelectedListener {
+    static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
     }
 
@@ -69,13 +69,13 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
 
-    protected static final String KEY_TAG_NAME = "tag_name";
+    static final String KEY_TAG_NAME = "tag_name";
     private static final String KEY_LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
     protected static enum RefreshType {AUTOMATIC, MANUAL}
 
-    protected static ReaderPostListFragment newInstance(final String tagName) {
+    static ReaderPostListFragment newInstance(final String tagName) {
         AppLog.d(T.READER, "reader post list > newInstance");
 
         Bundle args = new Bundle();
@@ -419,7 +419,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * tell the adapter to reload a single post - called when user returns from detail, where the
      * post may have been changed (either by the user, or because it updated)
      */
-    protected void reloadPost(ReaderPost post) {
+    void reloadPost(ReaderPost post) {
         if (post == null)
             return;
         getPostAdapter().reloadPost(post);
@@ -436,7 +436,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (getActivity() != null && !isRemoving());
     }
 
-    protected void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+    void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
         if (hasPostAdapter())
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
     }
@@ -493,7 +493,7 @@ public class ReaderPostListFragment extends SherlockFragment
         });
     }
 
-    protected void animateRefreshButton(boolean animate) {
+    void animateRefreshButton(boolean animate) {
         if (mRefreshMenuItem == null || !(getActivity() instanceof WPActionBarActivity))
             return;
         if (animate) {
@@ -571,7 +571,7 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * refresh the list of tags shown in the ActionBar
      */
-    protected void refreshTags() {
+    void refreshTags() {
         if (!hasActivity())
             return;
         checkCurrentTag();
@@ -581,7 +581,7 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * called from ReaderActivity after user adds/removes tags
      */
-    protected void doTagsChanged(final String newCurrentTag) {
+    void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag))
