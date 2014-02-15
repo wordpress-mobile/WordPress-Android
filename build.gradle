@@ -42,12 +42,12 @@ android {
     }
 
     compileSdkVersion 19
-    buildToolsVersion "19"
+    buildToolsVersion "19.0.1"
 
     defaultConfig {
         packageName "org.wordpress.android"
         versionName "2.6.1"
-        versionCode 93
+        versionCode 94
         minSdkVersion 9
         targetSdkVersion 19
     }
