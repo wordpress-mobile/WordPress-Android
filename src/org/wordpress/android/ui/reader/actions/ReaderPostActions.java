@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.os.Debug;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -90,8 +89,7 @@ public class ReaderPostActions {
                 break;
 
             default :
-                //ToastUtils.notImplemented(context);
-                if (actionListener!=null)
+                if (actionListener != null)
                     actionListener.onActionResult(false);
                 return false;
         }
@@ -101,7 +99,7 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, "post action " + action.name() + " succeeded");
-                if (actionListener!=null)
+                if (actionListener != null)
                     actionListener.onActionResult(true);
             }
         };
@@ -129,7 +127,7 @@ public class ReaderPostActions {
                            break;
                     }
                 }
-                if (actionListener!=null)
+                if (actionListener != null)
                     actionListener.onActionResult(false);
             }
         };
@@ -146,8 +144,8 @@ public class ReaderPostActions {
                                   long destinationBlogId,
                                   final String optionalComment,
                                   final ReaderActions.ActionListener actionListener) {
-        if (post==null) {
-            if (actionListener!=null)
+        if (post == null) {
+            if (actionListener != null)
                 actionListener.onActionResult(false);
             return;
         }
@@ -216,8 +214,8 @@ public class ReaderPostActions {
     private static void handleUpdatePostResponse(final ReaderPost post,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
-        if (jsonObject==null) {
-            if (resultListener!=null)
+        if (jsonObject == null) {
+            if (resultListener != null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             return;
         }
@@ -250,7 +248,7 @@ public class ReaderPostActions {
                 // ensures that the liking avatars are immediately available to post detail
                 handlePostLikes(updatedPost, jsonObject);
 
-                if (resultListener!=null) {
+                if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
@@ -290,7 +288,7 @@ public class ReaderPostActions {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
-                if (actionListener!=null)
+                if (actionListener != null)
                     actionListener.onActionResult(true);
             }
         };
@@ -298,7 +296,7 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener!=null)
+                if (actionListener != null)
                     actionListener.onActionResult(false);
 
             }
@@ -314,10 +312,10 @@ public class ReaderPostActions {
     public static void updatePostsWithTag(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
-//Debug.startMethodTracing("wp-update-reader-posts");
+//Debug.startMethodTracing("WordPress");
         final ReaderTag topic = ReaderTagTable.getTag(tagName);
-        if (topic==null) {
-            if (resultListener!=null)
+        if (topic == null) {
+            if (resultListener != null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
             return;
         }
@@ -381,8 +379,8 @@ public class ReaderPostActions {
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
                                                          final ReaderActions.UpdateResultAndCountListener resultListener) {
-        if (jsonObject==null) {
-            if (resultListener!=null)
+        if (jsonObject == null) {
+            if (resultListener != null)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
             return;
         }
@@ -396,7 +394,7 @@ public class ReaderPostActions {
 
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
-                if (updateAction==ReaderActions.RequestDataAction.LOAD_NEWER)
+                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER)
                     ReaderTagTable.setTagLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
 
                 // json "date_range" tells the the range of dates in the response, which we want to
@@ -405,7 +403,7 @@ public class ReaderPostActions {
                 // use "after" and "before"
                 JSONObject jsonDateRange = jsonObject.optJSONObject("date_range");
 
-                if (responseHasPosts && jsonDateRange!=null) {
+                if (responseHasPosts && jsonDateRange != null) {
                     switch (updateAction) {
                         case LOAD_NEWER:
                             String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
@@ -421,7 +419,8 @@ public class ReaderPostActions {
                 }
 
                 if (!responseHasPosts) {
-                    if (resultListener!=null) {
+                    AppLog.d(T.READER, String.format("no new posts in topic %s", tagName));
+                    if (resultListener != null) {
                         handler.post(new Runnable() {
                             public void run() {
                                 resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED, 0);
@@ -432,15 +431,14 @@ public class ReaderPostActions {
                 }
 
                 // determine how many of the downloaded posts are new (response will contain both
-                // new posts and posts updated since the last call)
+                // new posts and posts updated since the last call), then save the posts even if
+                // none are new in order to update comment counts, likes, etc., on existing posts
                 final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
+                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
 
                 AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
 
-                // save the posts even if none are new in order to update comment counts, likes, etc., on existing posts
-                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
-
-                if (resultListener!=null) {
+                if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
                             // always pass CHANGED as the result even if there are no new posts (since if
