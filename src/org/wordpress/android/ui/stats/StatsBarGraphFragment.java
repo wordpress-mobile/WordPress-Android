@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 /**
@@ -116,10 +117,11 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
         String[] horLabels = new String[numPoints];
 
+        StatsBarChartUnit unit = getBarChartUnit();
         for(int i = numPoints - 1; i >= 0; i--) {
             views[i] = new GraphView.GraphViewData(i, getViews(cursor));
             visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
-            horLabels[i] = getDate(cursor);
+            horLabels[i] = getDateLabel(cursor, unit);
             cursor.moveToNext();
         }
 
@@ -185,22 +187,23 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         return cursor.getInt(cursor.getColumnIndex(StatsBarChartDataTable.Columns.VISITORS));
     }
 
-    private String getDate(Cursor cursor) {
-        StatsBarChartUnit unit = getBarChartUnit();
+    private String getDateLabel(Cursor cursor, StatsBarChartUnit unit) {
+        String cursorDate = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE)));
 
-        String date = "";
-
-        String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE));
-
-        if (unit == StatsBarChartUnit.DAY) {
-            date = StatUtils.parseDate(temp, "yyyy-MM-dd", "MMM d");
-        } else if (unit == StatsBarChartUnit.WEEK) {
-            date = StatUtils.parseDate(temp, "yyyy'W'ww", "'Week' w");
-        } else if (unit == StatsBarChartUnit.MONTH) {
-            date = StatUtils.parseDate(temp, "yyyy-MM", "MMM yyyy");
+        switch (unit) {
+            case DAY:
+                return StatUtils.parseDate(cursorDate, "yyyy-MM-dd", "MMM d");
+            case WEEK:
+                // first four digits are the year
+                // followed by Wxx where xx is the month
+                // followed by Wxx where xx is the day of the month
+                // ex: 2013W07W22 = July 22, 2013
+                return StatUtils.parseDate(cursorDate, "yyyy'W'MM'W'dd", "MMM d");
+            case MONTH:
+                return StatUtils.parseDate(cursorDate, "yyyy-MM", "MMM yyyy");
+            default:
+                return cursorDate;
         }
-
-        return date;
     }
 
     class BarGraphContentObserver extends ContentObserver {
