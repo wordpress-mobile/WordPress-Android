@@ -717,7 +717,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+            Intent intent;
+            intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
