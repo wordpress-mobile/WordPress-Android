@@ -358,7 +358,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         showPostTimeSelectionDialog();
                     }
                 })
-                .setNegativeButton(getResources().getText(R.string.immediately),
+                .setNeutralButton(getResources().getText(R.string.immediately),
                         new DialogInterface.OnClickListener() {
 
                             @Override
@@ -368,7 +368,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                                 mPubDateText.setText(R.string.immediately);
                             }
                         })
-                .setNeutralButton(android.R.string.cancel,
+                .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
 
                             @Override
