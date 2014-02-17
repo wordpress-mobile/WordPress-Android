@@ -35,6 +35,7 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
@@ -400,7 +401,9 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
-            refreshStats();
+            // make sure we have a connection before proceeding (will alert user if not)
+            if (NetworkUtils.checkConnection(this))
+                refreshStats();
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
@@ -455,6 +458,8 @@ public class StatsActivity extends WPActionBarActivity {
 
     private void refreshStats() {
         if (WordPress.getCurrentBlog() == null)
+            return;
+        if (!NetworkUtils.isNetworkAvailable(this))
             return;
         
         String blogId;
