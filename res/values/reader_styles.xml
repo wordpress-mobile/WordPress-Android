@@ -202,4 +202,7 @@
     <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
     <style name="ReaderProgressBar.Small" parent="@android:style/Widget.ProgressBar.Small" />
     <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal" />
+
+    <style name="ReaderSpinner" parent="@android:style/Widget.Spinner" />
+
 </resources>
