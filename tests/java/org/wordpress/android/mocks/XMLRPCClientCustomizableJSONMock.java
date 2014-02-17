@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
+public class XMLRPCClientCustomizableJSONMock implements XMLRPCClientInterface {
     private Context mContext;
     private String mPrefix;
 
-    public XMLRPCClientCustomizableMock(URI uri, String httpUser, String httpPassword) {
+    public XMLRPCClientCustomizableJSONMock(URI uri, String httpUser, String httpPassword) {
     }
 
     public void setContextAndPrefix(Context context, String prefix) {
@@ -66,7 +66,7 @@ public class XMLRPCClientCustomizableMock implements XMLRPCClientInterface {
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException {
-        AppLog.v(T.TESTS, "XMLRPCClientCustomizableMock: <call(" + method + ", ...)>");
+        AppLog.v(T.TESTS, "XMLRPCClientCustomizableJSONMock: <call(" + method + ", ...)>");
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
             throw new XMLRPCException("code 403");

@@ -1,4 +1,4 @@
-package org.wordpress.android.functional;
+package org.wordpress.android;
 
 import org.wordpress.android.mocks.OAuthAuthenticatorFactoryTest;
 import org.wordpress.android.mocks.RestClientFactoryTest;
