@@ -19,6 +19,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -95,24 +96,42 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
-        
+
         loadFragmentIndex(mSelectedButtonIndex);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        mSelectedButtonIndex  = group.indexOfChild(group.findViewById(checkedId));
+        // checkedId will be -1 when the selection is cleared
+        if (checkedId == -1) {
+            AppLog.w(AppLog.T.STATS, "checkedId is -1");
+            return;
+        }
+
+        int index  = group.indexOfChild(group.findViewById(checkedId));
+        if (index == -1) {
+            AppLog.w(AppLog.T.STATS, "invalid checkedId");
+            return;
+        }
+
+        mSelectedButtonIndex = index;
         loadFragmentIndex(mSelectedButtonIndex);
     }
-    
+
     private void loadFragmentIndex(int index) {
-        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
+        if (index == -1) {
+            AppLog.w(AppLog.T.STATS, "invalid fragment index");
+            return;
+        }
+
+        String childTag = CHILD_TAG + ":" + index;
+        if (getChildFragmentManager().findFragmentByTag(childTag) == null) {
             //set minimum height for container, so we don't get a janky fragment transaction
             mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
             Fragment fragment = getFragment(index);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + index);
+            ft.replace(R.id.stats_pager_container, fragment, childTag);
             ft.commit();
         }
     }
