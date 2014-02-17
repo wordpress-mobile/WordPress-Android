@@ -52,6 +52,8 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
+        if (position == -1)
+            return position;
         return mAccounts.get(position).remoteBlogId;
     }
 
@@ -96,7 +98,8 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+            // only .com blogs support reblogging
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComAccounts();
             if (accounts == null || accounts.size() == 0)
                 return false;
 
