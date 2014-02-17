@@ -15,41 +15,55 @@ public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract {
     public static String sPrefix = "default";
     public static Context sContext;
     public static Mode sMode = Mode.EMPTY;
-    public static Set<XMLRPCClientCustomizableMock> sInstances = new HashSet<XMLRPCClientCustomizableMock>();;
+    public static Set<XMLRPCClientCustomizableMockAbstract> sInstances =
+            new HashSet<XMLRPCClientCustomizableMockAbstract>();
 
     public static void setContextAllInstances(Context context) {
         sContext = context;
-        if (sMode != Mode.CUSTOMIZABLE) {
-            AppLog.e(T.TESTS, "You try to change context on a non-customizable RestClient mock");
+        if (sMode != Mode.CUSTOMIZABLE_JSON && sMode != Mode.CUSTOMIZABLE_XML) {
+            AppLog.e(T.TESTS, "You tried to change context on a non-customizable XMLRPCClient mock");
         }
-        for (XMLRPCClientCustomizableMock client : sInstances) {
+        for (XMLRPCClientCustomizableMockAbstract client : sInstances) {
             client.setContext(context);
         }
     }
 
     public static void setPrefixAllInstances(String prefix) {
         sPrefix = prefix;
-        if (sMode != Mode.CUSTOMIZABLE) {
-            AppLog.e(T.TESTS, "You try to change prefix on a non-customizable RestClient mock");
+        if (sMode != Mode.CUSTOMIZABLE_JSON && sMode != Mode.CUSTOMIZABLE_XML) {
+            AppLog.e(T.TESTS, "You tried to change prefix on a non-customizable XMLRPCClient mock");
         }
-        for (XMLRPCClientCustomizableMock client : sInstances) {
+        for (XMLRPCClientCustomizableMockAbstract client : sInstances) {
             client.setPrefix(prefix);
         }
     }
 
     public XMLRPCClientInterface make(URI uri, String httpUser, String httpPassword) {
         switch (sMode) {
-            case CUSTOMIZABLE:
-                XMLRPCClientCustomizableMock client = new XMLRPCClientCustomizableMock(uri, httpUser, httpPassword);
+            case CUSTOMIZABLE_JSON:
+                XMLRPCClientCustomizableJSONMock clientJSONMock = new XMLRPCClientCustomizableJSONMock(uri, httpUser,
+                        httpPassword);
                 if (sContext != null) {
-                    client.setContextAndPrefix(sContext, sPrefix);
+                    clientJSONMock.setContextAndPrefix(sContext, sPrefix);
                 } else {
                     AppLog.e(T.TESTS, "You have to set XMLRPCFactoryTest.sContext field before running tests");
                     throw new IllegalStateException();
                 }
-                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableMock");
-                sInstances.add(client);
-                return client;
+                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableJSONMock");
+                sInstances.add(clientJSONMock);
+                return clientJSONMock;
+            case CUSTOMIZABLE_XML:
+                XMLRPCClientCustomizableXMLMock clientXMLMock = new XMLRPCClientCustomizableXMLMock(uri, httpUser,
+                        httpPassword);
+                if (sContext != null) {
+                    clientXMLMock.setContextAndPrefix(sContext, sPrefix);
+                } else {
+                    AppLog.e(T.TESTS, "You have to set XMLRPCFactoryTest.sContext field before running tests");
+                    throw new IllegalStateException();
+                }
+                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableJSONMock");
+                sInstances.add(clientXMLMock);
+                return clientXMLMock;
             case EMPTY:
             default:
                 AppLog.v(T.TESTS, "make: XMLRPCClientEmptyMock");
@@ -57,5 +71,5 @@ public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract {
         }
     }
 
-    public enum Mode {EMPTY, CUSTOMIZABLE}
+    public enum Mode {EMPTY, CUSTOMIZABLE_JSON, CUSTOMIZABLE_XML}
 }

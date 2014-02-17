@@ -4,7 +4,6 @@ import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
-import org.wordpress.android.functional.FactoryUtils;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.models.Blog;
@@ -37,7 +36,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
         AppLog.v(T.TESTS, "Contexts set");
 
         // Set mode to Customizable
-        XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE;
+        XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_JSON;
         RestClientFactoryTest.sMode = RestClientFactoryTest.Mode.CUSTOMIZABLE;
         AppLog.v(T.TESTS, "Modes set to customizable");
     }

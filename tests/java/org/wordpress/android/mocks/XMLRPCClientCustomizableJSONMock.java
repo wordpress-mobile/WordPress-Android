@@ -1,7 +1,5 @@
 package org.wordpress.android.mocks;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 
@@ -9,7 +7,6 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.io.File;
@@ -17,24 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-public class XMLRPCClientCustomizableJSONMock implements XMLRPCClientInterface {
-    private Context mContext;
-    private String mPrefix;
-
+public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMockAbstract {
     public XMLRPCClientCustomizableJSONMock(URI uri, String httpUser, String httpPassword) {
-    }
-
-    public void setContextAndPrefix(Context context, String prefix) {
-        mContext = context;
-        mPrefix = prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        mPrefix = prefix;
-    }
-
-    public void setContext(Context context) {
-        mContext = context;
     }
 
     public void addQuickPostHeader(String type) {
