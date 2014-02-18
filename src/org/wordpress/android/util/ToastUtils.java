@@ -1,8 +1,13 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import org.wordpress.android.WordPress;
 
 /**
  * Created by nbradbury on 6/20/13.
@@ -30,5 +35,25 @@ public class ToastUtils {
         Toast toast = Toast.makeText(context, text, (duration== Duration.SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG));
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    /*
+     * Shows a toast message, unless there is an authentication issue which will show an alert dialog.
+     */
+    public static void showToastOrAuthAlert(Context context, String xmlrpcMessage, String friendlyMessage) {
+        if (context == null || !(context instanceof FragmentActivity))
+            return;
+
+        FragmentActivity activity = (FragmentActivity) context;
+
+        if (!TextUtils.isEmpty(xmlrpcMessage) && xmlrpcMessage.contains("code 403") || xmlrpcMessage.contains("code 503")) {
+            // Invalid credentials, show auth alert
+            FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+            AuthErrorDialogFragment authAlert = AuthErrorDialogFragment.newInstance(WordPress.getCurrentBlog().isDotcomFlag());
+            ft.add(authAlert, "alert");
+            ft.commitAllowingStateLoss();
+        } else if (!TextUtils.isEmpty(friendlyMessage)) {
+            showToast(context, friendlyMessage);
+        }
     }
 }

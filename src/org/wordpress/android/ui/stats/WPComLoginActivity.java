@@ -22,6 +22,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
@@ -39,7 +40,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private String mUsername;
     private String mPassword;
-    private Button mSignInButon;
+    private Button mSignInButton;
     private boolean mIsJetpackAuthRequest;
 
     @Override
@@ -51,8 +52,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
             mIsJetpackAuthRequest = true;
 
-        mSignInButon = (Button) findViewById(R.id.saveDotcom);
-        mSignInButon.setOnClickListener(new Button.OnClickListener() {
+        mSignInButton = (Button) findViewById(R.id.saveDotcom);
+        mSignInButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
                 EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
@@ -92,8 +93,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
         @Override
         protected void onPreExecute() {
-            mSignInButon.setText(getString(R.string.attempting_configure));
-            mSignInButon.setEnabled(false);
+            mSignInButton.setText(getString(R.string.attempting_configure));
+            mSignInButton.setEnabled(false);
         }
 
         @Override
@@ -102,11 +103,13 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
             Object[] signInParams = { mUsername, mPassword };
 
+            Blog blog = WordPress.getCurrentBlog();
+            if (blog == null) return false;
+
             try {
                 client.call("wp.getUsersBlogs", signInParams);
-                WordPress.currentBlog.setDotcom_username(mUsername);
-                WordPress.currentBlog.setDotcom_password(mPassword);
-                WordPress.currentBlog.save();
+                blog.setDotcom_username(mUsername);
+                blog.setDotcom_password(mPassword);
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {
@@ -125,7 +128,12 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
+
+                    // Update regular blog credentials for WP.com auth requests
+                    blog.setUsername(mUsername);
+                    blog.setPassword(mPassword);
                 }
+                blog.save();
                 return true;
             } catch (XMLRPCException e) {
                 return false;
@@ -150,8 +158,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 }
             } else {
                 Toast.makeText(getBaseContext(), getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
-                mSignInButon.setEnabled(true);
-                mSignInButon.setText(R.string.sign_in);
+                mSignInButton.setEnabled(true);
+                mSignInButton.setText(R.string.sign_in);
             }
         }
     }

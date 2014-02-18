@@ -590,8 +590,8 @@ public class PostsListFragment extends ListFragment {
                 if (getActivity() == null)
                     return;
                 if (errorMsg != "" && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
-                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
+                    ToastUtils.showToastOrAuthAlert(getActivity(), errorMsg, getString(mIsPage ? R.string.error_refresh_pages
+                            : R.string.error_refresh_posts));
                     errorMsg = "";
                 }
                 return;
