@@ -53,7 +53,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostUploadService extends Service {
-
     private static Context context;
     private static ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
@@ -181,7 +180,7 @@ public class PostUploadService extends Service {
             post = posts[0];
 
             // add the uploader to the notification bar
-            nm = (NotificationManager) context.getSystemService("notification");
+            nm = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
 
             String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                     .getText(R.string.post_id));
