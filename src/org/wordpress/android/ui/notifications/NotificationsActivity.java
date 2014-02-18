@@ -496,8 +496,13 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
         @Override
+        public boolean canRequestMore() {
+            return mFirstLoadComplete && !mLoadingMore;
+        }
+
+        @Override
         public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
-            if (mFirstLoadComplete && !mLoadingMore) {
+            if (canRequestMore()) {
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 if (adapter.getCount() > 0) {
                     Note lastNote = adapter.getItem(adapter.getCount()-1);
