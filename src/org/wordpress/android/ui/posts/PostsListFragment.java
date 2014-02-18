@@ -380,7 +380,7 @@ public class PostsListFragment extends ListFragment {
             if (loadedPosts == null) {
                 refreshPosts(false);
                 if (!isPage)
-                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(getActivity())).execute(false);
             }
             mListScrollPositionManager.restoreScrollOffset();
             return false;
