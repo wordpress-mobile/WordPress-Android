@@ -6,13 +6,13 @@ import org.wordpress.android.util.AppLog.T;
 import java.net.URI;
 
 public class XMLRPCFactory {
-    public static XMLRPCFactoryAbstract factory;
+    public static XMLRPCFactoryAbstract sFactory;
 
     public static XMLRPCClientInterface instantiate(URI uri, String httpUser, String httpPassword) {
-        if (factory == null) {
-            factory = new XMLRPCFactoryDefault();
+        if (sFactory == null) {
+            sFactory = new XMLRPCFactoryDefault();
         }
-        AppLog.v(T.UTILS, "instantiate XMLRPCClient using factory: " + factory.getClass());
-        return factory.make(uri, httpUser, httpPassword);
+        AppLog.v(T.UTILS, "instantiate XMLRPCClient using sFactory: " + sFactory.getClass());
+        return sFactory.make(uri, httpUser, httpPassword);
     }
 }

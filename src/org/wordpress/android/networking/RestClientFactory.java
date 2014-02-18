@@ -7,13 +7,13 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class RestClientFactory {
-    public static RestClientFactoryAbstract factory;
+    public static RestClientFactoryAbstract sFactory;
 
     public static RestClient instantiate(RequestQueue queue) {
-        if (factory == null) {
-            factory = new RestClientFactoryDefault();
+        if (sFactory == null) {
+            sFactory = new RestClientFactoryDefault();
         }
-        AppLog.v(T.UTILS, "instantiate RestClient using factory: " + factory.getClass());
-        return factory.make(queue);
+        AppLog.v(T.UTILS, "instantiate RestClient using sFactory: " + sFactory.getClass());
+        return sFactory.make(queue);
     }
 }

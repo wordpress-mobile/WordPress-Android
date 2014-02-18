@@ -4,13 +4,13 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class OAuthAuthenticatorFactory {
-    public static OAuthAuthenticatorFactoryAbstract factory;
+    public static OAuthAuthenticatorFactoryAbstract sFactory;
 
     public static OAuthAuthenticator instantiate() {
-        if (factory == null) {
-            factory = new OAuthAuthenticatorFactoryDefault();
+        if (sFactory == null) {
+            sFactory = new OAuthAuthenticatorFactoryDefault();
         }
-        AppLog.v(T.UTILS, "instantiate OAuth using factory: " + factory.getClass());
-        return factory.make();
+        AppLog.v(T.UTILS, "instantiate OAuth using sFactory: " + sFactory.getClass());
+        return sFactory.make();
     }
 }
