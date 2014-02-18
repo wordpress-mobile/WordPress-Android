@@ -46,6 +46,7 @@ public class NotificationsListFragment extends ListFragment {
      * For providing more notes data when getting to the end of the list
      */
     public interface NoteProvider {
+        public boolean canRequestMore();
         public void onRequestMoreNotifications(ListView listView, ListAdapter adapter);
     }
 
@@ -65,6 +66,7 @@ public class NotificationsListFragment extends ListFragment {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
+        mProgressFooterView.setVisibility(View.GONE);
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnScrollListener(new ListScrollListener());
@@ -102,13 +104,14 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     private void requestMoreNotifications() {
-        if (mNoteProvider != null) {
+        if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
+            showProgressFooter();
             mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
         }
     }
 
     class NotesAdapter extends ArrayAdapter<Note> {
-        int mAvatarSz;
+        final int mAvatarSz;
 
         NotesAdapter() {
             this(getActivity());
@@ -159,8 +162,7 @@ public class NotificationsListFragment extends ListFragment {
             if (notes.size() == 0) {
                 // No more notes available
                 mAllNotesLoaded = true;
-                if (mProgressFooterView != null)
-                    mProgressFooterView.setVisibility(View.GONE);
+                hideProgressFooter();
             } else {
                 // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
                 // will be triggered for each added note
@@ -194,12 +196,11 @@ public class NotificationsListFragment extends ListFragment {
         @Override
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
-            if (mProgressFooterView != null)
-                mProgressFooterView.setVisibility(View.GONE);
+            hideProgressFooter();
         }
 
         // HashMap of drawables for note types
-        private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
+        private final HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
         private Drawable getDrawableForType(String noteType) {
             if (noteType==null)
                 return null;
@@ -227,19 +228,27 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
+    /*
+     * show/hide the "Loading" footer
+     */
+    private void showProgressFooter() {
+        if (mProgressFooterView != null)
+            mProgressFooterView.setVisibility(View.VISIBLE);
+    }
+    private void hideProgressFooter() {
+        if (mProgressFooterView != null)
+            mProgressFooterView.setVisibility(View.GONE);
+    }
+
+
     private class ListScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (mAllNotesLoaded)
+            if (mAllNotesLoaded || visibleItemCount == 0)
                 return;
 
             // if we're within 5 from the last item we should ask for more items
             if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
-                if (totalItemCount <= 1)
-                    mProgressFooterView.setVisibility(View.GONE);
-                else
-                    mProgressFooterView.setVisibility(View.VISIBLE);
-
                 requestMoreNotifications();
             }
         }
