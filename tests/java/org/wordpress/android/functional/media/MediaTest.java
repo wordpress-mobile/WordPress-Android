@@ -19,15 +19,19 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
     public void testDeleteMedia() throws Exception {
         login();
         mSolo.clickOnText(mSolo.getString(R.string.media));
+        // wait for reloading
+        mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
         mSolo.clickLongOnText("wpid-pony.jpg");
         // seems not to work on CAB
         // mSolo.clickOnActionBarItem(R.id.media_multiselect_actionbar_trash);
         RobotiumUtils.clickOnId(mSolo, "media_multiselect_actionbar_trash");
     }
-    
+
     public void testDeleteMultipleMedias() throws Exception {
         login();
         mSolo.clickOnText(mSolo.getString(R.string.media));
+        // wait for reloading
+        mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
         mSolo.clickLongOnText("wpid-pony.jpg");
         mSolo.clickOnImage(3);
         mSolo.clickOnImage(2);

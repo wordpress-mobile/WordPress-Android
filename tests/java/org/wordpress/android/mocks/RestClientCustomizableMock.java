@@ -62,8 +62,12 @@ public class RestClientCustomizableMock extends RestClient {
     }
 
     private VolleyError createVolleyErrorFromFilename(String filename) {
-        String data = fileToString(filename);
-        NetworkResponse networkResponse = new NetworkResponse(400, data.getBytes(), null, false);
+        String strData = fileToString(filename);
+        byte[] data = new byte[0];
+        if (strData != null) {
+            data = strData.getBytes();
+        }
+        NetworkResponse networkResponse = new NetworkResponse(400, data, null, false);
         VolleyError ve = new VolleyError(networkResponse);
         return ve;
     }

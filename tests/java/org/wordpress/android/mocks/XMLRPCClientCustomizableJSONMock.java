@@ -47,7 +47,7 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException {
-        AppLog.v(T.TESTS, "XMLRPCClientCustomizableJSONMock: <call(" + method + ", ...)>");
+        AppLog.v(T.TESTS, "XMLRPCClientCustomizableJSONMock: call: " + method);
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
             throw new XMLRPCException("code 403");

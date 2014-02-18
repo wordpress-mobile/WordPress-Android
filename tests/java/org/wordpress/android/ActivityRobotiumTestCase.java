@@ -52,8 +52,6 @@ public class ActivityRobotiumTestCase<T extends Activity> extends ActivityInstru
     }
 
     public void login() throws Exception {
-        RestClientFactoryTest.setPrefixAllInstances("default");
-        XMLRPCFactoryTest.setPrefixAllInstances("default");
         mSolo.enterText(0, "test");
         mSolo.enterText(1, "test");
         mSolo.clickOnText(mSolo.getString(R.string.sign_in));

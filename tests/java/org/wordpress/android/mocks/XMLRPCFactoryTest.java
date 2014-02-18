@@ -61,7 +61,7 @@ public class XMLRPCFactoryTest implements XMLRPCFactoryAbstract {
                     AppLog.e(T.TESTS, "You have to set XMLRPCFactoryTest.sContext field before running tests");
                     throw new IllegalStateException();
                 }
-                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableJSONMock");
+                AppLog.v(T.TESTS, "make: XMLRPCClientCustomizableXMLMock");
                 sInstances.add(clientXMLMock);
                 return clientXMLMock;
             case EMPTY:
