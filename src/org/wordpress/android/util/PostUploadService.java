@@ -382,8 +382,7 @@ public class PostUploadService extends Service {
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
 
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
-            
+
             if (post.getQuickPostType() != null)
                 client.addQuickPostHeader(post.getQuickPostType());
 
@@ -428,8 +427,7 @@ public class PostUploadService extends Service {
             if (curImagePath.contains("video")) {
                 // Upload the video
                 XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-                ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
-                
+
                 // create temp file for media upload
                 String tempFileName = "wp-" + System.currentTimeMillis();
                 try {
@@ -760,8 +758,7 @@ public class PostUploadService extends Service {
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
-            
+
             // create temp file for media upload
             String tempFileName = "wp-" + System.currentTimeMillis();
             try {

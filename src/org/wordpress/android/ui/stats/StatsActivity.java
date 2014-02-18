@@ -187,7 +187,6 @@ public class StatsActivity extends WPActionBarActivity {
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
-                    ApiHelper.addAuthorizationHeaderIfNeeded(currentBlog, xmlrpcClient);
                     xmlrpcClient.callAsync(new XMLRPCCallback() {
                         @Override
                         public void onSuccess(long id, Object result) {

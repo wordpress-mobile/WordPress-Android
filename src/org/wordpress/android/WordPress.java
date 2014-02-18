@@ -382,6 +382,7 @@ public class WordPress extends Application {
     public static String getWPComAuthToken(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+
     }
 
     class OauthAuthenticator implements WPRestClient.Authenticator {

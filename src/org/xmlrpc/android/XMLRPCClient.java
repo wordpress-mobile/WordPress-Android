@@ -470,17 +470,5 @@ public class XMLRPCClient {
 
     }
     
-    //Return true if wpcom XML-RPC Endpoint is called on a secure connection (https).
-    public boolean isWordPressComXMLRPCUrlOnSecureConnection() {
-        URI uri = postMethod.getURI();
-        if (uri==null)
-            return false;
-        String path = uri.getPath();
-        String host = uri.getHost();
-        String protocol = uri.getScheme();
-        if (path==null || host==null || protocol==null)
-            return false;
-        return path.equals("/xmlrpc.php") && host.endsWith("wordpress.com") && protocol.equals("https");
-    }
     private class CancelException extends RuntimeException { }
 }
