@@ -21,8 +21,6 @@ import java.util.Map;
 
 import android.util.Xml;
 
-import com.google.gson.Gson;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -287,6 +285,78 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
     }
 
+    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException {
+        // prepare POST body
+        if (method.equals("wp.uploadFile")) {
+
+            if (!tempFile.exists() && !tempFile.mkdirs()) {
+                throw new XMLRPCException("Path to file could not be created.");
+            }
+
+            FileWriter fileWriter = new FileWriter(tempFile);
+            serializer.setOutput(fileWriter);
+
+            serializer.startDocument(null, null);
+            serializer.startTag(null, TAG_METHOD_CALL);
+            // set method name
+            serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            if (params != null && params.length != 0) {
+                // set method params
+                serializer.startTag(null, TAG_PARAMS);
+                for (int i = 0; i < params.length; i++) {
+                    serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    XMLRPCSerializer.serialize(serializer, params[i]);
+                    serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                }
+                serializer.endTag(null, TAG_PARAMS);
+            }
+            serializer.endTag(null, TAG_METHOD_CALL);
+            serializer.endDocument();
+
+            fileWriter.flush();
+            fileWriter.close();
+
+            FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"");
+            fEntity.setContentType("text/xml");
+            //fEntity.setChunked(true);
+            postMethod.setEntity(fEntity);
+        } else {
+            StringWriter bodyWriter = new StringWriter();
+            serializer.setOutput(bodyWriter);
+
+            serializer.startDocument(null, null);
+            serializer.startTag(null, TAG_METHOD_CALL);
+            // set method name
+            serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            if (params != null && params.length != 0) {
+                // set method params
+                serializer.startTag(null, TAG_PARAMS);
+                for (int i = 0; i < params.length; i++) {
+                    serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
+                        XMLRPCSerializer.serialize(serializer, params[i]);
+                    } else {
+                        XMLRPCSerializer.serialize(serializer, params[i]);
+                    }
+                    serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                }
+                serializer.endTag(null, TAG_PARAMS);
+            }
+            serializer.endTag(null, TAG_METHOD_CALL);
+            serializer.endDocument();
+
+            HttpEntity entity = new StringEntity(bodyWriter.toString());
+            //Log.i("WordPress", bodyWriter.toString());
+            postMethod.setEntity(entity);
+        }
+
+        //set timeout to 40 seconds, does it need to be set for both client and method?
+        client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+        postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+    }
+
     /**
      * The Caller class is used to make asynchronous calls to the server.
      * For synchronous calls the Thread function of this class isn't used.
@@ -373,75 +443,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         @SuppressWarnings("unchecked")
         private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException {
             try {
-                // prepare POST body
-                if (method.equals("wp.uploadFile")) {
-
-                    if (!tempFile.exists() && !tempFile.mkdirs()) {
-                        throw new XMLRPCException("Path to file could not be created.");
-                    }
-
-                    FileWriter fileWriter = new FileWriter(tempFile);
-                    serializer.setOutput(fileWriter);
-
-                    serializer.startDocument(null, null);
-                    serializer.startTag(null, TAG_METHOD_CALL);
-                    // set method name
-                    serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
-                    if (params != null && params.length != 0) {
-                        // set method params
-                        serializer.startTag(null, TAG_PARAMS);
-                        for (int i = 0; i < params.length; i++) {
-                            serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-                            XMLRPCSerializer.serialize(serializer, params[i]);
-                            serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
-                        }
-                        serializer.endTag(null, TAG_PARAMS);
-                    }
-                    serializer.endTag(null, TAG_METHOD_CALL);
-                    serializer.endDocument();
-
-                    fileWriter.flush();
-                    fileWriter.close();
-
-                    FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"");
-                    fEntity.setContentType("text/xml");
-                    //fEntity.setChunked(true);
-                    postMethod.setEntity(fEntity);
-                } else {
-                    StringWriter bodyWriter = new StringWriter();
-                    serializer.setOutput(bodyWriter);
-
-                    serializer.startDocument(null, null);
-                    serializer.startTag(null, TAG_METHOD_CALL);
-                    // set method name
-                    serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
-                    if (params != null && params.length != 0) {
-                        // set method params
-                        serializer.startTag(null, TAG_PARAMS);
-                        for (int i = 0; i < params.length; i++) {
-                            serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-                            if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
-                                XMLRPCSerializer.serialize(serializer, params[i]);
-                            } else {
-                                XMLRPCSerializer.serialize(serializer, params[i]);
-                            }
-                            serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
-                        }
-                        serializer.endTag(null, TAG_PARAMS);
-                    }
-                    serializer.endTag(null, TAG_METHOD_CALL);
-                    serializer.endDocument();
-
-                    HttpEntity entity = new StringEntity(bodyWriter.toString());
-                    //Log.i("WordPress", bodyWriter.toString());
-                    postMethod.setEntity(entity);
-                }
-
-                //set timeout to 40 seconds, does it need to be set for both client and method?
-                client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-                client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-                postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-                postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+                preparePostMethod(method, params, tempFile);
 
                 // execute HTTP POST request
                 HttpResponse response = client.execute(postMethod);
