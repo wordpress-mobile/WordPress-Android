@@ -274,22 +274,17 @@ public class WordPressDB {
     private void migrateDrafts() {
         try {
             // Migrate drafts to unified posts table
-            Cursor c = db.query("localdrafts", new String[] { "blogID",
-                    "title", "content", "picturePaths", "date",
-                    "categories", "tags", "status", "password",
-                    "latitude", "longitude" }, null, null, null, null,
-                    "id desc");
+            Cursor c = db.query("localdrafts",
+                    new String[]{"blogID", "title", "content", "picturePaths", "date", "categories", "tags", "status",
+                                 "password", "latitude", "longitude"}, null, null, null, null, "id desc");
             int numRows = c.getCount();
             c.moveToFirst();
 
             for (int i = 0; i < numRows; ++i) {
                 if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1),
-                            c.getString(2), "", c.getString(3),
-                            c.getLong(4), c.getString(5),
-                            c.getString(6), c.getString(7),
-                            c.getString(8), c.getDouble(9),
-                            c.getDouble(10), false, "", false);
+                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
+                            c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(
+                            10), false, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     savePost(post, c.getInt(0));
@@ -301,19 +296,16 @@ public class WordPressDB {
             db.delete("localdrafts", null, null);
 
             // pages
-            c = db.query("localpagedrafts", new String[] { "blogID",
-                    "title", "content", "picturePaths", "date",
-                    "status", "password" }, null, null, null, null,
-                    "id desc");
+            c = db.query("localpagedrafts",
+                    new String[]{"blogID", "title", "content", "picturePaths", "date", "status", "password"}, null,
+                    null, null, null, "id desc");
             numRows = c.getCount();
             c.moveToFirst();
 
             for (int i = 0; i < numRows; ++i) {
                 if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1),
-                            c.getString(2), "", c.getString(3),
-                            c.getLong(4), c.getString(5), "", "",
-                            c.getString(6), 0, 0, true, "", false);
+                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
+                            c.getString(5), "", "", c.getString(6), 0, 0, true, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     post.setIsPage(true);
@@ -324,7 +316,7 @@ public class WordPressDB {
             c.close();
             db.delete("localpagedrafts", null, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            // Ignore exception (localdrafts doesn't exist)
         }
     }
 
