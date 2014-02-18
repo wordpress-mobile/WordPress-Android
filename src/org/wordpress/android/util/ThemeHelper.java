@@ -55,6 +55,10 @@ public class ThemeHelper {
         mTagToLabelMap.put("sticky-post", "Sticky Post");
         mTagToLabelMap.put("theme-options", "Theme Options");
         mTagToLabelMap.put("translation-ready", "Translation Ready");
+        //Subject
+        mTagToLabelMap.put("holiday", "Holiday");
+        mTagToLabelMap.put("photoblogging", "Photoblogging");
+        mTagToLabelMap.put("seasonal", "Seasonal");
     }
     
 }
