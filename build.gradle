@@ -58,6 +58,8 @@ android {
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.android.support:support-v4:19.0.+'
         instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
+        instrumentTestCompile('com.google.dexmaker:dexmaker-mockito:1.0')
+        instrumentTestCompile('org.mockito:mockito-core:+')
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
