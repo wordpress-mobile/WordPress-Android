@@ -66,6 +66,7 @@ public class AuthErrorDialogFragment extends SherlockDialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
+                    settingsIntent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
                     getActivity().startActivity(settingsIntent);
                 }
             });
