@@ -3,6 +3,8 @@ package org.wordpress.android.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
+
 /** 
  * A helper class to retrieve the labels for a given feature based on the tag supplied by the api. 
  *
@@ -10,15 +12,17 @@ import java.util.Map;
 public class ThemeHelper {
 
     private static Map<String, String> mTagToLabelMap;
-    
-    
+
     public static String getLabel(String feature_tag) {
         if (mTagToLabelMap == null) {
             initMap();
         }
-        return mTagToLabelMap.get(feature_tag);
-    }
-
+        if (mTagToLabelMap.containsKey(feature_tag)) {
+            return mTagToLabelMap.get(feature_tag);
+        } else {
+            return WordUtils.capitalizeFully(feature_tag.replace("-", " "));
+        }
+   }
 
     private static void initMap() {
         mTagToLabelMap = new HashMap<String, String>();
