@@ -170,9 +170,9 @@ public class Post implements Serializable {
         try {
             categories = StringUtils.unescapeHTML(categories);
             if (TextUtils.isEmpty(categories)) {
-                jArray = new JSONArray(categories);
-            } else {
                 jArray = new JSONArray();
+            } else {
+                jArray = new JSONArray(categories);
             }
         } catch (JSONException e) {
             AppLog.e(T.POSTS, e);
