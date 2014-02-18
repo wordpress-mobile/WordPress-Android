@@ -112,7 +112,12 @@ public class Blog {
 
     public URI getUri() {
         try {
-            return new URI(getUrl());
+            String url = getUrl();
+            if (url == null) {
+                AppLog.e(T.UTILS, "Blog url is null");
+                return null;
+            }
+            return new URI(url);
         } catch (URISyntaxException e) {
             AppLog.e(T.UTILS, "Blog url is invalid: " + getUrl());
             return null;
