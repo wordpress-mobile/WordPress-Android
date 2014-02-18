@@ -407,6 +407,9 @@ public class ApiHelper {
                 if (e.getMessage().contains("401")) {
                     setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
                     return 0;
+                } else {
+                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                    return 0;
                 }
             }
 
