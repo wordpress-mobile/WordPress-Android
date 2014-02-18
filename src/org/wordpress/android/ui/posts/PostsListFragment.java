@@ -629,6 +629,7 @@ public class PostsListFragment extends ListFragment {
             Object[] params = {mBlog.getRemoteBlogId(),
                     mBlog.getUsername(),
                     mBlog.getPassword(), recordCount};
+            ApiHelper.addAuthorizationHeaderIfNeeded(mBlog, client);
             try {
                 Object[] result = (Object[]) client.call((mIsPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", params);

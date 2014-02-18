@@ -1,9 +1,9 @@
 package org.xmlrpc.android;
 
-import android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HttpRequest;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -94,6 +95,8 @@ public class ApiHelper {
             mBlog = (Blog) arguments.get(0);
             client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(mBlog, client);
+            
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), "show-supported" };
@@ -224,6 +227,8 @@ public class ApiHelper {
             XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
+            ApiHelper.addAuthorizationHeaderIfNeeded(mBlog, client);
+            
             if (!commentsOnly) {
                 // check the WP number if self-hosted
                 Map<String, String> hPost = ApiHelper.blogOptionsXMLRPCParameters;
@@ -303,6 +308,8 @@ public class ApiHelper {
         XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
                 blog.getHttpuser(),
                 blog.getHttppassword());
+        ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
+        
         Object[] result;
         try {
             result = (Object[]) client.call("wp.getComments", commentParams);
@@ -381,6 +388,7 @@ public class ApiHelper {
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
             client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
 
             Map<String, Object> filter = new HashMap<String, Object>();
             filter.put("number", 50);
@@ -474,6 +482,7 @@ public class ApiHelper {
             }
 
             client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
 
             Map<String, Object> contentStruct = new HashMap<String, Object>();
             contentStruct.put("post_title", mTitle);
@@ -539,6 +548,7 @@ public class ApiHelper {
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
 
             Object[] apiParams = {
                     blog.getRemoteBlogId(),
@@ -605,7 +615,8 @@ public class ApiHelper {
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
-
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
+            
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
             data.put("type", mMediaFile.getMimeType());
@@ -686,6 +697,8 @@ public class ApiHelper {
             }
 
             client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
+            
             Object[] apiParams = new Object[]{blog.getRemoteBlogId(), blog.getUsername(),
                     blog.getPassword(), mMediaId};
 
@@ -745,6 +758,7 @@ public class ApiHelper {
             client = new XMLRPCClient(blog.getUrl(),
                     blog.getHttpuser(),
                     blog.getHttppassword());
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
 
             Object[] apiParams = new Object[] {
                     blog.getRemoteBlogId(),
@@ -962,5 +976,16 @@ public class ApiHelper {
             }
         }
         return null; // never found the rsd tag
+    }
+    
+    public static void addAuthorizationHeaderIfNeeded(Blog currentBlog, XMLRPCClient client){
+        Context ctx = WordPress.getContext();
+        if (ctx == null)
+            return;
+        if (currentBlog.isDotcomFlag() && client.isWordPressComXMLRPCUrlOnSecureConnection()) {
+            String token = WordPress.getWPComAuthToken(ctx);
+            if (!TextUtils.isEmpty(token))
+                client.setAuthorizationHeader(token);
+        }
     }
 }

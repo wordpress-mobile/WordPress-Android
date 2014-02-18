@@ -24,6 +24,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -244,6 +246,8 @@ public class EditCommentActivity extends SherlockActivity {
                     blog.getPassword(),
                     mCommentId,
                     postHash};
+            
+            ApiHelper.addAuthorizationHeaderIfNeeded(blog, client);
 
             try {
                 Object result = client.call("wp.editComment", xmlParams);
