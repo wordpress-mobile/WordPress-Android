@@ -129,9 +129,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
-   
-                    //Update wpcom password on all Blogs in the DB
-                    WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
+
                     // Update regular blog credentials for WP.com auth requests
                     blog.setUsername(mUsername);
                     blog.setPassword(mPassword);
