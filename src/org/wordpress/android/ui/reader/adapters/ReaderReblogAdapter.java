@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
@@ -72,7 +73,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
     @Override
     public View getDropDownView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, null);
+        view = mInflater.inflate(R.layout.reader_listitem_reblog, null);
         TextView text = (TextView) view.findViewById(android.R.id.text1);
         text.setText(mAccounts.get(position).blogName);
         return view;
