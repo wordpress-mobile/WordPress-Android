@@ -97,7 +97,7 @@ public class TestUtils {
         for (String key : stringMap.keySet()) {
             Object value = stringMap.get(key);
             if (StringMap.class.isInstance(value)) {
-                HashMap newValue = stringMapToHashMap((StringMap<?>) value);
+                HashMap<String, Object> newValue = stringMapToHashMap((StringMap<?>) value);
                 res.put(key, newValue);
             } else {
                 res.put(key, value);
@@ -130,8 +130,7 @@ public class TestUtils {
 
     public static Object castIt(Object value) {
         if (value instanceof HashMap) {
-            HashMap newValue = injectDateInHashMap((HashMap<String, Object>) value);
-            return newValue;
+            return injectDateInHashMap((HashMap<String, Object>) value);
         } else if (value instanceof String) {
             Date newValue = parseStringToDate((String) value);
             if (newValue != null) {
@@ -140,12 +139,7 @@ public class TestUtils {
                 return value;
             }
         } else if (value instanceof Double) {
-            Integer newValue = Integer.valueOf((int) Math.round((Double) value));
-            if (newValue != null) {
-                return newValue;
-            } else {
-                return value;
-            }
+            return (int) Math.round((Double) value);
         } else if (value instanceof Object[]) {
             return injectDateInArray((Object[]) value);
         } else if (value instanceof StringMap) {
