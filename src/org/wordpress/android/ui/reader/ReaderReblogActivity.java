@@ -92,6 +92,12 @@ public class ReaderReblogActivity extends FragmentActivity {
             super.onBackPressed();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @SuppressLint("NewApi")
     private void loadPost() {
         if (SysUtils.canUseExecuteOnExecutor()) {

@@ -2,6 +2,7 @@
 <!--
     styles used by the native reader - all margins & padding use margin_xxxx sizes
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
+    see also reader_styles in values-v14 for holo versions of some of these
 -->
 <resources>
     <!-- activity themes -->
@@ -200,9 +201,5 @@
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
-    <style name="ReaderProgressBar.Small" parent="@android:style/Widget.ProgressBar.Small" />
-    <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal" />
-
-    <style name="ReaderSpinner" parent="@android:style/Widget.Spinner" />
 
 </resources>
