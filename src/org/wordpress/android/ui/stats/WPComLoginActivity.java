@@ -18,6 +18,9 @@ import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -27,8 +30,6 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
@@ -128,7 +129,9 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
-
+   
+                    //Update wpcom password on all Blogs in the DB
+                    WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
                     // Update regular blog credentials for WP.com auth requests
                     blog.setUsername(mUsername);
                     blog.setPassword(mPassword);
