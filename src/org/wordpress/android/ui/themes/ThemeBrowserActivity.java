@@ -235,9 +235,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             public void onResponse(JSONObject response) {
                 try {
                     Theme theme = Theme.fromJSON(response);
-                    WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
-                    refreshViewPager();
+                    if (theme != null) {
+                        WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
+                        refreshViewPager();
+                    }
                 } catch (JSONException e) {
+                    AppLog.e(T.THEMES, e);
                 }
 
             }
@@ -328,12 +331,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
                             Theme theme = Theme.fromJSON(object);
-                            theme.save();
-                            themes.add(theme);
+                            if (theme != null) {
+                                theme.save();
+                                themes.add(theme);
+                            }
                         }
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(T.THEMES, e);
                 }
             }
             

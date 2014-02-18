@@ -474,13 +474,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
+            setEmptyViewVisible(false);
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
             fmt.setCalendar(startDate);
             String formattedStart = fmt.format(startDate.getTime());
             String formattedEnd = fmt.format(endDate.getTime());
 
-            mResultView.setVisibility(View.VISIBLE);
+            // TODO: replace hard-coded text with string resource
             mResultView.setText("Displaying media from " + formattedStart + " to " + formattedEnd);
             return cursor;
         } else {
