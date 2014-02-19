@@ -91,6 +91,10 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
+    private boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     public NotesAdapter getNotesAdapter() {
         return mNotesAdapter;
     }
@@ -104,7 +108,7 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     private void requestMoreNotifications() {
-        if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
+        if (mNoteProvider != null && mNoteProvider.canRequestMore() && hasActivity()) {
             showProgressFooter();
             mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
         }
