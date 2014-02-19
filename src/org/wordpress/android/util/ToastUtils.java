@@ -94,7 +94,15 @@ public class ToastUtils {
     public static void showToastOrAuthAlert(Context context, String xmlrpcMessage, String friendlyMessage) {
         if (context == null)
             return;
-        if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && xmlrpcMessage.contains("code 403") || xmlrpcMessage.contains("code 503")) {
+
+        boolean isLoginLimitReached = false;
+        if (!TextUtils.isEmpty(xmlrpcMessage)) {
+            String lowerCaseXmlrpcMessage = xmlrpcMessage.toLowerCase();
+            if (lowerCaseXmlrpcMessage.contains("code 503") && ( lowerCaseXmlrpcMessage.contains("limit reached") || lowerCaseXmlrpcMessage.contains("login limit")))
+                isLoginLimitReached = true;
+        }
+        
+        if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && xmlrpcMessage.contains("code 403")) {
             FragmentActivity activity = (FragmentActivity) context;
             if(activity.isFinishing())
                 return;
@@ -104,7 +112,12 @@ public class ToastUtils {
             ft.add(authAlert, "alert");
             ft.commitAllowingStateLoss(); 
         } else {
-            String errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
+            String errorMessage = null;
+            if (isLoginLimitReached) {
+                errorMessage = context.getString(R.string.limit_reached);
+            } else {
+              errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
+            }
             showToast(context, errorMessage, Duration.LONG);
         }
     }
