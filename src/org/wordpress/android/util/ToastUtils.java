@@ -96,13 +96,16 @@ public class ToastUtils {
             return;
 
         boolean isLoginLimitReached = false;
+        boolean is2StepsAuthEnabled = false;
         if (!TextUtils.isEmpty(xmlrpcMessage)) {
             String lowerCaseXmlrpcMessage = xmlrpcMessage.toLowerCase();
             if (lowerCaseXmlrpcMessage.contains("code 503") && ( lowerCaseXmlrpcMessage.contains("limit reached") || lowerCaseXmlrpcMessage.contains("login limit")))
                 isLoginLimitReached = true;
+            else if (lowerCaseXmlrpcMessage.contains("code 425"))
+                is2StepsAuthEnabled = true;
         }
-        
-        if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && xmlrpcMessage.contains("code 403")) {
+
+        if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && (xmlrpcMessage.contains("code 403") || is2StepsAuthEnabled)) {
             FragmentActivity activity = (FragmentActivity) context;
             if(activity.isFinishing())
                 return;
@@ -115,8 +118,10 @@ public class ToastUtils {
             String errorMessage = null;
             if (isLoginLimitReached) {
                 errorMessage = context.getString(R.string.limit_reached);
+            } else if (is2StepsAuthEnabled) {
+                errorMessage = context.getString(R.string.account_two_step_auth_enabled);
             } else {
-              errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
+                errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
             }
             showToast(context, errorMessage, Duration.LONG);
         }
