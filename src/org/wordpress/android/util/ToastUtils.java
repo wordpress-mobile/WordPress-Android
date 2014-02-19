@@ -76,6 +76,8 @@ public class ToastUtils {
 
         if (isInvalidTokenError && (context instanceof FragmentActivity)) {
             FragmentActivity activity = (FragmentActivity) context;
+            if(activity.isFinishing())
+                return;
             // Invalid credentials, show auth alert
             FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
             AuthErrorDialogFragment authAlert = AuthErrorDialogFragment.newInstance(WordPress.getCurrentBlog().isDotcomFlag());
@@ -96,6 +98,8 @@ public class ToastUtils {
             return;
         if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && xmlrpcMessage.contains("code 403") || xmlrpcMessage.contains("code 503")) {
             FragmentActivity activity = (FragmentActivity) context;
+            if(activity.isFinishing())
+                return;
             // Invalid credentials, show auth alert
             FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
             AuthErrorDialogFragment authAlert = AuthErrorDialogFragment.newInstance(WordPress.getCurrentBlog().isDotcomFlag());
