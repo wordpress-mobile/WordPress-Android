@@ -57,7 +57,7 @@ public class ToastUtils {
         boolean isInvalidTokenError = false;
         
         if (error.networkResponse != null && error.networkResponse.data != null) {
-            AppLog.e(T.NOTIFS, String.format("Error message: %s", new String(error.networkResponse.data)));
+            AppLog.e(T.API, String.format("Error message: %s", new String(error.networkResponse.data)));
             String jsonString = new String(error.networkResponse.data);
             try {
                 JSONObject errorObj = new JSONObject(jsonString);
@@ -66,7 +66,7 @@ public class ToastUtils {
                 if (error_code!=null && error_code.equals("invalid_token"))
                     isInvalidTokenError = true;
             } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, e);
+                AppLog.e(T.API, e);
             }
         } else {
             if (error.getMessage() != null && error.getMessage().contains("Limit reached") ) {
@@ -86,7 +86,7 @@ public class ToastUtils {
         } else {
             String fallbackErrorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
             String errorMessage = TextUtils.isEmpty(message) ? fallbackErrorMessage :  message;
-            showToast(context, errorMessage);
+            showToast(context, errorMessage, Duration.LONG);
         }
     }
     
@@ -107,7 +107,7 @@ public class ToastUtils {
             ft.commitAllowingStateLoss(); 
         } else {
             String errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
-            showToast(context, errorMessage);
+            showToast(context, errorMessage, Duration.LONG);
         }
     }
 }
