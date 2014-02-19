@@ -450,8 +450,11 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 adapter.clear();
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
-                ToastUtils.showToast(getContext(), R.string.error_refresh_notifications,
-                        ToastUtils.Duration.LONG);
+                
+                Context context = NotificationsActivity.this;
+                if(context!=null)
+                    ToastUtils.showToastOrAuthAlert(context, error, context.getString(R.string.error_refresh_notifications));
+                
                 stopAnimatingRefreshButton(mRefreshMenuItem);
                 mShouldAnimateRefreshButton = false;
             }

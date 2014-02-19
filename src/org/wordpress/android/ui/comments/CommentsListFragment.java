@@ -316,6 +316,7 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         final boolean isLoadingMore;
+        String errorMessage;
 
         private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
@@ -359,6 +360,7 @@ public class CommentsListFragment extends Fragment {
             try {
                 return ApiHelper.refreshComments(getActivity(), params);
             } catch (XMLRPCException e) {
+                errorMessage = e.getMessage();
                 isError = true;
                 return null;
             }
@@ -383,7 +385,7 @@ public class CommentsListFragment extends Fragment {
             // result will be null on error OR if no more comments exists
             if (comments == null) {
                 if (isError && !getActivity().isFinishing())
-                    ToastUtils.showToast(getActivity(), R.string.error_refresh_comments, ToastUtils.Duration.LONG);
+                    ToastUtils.showToastOrAuthAlert(getActivity(), errorMessage, getString(R.string.error_refresh_comments));
                 return;
             }
 

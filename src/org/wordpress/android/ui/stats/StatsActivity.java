@@ -486,8 +486,11 @@ public class StatsActivity extends WPActionBarActivity {
                 if (mSignInDialog != null && mSignInDialog.isShowing()) {
                     return;
                 }
-
-                if (!isFinishing() && error.networkResponse != null && error.networkResponse.statusCode == 403) {
+                
+                if (isFinishing())
+                    return;
+                
+                if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                     // This site has the wrong WP.com credentials
                     AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
                     builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
@@ -506,10 +509,8 @@ public class StatsActivity extends WPActionBarActivity {
                     mSignInDialog.show();
                     return ;
                 }
-                if (!isFinishing()) {
-                    ToastUtils.showToast(getBaseContext(),R.string.error_refresh_stats,
-                            ToastUtils.Duration.LONG);
-                }
+               
+                ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
             }
         });
 
