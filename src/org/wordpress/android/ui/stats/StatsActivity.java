@@ -35,6 +35,7 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
@@ -182,8 +183,7 @@ public class StatsActivity extends WPActionBarActivity {
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
-                    Map<String, String> args = new HashMap<String, String>();
-                    args.put("jetpack_client_id", "jetpack_client_id");
+                    Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
                     };
@@ -192,15 +192,9 @@ public class StatsActivity extends WPActionBarActivity {
                         public void onSuccess(long id, Object result) {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
-                                if ( blogOptions.containsKey("jetpack_client_id") ) {
-                                    String apiBlogId = ((HashMap<?, ?>)blogOptions.get("jetpack_client_id")).get("value").toString();
-                                    if (apiBlogId != null && (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(apiBlogId))) {
-                                        currentBlog.setApi_blogid(apiBlogId);
-                                        currentBlog.save();
-                                        if (!isFinishing())
-                                            refreshStats();
-                                    }
-                                }
+                                ApiHelper.updateBlogOptions(currentBlog, blogOptions);
+                                if (!isFinishing())
+                                    refreshStats();
                             }
                         }
                         @Override
@@ -407,7 +401,9 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
-            refreshStats();
+            // make sure we have a connection before proceeding (will alert user if not)
+            if (NetworkUtils.checkConnection(this))
+                refreshStats();
             return true;
         } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
@@ -462,6 +458,8 @@ public class StatsActivity extends WPActionBarActivity {
 
     private void refreshStats() {
         if (WordPress.getCurrentBlog() == null)
+            return;
+        if (!NetworkUtils.isNetworkAvailable(this))
             return;
         
         String blogId;

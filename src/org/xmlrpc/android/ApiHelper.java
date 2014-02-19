@@ -42,6 +42,18 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
+    
+    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
+    
+    static {
+        blogOptionsXMLRPCParameters.put("software_version", "software_version");
+        blogOptionsXMLRPCParameters.put("post_thumbnail", "post_thumbnail");
+        blogOptionsXMLRPCParameters.put("jetpack_client_id", "jetpack_client_id");
+        blogOptionsXMLRPCParameters.put("blog_public", "blog_public");
+        blogOptionsXMLRPCParameters.put("home_url", "home_url");
+        blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
+        blogOptionsXMLRPCParameters.put("login_url", "login_url");
+    }
 
     public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
         protected String mErrorMessage;
@@ -84,10 +96,8 @@ public class ApiHelper {
                     mBlog.getPassword(), "show-supported" };
             try {
                 result = client.call("wp.getPostFormats", params);
-                return null;
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-                return null;
             } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
@@ -95,7 +105,7 @@ public class ApiHelper {
         }
 
         protected void onPostExecute(Object result) {
-            if (result != null) {
+            if (result != null && result instanceof HashMap) {
                 Map<?, ?> postFormats = (HashMap<?, ?>) result;
                 if (postFormats.size() > 0) {
                     Gson gson = new Gson();
@@ -110,6 +120,34 @@ public class ApiHelper {
         }
     }
 
+    public static synchronized void updateBlogOptions(Blog currentBlog, Map<?, ?> blogOptions) {
+        boolean isModified = false;
+        Gson gson = new Gson();
+        String blogOptionsJson = gson.toJson(blogOptions);
+        if (blogOptionsJson != null) {
+            isModified |= currentBlog.bsetBlogOptions(blogOptionsJson);
+        }
+        // Software version
+        if (!currentBlog.isDotcomFlag()) {
+            Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
+            String wpVersion = MapUtils.getMapStr(sv, "value");
+            if (wpVersion.length() > 0) {
+                isModified |= currentBlog.bsetWpVersion(wpVersion);
+            }
+        }
+        // Featured image support
+        Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
+        if (featuredImageHash != null) {
+            boolean featuredImageCapable = MapUtils.getMapBool(featuredImageHash, "value");
+            isModified |= currentBlog.bsetFeaturedImageCapable(featuredImageCapable);
+        } else {
+            isModified |= currentBlog.bsetFeaturedImageCapable(false);
+        }
+        if (isModified) {
+            WordPress.wpDB.saveBlog(currentBlog);
+        }
+    }
+    
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
@@ -139,34 +177,6 @@ public class ApiHelper {
             mCallback = callback;
         }
 
-        private void updateBlogOptions(Map<?, ?> blogOptions) {
-            boolean isModified = false;
-            Gson gson = new Gson();
-            String blogOptionsJson = gson.toJson(blogOptions);
-            if (blogOptionsJson != null) {
-                isModified |= mBlog.bsetBlogOptions(blogOptionsJson);
-            }
-            // Software version
-            if (!mBlog.isDotcomFlag()) {
-                Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
-                String wpVersion = MapUtils.getMapStr(sv, "value");
-                if (wpVersion.length() > 0) {
-                    isModified |= mBlog.bsetWpVersion(wpVersion);
-                }
-            }
-            // Featured image support
-            Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
-            if (featuredImageHash != null) {
-                boolean featuredImageCapable = MapUtils.getMapBool(featuredImageHash, "value");
-                isModified |= mBlog.bsetFeaturedImageCapable(featuredImageCapable);
-            } else {
-                isModified |= mBlog.bsetFeaturedImageCapable(false);
-            }
-            if (isModified) {
-                WordPress.wpDB.saveBlog(mBlog);
-            }
-        }
-
         private void updateBlogAdmin(Map<String, Object> userInfos) {
             if (userInfos.containsKey("roles") && ( userInfos.get("roles") instanceof Object[])) {
                 boolean isAdmin = false;
@@ -191,14 +201,7 @@ public class ApiHelper {
 
             if (!commentsOnly) {
                 // check the WP number if self-hosted
-                Map<String, String> hPost = new HashMap<String, String>();
-                hPost.put("software_version", "software_version");
-                hPost.put("post_thumbnail", "post_thumbnail");
-                hPost.put("jetpack_client_id", "jetpack_client_id");
-                hPost.put("blog_public", "blog_public");
-                hPost.put("home_url", "home_url");
-                hPost.put("admin_url", "admin_url");
-                hPost.put("login_url", "login_url");
+                Map<String, String> hPost = ApiHelper.blogOptionsXMLRPCParameters;
 
                 Object[] vParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                         mBlog.getPassword(), hPost};
@@ -215,7 +218,7 @@ public class ApiHelper {
 
                 if (versionResult != null) {
                     Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
-                    updateBlogOptions(blogOptions);
+                    ApiHelper.updateBlogOptions(mBlog, blogOptions);
                 }
 
                 // get theme post formats

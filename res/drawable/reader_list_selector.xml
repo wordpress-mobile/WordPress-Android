@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@color/reader_list_selector" android:state_pressed="true" />
-
-    <item android:drawable="@color/reader_list_selector" android:state_focused="true" />
+    <!-- see http://stackoverflow.com/a/5155600/1673548 -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/reader_list_selector" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/reader_list_selector" />
+        </shape>
+    </item>
 </selector>

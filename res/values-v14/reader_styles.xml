@@ -2,10 +2,12 @@
     <!--
         Holo versions of styles defined in values/reader_styles.xml
     -->
-    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
-    <style name="ReaderProgressBar.Small" parent="@android:style/Widget.Holo.Light.ProgressBar.Small" />
-    <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" />
+    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Holo.Light.Panel">
+        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 
-    <style name="ReaderSpinner" parent="@android:style/Widget.Holo.Light.Spinner" />
+    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
 
 </resources>

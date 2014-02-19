@@ -1109,6 +1109,9 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px; }")
               .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
 
+        // use a consistent top/bottom margin for paragraphs
+        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
+
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
@@ -1116,15 +1119,12 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
 
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
-
         // css for video div when no video thumb available (see processVideos)
         sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
               .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
 
-        // make sure links are shown in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
+        // make sure links don't overflow and are shown in the same color they are elsewhere in the app
+        sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
         // hide iframes & embeds (they won't work since script is disabled)
         sbHtml.append("  iframe, embed { display: none; }");

@@ -65,6 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:padding="8dp"
         android:layout_marginBottom="28dp"
         style="@style/WordPress.NUXPrimaryButton"/>
 
@@ -84,6 +85,7 @@
             android:layout_height="38dp"
             android:textColor="@color/white"
             android:text="@string/cancel"
+            android:padding="8dp"
             android:singleLine="true"
             android:layout_alignParentStart="true"
             android:gravity="center_vertical" />
@@ -94,6 +96,7 @@
             android:layout_height="38dp"
             style="@style/WordPress.NUXPrimaryButton"
             android:text="@string/nux_tutorial_get_started_title"
+            android:padding="8dp"
             android:singleLine="true"
             android:layout_alignParentEnd="true"
             android:gravity="center_vertical" />

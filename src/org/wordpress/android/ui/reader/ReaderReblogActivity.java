@@ -92,6 +92,12 @@ public class ReaderReblogActivity extends FragmentActivity {
             super.onBackPressed();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @SuppressLint("NewApi")
     private void loadPost() {
         if (SysUtils.canUseExecuteOnExecutor()) {
@@ -123,7 +129,7 @@ public class ReaderReblogActivity extends FragmentActivity {
     }
 
     private void submitReblog() {
-        if (mDestinationBlogId==0) {
+        if (mDestinationBlogId == 0) {
             ToastUtils.showToast(this, R.string.reader_toast_err_reblog_requires_blog);
             return;
         }
