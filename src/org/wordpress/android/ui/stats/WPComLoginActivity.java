@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -27,13 +25,8 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
