@@ -1,8 +1,12 @@
 package org.wordpress.android.functional.media;
 
+import com.robotium.solo.Solo;
+
 import org.wordpress.android.ActivityRobotiumTestCase;
 import org.wordpress.android.R;
 import org.wordpress.android.RobotiumUtils;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 
 public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
@@ -15,6 +19,18 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
         mSolo.clickOnText(mSolo.getString(R.string.media));
         mSolo.scrollDown();
     }
+
+    public void testLoadMediaLandscape() throws Exception {
+        mSolo.setActivityOrientation(Solo.LANDSCAPE);
+        login();
+        mSolo.clickOnText(mSolo.getString(R.string.media));
+        mSolo.scrollToBottom();
+        mSolo.setActivityOrientation(Solo.PORTRAIT);
+        mSolo.scrollToTop();
+        mSolo.setActivityOrientation(Solo.LANDSCAPE);
+        mSolo.scrollToBottom();
+    }
+
 
     public void testDeleteMedia() throws Exception {
         login();
@@ -72,19 +88,18 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
         mSolo.clickOnImage(0);
         RobotiumUtils.clickOnId(mSolo, "media_multiselect_actionbar_gallery");
         mSolo.goBack();
-        assertTrue("Should be back on the media browser screen", mSolo.searchText(mSolo.getString(R.string.media)));
+        mSolo.assertCurrentActivity("Should be back on MediaBrowserActivity", MediaBrowserActivity.class);
     }
 
     public void testCreateGalleryConfirm() throws Exception {
         login();
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
-        mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
+        mSolo.waitForText("wpid-pony.jpg", 1, 10000);
         mSolo.clickLongOnText("wpid-pony.jpg");
         mSolo.clickOnImage(0);
         RobotiumUtils.clickOnId(mSolo, "media_multiselect_actionbar_gallery");
         RobotiumUtils.clickOnId(mSolo, "menu_save");
-        assertTrue("Should be back on edit post screen", mSolo.searchText(mSolo.getString(R.string.title)));
+        mSolo.assertCurrentActivity("Should display EditPostActivity", EditPostActivity.class);
     }
-
 }
