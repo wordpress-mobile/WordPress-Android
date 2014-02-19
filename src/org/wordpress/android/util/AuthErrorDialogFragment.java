@@ -4,9 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -42,11 +40,6 @@ public class AuthErrorDialogFragment extends SherlockDialogFragment {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle(R.string.connection_error);
         if (mIsWPCom) {
-            // Remove wpcom password since it is no longer valid
-            SharedPreferences.Editor editor = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity()).edit();
-            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
-            editor.commit();
             b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.please_sign_in));
             b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
 
