@@ -55,12 +55,9 @@ public class ToastUtils {
         
         String message = null;
         boolean isInvalidTokenError = false;
-        
-        if (error.networkResponse != null && error.networkResponse.data != null) {
-            AppLog.e(T.API, String.format("Error message: %s", new String(error.networkResponse.data)));
-            String jsonString = new String(error.networkResponse.data);
+        JSONObject errorObj = VolleyUtils.volleyErrorToJSON(error);
+        if (errorObj != null) {
             try {
-                JSONObject errorObj = new JSONObject(jsonString);
                 message = (String) errorObj.get("message");
                 String error_code = (String) errorObj.get("error");
                 if (error_code!=null && error_code.equals("invalid_token"))
@@ -69,9 +66,7 @@ public class ToastUtils {
                 AppLog.e(T.API, e);
             }
         } else {
-            if (error.getMessage() != null && error.getMessage().contains("Limit reached") ) {
-                message = context.getString(R.string.limit_reached);
-            }
+            message = error.getMessage();
         }
 
         if (isInvalidTokenError && (context instanceof FragmentActivity)) {
@@ -85,6 +80,9 @@ public class ToastUtils {
             ft.commitAllowingStateLoss(); 
         } else {
             String fallbackErrorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) : friendlyMessage;
+            if (message != null && message.contains("Limit reached") ) {
+                message = context.getString(R.string.limit_reached);
+            }
             String errorMessage = TextUtils.isEmpty(message) ? fallbackErrorMessage :  message;
             showToast(context, errorMessage, Duration.LONG);
         }
