@@ -40,6 +40,10 @@ public class ActivityRobotiumTestCase<T extends Activity> extends ActivityInstru
         XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_XML;
         RestClientFactoryTest.sMode = RestClientFactoryTest.Mode.CUSTOMIZABLE;
         AppLog.v(AppLog.T.TESTS, "Modes set to customizable");
+
+        // Set default variant
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("default");
     }
 
     @Override

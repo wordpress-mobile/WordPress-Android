@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
@@ -61,7 +62,7 @@ public class RestClientCustomizableMock extends RestClient {
         return new RestRequest(Method.POST, path, body, listener, errorListener);
     }
 
-    private VolleyError createVolleyErrorFromFilename(String filename) {
+    private VolleyError forgeVolleyErrorFromFilename(String filename) {
         String strData = fileToString(filename);
         byte[] data = new byte[0];
         if (strData != null) {
@@ -70,6 +71,11 @@ public class RestClientCustomizableMock extends RestClient {
         NetworkResponse networkResponse = new NetworkResponse(400, data, null, false);
         VolleyError ve = new VolleyError(networkResponse);
         return ve;
+    }
+
+    private TimeoutError forgeVolleyTimeoutError() {
+        TimeoutError te = new TimeoutError();
+        return te;
     }
 
     private String fileToString(String filename) {
@@ -93,13 +99,23 @@ public class RestClientCustomizableMock extends RestClient {
         String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-").replace("?",
                 "-") + ".json";
 
-        if ("password-invalid".equals(mPrefix)) {
-            errorListener.onErrorResponse(createVolleyErrorFromFilename(filename));
+        if ("password-invalid".equals(mPrefix) && errorListener != null) {
+            errorListener.onErrorResponse(forgeVolleyErrorFromFilename(filename));
             return dummyReturnValue;
         }
 
-        if ("username-exists".equals(mPrefix)) {
-            errorListener.onErrorResponse(createVolleyErrorFromFilename(filename));
+        if ("username-exists".equals(mPrefix) && errorListener != null) {
+            errorListener.onErrorResponse(forgeVolleyErrorFromFilename(filename));
+            return dummyReturnValue;
+        }
+
+        if ("timeout".equals(mPrefix) && errorListener != null) {
+            errorListener.onErrorResponse(forgeVolleyTimeoutError());
+            return dummyReturnValue;
+        }
+
+        if ("site-reserved".equals(mPrefix) && errorListener != null) {
+            errorListener.onErrorResponse(forgeVolleyErrorFromFilename(filename));
             return dummyReturnValue;
         }
 

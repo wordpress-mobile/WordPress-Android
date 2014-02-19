@@ -14,26 +14,21 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
         super(PostsActivity.class);
     }
 
-    public void testLoadMedia() throws Exception {
-        login();
-        mSolo.clickOnText(mSolo.getString(R.string.media));
-        mSolo.scrollDown();
-    }
-
     public void testLoadMediaLandscape() throws Exception {
         mSolo.setActivityOrientation(Solo.LANDSCAPE);
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
-        mSolo.scrollToBottom();
         mSolo.setActivityOrientation(Solo.PORTRAIT);
-        mSolo.scrollToTop();
+        mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
         mSolo.setActivityOrientation(Solo.LANDSCAPE);
-        mSolo.scrollToBottom();
+        mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
     }
 
 
     public void testDeleteMedia() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
@@ -45,6 +40,7 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
 
     public void testDeleteMediaCancel() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-Urbanhero", 1 , 10000);
@@ -56,6 +52,7 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
 
     public void testDeleteMediaConfirm() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-Urbanhero", 1 , 10000);
@@ -67,6 +64,7 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
 
     public void testDeleteMultipleMedias() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-pony.jpg", 1 , 10000);
@@ -81,6 +79,7 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
 
     public void testCreateGalleryCancel() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-pony.jpg", 1, 10000);
@@ -93,6 +92,7 @@ public class MediaTest extends ActivityRobotiumTestCase<PostsActivity> {
 
     public void testCreateGalleryConfirm() throws Exception {
         login();
+        mSolo.waitForText(mSolo.getString(R.string.media));
         mSolo.clickOnText(mSolo.getString(R.string.media));
         // wait for reloading
         mSolo.waitForText("wpid-pony.jpg", 1, 10000);
