@@ -1137,7 +1137,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         String content;
         if (post.hasText()) {
-            content = post.getText();
+            // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
+            content = post.getText().replace("src=\"//", "src=\"http://");
             // insert video div before content if this is a VideoPress post (video otherwise won't appear)
             if (post.isVideoPress)
                 content = makeVideoDiv(post.getFeaturedVideo(), post.getFeaturedImage()) + content;
