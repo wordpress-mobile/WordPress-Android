@@ -42,6 +42,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -445,13 +448,9 @@ public class PostUploadService extends Service {
                 String mimeType = "", xRes = "", yRes = "";
 
                 if (videoUri.toString().contains("content:")) {
-                    String[] projection;
-                    Uri imgPath;
-
-                    projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
-                    imgPath = videoUri;
-
-                    Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
+                    
+                    String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
+                    Cursor cur = context.getContentResolver().query(videoUri, projection, null, null, null);
 
                     if (cur != null && cur.moveToFirst()) {
 
@@ -497,12 +496,34 @@ public class PostUploadService extends Service {
 
                 String videoName = videoFile.getName();
 
-                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                if (!TextUtils.isEmpty(fileExtension)) {
-                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                
+                if (TextUtils.isEmpty(mimeType)){
+                    MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                    if (!TextUtils.isEmpty(fileExtension)) {
+                        mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                    }
+                }
+                
+                //mimetype could be null or empty here
+                if (TextUtils.isEmpty(mimeType)) {
+                    try {
+                        String videoFilePathForGuessingMime = videoFile.getPath().contains("://") ? videoFile.getPath() : "file://"+videoFile.getPath();
+                        URL urlForGuessingMime = new URL(videoFilePathForGuessingMime);
+                        URLConnection uc = urlForGuessingMime.openConnection();
+                        String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
+                        // check if returned "content/unknown"
+                        if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown"))
+                            mimeType = guessedContentType;
+                    } catch (Exception e) {
+                        AppLog.e(T.API, "Error while trying to guess the content type for the Video here " + videoFile.getPath() +" with URLConnection", e);
+                    }
                 }
 
+                //mimetype could still be null here. Set an empty mime type that seems to work.
+                if(mimeType == null)
+                    mimeType = "";
+                
                 if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
                     mimeType = "video/mp4";
                 }
