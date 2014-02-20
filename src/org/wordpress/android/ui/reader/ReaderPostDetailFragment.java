@@ -57,6 +57,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -1463,7 +1464,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                     AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
-        }, 500L);
+        }, 750L);
     }
 
     private void showContent() {
@@ -1483,7 +1484,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
     }
 
-    private static final WebViewClient readerWebViewClient = new WebViewClient() {
+    private WebViewClient readerWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
             // show the webView now that it has loaded
@@ -1497,7 +1498,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             // containing iframes automatically try to open urls (without being clicked)
             // before the page has loaded
             if (view.getVisibility() == View.VISIBLE) {
-                ReaderActivityLauncher.openUrl(view.getContext(), url);
+                openUrl(url);
                 return true;
             } else {
                 return false;
@@ -1517,6 +1518,25 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (actionBar == null)
             return;
         actionBar.setTitle(title);
+    }
+
+    /*
+     * called when user taps a link in the webView
+     */
+    private void openUrl(String url) {
+        if (!hasActivity() || TextUtils.isEmpty(url))
+            return;
+        final OpenUrlType openUrlType;
+
+        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            // open YouTube videos in external app so they launch the YouTube player
+            openUrlType = OpenUrlType.EXTERNAL;
+        } else {
+            // open all other urls using an AuthenticatedWebViewActivity
+            openUrlType = OpenUrlType.INTERNAL;
+        }
+
+        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
     }
 
     private ActionBar getActionBar() {
