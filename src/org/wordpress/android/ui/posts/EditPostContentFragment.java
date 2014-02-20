@@ -658,14 +658,17 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
+            if (!hasActivity()) {
+                return;
+            }
             if (ssb != null && ssb.length() > 0) {
                 Editable postContentEditable = mContentEditText.getText();
-                if (postContentEditable != null)
+                if (postContentEditable != null) {
                     postContentEditable.insert(0, ssb);
-            } else {
-                if (hasActivity()) {
-                    Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                     .show();
             }
         }
     }
