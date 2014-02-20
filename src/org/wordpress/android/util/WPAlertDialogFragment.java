@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -14,8 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements DialogInterface.OnClickListener {
-    private static enum WPAlertDialogType {ERROR,    // simple ok dialog with error message
-                                           ALERT,    // dialog with yes/no and callback when positive button clicked
+    private static enum WPAlertDialogType {ALERT,    // simple ok dialog with error message
+                                           CONFIRM,  // dialog with yes/no and callback when positive button clicked
                                            URL_INFO} // info dialog that shows url when positive button clicked
 
     private static final String ARG_TITLE      = "title";
@@ -24,18 +25,21 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
     private static final String ARG_INFO_TITLE = "info-title";
     private static final String ARG_INFO_URL   = "info-url";
 
+    public interface OnDialogConfirmListener {
+        public void onDialogConfirm();
+    }
 
-    public static WPAlertDialogFragment newErrorDialog(String message) {
+    public static WPAlertDialogFragment newAlertDialog(String message) {
         String title = WordPress.getContext().getString(R.string.error_generic);
-        return newErrorDialog(title, message);
+        return newAlertDialog(title, message);
     }
-    public static WPAlertDialogFragment newErrorDialog(String title, String message) {
-        return newInstance(title, message, WPAlertDialogType.ERROR, null, null);
+    public static WPAlertDialogFragment newAlertDialog(String title, String message) {
+        return newInstance(title, message, WPAlertDialogType.ALERT, null, null);
     }
 
-    public static WPAlertDialogFragment newAlertDialog(String title,
-                                                       String message) {
-        return newInstance(title, message, WPAlertDialogType.ALERT, null, null);
+    public static WPAlertDialogFragment newConfirmDialog(String title,
+                                                         String message) {
+        return newInstance(title, message, WPAlertDialogType.CONFIRM, null, null);
     }
 
     public static WPAlertDialogFragment newUrlInfoDialog(String title,
@@ -56,7 +60,7 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
 
         bundle.putString(ARG_TITLE, title);
         bundle.putString(ARG_MESSAGE, message);
-        bundle.putSerializable(ARG_TYPE, (alertType != null ? alertType : WPAlertDialogType.ERROR));
+        bundle.putSerializable(ARG_TYPE, (alertType != null ? alertType : WPAlertDialogType.ALERT));
 
         if (alertType == WPAlertDialogType.URL_INFO) {
             bundle.putString(ARG_INFO_TITLE, infoTitle);
@@ -96,13 +100,12 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
         builder.setMessage(message);
 
         switch (dialogType) {
-            case ERROR:
+            case ALERT:
                 builder.setIcon(android.R.drawable.ic_dialog_alert);
                 builder.setNeutralButton(R.string.ok, this);
                 break;
 
-            case ALERT:
-                builder.setIcon(android.R.drawable.ic_dialog_alert);
+            case CONFIRM:
                 builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -118,26 +121,17 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
             case URL_INFO:
                 final String infoTitle = bundle.getString(ARG_INFO_TITLE);
                 final String infoURL = bundle.getString(ARG_INFO_URL);
-
-                builder.setIcon(android.R.drawable.ic_dialog_info);
-                builder.setPositiveButton(R.string.ok, this);
-
-                if (infoTitle != null && infoURL != null) {
-                    builder.setNeutralButton(infoTitle, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(infoTitle, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
+                            if (!TextUtils.isEmpty(infoURL))
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
                         }
-                    });
-                }
+                });
                 break;
         }
 
         return builder.create();
-    }
-
-    public interface OnDialogConfirmListener {
-        public void onDialogConfirm();
     }
 
     @Override
