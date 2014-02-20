@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -76,6 +78,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
+    // when true, javascript is enabled and embedded videos will play inside the app
+    private static final boolean ENABLE_EMBEDS = true;
+
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_POST_ID = "post_id";
     private static final String ARG_LIST_STATE = "list_state";
@@ -100,6 +105,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost = false;
     private boolean mIsUpdatingComments = false;
+    private boolean mWebViewIsPaused;
     private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
 
@@ -280,11 +286,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
 
-        // setup the webView - note that JavaScript is disabled since it's a security risk
-        // http://developer.android.com/training/articles/security-tips.html#WebView
+        // setup the webView - note that javaScript is only enabled when embeds are enabled
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.setWebViewClient(readerWebViewClient);
-        mWebView.getSettings().setJavaScriptEnabled(false);
+        mWebView.getSettings().setJavaScriptEnabled(ENABLE_EMBEDS);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
 
         // hide these views until the post is loaded
@@ -297,9 +302,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction()==MotionEvent.ACTION_UP) {
                     HitTestResult hr = ((WebView)v).getHitTestResult();
-                    if (hr!=null && (hr.getType()==HitTestResult.IMAGE_TYPE || hr.getType()==HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
                         String imageUrl = hr.getExtra();
-                        if (imageUrl==null)
+                        if (imageUrl == null)
                             return false;
                         // skip if image is a file: reference - this will be the video overlay, ie:
                         // file:///android_res/drawable/ic_reader_video_overlay.png
@@ -307,10 +312,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                             return false;
                         // skip if image is a video thumbnail (see processVideos)
                         if (mVideoThumbnailUrls.contains(imageUrl))
-                            return false;
-                        // skip if image is a VideoPress thumbnail (anchor around thumbnail will
-                        // take user to actual video - see ReaderPost.cleanupVideoPress)
-                        if (imageUrl.contains("videos.files."))
                             return false;
                         showPhotoViewer(imageUrl);
                         return true;
@@ -474,6 +475,22 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     @Override
+    public void onPause() {
+        // this ensures embedded videos don't continue to play when the fragment is no longer
+        // active or has been detached
+        if (ENABLE_EMBEDS)
+            pauseWebView();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ENABLE_EMBEDS)
+            resumeWebView();
+    }
+
+    @Override
     public void onDetach() {
         // return the activity's title to what it was
         if (getActivity() != null && mOriginalTitle != null) {
@@ -483,9 +500,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     /*
-         * called by this fragment whenever the post is changed - notifies ReaderActivity of the
-         * change so it can tell the list fragment to reflect the change
-         */
+     * called by this fragment whenever the post is changed - notifies ReaderActivity of the
+     * change so it can tell the list fragment to reflect the change
+     */
     private void doPostChanged(PostChangeType changeType) {
         if (mPostChangeListener == null || !hasPost() || changeType == null)
             return;
@@ -1146,6 +1163,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // title isn't strictly necessary, but source is invalid html5 without one
         sbHtml.append("<title>Reader Post</title>");
 
+        // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
+        sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>");
+
         // use "Open Sans" Google font
         sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
 
@@ -1163,15 +1183,24 @@ public class ReaderPostDetailFragment extends SherlockFragment {
          // use a consistent top/bottom margin for paragraphs
         sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
-        // css for video div when no video thumb available (see processVideos)
-        sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
-              .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
-
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
-        // hide iframes & embeds (they won't work since script is disabled)
-        sbHtml.append("  iframe, embed { display: none; }");
+        if (ENABLE_EMBEDS) {
+            // make sure embedded videos use 16:9 ratio (YouTube standard)
+            int videoWidth = 320;
+            int videoHeight = (int)(videoWidth * 0.5625f);
+            sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
+                  .append("                  height: ").append(videoHeight).append("px !important; }");
+        } else {
+            // hide iframes & embeds (they won't work when script is disabled)
+            sbHtml.append("  iframe, embed { display: none; }");
+            // css for video div when no video thumb available (see processVideos)
+            sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
+                  .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
+            // hide VideoPress divs that don't make sense on mobile
+            sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
+        }
 
         // don't allow any image to be wider than the screen
         sbHtml.append("  img { max-width: 100% !important; height: auto;}");
@@ -1182,9 +1211,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
-
-        // hide VideoPress divs that don't make sense on mobile
-        sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
 
         // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
         // content contains a tiled image gallery, remove the height params and replace the width
@@ -1202,9 +1228,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
-        sbHtml.append("</style></head><body>")
-                .append(processVideos(content))
-                .append("</body></html>");
+        sbHtml.append("</style></head><body>");
+        if (ENABLE_EMBEDS) {
+            sbHtml.append(content);
+        } else {
+            sbHtml.append(processVideos(content));
+        }
+        sbHtml.append("</body></html>");
 
         return sbHtml.toString();
     }
@@ -1545,6 +1575,26 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         } else {
             AppLog.w(T.READER, "reader post detail > null ActionBar");
             return null;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void pauseWebView() {
+        if (mWebViewIsPaused)
+            return;
+        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mWebViewIsPaused = true;
+            mWebView.onPause();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void resumeWebView() {
+        if (!mWebViewIsPaused)
+            return;
+        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mWebViewIsPaused = false;
+            mWebView.onResume();
         }
     }
 }
