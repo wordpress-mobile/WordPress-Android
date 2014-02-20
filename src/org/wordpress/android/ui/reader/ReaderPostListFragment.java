@@ -628,6 +628,8 @@ public class ReaderPostListFragment extends SherlockFragment
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
+                    if (!hasActivity())
+                        return;
                     AppLog.d(T.READER, "reader post list > ActionBar adapter loaded");
                     selectTagInActionBar(getCurrentTag());
                 }

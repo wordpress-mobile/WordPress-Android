@@ -967,12 +967,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
+        if (!hasActivity())
+            return;
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
         showFollowedStatus(txtFollow, isFollowed);
     }
 
     private void showFollowedStatus(final TextView txtFollow, boolean isFollowed) {
+        if (txtFollow == null)
+            return;
         final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
         txtFollow.setText(followText);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
