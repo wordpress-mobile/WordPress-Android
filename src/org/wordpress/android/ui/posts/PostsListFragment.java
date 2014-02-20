@@ -34,7 +34,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
@@ -64,7 +63,6 @@ public class PostsListFragment extends ListFragment {
     private int mLoadedBlogId;
 
     public List<String> imageUrl = new Vector<String>();
-    public String errorMsg = "";
     public int totalDrafts = 0;
     public boolean isPage = false, shouldSelectAfterLoad = false;
     public int numRecords = 20;
@@ -380,7 +378,7 @@ public class PostsListFragment extends ListFragment {
             if (loadedPosts == null) {
                 refreshPosts(false);
                 if (!isPage)
-                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(getActivity())).execute(false);
             }
             mListScrollPositionManager.restoreScrollOffset();
             return false;
@@ -587,13 +585,6 @@ public class PostsListFragment extends ListFragment {
         protected void onPostExecute(Boolean result) {
             if (isCancelled() || !result) {
                 mOnRefreshListener.onRefresh(false);
-                if (getActivity() == null)
-                    return;
-                if (errorMsg != "" && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
-                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
-                    errorMsg = "";
-                }
                 return;
             }
 
@@ -647,9 +638,6 @@ public class PostsListFragment extends ListFragment {
                     }
                 }
             } catch (XMLRPCException e) {
-                errorMsg = e.getMessage();
-                if (errorMsg == null)
-                    errorMsg = getResources().getString(R.string.error_generic);
             }
 
             return success;

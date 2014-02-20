@@ -19,8 +19,12 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -71,22 +75,22 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        
+
         overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
 
         setTitle(getResources().getText(R.string.settings));
-        
+
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
         addPreferencesFromResource(R.xml.preferences);
-        
+
         mNotificationsGroup = (PreferenceGroup)findPreference("wp_pref_notifications_category");
 
         OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null) { // cancelled dismiss keyoard
+                if (newValue != null) { // cancelled dismiss keyboard
                     preference.setSummary(newValue.toString());
                 }
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -134,7 +138,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }
         }
-        
+
         //Passcode Lock not supported
         if( AppLockManager.getInstance().isAppLockFeatureEnabled() == false ) {
             PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
@@ -147,13 +151,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ); 
+                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() );
                             return false;
                         }
                     }
                     );
         }
-        
+
         displayPreferences();
     }
 
@@ -180,19 +184,20 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         super.onResume();
 
         // the set of blogs may have changed while we were away
-        updateBlogsPreferenceCategory();
-        
+        updateSelfHostedBlogsPreferenceCategory();
+        refreshWPComAuthCategory();
+
         //update Passcode lock row if available
         if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
             CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
-            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) { 
+            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) {
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
                 passcodeEnabledCheckBoxPreference.setChecked(false);
             }
         }
     }
-    
+
     @Override
     protected void onPause() {
         overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
@@ -208,12 +213,72 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference)
+    {
+        super.onPreferenceTreeClick(preferenceScreen, preference);
+        // Workaround for Action Bar Home Button not functional with nested PreferenceScreen
+        if (preference!=null && preference instanceof PreferenceScreen) {
+            // If the user has clicked on a preference screen, set up the action bar
+            if (preference instanceof PreferenceScreen) {
+                initializeActionBar((PreferenceScreen) preference);
+            }
+        }
+        return false;
+    }
+    
+    /** Sets up the action bar for an {@link PreferenceScreen} */
+    public static void initializeActionBar(PreferenceScreen preferenceScreen) {
+        if (android.os.Build.VERSION.SDK_INT < 11)
+            return;
+       
+        final Dialog dialog = preferenceScreen.getDialog();
+
+        if (dialog != null) {
+            // Initialize the action bar
+            dialog.getActionBar().setDisplayHomeAsUpEnabled(true);
+
+            // Apply custom home button area click listener to close the PreferenceScreen because PreferenceScreens are dialogs which swallow
+            // events instead of passing to the activity
+            // Related Issue: https://code.google.com/p/android/issues/detail?id=4611
+            View homeBtn = dialog.findViewById(android.R.id.home);
+
+            if (homeBtn != null) {
+                OnClickListener dismissDialogClickListener = new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                };
+
+                // Prepare yourselves for some hacky programming
+                ViewParent homeBtnContainer = homeBtn.getParent();
+
+                // The home button is an ImageView inside a FrameLayout
+                if (homeBtnContainer instanceof FrameLayout) {
+                    ViewGroup containerParent = (ViewGroup) homeBtnContainer.getParent();
+
+                    if (containerParent instanceof LinearLayout) {
+                        // This view also contains the title text, set the whole view as clickable
+                        ((LinearLayout) containerParent).setOnClickListener(dismissDialogClickListener);
+                    } else {
+                        // Just set it on the home button
+                        ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
+                    }
+                } else {
+                    // The 'If all else fails' default case
+                    homeBtn.setOnClickListener(dismissDialogClickListener);
+                }
+            }    
+        }
+    }
+    
     /**
-     * Update the "blogs" preference category to contain a preference for each blog to configure
-     * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.
+     * Update the "wpcom blogs" preference category to contain a preference for each blog to configure
+     * blog-specific settings.
      */
-    protected void updateBlogsPreferenceCategory() {
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
+    protected void updateSelfHostedBlogsPreferenceCategory() {
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_self_hosted_blogs");
         blogsCategory.removeAll();
         int order = 0;
 
@@ -227,41 +292,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
 
-        List<Map<String, Object>> allAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
-        if (allAccounts.size() > 1) {
-            // Add show/hide buttons
-            Preference manageBlogPreference = new Preference(this);
-            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
-            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
-            manageBlogPreference.setIntent(intentManage);
-            manageBlogPreference.setOrder(order++);
-            blogsCategory.addPreference(manageBlogPreference);
-        }
-
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
-        for (Map<String, Object> account : accounts) {
-            String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
-            int accountId = (Integer) account.get("id");
-
-            Preference blogSettingsPreference = new Preference(this);
-            blogSettingsPreference.setTitle(blogName);
-
-            try {
-                // set blog hostname as preference summary if it differs from the blog name
-                URL blogUrl = new URL(account.get("url").toString());
-                if (!blogName.equals(blogUrl.getHost())) {
-                    blogSettingsPreference.setSummary(blogUrl.getHost());
-                }
-            } catch (MalformedURLException e) {
-                // do nothing
-            }
-
-            Intent intent = new Intent(this, BlogPreferencesActivity.class);
-            intent.putExtra("id", accountId);
-            blogSettingsPreference.setIntent(intent);
-            blogSettingsPreference.setOrder(order++);
-            blogsCategory.addPreference(blogSettingsPreference);
-        }
+        // Add self hosted list
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=0", null);
+        addAccounts(blogsCategory, accounts, order);
     }
 
     protected int getEnabledBlogsCount() {
@@ -276,9 +309,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        // WordPress.com auth area and notifications
-        refreshWPComAuthCategory();
-
         // Post signature
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             hidePostSignatureCategory();
@@ -296,7 +326,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
             }
         }
-         
+
         if (DeviceUtils.getInstance().isBlackBerry()) {
             PreferenceCategory appAboutSectionName = (PreferenceCategory) findPreference("wp_pref_app_about_section");
             appAboutSectionName.setTitle(getString(R.string.app_title_blackberry));
@@ -304,7 +334,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             appName.setTitle(getString(R.string.app_title_blackberry));
         }
     }
-    
+
     /**
      * Listens for changes to notification type settings
      */
@@ -325,7 +355,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             return false;
         }
     };
-    
+
     /**
      * Listens for changes to notification blogs settings
      */
@@ -349,7 +379,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             return false;
         }
     };
-    
+
     /**
      * Listens for changes to notification enabled toggle
      */
@@ -370,14 +400,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     dialog.setContentView(R.layout.notifications_enabled_dialog);
                     dialog.setTitle(R.string.notifications);
                     dialog.setCancelable(true);
-            
+
                     Button offButton = (Button) dialog.findViewById(R.id.notificationsOff);
                     offButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             enabledButtonClick(v);
                             dialog.dismiss();
-                        }   
+                        }
                     });
                     Button oneHourButton = (Button) dialog.findViewById(R.id.notifications1Hour);
                     oneHourButton.setOnClickListener(new OnClickListener() {
@@ -385,7 +415,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                         public void onClick(View v) {
                             enabledButtonClick(v);
                             dialog.dismiss();
-                        }   
+                        }
                     });
                     Button eightHoursButton = (Button) dialog.findViewById(R.id.notifications8Hours);
                     eightHoursButton.setOnClickListener(new OnClickListener() {
@@ -393,16 +423,16 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                         public void onClick(View v) {
                             enabledButtonClick(v);
                             dialog.dismiss();
-                        }   
+                        }
                     });
                     dialog.show();
                 }
-                
+
             }
             return false;
         }
     };
-    
+
     private void enabledButtonClick(View v) {
         StringMap<String> muteUntilMap = (StringMap<String>) mNotificationSettings
                 .get("mute_until");
@@ -453,67 +483,110 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
     }
 
-    private void refreshWPComAuthCategory() {
-        PreferenceCategory wpcomCategory = (PreferenceCategory) findPreference("wp_pref_wpcom_auth");
-        wpcomCategory.removeAll();
-        
+    private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String username = mSettings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             Preference usernamePref = new Preference(this);
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
-            wpcomCategory.addPreference(usernamePref);
+            usernamePref.setOrder(order);
+            wpComCategory.addPreference(usernamePref);
 
             Preference createWPComBlogPref = new Preference(this);
             createWPComBlogPref.setTitle(getString(R.string.create_new_blog_wpcom));
             Intent intent = new Intent(this, NewBlogActivity.class);
             createWPComBlogPref.setIntent(intent);
-            wpcomCategory.addPreference(createWPComBlogPref);
-
+            createWPComBlogPref.setOrder(order + 1);
+            wpComCategory.addPreference(createWPComBlogPref);
 
             loadNotifications();
         } else {
             Preference signInPref = new Preference(this);
             signInPref.setTitle(getString(R.string.sign_in));
             signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
-            wpcomCategory.addPreference(signInPref);
-            
+            wpComCategory.addPreference(signInPref);
+
             PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
             rootScreen.removePreference(mNotificationsGroup);
         }
     }
 
-    
+    private void addWpComShowHideButton(PreferenceCategory wpComCategory, int order) {
+        if (WordPress.wpDB.getNumDotComAccounts() > 0) {
+            Preference manageBlogPreference = new Preference(this);
+            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
+            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
+            manageBlogPreference.setIntent(intentManage);
+            manageBlogPreference.setOrder(order);
+            wpComCategory.addPreference(manageBlogPreference);
+        }
+    }
+
+    private void addAccounts(PreferenceCategory category, List<Map<String, Object>> blogs, int order) {
+        for (Map<String, Object> account : blogs) {
+            String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
+            int accountId = (Integer) account.get("id");
+
+            Preference blogSettingsPreference = new Preference(this);
+            blogSettingsPreference.setTitle(blogName);
+
+            try {
+                // set blog hostname as preference summary if it differs from the blog name
+                URL blogUrl = new URL(account.get("url").toString());
+                if (!blogName.equals(blogUrl.getHost())) {
+                    blogSettingsPreference.setSummary(blogUrl.getHost());
+                }
+            } catch (MalformedURLException e) {
+                // do nothing
+            }
+
+            Intent intent = new Intent(this, BlogPreferencesActivity.class);
+            intent.putExtra("id", accountId);
+            blogSettingsPreference.setIntent(intent);
+            blogSettingsPreference.setOrder(order++);
+            category.addPreference(blogSettingsPreference);
+        }
+    }
+
+    private void refreshWPComAuthCategory() {
+        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference("wp_pref_wpcom");
+        wpComCategory.removeAll();
+        addWpComSignIn(wpComCategory, 0);
+        addWpComShowHideButton(wpComCategory, 5);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag = 1 AND isHidden = 0", null);
+        addAccounts(wpComCategory, accounts, 10);
+    }
+
     private static Comparator<StringMap<?>> BlogNameComparatorForMutedBlogsList = new Comparator<StringMap<?>>() {
-        
         public int compare(StringMap<?> blog1, StringMap<?> blog2) {
- 
             StringMap<?> blogMap1 = (StringMap<?>)blog1;
             StringMap<?> blogMap2 = (StringMap<?>)blog2;
-            
+
             String blogName1 = blogMap1.get("blog_name").toString();
             if (blogName1.length() == 0) {
                 blogName1 = blogMap1.get("url").toString();
             }
-            
+
             String blogName2 = blogMap2.get("blog_name").toString();
             if (blogName2.length() == 0) {
                 blogName2 = blogMap2.get("url").toString();
             }
-            
+
           return blogName1.compareToIgnoreCase(blogName2);
- 
+
         }
- 
+
     };
-    
+
     private void loadNotifications() {
-        
+        AppLog.d(T.NOTIFS, "Preferences > loading notification settings");
+
         // Add notifications group back in case it was previously removed from being logged out
         PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
         rootScreen.addPreference(mNotificationsGroup);
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference("wp_pref_notification_types");
+        notificationTypesCategory.removeAll();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         String settingsJson = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
@@ -529,7 +602,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
 
                 Object[] mTypeList = mNotificationSettings.keySet().toArray();
-                
+
                 for (int i = 0; i < mTypeList.length; i++) {
                     if (!mTypeList[i].equals("muted_blogs") && !mTypeList[i].equals("mute_until")) {
                         StringMap<?> typeMap = (StringMap<?>) mNotificationSettings
@@ -544,6 +617,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 }
 
                 PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
+                selectBlogsCategory.removeAll();
                 for (int i = 0; i < mMutedBlogsList.size(); i++) {
                     StringMap<?> blogMap = (StringMap<?>) mMutedBlogsList.get(i);
                     String blogName = (String) blogMap.get("blog_name");
@@ -553,6 +627,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     blogPreference.setChecked(!MapUtils.getMapBool(blogMap, "value"));
                     blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
                     blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
+                    // set the order here so it matches the key in mMutedBlogsList since
+                    // mMuteBlogChangeListener uses the order to locate the clicked blog
+                    blogPreference.setOrder(i);
                     selectBlogsCategory.addPreference(blogPreference);
                 }
 
@@ -563,10 +640,10 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 AppLog.v(T.NOTIFS, "Failed to load notification settings.");
                 return;
             }
-            
+
             CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
             notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);
-            
+
         }
     }
 

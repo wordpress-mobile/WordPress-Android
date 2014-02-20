@@ -84,9 +84,13 @@
     <color name="reader_message_bar_orange">#ccf1831e</color>   <!-- orange_medium with alpha -->
     <color name="reader_list_selector">#77c8eefc</color>        <!-- blue_extra_light with alpha -->
 
+    <!-- comment status colors -->
+    <color name="comment_status_approved">@color/blue_extra_dark</color>
+    <color name="comment_status_unapproved">@color/orange_medium</color>
+    <color name="comment_status_spam">#dd3d36</color>
+
     <!-- NUX Colors -->
-    <color name="nux_primary_button_disabled">#99FFFFFF</color>
-    <color name="nux_tos">#77FFFFFF</color>
+    <color name="nux_grey_button">#bbdded</color>
     <color name="nux_alert_bg">#EE000000</color>
     <color name="nux_background">@color/blue_new_kid</color>
     <color name="nux_eye_icon_color">#c7c7c7</color>

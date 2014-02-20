@@ -383,12 +383,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
         } else if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
-            int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-            int[] loc = new int[2];
-            view.getLocationOnScreen(loc);
-            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
-                    loc[1] + view.getHeight() + y_offset);
-
+            if (view != null) {
+                int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
+                int[] loc = new int[2];
+                view.getLocationOnScreen(loc);
+                mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
+                        loc[1] + view.getHeight() + y_offset);
+            } else {
+                // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
+                View gridView = findViewById(R.id.media_gridview);
+                mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+            }
             return true;
         } else if (itemId == R.id.menu_search) {
             stopAnimatingRefreshButton(mRefreshMenuItem);

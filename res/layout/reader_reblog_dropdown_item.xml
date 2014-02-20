@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text"
-    style="@style/ReaderTextView.SpinnerDropdownItem"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:ellipsize="end"
-    android:maxLines="2" />

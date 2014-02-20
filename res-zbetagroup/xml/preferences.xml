@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="wp_pref_root" >
+
+    <PreferenceCategory
+        android:title="@string/wpcom_blogs"
+        android:key="wp_pref_wpcom" >
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_pref_self_hosted_blogs"
+        android:title="@string/self_hosted_blogs">
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/notifications"
+        android:key="wp_pref_notifications_category" >
+        <PreferenceScreen
+            android:key="wp_pref_notifications"
+            android:persistent="false"
+            android:title="@string/manage_notifications">
+            <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="wp_pref_notifications_enabled"
+                    android:title="@string/enable_notifications" />
+            <PreferenceCategory android:title="@string/types"
+                android:key="wp_pref_notification_types" >
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/blogs"
+                android:key="wp_pref_notification_blogs" >
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/options" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="wp_pref_notification_sound"
+                    android:title="@string/notification_sound" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="wp_pref_notification_vibrate"
+                    android:title="@string/notification_vibrate" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="wp_pref_notification_light"
+                    android:title="@string/notification_blink" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/post_signature"
+        android:key="wp_post_signature">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_signature_enabled"
+            android:title="@string/add_tagline" />
+
+        <org.wordpress.android.util.WPEditTextPreference
+            android:key="wp_pref_post_signature"
+            android:title="@string/post_signature" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_passcode_lock_category"
+        android:persistent="false"
+        android:title="@string/passcode_preference_title" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_passlock_enabled"
+            android:title="@string/passcode_preference_title">
+              <intent android:targetClass="org.wordpress.passcodelock.PasscodePreferencesActivity"
+                android:targetPackage="org.wordpress.android.beta"/>
+       </CheckBoxPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_share_pref"
+        android:persistent="false"
+        android:title="@string/share_preference_title" >
+        <Preference
+            android:key="wp_reset_share_pref"
+            android:persistent="false"
+            android:title="@string/reset_auto_share_preference">
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_pref_app_about_section"
+        android:title="@string/about">
+        <Preference android:title="@string/app_title"
+                    android:key="wp_pref_app_title">
+            <intent android:targetClass="org.wordpress.android.ui.prefs.AboutActivity"
+                    android:targetPackage="org.wordpress.android.beta"/>
+        </Preference>
+        <Preference android:title="@string/open_source_licenses">
+            <intent android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
+                    android:targetPackage="org.wordpress.android.beta"/>
+        </Preference>
+        <Preference android:title="@string/reader_title_applog">
+            <intent android:targetClass="org.wordpress.android.ui.AppLogViewerActivity"
+                    android:targetPackage="org.wordpress.android.beta"/>
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="wp_pref_app_signout_section"
+        android:title="@string/sign_out">
+        <Preference android:key="wp_pref_sign_out"
+            android:title="@string/sign_out" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

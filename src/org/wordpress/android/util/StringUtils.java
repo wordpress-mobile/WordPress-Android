@@ -15,10 +15,12 @@ import java.util.List;
 public class StringUtils {
 
     public static String[] mergeStringArrays(String array1[], String array2[]) {
-        if (array1 == null || array1.length == 0)
+        if (array1 == null || array1.length == 0) {
             return array2;
-        if (array2 == null || array2.length == 0)
+        }
+        if (array2 == null || array2.length == 0) {
             return array1;
+        }
         List<String> array1List = Arrays.asList(array1);
         List<String> array2List = Arrays.asList(array2);
         List<String> result = new ArrayList<String>(array1List);
@@ -29,7 +31,6 @@ public class StringUtils {
     }
 
     public static String convertHTMLTagsForUpload(String source) {
-
         // bold
         source = source.replace("<b>", "<strong>");
         source = source.replace("</b>", "</strong>");
@@ -39,7 +40,6 @@ public class StringUtils {
         source = source.replace("</i>", "</em>");
 
         return source;
-
     }
 
     public static String convertHTMLTagsForDisplay(String source) {
@@ -53,7 +53,6 @@ public class StringUtils {
         source = source.replace("</em>", "</i>");
 
         return source;
-
     }
 
     public static String addPTags(String source) {
@@ -64,8 +63,8 @@ public class StringUtils {
             for (int i = 0; i < asploded.length; i++) {
                 String trimmed = asploded[i].trim();
                 if (trimmed.length() > 0) {
-                    trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>")
-                            .replace("<br>\n", "<br>").replace("\n", "<br>");
+                    trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>").replace("<br>\n", "<br>")
+                                     .replace("\n", "<br>");
                     wrappedHTML.append("<p>");
                     wrappedHTML.append(trimmed);
                     wrappedHTML.append("</p>");
@@ -92,16 +91,18 @@ public class StringUtils {
     public static String getMd5Hash(String input) {
         BigInteger number = getMd5IntHash(input);
         String md5 = number.toString(16);
-        while (md5.length() < 32)
+        while (md5.length() < 32) {
             md5 = "0" + md5;
+        }
         return md5;
     }
 
     public static String unescapeHTML(String html) {
-        if (html != null)
+        if (html != null) {
             return Html.fromHtml(html).toString();
-        else
+        } else {
             return "";
+        }
     }
 
     /*
@@ -110,8 +111,9 @@ public class StringUtils {
      * this replaces two spaces with "&nbsp;"
      */
     private static String escapeHtml(final String text) {
-        if (text==null)
+        if (text == null) {
             return "";
+        }
 
         StringBuilder out = new StringBuilder();
         int length = text.length();
@@ -146,9 +148,20 @@ public class StringUtils {
      * returns empty string if passed string is null, otherwise returns passed string
      */
     public static String notNullStr(String s) {
-        if (s==null)
+        if (s == null) {
             return "";
+        }
         return s;
+    }
+
+    /**
+     * returns true if two strings are equal or two strings are null
+     */
+    public static boolean equals(String s1, String s2) {
+        if (s1 == null) {
+            return s2 == null;
+        }
+        return s1.equals(s2);
     }
 
     /*
@@ -157,17 +170,16 @@ public class StringUtils {
      */
     public static String capitalize(final String str) {
         int strLen;
-        if (str == null || (strLen = str.length()) == 0)
+        if (str == null || (strLen = str.length()) == 0) {
             return str;
+        }
 
         char firstChar = str.charAt(0);
-        if (Character.isTitleCase(firstChar))
+        if (Character.isTitleCase(firstChar)) {
             return str;
+        }
 
-        return new StringBuilder(strLen)
-                .append(Character.toTitleCase(firstChar))
-                .append(str.substring(1))
-                .toString();
+        return new StringBuilder(strLen).append(Character.toTitleCase(firstChar)).append(str.substring(1)).toString();
     }
 
     /*
@@ -180,18 +192,73 @@ public class StringUtils {
     }
 
     public static String getHost(String url) {
-        if (TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url)) {
             return "";
+        }
 
         int doubleslash = url.indexOf("//");
-        if (doubleslash == -1)
+        if (doubleslash == -1) {
             doubleslash = 0;
-        else
+        } else {
             doubleslash += 2;
+        }
 
         int end = url.indexOf('/', doubleslash);
         end = (end >= 0) ? end : url.length();
 
         return url.substring(doubleslash, end);
+    }
+
+    public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
+        final int length = inputString.length();
+        StringBuilder out = new StringBuilder(); // Used to hold the output.
+        for (int offset = 0; offset < length; ) {
+            final int codepoint = inputString.codePointAt(offset);
+            final char current = inputString.charAt(offset);
+            if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
+                if (Emoticons.wpSmiliesCodePointToText.get(codepoint) != null) {
+                    out.append(Emoticons.wpSmiliesCodePointToText.get(codepoint));
+                } else {
+                    final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
+                    out.append(htmlEscapedChar);
+                }
+            } else {
+                out.append(current);
+            }
+            offset += Character.charCount(codepoint);
+        }
+        return out.toString();
+    }
+
+    /**
+     * This method ensures that the output String has only
+     * valid XML unicode characters as specified by the
+     * XML 1.0 standard. For reference, please see
+     * <a href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char">the
+     * standard</a>. This method will return an empty
+     * String if the input is null or empty.
+     *
+     * @param in The String whose non-valid characters we want to remove.
+     * @return The in String, stripped of non-valid characters.
+     */
+    public static final String stripNonValidXMLCharacters(String in) {
+        StringBuilder out = new StringBuilder(); // Used to hold the output.
+        char current; // Used to reference the current character.
+
+        if (in == null || ("".equals(in))) {
+            return ""; // vacancy test.
+        }
+        for (int i = 0; i < in.length(); i++) {
+            current = in.charAt(i); // NOTE: No IndexOutOfBoundsException caught here; it should not happen.
+            if ((current == 0x9) ||
+                (current == 0xA) ||
+                (current == 0xD) ||
+                ((current >= 0x20) && (current <= 0xD7FF)) ||
+                ((current >= 0xE000) && (current <= 0xFFFD)) ||
+                ((current >= 0x10000) && (current <= 0x10FFFF))) {
+                out.append(current);
+            }
+        }
+        return out.toString();
     }
 }

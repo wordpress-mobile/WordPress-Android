@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -266,13 +267,17 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
                         endProgress();
-                        finishThisStuff(username);
+                        if (hasActivity()) {
+                            finishThisStuff(username);
+                        }
                     }
 
                     @Override
                     public void onError(int messageId) {
                         endProgress();
-                        showError(getString(messageId));
+                        if (hasActivity()) {
+                            showError(getString(messageId));
+                        }
                     }
                 });
         createUserAndBlog.startCreateUserAndBlogProcess();
@@ -288,6 +293,17 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             mEmailTextField.setText(suggest);
             mEmailTextField.setSelection(suggest.length());
         }
+    }
+
+    private void initInfoButton(View rootView) {
+        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoBUtton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                startActivity(newAccountIntent);
+            }
+        });
     }
 
     @Override
@@ -353,6 +369,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             }
         });
         initPasswordVisibilityButton(rootView, mPasswordTextField);
+        initInfoButton(rootView);
         return rootView;
     }
 }

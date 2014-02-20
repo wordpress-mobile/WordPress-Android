@@ -11,9 +11,11 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -284,7 +286,7 @@ public class Blog {
     }
 
     public boolean bsetWpVersion(String wpVersion) {
-        if (this.wpVersion.equals(wpVersion)) {
+        if (StringUtils.equals(this.wpVersion, wpVersion)) {
             return false;
         }
         setWpVersion(wpVersion);
@@ -333,7 +335,7 @@ public class Blog {
     }
 
     public boolean bsetPostFormats(String postFormats) {
-        if (this.postFormats.equals(postFormats)) {
+        if (StringUtils.equals(this.postFormats, postFormats)) {
             return false;
         }
         setPostFormats(postFormats);
@@ -341,7 +343,7 @@ public class Blog {
     }
 
     public int getUnmoderatedCommentCount() {
-        return WordPress.wpDB.getUnmoderatedCommentCount(this.localTableBlogId);
+        return CommentTable.getUnmoderatedCommentCount(this.localTableBlogId);
     }
 
     public boolean isScaledImage() {
@@ -366,20 +368,24 @@ public class Blog {
 
     public void setBlogOptions(String blogOptions) {
         this.blogOptions = blogOptions;
+        try {
+            JSONObject options = new JSONObject(blogOptions);
+            String  jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+            if (jetpackBlogId != null)
+                this.setApi_blogid(jetpackBlogId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // TODO: it's ugly to compare json strings, we have to normalize both strings before
     // comparison or compare JSON objects after parsing
     public boolean bsetBlogOptions(String blogOptions) {
-        if (this.blogOptions.equals(blogOptions)) {
+        if (StringUtils.equals(this.blogOptions, blogOptions)) {
             return false;
         }
         setBlogOptions(blogOptions);
         return true;
-    }
-
-    public boolean isActive() {
-        return !password.equals("");
     }
 
     public boolean isAdmin() {
@@ -428,7 +434,7 @@ public class Blog {
             Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
             StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
             String blogPublicOptionValue = blogPublicOption.get("value").toString();
-            if (blogPublicOptionValue.equals("-1")) {
+            if ("-1".equals(blogPublicOptionValue)) {
                 return true;
             }
         } catch (Exception e) {

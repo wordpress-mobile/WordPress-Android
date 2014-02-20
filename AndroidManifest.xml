@@ -19,12 +19,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
 
-    <!-- GCM configuration -->
-    <permission
-        android:name="org.wordpress.android.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+    <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -50,14 +45,14 @@
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
-        android:label="WordPress"
+        android:label="@string/app_name" 
         android:theme="@style/WordPress" >
 
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock"
@@ -66,6 +61,7 @@
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.accounts.NuxHelpActivity"/>
 
         <!-- Preferences activities -->
         <activity android:name=".ui.prefs.AboutActivity" />
@@ -86,8 +82,7 @@
             android:name=".ui.comments.CommentsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".ui.comments.EditCommentActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.comments.EditCommentActivity" />
 
         <!-- Posts activities -->
         <activity
@@ -270,23 +265,6 @@
             android:name=".util.MediaDeleteService"
             android:label="Media Delete Service" >
         </service>
-
-        <service android:name="org.wordpress.android.GCMIntentService" />
-        <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="org.wordpress.android" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name=".providers.StatsContentProvider"
-            android:authorities="org.wordpress.android.providers.StatsContentProvider"
-            android:exported="false" />
 
     </application>
 

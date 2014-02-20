@@ -25,7 +25,9 @@
     <dimen name="graph_font_size">8sp</dimen>
 
     <dimen name="share_action_dialog_width">280dp</dimen>
-    <dimen name="comments_moderation_bar_height">52dp</dimen>
+
+    <dimen name="post_editor_content_side_margin">20dp</dimen>
+    <dimen name="post_editor_content_side_margin_gingerbread">8dp</dimen>
 
     <!--
         native reader dimens
@@ -34,6 +36,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_extra_large">16dp</dimen>
 
     <!-- left/right margin for posts in both list and detail views -->
     <dimen name="reader_list_margin_normal">8dp</dimen>
@@ -51,7 +54,7 @@
 
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_large">72dp</dimen>
+    <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
     <dimen name="reader_button_icon_small">40dp</dimen>
@@ -85,6 +88,7 @@
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_button_height">50dp</dimen>
+    <dimen name="nux_width">600dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">20dp</dimen>

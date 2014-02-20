@@ -32,17 +32,18 @@ public class DateTimeUtils {
     };
 
     /*
-     * converts a date to a relative time span ("8h", "3d", "yesterday", etc.)
+     * converts a date to a relative time span ("8h", "3d", etc.) - similar to
+     * DateUtils.getRelativeTimeSpanString but returns shorter result
      */
-    public static String javaDateToTimeSpan(Date date) {
-        if (date==null)
+    public static String javaDateToTimeSpan(final Date date) {
+        if (date == null)
             return "";
 
-        long localTime = date.getTime();
-        long currentMs = System.currentTimeMillis();
+        long passedTime = date.getTime();
+        long currentTime = System.currentTimeMillis();
 
         // return "now" if less than a minute has elapsed
-        long secondsSince = (currentMs - localTime) / 1000;
+        long secondsSince = (currentTime - passedTime) / 1000;
         if (secondsSince < 60)
             return WordPress.getContext().getString(R.string.reader_timespan_now);
 
@@ -61,8 +62,12 @@ public class DateTimeUtils {
         if (daysSince < 7)
             return Long.toString(daysSince) + "d";
 
-        // date is older, so fall back to using getRelativeTimeSpanString
-        return DateUtils.getRelativeTimeSpanString(localTime, currentMs, DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString();
+        // less than a year old, so return day/month without year (ex: Jan 30)
+        if (daysSince < 365)
+            return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_ALL);
+
+        // date is older, so include year (ex: Jan 30, 2013)
+        return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_ABBREV_ALL);
     }
 
     /*

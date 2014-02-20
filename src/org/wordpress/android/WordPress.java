@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteException;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.os.Bundle;
@@ -97,10 +98,8 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         versionName = getVersionName();
-        wpDB = new WordPressDB(this);
-
+        initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
-
         mContext = this;
 
         // Volley networking setup
@@ -133,6 +132,48 @@ public class WordPress extends Application {
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
          }
+
+        //Enable log recording on beta build
+        if (NotificationUtils.getAppPushNotificationsName().equals("org.wordpress.android.beta.build")) {
+            AppLog.enableRecording(true);
+        }
+    }
+
+    private void initWpDb() {
+        if (!createAndVerifyWpDb()) {
+            AppLog.e(T.DB, "Invalid database, sign out user and delete database");
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            currentBlog = null;
+            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
+            editor.commit();
+            if (wpDB != null) {
+                wpDB.updateLastBlogId(-1);
+                wpDB.deleteDatabase(this);
+            }
+            wpDB = new WordPressDB(this);
+        }
+    }
+
+    private boolean createAndVerifyWpDb() {
+        try {
+            wpDB = new WordPressDB(this);
+            // verify account data
+            List<Map<String, Object>> accounts = wpDB.getAllAccounts();
+            for (Map<String, Object> account : accounts) {
+                if (account == null || account.get("blogName") == null || account.get("url") == null) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLiteException sqle) {
+            AppLog.e(T.DB, sqle);
+            return false;
+        } catch (RuntimeException re) {
+            AppLog.e(T.DB, re);
+            return false;
+        }
     }
 
     public static Context getContext() {
@@ -184,11 +225,11 @@ public class WordPress extends Application {
                     AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
-                AppLog.v(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
+                AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
             }
         }
     }
-    
+
     /**
      * Get versionName from Manifest.xml
      *
@@ -307,11 +348,11 @@ public class WordPress extends Application {
      * returns the blogID of the current blog
      */
     public static int getCurrentRemoteBlogId() {
-        return (currentBlog != null ? currentBlog.getRemoteBlogId() : -1);
+        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
     }
 
     public static int getCurrentLocalTableBlogId() {
-        return (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
+        return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
     /**
@@ -361,7 +402,7 @@ public class WordPress extends Application {
                 blog = wpDB.getBlogForDotComBlogId(siteId);
 
                 if (blog != null) {
-                    // get the access token from api key field
+                    // get the access token from api key field. Hetpack blogs likned with a different wpcom account have the token stored here.
                     token = blog.getApi_key();
 
                     // valid oauth tokens are 64 chars
@@ -369,15 +410,18 @@ public class WordPress extends Application {
                         token = null;
                     }
 
-                    // if there is no access token, but this is the dotcom flag
-                    if (token == null && (blog.isDotcomFlag() &&
-                            blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, "")))) {
-                        token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                    // if there is no access token, we need to check if it is a dotcom blog, or a jetpack blog linked with the main wpcom account.
+                    if (token == null){ 
+                        if (blog.isDotcomFlag() && blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))){ 
+                            token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                        } else if (blog.isJetpackPowered()) {
+                            if (blog.getDotcom_username() == null ||  blog.getDotcom_username().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))) {
+                                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+                            }
+                        }
                     }
                 }
-
             }
-
             if (token != null) {
                 // we have an access token, set the request and send it
                 request.sendWithAccessToken(token);
@@ -454,6 +498,20 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
+        removeWpComUserRelatedData(context);
+
+        wpDB.deleteAllAccounts();
+        wpDB.updateLastBlogId(-1);
+        currentBlog = null;
+
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        context.sendBroadcast(broadcastIntent);
+    }
+
+    public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
         VolleyUtils.cancelAllRequests(requestQueue);
@@ -466,16 +524,11 @@ public class WordPress extends Application {
             AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
 
-        SharedPreferences.Editor editor = PreferenceManager
-                .getDefaultSharedPreferences(context).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
         editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
         editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
         editor.commit();
-
-        wpDB.deleteAllAccounts();
-        wpDB.updateLastBlogId(-1);
-        currentBlog = null;
 
         // reset all reader-related prefs & data
         UserPrefs.reset();
@@ -483,14 +536,8 @@ public class WordPress extends Application {
 
         //Delete all the Notes
         WordPress.wpDB.clearNotes();
-
-        // send broadcast that user is signing out - this is received by WPActionBarActivity
-        // descendants
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        context.sendBroadcast(broadcastIntent);
     }
-
+    
     public static String getLoginUrl(Blog blog) {
         String loginURL = null;
         Gson gson = new Gson();
@@ -529,7 +576,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -537,7 +584,7 @@ public class WordPress extends Application {
                         defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     }
                     headers.putAll(defaultHeaders);
-                    
+
                     return super.performRequest(request, headers);
                 }
             };
@@ -556,7 +603,7 @@ public class WordPress extends Application {
                         authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
                         headers.putAll(authParams);
                     }
-                    
+
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
                     if (DeviceUtils.getInstance().isBlackBerry()) {
                         defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
@@ -572,23 +619,23 @@ public class WordPress extends Application {
             return stack;
         }
     }
-    
+
     /*
      * Detect when the app goes to the background and come back to the foreground.
-     * 
-     * Turns out that when your app has no more visible UI, a callback is triggered. 
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two). 
+     *
+     * Turns out that when your app has no more visible UI, a callback is triggered.
+     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
      * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
-     * 
+     *
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
-     * 
+     *
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-        
+
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
-        
+
         boolean background = false;
 
         @Override
@@ -608,24 +655,24 @@ public class WordPress extends Application {
             } else {
                 background = false;
             }
-            
+
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
- 
+
         }
-        
+
         private boolean mustPingPushNotificationsBackend() {
-            
+
             if (WordPress.hasValidWPComCredentials(mContext) == false)
                 return false;
-            
+
             if (background == false)
                 return false;
-            
+
             background = false;
-            
+
             if (lastPingDate == null)
                 return false; //first startup
 
@@ -633,19 +680,19 @@ public class WordPress extends Application {
             long nowInMilliseconds = now.getTime();
             long lastPingDateInMilliseconds = lastPingDate.getTime();
             int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {         
+            if (secondsPassed >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
 
             return false;
         }
-        
+
         @Override
         public void onActivityResumed(Activity arg0) {
             if(mustPingPushNotificationsBackend()) {
                 //uhhh ohhh!
-                
+
                 if (WordPress.hasValidWPComCredentials(mContext)) {
                     String token = null;
                     try {
@@ -665,7 +712,7 @@ public class WordPress extends Application {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                     }
                 }
-                
+
             }
         }
 
@@ -691,6 +738,6 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityStopped(Activity arg0) {
-        }    
+        }
     }
 }

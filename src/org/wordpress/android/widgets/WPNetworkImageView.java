@@ -22,7 +22,6 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
 
@@ -62,15 +61,12 @@ public class WPNetworkImageView extends ImageView {
         setImageUrl(url, imageType, null);
     }
     public void setImageUrl(String url, ImageType imageType, ImageListener imageListener) {
-        if (imageType == ImageType.AVATAR) {
-            mUrl = GravatarUtils.fixGravatarUrl(url);
-        } else {
-            mUrl = url;
-        }
+        mUrl = url;
         mImageType = imageType;
         mImageListener = imageListener;
-        if (url==null) {
-            showDefaultImage(mImageType, false);
+
+        if (TextUtils.isEmpty(mUrl)) {
+            showErrorImage(mImageType);
         } else {
             // The URL has potentially changed. See if we need to load it.
             loadImageIfNecessary(false);
@@ -84,7 +80,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = ImageType.VIDEO;
 
         if (TextUtils.isEmpty(videoUrl)) {
-            showDefaultImage(ImageType.VIDEO, false);
+            showDefaultImage(ImageType.VIDEO);
             return;
         }
 
@@ -95,7 +91,7 @@ public class WPNetworkImageView extends ImageView {
             return;
         }
 
-        showDefaultImage(ImageType.VIDEO, false);
+        showDefaultImage(ImageType.VIDEO);
 
         // vimeo videos require network request to get thumbnail
         if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
@@ -135,7 +131,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showDefaultImage(mImageType, false);
+            showErrorImage(mImageType);
             return;
         }
 
@@ -147,7 +143,7 @@ public class WPNetworkImageView extends ImageView {
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
-                setImageDrawable(null);
+                showDefaultImage(mImageType);
             }
         }
 
@@ -157,8 +153,8 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showDefaultImage(mImageType, true);
-                        if (mImageListener!=null)
+                        showErrorImage(mImageType);
+                        if (mImageListener != null)
                             mImageListener.onImageLoaded(false);
                     }
 
@@ -199,7 +195,7 @@ public class WPNetworkImageView extends ImageView {
             if (mImageListener!=null)
                 mImageListener.onImageLoaded(true);
         } else {
-            showDefaultImage(mImageType, false);
+            showDefaultImage(mImageType);
         }
     }
 
@@ -228,19 +224,43 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    public void showDefaultImage(ImageType imageType, boolean isError) {
-        if (imageType == ImageType.PHOTO_FULL) {
-            // null default for full-screen photos
-            setImageDrawable(null);
-        } else {
-            int color = getContext().getResources().getColor(isError ? R.color.grey_medium : R.color.grey_extra_light);
-            setImageDrawable(new ColorDrawable(color));
+    private int getColorRes(int resId) {
+        return getContext().getResources().getColor(resId);
+    }
+
+    private void showErrorImage(ImageType imageType) {
+        switch (imageType) {
+            case PHOTO_FULL:
+                // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            case AVATAR:
+                // "mystery man" for failed avatars
+                setImageResource(R.drawable.placeholder);
+                break;
+            default :
+                // medium grey box for all others
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
+                break;
+        }
+    }
+
+    private void showDefaultImage(ImageType imageType) {
+        switch (imageType) {
+            case PHOTO_FULL:
+                // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            default :
+                // light grey box for all others
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
+                break;
         }
     }
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mImageType== ImageType.VIDEO)
+        if (mImageType == ImageType.VIDEO)
             drawVideoOverlay(canvas);
     }
 

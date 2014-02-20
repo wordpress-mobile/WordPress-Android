@@ -2,25 +2,24 @@ package org.wordpress.android.ui.stats;
 
 import java.util.Locale;
 
+import android.support.v4.app.FragmentTransaction;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.Tab;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -37,7 +36,7 @@ import org.wordpress.android.util.Utils;
  * The tablet fragments are provided by subclasses implementing {@code getFragment(int)}
  * </p>
  */
-public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorInterface {
+public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements OnCheckedChangeListener, StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -46,13 +45,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     
     // the active fragment has the tag CHILD_TAG:<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
-    private int mChildIndex = -1;
-    
-    protected ViewPager mViewPager;
-    protected HorizontalTabView mTabView;
-    protected FragmentStatePagerAdapter mAdapter;
 
     private RadioGroup mRadioGroup;
+    private FrameLayout mFragmentContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +75,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
         String[] titles = getTabTitles();
+
+        mFragmentContainer = (FrameLayout) view.findViewById(R.id.stats_pager_container);
         
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
         mRadioGroup.setVisibility(View.VISIBLE);
@@ -99,27 +96,44 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
-        
+
         loadFragmentIndex(mSelectedButtonIndex);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        mSelectedButtonIndex  = group.indexOfChild(group.findViewById(checkedId));
+        // checkedId will be -1 when the selection is cleared
+        if (checkedId == -1) {
+            AppLog.w(AppLog.T.STATS, "checkedId is -1");
+            return;
+        }
+
+        int index  = group.indexOfChild(group.findViewById(checkedId));
+        if (index == -1) {
+            AppLog.w(AppLog.T.STATS, "invalid checkedId");
+            return;
+        }
+
+        mSelectedButtonIndex = index;
         loadFragmentIndex(mSelectedButtonIndex);
     }
-    
-    private void loadFragmentIndex(int index) {
-        mChildIndex = index;
-        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
-            Fragment fragment = getFragment(index);
-            getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex).commit();
-        }
-    }
 
-    @Override
-    public void onTabSelected(Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
+    private void loadFragmentIndex(int index) {
+        if (index == -1) {
+            AppLog.w(AppLog.T.STATS, "invalid fragment index");
+            return;
+        }
+
+        String childTag = CHILD_TAG + ":" + index;
+        if (getChildFragmentManager().findFragmentByTag(childTag) == null) {
+            //set minimum height for container, so we don't get a janky fragment transaction
+            mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
+            Fragment fragment = getFragment(index);
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
+            ft.replace(R.id.stats_pager_container, fragment, childTag);
+            ft.commit();
+        }
     }
 
     @Override
@@ -178,8 +192,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     }
 
     private void setLabel(int position, String label) {
-        if (mTabView != null)
-            mTabView.setTabText(position, label.toUpperCase(Locale.getDefault()));
         if (mRadioGroup != null) 
             ((RadioButton) mRadioGroup.getChildAt(position)).setText(label);
     }

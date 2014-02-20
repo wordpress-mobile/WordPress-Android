@@ -15,20 +15,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class NotificationsListFragment extends ListFragment {
@@ -50,6 +46,7 @@ public class NotificationsListFragment extends ListFragment {
      * For providing more notes data when getting to the end of the list
      */
     public interface NoteProvider {
+        public boolean canRequestMore();
         public void onRequestMoreNotifications(ListView listView, ListAdapter adapter);
     }
 
@@ -62,14 +59,14 @@ public class NotificationsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
+        return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
+        mProgressFooterView.setVisibility(View.GONE);
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnScrollListener(new ListScrollListener());
@@ -94,16 +91,6 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
-    @Override
-    public void setListAdapter(ListAdapter adapter) {
-        super.setListAdapter(adapter);
-    }
-
-    public void setNotesAdapter(NotesAdapter adapter) {
-        mNotesAdapter = adapter;
-        this.setListAdapter(adapter);
-    }
-
     public NotesAdapter getNotesAdapter() {
         return mNotesAdapter;
     }
@@ -116,14 +103,15 @@ public class NotificationsListFragment extends ListFragment {
         mNoteClickListener = listener;
     }
 
-    protected void requestMoreNotifications() {
-        if (mNoteProvider != null) {
+    private void requestMoreNotifications() {
+        if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
+            showProgressFooter();
             mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
         }
     }
 
     class NotesAdapter extends ArrayAdapter<Note> {
-        int mAvatarSz;
+        final int mAvatarSz;
 
         NotesAdapter() {
             this(getActivity());
@@ -135,7 +123,7 @@ public class NotificationsListFragment extends ListFragment {
 
         NotesAdapter(Context context, List<Note> notes) {
             super(context, R.layout.note_list_item, R.id.note_label, notes);
-            mAvatarSz = DisplayUtils.dpToPx(context, 48);
+            mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         }
 
         @Override
@@ -147,7 +135,7 @@ public class NotificationsListFragment extends ListFragment {
             final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
             final TextView txtDate = (TextView) view.findViewById(R.id.text_date);
             final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            final NetworkImageView imgAvatar = (NetworkImageView) view.findViewById(R.id.note_avatar);
+            final WPNetworkImageView imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             final ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
 
             if (note.isCommentType()) {
@@ -158,16 +146,10 @@ public class NotificationsListFragment extends ListFragment {
             }
 
             txtDate.setText(note.getTimeSpan());
-
-            // gravatars default to having s=256 which is considerably larger than we need here, so
-            // change the s= param to the actual size used here
-            String avatarUrl = note.getIconURL();
-            if (avatarUrl!=null && avatarUrl.contains("s=256"))
-                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(avatarUrl), WordPress.imageLoader);
-
             imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
+
+            String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
             unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
             placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
@@ -180,17 +162,14 @@ public class NotificationsListFragment extends ListFragment {
             if (notes.size() == 0) {
                 // No more notes available
                 mAllNotesLoaded = true;
-                if (mProgressFooterView != null)
-                    mProgressFooterView.setVisibility(View.GONE);
+                hideProgressFooter();
             } else {
                 // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
                 // will be triggered for each added note
                 setNotifyOnChange(false);
                 try {
-                    Iterator<Note> noteIterator = notes.iterator();
-                    while(noteIterator.hasNext()){
-                        add(noteIterator.next());
-                    }
+                    for (Note note: notes)
+                        add(note);
                 } finally {
                     setNotifyOnChange(true);
                 }
@@ -217,12 +196,11 @@ public class NotificationsListFragment extends ListFragment {
         @Override
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
-            if (mProgressFooterView != null)
-                mProgressFooterView.setVisibility(View.GONE);
+            hideProgressFooter();
         }
 
         // HashMap of drawables for note types
-        private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
+        private final HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
         private Drawable getDrawableForType(String noteType) {
             if (noteType==null)
                 return null;
@@ -250,19 +228,27 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
+    /*
+     * show/hide the "Loading" footer
+     */
+    private void showProgressFooter() {
+        if (mProgressFooterView != null)
+            mProgressFooterView.setVisibility(View.VISIBLE);
+    }
+    private void hideProgressFooter() {
+        if (mProgressFooterView != null)
+            mProgressFooterView.setVisibility(View.GONE);
+    }
+
+
     private class ListScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (mAllNotesLoaded)
+            if (mAllNotesLoaded || visibleItemCount == 0)
                 return;
 
             // if we're within 5 from the last item we should ask for more items
             if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
-                if (totalItemCount <= 1)
-                    mProgressFooterView.setVisibility(View.GONE);
-                else
-                    mProgressFooterView.setVisibility(View.VISIBLE);
-
                 requestMoreNotifications();
             }
         }

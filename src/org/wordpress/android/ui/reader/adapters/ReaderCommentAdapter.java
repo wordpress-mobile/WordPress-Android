@@ -139,16 +139,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
+        holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
-
-        if (comment.hasAvatar()) {
-            holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            holder.imgAvatar.setImageResource(R.drawable.placeholder);
-        }
 
         // tapping avatar or author name opens blog in browser
         if (comment.hasAuthorUrl()) {

@@ -36,6 +36,7 @@ import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -372,7 +373,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         if (getActivity() != null) {
                             String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP ? getString(
                                     R.string.media_error_no_permission) : getString(R.string.error_refresh_media);
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            ToastUtils.showToastOrAuthAlert(getActivity(), errorMessage, message);
                         }
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
@@ -474,13 +475,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
+            setEmptyViewVisible(false);
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
             fmt.setCalendar(startDate);
             String formattedStart = fmt.format(startDate.getTime());
             String formattedEnd = fmt.format(endDate.getTime());
 
-            mResultView.setVisibility(View.VISIBLE);
+            // TODO: replace hard-coded text with string resource
             mResultView.setText("Displaying media from " + formattedStart + " to " + formattedEnd);
             return cursor;
         } else {

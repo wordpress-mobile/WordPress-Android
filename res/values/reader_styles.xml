@@ -2,6 +2,7 @@
 <!--
     styles used by the native reader - all margins & padding use margin_xxxx sizes
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
+    see also reader_styles in values-v14 for holo versions of some of these
 -->
 <resources>
     <!-- activity themes -->
@@ -72,10 +73,12 @@
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -198,18 +201,5 @@
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
-    <style name="ReaderProgressBar.Small" parent="@android:style/Widget.ProgressBar.Small" />
-    <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal" />
 
-    <!-- spinners -->
-    <style name="ReaderSpinner" parent="@android:style/Widget.Spinner" />
-    <style name="ReaderTextView.SpinnerItem" parebt="?android:attr/spinnerItemStyle">
-        <item name="android:textColor">@color/grey_extra_dark</item>
-        <item name="android:background">@android:color/white</item>
-    </style>
-    <style name="ReaderTextView.SpinnerDropdownItem" parebt="?android:attr/spinnerDropDownItemStyle">
-        <item name="android:padding">@dimen/margin_large</item>
-        <item name="android:textColor">@color/grey_extra_dark</item>
-        <item name="android:background">@color/grey_extra_light</item>
-    </style>
 </resources>

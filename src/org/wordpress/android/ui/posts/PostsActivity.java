@@ -30,6 +30,7 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -89,6 +90,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
                 }
             }).execute(false);
 
@@ -220,6 +222,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
+        if (WordPress.getCurrentBlog() == null)
+            return;
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             if (!shouldPrompt)
@@ -325,6 +329,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     public void newPost() {
         WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        if (WordPress.getCurrentBlog() == null) {
+            if (!isFinishing())
+                Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         Intent i = new Intent(this, EditPostActivity.class);
@@ -339,7 +348,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();
@@ -809,6 +818,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         popPostDetail();
         attemptToSelectPost();
         mPostList.loadPosts(false);
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
     }
 }

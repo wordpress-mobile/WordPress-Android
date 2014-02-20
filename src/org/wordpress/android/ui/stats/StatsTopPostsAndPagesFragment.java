@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
  */
-public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
