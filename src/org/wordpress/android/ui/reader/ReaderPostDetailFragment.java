@@ -46,6 +46,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUserIdList;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -1119,13 +1120,23 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
     }
 
+    private boolean hasStaticMenuDrawer() {
+        return (getActivity() instanceof WPActionBarActivity)
+            && (((WPActionBarActivity) getActivity()).isStaticMenuDrawer());
+    }
+
     /*
      * size to use for images that fit the full width of the listView item
      */
     private int getFullSizeImageWidth() {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
         int marginWidth = getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
-        return displayWidth - (marginWidth * 2);
+        int imageWidth = displayWidth - (marginWidth * 2);
+        if (hasStaticMenuDrawer()) {
+            int drawerWidth = getResources().getDimensionPixelOffset(R.dimen.menu_drawer_width);
+            imageWidth -= drawerWidth;
+        }
+        return imageWidth;
     }
 
     /*
@@ -1153,6 +1164,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
         int marginSmall = getResources().getDimensionPixelSize(R.dimen.margin_small);
         int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        int fullSizeImageWidth = getFullSizeImageWidth();
 
         final Context context = WordPress.getContext();
         final String linkColor = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
@@ -1188,8 +1200,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
         if (ENABLE_EMBEDS) {
-            // make sure embedded videos use 16:9 ratio (YouTube standard)
-            int videoWidth = 320;
+            // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
+            int videoWidth =  DisplayUtils.pxToDp(getActivity(), fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int)(videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
@@ -1218,7 +1230,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // params with ones that make images fit the width of the listView item, then adjust the
         // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
         if (content.contains("tiled-gallery-item")) {
-            String widthParam = "w=" + Integer.toString(getFullSizeImageWidth());
+            String widthParam = "w=" + Integer.toString(fullSizeImageWidth);
             content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
                   .append("  div.tiled-gallery-item img { ")
@@ -1515,7 +1527,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
     }
 
-    private WebViewClient readerWebViewClient = new WebViewClient() {
+    private final WebViewClient readerWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
             // show the webView now that it has loaded
