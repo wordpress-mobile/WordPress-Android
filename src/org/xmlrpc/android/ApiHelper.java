@@ -1,6 +1,5 @@
 package org.xmlrpc.android;
 
-import android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -24,7 +23,6 @@ import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
-
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
@@ -45,9 +43,9 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
     /** Called when the activity is first created. */
     private static XMLRPCClient client;
-    
+
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
-    
+
     static {
         blogOptionsXMLRPCParameters.put("software_version", "software_version");
         blogOptionsXMLRPCParameters.put("post_thumbnail", "post_thumbnail");
@@ -150,14 +148,14 @@ public class ApiHelper {
             WordPress.wpDB.saveBlog(currentBlog);
         }
     }
-    
+
     public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<Activity> activityWeakRef;
-        
+
         public VerifyCredentialsCallback(Activity refActivity) {
             this.activityWeakRef = new WeakReference<Activity>(refActivity);
         }
-       
+
         @Override
         public void onSuccess() {
         }
@@ -171,8 +169,8 @@ public class ApiHelper {
             ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
         }
     }
-    
-    
+
+
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
@@ -314,7 +312,7 @@ public class ApiHelper {
             return null;
 
         Map<?, ?> contentHash;
-        int commentID, postID;
+        long commentID, postID;
         String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
         java.util.Date date;
         CommentList comments = new CommentList();
@@ -323,8 +321,8 @@ public class ApiHelper {
             contentHash = (Map<?, ?>) result[ctr];
             content = contentHash.get("content").toString();
             status = contentHash.get("status").toString();
-            postID = Integer.parseInt(contentHash.get("post_id").toString());
-            commentID = Integer.parseInt(contentHash.get("comment_id").toString());
+            postID = Long.parseLong(contentHash.get("post_id").toString());
+            commentID = Long.parseLong(contentHash.get("comment_id").toString());
             authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();

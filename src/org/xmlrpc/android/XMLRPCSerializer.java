@@ -1,5 +1,17 @@
 package org.xmlrpc.android;
 
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Xml;
+
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -17,18 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
-
-import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Xml;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 class XMLRPCSerializer {
     static final String TAG_NAME = "name";
@@ -49,7 +49,7 @@ class XMLRPCSerializer {
 
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
-    
+
     private static final XmlSerializer serializeTester;
 
     static {
@@ -72,7 +72,10 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
         } else
         if (object instanceof Long) {
-            serializer.startTag(null, TYPE_I8).text(object.toString()).endTag(null, TYPE_I8);
+            // Note Long should be represented by a TYPE_I8 but the WordPress end point doesn't support <i8> tag
+            // Long usually represents IDs, so we convert them to string
+            serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
+            AppLog.w(T.API, "long type could be misinterpreted when sent to the WordPress XMLRPC end point");
         } else
         if (object instanceof Double || object instanceof Float) {
             serializer.startTag(null, TYPE_DOUBLE).text(object.toString()).endTag(null, TYPE_DOUBLE);
@@ -192,7 +195,7 @@ class XMLRPCSerializer {
             return StringUtils.stripNonValidXMLCharacters(noEmojiString);
         }
     }
-    
+
     static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, TAG_VALUE);
 
