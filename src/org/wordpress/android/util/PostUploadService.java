@@ -166,6 +166,7 @@ public class PostUploadService extends Service {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                         notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 n.flags |= Notification.FLAG_AUTO_CANCEL;
+                n.icon = android.R.drawable.stat_notify_error;
                 String errorText = context.getResources().getText(R.string.upload_failed).toString();
                 if (mIsMediaError)
                     errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
