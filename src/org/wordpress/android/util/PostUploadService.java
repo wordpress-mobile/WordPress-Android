@@ -495,11 +495,10 @@ public class PostUploadService extends Service {
                     return null;
                 }
                 
-                Hashtable<String, String> mimeTypeAndFileName = getMediaFilenameAndMimeType(videoFile, false);
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = mimeTypeAndFileName.get("mimetype");
+                    mimeType = getMediaFileMimeType(videoFile, false);
                 }
-                String videoName =  mimeTypeAndFileName.get("filename");
+                String videoName = getMediaFileName(videoFile, mimeType);
                 
                 // try to upload the video
                 Map<String, Object> m = new HashMap<String, Object>();
@@ -583,11 +582,10 @@ public class PostUploadService extends Service {
                     return null;
                 }
 
-                Hashtable<String, String> mimeTypeAndFileName = getMediaFilenameAndMimeType(imageFile, false);
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = mimeTypeAndFileName.get("mimetype");
+                    mimeType = getMediaFileMimeType(imageFile, false);
                 }
-                String fileName =  mimeTypeAndFileName.get("filename");
+                String fileName = getMediaFileName(imageFile, mimeType);
 
                 ImageHelper ih = new ImageHelper();
                 orientation = ih.getExifOrientation(path, orientation);
@@ -726,13 +724,11 @@ public class PostUploadService extends Service {
             return content;
         }
 
-        private Hashtable<String, String> getMediaFilenameAndMimeType(File mediaFile, boolean isImage) {
-            String originalFileName = mediaFile.getName();
+        private String getMediaFileMimeType(File mediaFile, boolean isImage) {
+            String originalFileName = mediaFile.getName().toLowerCase();
             String mimeType = UrlUtils.getUrlMimeType(originalFileName);
-            boolean shouldFixfileName = false;
             
             if (TextUtils.isEmpty(mimeType)) {
-                shouldFixfileName = true;  //if mimeType is null at this point, we even need to fix the filename since the extension is not available in the name, or it's unknown
                 try {
                     String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
                     URL urlForGuessingMime = new URL(filePathForGuessingMime);
@@ -774,17 +770,34 @@ public class PostUploadService extends Service {
                 }
             }
             
-            if (shouldFixfileName) { //Add the extension to filename
-                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtension = mimeTypeMap.getExtensionFromMimeType(mimeType);
-                originalFileName += "." + fileExtension; ;
-            }
-            Hashtable<String, String> returnValues = new Hashtable<String, String>();
-            returnValues.put("mimetype", mimeType);
-            returnValues.put("filename", originalFileName);
-            return returnValues;
+            return mimeType;
         }
-
+        
+        private String getMediaFileName(File mediaFile, String mimeType) {
+            String originalFileName = mediaFile.getName().toLowerCase();
+            String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
+            if (!TextUtils.isEmpty(extension))  //File name already has the extension in it
+                return originalFileName;
+            
+            if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
+                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType).toLowerCase();
+                if (!TextUtils.isEmpty(fileExtensionFromMimeType)) {
+                    originalFileName += "." + fileExtensionFromMimeType;
+                } else {
+                    //We're still without an extension - split the mime type and retrieve it
+                   String[] split = mimeType.split("/");
+                   String guessedExt = split.length > 1 ? split[1] : split[0];
+                   originalFileName += "." + guessedExt;
+                }
+            } else {
+                //No mimetype and no extension!!
+                AppLog.e(T.API, "No mimetype and no extension for " + mediaFile.getPath());
+            }
+            
+            return originalFileName;
+        }
+        
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
