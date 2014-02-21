@@ -48,6 +48,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -494,13 +495,14 @@ public class PostUploadService extends Service {
                     return null;
                 }
                 
+                Hashtable<String, String> mimeTypeAndFileName = getMediaFilenameAndMimeType(videoFile, false);
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaMimeType(videoFile, false);
+                    mimeType = mimeTypeAndFileName.get("mimetype");
                 }
-
+                String videoName =  mimeTypeAndFileName.get("filename");
+                
                 // try to upload the video
                 Map<String, Object> m = new HashMap<String, Object>();
-                String videoName = videoFile.getName();
                 m.put("name", videoName);
                 m.put("type", mimeType);
                 m.put("bits", mf);
@@ -581,9 +583,11 @@ public class PostUploadService extends Service {
                     return null;
                 }
 
+                Hashtable<String, String> mimeTypeAndFileName = getMediaFilenameAndMimeType(imageFile, false);
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaMimeType(imageFile, true);
+                    mimeType = mimeTypeAndFileName.get("mimetype");
                 }
+                String fileName =  mimeTypeAndFileName.get("filename");
 
                 ImageHelper ih = new ImageHelper();
                 orientation = ih.getExifOrientation(path, orientation);
@@ -609,7 +613,7 @@ public class PostUploadService extends Service {
                     }
                 }
                 
-                String fileName = imageFile.getName();
+
                 if (shouldUploadResizedVersion) {
                     byte[] bytes;
                     byte[] finalBytes;
@@ -722,11 +726,13 @@ public class PostUploadService extends Service {
             return content;
         }
 
-        private String getMediaMimeType(File mediaFile, boolean isImage) {
-            String videoName = mediaFile.getName();
-            String mimeType = UrlUtils.getUrlMimeType(videoName);
-          
+        private Hashtable<String, String> getMediaFilenameAndMimeType(File mediaFile, boolean isImage) {
+            String originalFileName = mediaFile.getName();
+            String mimeType = UrlUtils.getUrlMimeType(originalFileName);
+            boolean shouldFixfileName = false;
+            
             if (TextUtils.isEmpty(mimeType)) {
+                shouldFixfileName = true;  //if mimeType is null at this point, we even need to fix the filename since the extension is not available in the name, or it's unknown
                 try {
                     String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
                     URL urlForGuessingMime = new URL(filePathForGuessingMime);
@@ -761,14 +767,22 @@ public class PostUploadService extends Service {
             }
 
             if (TextUtils.isEmpty(mimeType)) {
-                return "";
+                mimeType = "";
             } else {
                 if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
                     mimeType = "video/mp4";
                 }
             }
-
-            return mimeType;
+            
+            if (shouldFixfileName) { //Add the extension to filename
+                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                String fileExtension = mimeTypeMap.getExtensionFromMimeType(mimeType);
+                originalFileName += "." + fileExtension; ;
+            }
+            Hashtable<String, String> returnValues = new Hashtable<String, String>();
+            returnValues.put("mimetype", mimeType);
+            returnValues.put("filename", originalFileName);
+            return returnValues;
         }
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
