@@ -205,7 +205,12 @@ class XMLRPCSerializer {
         Object obj;
         if (typeNodeName.equals(TYPE_INT) || typeNodeName.equals(TYPE_I4)) {
             String value = parser.nextText();
-            obj = Integer.parseInt(value);
+            try {
+                obj = Integer.parseInt(value);
+            } catch (NumberFormatException nfe) {
+                AppLog.w(T.API, "Server replied with an invalid 4 bytes int value, trying to parse it as 8 bytes long");
+                obj = Long.parseLong(value);
+            }
         } else
         if (typeNodeName.equals(TYPE_I8)) {
             String value = parser.nextText();
