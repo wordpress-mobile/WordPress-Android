@@ -728,8 +728,8 @@ public class PostUploadService extends Service {
           
             if (TextUtils.isEmpty(mimeType)) {
                 try {
-                    String videoFilePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
-                    URL urlForGuessingMime = new URL(videoFilePathForGuessingMime);
+                    String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
+                    URL urlForGuessingMime = new URL(filePathForGuessingMime);
                     URLConnection uc = urlForGuessingMime.openConnection();
                     String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
                     // check if returned "content/unknown"
