@@ -1822,9 +1822,11 @@ public class WordPressDB {
         return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
     }
 
-    public void saveNotes(List<Note> notes) {
+    public void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
         db.beginTransaction();
         try {
+            if (clearBeforeSaving)
+                clearNotes();
             for (Note note: notes)
                 addNote(note, false);
             db.setTransactionSuccessful();
@@ -1849,7 +1851,7 @@ public class WordPressDB {
         }
     }
 
-    public void clearNotes() {
+    protected void clearNotes() {
         db.delete(NOTES_TABLE, null, null);
     }
 
