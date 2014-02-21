@@ -583,7 +583,7 @@ public class PostUploadService extends Service {
                 }
 
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaFileMimeType(imageFile, false);
+                    mimeType = getMediaFileMimeType(imageFile, true);
                 }
                 String fileName = getMediaFileName(imageFile, mimeType);
 
