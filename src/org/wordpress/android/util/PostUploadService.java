@@ -411,7 +411,7 @@ public class PostUploadService extends Service {
                         .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
                         + " " + cleanXMLRPCErrorMessage(e.getMessage());
                 mIsMediaError = false;
-                AppLog.i(T.EDITOR, mErrorMessage);
+                AppLog.i(T.POSTS, mErrorMessage);
             }
 
             return false;
@@ -644,54 +644,32 @@ public class PostUploadService extends Service {
                 }
 
                 if (shouldUploadResizedVersion) {
-                    byte[] bytes;
-                    byte[] finalBytes;
+                    int rotation;
                     try {
-                        bytes = new byte[(int) imageFile.length()];
-                    } catch (OutOfMemoryError er) {
-                        mErrorMessage = context.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
+                        rotation = (orientation != null ? Integer.valueOf(orientation) : 0);
+                    } catch (NumberFormatException e) {
+                        rotation = 0;
+                    }
+                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, mf.getWidth(), fileExtension, rotation);
+
+                    // upload resized picture
+                    if (bytes != null && bytes.length > 0) {
+                        Map<String, Object> m = new HashMap<String, Object>();
+
+                        m.put("name", fileName);
+                        m.put("type", mimeType);
+                        m.put("bits", bytes);
+                        m.put("overwrite", true);
+
+                        resizedPictureURL = uploadPicture(m, mf, blog);
+                        if (resizedPictureURL == null) {
+                            AppLog.w(T.POSTS, "failed to upload resized picture");
+                            return null;
+                        }
+                    } else {
+                        AppLog.w(T.POSTS, "failed to create resized picture");
                         return null;
                     }
-
-                    DataInputStream in = null;
-                    try {
-                        in = new DataInputStream(new FileInputStream(imageFile));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        in.readFully(bytes);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String width = String.valueOf(mf.getWidth());
-
-                    finalBytes = ih.createThumbnail(bytes, width, orientation, false, fileExtension);
-
-                    if (finalBytes == null) {
-                        mErrorMessage = context.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
-                        return null;
-                    }
-
-                    //upload picture
-                    Map<String, Object> m = new HashMap<String, Object>();
-
-                    m.put("name", fileName);
-                    m.put("type", mimeType);
-                    m.put("bits", finalBytes);
-                    m.put("overwrite", true);
-
-                    resizedPictureURL = uploadPicture(m, mf, blog);
-                    if (resizedPictureURL == null)
-                        return null;
                 }
 
                 String fullSizeUrl = null;
@@ -705,8 +683,10 @@ public class PostUploadService extends Service {
                     m.put("overwrite", true);
 
                     fullSizeUrl = uploadPicture(m, mf, blog);
-                    if (fullSizeUrl == null)
+                    if (fullSizeUrl == null) {
+                        AppLog.w(T.POSTS, "failed to upload full-size picture");
                         return null;
+                    }
                 }
 
                 String alignment = "";
