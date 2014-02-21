@@ -112,8 +112,8 @@ public class CommentTable {
      * @param commentId - commentId of the actual comment
      * @return Comment if found, null otherwise
      */
-    public static Comment getComment(int localBlogId, int commentId) {
-        String[] args = {Integer.toString(localBlogId), Integer.toString(commentId)};
+    public static Comment getComment(int localBlogId, long commentId) {
+        String[] args = {Integer.toString(localBlogId), Long.toString(commentId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND comment_id=?", args);
         try {
             if (!c.moveToFirst())
@@ -230,11 +230,11 @@ public class CommentTable {
      * @param commentId - id of comment (returned by api)
      * @param newStatus - status to change to
      */
-    public static void updateCommentStatus(int localBlogId, int commentId, String newStatus) {
+    public static void updateCommentStatus(int localBlogId, long commentId, String newStatus) {
         ContentValues values = new ContentValues();
         values.put("status", newStatus);
         String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
+                         Long.toString(commentId)};
         getWritableDb().update(COMMENTS_TABLE,
                                values,
                                "blog_id=? AND comment_id=?",
@@ -267,11 +267,11 @@ public class CommentTable {
      * @param postTitle - title to update to
      * @return true if title updated
      */
-    public static boolean updateCommentPostTitle(int localBlogId, int commentId, String postTitle) {
+    public static boolean updateCommentPostTitle(int localBlogId, long commentId, String postTitle) {
         ContentValues values = new ContentValues();
         values.put("post_title", StringUtils.notNullStr(postTitle));
         String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
+                         Long.toString(commentId)};
         int count = getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
         return (count > 0);
     }
@@ -282,9 +282,9 @@ public class CommentTable {
      * @param commentId - commentId of the actual comment
      * @return true if comment deleted, false otherwise
      */
-    public static boolean deleteComment(int localBlogId, int commentId) {
+    public static boolean deleteComment(int localBlogId, long commentId) {
         String[] args = {Integer.toString(localBlogId),
-                         Integer.toString(commentId)};
+                         Long.toString(commentId)};
         int count = getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND comment_id=?", args);
         return (count > 0);
     }
