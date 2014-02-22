@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.text.TextUtils;
 import android.util.Xml;
 
 import org.apache.http.HttpEntity;
@@ -30,6 +31,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -375,6 +377,26 @@ public class XMLRPCClient {
             deleteTempFile(method, tempFile);
 
             if (statusCode != HttpStatus.SC_OK) {
+                if(statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                  //Try to intercept out of memory error here and show a better error message.
+                    HttpEntity entity = response.getEntity();
+                    if (entity!=null) {
+                        try {
+                            String responseString = EntityUtils.toString(entity, "UTF-8");
+                            if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") && responseString.contains("bytes exhausted")) {
+                                String newErrorMsg = null;
+                                if (method.equals("wp.uploadFile")) {
+                                    newErrorMsg =  "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
+                                } else {
+                                    newErrorMsg =  "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
+                                }
+                                throw new XMLRPCException(response.getStatusLine().getReasonPhrase()+ ".\n\n" + newErrorMsg);
+                            }
+                        } catch (Exception e) {
+                            //eat all the exceptions here, we dont want to crash the app when trying to show a better error message.
+                        }
+                    }
+                } 
                 throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
             }
 
