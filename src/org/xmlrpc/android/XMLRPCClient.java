@@ -383,19 +383,20 @@ public class XMLRPCClient {
                     if (entity!=null) {
                         try {
                             String responseString = EntityUtils.toString(entity, "UTF-8");
-                            if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") && responseString.contains("bytes exhausted"))
-                                throw new XMLRPCException(response.getStatusLine().getReasonPhrase()+".\n\n"+ "WordPress doesn't have enough memory to correctly handle file uploading.Talk to your host provider, or increase the PHP memory limit on your site.");
+                            if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") && responseString.contains("bytes exhausted")) {
+                                String newErrorMsg = null;
+                                if (method.equals("wp.uploadFile")) {
+                                    newErrorMsg =  "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
+                                } else {
+                                    newErrorMsg =  "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
+                                }
+                                throw new XMLRPCException(response.getStatusLine().getReasonPhrase()+ ".\n\n" + newErrorMsg);
+                            }
                         } catch (Exception e) {
                             //eat all the exceptions here, we dont want to crash the app when trying to show a better error message.
                         }
                     }
                 } 
-                
-                //we're are not sure it's an OOM error on the server, since the body of the response is blank. We should show a message that could help the user in some way.
-                if (method.equals("wp.uploadFile")) {
-                    throw new XMLRPCException(response.getStatusLine().getReasonPhrase()+ ".\n\n" + "Seems that WordPress doesn't have enough memory to correctly handle file uploading. Talk to your host provider, or increase the PHP memory limit on your site.");
-                }
-                
                 throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
             }
 
