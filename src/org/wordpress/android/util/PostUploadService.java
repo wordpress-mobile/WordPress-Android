@@ -129,6 +129,10 @@ public class PostUploadService extends Service {
         return false;
     }
 
+    private File createTempUploadFile(String fileExtension) throws IOException {
+        return File.createTempFile("wp-", fileExtension, context.getCacheDir());
+    }
+
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post post;
         private String mErrorMessage = "";
@@ -428,18 +432,6 @@ public class PostUploadService extends Service {
                 // Upload the video
                 XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-                // create temp file for media upload
-                String tempFileName = "wp-" + System.currentTimeMillis();
-                try {
-                    context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    mErrorMessage = getResources().getString(R.string.file_error_create);
-                    mIsMediaError = true;
-                    return null;
-                }
-
-                File tempFile = context.getFileStreamPath(tempFileName);
-
                 Uri videoUri = Uri.parse(curImagePath);
                 File videoFile = null;
                 String mimeType = "", xRes = "", yRes = "";
@@ -524,6 +516,14 @@ public class PostUploadService extends Service {
                 boolean isVideoEnabled = selfHosted ||
                         (featureSet != null && mFeatureSet.isVideopressEnabled());
                 if (isVideoEnabled) {
+                    File tempFile;
+                    try {
+                        tempFile = createTempUploadFile(fileExtension);
+                    } catch (IOException e) {
+                        mErrorMessage = getResources().getString(R.string.file_error_create);
+                        mIsMediaError = true;
+                        return null;
+                    }
                     Object result = uploadFileHelper(client, params, tempFile);
                     Map<?, ?> resultMap = (HashMap<?, ?>) result;
                     if (resultMap != null && resultMap.containsKey("url")) {
@@ -739,17 +739,17 @@ public class PostUploadService extends Service {
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-            // create temp file for media upload
-            String tempFileName = "wp-" + System.currentTimeMillis();
+            // create temporary upload file
+            File tempFile = null;
             try {
-                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-            } catch (FileNotFoundException e) {
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(mf.getFileName());
+                tempFile = createTempUploadFile(fileExtension);
+            } catch (IOException e) {
                 mIsMediaError = true;
                 mErrorMessage = context.getString(R.string.file_not_found);
                 return null;
             }
 
-            File tempFile = context.getFileStreamPath(tempFileName);
             Object[] params = { 1, blog.getUsername(), blog.getPassword(), pictureParams };
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
@@ -776,14 +776,18 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(XMLRPCClient client, Object[] params, File tempFile) {
-            final Object result;
             try {
-                result = client.call("wp.uploadFile", params, tempFile);
-            } catch (XMLRPCException e) {
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
-                return null;
+                try {
+                    return client.call("wp.uploadFile", params, tempFile);
+                } catch (XMLRPCException e) {
+                    mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                    return null;
+                }
+            } finally {
+                // remove the temporary upload file now that we're done with it
+                if (tempFile != null && tempFile.exists())
+                    tempFile.delete();
             }
-            return result;
         }
     }
 
