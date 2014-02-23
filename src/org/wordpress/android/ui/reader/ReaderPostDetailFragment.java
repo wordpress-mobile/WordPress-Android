@@ -40,11 +40,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
@@ -79,9 +77,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    // when true, javascript is enabled and embedded videos will play inside the app
-    private static final boolean ENABLE_EMBEDS = true;
-
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_POST_ID = "post_id";
     private static final String ARG_LIST_STATE = "list_state";
@@ -110,7 +105,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
 
-    private final ReaderUrlList mVideoThumbnailUrls = new ReaderUrlList();
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
@@ -287,10 +281,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
 
-        // setup the webView - note that javaScript is only enabled when embeds are enabled
+        // setup the webView
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.setWebViewClient(readerWebViewClient);
-        mWebView.getSettings().setJavaScriptEnabled(ENABLE_EMBEDS);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
 
         // hide these views until the post is loaded
@@ -311,9 +304,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                         // file:///android_res/drawable/ic_reader_video_overlay.png
                         if (imageUrl.startsWith("file:"))
                             return false;
-                        // skip if image is a video thumbnail (see processVideos)
-                        if (mVideoThumbnailUrls.contains(imageUrl))
-                            return false;
                         showPhotoViewer(imageUrl);
                         return true;
                     }
@@ -330,9 +320,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     void reloadPost() {
-        if (!hasPost() || !hasActivity())
-            return;
-        showPost();
+        if (hasPost() && hasActivity())
+            showPost();
     }
 
     @Override
@@ -479,7 +468,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void onPause() {
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
-        if (ENABLE_EMBEDS)
+        if (hasEmbedsOrIframes())
             pauseWebView();
         super.onPause();
     }
@@ -487,7 +476,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (ENABLE_EMBEDS)
+        if (hasEmbedsOrIframes())
             resumeWebView();
     }
 
@@ -1009,81 +998,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         });
     }
 
-    private static String getAttribute(final String html, final String attribute, int tagStart, int tagEnd) {
-        // hack to determine whether html uses single-quoted attributes
-        boolean usesSingleQuotes = html.contains(attribute + "='");
-
-        final String searchFor = attribute + (usesSingleQuotes ? "='" : "=\"");
-        int attrStart = html.indexOf(searchFor);
-        if (attrStart == -1 || attrStart > tagEnd)
-            return null;
-
-        // find the end of the attribute's value
-        int attrEnd = html.indexOf(usesSingleQuotes ? "'" : "\"", attrStart + searchFor.length());
-        if (attrEnd == -1 || attrEnd > tagEnd)
-            return null;
-
-        // extract the attribute's value
-        return html.substring(attrStart + searchFor.length(), attrEnd);
-    }
-
-    /*
-     * extracts the src from iframes and inserts a video player image with a link to the actual video
-     * this is necessary since embedded videos won't work (and the CSS we're using hides iframes)
-     * ex: <iframe src='http://player.vimeo.com/video/36281008' width='500' height='281' frameborder='0'></iframe>
-     * this isn't very performance-friendly due to all the string creation, but it does the job
-     * and performance isn't critical since this is only called once (from inside the AsyncTask)
-     */
-    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
-    private String processVideos(String text) {
-        if (text==null)
-            return "";
-
-        int iFrameStart = text.indexOf("<iframe");
-        if (iFrameStart == -1)
-            return text;
-
-        while (iFrameStart > -1) {
-            int iFrameEnd = text.indexOf(">", iFrameStart);
-            if (iFrameEnd == -1)
-                return text;
-
-            // extract the src attribute
-            String src = getAttribute(text, "src", iFrameStart, iFrameEnd);
-            if (src == null)
-                return text;
-
-            boolean isVideo = (src.contains("youtube")
-                            || src.contains("video")
-                            || src.contains("vimeo"));
-
-            final String videoDiv;
-            if (isVideo) {
-                // use generic video player overlay if we don't have the thumbnail for this video, otherwise
-                // show the thumbnail with the player overlay on top of it - note there's a good chance we
-                // have the thumbnail since it was likely already downloaded by the post list
-                String thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(src);
-                videoDiv = makeVideoDiv(src, thumbnailUrl);
-                // keep track of thumbnail urls so we know when they're clicked
-                if (!TextUtils.isEmpty(thumbnailUrl))
-                    mVideoThumbnailUrls.add(thumbnailUrl);
-                // insert the video div before the iframe - note that the iframe will be hidden by the CSS used
-                // in the AsyncTask below
-                text = text.substring(0, iFrameStart) + videoDiv + text.substring(iFrameStart);
-            } else {
-                // if we get here it means we're not sure the iframe is a video, in which case don't show anything
-                videoDiv = "";
-            }
-
-            iFrameStart = text.indexOf("<iframe", iFrameEnd + videoDiv.length());
-        }
-
-        return text;
-    }
-
     /*
      * creates formatted div for passed video with passed (optional) thumbnail
      */
+    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
     private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
         if (TextUtils.isEmpty(videoUrl))
             return "";
@@ -1142,21 +1060,21 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     /*
      * build html for post's content
      */
-    private String getPostHtml(ReaderPost post) {
-        if (post == null)
+    private String getPostHtml() {
+        if (mPost == null)
             return "";
 
         String content;
-        if (post.hasText()) {
+        if (mPost.hasText()) {
             // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
-            content = post.getText().replace("src=\"//", "src=\"http://");
+            content = mPost.getText().replace("src=\"//", "src=\"http://");
             // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (post.isVideoPress)
-                content = makeVideoDiv(post.getFeaturedVideo(), post.getFeaturedImage()) + content;
-        } else if (post.hasFeaturedImage()) {
+            if (mPost.isVideoPress)
+                content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
+        } else if (mPost.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content
-            content = String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage());
+            content = String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage());
         } else {
             content = "";
         }
@@ -1199,20 +1117,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
-        if (ENABLE_EMBEDS) {
+        if (hasEmbedsOrIframes()) {
             // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
             int videoWidth =  DisplayUtils.pxToDp(getActivity(), fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int)(videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
         } else {
-            // hide iframes & embeds (they won't work when script is disabled)
             sbHtml.append("  iframe, embed { display: none; }");
-            // css for video div when no video thumb available (see processVideos)
-            sbHtml.append("  div.wpreader-video { background-color: ").append(greyExtraLight).append(";")
-                  .append("                       width: 100%; padding: ").append(marginLarge).append("px; }");
-            // hide VideoPress divs that don't make sense on mobile
-            sbHtml.append("  div.video-player, div.videopress-title, div.play-button, div.videopress-watermark { display: none; }");
         }
 
         // don't allow any image to be wider than the screen
@@ -1241,13 +1153,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
-        sbHtml.append("</style></head><body>");
-        if (ENABLE_EMBEDS) {
-            sbHtml.append(content);
-        } else {
-            sbHtml.append(processVideos(content));
-        }
-        sbHtml.append("</body></html>");
+        sbHtml.append("</style></head><body>")
+              .append(content)
+              .append("</body></html>");
 
         return sbHtml.toString();
     }
@@ -1263,11 +1171,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                progress.setVisibility(View.GONE);
-                if (succeeded) {
-                    showPost();
-                } else {
-                    postFailed();
+                if (hasActivity()) {
+                    progress.setVisibility(View.GONE);
+                    if (succeeded) {
+                        showPost();
+                    } else {
+                        postFailed();
+                    }
                 }
             }
         };
@@ -1278,14 +1188,20 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * called when post couldn't be loaded and failed to be returned from server
      */
     private void postFailed() {
-        if (!hasActivity())
-            return;
-        ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+        if (hasActivity())
+            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
     }
 
     /*
-     * AsyncTask to retrieve this post from SQLite and display it
+     * returns true if content contains embed or iframe tags - if so then JavaScript is enabled
+     * and CSS is customized so embedded videos can play
      */
+    private boolean hasEmbedsOrIframes() {
+        return (mPost != null
+            && (mPost.getText().contains("<embed") || mPost.getText().contains("<iframe")));
+
+    }
+
     @SuppressLint("NewApi")
     private void showPost() {
         if (mIsPostTaskRunning)
@@ -1297,6 +1213,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             new ShowPostTask().execute();
         }
     }
+
+    /*
+     * AsyncTask to retrieve this post from SQLite and display it
+     */
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
@@ -1343,7 +1263,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             if (mPost == null)
                 return false;
 
-            postHtml = getPostHtml(mPost);
+            postHtml = getPostHtml();
 
             // detect whether the post has a featured image that's not in the content - if so,
             // it will be shown between the post's title and its content (but skip mshots)
@@ -1466,7 +1386,11 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 imgAvatar.setOnClickListener(clickListener);
             }
 
-            // IMPORTANT: must use loadDataWithBaseURL() rather than loadData() since the latter often fails
+            // enable JavaScript in the webView if the post content contains embeds or iframes
+            // so embedded videos will work
+            mWebView.getSettings().setJavaScriptEnabled(hasEmbedsOrIframes());
+
+            // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
             // https://code.google.com/p/android/issues/detail?id=4401
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
@@ -1482,7 +1406,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             if (getListView().getVisibility() != View.VISIBLE)
                 getListView().setVisibility(View.VISIBLE);
 
-            // webView is hidden in oCreateView() and will be made visible by readerWebViewClient
+            // webView is hidden in onCreateView() and will be made visible by readerWebViewClient
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
             // right away, otherwise show them after a brief delay - this gives content time to
             // load before likes/comments appear
@@ -1569,13 +1493,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private void openUrl(String url) {
         if (!hasActivity() || TextUtils.isEmpty(url))
             return;
-        final OpenUrlType openUrlType;
 
+        // open YouTube videos in external app so they launch the YouTube player, open all other
+        // urls using an AuthenticatedWebViewActivity
+        final OpenUrlType openUrlType;
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            // open YouTube videos in external app so they launch the YouTube player
             openUrlType = OpenUrlType.EXTERNAL;
         } else {
-            // open all other urls using an AuthenticatedWebViewActivity
             openUrlType = OpenUrlType.INTERNAL;
         }
 
