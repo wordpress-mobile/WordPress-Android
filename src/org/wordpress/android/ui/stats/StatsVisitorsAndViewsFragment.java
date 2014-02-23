@@ -34,6 +34,8 @@ import java.util.Locale;
 public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implements RadioGroup.OnCheckedChangeListener {
     private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
 
+    private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
+
     private TextView mVisitorsToday;
     private TextView mViewsToday;
     private TextView mViewsBestEver;
@@ -61,6 +63,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
 
+        setRetainInstance(true);
+
+        initLayout(view);
+
+        restoreState(savedInstanceState);
+
+        return view;
+    }
+
+    private void initLayout (View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleTextView.setText(getTitle());
 
@@ -88,8 +100,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
+    }
 
-        return view;
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState == null)
+            return;
+
+        mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
     }
 
     @Override
@@ -99,6 +116,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
 
         refreshSummary();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
     }
 
     @Override
