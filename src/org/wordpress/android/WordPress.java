@@ -68,7 +68,6 @@ public class WordPress extends Application {
 
     public static String versionName;
     public static Blog currentBlog;
-    public static Comment currentComment;
     public static Post currentPost;
     public static WordPressDB wpDB;
     public static WordPressStatsDB wpStatsDB;
