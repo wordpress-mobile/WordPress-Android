@@ -14,6 +14,8 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+import java.io.Serializable;
+
 public class WPAlertDialogFragment extends SherlockDialogFragment implements DialogInterface.OnClickListener {
     private static enum WPAlertDialogType {ALERT,    // simple ok dialog with error message
                                            CONFIRM,  // dialog with yes/no and callback when positive button clicked
@@ -58,13 +60,13 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
 
         Bundle bundle = new Bundle();
 
-        bundle.putString(ARG_TITLE, title);
-        bundle.putString(ARG_MESSAGE, message);
+        bundle.putString(ARG_TITLE, StringUtils.notNullStr(title));
+        bundle.putString(ARG_MESSAGE, StringUtils.notNullStr(message));
         bundle.putSerializable(ARG_TYPE, (alertType != null ? alertType : WPAlertDialogType.ALERT));
 
         if (alertType == WPAlertDialogType.URL_INFO) {
-            bundle.putString(ARG_INFO_TITLE, infoTitle);
-            bundle.putString(ARG_INFO_URL, infoUrl);
+            bundle.putString(ARG_INFO_TITLE, StringUtils.notNullStr(infoTitle));
+            bundle.putString(ARG_INFO_URL, StringUtils.notNullStr(infoUrl));
         }
 
         dialog.setArguments(bundle);
@@ -84,11 +86,11 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
 
-        final String title = bundle.getString(ARG_TITLE);
-        final String message = bundle.getString(ARG_MESSAGE);
+        final String title = StringUtils.notNullStr(bundle.getString(ARG_TITLE));
+        final String message = StringUtils.notNullStr(bundle.getString(ARG_MESSAGE));
 
         final WPAlertDialogType dialogType;
-        if (bundle.containsKey(ARG_TYPE)) {
+        if (bundle.containsKey(ARG_TYPE) && bundle.getSerializable(ARG_TYPE) instanceof WPAlertDialogType) {
             dialogType = (WPAlertDialogType) bundle.getSerializable(ARG_TYPE);
         } else {
             dialogType = WPAlertDialogType.ALERT;
@@ -119,8 +121,8 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements Dia
                 break;
 
             case URL_INFO:
-                final String infoTitle = bundle.getString(ARG_INFO_TITLE);
-                final String infoURL = bundle.getString(ARG_INFO_URL);
+                final String infoTitle = StringUtils.notNullStr(bundle.getString(ARG_INFO_TITLE));
+                final String infoURL = StringUtils.notNullStr(bundle.getString(ARG_INFO_URL));
                 builder.setPositiveButton(infoTitle, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
