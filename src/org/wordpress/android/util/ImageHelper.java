@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -519,5 +520,80 @@ public class ImageHelper {
         Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
         
         return scaled;
+    }
+
+    /**
+     * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
+     * require passing the full-size image as an array of bytes[]
+     */
+    public byte[] createThumbnailFromUri(Context context,
+                                         Uri imageUri,
+                                         int maxWidth,
+                                         String fileExtension,
+                                         int rotation) {
+        if (context == null || imageUri == null)
+            return null;
+
+        AssetFileDescriptor descriptor = null;
+        try {
+            try {
+                descriptor = context.getContentResolver().openAssetFileDescriptor(imageUri, "r");
+            } catch (FileNotFoundException e) {
+                AppLog.e(T.UTILS, e);
+                return null;
+            }
+
+            // get just the image bounds
+            BitmapFactory.Options optBounds = new BitmapFactory.Options();
+            optBounds.inJustDecodeBounds = true;
+            BitmapFactory.decodeFileDescriptor(descriptor.getFileDescriptor(), null, optBounds);
+
+            // determine correct scale value (should be power of 2)
+            // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
+            int scale = 1;
+            if (optBounds.outWidth > maxWidth) {
+                double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
+                scale = (int) d;
+            }
+
+            BitmapFactory.Options optActual = new BitmapFactory.Options();
+            optActual.inSampleSize = scale;
+
+            final Bitmap bmpResized = BitmapFactory.decodeFileDescriptor(descriptor.getFileDescriptor(), null, optActual);
+            if (bmpResized == null)
+                return null;
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            final Bitmap.CompressFormat fmt;
+            if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
+                fmt = Bitmap.CompressFormat.PNG;
+            } else {
+                fmt = Bitmap.CompressFormat.JPEG;
+            }
+
+            // apply rotation
+            if (rotation != 0) {
+                Matrix matrix = new Matrix();
+                matrix.setRotate(rotation);
+                final Bitmap bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+                bmpRotated.compress(fmt, 100, stream);
+                bmpResized.recycle();
+                bmpRotated.recycle();
+            } else {
+                bmpResized.compress(fmt, 100, stream);
+                bmpResized.recycle();
+            }
+
+            return stream.toByteArray();
+
+        } finally {
+            if (descriptor!=null) {
+                try {
+                    descriptor.close();
+                } catch (IOException e) {
+                    AppLog.e(T.UTILS, e);
+                }
+            }
+        }
     }
 }

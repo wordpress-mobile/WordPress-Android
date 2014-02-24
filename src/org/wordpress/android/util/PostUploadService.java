@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -54,7 +53,7 @@ import java.util.regex.Pattern;
 public class PostUploadService extends Service {
 
     private static Context context;
-    private static ArrayList<Post> listOfPosts = new ArrayList<Post>();
+    private static final ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
     private static Post currentUploadingPost = null;
     private UploadPostTask currentTask = null;
@@ -129,6 +128,10 @@ public class PostUploadService extends Service {
         return false;
     }
 
+    private File createTempUploadFile(String fileExtension) throws IOException {
+        return File.createTempFile("wp-", fileExtension, context.getCacheDir());
+    }
+
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post post;
         private String mErrorMessage = "";
@@ -180,7 +183,7 @@ public class PostUploadService extends Service {
             post = posts[0];
 
             // add the uploader to the notification bar
-            nm = (NotificationManager) context.getSystemService("notification");
+            nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                     .getText(R.string.post_id));
@@ -197,7 +200,7 @@ public class PostUploadService extends Service {
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
 
-            notificationID = (new Random()).nextInt() + Integer.valueOf(post.getBlogID());
+            notificationID = (new Random()).nextInt() + post.getBlogID();
             nm.notify(notificationID, n); // needs a unique id
 
             Blog blog;
@@ -211,9 +214,7 @@ public class PostUploadService extends Service {
             if (post.getPost_status() == null) {
                 post.setPost_status("publish");
             }
-            Boolean publishThis = false;
 
-            Spannable s;
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
             if (post.getMt_text_more() != null)
@@ -245,10 +246,9 @@ public class PostUploadService extends Service {
 
                     Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                     Matcher m = p.matcher(tag);
-                    String imgPath = "";
                     if (m.find()) {
-                        imgPath = m.group(1);
-                        if (!imgPath.equals("")) {
+                        String imgPath = m.group(1);
+                        if (!TextUtils.isEmpty(imgPath)) {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
                             if (mf != null) {
@@ -294,16 +294,16 @@ public class PostUploadService extends Service {
             if (!post.isPage() && post.isLocalDraft()) {
                 // add the tagline
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                String tagline = "";
 
                 if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
-                    tagline = prefs.getString("wp_pref_post_signature", "");
-                    if (tagline != null) {
+                    String tagline = prefs.getString("wp_pref_post_signature", "");
+                    if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
-                        if (moreContent == "")
+                        if (moreContent.equals("")) {
                             descriptionContent += tag;
-                        else
+                        } else {
                             moreContent += tag;
+                        }
                     }
                 }
             }
@@ -340,7 +340,7 @@ public class PostUploadService extends Service {
 
             contentStruct.put("description", descriptionContent);
             if (!post.isPage()) {
-                if (post.getMt_keywords() != "") {
+                if (!TextUtils.isEmpty(post.getMt_keywords())) {
                     contentStruct.put("mt_keywords", post.getMt_keywords());
                 }
 
@@ -352,11 +352,9 @@ public class PostUploadService extends Service {
                 contentStruct.put("mt_excerpt", post.getMt_excerpt());
 
             contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPost_status());
-            Double latitude = 0.0;
-            Double longitude = 0.0;
             if (!post.isPage()) {
-                latitude = (Double) post.getLatitude();
-                longitude = (Double) post.getLongitude();
+                Double latitude = post.getLatitude();
+                Double longitude = post.getLongitude();
 
                 if (latitude > 0) {
                     Map<Object, Object> hLatitude = new HashMap<Object, Object>();
@@ -395,10 +393,10 @@ public class PostUploadService extends Service {
 
             if (post.isLocalDraft() && !post.isUploaded())
                 params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
-                        contentStruct, publishThis};
+                        contentStruct, false};
             else
                 params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,
-                        publishThis};
+                        false};
 
             try {
                 client.call((post.isLocalDraft() && !post.isUploaded()) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
@@ -411,7 +409,7 @@ public class PostUploadService extends Service {
                         .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
                         + " " + cleanXMLRPCErrorMessage(e.getMessage());
                 mIsMediaError = false;
-                AppLog.i(T.EDITOR, mErrorMessage);
+                AppLog.i(T.POSTS, mErrorMessage);
             }
 
             return false;
@@ -427,18 +425,6 @@ public class PostUploadService extends Service {
             if (curImagePath.contains("video")) {
                 // Upload the video
                 XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
-                // create temp file for media upload
-                String tempFileName = "wp-" + System.currentTimeMillis();
-                try {
-                    context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    mErrorMessage = getResources().getString(R.string.file_error_create);
-                    mIsMediaError = true;
-                    return null;
-                }
-
-                File tempFile = context.getFileStreamPath(tempFileName);
 
                 Uri videoUri = Uri.parse(curImagePath);
                 File videoFile = null;
@@ -499,8 +485,8 @@ public class PostUploadService extends Service {
 
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                if (!TextUtils.isEmpty(fileExtension)) {
-                    mimeType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+                if (TextUtils.isEmpty(mimeType) && !TextUtils.isEmpty(fileExtension)) {
+                    mimeType = StringUtils.notNullStr(mimeTypeMap.getMimeTypeFromExtension(fileExtension));
                 }
 
                 if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
@@ -524,6 +510,14 @@ public class PostUploadService extends Service {
                 boolean isVideoEnabled = selfHosted ||
                         (featureSet != null && mFeatureSet.isVideopressEnabled());
                 if (isVideoEnabled) {
+                    File tempFile;
+                    try {
+                        tempFile = createTempUploadFile(fileExtension);
+                    } catch (IOException e) {
+                        mErrorMessage = getResources().getString(R.string.file_error_create);
+                        mIsMediaError = true;
+                        return null;
+                    }
                     Object result = uploadFileHelper(client, params, tempFile);
                     Map<?, ?> resultMap = (HashMap<?, ?>) result;
                     if (resultMap != null && resultMap.containsKey("url")) {
@@ -644,54 +638,32 @@ public class PostUploadService extends Service {
                 }
 
                 if (shouldUploadResizedVersion) {
-                    byte[] bytes;
-                    byte[] finalBytes;
+                    int rotation;
                     try {
-                        bytes = new byte[(int) imageFile.length()];
-                    } catch (OutOfMemoryError er) {
-                        mErrorMessage = context.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
+                        rotation = (orientation != null ? Integer.valueOf(orientation) : 0);
+                    } catch (NumberFormatException e) {
+                        rotation = 0;
+                    }
+                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, mf.getWidth(), fileExtension, rotation);
+
+                    // upload resized picture
+                    if (bytes != null && bytes.length > 0) {
+                        Map<String, Object> m = new HashMap<String, Object>();
+
+                        m.put("name", fileName);
+                        m.put("type", mimeType);
+                        m.put("bits", bytes);
+                        m.put("overwrite", true);
+
+                        resizedPictureURL = uploadPicture(m, mf, blog);
+                        if (resizedPictureURL == null) {
+                            AppLog.w(T.POSTS, "failed to upload resized picture");
+                            return null;
+                        }
+                    } else {
+                        AppLog.w(T.POSTS, "failed to create resized picture");
                         return null;
                     }
-
-                    DataInputStream in = null;
-                    try {
-                        in = new DataInputStream(new FileInputStream(imageFile));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        in.readFully(bytes);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String width = String.valueOf(mf.getWidth());
-
-                    finalBytes = ih.createThumbnail(bytes, width, orientation, false, fileExtension);
-
-                    if (finalBytes == null) {
-                        mErrorMessage = context.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
-                        return null;
-                    }
-
-                    //upload picture
-                    Map<String, Object> m = new HashMap<String, Object>();
-
-                    m.put("name", fileName);
-                    m.put("type", mimeType);
-                    m.put("bits", finalBytes);
-                    m.put("overwrite", true);
-
-                    resizedPictureURL = uploadPicture(m, mf, blog);
-                    if (resizedPictureURL == null)
-                        return null;
                 }
 
                 String fullSizeUrl = null;
@@ -705,8 +677,10 @@ public class PostUploadService extends Service {
                     m.put("overwrite", true);
 
                     fullSizeUrl = uploadPicture(m, mf, blog);
-                    if (fullSizeUrl == null)
+                    if (fullSizeUrl == null) {
+                        AppLog.w(T.POSTS, "failed to upload full-size picture");
                         return null;
+                    }
                 }
 
                 String alignment = "";
@@ -734,11 +708,9 @@ public class PostUploadService extends Service {
                     return ""; //Not featured in post. Do not add to the content.
                 }
 
-                if (fullSizeUrl != null && resizedPictureURL != null) {
-
-                } else if (fullSizeUrl == null) {
+                if (fullSizeUrl == null && resizedPictureURL != null) {
                     fullSizeUrl = resizedPictureURL;
-                } else {
+                } else if (fullSizeUrl != null && resizedPictureURL == null) {
                     resizedPictureURL = fullSizeUrl;
                 }
 
@@ -759,17 +731,17 @@ public class PostUploadService extends Service {
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-            // create temp file for media upload
-            String tempFileName = "wp-" + System.currentTimeMillis();
+            // create temporary upload file
+            File tempFile;
             try {
-                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-            } catch (FileNotFoundException e) {
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(mf.getFileName());
+                tempFile = createTempUploadFile(fileExtension);
+            } catch (IOException e) {
                 mIsMediaError = true;
                 mErrorMessage = context.getString(R.string.file_not_found);
                 return null;
             }
 
-            File tempFile = context.getFileStreamPath(tempFileName);
             Object[] params = { 1, blog.getUsername(), blog.getPassword(), pictureParams };
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
@@ -796,23 +768,27 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(XMLRPCClient client, Object[] params, File tempFile) {
-            final Object result;
             try {
-                result = client.call("wp.uploadFile", params, tempFile);
-            } catch (XMLRPCException e) {
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
-                return null;
+                try {
+                    return client.call("wp.uploadFile", params, tempFile);
+                } catch (XMLRPCException e) {
+                    mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                    return null;
+                }
+            } finally {
+                // remove the temporary upload file now that we're done with it
+                if (tempFile != null && tempFile.exists())
+                    tempFile.delete();
             }
-            return result;
         }
     }
 
 
-    public String cleanXMLRPCErrorMessage(String message) {
+    private String cleanXMLRPCErrorMessage(String message) {
         if (message != null) {
-            if (message.indexOf(": ") > -1)
+            if (message.contains(": "))
                 message = message.substring(message.indexOf(": ") + 2, message.length());
-            if (message.indexOf("[code") > -1)
+            if (message.contains("[code"))
                 message = message.substring(0, message.indexOf("[code"));
             message = StringUtils.unescapeHTML(message);
             return message;
