@@ -785,7 +785,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -810,9 +810,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
-            intent.putExtra("isNew",
-                    true);
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+            intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -876,7 +875,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
