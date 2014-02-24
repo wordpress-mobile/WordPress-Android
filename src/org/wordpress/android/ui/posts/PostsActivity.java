@@ -31,6 +31,7 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -91,6 +92,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
                 }
             }).execute(false);
 
@@ -348,7 +350,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();
@@ -813,6 +815,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         popPostDetail();
         attemptToSelectPost();
         mPostList.loadPosts(false);
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
     }
 }

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,15 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -32,6 +35,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
@@ -43,8 +47,9 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private String mUsername;
     private String mPassword;
-    private Button mSignInButon;
+    private Button mSignInButton;
     private boolean mIsJetpackAuthRequest;
+    private boolean mIsWpcomAccountWith2FA = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +60,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
             mIsJetpackAuthRequest = true;
 
-        mSignInButon = (Button) findViewById(R.id.saveDotcom);
-        mSignInButon.setOnClickListener(new Button.OnClickListener() {
+        mSignInButton = (Button) findViewById(R.id.saveDotcom);
+        mSignInButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
                 EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
@@ -96,8 +101,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
         @Override
         protected void onPreExecute() {
-            mSignInButon.setText(getString(R.string.attempting_configure));
-            mSignInButon.setEnabled(false);
+            mSignInButton.setText(getString(R.string.attempting_configure));
+            mSignInButton.setEnabled(false);
         }
 
         @Override
@@ -113,30 +118,39 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             Object[] signInParams = { mUsername, mPassword };
             try {
                 client.call("wp.getUsersBlogs", signInParams);
-                WordPress.currentBlog.setDotcom_username(mUsername);
-                WordPress.currentBlog.setDotcom_password(mPassword);
-                WordPress.wpDB.saveBlog(WordPress.currentBlog);
+                Blog blog = WordPress.getCurrentBlog();
+                if (blog != null) {
+                    blog.setDotcom_username(mUsername);
+                    blog.setDotcom_password(mPassword);
+                }
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {
-                    if (WordPress.hasValidWPComCredentials(WPComLoginActivity.this)) {
-                        // Sign out current user from all services
-                        NotificationUtils.unregisterDevicePushNotifications(WPComLoginActivity.this);
-                        try {
-                            GCMRegistrar.checkDevice(WPComLoginActivity.this);
-                            GCMRegistrar.unregister(WPComLoginActivity.this);
-                        } catch (Exception e) {
-                            AppLog.v(T.NUX, "Could not unregister for GCM: " + e.getMessage());
-                        }
-                    }
+                    //New wpcom credetials inserted here. Reset the app state: there is the possibility a different username/password is inserted here
+                    WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
 
                     Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
+
+                    //Make sure to update credentials for .wpcom blog even if currentBlog is null
+                    WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
+
+                    // Update regular blog credentials for WP.com auth requests
+                    if (blog != null) {
+                        blog.setUsername(mUsername);
+                        blog.setPassword(mPassword);
+                    }
+                }
+                if (blog != null) {
+                    WordPress.wpDB.saveBlog(blog);
                 }
                 return true;
             } catch (XMLRPCException e) {
+                if (!TextUtils.isEmpty(e.getMessage())){
+                    mIsWpcomAccountWith2FA = e.getMessage().contains("code 425");
+                }
                 return false;
             }
         }
@@ -149,6 +163,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
+                            //Register the device again for Push Notifications
+                            WordPress.registerForCloudMessaging(WPComLoginActivity.this);
                             ReaderUserActions.setCurrentUser(jsonObject);
                             finish();
                         }
@@ -158,9 +174,10 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     finish();
                 }
             } else {
-                Toast.makeText(getBaseContext(), getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
-                mSignInButon.setEnabled(true);
-                mSignInButon.setText(R.string.sign_in);
+                String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) : getString(R.string.nux_cannot_log_in);
+                Toast.makeText(getBaseContext(),errorMessage, Toast.LENGTH_LONG).show();
+                mSignInButton.setEnabled(true);
+                mSignInButton.setText(R.string.sign_in);
             }
         }
     }

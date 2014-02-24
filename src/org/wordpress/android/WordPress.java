@@ -357,11 +357,11 @@ public class WordPress extends Application {
      * returns the blogID of the current blog
      */
     public static int getCurrentRemoteBlogId() {
-        return (currentBlog != null ? currentBlog.getRemoteBlogId() : -1);
+        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
     }
 
     public static int getCurrentLocalTableBlogId() {
-        return (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
+        return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
     /**
@@ -399,6 +399,20 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
+        removeWpComUserRelatedData(context);
+
+        wpDB.deleteAllAccounts();
+        wpDB.updateLastBlogId(-1);
+        currentBlog = null;
+
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        context.sendBroadcast(broadcastIntent);
+    }
+
+    public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
         VolleyUtils.cancelAllRequests(requestQueue);
@@ -416,13 +430,6 @@ public class WordPress extends Application {
         editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
         editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
         editor.commit();
-
-        if (wpDB != null) {
-            wpDB.deleteAllAccounts();
-            wpDB.updateLastBlogId(-1);
-            wpDB.clearNotes();
-        }
-        currentBlog = null;
 
         // reset all reader-related prefs & data
         UserPrefs.reset();

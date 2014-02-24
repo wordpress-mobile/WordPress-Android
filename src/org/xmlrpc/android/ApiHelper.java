@@ -1,5 +1,6 @@
 package org.xmlrpc.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml;
@@ -21,11 +22,13 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -143,6 +146,27 @@ public class ApiHelper {
         }
         if (isModified) {
             WordPress.wpDB.saveBlog(currentBlog);
+        }
+    }
+
+    public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
+        private final WeakReference<Activity> activityWeakRef;
+
+        public VerifyCredentialsCallback(Activity refActivity) {
+            this.activityWeakRef = new WeakReference<Activity>(refActivity);
+        }
+
+        @Override
+        public void onSuccess() {
+        }
+
+        @Override
+        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            Activity act = activityWeakRef.get();
+            if (act == null || act.isFinishing()) {
+                return;
+            }
+            ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
         }
     }
 
@@ -378,6 +402,9 @@ public class ApiHelper {
                 // user does not have permission to view media gallery
                 if (e.getMessage().contains("401")) {
                     setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
+                    return 0;
+                } else {
+                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                     return 0;
                 }
             }

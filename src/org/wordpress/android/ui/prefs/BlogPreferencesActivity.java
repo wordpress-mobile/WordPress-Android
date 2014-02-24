@@ -35,7 +35,6 @@ import java.util.Locale;
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends SherlockFragmentActivity {
-    private String originalUsername;
     private boolean mIsViewingAdmin;
 
     /** The blog this activity is managing settings for. */
@@ -50,7 +49,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     private CheckBox mLocationCB;
     private Spinner mImageWidthSpinner;
     private EditText mScaledImageWidthET;
-    private Button mRemoveBlogButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,13 +77,13 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mScaledCB = (CheckBox) findViewById(R.id.scaledImage);
         mLocationCB = (CheckBox) findViewById(R.id.location);
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
-        mRemoveBlogButton = (Button) findViewById(R.id.remove_account);
+        Button removeBlogButton = (Button) findViewById(R.id.remove_account);
         
         if (blog.isDotcomFlag()) {
             // Hide credentials section
             RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
-            mRemoveBlogButton.setVisibility(View.GONE);
+            removeBlogButton.setVisibility(View.GONE);
         }
         loadSettingsForBlog();
     }
@@ -205,7 +203,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
 
         mUsernameET.setText(blog.getUsername());
-        originalUsername = blog.getUsername();
         mPasswordET.setText(blog.getPassword());
         mHttpUsernameET.setText(blog.getHttpuser());
         mHttpPasswordET.setText(blog.getHttppassword());

@@ -335,9 +335,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 savePost(false);
-                if(mPost.hasChanges(mOriginalPost)) {
-                    WordPress.currentPost = mPost;
-                }
+                WordPress.currentPost = mPost;
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);

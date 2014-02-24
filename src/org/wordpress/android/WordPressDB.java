@@ -403,6 +403,10 @@ public class WordPressDB {
         return getAccountsBy("isHidden = 0", null);
     }
 
+    public List<Map<String, Object>> getVisibleDotComAccounts() {
+        return getAccountsBy("isHidden = 0 AND dotcomFlag = 1", null);
+    }
+
     public int getNumVisibleAccounts() {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE + " WHERE isHidden = 0", null);
     }
