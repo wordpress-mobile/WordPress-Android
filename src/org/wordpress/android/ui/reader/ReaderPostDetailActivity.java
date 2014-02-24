@@ -549,6 +549,8 @@ public class ReaderPostDetailActivity extends WPActionBarActivity {
      * display the standard Android share chooser to share a link to this post
      */
     private void sharePage() {
+        if (!hasPost())
+            return;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());

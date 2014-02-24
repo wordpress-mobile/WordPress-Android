@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.WordPress.restClient;
 
 public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
@@ -66,7 +65,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
-    private List<Note> notes;
+    private List<Note> mNotes;
     private BroadcastReceiver mBroadcastReceiver;
 
     @Override
@@ -85,7 +84,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         // Load notes
-        notes = WordPress.wpDB.getLatestNotes();
+        mNotes = WordPress.wpDB.getLatestNotes();
 
         fragmentDetectors.add(new FragmentDetector(){
             @Override
@@ -138,7 +137,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
         }
 
-        refreshNotificationsListFragment(notes);
+        refreshNotificationsListFragment(mNotes);
 
         if (savedInstanceState != null)
             popNoteDetail();
@@ -153,8 +152,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                notes = WordPress.wpDB.getLatestNotes();
-                refreshNotificationsListFragment(notes);
+                mNotes = WordPress.wpDB.getLatestNotes();
+                refreshNotificationsListFragment(mNotes);
             }
         };
     }
@@ -206,8 +205,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             // on a tablet: open first note if none selected
             String fragmentTag = mNotesList.getTag();
             if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
-                if (notes != null && notes.size() > 0) {
-                    Note note = notes.get(0);
+                if (mNotes != null && mNotes.size() > 0) {
+                    Note note = mNotes.get(0);
                     if (note != null) {
                         openNote(note);
                     }
@@ -285,7 +284,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
                         note.setUnreadCount("0");
                         if (notesAdapter.getPosition(note) < 0) {
-                            //Edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes in the adapter and find a match with the noteID
+                            // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
+                            // in the adapter and find a match with the noteID
                             for (int i=0; i<notesAdapter.getCount(); i++) {
                                 Note item = notesAdapter.getItem(i);
                                 if( item.getId().equals(note.getId()) ) {
@@ -408,10 +408,9 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     }
 
     private void refreshNotificationsListFragment(List<Note> notes) {
+        AppLog.d(T.NOTIFS, "refreshing note list fragment");
         final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-        adapter.clear();
-        adapter.addAll(notes);
-        adapter.notifyDataSetChanged();
+        adapter.addAll(notes, true);
         // mark last seen timestamp
         if (!notes.isEmpty()) {
             updateLastSeen(notes.get(0).getTimestamp());
@@ -430,8 +429,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 new Thread() {
                     @Override
                     public void run() {
-                        WordPress.wpDB.clearNotes();
-                        WordPress.wpDB.saveNotes(notes);
+                        WordPress.wpDB.saveNotes(notes, true);
                         NotificationsActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -447,10 +445,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 //We need to show an error message? and remove the loading indicator from the list?
                 mFirstLoadComplete = true;
                 final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                adapter.clear();
-                adapter.addAll(new ArrayList<Note>());
-                adapter.notifyDataSetChanged();
-                
+                adapter.addAll(new ArrayList<Note>(), true);
+
                 Context context = NotificationsActivity.this;
                 if(context!=null)
                     ToastUtils.showToastOrAuthAlert(context, error, context.getString(R.string.error_refresh_notifications));
@@ -490,8 +486,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 if (notes.size() >= 1)
                     notes.remove(0);
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                adapter.addAll(notes);
-                adapter.notifyDataSetChanged();
+                adapter.addAll(notes, false);
             }
         };
         restClient.getNotifications(params, notesHandler, notesHandler);
@@ -535,14 +530,14 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             if( response == null ) {
                 //Not sure this could ever happen, but make sure we're catching all response types
                 AppLog.w(T.NOTIFS, "Success, but did not receive any notes");
-                notes = new ArrayList<Note>(0);
-                onNotes(notes);
+                mNotes = new ArrayList<Note>(0);
+                onNotes(mNotes);
                 return;
             }
 
             try {
-                notes = NotificationUtils.parseNotes(response);
-                onNotes(notes);
+                mNotes = NotificationUtils.parseNotes(response);
+                onNotes(mNotes);
             } catch (JSONException e) {
                 AppLog.e(T.NOTIFS, "Success, but can't parse the response", e);
                 showError(getString(R.string.error_parsing_response));
