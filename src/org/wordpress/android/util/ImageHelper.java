@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.text.TextUtils;
 import android.util.FloatMath;
 import android.view.Display;
 import android.widget.ImageView;
@@ -255,6 +256,9 @@ public class ImageHelper {
         return null;
     }
 
+    /**
+     * daniloercoli - 21-Feb-2014 - Try to use a better alternative. Reading image bytes in memory is really expensive
+     */
     public Map<String, Object> getImageBytesForPath(String filePath, Context ctx) {
         Uri curStream = null;
         String[] projection;
@@ -475,6 +479,59 @@ public class ImageHelper {
         }
     }
 
+
+    public  String getTitleForWPImageSpan(Context ctx, String filePath) {
+        if (filePath == null)
+            return null;
+
+        Uri curStream = null;
+        String title = "";
+
+        if (filePath != null) {
+            if (!filePath.contains("content://"))
+                curStream = Uri.parse("content://media" + filePath);
+            else
+                curStream = Uri.parse(filePath);
+        }
+
+        if (curStream == null) {
+            return null;
+        }
+
+        if (filePath.contains("video")) {
+            return "Video";
+        } else {
+            String[] projection = new String[] { Images.Thumbnails.DATA };
+            String path = "";
+            Cursor cur;
+            try {
+                cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
+            } catch (Exception e1) {
+                return null;
+            }
+            File jpeg = null;
+            if (cur != null) {
+                String thumbData = "";
+                if (cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    thumbData = cur.getString(dataColumn);
+                }
+                cur.close();
+
+                if (thumbData == null) {
+                    return null;
+                }
+                jpeg = new File(thumbData);
+                path = thumbData;
+            } else {
+                path = filePath.toString().replace("file://", "");
+                jpeg = new File(path);
+            }
+            title = jpeg.getName();
+            return title;
+        }
+    }
+    
     /**
      * Resizes an image to be placed in the Post Content Editor
      * @param ctx
@@ -482,30 +539,64 @@ public class ImageHelper {
      * @param orientation
      * @return resized bitmap
      */
-    public Bitmap getThumbnailForWPImageSpan(Context ctx, byte[] bytes, String orientation) {
+    public Bitmap getThumbnailForWPImageSpan(Context ctx, String filePath) {
+        if (filePath==null)
+            return null;
+        
         Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
         if (width > height)
             width = height;
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+        Uri curStream = null;
+        
+        if (!filePath.contains("content://"))
+            curStream = Uri.parse("content://media" + filePath);
+        else
+            curStream = Uri.parse(filePath);
 
-        float conversionFactor = 0.40f;
-
-        if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.70f;
-
-        byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
-                orientation, true, null);
-
-        if (finalBytes == null) {
+        if (curStream == null) {
             return null;
         }
+        
+        if (filePath.contains("video")) {
+            int videoId = 0;
+            try {
+                videoId = Integer.parseInt(curStream.getLastPathSegment());
+            } catch (NumberFormatException e) {
+            }
+            ContentResolver crThumb = ctx.getContentResolver();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 1;
+            Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
+                    options);
+            return videoBitmap;
+        } else {
+            String orientation = getExifOrientation(filePath, "");
+            
+            int[] dimensions = getImageSize(curStream, ctx);
+            float conversionFactor = 0.40f;
+            if (dimensions[0] > dimensions[1])
+                conversionFactor = 0.60f;
+            int resizedWitdh = (int) (width * conversionFactor);
 
-        return BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
+            // create resized picture
+            int rotation;
+            try {
+                rotation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
+            } catch (NumberFormatException e) {
+                rotation = 0;
+            }
+            byte[] bytes = createThumbnailFromUri(ctx, curStream, resizedWitdh, null, rotation);
+
+            // upload resized picture
+            if (bytes != null && bytes.length > 0) {
+                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            } else {
+                return null;
+            }
+        }
     }
     
     public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
