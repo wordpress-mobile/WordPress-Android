@@ -281,8 +281,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             public void onResponse(JSONObject jsonObject) {
                 try {
                     List<Note> notes = NotificationUtils.parseNotes(jsonObject);
-                    WordPress.wpDB.clearNotes();
-                    WordPress.wpDB.saveNotes(notes);
+                    WordPress.wpDB.saveNotes(notes, true);
                     broadcastNewNotification();
                 } catch (JSONException e) {
                     AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: " + e);

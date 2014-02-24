@@ -625,8 +625,7 @@ public class WordPressDB {
         return returnVector;
     }
 
-    public boolean updateLatestCommentID(int id, Integer newCommentID) {
-
+    public boolean updateLatestCommentID(int id, long newCommentID) {
         boolean returnValue = false;
 
         synchronized (this) {
@@ -637,7 +636,6 @@ public class WordPressDB {
         }
 
         return (returnValue);
-
     }
 
     public List<Integer> getNotificationAccounts() {
@@ -683,7 +681,7 @@ public class WordPressDB {
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(remoteBlogId)});
-        if (localBlogID==0) { 
+        if (localBlogID==0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
         }
         return localBlogID;
@@ -692,7 +690,7 @@ public class WordPressDB {
     public int getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(int remoteBlogId, String xmlRpcUrl) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
                 new String[]{Integer.toString(remoteBlogId), xmlRpcUrl});
-        if (localBlogID==0) { 
+        if (localBlogID==0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, xmlRpcUrl);
         }
         return localBlogID;
@@ -1822,9 +1820,11 @@ public class WordPressDB {
         return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
     }
 
-    public void saveNotes(List<Note> notes) {
+    public void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
         db.beginTransaction();
         try {
+            if (clearBeforeSaving)
+                clearNotes();
             for (Note note: notes)
                 addNote(note, false);
             db.setTransactionSuccessful();
@@ -1849,7 +1849,7 @@ public class WordPressDB {
         }
     }
 
-    public void clearNotes() {
+    protected void clearNotes() {
         db.delete(NOTES_TABLE, null, null);
     }
 

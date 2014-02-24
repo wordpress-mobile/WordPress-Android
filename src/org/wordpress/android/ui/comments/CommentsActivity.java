@@ -40,8 +40,6 @@ public class CommentsActivity extends WPActionBarActivity
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
-        WordPress.currentComment = null;
-
         if (savedInstanceState != null)
             popCommentDetail();
     }
@@ -135,7 +133,6 @@ public class CommentsActivity extends WPActionBarActivity
 
         if (comment != null && fm.getBackStackEntryCount() == 0) {
             if (f == null || !f.isInLayout()) {
-                WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mCommentListFragment);
                 f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
