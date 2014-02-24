@@ -1,13 +1,14 @@
-package org.wordpress.android;
+package org.wordpress.android.util;
 
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
+import org.wordpress.android.FactoryUtils;
+import org.wordpress.android.TestUtils;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
