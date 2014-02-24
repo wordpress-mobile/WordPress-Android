@@ -559,7 +559,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
      * display the standard Android share chooser to share a link to this post
      */
     private void sharePage() {
-        if (!hasActivity())
+        if (!hasActivity() || !hasPost())
             return;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
