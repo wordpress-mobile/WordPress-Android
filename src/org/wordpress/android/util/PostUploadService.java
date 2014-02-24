@@ -818,17 +818,14 @@ public class PostUploadService extends Service {
 
         private Object uploadFileHelper(XMLRPCClient client, Object[] params, File tempFile) {
             try {
-                try {
-                    return client.call("wp.uploadFile", params, tempFile);
-                } catch (XMLRPCException e) {
-                    mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
-                    return null;
-                }
+                return client.call("wp.uploadFile", params, tempFile);
+            } catch (XMLRPCException e) {
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
+                return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
                 if (tempFile != null && tempFile.exists())
                     tempFile.delete();
-
             }
         }
     }
