@@ -92,7 +92,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
+                    if (!isFinishing())
+                        ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
                 }
             }).execute(false);
 

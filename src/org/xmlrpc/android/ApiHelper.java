@@ -311,7 +311,7 @@ public class ApiHelper {
         }
 
         Map<?, ?> contentHash;
-        int commentID, postID;
+        long commentID, postID;
         String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
         java.util.Date date;
         CommentList comments = new CommentList();
@@ -320,8 +320,8 @@ public class ApiHelper {
             contentHash = (Map<?, ?>) result[ctr];
             content = contentHash.get("content").toString();
             status = contentHash.get("status").toString();
-            postID = Integer.parseInt(contentHash.get("post_id").toString());
-            commentID = Integer.parseInt(contentHash.get("comment_id").toString());
+            postID = Long.parseLong(contentHash.get("post_id").toString());
+            commentID = Long.parseLong(contentHash.get("comment_id").toString());
             authorName = contentHash.get("author").toString();
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();

@@ -143,7 +143,7 @@ public class CommentActions {
                         blog.getHttppassword());
 
                 Map<String, Object> replyHash = new HashMap<String, Object>();
-                replyHash.put("comment_parent", comment.commentID);
+                replyHash.put("comment_parent", Long.toString(comment.commentID));
                 replyHash.put("content", replyText);
                 replyHash.put("author", "");
                 replyHash.put("author_url", "");
@@ -153,13 +153,21 @@ public class CommentActions {
                         blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        Integer.valueOf(comment.postID),
+                        Long.toString(comment.postID),
                         replyHash };
 
 
-                int newCommentID;
+                long newCommentID;
                 try {
-                    newCommentID = (Integer) client.call("wp.newComment", params);
+                    Object newCommentIDObject = client.call("wp.newComment", params);
+                    if (newCommentIDObject instanceof Integer) {
+                        newCommentID = ((Integer) newCommentIDObject).longValue();
+                    } else if (newCommentIDObject instanceof Long) {
+                        newCommentID = (Long) newCommentIDObject;
+                    } else {
+                        AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
+                        newCommentID = -1;
+                    }
                 } catch (XMLRPCException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
@@ -256,7 +264,7 @@ public class CommentActions {
                 Object[] params = { blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        comment.commentID,
+                        Long.toString(comment.commentID),
                         postHash};
 
                 Object result;
@@ -329,7 +337,7 @@ public class CommentActions {
                             remoteBlogId,
                             blog.getUsername(),
                             blog.getPassword(),
-                            comment.commentID,
+                            Long.toString(comment.commentID),
                             postHash};
 
                     Object result;

@@ -98,7 +98,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(int localBlogId, int commentId) {
+    protected static CommentDetailFragment newInstance(int localBlogId, long commentId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setComment(localBlogId, commentId);
         return fragment;
@@ -187,7 +187,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    protected void setComment(int localBlogId, int commentId) {
+    protected void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
@@ -258,7 +258,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mComment != null);
     }
 
-    private int getCommentId() {
+    private long getCommentId() {
         return (mComment != null ? mComment.commentID : 0);
     }
 
@@ -409,7 +409,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
      */
-    private void showPostTitle(final int blogId, final int postId) {
+    private void showPostTitle(final int blogId, final long postId) {
         if (!hasActivity())
             return;
 

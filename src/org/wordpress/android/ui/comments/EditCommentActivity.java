@@ -39,7 +39,7 @@ public class EditCommentActivity extends SherlockActivity {
     private static final int ID_DIALOG_SAVING = 0;
 
     private int mLocalBlogId;
-    private int mCommentId;
+    private long mCommentId;
     private Comment mComment;
 
     @Override
@@ -66,7 +66,7 @@ public class EditCommentActivity extends SherlockActivity {
             return false;
 
         mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
-        mCommentId = intent.getIntExtra(ARG_COMMENT_ID, 0);
+        mCommentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
         mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
         if (mComment == null)
             return false;
@@ -237,7 +237,9 @@ public class EditCommentActivity extends SherlockActivity {
 
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), mCommentId, postHash};
+            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), Long.toString(
+                    mCommentId), postHash};
+
             try {
                 Object result = client.call("wp.editComment", xmlParams);
                 boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
