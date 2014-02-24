@@ -96,8 +96,10 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    OnDialogConfirmListener act = (OnDialogConfirmListener) getActivity();
-                    act.onDialogConfirm();
+                    if (getActivity() instanceof OnDialogConfirmListener) {
+                        OnDialogConfirmListener act = (OnDialogConfirmListener) getActivity();
+                        act.onDialogConfirm();
+                    }
                 }
             });
             b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

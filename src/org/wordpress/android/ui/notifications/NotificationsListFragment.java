@@ -34,6 +34,7 @@ public class NotificationsListFragment extends ListFragment {
     private OnNoteClickListener mNoteClickListener;
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
+    private boolean mIsAddingNotes;
 
     /**
      * For responding to tapping of notes
@@ -104,10 +105,24 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     private void requestMoreNotifications() {
+        if (getView() == null) {
+            AppLog.w(T.NOTIFS, "requestMoreNotifications called before view exists");
+            return;
+        }
+
+        if (!hasActivity()) {
+            AppLog.w(T.NOTIFS, "requestMoreNotifications called without activity");
+            return;
+        }
+
         if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
             showProgressFooter();
             mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
         }
+    }
+
+    private boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
     }
 
     class NotesAdapter extends ArrayAdapter<Note> {
@@ -157,21 +172,26 @@ public class NotificationsListFragment extends ListFragment {
             return view;
         }
 
-        public void addAll(List<Note> notes) {
-            Collections.sort(notes, new Note.TimeStampComparator());
+        public void addAll(List<Note> notes, boolean clearBeforeAdding) {
             if (notes.size() == 0) {
                 // No more notes available
                 mAllNotesLoaded = true;
                 hideProgressFooter();
             } else {
+                Collections.sort(notes, new Note.TimeStampComparator());
                 // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
                 // will be triggered for each added note
                 setNotifyOnChange(false);
+                mIsAddingNotes = true;
                 try {
+                    if (clearBeforeAdding)
+                        clear();
                     for (Note note: notes)
                         add(note);
                 } finally {
                     setNotifyOnChange(true);
+                    notifyDataSetChanged();
+                    mIsAddingNotes = false;
                 }
             }
         }
@@ -214,8 +234,8 @@ public class NotificationsListFragment extends ListFragment {
                 return icon;
 
             int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
-            if (imageId==0) {
-                AppLog.w(T.NOTIFS, "unknown note type - " + noteType);
+            if (imageId == 0) {
+                AppLog.i(T.NOTIFS, "unknown note type - " + noteType);
                 return null;
             }
 
@@ -240,11 +260,14 @@ public class NotificationsListFragment extends ListFragment {
             mProgressFooterView.setVisibility(View.GONE);
     }
 
-
     private class ListScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (mAllNotesLoaded || visibleItemCount == 0)
+            if (visibleItemCount == 0 || totalItemCount == 0)
+                return;
+
+            // skip if all notes are loaded or notes are currently being added to the adapter
+            if (mAllNotesLoaded || mIsAddingNotes)
                 return;
 
             // if we're within 5 from the last item we should ask for more items

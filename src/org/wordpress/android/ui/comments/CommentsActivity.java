@@ -41,8 +41,6 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-
-        WordPress.currentComment = null;
     }
 
     @Override
@@ -190,7 +188,6 @@ public class CommentsActivity extends WPActionBarActivity
         CommentsListFragment listFragment = getListFragment();
 
         if (detailFragment == null) {
-            WordPress.currentComment = comment;
             FragmentTransaction ft = fm.beginTransaction();
             String tagForFragment = getString(R.string.fragment_tag_comment_detail);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
