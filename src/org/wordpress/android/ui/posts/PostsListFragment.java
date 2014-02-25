@@ -47,8 +47,7 @@ public class PostsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
+        return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
     public PostListAdapter getPostListAdapter() {
