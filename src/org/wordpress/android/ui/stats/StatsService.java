@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.wordpress.android.ui.stats.tasks.ClicksTask;
 import org.wordpress.android.ui.stats.tasks.ReferrersTask;
@@ -30,6 +31,9 @@ public class StatsService extends Service {
     private static final long EXECUTOR_TIMEOUT = 60 * 1000;
     public static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
+    public static final String ACTION_STAT_UPDATE_STARTED = "wp-stats-update-started";
+    public static final String ACTION_STAT_UPDATE_ENDED   = "wp-stats-update-ended";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -51,6 +55,7 @@ public class StatsService extends Service {
         final String today = StatUtils.getCurrentDate();
         final String yesterday = StatUtils.getYesterdaysDate();
 
+        broadcastAction(ACTION_STAT_UPDATE_STARTED);
         try {
             // summary (visitors and views)
             mExecutor.submit(new SummaryTask(blogId));
@@ -75,6 +80,17 @@ public class StatsService extends Service {
             mExecutor.submit(new ViewsByCountryTask(blogId, today));
             mExecutor.submit(new ViewsByCountryTask(blogId, yesterday));
 
+            /*
+            // comments
+            mExecutor.submit(new CommentsTask(blogId));
+            // tags and categories
+            mExecutor.submit(new TagsAndCategoriesTask(blogId));
+            // top authors
+            mExecutor.submit(new TopAuthorsTask(blogId));
+            // video plays
+            mExecutor.submit(new VideoPlaysTask(blogId));
+            */
+
         } catch (RejectedExecutionException e) {
             AppLog.e(T.STATS, e);
         }
@@ -85,8 +101,16 @@ public class StatsService extends Service {
             mExecutor.awaitTermination(EXECUTOR_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             AppLog.e(T.STATS, e);
+        } finally {
+            broadcastAction(ACTION_STAT_UPDATE_ENDED);
         }
 
         return START_NOT_STICKY;
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

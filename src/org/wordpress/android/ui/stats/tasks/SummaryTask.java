@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 
 /**
  * Created by nbradbury on 2/25/14.
@@ -15,7 +16,7 @@ public class SummaryTask extends StatsTask {
     private final String mBlogId;
 
     public SummaryTask(final String blogId) {
-        mBlogId = blogId;
+        mBlogId = StringUtils.notNullStr(blogId);
     }
 
     @Override
@@ -28,7 +29,6 @@ public class SummaryTask extends StatsTask {
                     }
                 },
                 new RestRequest.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.e(AppLog.T.STATS, error);

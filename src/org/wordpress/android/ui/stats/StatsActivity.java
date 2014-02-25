@@ -24,6 +24,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -482,43 +483,7 @@ public class StatsActivity extends WPActionBarActivity {
             }
         }
 
-        StatsRestHelper.getStatsSummary(blogId, new StatsRestHelper.StatsSummaryInterface() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure(VolleyError error) {
-                if (mSignInDialog != null && mSignInDialog.isShowing()) {
-                    return;
-                }
-
-                if (isFinishing())
-                    return;
-
-                if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
-                    // This site has the wrong WP.com credentials
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
-                    builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
-                            .setMessage(getString(R.string.jetpack_stats_switch_user));
-                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startWPComLoginActivity();
-                        }
-                    });
-                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    mSignInDialog = builder.create();
-                    mSignInDialog.show();
-                    return;
-                }
-
-                ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
-            }
-        });
+        verifyCredentials(blogId);
 
         // start service to get stats
         Intent intent = new Intent(this, StatsService.class);
@@ -536,6 +501,48 @@ public class StatsActivity extends WPActionBarActivity {
 //      StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
         StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
         StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);*/
+    }
+
+    private void verifyCredentials(final String blogId) {
+        WordPress.restClient.getStatsSummary(blogId,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        // nop
+                    }
+                },
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (isFinishing())
+                            return;
+                        if (mSignInDialog != null && mSignInDialog.isShowing()) {
+                            return;
+                        }
+
+                        if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
+                            // This site has the wrong WP.com credentials
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
+                            builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
+                                    .setMessage(getString(R.string.jetpack_stats_switch_user));
+                            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    startWPComLoginActivity();
+                                }
+                            });
+                            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                            mSignInDialog = builder.create();
+                            mSignInDialog.show();
+                            return;
+                        }
+
+                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
+                    }
+                });
     }
 
     public String getBlogId() {
