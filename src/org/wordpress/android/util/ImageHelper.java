@@ -163,11 +163,53 @@ public class ImageHelper {
 
     }
 
+    //Read the orientation from ContentResolver. If it fails, read from EXIF.
+    public int getImageOrientation(Context ctx, String filePath) {
+        Uri curStream = null;
+        String orientation = null;
+        
+        if (!filePath.contains("content://"))
+            curStream = Uri.parse("content://media" + filePath);
+        else
+            curStream = Uri.parse(filePath);
+
+        if (curStream != null) {
+            try {
+                Cursor cur = ctx.getContentResolver().query(curStream, new String[] { Images.Media.ORIENTATION }, null, null, null);
+                if (cur != null) {
+                    if(cur.moveToFirst()) {
+                        orientation = cur.getString(cur.getColumnIndex(Images.Media.ORIENTATION));
+                    }
+                    cur.close();
+                }
+            } catch (Exception errReadingContentResolver) {
+                AppLog.e(T.UTILS, errReadingContentResolver);
+            }
+        }
+        
+        if (TextUtils.isEmpty(orientation)) {
+            orientation = getExifOrientation(filePath, "");
+        }
+        
+        int calculatedOrientation;
+        try {
+            calculatedOrientation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
+        } catch (NumberFormatException e) {
+            AppLog.e(T.UTILS, e);
+            calculatedOrientation = 0;
+        }
+        
+        return calculatedOrientation;
+    }
+    
+    
+    
     public String getExifOrientation(String path, String orientation) {
         ExifInterface exif;
         try {
             exif = new ExifInterface(path);
         } catch (IOException e) {
+            AppLog.e(T.UTILS, e);
             return orientation;
         }
         String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
@@ -257,7 +299,9 @@ public class ImageHelper {
     }
 
     /**
-     * daniloercoli - 21-Feb-2014 - Try to use a better alternative. Reading image bytes in memory is really expensive
+     * daniloercoli - 21-Feb-2014 - Read image bytes in memory
+     * 
+     * @deprecated Try to use a better alternative. Reading image bytes in memory is really expensive
      */
     public Map<String, Object> getImageBytesForPath(String filePath, Context ctx) {
         Uri curStream = null;
@@ -573,21 +617,14 @@ public class ImageHelper {
                     options);
             return videoBitmap;
         } else {
-            String orientation = getExifOrientation(filePath, "");
-            
             int[] dimensions = getImageSize(curStream, ctx);
             float conversionFactor = 0.40f;
-            if (dimensions[0] > dimensions[1])
+            if (dimensions[0] > dimensions[1]) //width > height
                 conversionFactor = 0.60f;
             int resizedWitdh = (int) (width * conversionFactor);
 
             // create resized picture
-            int rotation;
-            try {
-                rotation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
-            } catch (NumberFormatException e) {
-                rotation = 0;
-            }
+            int rotation = getImageOrientation(ctx, filePath);
             byte[] bytes = createThumbnailFromUri(ctx, curStream, resizedWitdh, null, rotation);
 
             // upload resized picture
