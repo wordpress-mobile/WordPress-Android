@@ -14,8 +14,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Comment {
-    public int postID;
-    public int commentID;
+    public long postID;
+    public long commentID;
 
     private String authorName;
     private String status;
@@ -26,8 +26,8 @@ public class Comment {
     private String published;
     private String profileImageUrl;
 
-    public Comment(int postID,
-                   int commentID,
+    public Comment(long postID,
+                   long commentID,
                    String authorName,
                    String pubDateGmt,
                    String comment,
@@ -61,7 +61,7 @@ public class Comment {
             return null;
 
         Comment comment = new Comment();
-        comment.commentID = json.optInt("ID");
+        comment.commentID = json.optLong("ID");
         comment.status = JSONUtil.getString(json, "status");
         comment.published = JSONUtil.getString(json, "date");
 
@@ -72,7 +72,7 @@ public class Comment {
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
-            comment.postID = jsonPost.optInt("ID");
+            comment.postID = jsonPost.optLong("ID");
             // TODO: c.postTitle = ???
         }
 

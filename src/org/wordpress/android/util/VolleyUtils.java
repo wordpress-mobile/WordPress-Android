@@ -34,7 +34,7 @@ public class VolleyUtils {
      * attempts to return JSON from a volleyError - useful for WP REST API failures, which often
      * contain JSON in the response
      */
-    private static JSONObject volleyErrorToJSON(VolleyError volleyError) {
+    public static JSONObject volleyErrorToJSON(VolleyError volleyError) {
         if (volleyError==null
                 || volleyError.networkResponse==null
                 || volleyError.networkResponse.data==null

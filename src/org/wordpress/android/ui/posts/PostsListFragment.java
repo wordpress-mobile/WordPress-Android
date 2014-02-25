@@ -141,7 +141,7 @@ public class PostsListFragment extends ListFragment {
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }
@@ -193,7 +193,7 @@ public class PostsListFragment extends ListFragment {
                     FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
                     WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newInstance(mIsPage ? getString(R.string.error_refresh_pages) : getString(R.string.error_refresh_posts));
+                            .newAlertDialog(mIsPage ? getString(R.string.error_refresh_pages) : getString(R.string.error_refresh_posts));
                     try {
                         alert.show(ft, "alert");
                     } catch (Exception e) {

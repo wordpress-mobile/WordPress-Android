@@ -49,7 +49,7 @@ public class CommentAdapter extends BaseAdapter {
     private final int mSelectionColor;
 
     private final int mAvatarSz;
-    private int mHighlightedCommentId = -1;
+    private long mHighlightedCommentId = -1;
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
@@ -171,7 +171,7 @@ public class CommentAdapter extends BaseAdapter {
     /*
      * this is used for tablet UI to highlight the comment displayed in the detail view
      */
-    protected void setHighlightedCommentId(int commentId) {
+    protected void setHighlightedCommentId(long commentId) {
         if (mHighlightedCommentId == commentId)
             return;
         mHighlightedCommentId = commentId;
