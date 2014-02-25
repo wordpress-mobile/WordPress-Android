@@ -14,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -97,11 +94,13 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     }
 
     public class CustomAdapter extends CursorTreeAdapter {
-
         private StatsCursorLoaderCallback mCallback;
+        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+        private final LayoutInflater inflater;
 
         public CustomAdapter(Cursor cursor, Context context) {
             super(cursor, context, true);
+            inflater = LayoutInflater.from(context);
         }
 
         public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
@@ -109,32 +108,46 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
         }
 
         @Override
+        protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
+            View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
+            view.setTag(new StatsChildViewHolder(view));
+            return view;
+        }
+
+        @Override
         protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
+            final StatsChildViewHolder holder = (StatsChildViewHolder)view.getTag();
+
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
 
             // name, url
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
             if (name != null && name.startsWith("http")) {
                 Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                holder.entryTextView.setText(link);
+                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
-                entryTextView.setText(name);
-                entryTextView.setMovementMethod(null);
+                holder.entryTextView.setText(name);
+                holder.entryTextView.setMovementMethod(null);
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(formatter.format(total));
 
             // no icon
         }
 
         @Override
+        protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+            View view = inflater.inflate(R.layout.stats_group_cell, parent, false);
+            view.setTag(new StatsGroupViewHolder(view));
+            return view;
+        }
+
+        @Override
         protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+            final StatsGroupViewHolder holder = (StatsGroupViewHolder) view.getTag();
+
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));
             String url = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.URL));
@@ -147,35 +160,29 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             toggleChevrons(children > 0, isExpanded, view);
             
             // name, url
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_group_cell_entry);
             if (urlValid) {
                 Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                holder.entryTextView.setText(link);
+                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
-                entryTextView.setText(name);
-                entryTextView.setMovementMethod(null);
+                holder.entryTextView.setText(name);
+                holder.entryTextView.setMovementMethod(null);
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
-            totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(formatter.format(total));
 
             // icon
-            view.findViewById(R.id.stats_group_cell_image_frame).setVisibility(View.VISIBLE);
-            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
-            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
+            holder.imageFrame.setVisibility(View.VISIBLE);
             if (icon != null && icon.length() > 0) {
-                imageView.setErrorImageResId(R.drawable.stats_blank_image);
-                imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                imageView.setImageUrl(icon, WordPress.imageLoader);
-                imageView.setVisibility(View.VISIBLE);
-                errorImageView.setVisibility(View.GONE);
+                holder.networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
+                holder.networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
+                holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                holder.errorImageView.setVisibility(View.GONE);
             } else {
-                imageView.setVisibility(View.GONE);
-                errorImageView.setVisibility(View.VISIBLE);
+                holder.networkImageView.setVisibility(View.GONE);
+                holder.errorImageView.setVisibility(View.VISIBLE);
             }   
         }
 
@@ -186,18 +193,6 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupCursor.getString(groupCursor.getColumnIndex("groupId")));
             mCallback.onUriRequested(groupCursor.getPosition(), STATS_CLICKS_URI, bundle);
             return null;
-        }
-        
-        @Override
-        protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, parent, false);
-        }
-
-        @Override
-        protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_group_cell, parent, false);
         }
 
         private void toggleChevrons(boolean isVisible, boolean isExpanded, View view) {

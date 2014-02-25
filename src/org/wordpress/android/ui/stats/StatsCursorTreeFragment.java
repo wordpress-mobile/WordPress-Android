@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -115,8 +114,14 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         entryLabel.setText(getEntryLabelResId());
         TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
         totalsLabel.setText(getTotalsLabelResId());
+
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
-        mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
+        String label = getString(getEmptyLabelResId());
+        if (label != null && label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
+        }
         configureEmptyLabel();
 
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
@@ -149,7 +154,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             return null;
 
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
+        if (TextUtils.isEmpty(blogId))
+            blogId = "0";
         
         Uri uri = getGroupUri();
         
@@ -182,7 +188,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
 
-
             mCallback.onCursorLoaded(getGroupUri(), data);
             
             if (mAdapter != null)
@@ -193,7 +198,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 // due to a race condition that occurs when stats are refreshed, 
                 // it is possible to have more rows in the listview initially than when done refreshing,
                 // causing null pointer exceptions to occur. 
-                
                 try {
                     mAdapter.setChildrenCursor(loader.getId(), data);
                 } catch (NullPointerException e) {
@@ -231,7 +235,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
-            
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
             View view = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
             view.setTag(i);
@@ -248,8 +251,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
             // add divider
             getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
-            
-            
+
             if (isExpanded) {
                 int childrenCount = mAdapter.getChildrenCount(i);
                 for (int j = 0; j < childrenCount; j++) {
@@ -259,12 +261,9 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     
                     // add divider
                     getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
-                    
                 }
             }
-            
         }
-        
     }
     
     @Override

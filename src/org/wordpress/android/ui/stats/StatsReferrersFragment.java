@@ -14,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -84,26 +81,15 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
         return fragment;
     }
 
-    private static class GroupViewHolder {
-        TextView entryTextView;
-        TextView totalsTextView;
-        View imageFrame;
-        NetworkImageView networkImageView;
-        ImageView errorImageView;
-    }
-
-    private class ChildViewHolder {
-        TextView entryTextView;
-        TextView totalsTextView;
-    }
-
 
     public class CustomAdapter extends CursorTreeAdapter {
-
+        private final LayoutInflater inflater;
+        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         private StatsCursorLoaderCallback mCallback;
 
         public CustomAdapter(Cursor cursor, Context context) {
             super(cursor, context, true);
+            inflater = LayoutInflater.from(context);
         }
 
         public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
@@ -112,20 +98,14 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
 
         @Override
         protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
-
-            ChildViewHolder holder = new ChildViewHolder();
-            holder.entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            holder.totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            view.setTag(holder);
-
+            view.setTag(new StatsChildViewHolder(view));
             return view;
         }
 
         @Override
         protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
-            final ChildViewHolder holder = (ChildViewHolder) view.getTag();
+            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
 
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
@@ -140,8 +120,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
                 holder.entryTextView.setMovementMethod(null);
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
             holder.totalsTextView.setText(formatter.format(total));
 
@@ -150,23 +128,14 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
 
         @Override
         protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.stats_group_cell, parent, false);
-
-            GroupViewHolder holder = new GroupViewHolder();
-            holder.entryTextView = (TextView) view.findViewById(R.id.stats_group_cell_entry);
-            holder.errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
-            holder.imageFrame = view.findViewById(R.id.stats_group_cell_image_frame);
-            holder.networkImageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
-            holder.totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
-            view.setTag(holder);
-
+            view.setTag(new StatsGroupViewHolder(view));
             return view;
         }
 
         @Override
         protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
-            GroupViewHolder holder = (GroupViewHolder) view.getTag();
+            final StatsGroupViewHolder holder = (StatsGroupViewHolder) view.getTag();
 
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));
@@ -189,8 +158,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
                 holder.entryTextView.setMovementMethod(null);
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
             holder.totalsTextView.setText(formatter.format(total));
 

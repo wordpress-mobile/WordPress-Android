@@ -47,7 +47,6 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,7 +95,6 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         if (getActivity() == null)
             return;
 

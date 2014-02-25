@@ -72,44 +72,52 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
-    
+
+    private static class ViewHolder {
+        private final TextView entryTextView;
+        private final TextView totalsTextView;
+
+        ViewHolder(View view) {
+            entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+        }
+    }
     public class CustomCursorAdapter extends CursorAdapter {
+        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final ViewHolder holder = (ViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.TITLE));
             String url = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
 
             // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
             if (url != null && url.length() > 0) {
                 Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                holder.entryTextView.setText(link);
+                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             } else {
-                entryTextView.setText(entry);
+                holder.entryTextView.setText(entry);
             }
             
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            holder.totalsTextView.setText(formatter.format(total));
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new ViewHolder(view));
+            return view;
         }
-
     }
 
     @Override

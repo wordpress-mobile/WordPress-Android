@@ -10,7 +10,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
@@ -72,15 +71,17 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     
     public class CustomCursorAdapter extends CursorAdapter {
         private final DecimalFormat formatter;
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
             formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            final ChildViewHolder holder = (ChildViewHolder) view.getTag();
+            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
 
             String entry = cursor.getString(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.SEARCH));
             int total = cursor.getInt(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.VIEWS));
@@ -91,21 +92,10 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.stats_list_cell, root, false);
-
-            ChildViewHolder holder = new ChildViewHolder();
-            holder.entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            holder.totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            view.setTag(holder);
-
+            view.setTag(new StatsChildViewHolder(view));
             return view;
         }
-    }
-
-    private class ChildViewHolder {
-        TextView entryTextView;
-        TextView totalsTextView;
     }
 
     @Override
