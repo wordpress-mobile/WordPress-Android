@@ -15,10 +15,8 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
@@ -72,7 +70,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
     }
 
     public class CustomCursorAdapter extends CursorAdapter {
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
@@ -96,7 +93,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
             }
             
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
         }
 
         @Override

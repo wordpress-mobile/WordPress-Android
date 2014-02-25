@@ -25,10 +25,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
@@ -89,7 +87,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
@@ -119,7 +116,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             }
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
         }
     }
 
@@ -253,11 +250,9 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                 header = String.format(getString(R.string.stats_video_summary_header), result.getTimeframe());
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             mHeader.setText(header);
-            mPlays.setText(formatter.format(plays));
-            mImpressions.setText(formatter.format(impressions));
+            mPlays.setText(FormatUtils.formatDecimal(plays));
+            mImpressions.setText(FormatUtils.formatDecimal(impressions));
             mPlaybackTotals.setText(playbackTotals + "");
             mBandwidth.setText(bandwidth);
         }

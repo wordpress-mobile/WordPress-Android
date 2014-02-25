@@ -1,14 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -20,8 +11,6 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -29,7 +18,6 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
@@ -38,6 +26,15 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A utility class to help with date parsing and saving summaries in stats
@@ -239,18 +236,16 @@ public class StatUtils {
     }
 
     /*
-     * used in various stats views to show a hyperlinked entry
-     * TODO: Html.fromHtml() is very slow, try to get rid of it here!
+     * used in stats referrer views to show a hyperlinked entry
      */
     public static void hyperlinkEntryText(TextView entryTextView, String linkUrl, String linkName) {
         if (entryTextView == null
-                || linkUrl == null
-                || linkName == null)
+               || linkUrl == null
+               || linkName == null)
             return;
 
-        Spanned link = Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>");
-        entryTextView.setText(link);
-        entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
+        //entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
     }
     
 }

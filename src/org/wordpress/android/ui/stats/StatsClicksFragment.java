@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
@@ -93,7 +92,6 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
     public class CustomAdapter extends CursorTreeAdapter {
         private StatsCursorLoaderCallback mCallback;
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         private final LayoutInflater inflater;
 
         public CustomAdapter(Cursor cursor, Context context) {
@@ -127,7 +125,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             }
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // no icon
         }
@@ -162,11 +160,11 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             }
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
             holder.imageFrame.setVisibility(View.VISIBLE);
-            if (icon != null && icon.length() > 0) {
+            if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
                 holder.networkImageView.setVisibility(View.VISIBLE);
                 holder.errorImageView.setVisibility(View.GONE);

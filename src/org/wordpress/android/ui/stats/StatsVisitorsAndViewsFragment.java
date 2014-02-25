@@ -20,11 +20,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for visitors and views stats. Has three pages, for DAY, WEEK and MONTH stats.
@@ -166,12 +164,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 int viewsAllTime = (stats != null ? stats.getViewsAllTime() : 0);
                 int commentsAllTime = (stats != null ? stats.getCommentsAllTime() : 0);
 
-                DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-                final String fmtVisitorsToday = formatter.format(visitorsToday);
-                final String fmtViewsToday = formatter.format(viewsToday);
-                final String fmtVisitorsBestEver = formatter.format(visitorsBestEver);
-                final String fmtViewsAllTime = formatter.format(viewsAllTime);
-                final String fmtCommentsAllTime = formatter.format(commentsAllTime);
+                final String fmtVisitorsToday = FormatUtils.formatDecimal(visitorsToday);
+                final String fmtViewsToday = FormatUtils.formatDecimal(viewsToday);
+                final String fmtVisitorsBestEver = FormatUtils.formatDecimal(visitorsBestEver);
+                final String fmtViewsAllTime = FormatUtils.formatDecimal(viewsAllTime);
+                final String fmtCommentsAllTime = FormatUtils.formatDecimal(commentsAllTime);
 
                 handler.post(new Runnable() {
                     public void run() {

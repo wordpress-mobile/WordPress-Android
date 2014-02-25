@@ -19,10 +19,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for referrer stats. Has two pages, for Today's and Yesterday's stats.
@@ -83,7 +81,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
 
     public class CustomAdapter extends CursorTreeAdapter {
         private final LayoutInflater inflater;
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         private StatsCursorLoaderCallback mCallback;
 
         public CustomAdapter(Cursor cursor, Context context) {
@@ -117,7 +114,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             }
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // no icon
         }
@@ -152,7 +149,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             }
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
             holder.imageFrame.setVisibility(View.VISIBLE);

@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
@@ -17,11 +17,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for summary stats. Only a single page.
@@ -87,32 +85,22 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId))
-            blogId = "0";
-
-        final String statsBlogId = blogId;
-        new AsyncTask<Void, Void, StatsSummary>() {
-
+        final Handler handler = new Handler();
+        new Thread() {
             @Override
-            protected StatsSummary doInBackground(Void... params) {
-                return StatUtils.getSummary(statsBlogId);
-            }
-            
-            protected void onPostExecute(final StatsSummary result) {
-                if (getActivity() == null)
-                    return;
-                getActivity().runOnUiThread(new Runnable() {
-                    
-                    @Override
+            public void run() {
+                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                if (TextUtils.isEmpty(blogId))
+                    blogId = "0";
+                final StatsSummary summary = StatUtils.getSummary(blogId);
+                handler.post(new Runnable() {
                     public void run() {
-                        refreshViews(result);      
+                        if (getActivity() != null)
+                            refreshViews(summary);
                     }
                 });
             }
-            
-        }.execute();
-        
+        }.start();
     }
 
     @Override
@@ -145,14 +133,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
             shares = stats.getShares();
         }
 
-         DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-         
-         mPostsCountView.setText(formatter.format(posts));
-         mCategoriesCountView.setText(formatter.format(categories));
-         mTagsCountView.setText(formatter.format(tags));
-         mFollowersCountView.setText(formatter.format(followers));
-         mCommentsCountView.setText(formatter.format(comments));
-         mSharesCountView.setText(formatter.format(shares));
+         mPostsCountView.setText(FormatUtils.formatDecimal(posts));
+         mCategoriesCountView.setText(FormatUtils.formatDecimal(categories));
+         mTagsCountView.setText(FormatUtils.formatDecimal(tags));
+         mFollowersCountView.setText(FormatUtils.formatDecimal(followers));
+         mCommentsCountView.setText(FormatUtils.formatDecimal(comments));
+         mSharesCountView.setText(FormatUtils.formatDecimal(shares));
     }
 
 }

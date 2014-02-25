@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +16,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.Utils;
+
+import java.util.Locale;
 
 /**
  * Fragment for tags and categories stats. Only a single page.
@@ -80,11 +80,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
                 entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
             
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
+            totalsTextView.setText(FormatUtils.formatDecimal(total));
             
         }
 

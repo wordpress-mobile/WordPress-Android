@@ -14,9 +14,7 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.providers.StatsContentProvider;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
+import org.wordpress.android.util.FormatUtils;
 
 /**
  * Fragment for search engine term stats. Has two pages, for Today's and Yesterday's stats.
@@ -70,12 +68,10 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
-        private final DecimalFormat formatter;
         private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
-            formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
             inflater = LayoutInflater.from(context);
         }
 
@@ -87,7 +83,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.VIEWS));
 
             holder.entryTextView.setText(entry);
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
         }
 
         @Override

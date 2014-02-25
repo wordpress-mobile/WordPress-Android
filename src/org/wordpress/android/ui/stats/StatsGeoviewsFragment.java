@@ -16,9 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.providers.StatsContentProvider;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
+import org.wordpress.android.util.FormatUtils;
 
 /**
  * Fragment for geoview (views by country) stats. Has two pages, for Today's and Yesterday's stats.
@@ -74,7 +72,6 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     
     public static class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
@@ -100,7 +97,7 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
             holder.entryTextView.setText(entry);
 
             // totals
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             
             // image (country flag)
             holder.imageFrame.setVisibility(View.VISIBLE);

@@ -19,11 +19,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -31,12 +29,10 @@ import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.WPLinkMovementMethod;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
@@ -105,7 +101,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
         private final int mType;
-        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
         public CustomCursorAdapter(Context context, Cursor c, int type) {
             super(context, c, true);
@@ -135,7 +130,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             }
 
             holder.entryTextView.setText(entry);
-            holder.totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             
             // image 
             if (mType == TOP_COMMENTERS) {
@@ -261,10 +256,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             }
     
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-
-            mPerMonthText.setText(formatter.format(perMonth));
-            mTotalText.setText(formatter.format(total));
+            mPerMonthText.setText(FormatUtils.formatDecimal(perMonth));
+            mTotalText.setText(FormatUtils.formatDecimal(total));
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
             
