@@ -56,9 +56,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
         
         setRetainInstance(true);
-        
         initLayout(view);
-
         restoreState(savedInstanceState);
         
         return view;
@@ -67,29 +65,28 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-        
         mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
     }
 
     private void initLayout(View view) {
-        
-        TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
+        final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
-        String[] titles = getTabTitles();
-
         mFragmentContainer = (FrameLayout) view.findViewById(R.id.stats_pager_container);
-        
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
-        mRadioGroup.setVisibility(View.VISIBLE);
-        mRadioGroup.setOnCheckedChangeListener(this);
-        
+
+        int dp8 = (int) Utils.dpToPx(8);
+        int dp80 = (int) Utils.dpToPx(80);
+
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+        String[] titles = getTabTitles();
         for (int i = 0; i < titles.length; i++) {
-            RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            int dp8 = (int) Utils.dpToPx(8);
+            RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
+                                                                         RadioGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, dp8, 0);
-            rb.setMinimumWidth((int) Utils.dpToPx(80));
+            rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
@@ -100,6 +97,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         }
 
         loadFragmentIndex(mSelectedButtonIndex);
+
+        mRadioGroup.setVisibility(View.VISIBLE);
+        mRadioGroup.setOnCheckedChangeListener(this);
     }
 
     @Override

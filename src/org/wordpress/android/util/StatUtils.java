@@ -19,6 +19,10 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -232,6 +236,21 @@ public class StatUtils {
         Intent intent = new Intent(STATS_SUMMARY_UPDATED);
         intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
         lbm.sendBroadcast(intent);
+    }
+
+    /*
+     * used in various stats views to show a hyperlinked entry
+     * TODO: Html.fromHtml() is very slow, try to get rid of it here!
+     */
+    public static void hyperlinkEntryText(TextView entryTextView, String linkUrl, String linkName) {
+        if (entryTextView == null
+                || linkUrl == null
+                || linkName == null)
+            return;
+
+        Spanned link = Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>");
+        entryTextView.setText(link);
+        entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
     }
     
 }

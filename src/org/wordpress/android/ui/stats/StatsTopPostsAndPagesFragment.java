@@ -7,17 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.StatUtils;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -73,15 +71,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
         return fragment;
     }
 
-    private static class ViewHolder {
-        private final TextView entryTextView;
-        private final TextView totalsTextView;
-
-        ViewHolder(View view) {
-            entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-        }
-    }
     public class CustomCursorAdapter extends CursorAdapter {
         private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         private final LayoutInflater inflater;
@@ -93,17 +82,15 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            final ViewHolder holder = (ViewHolder) view.getTag();
+            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
 
-            String entry = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.TITLE));
-            String url = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.URL));
+            final String entry = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.TITLE));
+            final String url = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
 
             // entries
-            if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                holder.entryTextView.setText(link);
-                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            if (!TextUtils.isEmpty(url)) {
+                StatUtils.hyperlinkEntryText(holder.entryTextView, url, entry);
             } else {
                 holder.entryTextView.setText(entry);
             }
@@ -115,7 +102,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
             View view = inflater.inflate(R.layout.stats_list_cell, root, false);
-            view.setTag(new ViewHolder(view));
+            view.setTag(new StatsChildViewHolder(view));
             return view;
         }
     }

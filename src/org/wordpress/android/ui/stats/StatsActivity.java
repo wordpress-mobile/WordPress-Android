@@ -89,7 +89,7 @@ public class StatsActivity extends WPActionBarActivity {
             finish();
             return;
         }
-
+        //Debug.startMethodTracing("WordPress");
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
@@ -105,6 +105,12 @@ public class StatsActivity extends WPActionBarActivity {
         loadStatsFragments();
         setTitle(R.string.stats);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        //Debug.stopMethodTracing();
+        super.onDestroy();
     }
 
     @Override

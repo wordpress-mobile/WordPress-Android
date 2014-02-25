@@ -13,7 +13,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp" >
 
-        <org.wordpress.android.ui.FadeInNetworkImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/stats_group_cell_image"
             android:layout_width="24dp"
             android:layout_height="24dp"

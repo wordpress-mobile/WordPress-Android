@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +26,6 @@ import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -91,42 +88,39 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
+        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsChildViewHolder(view));
+            return view;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.NAME));
             String url = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
 
             // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
             if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                StatUtils.hyperlinkEntryText(holder.entryTextView, url, entry);
             } else {
-                entryTextView.setText(entry);
+                holder.entryTextView.setText(entry);
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            holder.totalsTextView.setText(formatter.format(total));
         }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
-        }
-
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,69 +103,54 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
-
+        private final LayoutInflater inflater;
         private final int mType;
+        private final DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
         public CustomCursorAdapter(Context context, Cursor c, int type) {
             super(context, c, true);
             mType = type;
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
-            // entry
-            String entry;
-            if (mType == TOP_COMMENTERS)
-                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
-            else 
-                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
-
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
-
-
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
-            // totals
-            int total;
-            if (mType == TOP_COMMENTERS)
-                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
-            else 
-                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
-            
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
-            // image 
-            String imageUrl;
-            if (mType == TOP_COMMENTERS) {
-                imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
-                
-                view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
-                
-                NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-                ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-                if (imageUrl != null && imageUrl.length() > 0) {
-                    imageView.setErrorImageResId(R.drawable.stats_blank_image);
-                    imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                    imageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                    imageView.setVisibility(View.VISIBLE);
-                    errorImageView.setVisibility(View.GONE);
-                } else {
-                    imageView.setVisibility(View.GONE);
-                    errorImageView.setVisibility(View.VISIBLE);
-                }
-            }
-            
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsChildViewHolder(view));
+            return view;
         }
 
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
+
+            final String entry;
+            final int total;
+            if (mType == TOP_COMMENTERS) {
+                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
+                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
+            } else {
+                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
+                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
+            }
+
+            holder.entryTextView.setText(entry);
+            holder.totalsTextView.setText(formatter.format(total));
+            
+            // image 
+            if (mType == TOP_COMMENTERS) {
+                String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
+                holder.imageFrame.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(imageUrl)) {
+                    holder.networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+                    holder.networkImageView.setVisibility(View.VISIBLE);
+                    holder.errorImageView.setVisibility(View.GONE);
+                } else {
+                    holder.networkImageView.setVisibility(View.GONE);
+                    holder.errorImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
     
     @Override

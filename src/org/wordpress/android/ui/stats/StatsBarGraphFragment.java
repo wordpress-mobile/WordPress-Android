@@ -84,7 +84,8 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
             return null;
 
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
+        if (TextUtils.isEmpty(blogId))
+            blogId = "0";
         StatsBarChartUnit unit = getBarChartUnit();
         return new CursorLoader(getActivity(), getUri(), null, "blogId=? AND unit=?", new String[] { blogId, unit.name() }, null);
     }

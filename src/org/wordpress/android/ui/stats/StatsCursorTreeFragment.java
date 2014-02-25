@@ -172,10 +172,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
-
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));

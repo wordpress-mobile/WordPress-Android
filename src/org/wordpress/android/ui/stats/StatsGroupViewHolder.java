@@ -21,9 +21,12 @@ public class StatsGroupViewHolder {
 
     public StatsGroupViewHolder(View view) {
         entryTextView = (TextView) view.findViewById(R.id.stats_group_cell_entry);
-        errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
-        imageFrame = view.findViewById(R.id.stats_group_cell_image_frame);
-        networkImageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
         totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
+        imageFrame = view.findViewById(R.id.stats_group_cell_image_frame);
+        errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
+        networkImageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
+
+        networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
+        networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
     }
 }

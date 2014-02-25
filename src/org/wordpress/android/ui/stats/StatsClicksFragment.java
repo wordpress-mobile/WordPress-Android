@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.StatUtils;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -123,12 +121,9 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
             // name, url
             if (name != null && name.startsWith("http")) {
-                Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
-                holder.entryTextView.setText(link);
-                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                StatUtils.hyperlinkEntryText(holder.entryTextView, name, name);
             } else {
                 holder.entryTextView.setText(name);
-                holder.entryTextView.setMovementMethod(null);
             }
 
             // totals
@@ -161,12 +156,9 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             
             // name, url
             if (urlValid) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
-                holder.entryTextView.setText(link);
-                holder.entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                StatUtils.hyperlinkEntryText(holder.entryTextView, url, name);
             } else {
                 holder.entryTextView.setText(name);
-                holder.entryTextView.setMovementMethod(null);
             }
 
             // totals
@@ -175,8 +167,6 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             // icon
             holder.imageFrame.setVisibility(View.VISIBLE);
             if (icon != null && icon.length() > 0) {
-                holder.networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
-                holder.networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
                 holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
                 holder.networkImageView.setVisibility(View.VISIBLE);
                 holder.errorImageView.setVisibility(View.GONE);
