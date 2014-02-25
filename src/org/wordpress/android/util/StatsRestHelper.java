@@ -18,7 +18,6 @@ import com.wordpress.rest.RestRequest.Listener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
@@ -77,9 +76,8 @@ public class StatsRestHelper {
     public static final String REFRESH_VIEW_TYPE = "REFRESH_VIEW_TYPE";
     public static final String REFRESH_VIEW_TYPE_STARTED = "REFRESH_VIEW_TYPE_STARTED";
     public static final String REFRESH_VIEW_TYPE_ORDINAL = "REFRESH_VIEW_TYPE_ORDINAL";
-    
+
     public static void getStats(StatsViewType type, String blogId) {
-        
         if (sRefreshMap == null) {
             initRefreshMap();
         }
@@ -1052,6 +1050,5 @@ public class StatsRestHelper {
             return null;
         }        
     }
-    
-    
+
 }

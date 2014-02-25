@@ -89,7 +89,7 @@ public class StatsActivity extends WPActionBarActivity {
             finish();
             return;
         }
-        //Debug.startMethodTracing("WordPress");
+
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
@@ -109,7 +109,7 @@ public class StatsActivity extends WPActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        //Debug.stopMethodTracing();
+        stopService(new Intent(this, StatsService.class));
         super.onDestroy();
     }
 
@@ -492,10 +492,10 @@ public class StatsActivity extends WPActionBarActivity {
                 if (mSignInDialog != null && mSignInDialog.isShowing()) {
                     return;
                 }
-                
+
                 if (isFinishing())
                     return;
-                
+
                 if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                     // This site has the wrong WP.com credentials
                     AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
@@ -503,7 +503,7 @@ public class StatsActivity extends WPActionBarActivity {
                             .setMessage(getString(R.string.jetpack_stats_switch_user));
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                        startWPComLoginActivity();
+                            startWPComLoginActivity();
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -513,14 +513,19 @@ public class StatsActivity extends WPActionBarActivity {
                     });
                     mSignInDialog = builder.create();
                     mSignInDialog.show();
-                    return ;
+                    return;
                 }
-               
+
                 ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
             }
         });
 
-        StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
+        // start service to get stats
+        Intent intent = new Intent(this, StatsService.class);
+        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
+        startService(intent);
+
+        /*StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
 //      StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
         StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
         StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
@@ -530,7 +535,7 @@ public class StatsActivity extends WPActionBarActivity {
         StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
 //      StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
         StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
-        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
+        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);*/
     }
 
     public String getBlogId() {

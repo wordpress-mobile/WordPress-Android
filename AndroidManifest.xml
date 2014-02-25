@@ -266,6 +266,10 @@
             android:label="Media Delete Service" >
         </service>
 
+        <service android:name=".ui.stats.StatsService"
+            android:label="Stats Update Service"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -178,19 +178,17 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             setLabel(0, label1);
             setLabel(1, label2);
         } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
-            
-            currentDate -= ONE_DAY; 
+            currentDate -= ONE_DAY;
             
             String label;
-            if (date < currentDate) // old stats
+            if (date < currentDate) {// old stats
                 label = StatUtils.msToString(date, "MMM d");
-            else
+            } else {
                 label = StatsTimeframe.YESTERDAY.getLabel();
-        
+            }
+
             setLabel(1, label);
         }
-        
-        
     }
 
     private void setLabel(int position, String label) {

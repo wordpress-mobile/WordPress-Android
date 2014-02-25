@@ -93,10 +93,7 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
             String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
 
-            // entries
             holder.entryTextView.setText(entry);
-
-            // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             
             // image (country flag)
