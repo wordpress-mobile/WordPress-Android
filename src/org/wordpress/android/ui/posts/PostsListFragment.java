@@ -165,21 +165,22 @@ public class PostsListFragment extends ListFragment {
         ApiHelper.FetchPostsTask fetchPostsTaskTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
-                if (isAdded() && hasActivity()) {
-                    if (postCount == 0) {
-                        mCanLoadMorePosts = false;
-                        return;
-                    } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
-                        // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
-                        mCanLoadMorePosts = false;
-                        if (mProgressFooterView != null)
-                            mProgressFooterView.setVisibility(View.GONE);
-                        return;
+                if (!hasActivity())
+                    return;
+                mOnRefreshListener.onRefresh(false);
+                if (postCount == 0) {
+                    mCanLoadMorePosts = false;
+                    return;
+                } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
+                    // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
+                    mCanLoadMorePosts = false;
+                    if (mProgressFooterView != null) {
+                        mProgressFooterView.setVisibility(View.GONE);
                     }
-
-                    mOnRefreshListener.onRefresh(false);
-                    getPostListAdapter().loadPosts();
+                    return;
                 }
+
+                getPostListAdapter().loadPosts();
             }
 
             @Override
