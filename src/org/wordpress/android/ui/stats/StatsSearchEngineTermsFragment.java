@@ -79,28 +79,39 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final ChildViewHolder holder = (ChildViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.SEARCH));
             int total = cursor.getInt(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.VIEWS));
 
             // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
+            holder.entryTextView.setText(entry);
 
             DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
             
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
+            holder.totalsTextView.setText(formatter.format(total));
             
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+
+            ChildViewHolder holder = new ChildViewHolder();
+            holder.entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            holder.totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+            view.setTag(holder);
+
+            return view;
         }
 
+    }
+
+    private class ChildViewHolder {
+        TextView entryTextView;
+        TextView totalsTextView;
     }
 
     @Override

@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -110,10 +109,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     private void loadBarChartFragmentForIndex(int index) {
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
             StatsBarChartUnit unit = StatsBarChartUnit.DAY;
-            if (index == 1)
+            if (index == 1) {
                 unit = StatsBarChartUnit.WEEK;
-            else if (index == 2)
+            } else if (index == 2) {
                 unit = StatsBarChartUnit.MONTH;
+            }
             StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
@@ -126,31 +126,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
-
-        final String statsBlogId = blogId;
-        new AsyncTask<Void, Void, StatsSummary>() {
-
+        final Handler handler = new Handler();
+        new Thread() {
             @Override
-            protected StatsSummary doInBackground(Void... params) {
-                return StatUtils.getSummary(statsBlogId);
-            }
-
-            protected void onPostExecute(final StatsSummary result) {
-                if (getActivity() == null)
-                    return;
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
+            public void run() {
+                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                if (TextUtils.isEmpty(blogId))
+                    blogId = "0";
+                final StatsSummary summary = StatUtils.getSummary(blogId);
+                handler.post(new Runnable() {
                     public void run() {
-                        refreshViews(result);
+                        if (getActivity() != null)
+                            refreshViews(summary);
                     }
                 });
-            };
-
-        }.execute();
-
+            }
+        }.start();
     }
 
     @Override
@@ -161,28 +152,38 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         lbm.unregisterReceiver(mReceiver);
     }
 
-    protected void refreshViews(StatsSummary stats) {
-        int visitorsToday = 0;
-        int viewsToday = 0;
-        int visitorsBestEver = 0;
-        int viewsAllTime = 0;
-        int commentsAllTime = 0;
+    protected void refreshViews(final StatsSummary stats) {
+        final Handler handler = new Handler();
 
-        if (stats != null) {
-            visitorsToday = stats.getVisitorsToday();
-            viewsToday = stats.getViewsToday();
-            visitorsBestEver = stats.getViewsBestDayTotal();
-            viewsAllTime = stats.getViewsAllTime();
-            commentsAllTime = stats.getCommentsAllTime();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                int visitorsToday = (stats != null ? stats.getVisitorsToday() : 0);
+                int viewsToday = (stats != null ? stats.getViewsToday() : 0);
+                int visitorsBestEver = (stats != null ? stats.getViewsBestDayTotal() : 0);
+                int viewsAllTime = (stats != null ? stats.getViewsAllTime() : 0);
+                int commentsAllTime = (stats != null ? stats.getCommentsAllTime() : 0);
 
-        DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+                DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+                final String fmtVisitorsToday = formatter.format(visitorsToday);
+                final String fmtViewsToday = formatter.format(viewsToday);
+                final String fmtVisitorsBestEver = formatter.format(visitorsBestEver);
+                final String fmtViewsAllTime = formatter.format(viewsAllTime);
+                final String fmtCommentsAllTime = formatter.format(commentsAllTime);
 
-        mVisitorsToday.setText(formatter.format(visitorsToday));
-        mViewsToday.setText(formatter.format(viewsToday));
-        mViewsBestEver.setText(formatter.format(visitorsBestEver));
-        mViewsAllTime.setText(formatter.format(viewsAllTime));
-        mCommentsAllTime.setText(formatter.format(commentsAllTime));
+                handler.post(new Runnable() {
+                    public void run() {
+                        if (getActivity() == null)
+                            return;
+                        mVisitorsToday.setText(fmtVisitorsToday);
+                        mViewsToday.setText(fmtViewsToday);
+                        mViewsBestEver.setText(fmtVisitorsBestEver);
+                        mViewsAllTime.setText(fmtViewsAllTime);
+                        mCommentsAllTime.setText(fmtCommentsAllTime);
+                    }
+                });
+            }
+        }.start();
     }
 
     @Override

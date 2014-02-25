@@ -94,7 +94,14 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
         mTotalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
-        mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
+
+        // skip Html.fromHtml() when possible since it's slow
+        String empty = getString(getEmptyLabelResId());
+        if (empty != null && empty.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(empty));
+        } else {
+            mEmptyLabel.setText(empty);
+        }
         configureEmptyLabel();
 
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
@@ -159,13 +166,14 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
             return; 
         
         mLinearLayout.removeAllViews();
-        
+        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+
         // limit number of items to show otherwise it would cause performance issues on the linearlayout
         int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < count; i++) {
             View view = mAdapter.getView(i, null, mLinearLayout);
             if (i % 2 == 1)
-                view.setBackgroundColor(getResources().getColor(R.color.stats_alt_row));
+                view.setBackgroundColor(altRowColor);
             mLinearLayout.addView(view);
 
             // add divider

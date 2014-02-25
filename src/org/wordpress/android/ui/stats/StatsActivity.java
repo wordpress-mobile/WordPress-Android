@@ -106,7 +106,7 @@ public class StatsActivity extends WPActionBarActivity {
         setTitle(R.string.stats);
 
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();

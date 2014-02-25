@@ -125,7 +125,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
 
         @Override
         protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
-            ChildViewHolder holder = (ChildViewHolder) view.getTag();
+            final ChildViewHolder holder = (ChildViewHolder) view.getTag();
 
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
