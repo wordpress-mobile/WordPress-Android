@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.PostsListFragment;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,7 @@ public class PostListAdapter extends BaseAdapter {
         PostsListPost post = mPosts.get(position);
         PostViewWrapper wrapper;
         if (view == null) {
-            view = mLayoutInflater.inflate(R.layout.row_post_page, parent, false);
+            view = mLayoutInflater.inflate(R.layout.post_list_row, parent, false);
             wrapper = new PostViewWrapper(view);
             view.setTag(wrapper);
         } else {
@@ -93,24 +92,40 @@ public class PostListAdapter extends BaseAdapter {
         }
 
         String formattedStatus = "";
-        if (post.isLocalDraft()) {
-            formattedStatus = mContext.getResources().getText(R.string.local_draft).toString();
-        } else if (status.equals("publish")) {
-            formattedStatus = mContext.getResources().getText(R.string.published).toString();
-        } else if (status.equals("draft")) {
-            formattedStatus = mContext.getResources().getText(R.string.draft).toString();
-        } else if (status.equals("pending")) {
-            formattedStatus = mContext.getResources().getText(R.string.pending_review).toString();
-        } else if (status.equals("private")) {
-            formattedStatus = mContext.getResources().getText(R.string.post_private).toString();
+        if (status.equals("publish") && !post.isLocalDraft() && !post.hasLocalChanges()) {
+            wrapper.getStatus().setVisibility(View.GONE);
+        } else {
+            wrapper.getStatus().setVisibility(View.VISIBLE);
+            if (post.isLocalDraft()) {
+                formattedStatus = mContext.getResources().getString(R.string.local_draft);
+            } else if (post.hasLocalChanges()) {
+                formattedStatus = mContext.getResources().getString(R.string.local_changes);
+            } else if (status.equals("draft")) {
+                formattedStatus = mContext.getResources().getString(R.string.draft);
+            } else if (status.equals("pending")) {
+                formattedStatus = mContext.getResources().getString(R.string.pending_review);
+            } else if (status.equals("private")) {
+                formattedStatus = mContext.getResources().getString(R.string.post_private);
+            } else if (status.equals("scheduled")) {
+                formattedStatus = mContext.getResources().getString(R.string.scheduled);
+            }
+
+            // Set post status TextView color
+            if (post.isLocalDraft() || status.equals("draft") || post.hasLocalChanges()) {
+                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_dark));
+            } else {
+                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_medium));
+            }
+
+            formattedStatus = formattedStatus.toUpperCase(Locale.getDefault());
+            wrapper.getStatus().setText(formattedStatus);
         }
-        formattedStatus = formattedStatus.toUpperCase(Locale.getDefault());
-        wrapper.getStatus().setText(formattedStatus);
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
-                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1)
+                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore(true);
+        }
 
         return view;
     }
@@ -139,21 +154,21 @@ public class PostListAdapter extends BaseAdapter {
 
         TextView getTitle() {
             if (title == null) {
-                title = (TextView) base.findViewById(R.id.title);
+                title = (TextView) base.findViewById(R.id.post_list_title);
             }
             return (title);
         }
 
         TextView getDate() {
             if (date == null) {
-                date = (TextView) base.findViewById(R.id.date);
+                date = (TextView) base.findViewById(R.id.post_list_date);
             }
             return (date);
         }
 
         TextView getStatus() {
             if (status == null) {
-                status = (TextView) base.findViewById(R.id.status);
+                status = (TextView) base.findViewById(R.id.post_list_status);
             }
             return (status);
         }
@@ -178,5 +193,18 @@ public class PostListAdapter extends BaseAdapter {
         protected void onPostExecute(Void nada) {
             notifyDataSetChanged();
         }
+    }
+
+    public int getRemotePostCount() {
+        if (mPosts == null)
+            return 0;
+
+        int remotePostCount = 0;
+        for (PostsListPost post : mPosts) {
+            if (!post.isLocalDraft())
+                remotePostCount++;
+        }
+
+        return remotePostCount;
     }
 }

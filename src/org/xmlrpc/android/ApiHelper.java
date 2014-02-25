@@ -16,6 +16,7 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -364,23 +365,29 @@ public class ApiHelper {
             try {
                 result = (Object[]) client.call((isPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", xmlrpcParams);
-                if (result != null) {
-                    if (result.length > 0) {
-                        List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                if (result != null && result.length > 0) {
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
 
-                        if (!loadMore) {
-                            WordPress.wpDB.deleteUploadedPosts(
-                                    blog.getLocalTableBlogId(), isPage);
-                        }
-
-                        for (int ctr = 0; ctr < result.length; ctr++) {
-                            Map<?, ?> postMap = (Map<?, ?>) result[ctr];
-                            postsList.add(ctr, postMap);
-                        }
-
-                        WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage);
-                        mPostCount = postsList.size();
+                    if (!loadMore) {
+                        WordPress.wpDB.deleteUploadedPosts(
+                                blog.getLocalTableBlogId(), isPage);
                     }
+
+                    // If we're loading more posts, only save the posts at the end of the array.
+                    // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
+                    // since it allows for an offset parameter.
+                    int startPosition = 0;
+                    if (loadMore && result.length > PostsListFragment.POSTS_REQUEST_COUNT) {
+                        startPosition = (result.length - PostsListFragment.POSTS_REQUEST_COUNT);
+                    }
+
+                    for (int ctr = startPosition; ctr < result.length; ctr++) {
+                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                        postsList.add(postMap);
+                    }
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
+                    mPostCount = postsList.size();
                 }
                 return true;
             } catch (XMLRPCException e) {

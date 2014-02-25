@@ -2,7 +2,7 @@
     android:id="@+id/row_post_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
@@ -10,33 +10,37 @@
     style="@style/WordPressListRowBackground">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/title"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:id="@+id/post_list_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"
-            style="@style/ReaderTextView.Post.Title" />
+            android:layout_gravity="center_vertical"
+            style="@style/ReaderTextView.Post.Title"
+            android:text="Jumanji is my favorite" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/date"
+            android:id="@+id/post_list_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/ReaderTextView.Date" />
-
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/margin_medium"
+            style="@style/ReaderTextView.Date"
+            android:text="Two hours ago"/>
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/status"
-        android:layout_marginTop="6dp"
-        android:layout_width="fill_parent"
+        android:id="@+id/post_list_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:textColor="@color/grey_medium"
-        android:textSize="@dimen/text_sz_small" />
+        android:textSize="@dimen/text_sz_small"
+        android:text="DRAFT"/>
 
 </LinearLayout>

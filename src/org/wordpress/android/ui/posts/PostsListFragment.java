@@ -149,7 +149,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void requestPosts(boolean loadMore) {
-        int postCount = getPostListAdapter().getCount() + POSTS_REQUEST_COUNT;
+        int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
             mOnRefreshListener.onRefresh(true);
             postCount = POSTS_REQUEST_COUNT;
@@ -169,7 +169,8 @@ public class PostsListFragment extends ListFragment {
                     if (postCount == 0) {
                         mCanLoadMorePosts = false;
                         return;
-                    } else if (postCount == getPostListAdapter().getCount()) {
+                    } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
+                        // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
                         mCanLoadMorePosts = false;
                         if (mProgressFooterView != null)
                             mProgressFooterView.setVisibility(View.GONE);

@@ -2,11 +2,13 @@ package org.wordpress.android.models;
 
 import android.text.format.DateUtils;
 
+import org.wordpress.android.util.StringUtils;
+
 import java.util.Date;
 
 /**
  * Barebones post/page as listed in PostsListFragment
- * Created by dan on 11/5/13.
+ * Created by @roundhill on 11/5/13.
  */
 public class PostsListPost {
 
@@ -17,8 +19,9 @@ public class PostsListPost {
     String status;
     String formattedDate;
     boolean isLocalDraft;
+    boolean hasLocalChanges;
 
-    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft) {
+    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft, boolean localChanges) {
         setPostId(postId);
         setBlogId(blogId);
         setTitle(title);
@@ -26,6 +29,7 @@ public class PostsListPost {
         setStatus(status);
         setFormattedDate();
         setLocalDraft(localDraft);
+        setHasLocalChanges(localChanges);
     }
 
     public int getPostId() {
@@ -45,7 +49,7 @@ public class PostsListPost {
     }
 
     public String getTitle() {
-        return title;
+        return StringUtils.notNullStr(title);
     }
 
     public void setTitle(String title) {
@@ -61,7 +65,7 @@ public class PostsListPost {
     }
 
     public String getStatus() {
-        return status;
+        return StringUtils.notNullStr(status);
     }
 
     public void setStatus(String status) {
@@ -70,7 +74,7 @@ public class PostsListPost {
 
     public String getFormattedDate() {
 
-        return formattedDate;
+        return StringUtils.notNullStr(formattedDate);
     }
 
     public void setFormattedDate() {
@@ -83,6 +87,14 @@ public class PostsListPost {
 
     public void setLocalDraft(boolean isLocalDraft) {
         this.isLocalDraft = isLocalDraft;
+    }
+
+    public boolean hasLocalChanges() {
+        return hasLocalChanges;
+    }
+
+    public void setHasLocalChanges(boolean localChanges) {
+        this.hasLocalChanges = localChanges;
     }
 
 }

@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLInput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -820,7 +821,7 @@ public class WordPressDB {
      * @param localBlogId: the posts table blog id
      * @param isPage: boolean to save as pages
      */
-    public void savePosts(List<?> postsList, int localBlogId, boolean isPage) {
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
         if (postsList.size() != 0) {
             for (Object post : postsList) {
                 ContentValues values = new ContentValues();
@@ -907,8 +908,13 @@ public class WordPressDB {
                     values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
                 }
 
-                int result = db.update(POSTS_TABLE, values, "postID=? AND isPage=?",
-                        new String[]{postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                String whereClause = "blogID=? AND postID=? AND isPage=?";
+                if (!shouldOverwrite) {
+                    whereClause += " AND NOT isLocalChange=1";
+                }
+
+                int result = db.update(POSTS_TABLE, values, whereClause,
+                        new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
                 if (result == 0)
                     db.insert(POSTS_TABLE, null, values);
             }
@@ -921,17 +927,32 @@ public class WordPressDB {
         Cursor c;
         c = db.query(POSTS_TABLE,
                 new String[] { "id", "blogID", "title",
-                        "date_created_gmt", "post_status", "localDraft" },
+                        "date_created_gmt", "post_status", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
         c.moveToFirst();
 
+        Date d = new Date();
         for (int i = 0; i < numRows; ++i) {
-            if (c.getString(0) != null) {
-                PostsListPost post = new PostsListPost(c.getInt(0), c.getInt(1), c.getString(2), c.getLong(3), c.getString(4), SqlUtils.sqlToBool(c.getInt(5)));
-                posts.add(i, post);
+            // Check if post is scheduled
+            long postDate = c.getLong(c.getColumnIndex("date_created_gmt"));
+            String postStatus = StringUtils.notNullStr(c.getString(c.getColumnIndex("post_status")));
+            if (postDate > d.getTime() && postStatus.equals("publish")) {
+                postStatus = "scheduled";
             }
+
+            // Create the PostsListPost and add it to the Array
+            PostsListPost post = new PostsListPost(
+                    c.getInt(c.getColumnIndex("id")),
+                    c.getInt(c.getColumnIndex("blogID")),
+                    c.getString(c.getColumnIndex("title")),
+                    postDate,
+                    postStatus,
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange")))
+            );
+            posts.add(i, post);
             c.moveToNext();
         }
         c.close();
