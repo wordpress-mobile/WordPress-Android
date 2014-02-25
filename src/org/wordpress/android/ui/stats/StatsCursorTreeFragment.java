@@ -54,16 +54,14 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
 
     public static final String TAG = StatsCursorTreeFragment.class.getSimpleName();
-    
-    private TextView mEntryLabel;
-    private TextView mTotalsLabel;
+
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
     
     private SparseBooleanArray mGroupIdToExpandedMap;
 
     private CursorTreeAdapter mAdapter;
-    private ContentObserver mContentObserver = new MyObserver(new Handler());
+    private final ContentObserver mContentObserver = new MyObserver(new Handler());
     
     private StatsCursorInterface mCallback;
     
@@ -112,11 +110,11 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
         View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
-        
-        mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        mEntryLabel.setText(getEntryLabelResId());
-        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
-        mTotalsLabel.setText(getTotalsLabelResId());
+
+        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
+        entryLabel.setText(getEntryLabelResId());
+        TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
         mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
         configureEmptyLabel();

@@ -109,7 +109,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                         refreshViews(result);      
                     }
                 });
-            };
+            }
             
         }.execute();
         
@@ -128,7 +128,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
 
-    protected void refreshViews(StatsSummary stats) {
+    void refreshViews(StatsSummary stats) {
         int posts = 0;
         int categories = 0;
         int tags = 0;

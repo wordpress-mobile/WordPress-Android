@@ -17,7 +17,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.text.DecimalFormat;

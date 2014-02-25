@@ -36,7 +36,9 @@ import org.wordpress.android.util.Utils;
  * The tablet fragments are provided by subclasses implementing {@code getFragment(int)}
  * </p>
  */
-public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements OnCheckedChangeListener, StatsCursorInterface {
+public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
+                                                implements OnCheckedChangeListener,
+                                                           StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 

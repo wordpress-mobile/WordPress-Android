@@ -30,7 +30,6 @@ import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -98,14 +97,13 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {
-            CommentsSummaryFragment fragment = new CommentsSummaryFragment();
-            return fragment;
+            return new CommentsSummaryFragment();
         }
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
 
-        private int mType;
+        private final int mType;
 
         public CustomCursorAdapter(Context context, Cursor c, int type) {
             super(context, c, true);
@@ -254,7 +252,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
                             refreshStats(result);     
                         }
                     });
-                };
+                }
             }.execute();
         }
 

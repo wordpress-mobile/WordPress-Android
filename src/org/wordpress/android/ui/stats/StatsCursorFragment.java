@@ -45,14 +45,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
-    
-    private TextView mEntryLabel;
-    private TextView mTotalsLabel;
+
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
 
     private CursorAdapter mAdapter;
-    private ContentObserver mContentObserver = new MyObserver(new Handler());
+    private final ContentObserver mContentObserver = new MyObserver(new Handler());
     
     private StatsCursorInterface mCallback;
     
@@ -88,11 +86,11 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_list_fragment, container, false);
-        
-        mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        mEntryLabel.setText(getEntryLabelResId());
-        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
-        mTotalsLabel.setText(getTotalsLabelResId());
+
+        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
+        entryLabel.setText(getEntryLabelResId());
+        TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
 
         // skip Html.fromHtml() when possible since it's slow
@@ -135,8 +133,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         if (TextUtils.isEmpty(blogId)) blogId = "0";
-        CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
-        return cursorLoader;
+        return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
     }
 
     @Override

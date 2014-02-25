@@ -27,7 +27,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
@@ -87,8 +86,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
         } else {
-            VideoSummaryFragment fragment = new VideoSummaryFragment();
-            return fragment;
+            return new VideoSummaryFragment();
         }
     }
     
@@ -187,15 +185,12 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                 @Override
                 protected StatsVideoSummary doInBackground(String... params) {
                     final String blogId = params[0];
-                    
-                    StatsVideoSummary stats = StatUtils.getVideoSummary(blogId);
-                    
-                    return stats;
+                    return StatUtils.getVideoSummary(blogId);
                 }
                 
                 protected void onPostExecute(StatsVideoSummary result) {
                     refreshSummaryViews(result);
-                };
+                }
             }.execute(blogId);
         }
 
@@ -232,7 +227,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                                             refreshSummary();      
                                         }
                                     });
-                                };
+                                }
                                 
                             }.execute();
                             
@@ -248,7 +243,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                     });
         }
         
-        protected void refreshSummaryViews(StatsVideoSummary result) {
+        void refreshSummaryViews(StatsVideoSummary result) {
 
             String header = "";
             int plays = 0;

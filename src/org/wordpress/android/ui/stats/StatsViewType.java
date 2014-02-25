@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import java.util.ArrayList;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+
+import java.util.ArrayList;
 
 /**
  * An enum of the different view types to appear on the stats view.
@@ -13,8 +13,8 @@ import org.wordpress.android.WordPress;
 public enum StatsViewType {
 
     /**
-     * A flag is set to indicate which apis have been implemented.
-     * Set the flag to true once the api is implemented for the view to be visible on phone.  
+     * A flag is set to indicate which APIs have been implemented.
+     * Set the flag to true once the API is implemented for the view to be visible on phone.
      */
     
     VISITORS_AND_VIEWS(R.string.stats_view_visitors_and_views, true),
@@ -29,15 +29,15 @@ public enum StatsViewType {
     COMMENTS(R.string.stats_view_comments, false),
     SEARCH_ENGINE_TERMS(R.string.stats_view_search_engine_terms, true), ;
 
-    private int mLabelResId;
-    private boolean mIsImplemented;
+    private final int mLabelResId;
+    private final boolean mIsImplemented;
 
     private StatsViewType(int viewsLabelResId, boolean implemented) {
         mLabelResId = viewsLabelResId;
         mIsImplemented = implemented;
     }
 
-    public String getLabel() {
+    String getLabel() {
         return WordPress.getContext().getString(mLabelResId);
     }
 
@@ -51,8 +51,7 @@ public enum StatsViewType {
                 list.add(StatsViewType.values()[i].getLabel());
         }
 
-        String[] array = list.toArray(new String[list.size()]);
-        return array;
+        return list.toArray(new String[list.size()]);
     }
     
     public static StatsViewType[] getImplemented() {

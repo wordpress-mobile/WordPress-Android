@@ -23,7 +23,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.text.DecimalFormat;
@@ -116,7 +115,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
             // name, url
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            if (name.startsWith("http")) {
+            if (name != null && name.startsWith("http")) {
                 Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
                 entryTextView.setText(link);
                 entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());

@@ -94,8 +94,7 @@ public class StatsBarGraph extends GraphView {
 	protected double getMaxY() {
 		double maxY = super.getMaxY();
 
-		int divideBy = 1;
-		
+		final int divideBy;
 		if (maxY < 100)
 			divideBy = 10;
 		else if (maxY < 1000)

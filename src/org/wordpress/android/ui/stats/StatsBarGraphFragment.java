@@ -35,7 +35,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
 
     private LinearLayout mGraphContainer;
-    private ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
+    private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
 
     static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();

@@ -31,7 +31,9 @@ import java.util.Locale;
  * A summary of the blog's stats are also shown on each page.
  */ 
 public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implements RadioGroup.OnCheckedChangeListener {
-    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
+    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(),
+                                                           StatsBarChartUnit.WEEK.getLabel(),
+                                                           StatsBarChartUnit.MONTH.getLabel() };
 
     private TextView mVisitorsToday;
     private TextView mViewsToday;
@@ -43,12 +45,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     private int mSelectedButtonIndex = 0;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
+            if (action != null && action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
                 StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
                 refreshViews(summary);
             }
@@ -152,7 +154,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         lbm.unregisterReceiver(mReceiver);
     }
 
-    protected void refreshViews(final StatsSummary stats) {
+    private void refreshViews(final StatsSummary stats) {
         final Handler handler = new Handler();
 
         new Thread() {
