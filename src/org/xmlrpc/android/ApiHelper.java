@@ -817,28 +817,6 @@ public class ApiHelper {
     }
 
     /**
-     * Discover the RSD homepage URL associated with the specified blog URL.
-     *
-     * @param urlString URL of the blog to get the link for.
-     * @return RSD homepage URL for the specified blog, or null if unable to discover URL.
-     */
-    public static String getHomePageLink(String urlString, boolean trustAllSslCertificates)
-            throws SSLHandshakeException {
-        Pattern xmlrpcLink = Pattern.compile("<homePageLink>(.*?)</homePageLink>",
-                Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-        String html = getResponse(urlString, trustAllSslCertificates);
-
-        if (html != null) {
-            Matcher matcher = xmlrpcLink.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
-        }
-        return null; // never found the rsd tag
-    }
-
-    /**
      * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
      * verified hostnames)
      */
