@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.util.SysUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,11 @@ public class PostListAdapter extends BaseAdapter {
 
     public void loadPosts() {
         // load posts from db
-        new LoadPostsTask().execute();
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new LoadPostsTask().execute();
+        }
     }
 
     public void clear() {
