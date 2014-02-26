@@ -90,7 +90,7 @@ public class ApiHelper {
         protected Object doInBackground(List<?>... args) {
             List<?> arguments = args[0];
             mBlog = (Blog) arguments.get(0);
-            client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
@@ -113,7 +113,7 @@ public class ApiHelper {
                     String postFormatsJson = gson.toJson(postFormats);
                     if (postFormatsJson != null) {
                         if (mBlog.bsetPostFormats(postFormatsJson)) {
-                            mBlog.save();
+                            WordPress.wpDB.saveBlog(mBlog);
                         }
                     }
                 }
@@ -170,7 +170,6 @@ public class ApiHelper {
         }
     }
 
-
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
@@ -211,7 +210,7 @@ public class ApiHelper {
                     }
                 }
                 if (mBlog.bsetAdmin(isAdmin)) {
-                    mBlog.save();
+                    WordPress.wpDB.saveBlog(mBlog);
                 }
             }
         }
@@ -219,7 +218,7 @@ public class ApiHelper {
         @Override
         protected Boolean doInBackground(Boolean... params) {
             boolean commentsOnly = params[0];
-            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
             if (!commentsOnly) {
@@ -295,11 +294,10 @@ public class ApiHelper {
     public static CommentList refreshComments(Context context, Object[] commentParams)
             throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
-        if (blog == null)
+        if (blog == null) {
             return null;
-
-        XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-                blog.getHttpuser(),
+        }
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
         try {
@@ -308,8 +306,9 @@ public class ApiHelper {
             throw new XMLRPCException(e);
         }
 
-        if (result.length == 0)
+        if (result.length == 0) {
             return null;
+        }
 
         Map<?, ?> contentHash;
         long commentID, postID;
@@ -327,8 +326,7 @@ public class ApiHelper {
             authorURL = contentHash.get("author_url").toString();
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
-
-            date = (java.util.Date)contentHash.get("date_created_gmt");
+            date = (java.util.Date) contentHash.get("date_created_gmt");
             pubDate = DateTimeUtils.javaDateToIso8601(date);
 
             Comment comment = new Comment(
@@ -378,8 +376,8 @@ public class ApiHelper {
             }
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Map<String, Object> filter = new HashMap<String, Object>();
             filter.put("number", 50);
             filter.put("offset", mOffset);
@@ -473,9 +471,8 @@ public class ApiHelper {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return null;
             }
-
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Map<String, Object> contentStruct = new HashMap<String, Object>();
             contentStruct.put("post_title", mTitle);
             contentStruct.put("post_content", mDescription);
@@ -537,10 +534,8 @@ public class ApiHelper {
 
             String blogId = String.valueOf(blog.getLocalTableBlogId());
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
             Object[] apiParams = {
                     blog.getRemoteBlogId(),
                     blog.getUsername(),
@@ -603,8 +598,7 @@ public class ApiHelper {
                 return null;
             }
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Map<String, Object> data = new HashMap<String, Object>();
@@ -686,7 +680,8 @@ public class ApiHelper {
                 return null;
             }
 
-            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object[] apiParams = new Object[]{blog.getRemoteBlogId(), blog.getUsername(),
                     blog.getPassword(), mMediaId};
 
@@ -743,8 +738,7 @@ public class ApiHelper {
             if (blog == null)
                 return null;
 
-            client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Object[] apiParams = new Object[] {

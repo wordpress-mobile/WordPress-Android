@@ -57,7 +57,7 @@ public class ReaderCommentActions {
             }
         };
         AppLog.d(T.READER, "updating comments");
-        WordPress.restClient.get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject, final long blogId, final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject==null) {
@@ -162,7 +162,7 @@ public class ReaderCommentActions {
         };
 
         AppLog.i(T.READER, "submitting comment");
-        WordPress.restClient.post(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
 
         return newComment;
     }
