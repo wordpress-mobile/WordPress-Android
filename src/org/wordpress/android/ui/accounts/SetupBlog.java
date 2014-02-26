@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.SSLHandshakeException;
+
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
 
@@ -40,6 +42,8 @@ public class SetupBlog {
     private String mSelfHostedURL;
 
     private boolean mHttpAuthRequired;
+    private boolean mErroneousSslCertificates;
+    private boolean mAllSslCertificatesTrusted;
 
     public SetupBlog() {
     }
@@ -86,6 +90,14 @@ public class SetupBlog {
 
     public boolean isHttpAuthRequired() {
         return mHttpAuthRequired;
+    }
+
+    public void setAllSslCertificatesTrusted(boolean allSslCertificatesTrusted) {
+        mAllSslCertificatesTrusted = allSslCertificatesTrusted;
+    }
+
+    public boolean isErroneousSslCertificates() {
+        return mErroneousSslCertificates;
     }
 
     public List<Map<String, Object>> getBlogList() {
@@ -139,6 +151,47 @@ public class SetupBlog {
         }
     }
 
+    private String getRsdUrl(String baseUrl, boolean ignoreSslCertificate) throws SSLHandshakeException {
+        String rsdUrl;
+        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl, ignoreSslCertificate);
+        if (rsdUrl == null) {
+            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl, ignoreSslCertificate);
+        }
+        return rsdUrl;
+    }
+
+    private String getmXmlrpcByUserEnteredPath(String baseUrl) {
+        String xmlRpcUrl = null;
+        // Try the user entered path
+        XMLRPCClient client = new XMLRPCClient(baseUrl, mHttpUsername, mHttpPassword);
+        try {
+            client.call("system.listMethods");
+            xmlRpcUrl = baseUrl;
+            mIsCustomUrl = true;
+        } catch (XMLRPCException e) {
+            AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
+            if (e.getMessage().contains("401")) {
+                mHttpAuthRequired = true;
+                return null;
+            }
+
+            // Guess the xmlrpc path
+            String guessURL = baseUrl;
+            if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
+                guessURL = guessURL.substring(0, guessURL.length() - 1);
+            }
+            guessURL += "/xmlrpc.php";
+            client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
+            try {
+                client.call("system.listMethods");
+                xmlRpcUrl = guessURL;
+            } catch (XMLRPCException ex) {
+                AppLog.w(T.NUX, "system.listMethods failed on: " + guessURL);
+            }
+        }
+        return xmlRpcUrl;
+    }
+
     // Attempts to retrieve the xmlrpc url for a self-hosted site, in this order:
     // 1: Try to retrieve it by finding the ?rsd url in the site's header
     // 2: Take whatever URL the user entered to see if that returns a correct response
@@ -159,7 +212,11 @@ public class SetupBlog {
 
         // Add http to the beginning of the URL if needed
         if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-            url = "http://" + url; // default to http
+            if (mAllSslCertificatesTrusted) {
+                url = "https://" + url; // default to https in case previous ssl error detected
+            } else {
+                url = "http://" + url; // default to http
+            }
         }
 
         if (!URLUtil.isValidUrl(url)) {
@@ -168,45 +225,26 @@ public class SetupBlog {
         }
 
         // Attempt to get the XMLRPC URL via RSD
-        String rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(url);
-        if (rsdUrl == null) {
-            rsdUrl = ApiHelper.getRSDMetaTagHref(url);
+        String rsdUrl;
+        try {
+            rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
+        } catch (SSLHandshakeException e) {
+            mErroneousSslCertificates = true;
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
         }
 
-        if (rsdUrl != null) {
-            xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
-            if (xmlrpcUrl == null)
-                xmlrpcUrl = rsdUrl.replace("?rsd", "");
-        } else {
-            // Try the user entered path
-            try {
-                XMLRPCClient client = new XMLRPCClient(url, mHttpUsername, mHttpPassword);
-                try {
-                    client.call("system.listMethods");
-                    xmlrpcUrl = url;
-                    mIsCustomUrl = true;
-                } catch (XMLRPCException e) {
-
-                    if (e.getMessage().contains("401")) {
-                        mHttpAuthRequired = true;
-                        return null;
-                    }
-
-                    // Guess the xmlrpc path
-                    String guessURL = url;
-                    if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
-                        guessURL = guessURL.substring(0, guessURL.length() - 1);
-                    }
-                    guessURL += "/xmlrpc.php";
-                    client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
-                    try {
-                        client.call("system.listMethods");
-                        xmlrpcUrl = guessURL;
-                    } catch (XMLRPCException ex) {
-                    }
+        try {
+            if (rsdUrl != null) {
+                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl, mAllSslCertificatesTrusted);
+                if (xmlrpcUrl == null) {
+                    xmlrpcUrl = rsdUrl.replace("?rsd", "");
                 }
-            } catch (Exception e) {
+            } else {
+                xmlrpcUrl = getmXmlrpcByUserEnteredPath(url);
             }
+        } catch (SSLHandshakeException e) {
+            // That should not happen cause mAllSslCertificatesTrusted will be true here
         }
         return xmlrpcUrl;
     }
