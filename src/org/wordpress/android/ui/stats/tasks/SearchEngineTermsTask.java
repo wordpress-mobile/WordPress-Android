@@ -1,14 +1,9 @@
 package org.wordpress.android.ui.stats.tasks;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
-
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,19 +35,8 @@ public class SearchEngineTermsTask extends StatsTask {
 
     @Override
     public void run() {
-        WordPress.restClient.getStatsSearchEngineTerms(mBlogId, mDate,
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseResponse(response);
-                    }
-                },
-                new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.STATS, error);
-                    }
-                });
+        WordPress.restClient.getStatsSearchEngineTerms(mBlogId, mDate, responseListener, errorListener);
+        waitForResponse();
     }
 
     @Override
@@ -73,22 +57,19 @@ public class SearchEngineTermsTask extends StatsTask {
 
             JSONArray results = response.getJSONArray("search-terms");
 
-            Context context = WordPress.getContext();
-
             int count = results.length();
             for (int i = 0; i < count; i++ ) {
                 JSONArray result = results.getJSONArray(i);
                 StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mBlogId, date, result);
                 ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
-                context.getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
+                getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
 
                 ContentProviderOperation insert_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withValues(values).build();
                 operations.add(insert_op);
             }
 
-            ContentResolver resolver = context.getContentResolver();
-            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            resolver.notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
+            getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
 
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);

@@ -37,7 +37,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StatsRestHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
@@ -73,6 +73,7 @@ public class StatsActivity extends WPActionBarActivity {
     private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
+    private boolean mIsUpdatingStats;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -120,7 +121,8 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = true;
         
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STAT_UPDATE_STARTED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STAT_UPDATE_ENDED));
 
         // for self-hosted sites; launch the user into an activity where they can provide their credentials
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag() &&
@@ -468,9 +470,13 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         if (!NetworkUtils.isNetworkAvailable(this))
             return;
+
+        if (mIsUpdatingStats) {
+            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+            return;
+        }
         
-        String blogId;
-        
+        final String blogId;
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch())
             blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         else {
@@ -489,18 +495,6 @@ public class StatsActivity extends WPActionBarActivity {
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         startService(intent);
-
-        /*StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
-//      StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
-        StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
-        StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
-//      StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
-        // data for total followers and shares will already be fetched
-//      StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
-        StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
-//      StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
-        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
-        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);*/
     }
 
     private void verifyCredentials(final String blogId) {
@@ -577,21 +571,16 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(StatsRestHelper.REFRESH_VIEW_TYPE)) {
-
-                if (mRefreshMenuItem == null)
-                    return;
-
-                // stop or start animating refresh button depending on result
-                boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
-
-                if (started)
+            final String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatsService.ACTION_STAT_UPDATE_STARTED)) {
+                mIsUpdatingStats = true;
+                if (mRefreshMenuItem != null)
                     startAnimatingRefreshButton(mRefreshMenuItem);
-                else
+            } else if (action.equals(StatsService.ACTION_STAT_UPDATE_ENDED)) {
+                mIsUpdatingStats = false;
+                if (mRefreshMenuItem != null)
                     stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         }

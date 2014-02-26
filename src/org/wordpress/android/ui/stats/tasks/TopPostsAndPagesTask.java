@@ -1,13 +1,9 @@
 package org.wordpress.android.ui.stats.tasks;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
-
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,19 +35,8 @@ public class TopPostsAndPagesTask extends StatsTask {
 
     @Override
     public void run() {
-        WordPress.restClient.getStatsTopPosts(mBlogId, mDate,
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseResponse(response);
-                    }
-                },
-                new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.STATS, error);
-                    }
-                });
+        WordPress.restClient.getStatsTopPosts(mBlogId, mDate, responseListener, errorListener);
+        waitForResponse();
     }
 
     @Override
@@ -80,9 +65,9 @@ public class TopPostsAndPagesTask extends StatsTask {
                 operations.add(op);
             }
 
-            ContentResolver resolver = WordPress.getContext().getContentResolver();
-            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            resolver.notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
+            getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
+
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
         } catch (RemoteException e) {

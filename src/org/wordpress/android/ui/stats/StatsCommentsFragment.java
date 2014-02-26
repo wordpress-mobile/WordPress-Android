@@ -31,7 +31,6 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 /**
@@ -219,7 +218,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
                 @Override
                 protected StatsSummary doInBackground(Void... params) {
-                    StatsRestHelper.getStatsSummary(blogId);
+                    //StatsRestHelper.getStatsSummary(blogId);
                     return StatUtils.getSummary(blogId);
                 }
                 

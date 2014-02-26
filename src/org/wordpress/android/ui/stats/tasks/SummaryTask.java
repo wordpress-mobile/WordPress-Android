@@ -1,11 +1,7 @@
 package org.wordpress.android.ui.stats.tasks;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -21,19 +17,8 @@ public class SummaryTask extends StatsTask {
 
     @Override
     public void run() {
-        WordPress.restClient.getStatsSummary(mBlogId,
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        parseResponse(response);
-                    }
-                },
-                new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.STATS, error);
-                    }
-                });
+        WordPress.restClient.getStatsSummary(mBlogId, responseListener, errorListener);
+        waitForResponse();
     }
 
     @Override

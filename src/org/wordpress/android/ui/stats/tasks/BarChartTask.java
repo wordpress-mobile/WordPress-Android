@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.tasks;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
+import android.net.Uri;
 import android.os.RemoteException;
 
 import org.json.JSONArray;
@@ -10,9 +11,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsVideosTable;
-import org.wordpress.android.models.StatsVideo;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -21,47 +23,54 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class VideoPlaysTask extends StatsTask {
+public class BarChartTask extends StatsTask {
 
     private final String mBlogId;
+    private final StatsBarChartUnit mBarChartUnit;
 
-    public VideoPlaysTask(final String blogId) {
+    public BarChartTask(String blogId, StatsBarChartUnit barChartUnit) {
         mBlogId = StringUtils.notNullStr(blogId);
+        mBarChartUnit = barChartUnit;
     }
 
     @Override
     public void run() {
-        WordPress.restClient.getStatsVideoPlays(mBlogId, responseListener, errorListener);
+        WordPress.restClient.getStatsBarChartData(mBlogId, mBarChartUnit, 30, responseListener, errorListener);
         waitForResponse();
     }
 
     @Override
     void parseResponse(JSONObject response) {
-        if (response == null || !response.has("result"))
+        if (response == null || !response.has("data"))
             return;
 
+        Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
         try {
-            JSONArray results = response.getJSONArray("result");
+            JSONArray results = response.getJSONArray("data");
+
             int count = results.length();
 
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
+            // delete old stats and insert new ones
             if (count > 0) {
-                ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_VIDEOS_URI).withSelection("blogId=?", new String[] { mBlogId }).build();
+                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { mBlogId, mBarChartUnit.name() }).build();
                 operations.add(op);
             }
 
             for (int i = 0; i < count; i++ ) {
-                JSONObject result = results.getJSONObject(i);
-                StatsVideo stat = new StatsVideo(mBlogId, result);
-                ContentValues values = StatsVideosTable.getContentValues(stat);
-                ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_VIDEOS_URI).withValues(values).build();
-                operations.add(op);
+                JSONArray result = results.getJSONArray(i);
+                StatsBarChartData stat = new StatsBarChartData(mBlogId, mBarChartUnit, result);
+                ContentValues values = StatsBarChartDataTable.getContentValues(stat);
+
+                if (values != null && uri != null) {
+                    ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
+                    operations.add(op);
+                }
             }
 
             getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            getContentResolver().notifyChange(StatsContentProvider.STATS_VIDEOS_URI, null);
-
+            getContentResolver().notifyChange(uri, null);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
         } catch (RemoteException e) {

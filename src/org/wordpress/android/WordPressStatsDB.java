@@ -19,13 +19,12 @@ import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.StatsRestHelper;
 
 /**
  * A database for storing stats. Do not access this class directly.
  * Instead, use a {@link ContentResolver} and the URIs listed in 
  * {@link StatsContentProvider} to perform inserts, updates, and deletes.
- * See {@link StatsRestHelper} for examples.
+ * See {@link org.wordpress.android.ui.stats.StatsService} for examples.
  */
 public class WordPressStatsDB extends SQLiteOpenHelper{
 

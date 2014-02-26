@@ -1,13 +1,9 @@
 package org.wordpress.android.ui.stats.tasks;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
-
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,19 +37,8 @@ public class ReferrersTask extends StatsTask {
 
     @Override
     public void run() {
-        WordPress.restClient.getStatsReferrers(mBlogId, mDate,
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseResponse(response);
-                    }
-                },
-                new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.STATS, error);
-                    }
-                });
+        WordPress.restClient.getStatsReferrers(mBlogId, mDate, responseListener, errorListener);
+        waitForResponse();
     }
 
     @Override
@@ -103,10 +88,10 @@ public class ReferrersTask extends StatsTask {
 
             }
 
-            ContentResolver resolver = WordPress.getContext().getContentResolver();
-            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            resolver.notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
-            resolver.notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
+            getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
+
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
         } catch (RemoteException e) {
