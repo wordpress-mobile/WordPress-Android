@@ -209,7 +209,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     if (mIsRunning) {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
+                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg, errorTitle);
                         ft.add(fragment, "alert");
                         ft.commitAllowingStateLoss();
                     }
