@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class PostsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         getListView().addFooterView(mProgressFooterView, null, false);
         mProgressFooterView.setVisibility(View.GONE);
