@@ -27,10 +27,9 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
@@ -801,11 +800,11 @@ public class ApiHelper {
      * @param urlString URL of the blog to get the XML-RPC endpoint for.
      * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
      */
-    public static String getXMLRPCUrl(String urlString, boolean ignoreSslCertificate) throws SSLHandshakeException {
+    public static String getXMLRPCUrl(String urlString, boolean trustAllSslCertificates) throws SSLHandshakeException {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-        String html = getResponse(urlString, ignoreSslCertificate);
+        String html = getResponse(urlString, trustAllSslCertificates);
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
             if (matcher.find()) {
@@ -821,11 +820,12 @@ public class ApiHelper {
      * @param urlString URL of the blog to get the link for.
      * @return RSD homepage URL for the specified blog, or null if unable to discover URL.
      */
-    public static String getHomePageLink(String urlString, boolean ignoreSslCertificate) throws SSLHandshakeException {
+    public static String getHomePageLink(String urlString, boolean trustAllSslCertificates)
+            throws SSLHandshakeException {
         Pattern xmlrpcLink = Pattern.compile("<homePageLink>(.*?)</homePageLink>",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-        String html = getResponse(urlString, ignoreSslCertificate);
+        String html = getResponse(urlString, trustAllSslCertificates);
 
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
@@ -882,16 +882,15 @@ public class ApiHelper {
      * Synchronous method to fetch the String content at the specified URL.
      *
      * @param url URL to fetch contents for.
-     * @param ignoreSslCertificate if true ignore SSL errors
+     * @param trustAllSslCertificates if true ignore SSL errors
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String url, boolean ignoreSslCertificate) throws SSLHandshakeException {
+    public static String getResponse(final String url, boolean trustAllSslCertificates) throws SSLHandshakeException {
         final String res[] = new String[1];
         final SSLHandshakeException sslHandshakeException[] = new SSLHandshakeException[1];
-
         // Using a CountDownLatch to make the request synchronous
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        trustAllSslCertificates(ignoreSslCertificate);
+        trustAllSslCertificates(trustAllSslCertificates);
 
         // Response Listener
         final Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -973,9 +972,9 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHrefRegEx(String urlString, boolean ignoreSslCertificate)
+    public static String getRSDMetaTagHrefRegEx(String urlString, boolean trustAllSslCertificates)
             throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString, ignoreSslCertificate);
+        String html = ApiHelper.getResponse(urlString, trustAllSslCertificates);
         if (html != null) {
             Matcher matcher = rsdLink.matcher(html);
             if (matcher.find()) {
@@ -991,18 +990,18 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHref(String urlString, boolean ignoreSslCertificate)
+    public static String getRSDMetaTagHref(String urlString, boolean trustAllSslCertificates)
             throws SSLHandshakeException {
         // get the html code
-        String data = ApiHelper.getResponse(urlString, ignoreSslCertificate);
+        String data = ApiHelper.getResponse(urlString, trustAllSslCertificates);
 
         // parse the html and get the attribute for xmlrpc endpoint
         if (data != null) {
-            InputStream in = new ByteArrayInputStream(data.getBytes());
+            StringReader stringReader = new StringReader(data);
             XmlPullParser parser = Xml.newPullParser();
             try {
                 // auto-detect the encoding from the stream
-                parser.setInput(in, null);
+                parser.setInput(stringReader);
                 int eventType = parser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     String name = null;

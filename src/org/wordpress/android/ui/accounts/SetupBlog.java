@@ -42,7 +42,7 @@ public class SetupBlog {
     private String mSelfHostedURL;
 
     private boolean mHttpAuthRequired;
-    private boolean mErroneousSslCertificates;
+    private boolean mErroneousSslCertificate;
     private boolean mAllSslCertificatesTrusted;
 
     public SetupBlog() {
@@ -97,7 +97,7 @@ public class SetupBlog {
     }
 
     public boolean isErroneousSslCertificates() {
-        return mErroneousSslCertificates;
+        return mErroneousSslCertificate;
     }
 
     public List<Map<String, Object>> getBlogList() {
@@ -229,7 +229,7 @@ public class SetupBlog {
         try {
             rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
         } catch (SSLHandshakeException e) {
-            mErroneousSslCertificates = true;
+            mErroneousSslCertificate = true;
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         }
