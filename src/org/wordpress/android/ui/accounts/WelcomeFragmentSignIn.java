@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
@@ -68,8 +67,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.nux_fragment_welcome, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
@@ -167,14 +165,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private void autocorrectUsername() {
-        if (mEmailAutoCorrected)
+        if (mEmailAutoCorrected) {
             return;
+        }
         final String email = EditTextUtils.getText(mUsernameEditText).trim();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find()) {
-            return ;
+            return;
         }
         // It looks like an email address, then try to correct it
         String suggest = mEmailChecker.suggestDomainCorrection(email);
@@ -491,7 +490,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
-                WordPress.restClient.get("me", new RestRequest.Listener() {
+                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         ReaderUserActions.setCurrentUser(jsonObject);

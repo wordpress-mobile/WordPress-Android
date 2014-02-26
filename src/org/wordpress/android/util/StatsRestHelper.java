@@ -174,7 +174,7 @@ public class StatsRestHelper {
     }
 
     private static void getStatsClicks(final String blogId, final String date) {
-        WordPress.restClient.getStatsClicks(blogId, date, 
+        WordPress.getRestClientUtils().getStatsClicks(blogId, date, 
                 new Listener() {
                     
                     @Override
@@ -267,7 +267,7 @@ public class StatsRestHelper {
     
     private static void getStatsComments(final String blogId) {
     
-        WordPress.restClient.getStatsMostCommented(blogId, 
+        WordPress.getRestClientUtils().getStatsMostCommented(blogId, 
                 new Listener() {
                     
                     @Override
@@ -284,7 +284,7 @@ public class StatsRestHelper {
                     }
                 });
         
-        WordPress.restClient.getStatsTopCommenters(blogId, 
+        WordPress.getRestClientUtils().getStatsTopCommenters(blogId, 
                 new Listener() {
                     
                     @Override
@@ -399,7 +399,7 @@ public class StatsRestHelper {
     }
     
     private static void getStatsReferrers(final String blogId, final String date) {
-        WordPress.restClient.getStatsReferrers(blogId, date,
+        WordPress.getRestClientUtils().getStatsReferrers(blogId, date,
                 new Listener() {
                     
                     @Override
@@ -490,7 +490,7 @@ public class StatsRestHelper {
 
     private static void getStatsSearchEngineTerms(final String blogId, final String date) {
 
-        WordPress.restClient.getStatsSearchEngineTerms(blogId, date, 
+        WordPress.getRestClientUtils().getStatsSearchEngineTerms(blogId, date, 
                 new Listener() {
                     
                     @Override
@@ -564,7 +564,7 @@ public class StatsRestHelper {
 
     private static void getStatsTagsAndCategories(final String blogId) {
         
-        WordPress.restClient.getStatsTagsAndCategories(blogId, 
+        WordPress.getRestClientUtils().getStatsTagsAndCategories(blogId, 
                 new Listener() {
                     
                     @Override
@@ -632,7 +632,7 @@ public class StatsRestHelper {
 
     private static void getStatsTopAuthors(final String blogId) {
         
-        WordPress.restClient.getStatsTopAuthors(blogId, 
+        WordPress.getRestClientUtils().getStatsTopAuthors(blogId, 
                 new Listener() {
                     
                     @Override
@@ -700,7 +700,7 @@ public class StatsRestHelper {
 
     private static void getStatsTopPostsAndPages(final String blogId, final String date) {
 
-        WordPress.restClient.getStatsTopPosts(blogId, date,
+        WordPress.getRestClientUtils().getStatsTopPosts(blogId, date,
                 new Listener() {
                     
                     @Override
@@ -768,7 +768,7 @@ public class StatsRestHelper {
     }
 
     private static void getStatsVideoPlays(final String blogId, String date) {
-        WordPress.restClient.getStatsVideoPlays(blogId, 
+        WordPress.getRestClientUtils().getStatsVideoPlays(blogId, 
                 new Listener() {
                     
                     @Override
@@ -834,7 +834,7 @@ public class StatsRestHelper {
     }
 
     private static void getStatsViewsByCountry(final String blogId, String date) {
-        WordPress.restClient.getStatsGeoviews(blogId, date,
+        WordPress.getRestClientUtils().getStatsGeoviews(blogId, date,
                 new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -942,7 +942,7 @@ public class StatsRestHelper {
     }
     
     public static void getStatsSummary(final String blogId, final StatsSummaryInterface callback) {
-        WordPress.restClient.getStatsSummary(blogId, 
+        WordPress.getRestClientUtils().getStatsSummary(blogId, 
                 new Listener() {
                     
                     @Override
@@ -995,7 +995,7 @@ public class StatsRestHelper {
             }
         };
         
-        WordPress.restClient.getStatsBarChartData(blogId, barChartUnit, 30, listener, errorListener);
+        WordPress.getRestClientUtils().getStatsBarChartData(blogId, barChartUnit, 30, listener, errorListener);
         
     }
     
