@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * implementation of an individual stats task
  */
 
-// TODO: broadcast when summary changes
 // TODO: modify each task to only notify content resolver of changes if changes actually exist
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";

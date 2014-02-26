@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,8 +20,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 /**
@@ -75,8 +82,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.ACTION_STATS_SUMMARY_UPDATED));
+
         refreshSummary();
     }
 
@@ -88,12 +105,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     private void loadBarChartFragmentForIndex(int index) {
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
-            StatsBarChartUnit unit = StatsBarChartUnit.DAY;
-            if (index == 1) {
-                unit = StatsBarChartUnit.WEEK;
-            } else if (index == 2) {
-                unit = StatsBarChartUnit.MONTH;
+            final StatsBarChartUnit unit;
+            switch (index) {
+                case 1:
+                    unit = StatsBarChartUnit.WEEK;
+                    break;
+                case 2:
+                    unit = StatsBarChartUnit.MONTH;
+                    break;
+                default:
+                    unit = StatsBarChartUnit.DAY;
             }
+
             StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
@@ -161,4 +184,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     public String getTitle() {
         return getString(R.string.stats_view_visitors_and_views);
     }
+
+    /*
+     * receives broadcast when summary data has been updated
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatUtils.ACTION_STATS_SUMMARY_UPDATED)) {
+                AppLog.i(AppLog.T.STATS, "summary changed");
+                StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                refreshViews(summary);
+            }
+        }
+    };
 }

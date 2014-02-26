@@ -28,7 +28,9 @@ class SummaryTask extends AbsStatsTask {
 
     @Override
     void parseResponse(JSONObject response) {
-        if (response != null)
-            StatUtils.saveSummary(mBlogId, response);
+        if (response == null)
+            return;
+        StatUtils.saveSummary(mBlogId, response);
+        StatUtils.broadcastSummaryUpdated(StatUtils.getSummary(mBlogId));
     }
 }
