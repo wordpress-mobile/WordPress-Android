@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
  * concurrent updating of the various stats tasks - see AbsStatsTask for base
  * implementation of an individual stats task
  */
+
+// TODO: broadcast when summary changes
+// TODO: modify each task to only notify content resolver of changes if changes actually exist
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
 
@@ -40,10 +43,22 @@ public class StatsService extends Service {
         return START_NOT_STICKY;
     }
 
+    /*
+     * create executor to process stats tasks, limited to one concurrent task for single-core
+     * devices and two concurrent tasks for all other devices - this limit is necessary due
+     * to how various tasks rely on getContentResolver().notifyChange() to notify fragments
+     * of changes to underlying data, resulting in work being done on the UI thread - without
+     * this limit the stats views would stutter noticeably
+     */
+    private ThreadPoolExecutor createExecutor() {
+        int numCPUs = Runtime.getRuntime().availableProcessors();
+        int numConcurrentTasks = Math.min(numCPUs, 2);
+        AppLog.i(T.STATS, "creating executor with pool size = " + numConcurrentTasks);
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(numConcurrentTasks);
+    }
+
     private void startTasks(final String blogId) {
-        // create executor to process stats tasks, limited to one task at a time on single-core devices
-        int maxConcurrentTasks = (Runtime.getRuntime().availableProcessors() > 1 ? 2 : 1);
-        final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxConcurrentTasks);
+        final ThreadPoolExecutor executor = createExecutor();
 
         // submit tasks from a separate thread or else they'll run on the main thread
         new Thread() {

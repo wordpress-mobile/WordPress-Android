@@ -430,6 +430,8 @@ public class StatsActivity extends WPActionBarActivity {
     public void onBlogChanged() {
         super.onBlogChanged();
 
+        stopService(new Intent(this, StatsService.class));
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
