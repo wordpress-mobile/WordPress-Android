@@ -13,8 +13,9 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.net.IDN;
 import java.net.URI;
@@ -103,17 +104,21 @@ public class SetupBlog {
 
         // Validate the URL found before calling the client. Prevent a crash that can occur
         // during the setup of self-hosted sites.
+        URI uri;
         try {
-            URI.create(mXmlrpcUrl);
+            uri = URI.create(mXmlrpcUrl);
         } catch (Exception e1) {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
-
-        XMLRPCClient client = new XMLRPCClient(mXmlrpcUrl, mHttpUsername, mHttpPassword);
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
+            if (userBlogs == null) { // Could happen if the returned server response is truncated
+                mErrorMsgId = R.string.no_network_message;
+                return null;
+            }
             Arrays.sort(userBlogs, Utils.BlogNameComparator);
             List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
             for (Object blog : userBlogs) {
@@ -180,7 +185,8 @@ public class SetupBlog {
         } else {
             // Try the user entered path
             try {
-                XMLRPCClient client = new XMLRPCClient(url, mHttpUsername, mHttpPassword);
+                URI nuri = URI.create(url);
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(nuri, mHttpUsername, mHttpPassword);
                 try {
                     client.call("system.listMethods");
                     xmlrpcUrl = url;
@@ -198,7 +204,8 @@ public class SetupBlog {
                         guessURL = guessURL.substring(0, guessURL.length() - 1);
                     }
                     guessURL += "/xmlrpc.php";
-                    client = new XMLRPCClient(guessURL, mHttpUsername, mHttpPassword);
+                    URI guestUri = URI.create(guessURL);
+                    client = XMLRPCFactory.instantiate(guestUri, mHttpUsername, mHttpPassword);
                     try {
                         client.call("system.listMethods");
                         xmlrpcUrl = guessURL;
@@ -230,16 +237,16 @@ public class SetupBlog {
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             blog.setWpVersion(""); // assigned later in getOptions call
             blog.setAdmin(isAdmin);
-            blog.save();
+            WordPress.wpDB.saveBlog(blog);
         } else {
             // Update blog name
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
                     Integer.parseInt(blogId), xmlRpcUrl);
             try {
-                blog = new Blog(localTableBlogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(localTableBlogId);
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
-                    blog.save();
+                    WordPress.wpDB.saveBlog(blog);
                 }
             } catch (Exception e) {
                 AppLog.e(T.NUX, "localTableBlogId: " + localTableBlogId + " not found");
@@ -284,4 +291,3 @@ public class SetupBlog {
         }
     }
 }
-

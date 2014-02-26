@@ -26,7 +26,6 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
@@ -154,7 +153,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
                     if (WordPress.currentBlog == null) {
                         try {
-                            WordPress.currentBlog = new Blog(accountIDs[position]);
+                            WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
                             WordPress.wpDB.updateLastBlogId(accountIDs[position]);
                         } catch (Exception e) {
                         }
@@ -214,7 +213,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             if (view == null) {
                 LayoutInflater inflater = getLayoutInflater();
                 view = (RelativeLayout)inflater.inflate(R.layout.home_row, parent, false);
-            } 
+            }
             String username = accountUsers[position];
             view.setBackgroundDrawable(getResources().getDrawable(
                     R.drawable.list_bg_selector));
@@ -223,13 +222,13 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             TextView blogName = (TextView)view.findViewById(R.id.blogName);
             TextView blogUsername = (TextView)view.findViewById(R.id.blogUser);
             NetworkImageView blavatar = (NetworkImageView)view.findViewById(R.id.blavatar);
-            
+
             blogName.setText(
                     StringUtils.unescapeHTML(blogNames[position]));
             blogUsername.setText(
                     StringUtils.unescapeHTML(username));
             blavatar.setImageUrl(blavatars[position], WordPress.imageLoader);
-            
+
             return view;
 
         }

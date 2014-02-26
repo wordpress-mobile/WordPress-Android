@@ -668,7 +668,7 @@ public class HttpRequest {
   }
 
   /**
-   * Request output stream
+   * AuthenticatorRequest output stream
    */
   public static class RequestOutputStream extends BufferedOutputStream {
 
@@ -1429,7 +1429,7 @@ public class HttpRequest {
   }
 
   /**
-   * Is the response code a 400 Bad Request?
+   * Is the response code a 400 Bad AuthenticatorRequest?
    *
    * @return true if 400, false otherwise
    * @throws HttpRequestException

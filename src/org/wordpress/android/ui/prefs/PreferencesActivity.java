@@ -111,7 +111,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Request notification settings if needed
+        // AuthenticatorRequest notification settings if needed
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String settingsJson = mSettings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
