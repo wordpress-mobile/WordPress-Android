@@ -240,7 +240,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String message = getString(R.string.media_no_video_message);
         String infoTitle = getString(R.string.learn_more);
         String infoURL = Constants.videoPressURL;
-        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL);
+        WPAlertDialogFragment alert = WPAlertDialogFragment.newUrlInfoDialog(title, message, infoTitle, infoURL);
         ft.add(alert, "alert");
         ft.commitAllowingStateLoss();
     }
