@@ -888,7 +888,7 @@ public class ApiHelper {
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String url, boolean trustAllSslCertificates) throws SSLHandshakeException {
-        return getResponse(url, trustAllSslCertificates, 2);
+        return getResponse(url, trustAllSslCertificates, 3);
     }
 
     private static String getResponse(final String url, boolean trustAllSslCertificates, int maxRedirection)
@@ -909,7 +909,7 @@ public class ApiHelper {
                 if ((networkResponse != null) && (networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_PERM ||
                                                   networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
                     String newUrl = networkResponse.headers.get("Location");
-                    if (maxRedirection >= 0) {
+                    if (maxRedirection > 0) {
                         return getResponse(newUrl, trustAllSslCertificates, maxRedirection - 1);
                     }
                 }
