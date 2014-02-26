@@ -57,6 +57,7 @@ public class StatsService extends Service {
         return (ThreadPoolExecutor) Executors.newFixedThreadPool(numConcurrentTasks);
     }
 
+    private static final int EXECUTOR_TIMEOUT_SECONDS = 60;
     private void startTasks(final String blogId) {
         final ThreadPoolExecutor executor = createExecutor();
 
@@ -109,7 +110,7 @@ public class StatsService extends Service {
                 try {
                     // prevent additional tasks from being submitted, then wait for all tasks to complete
                     executor.shutdown();
-                    if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                    if (!executor.awaitTermination(EXECUTOR_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
                         AppLog.w(T.STATS, "executor failed to terminate");
                         executor.shutdownNow();
                     }
