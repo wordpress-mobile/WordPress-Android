@@ -28,7 +28,9 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
@@ -57,7 +59,7 @@ public class XMLRPCClient {
     
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
-    private ConnectionClient client;
+    private DefaultHttpClient client;
     private HttpPost postMethod;
     private XmlSerializer serializer;
     private HttpParams httpParams;
@@ -84,24 +86,16 @@ public class XMLRPCClient {
         //username & password not needed
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(httpuser, httppasswd);
 
-        //this gets connections working over https
-        if (uri.getScheme() != null){
-            if(uri.getScheme().equals("https")) {
-                if(uri.getPort() == -1)
-                    try {
-                        client = new ConnectionClient(creds, 443);
-                    } catch (KeyManagementException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (NoSuchAlgorithmException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (KeyStoreException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (UnrecoverableKeyException e) {
-                        client = new ConnectionClient(creds);
-                    }
-                    else
+        if(uri.getHost().contains("wordpress.com")) {
+            client = new DefaultHttpClient();
+            HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
+        } else {
+            //this gets connections working over https
+            if (uri.getScheme() != null){
+                if(uri.getScheme().equals("https")) {
+                    if(uri.getPort() == -1)
                         try {
-                            client = new ConnectionClient(creds, uri.getPort());
+                            client = new ConnectionClient(creds, 443);
                         } catch (KeyManagementException e) {
                             client = new ConnectionClient(creds);
                         } catch (NoSuchAlgorithmException e) {
@@ -111,15 +105,27 @@ public class XMLRPCClient {
                         } catch (UnrecoverableKeyException e) {
                             client = new ConnectionClient(creds);
                         }
+                        else
+                            try {
+                                client = new ConnectionClient(creds, uri.getPort());
+                            } catch (KeyManagementException e) {
+                                client = new ConnectionClient(creds);
+                            } catch (NoSuchAlgorithmException e) {
+                                client = new ConnectionClient(creds);
+                            } catch (KeyStoreException e) {
+                                client = new ConnectionClient(creds);
+                            } catch (UnrecoverableKeyException e) {
+                                client = new ConnectionClient(creds);
+                            }
+                }
+                else {
+                    client = new ConnectionClient(creds);
+                }
             }
-            else {
+            else{
                 client = new ConnectionClient(creds);
             }
         }
-        else{
-            client = new ConnectionClient(creds);
-        }
-
         serializer = Xml.newSerializer();
     }
 
