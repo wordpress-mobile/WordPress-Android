@@ -1,12 +1,7 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,18 +30,6 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
     
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                refreshViews(stats);
-            }
-        }
-    };
-    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_totals_followers_shares, container, false);
@@ -74,10 +57,6 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     @Override
     public void onResume() {
         super.onResume();
-        
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
-
         refreshSummary();
     }
 
@@ -101,14 +80,6 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                 });
             }
         }.start();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
     }
     
     @Override

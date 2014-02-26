@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
@@ -119,7 +119,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
             // name, url
             if (name != null && name.startsWith("http")) {
-                StatUtils.hyperlinkEntryText(holder.entryTextView, name, name);
+                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>"));
             } else {
                 holder.entryTextView.setText(name);
             }
@@ -154,7 +154,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             
             // name, url
             if (urlValid) {
-                StatUtils.hyperlinkEntryText(holder.entryTextView, url, name);
+                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>"));
             } else {
                 holder.entryTextView.setText(name);
             }

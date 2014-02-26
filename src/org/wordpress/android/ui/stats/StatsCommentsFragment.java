@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -166,18 +162,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         private TextView mActiveTimeText;
         private TextView mMostCommentedText;
         
-        private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-            
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                    StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                    refreshStats(stats);
-                }
-            }
-        };
-        
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
@@ -192,20 +176,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         }
         
         @Override
-        public void onPause() {
-            super.onPause();
-
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-            lbm.unregisterReceiver(mReceiver);
-        }
-        
-        @Override
         public void onResume() {
             super.onResume();
-            
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-            lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
-
             refreshStatsFromFile();
         }
 

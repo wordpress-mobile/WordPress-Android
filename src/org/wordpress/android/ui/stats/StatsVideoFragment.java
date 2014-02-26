@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,8 +111,8 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
 
             // entries
-            if (url != null && url.length() > 0) {
-                StatUtils.hyperlinkEntryText(holder.entryTextView, url, entry);
+            if (!TextUtils.isEmpty(url)) {
+                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>"));
             } else {
                 holder.entryTextView.setText(entry);
             }

@@ -95,7 +95,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
     }
 
     @Override
-    public String getTitle() {
+    protected String getTitle() {
         return getString(R.string.stats_view_tags_and_categories);
     }
     

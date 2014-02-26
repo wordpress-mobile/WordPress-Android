@@ -120,10 +120,10 @@ public class StatsActivity extends WPActionBarActivity {
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        
+
+        // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STAT_UPDATE_STARTED));
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STAT_UPDATE_ENDED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
 
         // for self-hosted sites; launch the user into an activity where they can provide their credentials
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag() &&
@@ -571,18 +571,22 @@ public class StatsActivity extends WPActionBarActivity {
         return null;
     }
 
+    /*
+     * receiver for broadcast from StatsService which alerts when stats update has started/ended
+     */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String action = StringUtils.notNullStr(intent.getAction());
-            if (action.equals(StatsService.ACTION_STAT_UPDATE_STARTED)) {
-                mIsUpdatingStats = true;
-                if (mRefreshMenuItem != null)
-                    startAnimatingRefreshButton(mRefreshMenuItem);
-            } else if (action.equals(StatsService.ACTION_STAT_UPDATE_ENDED)) {
-                mIsUpdatingStats = false;
-                if (mRefreshMenuItem != null)
-                    stopAnimatingRefreshButton(mRefreshMenuItem);
+            String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
+                mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
+                if (mRefreshMenuItem != null) {
+                    if (mIsUpdatingStats) {
+                        startAnimatingRefreshButton(mRefreshMenuItem);
+                    } else {
+                        stopAnimatingRefreshButton(mRefreshMenuItem);
+                    }
+                }
             }
         }
     };

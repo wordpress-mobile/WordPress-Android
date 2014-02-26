@@ -18,16 +18,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by nbradbury on 2/25/14.
  * Background service to retrieve latest stats - uses a ThreadPoolExecutor to handle
- * concurrent updating of the various stats tasks
+ * concurrent updating of the various stats tasks - see AbsStatsTask for base
+ * implementation of an individual stats task
  */
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
 
-    // broadcast actions used to notify clients of update start/end
-    public static final String ACTION_STAT_UPDATE_STARTED = "wp-stats-update-started";
-    public static final String ACTION_STAT_UPDATE_ENDED   = "wp-stats-update-ended";
-
-    private static final long EXECUTOR_TIMEOUT = 30 * 1000;
+    // broadcast action used to notify clients of update start/end
+    public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
+    public static final String EXTRA_IS_UPDATING = "is-updating";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -42,75 +41,85 @@ public class StatsService extends Service {
     }
 
     private void startTasks(final String blogId) {
-        broadcastAction(ACTION_STAT_UPDATE_STARTED);
-        AppLog.i(T.STATS, "stats update started");
-        try {
-            final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(getMaxConcurrentTasks());
-            // submit tasks from a separate thread or else they'll run on the main thread
-            new Thread() {
-                @Override
-                public void run() {
-                    final String today = StatUtils.getCurrentDate();
-                    final String yesterday = StatUtils.getYesterdaysDate();
+        // create executor to process stats tasks, limited to one task at a time on single-core devices
+        int maxConcurrentTasks = (Runtime.getRuntime().availableProcessors() > 1 ? 2 : 1);
+        final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxConcurrentTasks);
 
-                    // visitors and views
-                    executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
-                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
-                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
+        // submit tasks from a separate thread or else they'll run on the main thread
+        new Thread() {
+            @Override
+            public void run() {
+                final String today = StatUtils.getCurrentDate();
+                final String yesterday = StatUtils.getYesterdaysDate();
 
-                    // top posts and pages
-                    executor.submit(new TopPostsAndPagesTask(blogId, today));
-                    executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
+                // visitors and views
+                executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
+                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
+                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
 
-                    // clicks
-                    executor.submit(new ClicksTask(blogId, today));
-                    executor.submit(new ClicksTask(blogId, yesterday));
+                // top posts and pages
+                executor.submit(new TopPostsAndPagesTask(blogId, today));
+                executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
 
-                    // referrers
-                    executor.submit(new ReferrersTask(blogId, today));
-                    executor.submit(new ReferrersTask(blogId, yesterday));
+                // clicks
+                executor.submit(new ClicksTask(blogId, today));
+                executor.submit(new ClicksTask(blogId, yesterday));
 
-                    // search engine terms
-                    executor.submit(new SearchEngineTermsTask(blogId, today));
-                    executor.submit(new SearchEngineTermsTask(blogId, yesterday));
+                // referrers
+                executor.submit(new ReferrersTask(blogId, today));
+                executor.submit(new ReferrersTask(blogId, yesterday));
 
-                    // views by country
-                    executor.submit(new ViewsByCountryTask(blogId, today));
-                    executor.submit(new ViewsByCountryTask(blogId, yesterday));
+                // search engine terms
+                executor.submit(new SearchEngineTermsTask(blogId, today));
+                executor.submit(new SearchEngineTermsTask(blogId, yesterday));
 
-                    /*
-                    // comments
-                    executor.submit(new CommentsTopTask(blogId));
-                    executor.submit(new CommentsMostTask(blogId));
-                    // tags and categories
-                    executor.submit(new TagsAndCategoriesTask(blogId));
-                    // top authors
-                    executor.submit(new TopAuthorsTask(blogId));
-                    // video plays
-                    executor.submit(new VideoPlaysTask(blogId));
-                    */
+                // views by country
+                executor.submit(new ViewsByCountryTask(blogId, today));
+                executor.submit(new ViewsByCountryTask(blogId, yesterday));
 
-                    // wait for tasks to complete
-                    try {
-                        executor.awaitTermination(EXECUTOR_TIMEOUT, TimeUnit.MILLISECONDS);
-                    } catch (InterruptedException e) {
-                        AppLog.e(T.STATS, e);
+                /*
+                // comments
+                executor.submit(new CommentsTopTask(blogId));
+                executor.submit(new CommentsMostTask(blogId));
+                // tags and categories
+                executor.submit(new TagsAndCategoriesTask(blogId));
+                // top authors
+                executor.submit(new TopAuthorsTask(blogId));
+                // video plays
+                executor.submit(new VideoPlaysTask(blogId));
+                */
+
+                AppLog.i(T.STATS, "stats update started");
+                broadcastUpdate(true);
+                try {
+                    // prevent additional tasks from being submitted, then wait for all tasks to complete
+                    executor.shutdown();
+                    if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                        AppLog.w(T.STATS, "executor failed to terminate");
+                        executor.shutdownNow();
                     }
+                } catch (InterruptedException e) {
+                    AppLog.e(T.STATS, e);
+                    // (re-)cancel if current thread also interrupted
+                    executor.shutdownNow();
+                    // preserve interrupt status
+                    Thread.currentThread().interrupt();
+                } finally {
+                    AppLog.i(T.STATS, "stats update ended");
+                    broadcastUpdate(false);
                 }
-            }.start();
-        } finally {
-            AppLog.i(T.STATS, "stats update ended");
-            broadcastAction(ACTION_STAT_UPDATE_ENDED);
-        }
+            }
+        }.start();
     }
 
-    private void broadcastAction(String action) {
-        Intent intent = new Intent().setAction(action);
+    /*
+     * broadcast that the update has started - used by StatsActivity to animate refresh
+     * icon while update is in progress
+     */
+    private void broadcastUpdate(boolean isUpdating) {
+        Intent intent = new Intent()
+                .setAction(ACTION_STATS_UPDATING)
+                .putExtra(EXTRA_IS_UPDATING, isUpdating);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    private static int getMaxConcurrentTasks() {
-        int numProcessors = Runtime.getRuntime().availableProcessors();
-        return (numProcessors > 1 ? 2 : 1);
     }
 }

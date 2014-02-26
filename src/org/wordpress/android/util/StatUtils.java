@@ -5,13 +5,9 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -40,9 +36,6 @@ import java.util.Date;
  * A utility class to help with date parsing and saving summaries in stats
  */
 public class StatUtils {
-
-    public static final String STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
-    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
     
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
@@ -155,7 +148,7 @@ public class StatUtils {
         StatsSummary stat = null;
         try {
             FileInputStream fis = WordPress.getContext().openFileInput(STAT_SUMMARY + blogId);
-            StringBuffer fileContent = new StringBuffer("");
+            StringBuilder fileContent = new StringBuilder();
 
             byte[] buffer = new byte[1024];
 
@@ -199,7 +192,7 @@ public class StatUtils {
         StatsVideoSummary stat = null;
         try {
             FileInputStream fis = WordPress.getContext().openFileInput(STAT_VIDEO_SUMMARY + blogId);
-            StringBuffer fileContent = new StringBuffer("");
+            StringBuilder fileContent = new StringBuilder();
 
             byte[] buffer = new byte[1024];
 
@@ -227,25 +220,4 @@ public class StatUtils {
         }
         return stat;
     }
-    
-    public static void broadcastSummaryUpdated(StatsSummary stats) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
-        Intent intent = new Intent(STATS_SUMMARY_UPDATED);
-        intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
-        lbm.sendBroadcast(intent);
-    }
-
-    /*
-     * used in stats referrer views to show a hyperlinked entry
-     */
-    public static void hyperlinkEntryText(TextView entryTextView, String linkUrl, String linkName) {
-        if (entryTextView == null
-               || linkUrl == null
-               || linkName == null)
-            return;
-
-        entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
-        //entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-    }
-    
 }

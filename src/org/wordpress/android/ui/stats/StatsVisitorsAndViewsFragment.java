@@ -1,13 +1,8 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,18 +37,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     private static final String CHILD_TAG = "CHILD_TAG";
 
     private int mSelectedButtonIndex = 0;
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                refreshViews(summary);
-            }
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,9 +77,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
-
         refreshSummary();
     }
 
@@ -142,14 +122,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 });
             }
         }.start();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
     }
 
     private void refreshViews(final StatsSummary stats) {
