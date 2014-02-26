@@ -34,7 +34,7 @@ public class PostsListFragment extends ListFragment {
     private PostListAdapter mPostListAdapter;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage;
+    private boolean mIsPage, mShouldSelectFirstPost;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -60,7 +60,24 @@ public class PostsListFragment extends ListFragment {
                 }
             };
 
-            mPostListAdapter = new PostListAdapter(getActivity(), mIsPage, loadMoreListener);
+            PostListAdapter.OnPostsLoadedListener postsLoadedListener = new PostListAdapter.OnPostsLoadedListener() {
+                @Override
+                public void onPostsLoaded() {
+                    // Select the first row, if available.
+                    if (mShouldSelectFirstPost) {
+                        mShouldSelectFirstPost = false;
+                        if (mPostListAdapter.getCount() > 0) {
+                            PostsListPost postsListPost = (PostsListPost) mPostListAdapter.getItem(0);
+                            if (postsListPost != null) {
+                                showPost(postsListPost.getPostId());
+                                getListView().setItemChecked(0, true);
+                            }
+                        }
+                    }
+                }
+            };
+
+            mPostListAdapter = new PostListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
         }
 
         return mPostListAdapter;
@@ -165,8 +182,9 @@ public class PostsListFragment extends ListFragment {
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-        if (mProgressFooterView != null && loadMore)
+        if (mProgressFooterView != null && loadMore) {
             mProgressFooterView.setVisibility(View.VISIBLE);
+        }
 
         ApiHelper.FetchPostsTask fetchPostsTaskTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
@@ -221,6 +239,10 @@ public class PostsListFragment extends ListFragment {
         if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
             mProgressFooterView.setVisibility(View.GONE);
         }
+    }
+
+    public void setShouldSelectFirstPost(boolean shouldSelect) {
+        mShouldSelectFirstPost = shouldSelect;
     }
 
     private boolean hasActivity() {

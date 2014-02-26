@@ -26,7 +26,12 @@ public class PostListAdapter extends BaseAdapter {
         public void onLoadMore(boolean loadMore);
     }
 
+    public static interface OnPostsLoadedListener {
+        public void onPostsLoaded();
+    }
+
     private final OnLoadMoreListener mOnLoadMoreListener;
+    private final OnPostsLoadedListener mOnPostsLoadedListener;
     private Context mContext;
     private boolean mIsPage;
     private LayoutInflater mLayoutInflater;
@@ -34,10 +39,11 @@ public class PostListAdapter extends BaseAdapter {
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
 
-    public PostListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener) {
+    public PostListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
         mContext = context;
         mIsPage = isPage;
         mOnLoadMoreListener = onLoadMoreListener;
+        mOnPostsLoadedListener = onPostsLoadedListener;
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
@@ -179,7 +185,7 @@ public class PostListAdapter extends BaseAdapter {
         protected Void doInBackground(Void... nada) {
             if (WordPress.getCurrentBlog() != null) {
                 List<PostsListPost> postsList = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
-                if (postsList.size() == 0) {
+                if (postsList.size() == 0 && mOnLoadMoreListener != null) {
                     mOnLoadMoreListener.onLoadMore(false);
                 } else {
                     setPosts(postsList);
@@ -192,6 +198,9 @@ public class PostListAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Void nada) {
             notifyDataSetChanged();
+            if (mOnPostsLoadedListener != null) {
+                mOnPostsLoadedListener.onPostsLoaded();
+            }
         }
     }
 

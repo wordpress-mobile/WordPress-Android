@@ -374,7 +374,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
-            //mPostList.shouldSelectAfterLoad = true;
+            mPostList.setShouldSelectFirstPost(true);
         }
     }
 
@@ -780,15 +780,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public void onDetailPostAction(int action, Post post) {
-
         onPostAction(action, post);
-
     }
 
     @Override
     public void onDialogConfirm() {
-       // mPostList.switcher.showNext();
-        //mPostList.numRecords += 30;
         mPostList.requestPosts(true);
     }
 
