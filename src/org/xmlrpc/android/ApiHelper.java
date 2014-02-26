@@ -5,9 +5,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
@@ -41,8 +42,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -881,83 +883,48 @@ public class ApiHelper {
     /**
      * Synchronous method to fetch the String content at the specified URL.
      *
-     * @param url URL to fetch contents for.
+     * @param url                     URL to fetch contents for.
      * @param trustAllSslCertificates if true ignore SSL errors
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String url, boolean trustAllSslCertificates) throws SSLHandshakeException {
-        final String res[] = new String[1];
-        final SSLHandshakeException sslHandshakeException[] = new SSLHandshakeException[1];
-        // Using a CountDownLatch to make the request synchronous
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        return getResponse(url, trustAllSslCertificates, 2);
+    }
+
+    private static String getResponse(final String url, boolean trustAllSslCertificates, int maxRedirection)
+            throws SSLHandshakeException {
         trustAllSslCertificates(trustAllSslCertificates);
-
-        // Response Listener
-        final Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                res[0] = response;
-                countDownLatch.countDown();
-            }
-        };
-
-        // Error Listener
-        final Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if ((error != null && error.networkResponse != null) &&
-                    (error.networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_PERM ||
-                     error.networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
-                    String newUrl = error.networkResponse.headers.get("Location");
-                    if (newUrl == null) {
-                        AppLog.e(T.API, url + " moved but Location header is not found");
-                        countDownLatch.countDown();
-                        return;
+        RequestFuture<String> requestFuture = RequestFuture.newFuture();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, requestFuture, requestFuture);
+        WordPress.requestQueue.add(stringRequest);
+        try {
+            // Wait for the response
+            return requestFuture.get(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            AppLog.e(T.API, e);
+            return null;
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof ServerError) {
+                NetworkResponse networkResponse = ((ServerError) e.getCause()).networkResponse;
+                if ((networkResponse != null) && (networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                                                  networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
+                    String newUrl = networkResponse.headers.get("Location");
+                    if (maxRedirection >= 0) {
+                        return getResponse(newUrl, trustAllSslCertificates, maxRedirection - 1);
                     }
-                    AppLog.i(T.API, url + " moved to " + newUrl);
-                    StringRequest stringRequestRedirect = new StringRequest(Request.Method.GET, newUrl,
-                            responseListener, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error != null && error.getCause() instanceof SSLHandshakeException) {
-                                sslHandshakeException[0] = (SSLHandshakeException) error.getCause();
-                                countDownLatch.countDown();
-                                return;
-                            }
-                            AppLog.e(T.API, error);
-                            countDownLatch.countDown();
-                        }
-                    });
-                    WordPress.requestQueue.add(stringRequestRedirect);
-                } else {
-                    if (error != null && error.getCause() instanceof SSLHandshakeException) {
-                        sslHandshakeException[0] = (SSLHandshakeException) error.getCause();
-                        countDownLatch.countDown();
-                        return;
-                    }
-                    AppLog.e(T.API, error);
-                    countDownLatch.countDown();
                 }
             }
-        };
-
-        // Add the request to the queue
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener, errorListener);
-        WordPress.requestQueue.add(stringRequest);
-
-        // Wait for the response
-        try {
-            countDownLatch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+            if (e.getCause() != null && e.getCause().getCause() instanceof SSLHandshakeException) {
+                throw (SSLHandshakeException) e.getCause().getCause();
+            }
+            AppLog.e(T.API, e);
+            return null;
+        } catch (TimeoutException e) {
             AppLog.e(T.API, e);
             return null;
         } finally {
             trustAllSslCertificates(false);
         }
-        if (sslHandshakeException[0] != null) {
-            throw sslHandshakeException[0];
-        }
-        return res[0];
     }
 
     /**
