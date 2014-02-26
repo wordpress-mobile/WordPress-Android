@@ -22,16 +22,14 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:layout_gravity="center_vertical"
-            style="@style/ReaderTextView.Post.Title"
-            android:text="Jumanji is my favorite" />
+            style="@style/ReaderTextView.Post.Title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/post_list_date"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_marginTop="@dimen/margin_medium"
-            style="@style/ReaderTextView.Date"
-            android:text="Two hours ago"/>
+            style="@style/ReaderTextView.Date"/>
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
@@ -40,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/grey_medium"
-        android:textSize="@dimen/text_sz_small"
-        android:text="DRAFT"/>
+        android:textSize="@dimen/text_sz_small"/>
 
 </LinearLayout>
