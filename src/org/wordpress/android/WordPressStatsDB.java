@@ -24,7 +24,7 @@ import org.wordpress.android.providers.StatsContentProvider;
  * A database for storing stats. Do not access this class directly.
  * Instead, use a {@link ContentResolver} and the URIs listed in 
  * {@link StatsContentProvider} to perform inserts, updates, and deletes.
- * See {@link org.wordpress.android.ui.stats.StatsService} for examples.
+ * See {@link org.wordpress.android.ui.stats.service.StatsService} for examples.
  */
 public class WordPressStatsDB extends SQLiteOpenHelper{
 

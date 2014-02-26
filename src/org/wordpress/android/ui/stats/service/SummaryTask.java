@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -8,11 +8,16 @@ import org.wordpress.android.util.StringUtils;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class SummaryTask extends StatsTask {
+class SummaryTask extends AbsStatsTask {
     private final String mBlogId;
 
     public SummaryTask(final String blogId) {
         mBlogId = StringUtils.notNullStr(blogId);
+    }
+
+    @Override
+    String getTaskName() {
+        return "SummaryTask";
     }
 
     @Override

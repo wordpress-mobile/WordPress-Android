@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -10,8 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsTopAuthorsTable;
-import org.wordpress.android.models.StatsTopAuthor;
+import org.wordpress.android.datasets.StatsVideosTable;
+import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -21,17 +21,22 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class TopAuthorsTask extends StatsTask {
+class VideoPlaysTask extends AbsStatsTask {
 
     private final String mBlogId;
 
-    public TopAuthorsTask(final String blogId) {
+    public VideoPlaysTask(final String blogId) {
         mBlogId = StringUtils.notNullStr(blogId);
     }
 
     @Override
+    String getTaskName() {
+        return "VideoPlaysTask";
+    }
+
+    @Override
     public void run() {
-        WordPress.restClient.getStatsTopAuthors(mBlogId, responseListener, errorListener);
+        WordPress.restClient.getStatsVideoPlays(mBlogId, responseListener, errorListener);
         waitForResponse();
     }
 
@@ -47,20 +52,20 @@ public class TopAuthorsTask extends StatsTask {
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
             if (count > 0) {
-                ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_AUTHORS_URI).withSelection("blogId=?", new String[] { mBlogId }).build();
+                ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_VIDEOS_URI).withSelection("blogId=?", new String[] { mBlogId }).build();
                 operations.add(op);
             }
 
             for (int i = 0; i < count; i++ ) {
                 JSONObject result = results.getJSONObject(i);
-                StatsTopAuthor stat = new StatsTopAuthor(mBlogId, result);
-                ContentValues values = StatsTopAuthorsTable.getContentValues(stat);
-                ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_AUTHORS_URI).withValues(values).build();
+                StatsVideo stat = new StatsVideo(mBlogId, result);
+                ContentValues values = StatsVideosTable.getContentValues(stat);
+                ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_VIDEOS_URI).withValues(values).build();
                 operations.add(op);
             }
 
             getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            getContentResolver().notifyChange(StatsContentProvider.STATS_TOP_AUTHORS_URI, null);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_VIDEOS_URI, null);
 
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);

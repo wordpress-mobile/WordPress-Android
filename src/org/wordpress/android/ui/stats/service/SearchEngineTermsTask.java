@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -13,7 +13,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class SearchEngineTermsTask extends StatsTask {
+class SearchEngineTermsTask extends AbsStatsTask {
 
     private final String mBlogId;
     private final String mDate;
@@ -40,6 +39,11 @@ public class SearchEngineTermsTask extends StatsTask {
     }
 
     @Override
+    String getTaskName() {
+        return String.format("SearchEngineTermsTask (%s)", mDate);
+    }
+
+    @Override
     void parseResponse(JSONObject response) {
         if (response == null)
             return;
@@ -51,7 +55,7 @@ public class SearchEngineTermsTask extends StatsTask {
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
             ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                    new String[] { mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + "" }).build();
+                    new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
 
             operations.add(delete_op);
 

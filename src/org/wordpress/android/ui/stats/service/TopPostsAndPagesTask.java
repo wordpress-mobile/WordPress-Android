@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -10,10 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsGeoviewsTable;
-import org.wordpress.android.models.StatsGeoview;
+import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
+import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -23,51 +22,55 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class ViewsByCountryTask extends StatsTask {
+class TopPostsAndPagesTask extends AbsStatsTask {
 
     private final String mBlogId;
     private final String mDate;
 
-    public ViewsByCountryTask(final String blogId, final String date) {
+    public TopPostsAndPagesTask(final String blogId, final String date) {
         mBlogId = StringUtils.notNullStr(blogId);
         mDate = StringUtils.notNullStr(date);
     }
 
     @Override
+    String getTaskName() {
+        return String.format("TopPostsAndPagesTask (%s)", mDate);
+    }
+
+    @Override
     public void run() {
-        WordPress.restClient.getStatsGeoviews(mBlogId, mDate, responseListener, errorListener);
+        WordPress.restClient.getStatsTopPosts(mBlogId, mDate, responseListener, errorListener);
         waitForResponse();
     }
 
     @Override
     void parseResponse(JSONObject response) {
-        if (response == null || !response.has("country-views"))
+        if (response == null || !response.has("top-posts"))
             return;
 
         try {
-            JSONArray results = response.getJSONArray("country-views");
+            JSONArray results = response.getJSONArray("top-posts");
             int count = results.length();
+
             String date = response.getString("date");
             long dateMs = StatUtils.toMs(date);
-            ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
-            if (count > 0) {
-                // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI)
-                        .withSelection("blogId=? AND (date=? OR date<=?)", new String[]{mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + ""}).build();
-                operations.add(delete_op);
-            }
+            ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+            // delete data with the same date, and data older than two days ago (keep yesterday's data)
+            ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI)
+                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+            operations.add(delete_op);
 
             for (int i = 0; i < count; i++ ) {
                 JSONObject result = results.getJSONObject(i);
-                StatsGeoview stat = new StatsGeoview(mBlogId, result);
-                ContentValues values = StatsGeoviewsTable.getContentValues(stat);
-                ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_GEOVIEWS_URI).withValues(values).build();
+                StatsTopPostsAndPages stat = new StatsTopPostsAndPages(mBlogId, result);
+                ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);
+                ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withValues(values).build();
                 operations.add(op);
             }
 
             getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            getContentResolver().notifyChange(StatsContentProvider.STATS_GEOVIEWS_URI, null);
+            getContentResolver().notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
 
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);

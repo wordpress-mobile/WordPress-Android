@@ -35,7 +35,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
     
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         
         @Override
         public void onReceive(Context context, Intent intent) {

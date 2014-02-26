@@ -12,7 +12,7 @@ import org.wordpress.android.R;
  * Created by nbradbury on 2/25/14.
  * View holder for stats_list_cell layout
  */
-public class StatsChildViewHolder {
+class StatsChildViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final View imageFrame;

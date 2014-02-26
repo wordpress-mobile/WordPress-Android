@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -15,7 +15,6 @@ import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.models.StatsClickGroup;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -25,13 +24,18 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class ClicksTask extends StatsTask {
+class ClicksTask extends AbsStatsTask {
     private final String mBlogId;
     private final String mDate;
 
     public ClicksTask(final String blogId, final String date) {
         mBlogId = StringUtils.notNullStr(blogId);
         mDate = StringUtils.notNullStr(date);
+    }
+
+    @Override
+    String getTaskName() {
+        return String.format("ClicksTask (%s)", mDate);
     }
 
     @Override
@@ -53,9 +57,9 @@ public class ClicksTask extends StatsTask {
 
             // delete data with the same date, and data older than two days ago (keep yesterday's data)
             ContentProviderOperation delete_group = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICK_GROUP_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                    new String[] { mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + "" }).build();
+                    new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
             ContentProviderOperation delete_child = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICKS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                    new String[] { mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + "" }).build();
+                    new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
 
             operations.add(delete_group);
             operations.add(delete_child);

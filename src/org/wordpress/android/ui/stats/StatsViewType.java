@@ -3,8 +3,6 @@ package org.wordpress.android.ui.stats;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
-import java.util.ArrayList;
-
 /**
  * An enum of the different view types to appear on the stats view.
  * The views of the APIs that have not been implemented should be hidden 
@@ -30,40 +28,13 @@ public enum StatsViewType {
     SEARCH_ENGINE_TERMS(R.string.stats_view_search_engine_terms, true), ;
 
     private final int mLabelResId;
-    private final boolean mIsImplemented;
 
     private StatsViewType(int viewsLabelResId, boolean implemented) {
         mLabelResId = viewsLabelResId;
-        mIsImplemented = implemented;
+        //mIsImplemented = implemented;
     }
 
     String getLabel() {
         return WordPress.getContext().getString(mLabelResId);
-    }
-
-    public static String[] toStringArray() {
-        int count = StatsViewType.values().length;
-        
-        ArrayList<String> list = new ArrayList<String>();
-        
-        for (int i = 0; i < count; i++) {
-            if (StatsViewType.values()[i].mIsImplemented)
-                list.add(StatsViewType.values()[i].getLabel());
-        }
-
-        return list.toArray(new String[list.size()]);
-    }
-    
-    public static StatsViewType[] getImplemented() {
-        ArrayList<StatsViewType> list = new ArrayList<StatsViewType>();
-
-        int count = StatsViewType.values().length;
-        for (int i = 0; i < count; i++) {
-            if (StatsViewType.values()[i].mIsImplemented)
-                list.add(StatsViewType.values()[i]);
-        }
-
-        StatsViewType[] array = list.toArray(new StatsViewType[list.size()]);
-        return array;
     }
 }

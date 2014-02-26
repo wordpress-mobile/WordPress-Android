@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -15,7 +15,6 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class ReferrersTask extends StatsTask {
+class ReferrersTask extends AbsStatsTask {
 
     private final String mBlogId;
     private final String mDate;
@@ -42,6 +41,11 @@ public class ReferrersTask extends StatsTask {
     }
 
     @Override
+    String getTaskName() {
+        return String.format("ReferrersTask (%s)", mDate);
+    }
+
+    @Override
     void parseResponse(JSONObject response) {
         if (response == null)
             return;
@@ -54,11 +58,11 @@ public class ReferrersTask extends StatsTask {
 
             // delete data with the same date, and data older than two days ago (keep yesterday's data)
             ContentProviderOperation delete_group_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRER_GROUP_URI)
-                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + "" }).build();
+                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
             operations.add(delete_group_op);
 
             ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRERS_URI)
-                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - StatsService.TWO_DAYS) + "" }).build();
+                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
             operations.add(delete_op);
 
 

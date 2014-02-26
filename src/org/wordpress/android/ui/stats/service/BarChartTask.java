@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.tasks;
+package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by nbradbury on 2/25/14.
  */
-public class BarChartTask extends StatsTask {
+class BarChartTask extends AbsStatsTask {
 
     private final String mBlogId;
     private final StatsBarChartUnit mBarChartUnit;
@@ -31,6 +31,11 @@ public class BarChartTask extends StatsTask {
     public BarChartTask(String blogId, StatsBarChartUnit barChartUnit) {
         mBlogId = StringUtils.notNullStr(blogId);
         mBarChartUnit = barChartUnit;
+    }
+
+    @Override
+    String getTaskName() {
+        return String.format("BarChartTask (%s)", mBarChartUnit.toString());
     }
 
     @Override

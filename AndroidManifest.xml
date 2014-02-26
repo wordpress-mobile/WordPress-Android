@@ -266,7 +266,7 @@
             android:label="Media Delete Service" >
         </service>
 
-        <service android:name=".ui.stats.StatsService"
+        <service android:name=".ui.stats.service.StatsService"
             android:label="Stats Update Service"
             android:exported="false" />
 

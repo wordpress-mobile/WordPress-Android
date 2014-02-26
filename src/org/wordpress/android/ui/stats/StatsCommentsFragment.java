@@ -166,7 +166,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         private TextView mActiveTimeText;
         private TextView mMostCommentedText;
         
-        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
             
             @Override
             public void onReceive(Context context, Intent intent) {

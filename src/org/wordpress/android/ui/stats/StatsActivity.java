@@ -34,6 +34,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -361,7 +362,7 @@ public class StatsActivity extends WPActionBarActivity {
         @Override
         public void onSuccess() {
             if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
-                    || statsActivityWeakRef.get().mIsInFront == false) {
+                    || !statsActivityWeakRef.get().mIsInFront) {
                 return;
             }
             
@@ -459,7 +460,7 @@ public class StatsActivity extends WPActionBarActivity {
         refreshStats();
     }
 
-    public boolean dotComCredentialsMatch() {
+    boolean dotComCredentialsMatch() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
         return username.equals(WordPress.getCurrentBlog().getUsername());
@@ -539,7 +540,7 @@ public class StatsActivity extends WPActionBarActivity {
                 });
     }
 
-    public String getBlogId() {
+    String getBlogId() {
         // for dotcom blogs that were added manually
         if (WordPress.getCurrentBlog().isDotcomFlag() && !dotComCredentialsMatch())
             return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
@@ -570,7 +571,7 @@ public class StatsActivity extends WPActionBarActivity {
         return null;
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = StringUtils.notNullStr(intent.getAction());

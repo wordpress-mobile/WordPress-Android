@@ -34,12 +34,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
     
     public static final String TAG = StatsClicksFragment.class.getSimpleName();
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
-    
+
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
         public CustomPagerAdapter(FragmentManager fm) {
@@ -55,12 +55,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel();
         }
-        
+
     }
     
     @Override
