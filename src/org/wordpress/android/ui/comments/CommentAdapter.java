@@ -313,7 +313,7 @@ public class CommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            int localBlogId = WordPress.currentBlog.getLocalTableBlogId();
+            int localBlogId = WordPress.getCurrentLocalTableBlogId();
             tmpComments = CommentTable.getCommentsForBlog(localBlogId);
             if (mComments.isSameList(tmpComments))
                 return false;
