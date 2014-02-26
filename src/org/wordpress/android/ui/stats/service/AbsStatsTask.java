@@ -60,16 +60,17 @@ abstract class AbsStatsTask implements Runnable {
      * the response was received)
      */
     synchronized void waitForResponse() {
+        if (mIsCompleted)
+            return;
+        AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
         while (!mIsCompleted) {
-            AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
             try {
                 Thread.sleep(1000);
-                if (mIsCompleted)
-                    AppLog.d(AppLog.T.STATS, "completed " + getTaskName());
             } catch (InterruptedException e) {
                 AppLog.e(AppLog.T.STATS, e);
                 return;
             }
         }
+        AppLog.d(AppLog.T.STATS, "completed " + getTaskName());
     }
 }
