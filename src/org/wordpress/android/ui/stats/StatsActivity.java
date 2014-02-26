@@ -108,6 +108,7 @@ public class StatsActivity extends WPActionBarActivity {
         loadStatsFragments();
         setTitle(R.string.stats);
 
+        restoreState(savedInstanceState);
     }
 
     @Override
