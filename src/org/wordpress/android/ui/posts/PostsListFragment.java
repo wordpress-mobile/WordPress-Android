@@ -24,17 +24,16 @@ import java.util.List;
 import java.util.Vector;
 
 public class PostsListFragment extends ListFragment {
-    /** Called when the activity is first created. */
+
+    public static final int POSTS_REQUEST_COUNT = 20;
+
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnRefreshListener mOnRefreshListener;
     private PostsActivity mParentActivity;
     private PostListAdapter mPostListAdapter;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
-
     private boolean mIsPage;
-
-    public static final int POSTS_REQUEST_COUNT = 20;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -132,7 +131,10 @@ public class PostsListFragment extends ListFragment {
     }
 
     private void showPost(long selectedID) {
-        Post post = new Post(WordPress.currentBlog.getLocalTableBlogId(), selectedID, mIsPage);
+        if (WordPress.getCurrentBlog() == null)
+            return;
+
+        Post post = new Post(WordPress.getCurrentLocalTableBlogId(), selectedID, mIsPage);
         if (post.getId() >= 0) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);
@@ -148,6 +150,9 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void requestPosts(boolean loadMore) {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
             mOnRefreshListener.onRefresh(true);
@@ -207,8 +212,13 @@ public class PostsListFragment extends ListFragment {
     }
 
     protected void clear() {
-        if (getPostListAdapter() != null)
+        if (getPostListAdapter() != null) {
             getPostListAdapter().clear();
+        }
+        mCanLoadMorePosts = true;
+        if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
+            mProgressFooterView.setVisibility(View.GONE);
+        }
     }
 
     private boolean hasActivity() {
