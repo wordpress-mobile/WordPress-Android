@@ -403,7 +403,7 @@ public class ApiHelper {
                     // since it allows for an offset parameter.
                     int startPosition = 0;
                     if (loadMore && result.length > PostsListFragment.POSTS_REQUEST_COUNT) {
-                        startPosition = (result.length - PostsListFragment.POSTS_REQUEST_COUNT);
+                        startPosition = result.length - PostsListFragment.POSTS_REQUEST_COUNT;
                     }
 
                     for (int ctr = startPosition; ctr < result.length; ctr++) {
