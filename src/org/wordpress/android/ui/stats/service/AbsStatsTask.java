@@ -68,6 +68,7 @@ abstract class AbsStatsTask implements Runnable {
                     AppLog.d(AppLog.T.STATS, "completed " + getTaskName());
             } catch (InterruptedException e) {
                 AppLog.e(AppLog.T.STATS, e);
+                return;
             }
         }
     }
