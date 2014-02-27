@@ -22,7 +22,7 @@ import java.util.Locale;
  * Adapter for Posts/Pages list
  * Created by Dan Roundhill on 11/5/13.
  */
-public class PostListAdapter extends BaseAdapter {
+public class PostsListAdapter extends BaseAdapter {
     public static interface OnLoadMoreListener {
         public void onLoadMore(boolean loadMore);
     }
@@ -40,7 +40,7 @@ public class PostListAdapter extends BaseAdapter {
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
 
-    public PostListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
+    public PostsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
         mContext = context;
         mIsPage = isPage;
         mOnLoadMoreListener = onLoadMoreListener;

@@ -933,7 +933,7 @@ public class WordPressDB {
                     if (result == 0)
                         db.insert(POSTS_TABLE, null, values);
                 }
-                
+
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -955,13 +955,6 @@ public class WordPressDB {
 
         Date d = new Date();
         for (int i = 0; i < numRows; ++i) {
-            // Check if post is scheduled
-            long postDate = c.getLong(c.getColumnIndex("date_created_gmt"));
-            String postStatus = StringUtils.notNullStr(c.getString(c.getColumnIndex("post_status")));
-            if (postDate > d.getTime() && postStatus.equals("publish")) {
-                postStatus = "scheduled";
-            }
-
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
 
             // Create the PostsListPost and add it to the Array
@@ -969,8 +962,8 @@ public class WordPressDB {
                     c.getInt(c.getColumnIndex("id")),
                     c.getInt(c.getColumnIndex("blogID")),
                     postTitle,
-                    postDate,
-                    postStatus,
+                    c.getLong(c.getColumnIndex("date_created_gmt")),
+                    c.getString(c.getColumnIndex("post_status")),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange")))
             );

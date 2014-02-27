@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.ui.posts.adapters.PostListAdapter;
+import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 
@@ -31,7 +31,7 @@ public class PostsListFragment extends ListFragment {
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnRefreshListener mOnRefreshListener;
     private PostsActivity mParentActivity;
-    private PostListAdapter mPostListAdapter;
+    private PostsListAdapter mPostsListAdapter;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost;
@@ -50,9 +50,9 @@ public class PostsListFragment extends ListFragment {
         return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
-    public PostListAdapter getPostListAdapter() {
-        if (mPostListAdapter == null) {
-            PostListAdapter.OnLoadMoreListener loadMoreListener = new PostListAdapter.OnLoadMoreListener() {
+    public PostsListAdapter getPostListAdapter() {
+        if (mPostsListAdapter == null) {
+            PostsListAdapter.OnLoadMoreListener loadMoreListener = new PostsListAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(boolean loadMore) {
                     if (mCanLoadMorePosts)
@@ -60,14 +60,14 @@ public class PostsListFragment extends ListFragment {
                 }
             };
 
-            PostListAdapter.OnPostsLoadedListener postsLoadedListener = new PostListAdapter.OnPostsLoadedListener() {
+            PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded() {
                     // Select the first row, if available.
                     if (mShouldSelectFirstPost) {
                         mShouldSelectFirstPost = false;
-                        if (mPostListAdapter.getCount() > 0) {
-                            PostsListPost postsListPost = (PostsListPost) mPostListAdapter.getItem(0);
+                        if (mPostsListAdapter.getCount() > 0) {
+                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                                 getListView().setItemChecked(0, true);
@@ -77,10 +77,10 @@ public class PostsListFragment extends ListFragment {
                 }
             };
 
-            mPostListAdapter = new PostListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
         }
 
-        return mPostListAdapter;
+        return mPostsListAdapter;
     }
 
     @Override
@@ -157,7 +157,7 @@ public class PostsListFragment extends ListFragment {
         if (post.getId() >= 0) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);
-            mPostListAdapter.notifyDataSetChanged();
+            mPostsListAdapter.notifyDataSetChanged();
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();

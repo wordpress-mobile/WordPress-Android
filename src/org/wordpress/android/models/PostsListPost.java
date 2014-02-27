@@ -17,7 +17,6 @@ public class PostsListPost {
     private String title;
     private long dateCreatedGmt;
     private String status;
-    private String formattedDate;
     private boolean isLocalDraft;
     private boolean hasLocalChanges;
 
@@ -27,7 +26,6 @@ public class PostsListPost {
         setTitle(title);
         setDateCreatedGmt(dateCreatedGmt);
         setStatus(status);
-        setFormattedDate();
         setLocalDraft(localDraft);
         setHasLocalChanges(localChanges);
     }
@@ -65,7 +63,14 @@ public class PostsListPost {
     }
 
     public String getStatus() {
-        return StringUtils.notNullStr(status);
+        // Check if post is scheduled
+        Date d = new Date();
+        String postStatus = StringUtils.notNullStr(status);
+        if (getDateCreatedGmt() > d.getTime() && postStatus.equals("publish")) {
+            postStatus = "scheduled";
+        }
+
+        return postStatus;
     }
 
     public void setStatus(String status) {
@@ -73,12 +78,7 @@ public class PostsListPost {
     }
 
     public String getFormattedDate() {
-
-        return StringUtils.notNullStr(formattedDate);
-    }
-
-    public void setFormattedDate() {
-        formattedDate = DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
+        return DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
     }
 
     public boolean isLocalDraft() {
