@@ -43,24 +43,21 @@ public class StatsService extends Service {
     }
 
     /*
-     * create executor to process stats tasks, limited to one concurrent task for single-core
-     * devices and two concurrent tasks for all other devices - this limit is necessary due
-     * to how various tasks rely on getContentResolver().notifyChange() to notify fragments
+     * create executor to process stats tasks, limited to one concurrent task - this limit is
+     * necessary due to how tasks use getContentResolver().notifyChange() to notify fragments
      * of changes to underlying data, resulting in work being done on the UI thread - without
      * this limit the stats views would stutter noticeably
      */
     private ThreadPoolExecutor createExecutor() {
-        int numCPUs = Runtime.getRuntime().availableProcessors();
-        int numConcurrentTasks = Math.min(numCPUs, 2);
-        AppLog.i(T.STATS, "creating executor with pool size = " + numConcurrentTasks);
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(numConcurrentTasks);
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
     }
 
     private static final int EXECUTOR_TIMEOUT_SECONDS = 60;
     private void startTasks(final String blogId) {
         final ThreadPoolExecutor executor = createExecutor();
 
-        // submit tasks from a separate thread or else they'll run on the main thread
+        // submit tasks from a separate thread or else they'll run on the main thread - note that
+        // these are submitted in the order they appear
         new Thread() {
             @Override
             public void run() {
@@ -76,6 +73,10 @@ public class StatsService extends Service {
                 executor.submit(new TopPostsAndPagesTask(blogId, today));
                 executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
 
+                // views by country
+                executor.submit(new ViewsByCountryTask(blogId, today));
+                executor.submit(new ViewsByCountryTask(blogId, yesterday));
+
                 // clicks
                 executor.submit(new ClicksTask(blogId, today));
                 executor.submit(new ClicksTask(blogId, yesterday));
@@ -87,10 +88,6 @@ public class StatsService extends Service {
                 // search engine terms
                 executor.submit(new SearchEngineTermsTask(blogId, today));
                 executor.submit(new SearchEngineTermsTask(blogId, yesterday));
-
-                // views by country
-                executor.submit(new ViewsByCountryTask(blogId, today));
-                executor.submit(new ViewsByCountryTask(blogId, yesterday));
 
                 /*
                 // comments
