@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -24,6 +22,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
@@ -79,7 +78,7 @@ public class DashboardActivity extends SherlockActivity {
             finish();
         }
 
-        mWebView.setWebViewClient(new WordPressWebViewClient(mBlog));
+        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
         mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -161,36 +160,6 @@ public class DashboardActivity extends SherlockActivity {
             if (progress == 100) {
                 setTitle(webView.getTitle());
             }
-        }
-    }
-
-    /**
-     * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
-     * username and password of the blog configured for this activity.
-     */
-    private class WordPressWebViewClient extends WebViewClient {
-        private Blog blog;
-
-        WordPressWebViewClient(Blog blog) {
-            super();
-            this.blog = blog;
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-
-        }
-
-        @Override
-        public void onReceivedHttpAuthRequest(WebView view,
-                                              HttpAuthHandler handler, String host, String realm) {
-            handler.proceed(blog.getHttpuser(), blog.getHttppassword());
         }
     }
 
