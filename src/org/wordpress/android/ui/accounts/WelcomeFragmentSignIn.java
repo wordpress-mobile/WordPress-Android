@@ -350,6 +350,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
+        private boolean mIsAllSslCertificatesTrusted;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -357,6 +358,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
             mSetupBlog.setHttpUsername(username);
             mSetupBlog.setHttpPassword(password);
+        }
+
+        private void setAllSslCertificatesTrusted(boolean trustAll) {
+            mIsAllSslCertificatesTrusted = trustAll;
         }
 
         @Override
@@ -371,8 +376,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 mSetupBlog.setSelfHostedURL(null);
             }
-            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) :
-                                  getString(R.string.connecting_wpcom));
+            mSetupBlog.setAllSslCertificatesTrusted(mIsAllSslCertificatesTrusted);
+            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
+                    R.string.connecting_wpcom));
         }
 
         @Override
@@ -385,46 +391,69 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             return userBlogList;
         }
 
+        private void httpAuthRequired() {
+            // Prompt for http credentials
+            mSetupBlog.setHttpAuthRequired(false);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(R.string.http_authorization_required);
+
+            View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
+            final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
+            final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
+            alert.setView(httpAuth);
+            alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    SetupBlogTask setupBlogTask = new SetupBlogTask();
+                    setupBlogTask.setHttpCredentials(EditTextUtils.getText(usernameEditText), EditTextUtils.getText(
+                            passwordEditText));
+                    setupBlogTask.execute();
+                }
+            });
+
+            alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Canceled.
+                }
+            });
+
+            alert.show();
+            endProgress();
+        }
+
+        private void askForSslTrust() {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getString(R.string.ssl_certificate_error));
+            alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
+            alert.setPositiveButton(
+                    android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    SetupBlogTask setupBlogTask = new SetupBlogTask();
+                    setupBlogTask.setAllSslCertificatesTrusted(true);
+                    setupBlogTask.execute();
+                }
+            });
+            alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Canceled.
+                }
+            });
+            alert.show();
+            endProgress();
+        }
+
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
-            if (mSetupBlog.isHttpAuthRequired()) {
-                if (!hasActivity()) {
-                    return ;
-                }
-                // Prompt for http credentials
-                mSetupBlog.setHttpAuthRequired(false);
-                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setTitle(R.string.http_authorization_required);
-
-                View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
-                final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
-                final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
-                alert.setView(httpAuth);
-                final SetupBlogTask self = this;
-                alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        SetupBlogTask setupBlogTask = new SetupBlogTask();
-                        setupBlogTask.setHttpCredentials(EditTextUtils.getText(usernameEditText),
-                                EditTextUtils.getText(passwordEditText));
-                        setupBlogTask.execute();
-                    }
-                });
-
-                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Canceled.
-                    }
-                });
-
-                alert.show();
-                endProgress();
+            if (mSetupBlog.isErroneousSslCertificates() && hasActivity()) {
+                askForSslTrust();
                 return;
             }
 
-            if (userBlogList == null && mErrorMsgId != 0) {
-                if (!hasActivity()) {
-                    return ;
-                }
+            if (mSetupBlog.isHttpAuthRequired() && hasActivity()) {
+                httpAuthRequired();
+                return;
+            }
+
+            if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
