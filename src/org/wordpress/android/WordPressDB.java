@@ -932,9 +932,9 @@ public class WordPressDB {
                             new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
                     if (result == 0)
                         db.insert(POSTS_TABLE, null, values);
-
-                    db.setTransactionSuccessful();
                 }
+                
+                db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
             }
