@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public class PostsListAdapter extends BaseAdapter {
     public static interface OnLoadMoreListener {
-        public void onLoadMore(boolean loadMore);
+        public void onLoadMore();
     }
 
     public static interface OnPostsLoadedListener {
@@ -131,7 +131,7 @@ public class PostsListAdapter extends BaseAdapter {
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
-            mOnLoadMoreListener.onLoadMore(true);
+            mOnLoadMoreListener.onLoadMore();
         }
 
         return view;

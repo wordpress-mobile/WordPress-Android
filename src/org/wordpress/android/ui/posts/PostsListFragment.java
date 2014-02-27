@@ -53,9 +53,9 @@ public class PostsListFragment extends ListFragment {
         if (mPostsListAdapter == null) {
             PostsListAdapter.OnLoadMoreListener loadMoreListener = new PostsListAdapter.OnLoadMoreListener() {
                 @Override
-                public void onLoadMore(boolean loadMore) {
+                public void onLoadMore() {
                     if (mCanLoadMorePosts && !mIsFetchingPosts)
-                        requestPosts(loadMore);
+                        requestPosts(true);
                 }
             };
 
@@ -64,10 +64,10 @@ public class PostsListFragment extends ListFragment {
                 public void onPostsLoaded(int postCount) {
 
                     if (postCount == 0 && mCanLoadMorePosts) {
-                        // No posts, let's fetch some
+                        // No posts, let's request some
                         requestPosts(false);
                     } else if (mShouldSelectFirstPost) {
-                        // Select the first row, if available
+                        // Select the first row on a tablet, if available
                         mShouldSelectFirstPost = false;
                         if (mPostsListAdapter.getCount() > 0) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
