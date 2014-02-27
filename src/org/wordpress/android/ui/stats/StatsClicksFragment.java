@@ -110,13 +110,13 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
         @Override
         protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
             View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
-            view.setTag(new StatsChildViewHolder(view));
+            view.setTag(new StatsViewHolder(view));
             return view;
         }
 
         @Override
         protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
-            final StatsChildViewHolder holder = (StatsChildViewHolder)view.getTag();
+            final StatsViewHolder holder = (StatsViewHolder)view.getTag();
 
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
@@ -137,14 +137,14 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
         @Override
         protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
-            View view = inflater.inflate(R.layout.stats_group_cell, parent, false);
-            view.setTag(new StatsGroupViewHolder(view));
+            View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
+            view.setTag(new StatsViewHolder(view));
             return view;
         }
 
         @Override
         protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
-            final StatsGroupViewHolder holder = (StatsGroupViewHolder) view.getTag();
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
 
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));

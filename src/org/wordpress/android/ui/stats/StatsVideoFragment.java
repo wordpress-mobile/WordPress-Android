@@ -97,13 +97,13 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
             View view = inflater.inflate(R.layout.stats_list_cell, root, false);
-            view.setTag(new StatsChildViewHolder(view));
+            view.setTag(new StatsViewHolder(view));
             return view;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            final StatsChildViewHolder holder = (StatsChildViewHolder) view.getTag();
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
 
             String entry = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.NAME));
             String url = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.URL));

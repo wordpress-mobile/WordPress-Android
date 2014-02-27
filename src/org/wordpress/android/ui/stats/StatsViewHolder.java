@@ -12,16 +12,18 @@ import org.wordpress.android.R;
  * Created by nbradbury on 2/25/14.
  * View holder for stats_list_cell layout
  */
-class StatsChildViewHolder {
+class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final NetworkImageView networkImageView;
+    public final ImageView chevronImageView;
 
-    public StatsChildViewHolder(View view) {
+    public StatsViewHolder(View view) {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-        networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
+        chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
 
+        networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
         networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
         networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
     }
