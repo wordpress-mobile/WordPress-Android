@@ -836,100 +836,107 @@ public class WordPressDB {
      */
     public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
         if (postsList.size() != 0) {
-            for (Object post : postsList) {
-                ContentValues values = new ContentValues();
+            db.beginTransaction();
+            try {
+                for (Object post : postsList) {
+                    ContentValues values = new ContentValues();
 
-                // Sanity checks
-                if (!(post instanceof Map)) {
-                    continue;
-                }
-                Map<?, ?> postMap = (Map<?, ?>) post;
-                String postID = MapUtils.getMapStr(postMap, (isPage) ? "page_id" : "postid");
-                if (TextUtils.isEmpty(postID)) {
-                    // If we don't have a post or page ID, move on
-                    continue;
-                }
-
-                values.put("blogID", localBlogId);
-                values.put("postid", postID);
-                values.put("title", MapUtils.getMapStr(postMap, "title"));
-                Date dateCreated = MapUtils.getMapDate(postMap, "dateCreated");
-                if (dateCreated != null) {
-                    values.put("dateCreated", dateCreated.getTime());
-                } else {
-                    Date now = new Date();
-                    values.put("dateCreated", now.getTime());
-                }
-
-                Date dateCreatedGmt = MapUtils.getMapDate(postMap, "date_created_gmt");
-                if (dateCreatedGmt != null) {
-                    values.put("date_created_gmt", dateCreatedGmt.getTime());
-                } else {
-                    dateCreatedGmt = new Date((Long) values.get("dateCreated"));
-                    values.put("date_created_gmt", dateCreatedGmt.getTime() + (dateCreatedGmt.getTimezoneOffset() * 60000));
-                }
-
-                values.put("description", MapUtils.getMapStr(postMap, "description"));
-                values.put("link", MapUtils.getMapStr(postMap, "link"));
-                values.put("permaLink", MapUtils.getMapStr(postMap, "permaLink"));
-
-                Object[] postCategories = (Object[]) postMap.get("categories");
-                JSONArray jsonCategoriesArray = new JSONArray();
-                if (postCategories != null) {
-                    for (Object postCategory : postCategories) {
-                        jsonCategoriesArray.put(postCategory.toString());
+                    // Sanity checks
+                    if (!(post instanceof Map)) {
+                        continue;
                     }
-                }
-                values.put("categories", jsonCategoriesArray.toString());
+                    Map<?, ?> postMap = (Map<?, ?>) post;
+                    String postID = MapUtils.getMapStr(postMap, (isPage) ? "page_id" : "postid");
+                    if (TextUtils.isEmpty(postID)) {
+                        // If we don't have a post or page ID, move on
+                        continue;
+                    }
 
-                Object[] custom_fields = (Object[]) postMap.get("custom_fields");
-                JSONArray jsonCustomFieldsArray = new JSONArray();
-                if (custom_fields != null) {
-                    for (Object custom_field : custom_fields) {
-                        jsonCustomFieldsArray.put(custom_field.toString());
-                        // Update geo_long and geo_lat from custom fields
-                        if (!(custom_field instanceof Map))
-                            continue;
-                        Map<?, ?> customField = (Map<?, ?>) custom_field;
-                        if (customField.get("key") != null && customField.get("value") != null) {
-                            if (customField.get("key").equals("geo_longitude"))
-                                values.put("longitude", customField.get("value").toString());
-                            if (customField.get("key").equals("geo_latitude"))
-                                values.put("latitude", customField.get("value").toString());
+                    values.put("blogID", localBlogId);
+                    values.put("postid", postID);
+                    values.put("title", MapUtils.getMapStr(postMap, "title"));
+                    Date dateCreated = MapUtils.getMapDate(postMap, "dateCreated");
+                    if (dateCreated != null) {
+                        values.put("dateCreated", dateCreated.getTime());
+                    } else {
+                        Date now = new Date();
+                        values.put("dateCreated", now.getTime());
+                    }
+
+                    Date dateCreatedGmt = MapUtils.getMapDate(postMap, "date_created_gmt");
+                    if (dateCreatedGmt != null) {
+                        values.put("date_created_gmt", dateCreatedGmt.getTime());
+                    } else {
+                        dateCreatedGmt = new Date((Long) values.get("dateCreated"));
+                        values.put("date_created_gmt", dateCreatedGmt.getTime() + (dateCreatedGmt.getTimezoneOffset() * 60000));
+                    }
+
+                    values.put("description", MapUtils.getMapStr(postMap, "description"));
+                    values.put("link", MapUtils.getMapStr(postMap, "link"));
+                    values.put("permaLink", MapUtils.getMapStr(postMap, "permaLink"));
+
+                    Object[] postCategories = (Object[]) postMap.get("categories");
+                    JSONArray jsonCategoriesArray = new JSONArray();
+                    if (postCategories != null) {
+                        for (Object postCategory : postCategories) {
+                            jsonCategoriesArray.put(postCategory.toString());
                         }
                     }
+                    values.put("categories", jsonCategoriesArray.toString());
+
+                    Object[] custom_fields = (Object[]) postMap.get("custom_fields");
+                    JSONArray jsonCustomFieldsArray = new JSONArray();
+                    if (custom_fields != null) {
+                        for (Object custom_field : custom_fields) {
+                            jsonCustomFieldsArray.put(custom_field.toString());
+                            // Update geo_long and geo_lat from custom fields
+                            if (!(custom_field instanceof Map))
+                                continue;
+                            Map<?, ?> customField = (Map<?, ?>) custom_field;
+                            if (customField.get("key") != null && customField.get("value") != null) {
+                                if (customField.get("key").equals("geo_longitude"))
+                                    values.put("longitude", customField.get("value").toString());
+                                if (customField.get("key").equals("geo_latitude"))
+                                    values.put("latitude", customField.get("value").toString());
+                            }
+                        }
+                    }
+                    values.put("custom_fields", jsonCustomFieldsArray.toString());
+
+                    values.put("mt_excerpt", MapUtils.getMapStr(postMap, (isPage) ? "excerpt" : "mt_excerpt"));
+                    values.put("mt_text_more", MapUtils.getMapStr(postMap, (isPage) ? "text_more" : "mt_text_more"));
+                    values.put("mt_allow_comments", MapUtils.getMapInt(postMap, "mt_allow_comments", 0));
+                    values.put("mt_allow_pings", MapUtils.getMapInt(postMap, "mt_allow_pings", 0));
+                    values.put("wp_slug", MapUtils.getMapStr(postMap, "wp_slug"));
+                    values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
+                    values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
+                    values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
+                    values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
+                    values.put("userid", MapUtils.getMapStr(postMap, "userid"));
+
+                    if (isPage) {
+                        values.put("isPage", true);
+                        values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "wp_page_parent_id"));
+                        values.put("wp_page_parent_title", MapUtils.getMapStr(postMap, "wp_page_parent_title"));
+                    } else {
+                        values.put("mt_keywords", MapUtils.getMapStr(postMap, "mt_keywords"));
+                        values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
+                    }
+
+                    String whereClause = "blogID=? AND postID=? AND isPage=?";
+                    if (!shouldOverwrite) {
+                        whereClause += " AND NOT isLocalChange=1";
+                    }
+
+                    int result = db.update(POSTS_TABLE, values, whereClause,
+                            new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                    if (result == 0)
+                        db.insert(POSTS_TABLE, null, values);
+
+                    db.setTransactionSuccessful();
                 }
-                values.put("custom_fields", jsonCustomFieldsArray.toString());
-
-                values.put("mt_excerpt", MapUtils.getMapStr(postMap, (isPage) ? "excerpt" : "mt_excerpt"));
-                values.put("mt_text_more", MapUtils.getMapStr(postMap, (isPage) ? "text_more" : "mt_text_more"));
-                values.put("mt_allow_comments", MapUtils.getMapInt(postMap, "mt_allow_comments", 0));
-                values.put("mt_allow_pings", MapUtils.getMapInt(postMap, "mt_allow_pings", 0));
-                values.put("wp_slug", MapUtils.getMapStr(postMap, "wp_slug"));
-                values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
-                values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
-                values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
-                values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
-                values.put("userid", MapUtils.getMapStr(postMap, "userid"));
-
-                if (isPage) {
-                    values.put("isPage", true);
-                    values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "wp_page_parent_id"));
-                    values.put("wp_page_parent_title", MapUtils.getMapStr(postMap, "wp_page_parent_title"));
-                } else {
-                    values.put("mt_keywords", MapUtils.getMapStr(postMap, "mt_keywords"));
-                    values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
-                }
-
-                String whereClause = "blogID=? AND postID=? AND isPage=?";
-                if (!shouldOverwrite) {
-                    whereClause += " AND NOT isLocalChange=1";
-                }
-
-                int result = db.update(POSTS_TABLE, values, whereClause,
-                        new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
-                if (result == 0)
-                    db.insert(POSTS_TABLE, null, values);
+            } finally {
+                db.endTransaction();
             }
         }
     }
