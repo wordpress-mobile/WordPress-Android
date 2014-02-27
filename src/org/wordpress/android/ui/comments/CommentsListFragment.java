@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -315,7 +317,7 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         final boolean isLoadingMore;
-        String errorMessage;
+        String xmlRpcErrorMessage;
 
         private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
@@ -343,6 +345,12 @@ public class CommentsListFragment extends Fragment {
             if (!hasActivity())
                 return null;
 
+            Blog blog = WordPress.getCurrentBlog();
+            if (blog == null) {
+                isError = true;
+                return null;
+            }
+
             Map<String, Object> hPost = new HashMap<String, Object>();
             if (isLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
@@ -352,14 +360,14 @@ public class CommentsListFragment extends Fragment {
                 hPost.put("number", COMMENTS_PER_PAGE);
             }
 
-            Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
-                                WordPress.currentBlog.getUsername(),
-                                WordPress.currentBlog.getPassword(),
+            Object[] params = { blog.getRemoteBlogId(),
+                                blog.getUsername(),
+                                blog.getPassword(),
                                 hPost };
             try {
                 return ApiHelper.refreshComments(getActivity(), params);
             } catch (XMLRPCException e) {
-                errorMessage = e.getMessage();
+                xmlRpcErrorMessage = e.getMessage();
                 isError = true;
                 return null;
             }
@@ -383,8 +391,13 @@ public class CommentsListFragment extends Fragment {
 
             // result will be null on error OR if no more comments exists
             if (comments == null) {
-                if (isError && !getActivity().isFinishing())
-                    ToastUtils.showToastOrAuthAlert(getActivity(), errorMessage, getString(R.string.error_refresh_comments));
+                if (isError && !getActivity().isFinishing()) {
+                    if (!TextUtils.isEmpty(xmlRpcErrorMessage)) {
+                        ToastUtils.showToastOrAuthAlert(getActivity(), xmlRpcErrorMessage, getString(R.string.error_refresh_comments));
+                    } else {
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                    }
+                }
                 return;
             }
 

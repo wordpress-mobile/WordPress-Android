@@ -548,6 +548,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
                         onBlogChanged();
+                    } else {
+                        // user has hidden all blogs
+                        onBlogChanged();
                     }
                     WordPress.registerForCloudMessaging(this);
                 }
@@ -620,10 +623,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
-     * This method is called when the user changes the active blog.
+     * This method is called when the user changes the active blog or hides all blogs
      */
     public void onBlogChanged() {
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
+        WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
