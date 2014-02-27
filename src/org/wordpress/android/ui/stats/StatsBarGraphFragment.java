@@ -99,7 +99,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         if (getActivity() == null)
             return;
 
-        if (!cursor.moveToFirst() || cursor.getCount() == 0) {
+        if (!cursor.moveToFirst()) {
             Context context = mGraphContainer.getContext();
             if (context != null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
