@@ -475,7 +475,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 checkForLocalChanges(false);
                 post.delete();
                 attemptToSelectPost();
-                mPostList.getPostListAdapter().loadPosts();
+                mPostList.requestPosts(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
