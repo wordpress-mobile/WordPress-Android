@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
-import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -93,10 +93,14 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     public class CustomAdapter extends CursorTreeAdapter {
         private StatsCursorLoaderCallback mCallback;
         private final LayoutInflater inflater;
+        private final Drawable mChevronUp;
+        private final Drawable mChevronDown;
 
         public CustomAdapter(Cursor cursor, Context context) {
             super(cursor, context, true);
             inflater = LayoutInflater.from(context);
+            mChevronDown = getResources().getDrawable(R.drawable.stats_chevron_down);
+            mChevronUp = getResources().getDrawable(R.drawable.stats_chevron_up);
         }
 
         public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
@@ -147,9 +151,6 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             String icon = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.ICON));
             int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
 
-            // chevron
-            toggleChevrons(children > 0, isExpanded, view);
-            
             // name, url
             if (!TextUtils.isEmpty(url)) {
                 StatUtils.setTextHyperlink(holder.entryTextView, url, name);
@@ -161,15 +162,19 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
-            holder.imageFrame.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
-                holder.networkImageView.setVisibility(View.VISIBLE);
-                holder.errorImageView.setVisibility(View.GONE);
             } else {
-                holder.networkImageView.setVisibility(View.GONE);
-                holder.errorImageView.setVisibility(View.VISIBLE);
-            }   
+                holder.networkImageView.setImageDrawable(null);
+            }
+
+            // expand/collapse chevron
+            if (children > 0) {
+                holder.chevronImageView.setImageDrawable(isExpanded ? mChevronUp : mChevronDown);
+                holder.chevronImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.chevronImageView.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -180,26 +185,5 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             mCallback.onUriRequested(groupCursor.getPosition(), STATS_CLICKS_URI, bundle);
             return null;
         }
-
-        private void toggleChevrons(boolean isVisible, boolean isExpanded, View view) {
-            ImageView chevronUp = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_up);
-            ImageView chevronDown = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_down);
-            View frame = view.findViewById(R.id.stats_group_cell_chevron_frame);
-            
-            if (isVisible) {
-                frame.setVisibility(View.VISIBLE);  
-                if (isExpanded) {
-                    chevronUp.setVisibility(View.VISIBLE);
-                    chevronDown.setVisibility(View.GONE);
-                } else {
-                    chevronUp.setVisibility(View.GONE);
-                    chevronDown.setVisibility(View.VISIBLE);
-                }
-            } else {
-                frame.setVisibility(View.GONE);
-            }
-        }
-        
     }
-
 }

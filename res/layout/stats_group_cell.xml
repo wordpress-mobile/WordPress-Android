@@ -4,51 +4,25 @@
     android:layout_height="wrap_content"
     android:padding="4dp" >
 
-    <FrameLayout
-        android:id="@+id/stats_group_cell_image_frame"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/stats_group_cell_image"
+        android:background="@drawable/stats_blank_image"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp" >
+        android:layout_marginRight="4dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/stats_group_cell_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/stats_group_cell_blank_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/stats_blank_image"
-            android:visibility="gone" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/stats_group_cell_chevron_frame"
+    <ImageView
+        android:id="@+id/stats_group_cell_chevron"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_toRightOf="@id/stats_group_cell_image_frame" >
-
-        <ImageView
-            android:id="@+id/stats_group_cell_chevron_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/stats_chevron_down" />
-
-        <ImageView
-            android:id="@+id/stats_group_cell_chevron_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/stats_chevron_up"
-            android:visibility="gone" />
-    </FrameLayout>
+        android:layout_toRightOf="@id/stats_group_cell_image"
+        android:src="@drawable/stats_chevron_down" />
 
     <TextView
         android:id="@+id/stats_group_cell_total"
@@ -67,7 +41,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
         android:layout_toLeftOf="@id/stats_group_cell_total"
-        android:layout_toRightOf="@id/stats_group_cell_chevron_frame"
+        android:layout_toRightOf="@id/stats_group_cell_chevron"
         android:drawablePadding="4dp"
         android:paddingLeft="4dp"
         android:textColorLink="@color/wordpress_blue"

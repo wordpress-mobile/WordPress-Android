@@ -235,28 +235,31 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            View view = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
-            view.setTag(i);
+            View groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
             if (i % 2 == 1)
-                view.setBackgroundColor(altRowColor);
-            mLinearLayout.addView(view);
-            view.setOnClickListener(new OnClickListener() {
+                groupView.setBackgroundColor(altRowColor);
+            mLinearLayout.addView(groupView);
+
+            if (isExpanded)
+                expandChildren(i);
+
+            final int position = i;
+            groupView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (Integer) v.getTag();
                     mGroupIdToExpandedMap.put(position, !mGroupIdToExpandedMap.get(position));
                     reloadLinearLayout();
                 }
             });
+        }
+    }
 
-            if (isExpanded) {
-                int childrenCount = mAdapter.getChildrenCount(i);
-                for (int j = 0; j < childrenCount; j++) {
-                    boolean isLastChild = (j == childrenCount - 1);
-                    View childView = mAdapter.getChildView(i, j, isLastChild, null, mLinearLayout);
-                    mLinearLayout.addView(childView);
-                }
-            }
+    private void expandChildren(int position) {
+        int childrenCount = mAdapter.getChildrenCount(position);
+        for (int j = 0; j < childrenCount; j++) {
+            boolean isLastChild = (j == childrenCount - 1);
+            View childView = mAdapter.getChildView(position, j, isLastChild, null, mLinearLayout);
+            mLinearLayout.addView(childView);
         }
     }
     
