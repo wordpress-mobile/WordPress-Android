@@ -19,6 +19,7 @@ import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.SqlUtils;
 
 /**
  * A database for storing stats. Do not access this class directly.
@@ -74,6 +75,15 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         StatsTopPostsAndPagesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsVideosTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsBarChartDataTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+    }
+
+    /*
+     * nbradbury - used during testing to clear all stats tables
+     */
+    public void reset() {
+        SQLiteDatabase db = getWritableDatabase();
+        SqlUtils.dropAllTables(db);
+        onCreate(db);
     }
 
 }

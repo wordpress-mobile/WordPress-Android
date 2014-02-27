@@ -60,7 +60,7 @@ public class StatsActivity extends WPActionBarActivity {
 
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
-    public static final int STATS_CHILD_MAX_ITEMS = 10;
+    public static final int STATS_CHILD_MAX_ITEMS = 25;
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
@@ -109,12 +109,14 @@ public class StatsActivity extends WPActionBarActivity {
         loadStatsFragments();
         setTitle(R.string.stats);
 
+        //WordPress.wpStatsDB.reset();
+
         restoreState(savedInstanceState);
     }
 
     @Override
     protected void onDestroy() {
-        stopService(new Intent(this, StatsService.class));
+        stopStatsService();
         super.onDestroy();
     }
 
@@ -431,7 +433,7 @@ public class StatsActivity extends WPActionBarActivity {
     public void onBlogChanged() {
         super.onBlogChanged();
 
-        stopService(new Intent(this, StatsService.class));
+        stopStatsService();
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -573,6 +575,15 @@ public class StatsActivity extends WPActionBarActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void stopStatsService() {
+        stopService(new Intent(this, StatsService.class));
+        if (mIsUpdatingStats) {
+            mIsUpdatingStats = false;
+            if (mRefreshMenuItem != null)
+                stopAnimatingRefreshButton(mRefreshMenuItem);
+        }
     }
 
     /*

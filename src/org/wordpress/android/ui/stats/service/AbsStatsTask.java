@@ -65,7 +65,7 @@ abstract class AbsStatsTask implements Runnable {
             AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
             while (!mIsCompleted) {
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     AppLog.w(AppLog.T.STATS, "interrupted " + getTaskName());
                     return;
