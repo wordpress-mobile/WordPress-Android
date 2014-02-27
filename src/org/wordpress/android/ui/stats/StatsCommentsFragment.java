@@ -127,15 +127,14 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             // image 
             if (mType == TOP_COMMENTERS) {
                 String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
-                holder.imageFrame.setVisibility(View.VISIBLE);
+                holder.networkImageView.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(imageUrl)) {
                     holder.networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                    holder.networkImageView.setVisibility(View.VISIBLE);
-                    holder.errorImageView.setVisibility(View.GONE);
                 } else {
-                    holder.networkImageView.setVisibility(View.GONE);
-                    holder.errorImageView.setVisibility(View.VISIBLE);
+                    holder.networkImageView.setImageDrawable(null);
                 }
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
             }
         }
     }
@@ -231,6 +230,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
             StatUtils.setTextHyperlink(mMostCommentedText, activePostUrl, activePost);
         }
+
+
     }
 
 }

@@ -121,6 +121,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // no icon
+            holder.networkImageView.setVisibility(View.GONE);
         }
 
         @Override

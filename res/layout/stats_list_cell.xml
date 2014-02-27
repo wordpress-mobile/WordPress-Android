@@ -4,29 +4,15 @@
     android:layout_height="wrap_content"
     android:padding="4dp" >
 
-    <FrameLayout
-        android:id="@+id/stats_list_cell_image_frame"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/stats_list_cell_image"
+        android:background="@drawable/stats_blank_image"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:visibility="gone" >
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/stats_list_cell_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/stats_list_cell_blank_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/stats_blank_image"
-            android:visibility="gone" />
-    </FrameLayout>
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
 
     <TextView
         android:id="@+id/stats_list_cell_total"
@@ -46,7 +32,7 @@
         android:layout_marginRight="12dp"
         android:textColorLink="@color/wordpress_blue"
         android:layout_toLeftOf="@id/stats_list_cell_total"
-        android:layout_toRightOf="@id/stats_list_cell_image_frame"
+        android:layout_toRightOf="@id/stats_list_cell_image"
         android:drawablePadding="4dp"
         android:paddingLeft="4dp"
         android:textSize="14sp" />

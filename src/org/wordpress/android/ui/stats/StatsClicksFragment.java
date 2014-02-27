@@ -132,6 +132,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // no icon
+            holder.networkImageView.setVisibility(View.GONE);
         }
 
         @Override

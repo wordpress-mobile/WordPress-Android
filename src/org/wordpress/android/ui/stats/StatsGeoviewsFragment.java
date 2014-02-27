@@ -92,14 +92,10 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             
             // image (country flag)
-            holder.imageFrame.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(imageUrl)) {
                 holder.networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                holder.networkImageView.setVisibility(View.VISIBLE);
-                holder.errorImageView.setVisibility(View.GONE);
             } else {
-                holder.networkImageView.setVisibility(View.GONE);
-                holder.errorImageView.setVisibility(View.VISIBLE);
+                holder.networkImageView.setImageDrawable(null);
             }
         }
     }
