@@ -12,14 +12,14 @@ import java.util.Date;
  */
 public class PostsListPost {
 
-    int postId;
-    int blogId;
-    String title;
-    long dateCreatedGmt;
-    String status;
-    String formattedDate;
-    boolean isLocalDraft;
-    boolean hasLocalChanges;
+    private int postId;
+    private int blogId;
+    private String title;
+    private long dateCreatedGmt;
+    private String status;
+    private String formattedDate;
+    private boolean isLocalDraft;
+    private boolean hasLocalChanges;
 
     public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft, boolean localChanges) {
         setPostId(postId);

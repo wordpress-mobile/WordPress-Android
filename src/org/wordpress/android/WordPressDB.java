@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -954,11 +955,13 @@ public class WordPressDB {
                 postStatus = "scheduled";
             }
 
+            String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
+
             // Create the PostsListPost and add it to the Array
             PostsListPost post = new PostsListPost(
                     c.getInt(c.getColumnIndex("id")),
                     c.getInt(c.getColumnIndex("blogID")),
-                    c.getString(c.getColumnIndex("title")),
+                    postTitle,
                     postDate,
                     postStatus,
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
