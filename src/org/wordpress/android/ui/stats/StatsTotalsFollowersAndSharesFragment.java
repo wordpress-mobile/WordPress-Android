@@ -61,21 +61,42 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     }
 
     private void refreshSummary() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
+                if (WordPress.getCurrentBlog() == null)
+                    return;
+
                 String blogId = WordPress.getCurrentBlog().getDotComBlogId();
                 if (TextUtils.isEmpty(blogId))
                     blogId = "0";
-                final StatsSummary summary = StatUtils.getSummary(blogId);
+
+                StatsSummary stats = StatUtils.getSummary(blogId);
+                int posts = (stats != null ? stats.getPosts() : 0);
+                int categories = (stats != null ? stats.getCategories() : 0);
+                int tags = (stats != null ? stats.getTags() : 0);
+                int followers = (stats != null ? stats.getFollowersBlog() : 0);
+                int comments = (stats != null ? stats.getFollowersComments() : 0);
+                int shares = (stats != null ? stats.getShares() : 0);
+
+                final String fmtPosts = FormatUtils.formatDecimal(posts);
+                final String fmtCategories = FormatUtils.formatDecimal(categories);
+                final String fmtTags = FormatUtils.formatDecimal(tags);
+                final String fmtFollowers = FormatUtils.formatDecimal(followers);
+                final String fmtComments = FormatUtils.formatDecimal(comments);
+                final String fmtShares = FormatUtils.formatDecimal(shares);
+
                 handler.post(new Runnable() {
                     public void run() {
-                        if (getActivity() != null)
-                            refreshViews(summary);
+                        if (getActivity() == null)
+                            return;
+                        mPostsCountView.setText(fmtPosts);
+                        mCategoriesCountView.setText(fmtCategories);
+                        mTagsCountView.setText(fmtTags);
+                        mFollowersCountView.setText(fmtFollowers);
+                        mCommentsCountView.setText(fmtComments);
+                        mSharesCountView.setText(fmtShares);
                     }
                 });
             }
@@ -86,30 +107,4 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     public String getTitle() {
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
-
-    void refreshViews(StatsSummary stats) {
-        int posts = 0;
-        int categories = 0;
-        int tags = 0;
-        int followers = 0;
-        int comments = 0;
-        int shares = 0;
-        
-        if (stats != null) {
-            posts = stats.getPosts();
-            categories = stats.getCategories();
-            tags = stats.getTags();
-            followers = stats.getFollowersBlog();
-            comments = stats.getFollowersComments();
-            shares = stats.getShares();
-        }
-
-         mPostsCountView.setText(FormatUtils.formatDecimal(posts));
-         mCategoriesCountView.setText(FormatUtils.formatDecimal(categories));
-         mTagsCountView.setText(FormatUtils.formatDecimal(tags));
-         mFollowersCountView.setText(FormatUtils.formatDecimal(followers));
-         mCommentsCountView.setText(FormatUtils.formatDecimal(comments));
-         mSharesCountView.setText(FormatUtils.formatDecimal(shares));
-    }
-
 }

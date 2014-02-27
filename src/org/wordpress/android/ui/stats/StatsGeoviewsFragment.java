@@ -35,26 +35,21 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             return getFragment(position);
         }
-
         @Override
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel(); 
         }
-
     }
 
     @Override
