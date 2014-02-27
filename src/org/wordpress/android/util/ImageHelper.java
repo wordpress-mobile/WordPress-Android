@@ -1,16 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -24,7 +13,6 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
-import android.util.FloatMath;
 import android.view.Display;
 import android.widget.ImageView;
 
@@ -33,16 +21,22 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+
 public class ImageHelper {
-    
+
     public static int[] getImageSize(Uri uri, Context context){
         String path = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        
+
         if (uri.toString().contains("content:")) {
             String[] projection = new String[] { Images.Media._ID, Images.Media.DATA };
             Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
@@ -54,7 +48,7 @@ public class ImageHelper {
                 cur.close();
             }
         }
-        
+
         if (TextUtils.isEmpty(path)) {
             //The file isn't ContentResolver, or it can't be access by ContentResolver. Try to access the file directly.
             path = uri.toString().replace("content://media", "");
@@ -64,105 +58,12 @@ public class ImageHelper {
         BitmapFactory.decodeFile(path, options);
         int imageHeight = options.outHeight;
         int imageWidth = options.outWidth;
-        int[] dimensions = {imageWidth, imageHeight};
-        return dimensions;
-    }
-    
-    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny, String fileExtension) {
-        // creates a thumbnail and returns the bytes
-
-        int finalHeight = 0;
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-        int width = opts.outWidth;
-
-        int finalWidth = 500; // default to this if there's a problem
-        // Change dimensions of thumbnail
-
-        if (tiny) {
-            finalWidth = 150;
-        }
-
-        byte[] finalBytes;
-
-        if (sMaxImageWidth.equals("Original Size")) {
-            finalBytes = bytes;
-        } else {
-            finalWidth = Integer.parseInt(sMaxImageWidth);
-            if (finalWidth > width) {
-                // don't resize
-                finalBytes = bytes;
-            } else {
-                int sample = 0;
-
-                float fWidth = width;
-                sample = Double.valueOf(FloatMath.ceil(fWidth / 1200)).intValue();
-
-                if (sample == 3) {
-                    sample = 4;
-                } else if (sample > 4 && sample < 8) {
-                    sample = 8;
-                }
-
-                opts.inSampleSize = sample;
-                opts.inJustDecodeBounds = false;
-
-                try {
-                    bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                } catch (OutOfMemoryError e) {
-                    // out of memory
-                    return null;
-                }
-                
-                if (bm == null)
-                    return null;
-
-                float percentage = (float) finalWidth / bm.getWidth();
-                float proportionateHeight = bm.getHeight() * percentage;
-                finalHeight = (int) Math.rint(proportionateHeight);
-
-                float scaleWidth = ((float) finalWidth) / bm.getWidth();
-                float scaleHeight = ((float) finalHeight) / bm.getHeight();
-
-                float scaleBy = Math.min(scaleWidth, scaleHeight);
-
-                // Create a matrix for the manipulation
-                Matrix matrix = new Matrix();
-                // Resize the bitmap
-                matrix.postScale(scaleBy, scaleBy);
-                if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))) {
-                    matrix.postRotate(Integer.valueOf(orientation));
-                }
-
-                Bitmap resized;
-                try {
-                    resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-                } catch (OutOfMemoryError e) {
-                    return null;
-                }
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                if (fileExtension != null && fileExtension.equalsIgnoreCase("png"))
-                    format = Bitmap.CompressFormat.PNG;
-                resized.compress(format, 85, baos);
-
-                bm.recycle(); // free up memory
-                resized.recycle();
-
-                finalBytes = baos.toByteArray();
-            }
-        }
-
-        return finalBytes;
-
+        return new int[]{imageWidth, imageHeight};
     }
 
     //Read the orientation from ContentResolver. If it fails, read from EXIF.
     public int getImageOrientation(Context ctx, String filePath) {
-        Uri curStream = null;
+        Uri curStream;
         String orientation = null;
         
         if (!filePath.contains("content://"))
@@ -170,18 +71,16 @@ public class ImageHelper {
         else
             curStream = Uri.parse(filePath);
 
-        if (curStream != null) {
-            try {
-                Cursor cur = ctx.getContentResolver().query(curStream, new String[] { Images.Media.ORIENTATION }, null, null, null);
-                if (cur != null) {
-                    if(cur.moveToFirst()) {
-                        orientation = cur.getString(cur.getColumnIndex(Images.Media.ORIENTATION));
-                    }
-                    cur.close();
+        try {
+            Cursor cur = ctx.getContentResolver().query(curStream, new String[] { Images.Media.ORIENTATION }, null, null, null);
+            if (cur != null) {
+                if(cur.moveToFirst()) {
+                    orientation = cur.getString(cur.getColumnIndex(Images.Media.ORIENTATION));
                 }
-            } catch (Exception errReadingContentResolver) {
-                AppLog.e(T.UTILS, errReadingContentResolver);
+                cur.close();
             }
+        } catch (Exception errReadingContentResolver) {
+            AppLog.e(T.UTILS, errReadingContentResolver);
         }
         
         if (TextUtils.isEmpty(orientation)) {
@@ -226,38 +125,6 @@ public class ImageHelper {
         return orientation;
     }
 
-    // borrowed from
-    // http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html
-    class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-
-        public BitmapDownloaderTask(ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
-
-        @Override
-        // Actual download method, run in the task thread
-        protected Bitmap doInBackground(String... params) {
-            // params comes from the execute() call: params[0] is the url.
-            return downloadBitmap(params[0]);
-        }
-
-        @Override
-        // Once the image is downloaded, associates it to the imageView
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-
-            if (imageViewReference != null) {
-                ImageView imageView = imageViewReference.get();
-                if (imageView != null && bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
-    }
-
     public static Bitmap downloadBitmap(String url) {
         final DefaultHttpClient client = new DefaultHttpClient();
 
@@ -277,8 +144,7 @@ public class ImageHelper {
                 InputStream inputStream = null;
                 try {
                     inputStream = entity.getContent();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    return bitmap;
+                    return BitmapFactory.decodeStream(inputStream);
                 } finally {
                     if (inputStream != null) {
                         inputStream.close();
@@ -293,127 +159,6 @@ public class ImageHelper {
             AppLog.w(T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
         }
         return null;
-    }
-
-    /**
-     * daniloercoli - 21-Feb-2014 - Read image bytes in memory
-     * 
-     * @deprecated Try to use a better alternative. Reading image bytes in memory is really expensive
-     */
-    public Map<String, Object> getImageBytesForPath(String filePath, Context ctx) {
-        Uri curStream = null;
-        String[] projection;
-        Map<String, Object> mediaData = new HashMap<String, Object>();
-        String title = "", orientation = "";
-        byte[] bytes;
-        if (filePath != null) {
-            if (!filePath.contains("content://"))
-                curStream = Uri.parse("content://media" + filePath);
-            else
-                curStream = Uri.parse(filePath);
-        }
-        if (curStream != null) {
-            if (filePath.contains("video")) {
-                int videoId = 0;
-                try {
-                    videoId = Integer.parseInt(curStream.getLastPathSegment());
-                } catch (NumberFormatException e) {
-                }
-                ContentResolver crThumb = ctx.getContentResolver();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 1;
-                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
-                        options);
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                try {
-                    videoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    bytes = stream.toByteArray();
-                    title = "Video";
-                    videoBitmap = null;
-                } catch (Exception e) {
-                    return null;
-                }
-
-            } else {
-                projection = new String[] { Images.Thumbnails._ID, Images.Thumbnails.DATA, Images.Media.ORIENTATION };
-
-                String path = "";
-                Cursor cur;
-                try {
-                    cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
-                } catch (Exception e1) {
-                    return null;
-                }
-                File jpeg = null;
-                if (cur != null) {
-                    String thumbData = "";
-
-                    if (cur.moveToFirst()) {
-
-                        int dataColumn, orientationColumn;
-
-                        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                        thumbData = cur.getString(dataColumn);
-                        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-                        orientation = cur.getString(orientationColumn);
-                        if (orientation == null)
-                            orientation = "";
-                    }
-                    cur.close();
-
-                    if (thumbData == null) {
-                        return null;
-                    }
-
-                    jpeg = new File(thumbData);
-                    path = thumbData;
-                } else {
-                    path = filePath.toString().replace("file://", "");
-                    jpeg = new File(path);
-                }
-
-                title = jpeg.getName();
-
-                try {
-                    bytes = new byte[(int) jpeg.length()];
-                } catch (Exception e) {
-                    return null;
-                } catch (OutOfMemoryError e) {
-                    return null;
-                }
-
-                DataInputStream in = null;
-                try {
-                    in = new DataInputStream(new FileInputStream(jpeg));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                try {
-                    in.readFully(bytes);
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-
-                title = jpeg.getName();
-                if (orientation == "") {
-                    orientation = getExifOrientation(path, orientation);
-                }
-            }
-
-            mediaData.put("bytes", bytes);
-            mediaData.put("title", title);
-            mediaData.put("orientation", orientation);
-
-            return mediaData;
-
-        } else {
-            return null;
-        }
-
     }
     
     /** From http://developer.android.com/training/displaying-bitmaps/load-bitmap.html **/
@@ -525,19 +270,13 @@ public class ImageHelper {
         if (filePath == null)
             return null;
 
-        Uri curStream = null;
-        String title = "";
+        Uri curStream;
+        String title;
 
-        if (filePath != null) {
-            if (!filePath.contains("content://"))
-                curStream = Uri.parse("content://media" + filePath);
-            else
-                curStream = Uri.parse(filePath);
-        }
-
-        if (curStream == null) {
-            return null;
-        }
+        if (!filePath.contains("content://"))
+            curStream = Uri.parse("content://media" + filePath);
+        else
+            curStream = Uri.parse(filePath);
 
         if (filePath.contains("video")) {
             return "Video";
@@ -551,7 +290,7 @@ public class ImageHelper {
                 AppLog.e(T.UTILS, e1);
                 return null;
             }
-            File jpeg = null;
+            File jpeg;
             if (cur != null) {
                 String thumbData = "";
                 if (cur.moveToFirst()) {
@@ -575,8 +314,7 @@ public class ImageHelper {
     /**
      * Resizes an image to be placed in the Post Content Editor
      * @param ctx
-     * @param bytes
-     * @param orientation
+     * @param filePath
      * @return resized bitmap
      */
     public Bitmap getThumbnailForWPImageSpan(Context ctx, String filePath) {
@@ -589,16 +327,12 @@ public class ImageHelper {
         if (width > height)
             width = height;
 
-        Uri curUri = null;
+        Uri curUri;
         
         if (!filePath.contains("content://"))
             curUri = Uri.parse("content://media" + filePath);
         else
             curUri = Uri.parse(filePath);
-
-        if (curUri == null) {
-            return null;
-        }
         
         if (filePath.contains("video")) {
             int videoId = 0;
@@ -609,9 +343,8 @@ public class ImageHelper {
             ContentResolver crThumb = ctx.getContentResolver();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 1;
-            Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
+            return MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
                     options);
-            return videoBitmap;
         } else {
             int[] dimensions = getImageSize(curUri, ctx);
             float conversionFactor = 0.40f;
@@ -640,10 +373,8 @@ public class ImageHelper {
         float percentage = (float) resizeWidth / largeBitmap.getWidth();
         float proportionateHeight = largeBitmap.getHeight() * percentage;
         int resizeHeight = (int) Math.rint(proportionateHeight);
-        
-        Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
-        
-        return scaled;
+
+        return Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
     }
 
     /**
@@ -694,7 +425,7 @@ public class ImageHelper {
         BitmapFactory.Options optActual = new BitmapFactory.Options();
         optActual.inSampleSize = scale;
 
-        Bitmap bmpResized = null;
+        Bitmap bmpResized;
 
         bmpResized = BitmapFactory.decodeFile(filePath, optActual);
 
