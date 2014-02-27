@@ -1,31 +1,5 @@
 package org.xmlrpc.android;
 
-import android.text.TextUtils;
-import android.util.Xml;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
-import org.wordpress.android.util.DeviceUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -44,6 +18,32 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.text.TextUtils;
+import android.util.Xml;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 
 /**
  * A WordPress XMLRPC Client.
@@ -76,11 +76,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mPostMethod = new HttpPost(uri);
         mPostMethod.addHeader("Content-Type", "text/xml");
         mPostMethod.addHeader("charset", "UTF-8");
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            mPostMethod.addHeader("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-        } else {
-            mPostMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
-        }
+        mPostMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
 
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
