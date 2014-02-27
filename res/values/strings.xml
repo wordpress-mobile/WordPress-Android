@@ -261,7 +261,6 @@
     <string name="post_signature">Post signature</string>
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
-    <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
     <string name="preview">Preview</string>
 
     <!-- new account view -->
@@ -511,7 +510,6 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="app_title_blackberry">WordPress for BlackBerry</string>
     <string name="publisher">Publisher: Automattic, Inc</string>
     <string name="copyright">©2014 Automattic, Inc</string>
     <string name="version">Version</string>

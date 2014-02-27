@@ -41,7 +41,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.DeviceUtils;
 
 /**
  * A WordPress XMLRPC Client.
@@ -75,12 +74,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         postMethod.addHeader("Content-Type", "text/xml");
 
         postMethod.addHeader("charset", "UTF-8");
-
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            postMethod.addHeader("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-        } else {
-            postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
-        }
+        postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
 
         httpParams = postMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(httpParams, false);

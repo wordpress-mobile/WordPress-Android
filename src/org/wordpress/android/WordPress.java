@@ -481,11 +481,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    if (DeviceUtils.getInstance().isBlackBerry()) {
-                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-                    } else {
-                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    }
+                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
@@ -508,11 +504,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    if (DeviceUtils.getInstance().isBlackBerry()) {
-                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-                    } else {
-                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    }
+                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
