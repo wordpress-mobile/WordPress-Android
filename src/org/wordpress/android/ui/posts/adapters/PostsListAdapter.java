@@ -28,7 +28,7 @@ public class PostsListAdapter extends BaseAdapter {
     }
 
     public static interface OnPostsLoadedListener {
-        public void onPostsLoaded();
+        public void onPostsLoaded(int postCount);
     }
 
     private final OnLoadMoreListener mOnLoadMoreListener;
@@ -190,11 +190,7 @@ public class PostsListAdapter extends BaseAdapter {
         protected Void doInBackground(Void... nada) {
             if (WordPress.getCurrentBlog() != null) {
                 List<PostsListPost> postsList = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
-                if (postsList.size() == 0 && mOnLoadMoreListener != null) {
-                    mOnLoadMoreListener.onLoadMore(false);
-                } else {
-                    setPosts(postsList);
-                }
+                setPosts(postsList);
             }
 
             return null;
@@ -203,8 +199,8 @@ public class PostsListAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Void nada) {
             notifyDataSetChanged();
-            if (mOnPostsLoadedListener != null) {
-                mOnPostsLoadedListener.onPostsLoaded();
+            if (mOnPostsLoadedListener != null && mPosts != null) {
+                mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
         }
     }

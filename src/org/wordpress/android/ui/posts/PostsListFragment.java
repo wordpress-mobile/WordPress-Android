@@ -30,11 +30,10 @@ public class PostsListFragment extends ListFragment {
 
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnRefreshListener mOnRefreshListener;
-    private PostsActivity mParentActivity;
     private PostsListAdapter mPostsListAdapter;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage, mShouldSelectFirstPost;
+    private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -55,16 +54,20 @@ public class PostsListFragment extends ListFragment {
             PostsListAdapter.OnLoadMoreListener loadMoreListener = new PostsListAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(boolean loadMore) {
-                    if (mCanLoadMorePosts)
+                    if (mCanLoadMorePosts && !mIsFetchingPosts)
                         requestPosts(loadMore);
                 }
             };
 
             PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
-                public void onPostsLoaded() {
-                    // Select the first row, if available.
-                    if (mShouldSelectFirstPost) {
+                public void onPostsLoaded(int postCount) {
+
+                    if (postCount == 0 && mCanLoadMorePosts) {
+                        // No posts, let's fetch some
+                        requestPosts(false);
+                    } else if (mShouldSelectFirstPost) {
+                        // Select the first row, if available
                         mShouldSelectFirstPost = false;
                         if (mPostsListAdapter.getCount() > 0) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
@@ -102,10 +105,10 @@ public class PostsListFragment extends ListFragment {
                 PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
                 if (postsListPost == null)
                     return;
-                if (!mParentActivity.mIsRefreshing) {
+                if (!mIsFetchingPosts) {
                     showPost(postsListPost.getPostId());
-                } else {
-                    Toast.makeText(mParentActivity, R.string.please_wait_refresh_done,
+                } else if (hasActivity()) {
+                    Toast.makeText(getActivity(), R.string.please_wait_refresh_done,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -121,7 +124,10 @@ public class PostsListFragment extends ListFragment {
             textview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mParentActivity.newPost();
+                    if (hasActivity()) {
+                        PostsActivity postsActivity = (PostsActivity) getActivity();
+                        postsActivity.newPost();
+                    }
                 }
             });
         }
@@ -142,7 +148,6 @@ public class PostsListFragment extends ListFragment {
 
     public void onResume() {
         super.onResume();
-        mParentActivity = (PostsActivity) getActivity();
         if (WordPress.getCurrentBlog() != null) {
             getListView().setAdapter(getPostListAdapter());
             getPostListAdapter().loadPosts();
@@ -189,12 +194,12 @@ public class PostsListFragment extends ListFragment {
         ApiHelper.FetchPostsTask fetchPostsTaskTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
+                mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
                 mOnRefreshListener.onRefresh(false);
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
-                    return;
                 } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
                     // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
                     mCanLoadMorePosts = false;
@@ -209,6 +214,7 @@ public class PostsListFragment extends ListFragment {
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
                 mOnRefreshListener.onRefresh(false);
@@ -228,6 +234,7 @@ public class PostsListFragment extends ListFragment {
             }
         });
 
+        mIsFetchingPosts = true;
         fetchPostsTaskTask.execute(apiArgs);
     }
 
