@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -159,23 +160,39 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
 
     private void reloadLinearLayout() {
         if (mLinearLayout == null || mAdapter == null)
-            return; 
-        
-        mLinearLayout.removeAllViews();
+            return;
+
+        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
+        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+
+        if (count == 0) {
+            mLinearLayout.removeAllViews();
+            return;
+        }
+
+        int numExistingViews = mLinearLayout.getChildCount();
         int altRowColor = getResources().getColor(R.color.stats_alt_row);
 
-        // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-        for (int i = 0; i < count; i++) {
-            View view = mAdapter.getView(i, null, mLinearLayout);
-            if (i % 2 == 1)
-                view.setBackgroundColor(altRowColor);
-            mLinearLayout.addView(view);
-
-            // add divider
-            getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
+        if (count < numExistingViews) {
+            int numToRemove = numExistingViews - count;
+            mLinearLayout.removeViews(count, numToRemove);
+            numExistingViews = count;
         }
-        
+
+        for (int i = 0; i < count; i++) {
+            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
+            final View view;
+            if (i < numExistingViews) {
+                View convertView = mLinearLayout.getChildAt(i);
+                view = mAdapter.getView(i, convertView, mLinearLayout);
+                view.setBackgroundColor(bgColor);
+            } else {
+                view = mAdapter.getView(i, null, mLinearLayout);
+                view.setBackgroundColor(bgColor);
+                mLinearLayout.addView(view);
+            }
+        }
+        mLinearLayout.invalidate();
     }
     
     @Override
