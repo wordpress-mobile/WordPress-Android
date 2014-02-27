@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
@@ -51,7 +52,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 25;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -164,6 +165,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
         CommentTable.createTables(db);
+        TrustedSslDomainTable.createTable(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -235,11 +237,14 @@ public class WordPressDB {
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                 currentVersion++;
-            // version 23 added CommentTable.java, version 24 changed the comment table schema
-            case 22 :
+                // version 23 added CommentTable.java, version 24 changed the comment table schema
+            case 22:
                 currentVersion++;
             case 23:
                 CommentTable.reset(db);
+                currentVersion++;
+            case 24:
+                // create table TrustedSslDomainTable
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

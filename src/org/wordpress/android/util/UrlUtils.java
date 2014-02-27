@@ -30,8 +30,9 @@ public class UrlUtils {
     }
 
     public static String getDomainFromUrl(final String urlString) {
-        if (urlString==null)
+        if (urlString == null) {
             return "";
+        }
         Uri uri = Uri.parse(urlString);
         return uri.getHost();
     }

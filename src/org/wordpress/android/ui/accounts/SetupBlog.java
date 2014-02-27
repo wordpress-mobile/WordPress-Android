@@ -6,6 +6,7 @@ import android.webkit.URLUtil;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -123,6 +124,9 @@ public class SetupBlog {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
+        if (mAllSslCertificatesTrusted) {
+            TrustedSslDomainTable.trustDomain(uri);
+        }
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
@@ -142,6 +146,9 @@ public class SetupBlog {
             }
             return userBlogList;
         } catch (XMLRPCException e) {
+            if (mAllSslCertificatesTrusted) {
+                TrustedSslDomainTable.removeTrustedDomain(uri);
+            }
             String message = e.getMessage();
             if (message.contains("code 403")) {
                 mErrorMsgId = R.string.username_or_password_incorrect;

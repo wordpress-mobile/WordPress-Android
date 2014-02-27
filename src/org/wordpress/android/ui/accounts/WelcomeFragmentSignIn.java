@@ -364,7 +364,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mIsAllSslCertificatesTrusted = trustAll;
         }
 
-
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
