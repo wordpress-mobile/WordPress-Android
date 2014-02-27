@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for referrer stats. Has two pages, for Today's and Yesterday's stats.
@@ -107,8 +107,8 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
 
             // name, url
-            if (name.startsWith("http")) {
-                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>"));
+            if (name != null && name.startsWith("http")) {
+                StatUtils.setTextHyperlink(holder.entryTextView, name, name);
             } else {
                 holder.entryTextView.setText(name);
             }
@@ -143,7 +143,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             
             // name, url
             if (urlValid) {
-                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>"));
+                StatUtils.setTextHyperlink(holder.entryTextView, url, name);
             } else {
                 holder.entryTextView.setText(name);
             }

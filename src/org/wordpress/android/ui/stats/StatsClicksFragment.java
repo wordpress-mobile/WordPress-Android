@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
@@ -119,7 +119,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
             // name, url
             if (name != null && name.startsWith("http")) {
-                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>"));
+                StatUtils.setTextHyperlink(holder.entryTextView, name, name);
             } else {
                 holder.entryTextView.setText(name);
             }
@@ -147,14 +147,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             String icon = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.ICON));
             int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
 
-            boolean urlValid = (url != null && url.length() > 0); 
-            
             // chevron
             toggleChevrons(children > 0, isExpanded, view);
             
             // name, url
-            if (urlValid) {
-                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>"));
+            if (!TextUtils.isEmpty(url)) {
+                StatUtils.setTextHyperlink(holder.entryTextView, url, name);
             } else {
                 holder.entryTextView.setText(name);
             }

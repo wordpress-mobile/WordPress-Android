@@ -93,7 +93,6 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
 
-        // skip Html.fromHtml() when possible since it's slow
         String empty = getString(getEmptyLabelResId());
         if (empty != null && empty.contains("<")) {
             mEmptyLabel.setText(Html.fromHtml(empty));

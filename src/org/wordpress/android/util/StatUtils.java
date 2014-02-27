@@ -10,6 +10,8 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -232,6 +234,17 @@ public class StatUtils {
         Intent intent = new Intent(ACTION_STATS_SUMMARY_UPDATED);
         intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
         lbm.sendBroadcast(intent);
+    }
+
+    /*
+     * used by various fragments to set a textView to a clickable hyperlink
+     */
+    public static void setTextHyperlink(TextView textView, String linkUrl, String linkName) {
+        if (textView == null || linkUrl == null || linkName == null)
+            return;
+        String html = "<a href=\"" + linkUrl + "\">" + linkName + "</a>";
+        textView.setText(Html.fromHtml(html));
+        textView.setMovementMethod(WPLinkMovementMethod.getInstance());
     }
 
 }

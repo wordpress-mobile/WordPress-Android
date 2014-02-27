@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
@@ -82,7 +82,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
 
             // entries
             if (!TextUtils.isEmpty(url)) {
-                holder.entryTextView.setText(Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>"));
+                StatUtils.setTextHyperlink(holder.entryTextView, url, entry);
             } else {
                 holder.entryTextView.setText(entry);
             }

@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,6 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
 
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
@@ -231,13 +228,9 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             mTotalText.setText(FormatUtils.formatDecimal(total));
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
-            
-            Spanned link = Html.fromHtml("<a href=\"" + activePostUrl + "\">" + activePost + "</a>");
-            mMostCommentedText.setText(link);
-            mMostCommentedText.setMovementMethod(WPLinkMovementMethod.getInstance());
-        }
 
-        
+            StatUtils.setTextHyperlink(mMostCommentedText, activePostUrl, activePost);
+        }
     }
 
 }
