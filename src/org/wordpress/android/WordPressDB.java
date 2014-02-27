@@ -545,7 +545,7 @@ public class WordPressDB {
                 if (c.getString(c.getColumnIndex("httpuser")) == null) {
                     blog.setHttpuser("");
                 } else {
-                    blog.setHttpuser(c.getString(c.getColumnIndex("httppassword")));
+                    blog.setHttpuser(c.getString(c.getColumnIndex("httpuser")));
                 }
                 if (c.getString(c.getColumnIndex("httppassword")) == null) {
                     blog.setHttppassword("");
