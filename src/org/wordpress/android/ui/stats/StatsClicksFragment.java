@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -93,14 +92,10 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     public class CustomAdapter extends CursorTreeAdapter {
         private StatsCursorLoaderCallback mCallback;
         private final LayoutInflater inflater;
-        private final Drawable mChevronUp;
-        private final Drawable mChevronDown;
 
         public CustomAdapter(Cursor cursor, Context context) {
             super(cursor, context, true);
             inflater = LayoutInflater.from(context);
-            mChevronDown = getResources().getDrawable(R.drawable.stats_chevron_down);
-            mChevronUp = getResources().getDrawable(R.drawable.stats_chevron_up);
         }
 
         public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
@@ -170,12 +165,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             }
 
             // expand/collapse chevron
-            if (children > 0) {
-                holder.chevronImageView.setImageDrawable(isExpanded ? mChevronUp : mChevronDown);
-                holder.chevronImageView.setVisibility(View.VISIBLE);
-            } else {
-                holder.chevronImageView.setVisibility(View.GONE);
-            }
+            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
         }
 
         @Override

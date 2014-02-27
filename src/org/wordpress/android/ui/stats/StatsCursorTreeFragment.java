@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -226,43 +228,108 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     private void reloadLinearLayout() {
         if (mLinearLayout == null || mAdapter == null)
-            return; 
-        
-        mLinearLayout.removeAllViews();
-        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+            return;
 
         // limit number of items to show otherwise it would cause performance issues on the LinearLayout
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+
+        if (groupCount == 0) {
+            mLinearLayout.removeAllViews();
+            return;
+        }
+
+        int numExistingGroupViews = mLinearLayout.getChildCount();
+        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+
+        // remove excess views
+        if (groupCount < numExistingGroupViews) {
+            int numToRemove = numExistingGroupViews - groupCount;
+            mLinearLayout.removeViews(groupCount, numToRemove);
+            numExistingGroupViews = groupCount;
+        }
+
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            View groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
-            if (i % 2 == 1)
-                groupView.setBackgroundColor(altRowColor);
-            mLinearLayout.addView(groupView);
+            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
 
-            if (isExpanded)
-                expandChildren(i);
+            // reuse existing view when possible
+            final View groupView;
+            if (i < numExistingGroupViews) {
+                View convertView = mLinearLayout.getChildAt(i);
+                groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
+                groupView.setBackgroundColor(bgColor);
+            } else {
+                groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
+                groupView.setBackgroundColor(bgColor);
+                mLinearLayout.addView(groupView);
+            }
 
-            final int position = i;
+            // add children if this group is expanded
+            if (isExpanded) {
+                showChildViews(i, groupView);
+            }
+
+            // toggle expand/collapse when group view is tapped
+            final int groupPosition = i;
             groupView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mGroupIdToExpandedMap.put(position, !mGroupIdToExpandedMap.get(position));
-                    reloadLinearLayout();
+                    if (mAdapter.getChildrenCount(groupPosition) == 0)
+                        return;
+                    boolean shouldExpand = !mGroupIdToExpandedMap.get(groupPosition);
+                    mGroupIdToExpandedMap.put(groupPosition, shouldExpand);
+                    if (shouldExpand) {
+                        showChildViews(groupPosition, groupView);
+                    } else {
+                        hideChildViews(groupView);
+                    }
                 }
             });
         }
     }
 
-    private void expandChildren(int position) {
-        int childrenCount = mAdapter.getChildrenCount(position);
-        for (int j = 0; j < childrenCount; j++) {
-            boolean isLastChild = (j == childrenCount - 1);
-            View childView = mAdapter.getChildView(position, j, isLastChild, null, mLinearLayout);
-            mLinearLayout.addView(childView);
+    private void showChildViews(int groupPosition, View groupView) {
+        int childCount = Math.min(mAdapter.getChildrenCount(groupPosition), StatsActivity.STATS_CHILD_MAX_ITEMS);
+        if (childCount == 0)
+            return;
+
+        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+
+        int numExistingViews = childContainer.getChildCount();
+        if (childCount < numExistingViews) {
+            int numToRemove = numExistingViews - childCount;
+            childContainer.removeViews(childCount, numToRemove);
+            numExistingViews = childCount;
         }
+
+        for (int i = 0; i < childCount; i++) {
+            boolean isLastChild = (i == childCount - 1);
+            if (i < numExistingViews) {
+                View convertView = childContainer.getChildAt(i);
+                mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
+            } else {
+                childContainer.addView(mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout));
+            }
+        }
+
+        childContainer.setVisibility(View.VISIBLE);
+        setGroupChevron(true, groupView);
     }
-    
+
+    private void hideChildViews(View groupView) {
+        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        childContainer.setVisibility(View.GONE);
+        setGroupChevron(false, groupView);
+    }
+
+    /*
+     * shows the correct up/down chevron for the passed group
+     */
+    private void setGroupChevron(boolean isGroupExpanded, View groupView) {
+        final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+        chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_up : R.drawable.stats_chevron_down);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
