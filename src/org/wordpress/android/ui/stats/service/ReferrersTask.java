@@ -15,6 +15,7 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -65,9 +66,8 @@ class ReferrersTask extends AbsStatsTask {
                     .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
             operations.add(delete_op);
 
-
             JSONArray groups = response.getJSONArray("referrers");
-            int groupsCount = groups.length();
+            int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
 
             // insert groups
             for (int i = 0; i < groupsCount; i++ ) {
@@ -79,17 +79,15 @@ class ReferrersTask extends AbsStatsTask {
 
                 // insert children, only if there is more than one entry
                 JSONArray referrers = group.getJSONArray("results");
-                int count = referrers.length();
-                if (count > 1) {
-
-                    for (int j = 0; j < count; j++) {
+                int childCount = Math.min(referrers.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                if (childCount > 1) {
+                    for (int j = 0; j < childCount; j++) {
                         StatsReferrer stat = new StatsReferrer(mBlogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
                         ContentValues v = StatsReferrersTable.getContentValues(stat);
                         ContentProviderOperation insert_child_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRERS_URI).withValues(v).build();
                         operations.add(insert_child_op);
                     }
                 }
-
             }
 
             getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);

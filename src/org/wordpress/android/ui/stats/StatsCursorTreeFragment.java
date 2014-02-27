@@ -27,6 +27,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -161,7 +162,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         
         Uri uri = getGroupUri();
         
-        if (id == LOADER_URI_GROUP_INDEX) { 
+        if (id == LOADER_URI_GROUP_INDEX) {
             return new CursorLoader(getActivity(), uri, null, "blogId=?", new String[] { blogId }, null);
         } else {
             uri = getChildrenUri();
@@ -172,10 +173,12 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         
     }
 
+    private int mNumChildLoaders = 0;
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
+            mNumChildLoaders = data.getCount();
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
@@ -202,12 +205,17 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     mAdapter.setChildrenCursor(loader.getId(), data);
                 } catch (NullPointerException e) {
                     // do nothing
+                    AppLog.e(AppLog.T.STATS, e);
                 }
+                mNumChildLoaders--;
             }
         }
-        
-        configureEmptyLabel();
-        reloadLinearLayout();
+
+        // display data once all child loaders have completed
+        if (mNumChildLoaders <= 0) {
+            configureEmptyLabel();
+            reloadLinearLayout();
+        }
     }
 
     @Override
@@ -308,7 +316,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 View convertView = childContainer.getChildAt(i);
                 mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
             } else {
-                childContainer.addView(mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout));
+                View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
+                childContainer.addView(childView);
             }
         }
 

@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -50,7 +51,7 @@ class TopPostsAndPagesTask extends AbsStatsTask {
 
         try {
             JSONArray results = response.getJSONArray("top-posts");
-            int count = results.length();
+            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
 
             String date = response.getString("date");
             long dateMs = StatUtils.toMs(date);

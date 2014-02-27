@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -47,7 +48,7 @@ class VideoPlaysTask extends AbsStatsTask {
 
         try {
             JSONArray results = response.getJSONArray("result");
-            int count = results.length();
+            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
 
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 

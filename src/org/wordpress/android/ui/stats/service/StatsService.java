@@ -11,7 +11,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -42,19 +42,9 @@ public class StatsService extends Service {
         return START_NOT_STICKY;
     }
 
-    /*
-     * create executor to process stats tasks, limited to one concurrent task - this limit is
-     * necessary due to how tasks use getContentResolver().notifyChange() to notify fragments
-     * of changes to underlying data, resulting in work being done on the UI thread - without
-     * this limit the stats views would stutter noticeably
-     */
-    private ThreadPoolExecutor createExecutor() {
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-    }
-
     private static final int EXECUTOR_TIMEOUT_SECONDS = 60;
     private void startTasks(final String blogId) {
-        final ThreadPoolExecutor executor = createExecutor();
+        final StatsTaskExecutor executor = new StatsTaskExecutor();
 
         // submit tasks from a separate thread or else they'll run on the main thread - note that
         // these are submitted in the order they appear
@@ -65,40 +55,40 @@ public class StatsService extends Service {
                 final String yesterday = StatUtils.getYesterdaysDate();
 
                 // visitors and views
-                executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
-                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
-                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
+                executor.submitTask(new SummaryTask(blogId)); // this includes bar chart data for days
+                executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
+                executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
 
                 // top posts and pages
-                executor.submit(new TopPostsAndPagesTask(blogId, today));
-                executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
+                executor.submitTask(new TopPostsAndPagesTask(blogId, today));
+                executor.submitTask(new TopPostsAndPagesTask(blogId, yesterday));
 
                 // views by country
-                executor.submit(new ViewsByCountryTask(blogId, today));
-                executor.submit(new ViewsByCountryTask(blogId, yesterday));
+                executor.submitTask(new ViewsByCountryTask(blogId, today));
+                executor.submitTask(new ViewsByCountryTask(blogId, yesterday));
 
                 // clicks
-                executor.submit(new ClicksTask(blogId, today));
-                executor.submit(new ClicksTask(blogId, yesterday));
+                executor.submitTask(new ClicksTask(blogId, today));
+                executor.submitTask(new ClicksTask(blogId, yesterday));
 
                 // referrers
-                executor.submit(new ReferrersTask(blogId, today));
-                executor.submit(new ReferrersTask(blogId, yesterday));
+                executor.submitTask(new ReferrersTask(blogId, today));
+                executor.submitTask(new ReferrersTask(blogId, yesterday));
 
                 // search engine terms
-                executor.submit(new SearchEngineTermsTask(blogId, today));
-                executor.submit(new SearchEngineTermsTask(blogId, yesterday));
+                executor.submitTask(new SearchEngineTermsTask(blogId, today));
+                executor.submitTask(new SearchEngineTermsTask(blogId, yesterday));
 
                 /*
                 // comments
-                executor.submit(new CommentsTopTask(blogId));
-                executor.submit(new CommentsMostTask(blogId));
+                executor.submitTask(new CommentsTopTask(blogId));
+                executor.submitTask(new CommentsMostTask(blogId));
                 // tags and categories
-                executor.submit(new TagsAndCategoriesTask(blogId));
+                executor.submitTask(new TagsAndCategoriesTask(blogId));
                 // top authors
-                executor.submit(new TopAuthorsTask(blogId));
+                executor.submitTask(new TopAuthorsTask(blogId));
                 // video plays
-                executor.submit(new VideoPlaysTask(blogId));
+                executor.submitTask(new VideoPlaysTask(blogId));
                 */
 
                 AppLog.i(T.STATS, "stats update started");
@@ -133,5 +123,34 @@ public class StatsService extends Service {
                 .setAction(ACTION_STATS_UPDATING)
                 .putExtra(EXTRA_IS_UPDATING, isUpdating);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    /*
+     * executor to process stats tasks, limited to one concurrent task - this limit is necessary
+     * due to how tasks use getContentResolver().notifyChange() to notify fragments of changes
+     * to underlying data, resulting in work being done on the UI thread - without this limit
+     * the stats views would stutter noticeably
+     */
+    private class StatsTaskExecutor extends ThreadPoolExecutor {
+        private StatsTaskExecutor() {
+            // same as Executors.newFixedThreadPool()
+            super(1, 1,
+                  0L, TimeUnit.MILLISECONDS,
+                  new LinkedBlockingQueue<Runnable>());
+        }
+
+        private void submitTask(AbsStatsTask task) {
+            submit(task);
+        }
+
+        @Override
+        protected void beforeExecute(Thread t, Runnable r) {
+            super.beforeExecute(t, r);
+        }
+
+        @Override
+        protected void afterExecute(Runnable r, Throwable t) {
+            super.afterExecute(r, t);
+        }
     }
 }

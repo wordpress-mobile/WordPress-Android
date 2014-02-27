@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -61,7 +62,7 @@ class SearchEngineTermsTask extends AbsStatsTask {
 
             JSONArray results = response.getJSONArray("search-terms");
 
-            int count = results.length();
+            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
             for (int i = 0; i < count; i++ ) {
                 JSONArray result = results.getJSONArray(i);
                 StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mBlogId, date, result);

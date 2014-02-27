@@ -20,7 +20,8 @@ abstract class AbsStatsTask implements Runnable {
     static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     /*
-     * descendants must implement this to parse a successful rest response
+     * descendants must implement this to parse a successful rest response - note that this
+     * is called from a non-UI thread
      */
     abstract void parseResponse(JSONObject response);
 
@@ -31,7 +32,7 @@ abstract class AbsStatsTask implements Runnable {
      */
     final RestRequest.Listener responseListener = new RestRequest.Listener() {
         @Override
-        public void onResponse(JSONObject response) {
+        public void onResponse(final JSONObject response) {
             parseResponse(response);
             doCompleted();
         }
@@ -60,15 +61,15 @@ abstract class AbsStatsTask implements Runnable {
      * the response was received)
      */
     synchronized void waitForResponse() {
-        if (mIsCompleted)
-            return;
-        AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
-        while (!mIsCompleted) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                AppLog.e(AppLog.T.STATS, e);
-                return;
+        if (!mIsCompleted) {
+            AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
+            while (!mIsCompleted) {
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    AppLog.w(AppLog.T.STATS, "interrupted " + getTaskName());
+                    return;
+                }
             }
         }
         AppLog.d(AppLog.T.STATS, "completed " + getTaskName());

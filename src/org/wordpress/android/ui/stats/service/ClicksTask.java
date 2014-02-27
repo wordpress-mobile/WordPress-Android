@@ -15,6 +15,7 @@ import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.models.StatsClickGroup;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -66,9 +67,9 @@ class ClicksTask extends AbsStatsTask {
 
 
             JSONArray groups = response.getJSONArray("clicks");
-            int groupsCount = groups.length();
 
-            // insert groups
+             // insert groups, limited to the number that can actually be displayed
+            int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
             for (int i = 0; i < groupsCount; i++ ) {
                 JSONObject group = groups.getJSONObject(i);
                 StatsClickGroup statGroup = new StatsClickGroup(mBlogId, date, group);
@@ -77,11 +78,11 @@ class ClicksTask extends AbsStatsTask {
                 ContentProviderOperation insert_group = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICK_GROUP_URI).withValues(values).build();
                 operations.add(insert_group);
 
-                // insert children, only if there is more than one entry
+                // insert children if there are any, limited to the number that can be displayed
                 JSONArray clicks = group.getJSONArray("results");
-                int count = clicks.length();
-                if (count > 1) {
-                    for (int j = 0; j < count; j++) {
+                int childCount = Math.min(clicks.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                if (childCount > 1) {
+                    for (int j = 0; j < childCount; j++) {
                         StatsClick stat = new StatsClick(mBlogId, date, statGroup.getGroupId(), clicks.getJSONArray(j));
                         ContentValues v = StatsClicksTable.getContentValues(stat);
                         ContentProviderOperation insert_child = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICKS_URI).withValues(v).build();
