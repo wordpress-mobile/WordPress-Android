@@ -173,6 +173,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         int numExistingViews = mLinearLayout.getChildCount();
         int altRowColor = getResources().getColor(R.color.stats_alt_row);
 
+        // remove excess views
         if (count < numExistingViews) {
             int numToRemove = numExistingViews - count;
             mLinearLayout.removeViews(count, numToRemove);
@@ -182,6 +183,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         for (int i = 0; i < count; i++) {
             int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
             final View view;
+            // reuse existing view when possible
             if (i < numExistingViews) {
                 View convertView = mLinearLayout.getChildAt(i);
                 view = mAdapter.getView(i, convertView, mLinearLayout);

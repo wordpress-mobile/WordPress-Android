@@ -229,16 +229,18 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             return; 
         
         mLinearLayout.removeAllViews();
-        
-        // limit number of items to show otherwise it would cause performance issues on the linearlayout
+        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+
+        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
             View view = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
             view.setTag(i);
+            if (i % 2 == 1)
+                view.setBackgroundColor(altRowColor);
             mLinearLayout.addView(view);
             view.setOnClickListener(new OnClickListener() {
-                
                 @Override
                 public void onClick(View v) {
                     int position = (Integer) v.getTag();
@@ -247,18 +249,12 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 }
             });
 
-            // add divider
-            getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
-
             if (isExpanded) {
                 int childrenCount = mAdapter.getChildrenCount(i);
                 for (int j = 0; j < childrenCount; j++) {
                     boolean isLastChild = (j == childrenCount - 1);
                     View childView = mAdapter.getChildView(i, j, isLastChild, null, mLinearLayout);
                     mLinearLayout.addView(childView);
-                    
-                    // add divider
-                    getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
                 }
             }
         }
