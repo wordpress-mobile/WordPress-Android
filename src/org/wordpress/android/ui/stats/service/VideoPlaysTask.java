@@ -36,7 +36,7 @@ class VideoPlaysTask extends AbsStatsTask {
     }
 
     @Override
-    public void run() {
+    void sendRequest() {
         WordPress.restClient.getStatsVideoPlays(mBlogId, responseListener, errorListener);
     }
 

@@ -193,10 +193,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
-
-            configureEmptyLabel();
-            reloadLinearLayout();
-
         } else {
             // cursor is for children
             if (mAdapter != null) {
@@ -211,6 +207,9 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 }
             }
         }
+
+        configureEmptyLabel();
+        reloadLinearLayout();
     }
 
     @Override
@@ -233,9 +232,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         if (mLinearLayout == null || mAdapter == null)
             return;
 
-        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-
         if (groupCount == 0) {
             mLinearLayout.removeAllViews();
             return;
@@ -251,6 +248,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             numExistingGroupViews = groupCount;
         }
 
+        // add each group
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
             int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);

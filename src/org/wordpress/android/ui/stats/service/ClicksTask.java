@@ -40,7 +40,7 @@ class ClicksTask extends AbsStatsTask {
     }
 
     @Override
-    public void run() {
+    void sendRequest() {
         WordPress.restClient.getStatsClicks(mBlogId, mDate, responseListener, errorListener);
     }
 

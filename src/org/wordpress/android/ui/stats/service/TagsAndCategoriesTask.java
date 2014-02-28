@@ -36,7 +36,7 @@ class TagsAndCategoriesTask extends AbsStatsTask {
     }
 
     @Override
-    public void run() {
+    void sendRequest() {
         WordPress.restClient.getStatsTagsAndCategories(mBlogId, responseListener, errorListener);
     }
 
