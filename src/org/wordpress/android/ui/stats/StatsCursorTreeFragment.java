@@ -237,7 +237,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     }
 
     private void reloadLinearLayout() {
-        if (mLinearLayout == null || mAdapter == null)
+        if (getActivity() == null || mLinearLayout == null || mAdapter == null)
             return;
 
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);

@@ -159,7 +159,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     }
 
     private void reloadLinearLayout() {
-        if (mLinearLayout == null || mAdapter == null)
+        if (getActivity() == null || mLinearLayout == null || mAdapter == null)
             return;
 
         // limit number of items to show otherwise it would cause performance issues on the LinearLayout
