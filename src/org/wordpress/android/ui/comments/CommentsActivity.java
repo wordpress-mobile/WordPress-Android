@@ -210,8 +210,10 @@ public class CommentsActivity extends WPActionBarActivity
             ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
-            // tablet mode with list/detail side-by-side - show this comment in the detail view,
-            // and highlight it in the list view
+            // tablet mode with list/detail side-by-side - remove the reader fragment if it exists,
+            // then show this comment in the detail view and highlight it in the list view
+            if (hasReaderFragment())
+                fm.popBackStackImmediate();
             detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
             if (listFragment != null)
                 listFragment.setHighlightedCommentId(comment.commentID);
