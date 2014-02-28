@@ -33,7 +33,6 @@ class CommentsMostTask extends AbsStatsTask {
     @Override
     public void run() {
         WordPress.restClient.getStatsMostCommented(mBlogId, responseListener, errorListener);
-        waitForResponse();
     }
 
     @Override

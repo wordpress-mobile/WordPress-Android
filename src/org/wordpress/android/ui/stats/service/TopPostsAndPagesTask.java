@@ -41,7 +41,6 @@ class TopPostsAndPagesTask extends AbsStatsTask {
     @Override
     public void run() {
         WordPress.restClient.getStatsTopPosts(mBlogId, mDate, responseListener, errorListener);
-        waitForResponse();
     }
 
     @Override

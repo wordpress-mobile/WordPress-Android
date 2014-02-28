@@ -46,72 +46,66 @@ public class StatsService extends Service {
     private void startTasks(final String blogId) {
         final StatsTaskExecutor executor = new StatsTaskExecutor();
 
-        // submit tasks from a separate thread or else they'll run on the main thread - note that
-        // these are submitted in the order they appear
-        new Thread() {
-            @Override
-            public void run() {
-                final String today = StatUtils.getCurrentDate();
-                final String yesterday = StatUtils.getYesterdaysDate();
+        // tasks are submitted in the order they appear
+        final String today = StatUtils.getCurrentDate();
+        final String yesterday = StatUtils.getYesterdaysDate();
 
-                // visitors and views
-                executor.submitTask(new SummaryTask(blogId)); // this includes bar chart data for days
-                executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
-                executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
+        // visitors and views
+        executor.submitTask(new SummaryTask(blogId)); // this includes bar chart data for days
+        executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
+        executor.submitTask(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
 
-                // top posts and pages
-                executor.submitTask(new TopPostsAndPagesTask(blogId, today));
-                executor.submitTask(new TopPostsAndPagesTask(blogId, yesterday));
+        // top posts and pages
+        executor.submitTask(new TopPostsAndPagesTask(blogId, today));
+        executor.submitTask(new TopPostsAndPagesTask(blogId, yesterday));
 
-                // views by country
-                executor.submitTask(new ViewsByCountryTask(blogId, today));
-                executor.submitTask(new ViewsByCountryTask(blogId, yesterday));
+        // views by country
+        executor.submitTask(new ViewsByCountryTask(blogId, today));
+        executor.submitTask(new ViewsByCountryTask(blogId, yesterday));
 
-                // clicks
-                executor.submitTask(new ClicksTask(blogId, today));
-                executor.submitTask(new ClicksTask(blogId, yesterday));
+        // clicks
+        executor.submitTask(new ClicksTask(blogId, today));
+        executor.submitTask(new ClicksTask(blogId, yesterday));
 
-                // referrers
-                executor.submitTask(new ReferrersTask(blogId, today));
-                executor.submitTask(new ReferrersTask(blogId, yesterday));
+        // referrers
+        executor.submitTask(new ReferrersTask(blogId, today));
+        executor.submitTask(new ReferrersTask(blogId, yesterday));
 
-                // search engine terms
-                executor.submitTask(new SearchEngineTermsTask(blogId, today));
-                executor.submitTask(new SearchEngineTermsTask(blogId, yesterday));
+        // search engine terms
+        executor.submitTask(new SearchEngineTermsTask(blogId, today));
+        executor.submitTask(new SearchEngineTermsTask(blogId, yesterday));
 
-                /*
-                // comments
-                executor.submitTask(new CommentsTopTask(blogId));
-                executor.submitTask(new CommentsMostTask(blogId));
-                // tags and categories
-                executor.submitTask(new TagsAndCategoriesTask(blogId));
-                // top authors
-                executor.submitTask(new TopAuthorsTask(blogId));
-                // video plays
-                executor.submitTask(new VideoPlaysTask(blogId));
-                */
+        /*
+        // comments
+        executor.submitTask(new CommentsTopTask(blogId));
+        executor.submitTask(new CommentsMostTask(blogId));
+        // tags and categories
+        executor.submitTask(new TagsAndCategoriesTask(blogId));
+        // top authors
+        executor.submitTask(new TopAuthorsTask(blogId));
+        // video plays
+        executor.submitTask(new VideoPlaysTask(blogId));
+        */
 
-                AppLog.i(T.STATS, "stats update started");
-                broadcastUpdate(true);
-                try {
-                    // prevent additional tasks from being submitted, then wait for all tasks to complete
-                    executor.shutdown();
-                    if (!executor.awaitTermination(EXECUTOR_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-                        AppLog.w(T.STATS, "executor failed to terminate");
-                        executor.shutdownNow();
-                    }
-                } catch (InterruptedException e) {
-                    AppLog.e(T.STATS, e);
-                    // (re-)cancel if current thread also interrupted
-                    executor.shutdownNow();
-                    // preserve interrupt status
-                    Thread.currentThread().interrupt();
-                } finally {
-                    AppLog.i(T.STATS, "stats update ended");
-                    broadcastUpdate(false);
-                }
+        AppLog.i(T.STATS, "stats update started");
+        broadcastUpdate(true);
+        try {
+            // prevent additional tasks from being submitted, then wait for all tasks to complete
+            executor.shutdown();
+            if (!executor.awaitTermination(EXECUTOR_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                AppLog.w(T.STATS, "executor failed to terminate");
+                executor.shutdownNow();
             }
-        }.start();
+        } catch (InterruptedException e) {
+            AppLog.e(T.STATS, e);
+            // (re-)cancel if current thread also interrupted
+            executor.shutdownNow();
+            // preserve interrupt status
+            Thread.currentThread().interrupt();
+        } finally {
+            AppLog.i(T.STATS, "stats update ended");
+            broadcastUpdate(false);
+        }
     }
 
     /*
@@ -126,15 +120,17 @@ public class StatsService extends Service {
     }
 
     /*
-     * executor to process stats tasks, limited to one concurrent task - this limit is necessary
-     * due to how tasks use getContentResolver().notifyChange() to notify fragments of changes
-     * to underlying data, resulting in work being done on the UI thread - without this limit
-     * the stats views would stutter noticeably
+     * executor to process stats tasks - this can be replaced with Executors.newFixedThreadPool()
+     * after testing, when the AppLog messages aren't necessary
      */
+    private static int getMaxConcurrentTasks() {
+        int numProcessors = Runtime.getRuntime().availableProcessors();
+        return Math.min(numProcessors, 3);
+    }
     private class StatsTaskExecutor extends ThreadPoolExecutor {
         private StatsTaskExecutor() {
-            // same as Executors.newFixedThreadPool()
-            super(1, 1,
+            super(getMaxConcurrentTasks(),
+                  getMaxConcurrentTasks(),
                   0L, TimeUnit.MILLISECONDS,
                   new LinkedBlockingQueue<Runnable>());
         }
@@ -146,11 +142,13 @@ public class StatsService extends Service {
         @Override
         protected void beforeExecute(Thread t, Runnable r) {
             super.beforeExecute(t, r);
+            AppLog.d(AppLog.T.STATS, "beforeExecute > " + r.toString());
         }
 
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
             super.afterExecute(r, t);
+            AppLog.d(AppLog.T.STATS, "afterExecute > " + r.toString());
         }
     }
 }

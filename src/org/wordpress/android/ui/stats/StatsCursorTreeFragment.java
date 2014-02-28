@@ -173,12 +173,10 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         
     }
 
-    private int mNumChildLoaders = 0;
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
-            mNumChildLoaders = data.getCount();
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
@@ -195,10 +193,14 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
+
+            configureEmptyLabel();
+            reloadLinearLayout();
+
         } else {
             // cursor is for children
             if (mAdapter != null) {
-                // due to a race condition that occurs when stats are refreshed, 
+                // due to a race condition that occurs when stats are refreshed,
                 // it is possible to have more rows in the listview initially than when done refreshing,
                 // causing null pointer exceptions to occur. 
                 try {
@@ -207,14 +209,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     // do nothing
                     AppLog.e(AppLog.T.STATS, e);
                 }
-                mNumChildLoaders--;
             }
-        }
-
-        // display data once all child loaders have completed
-        if (mNumChildLoaders <= 0) {
-            configureEmptyLabel();
-            reloadLinearLayout();
         }
     }
 

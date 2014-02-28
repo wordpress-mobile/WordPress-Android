@@ -41,7 +41,6 @@ class BarChartTask extends AbsStatsTask {
     @Override
     public void run() {
         WordPress.restClient.getStatsBarChartData(mBlogId, mBarChartUnit, 30, responseListener, errorListener);
-        waitForResponse();
     }
 
     @Override

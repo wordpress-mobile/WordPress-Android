@@ -38,7 +38,6 @@ class ReferrersTask extends AbsStatsTask {
     @Override
     public void run() {
         WordPress.restClient.getStatsReferrers(mBlogId, mDate, responseListener, errorListener);
-        waitForResponse();
     }
 
     @Override

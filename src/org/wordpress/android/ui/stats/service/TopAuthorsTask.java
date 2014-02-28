@@ -38,7 +38,6 @@ class TopAuthorsTask extends AbsStatsTask {
     @Override
     public void run() {
         WordPress.restClient.getStatsTopAuthors(mBlogId, responseListener, errorListener);
-        waitForResponse();
     }
 
     @Override

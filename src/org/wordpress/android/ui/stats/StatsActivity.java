@@ -109,7 +109,7 @@ public class StatsActivity extends WPActionBarActivity {
         loadStatsFragments();
         setTitle(R.string.stats);
 
-        //WordPress.wpStatsDB.reset();
+WordPress.wpStatsDB.reset();
 
         restoreState(savedInstanceState);
     }

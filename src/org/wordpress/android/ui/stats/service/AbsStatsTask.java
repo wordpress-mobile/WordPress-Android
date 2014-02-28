@@ -16,7 +16,6 @@ import org.wordpress.android.util.AppLog;
  * refactored by nbradbury
  */
 abstract class AbsStatsTask implements Runnable {
-    private boolean mIsCompleted;
     static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     /*
@@ -33,45 +32,23 @@ abstract class AbsStatsTask implements Runnable {
     final RestRequest.Listener responseListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject response) {
-            parseResponse(response);
-            doCompleted();
+            AppLog.d(AppLog.T.STATS, getTaskName() + " response");
+            new Thread() {
+                @Override
+                public void run() {
+                    parseResponse(response);
+                }
+            }.start();
         }
     };
     final RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             AppLog.e(AppLog.T.STATS, getTaskName() + " failed", error);
-            doCompleted();
         }
     };
 
     ContentResolver getContentResolver() {
         return WordPress.getContext().getContentResolver();
-    }
-
-    private void doCompleted() {
-        mIsCompleted = true;
-    }
-
-    /*
-     * each task calls this after making a rest request to ensure the ThreadPoolExecutor
-     * used by StatsService doesn't immediately move to the next task - necessary since
-     * rest requests are processed in a separate thread - without this, the executor
-     * would believe the task completed as soon as the rest request was made (before
-     * the response was received)
-     */
-    synchronized void waitForResponse() {
-        if (!mIsCompleted) {
-            AppLog.d(AppLog.T.STATS, "waiting for " + getTaskName());
-            while (!mIsCompleted) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    AppLog.w(AppLog.T.STATS, "interrupted " + getTaskName());
-                    return;
-                }
-            }
-        }
-        AppLog.d(AppLog.T.STATS, "completed " + getTaskName());
     }
 }
