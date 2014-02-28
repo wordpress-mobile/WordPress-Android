@@ -12,6 +12,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -243,7 +244,9 @@ public class SetupBlog {
         try {
             rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
         } catch (SSLHandshakeException e) {
-            mErroneousSslCertificate = true;
+            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         }
