@@ -835,7 +835,7 @@ public class WordPressDB {
      * @param isPage: boolean to save as pages
      */
     public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
-        if (postsList.size() != 0) {
+        if (postsList != null && postsList.size() != 0) {
             db.beginTransaction();
             try {
                 for (Object post : postsList) {
