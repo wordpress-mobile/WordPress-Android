@@ -22,7 +22,6 @@ import android.preference.PreferenceManager;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
@@ -32,13 +31,15 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wordpress.rest.Oauth;
 
 import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.networking.OAuthAuthenticatorFactory;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -48,7 +49,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
-import org.wordpress.android.util.WPRestClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -68,14 +68,13 @@ public class WordPress extends Application {
 
     public static String versionName;
     public static Blog currentBlog;
-    public static Comment currentComment;
     public static Post currentPost;
     public static WordPressDB wpDB;
     public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
-    public static WPRestClient restClient;
+    public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static final String TAG = "WordPress";
@@ -111,16 +110,17 @@ public class WordPress extends Application {
         imageLoader.setBatchedResponseDelay(0);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getInt("wp_pref_last_activity", -1) >= 0)
+        if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
             shouldRestoreSelectedActivity = true;
-
-        restClient = new WPRestClient(requestQueue, new OauthAuthenticator());
+        }
         registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
-        if (AppLockManager.getInstance().isAppLockFeatureEnabled())
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+                    new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
+        }
 
         WPMobileStatsUtil.initialize();
         WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
@@ -178,6 +178,14 @@ public class WordPress extends Application {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    public static RestClientUtils getRestClientUtils() {
+        if (mRestClientUtils == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
+        }
+        return mRestClientUtils;
     }
 
     /*
@@ -298,7 +306,7 @@ public class WordPress extends Application {
      */
     public static Blog getBlog(int id) {
         try {
-            Blog blog = new Blog(id);
+            Blog blog = wpDB.instantiateBlogByLocalId(id);
             return blog;
         } catch (Exception e) {
             return null;
@@ -336,7 +344,7 @@ public class WordPress extends Application {
      */
     public static Blog setCurrentBlog(int id) {
         try {
-            currentBlog = new Blog(id);
+            currentBlog = wpDB.instantiateBlogByLocalId(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -385,114 +393,6 @@ public class WordPress extends Application {
 
     }
 
-    class OauthAuthenticator implements WPRestClient.Authenticator {
-
-        @Override
-        public void authenticate(WPRestClient.Request request) {
-
-            String siteId = request.getSiteId();
-            String token = null;
-            Blog blog = null;
-
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-            if (siteId == null) {
-                // Use the global access token
-                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-            } else {
-                blog = wpDB.getBlogForDotComBlogId(siteId);
-
-                if (blog != null) {
-                    // get the access token from api key field. Hetpack blogs likned with a different wpcom account have the token stored here.
-                    token = blog.getApi_key();
-
-                    // valid oauth tokens are 64 chars
-                    if (token != null && token.length() < 64 && !blog.isDotcomFlag()) {
-                        token = null;
-                    }
-
-                    // if there is no access token, we need to check if it is a dotcom blog, or a jetpack blog linked with the main wpcom account.
-                    if (token == null){ 
-                        if (blog.isDotcomFlag() && blog.getUsername().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))){ 
-                            token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-                        } else if (blog.isJetpackPowered()) {
-                            if (blog.getDotcom_username() == null ||  blog.getDotcom_username().equals(settings.getString(WPCOM_USERNAME_PREFERENCE, ""))) {
-                                token = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-                            }
-                        }
-                    }
-                }
-            }
-            if (token != null) {
-                // we have an access token, set the request and send it
-                request.sendWithAccessToken(token);
-            } else {
-                // we don't have an access token, let's request one
-                requestAccessToken(request, blog);
-            }
-
-        }
-
-        public void requestAccessToken(final WPRestClient.Request request, final Blog blog) {
-
-            Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
-
-            // make oauth volley request
-
-            String username = null, password = null;
-            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-
-            if (blog == null) {
-                // We weren't give a specific blog, so we're going to user the username/password
-                // from the "global" dotcom user account
-                username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-                password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
-            } else {
-                // use the requested blog's username password, if it's a dotcom blog, use the
-                // username and password for the blog. If it's a jetpack blog (not isDotcomFlag)
-                // then use the getDotcom_* methods for username/password
-                if (blog.isDotcomFlag()) {
-                    username = blog.getUsername();
-                    password = blog.getPassword();
-                } else {
-                    username = blog.getDotcom_username();
-                    password = blog.getDotcom_password();
-                }
-            }
-
-            Request oauthRequest = oauth.makeRequest(username, password,
-
-                    new Oauth.Listener() {
-
-                        @Override
-                        public void onResponse(Oauth.Token token) {
-                            if (blog == null) {
-                                settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).
-                                        commit();
-                            } else {
-                                blog.setApi_key(token.toString());
-                                blog.save();
-                            }
-                            request.sendWithAccessToken(token);
-                        }
-
-                    },
-
-                    new Oauth.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            request.abort(error);
-                        }
-
-                    }
-            );
-
-            // add oauth request to the request queue
-            requestQueue.add(oauthRequest);
-
-        }
-    }
-
     /**
      * Sign out from all accounts by clearing out the password, which will require user to sign in
      * again
@@ -500,6 +400,7 @@ public class WordPress extends Application {
     public static void signOut(Context context) {
         removeWpComUserRelatedData(context);
 
+        TrustedSslDomainTable.emptyTable();
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
@@ -534,10 +435,13 @@ public class WordPress extends Application {
         UserPrefs.reset();
         ReaderDatabase.reset();
 
-        //Delete all the Notes
-        WordPress.wpDB.clearNotes();
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        context.sendBroadcast(broadcastIntent);
     }
-    
+
     public static String getLoginUrl(Blog blog) {
         String loginURL = null;
         Gson gson = new Gson();

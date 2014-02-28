@@ -75,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private static final String TAG = "WPActionBarActivity";
 
     /**
-     * Request code used when no accounts exist, and user is prompted to add an
+     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
      */
     private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
-     * Request code for reloading menu after returning from  the PreferencesActivity.
+     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
      */
     private static final int SETTINGS_REQUEST = 200;
     /**
-     * Request code for re-authentication
+     * AuthenticatorRequest code for re-authentication
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
@@ -788,7 +788,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -813,9 +813,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
-            intent.putExtra("isNew",
-                    true);
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+            intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -879,7 +878,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);

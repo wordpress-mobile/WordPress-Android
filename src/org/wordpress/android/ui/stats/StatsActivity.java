@@ -41,8 +41,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -55,7 +56,6 @@ import java.util.Map;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity {
-
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
 
@@ -79,7 +79,7 @@ public class StatsActivity extends WPActionBarActivity {
     private LinearLayout mFragmentContainer;
     private LinearLayout mColumnLeft;
     private LinearLayout mColumnRight;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,12 +106,12 @@ public class StatsActivity extends WPActionBarActivity {
         setTitle(R.string.stats);
 
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
 
@@ -125,14 +125,14 @@ public class StatsActivity extends WPActionBarActivity {
                 String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                 WordPress.getCurrentBlog().setDotcom_username(username);
                 WordPress.getCurrentBlog().setDotcom_password(password);
-                WordPress.getCurrentBlog().save();
+                WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
                 refreshStats();
             } else {
                 startWPComLoginActivity();
             }
             return;
         }
-        
+
         if (!mIsRestoredFromState)
             refreshStats();
     }
@@ -144,23 +144,23 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        
+
         stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-            
+
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
         mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
         mIsRestoredFromState = true;
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
     }
@@ -171,18 +171,18 @@ public class StatsActivity extends WPActionBarActivity {
         loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
         startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
-            
+
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
                 if (getBlogId() == null) {
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
-                    XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
+                    XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
                     Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
@@ -344,18 +344,18 @@ public class StatsActivity extends WPActionBarActivity {
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> statsActivityWeakRef;
-        
+
         public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
             this.statsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
         }
-       
+
         @Override
         public void onSuccess() {
             if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
                     || statsActivityWeakRef.get().mIsInFront == false) {
                 return;
             }
-            
+
             if (getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
@@ -397,7 +397,7 @@ public class StatsActivity extends WPActionBarActivity {
         mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
@@ -461,9 +461,8 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         if (!NetworkUtils.isNetworkAvailable(this))
             return;
-        
         String blogId;
-        
+
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch())
             blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         else {
@@ -545,7 +544,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save();
+                    WordPress.wpDB.saveBlog(currentBlog);
                 }
 
                 return jetpackBlogId;

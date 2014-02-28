@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -155,56 +157,81 @@ public class ViewPostFragment extends Fragment {
         }
     }
 
-    public void loadPost(Post post) {
-
-        // Don't load if the Post object of title are null, see #395
+    public void loadPost(final Post post) {
+        // Don't load if the Post object or title are null, see #395
         if (post == null || post.getTitle() == null)
             return;
+        if (!hasActivity() || getView() == null)
+            return;
 
-        TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
-        if (post.getTitle().equals(""))
-            title.setText("(" + getResources().getText(R.string.untitled) + ")");
-        else
-            title.setText(StringUtils.unescapeHTML(post.getTitle()));
+        // create handler on UI thread
+        final Handler handler = new Handler();
 
-        WebView webView = (WebView) getActivity().findViewById(
-                R.id.viewPostWebView);
-        TextView tv = (TextView) getActivity().findViewById(
-                R.id.viewPostTextView);
-        ImageButton shareURLButton = (ImageButton) getActivity().findViewById(
-                R.id.sharePostLink);
-        ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
-                R.id.viewPost);
-        ImageButton addCommentButton = (ImageButton) getActivity().findViewById(
-                R.id.addComment);
+        // locate views and determine content in the background to avoid ANR - especially
+        // important when using WPHtml.fromHtml() for drafts that contain images since
+        // thumbnails may take some time to create
+        new Thread() {
+            @Override
+            public void run() {
+                final TextView txtTitle = (TextView) getView().findViewById(R.id.postTitle);
+                final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
+                final TextView txtContent = (TextView) getView().findViewById(R.id.viewPostTextView);
+                final ImageButton btnShareUrl = (ImageButton) getView().findViewById(R.id.sharePostLink);
+                final ImageButton btnViewPost = (ImageButton) getView().findViewById(R.id.viewPost);
+                final ImageButton btnAddComment = (ImageButton) getView().findViewById(R.id.addComment);
 
-        String postContent = post.getDescription() + "\n\n" + post.getMt_text_more();
+                final String title = (TextUtils.isEmpty(post.getTitle())
+                                        ? "(" + getResources().getText(R.string.untitled) + ")"
+                                        : StringUtils.unescapeHTML(post.getTitle()));
 
-        if (post.isLocalDraft()) {
-            tv.setVisibility(View.VISIBLE);
-            webView.setVisibility(View.GONE);
-            shareURLButton.setVisibility(View.GONE);
-            viewPostButton.setVisibility(View.GONE);
-            addCommentButton.setVisibility(View.GONE);
+                final String postContent = post.getDescription() + "\n\n" + post.getMt_text_more();
 
-            tv.setText(WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post));
-        } else {
-            tv.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
-            shareURLButton.setVisibility(View.VISIBLE);
-            viewPostButton.setVisibility(View.VISIBLE);
-            if (post.isMt_allow_comments()) {
-                addCommentButton.setVisibility(View.VISIBLE);
-            } else {
-                addCommentButton.setVisibility(View.GONE);
+                final Spanned draftContent;
+                final String htmlContent;
+                if (post.isLocalDraft()) {
+                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post);
+                    htmlContent = null;
+                } else {
+                    draftContent = null;
+                    htmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+                                + "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head>"
+                                + "<body><div id=\"container\">"
+                                + StringUtils.addPTags(postContent)
+                                + "</div></body></html>";
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // make sure activity is still valid
+                        if (!hasActivity())
+                            return;
+
+                        txtTitle.setText(title);
+
+                        if (post.isLocalDraft()) {
+                            txtContent.setVisibility(View.VISIBLE);
+                            webView.setVisibility(View.GONE);
+                            btnShareUrl.setVisibility(View.GONE);
+                            btnViewPost.setVisibility(View.GONE);
+                            btnAddComment.setVisibility(View.GONE);
+                            txtContent.setText(draftContent);
+                        } else {
+                            txtContent.setVisibility(View.GONE);
+                            webView.setVisibility(View.VISIBLE);
+                            btnShareUrl.setVisibility(View.VISIBLE);
+                            btnViewPost.setVisibility(View.VISIBLE);
+                            btnAddComment.setVisibility(post.isMt_allow_comments() ? View.VISIBLE : View.GONE);
+                            webView.loadDataWithBaseURL("file:///android_asset/",
+                                                        htmlContent,
+                                                        "text/html",
+                                                        "utf-8",
+                                                        null);
+                        }
+                    }
+                });
             }
-
-            String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
-                    + StringUtils.addPTags(postContent) + "</div></body></html>";
-            webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
-                    "text/html", "utf-8", null);
-        }
-
+        }.start();
     }
 
     public interface OnDetailPostActionListener {
@@ -212,14 +239,14 @@ public class ViewPostFragment extends Fragment {
     }
 
     public void clearContent() {
-        TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
-        title.setText("");
-        WebView webView = (WebView) getActivity().findViewById(
-                R.id.viewPostWebView);
-        TextView tv = (TextView) getActivity().findViewById(
-                R.id.viewPostTextView);
-        tv.setText("");
-        String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\"></div></body></html>";
+        TextView txtTitle = (TextView) getView().findViewById(R.id.postTitle);
+        WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
+        TextView txtContent = (TextView) getView().findViewById(R.id.viewPostTextView);
+        txtTitle.setText("");
+        txtContent.setText("");
+        String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+                        + "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head>"
+                        + "<body><div id=\"container\"></div></body></html>";
         webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
                 "text/html", "utf-8", null);
     }

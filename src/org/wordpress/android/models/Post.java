@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.WordPress;
@@ -162,11 +164,16 @@ public class Post implements Serializable {
 
     public JSONArray getJSONCategories() {
         JSONArray jArray = null;
-        if (categories == null)
-            categories = "";
+        if (categories == null) {
+            categories = "[]";
+        }
         try {
             categories = StringUtils.unescapeHTML(categories);
-            jArray = new JSONArray(categories);
+            if (TextUtils.isEmpty(categories)) {
+                jArray = new JSONArray();
+            } else {
+                jArray = new JSONArray(categories);
+            }
         } catch (JSONException e) {
             AppLog.e(T.POSTS, e);
         }

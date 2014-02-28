@@ -57,7 +57,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     private ScrollView mScrollView;
     private ImageButton mApproveButton, mSpamButton, mTrashButton;
     private LinearLayout mModerateContainer, mModerateSection;
-    
+
     private static final String APPROVE_TAG = "approve-comment";
     private static final String UNAPPROVE_TAG = "unapprove-comment";
     private static final String SPAM_TAG = "spam-comment";
@@ -78,9 +78,9 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         mModeratingText = (TextView)view.findViewById(R.id.comment_moderating);
         mModerateContainer = (LinearLayout)view.findViewById(R.id.moderate_buttons_container);
         mModerateSection = (LinearLayout)view.findViewById(R.id.moderate_section);
-        
+
         ((TextView) view.findViewById(R.id.moderate_comment_header)).setText(getResources().getString(R.string.moderate_comment).toUpperCase());
-        
+
         return view;
     }
 
@@ -122,7 +122,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         mCommentText.setMovementMethod(WPLinkMovementMethod.getInstance());
         mReplyField.setOnReplyListener(mReplyListener);
         mDetailHeader.setText(getNote().getSubject());
-        
+
         Map<String, JSONObject> noteActions = getNote().getActions();
         boolean hasModerateAction = false;
         if (noteActions.containsKey(APPROVE_TAG)) {
@@ -155,10 +155,10 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         } else {
             mTrashButton.setVisibility(View.GONE);
         }
-        
+
         if (!hasModerateAction)
             mModerateSection.setVisibility(View.GONE);
-        
+
         String url = getNote().queryJSON("body.items[last].header_link", "");
         if (!url.equals("")) {
             mDetailHeader.setUrl(url);
@@ -171,26 +171,26 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         if (arguments != null && (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA) || arguments.containsKey(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA))) {
             if (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA))
                 mReplyField.setText(arguments.getString(NotificationsActivity.NOTE_REPLY_EXTRA));
-            
+
             mReplyField.mTextField.requestFocus();
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null)
                 inputMethodManager.showSoftInput(mReplyField.mTextField, 0);
         }
-        
+
     }
-    
+
     @Override
     public void onPause(){
         super.onPause();
         dismissKeyboard();
     }
-    
+
     protected void dismissKeyboard(){
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0x0);
     }
-    
+
     private OnClickListener mModerateClickListener = new OnClickListener() {
 
         @Override
@@ -206,15 +206,15 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 String commentId = String.valueOf(JSONUtil.queryJSON(moderateAction,
                         "params.comment_id", -1));
                 String status = JSONUtil.queryJSON(moderateAction, "params.rest_body.status", "");
-                
+
                 if (getActivity() != null) {
                     ((NotificationsActivity)getActivity()).moderateComment(siteId, commentId, status, getNote());
                 }
-                
+
             }
         }
     };
-    
+
     public void animateModeration(boolean start) {
         // show some fancy animations
         for (int i = 0; i < mModerateContainer.getChildCount(); i++) {
@@ -235,9 +235,9 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 .getBaseContext(), (start) ? R.anim.blink : R.anim.fade_out);
         mModeratingText.setVisibility((start) ? View.VISIBLE : View.GONE);
         mModeratingText.startAnimation(moderatingAnimation);
-        
+
     }
-    
+
     private ReplyField.OnReplyListener mReplyListener = new ReplyField.OnReplyListener() {
         @Override
         public void onReply(ReplyField field, Editable replyText){
@@ -246,11 +246,11 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             dismissKeyboard();
             ReplyRow row = mReplyList.addReply(reply);
             ReplyResponseHandler handler = new ReplyResponseHandler(reply, row);
-            WordPress.restClient.replyToComment(reply, handler, handler);
+            WordPress.getRestClientUtils().replyToComment(reply, handler, handler);
             mScrollView.scrollTo(0, mReplyList.getBottom());
         }
     };
-    
+
     class ReplyResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener, View.OnClickListener {
         private Toast mToast;
         private Note.Reply mReply;
@@ -313,19 +313,19 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         public void onClick(View v){
             mRow.setFailed(false);
             mRow.setComplete(false);
-            WordPress.restClient.replyToComment(mReply, this, this);
+            WordPress.getRestClientUtils().replyToComment(mReply, this, this);
         }
-        
+
     }
-    
+
     public void setNote(Note note){
         mNote = note;
     }
-    
+
     public Note getNote(){
         return mNote;
     }
-    
+
     private class AsyncImageGetter implements Html.ImageGetter {
         private TextView mView;
         public AsyncImageGetter(TextView view){
@@ -375,7 +375,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             });
             return remote;
         }
-        
+
     }
 
     private class RemoteDrawable extends BitmapDrawable {
@@ -431,11 +431,11 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 mRemoteDrawable.draw(canvas);
             } else if (didFail()) {
                 mFailedDrawable.draw(canvas);
-            } else {                
+            } else {
                 mLoadingDrawable.draw(canvas);
             }
         }
-        
+
     }
 
     @Override
