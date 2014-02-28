@@ -221,22 +221,26 @@ public class NotificationsActivity extends WPActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.equals(mRefreshMenuItem)) {
-            refreshNotes();
-            return true;
-        } else if (item.getItemId() == android.R.id.home){
-            if (isXLarge()) {
-                // let WPActionBarActivity handle it (toggles menu drawer)
-                return super.onOptionsItemSelected(item);
-            } else {
-                FragmentManager fm = getSupportFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    popNoteDetail();
-                    return true;
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                refreshNotes();
+                return true;
+            case android.R.id.home:
+                if (isLarge()) {
+                    // let WPActionBarActivity handle it (toggles menu drawer)
+                    return super.onOptionsItemSelected(item);
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        popNoteDetail();
+                        return true;
+                    } else {
+                        return super.onOptionsItemSelected(item);
+                    }
                 }
-            }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

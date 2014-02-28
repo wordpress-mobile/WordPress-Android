@@ -217,7 +217,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     protected boolean isXLarge() {
-        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_XLARGE);
+    }
+
+    protected boolean isLarge() {
+        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
 
     /**

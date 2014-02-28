@@ -94,7 +94,7 @@ public class CommentsActivity extends WPActionBarActivity
                 updateCommentList();
                 return true;
             case android.R.id.home:
-                if (isXLarge()) {
+                if (isLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
