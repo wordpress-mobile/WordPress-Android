@@ -41,6 +41,7 @@ import java.util.Map;
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
+    private boolean mHasAutoRefreshedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private ListView mListView;
@@ -53,6 +54,7 @@ public class CommentsListFragment extends Fragment {
     private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
+    private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
 
     private ListView getListView() {
         return mListView;
@@ -123,11 +125,22 @@ public class CommentsListFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED);
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         setUpListView();
         getCommentAdapter().loadComments();
-        updateComments(false);
+        if (!mHasAutoRefreshedComments) {
+            updateComments(false);
+            mHasAutoRefreshedComments = true;
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -433,6 +446,7 @@ public class CommentsListFragment extends Fragment {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.putBoolean(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
         super.onSaveInstanceState(outState);
     }
 

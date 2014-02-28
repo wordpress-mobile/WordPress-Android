@@ -95,6 +95,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private OnCommentChangeListener mOnCommentChangeListener;
     private OnPostClickListener mOnPostClickListener;
 
+    private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
+    private static final String KEY_COMMENT_ID = "comment_id";
+
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
@@ -118,6 +121,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNote(note);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
+            long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+            setComment(localBlogId, commentId);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (hasComment()) {
+            outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
+            outState.putLong(KEY_COMMENT_ID, getCommentId());
+        }
     }
 
     @Override
@@ -313,7 +335,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * display the current comment
      */
     private void showComment() {
-        if (!hasActivity())
+        if (!hasActivity() || getView() == null)
             return;
 
         // these two views contain all the other views except the progress bar

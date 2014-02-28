@@ -48,8 +48,6 @@ public class CommentsActivity extends WPActionBarActivity
             if (commentId != 0) {
                 if (hasListFragment())
                     getListFragment().setHighlightedCommentId(commentId);
-                if (hasDetailFragment())
-                    getDetailFragment().setComment(WordPress.getCurrentLocalTableBlogId(), commentId);
             }
         }
     }
@@ -298,6 +296,7 @@ public class CommentsActivity extends WPActionBarActivity
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
         // retain the id of the highlighted comment
         if (hasListFragment()) {
             long commentId = getListFragment().getHighlightedCommentId();
