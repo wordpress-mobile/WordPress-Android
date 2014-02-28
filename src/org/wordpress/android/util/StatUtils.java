@@ -5,11 +5,9 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.widget.TextView;
 
@@ -44,9 +42,6 @@ public class StatUtils {
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
-
-    public static final String ACTION_STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
-    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
 
     /** Converts date in the form of 2013-07-18 to ms **/
     @SuppressLint("SimpleDateFormat")
@@ -225,15 +220,6 @@ public class StatUtils {
             e.printStackTrace();
         }
         return stat;
-    }
-
-    public static void broadcastSummaryUpdated(StatsSummary stats) {
-        if (stats == null)
-            return;
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
-        Intent intent = new Intent(ACTION_STATS_SUMMARY_UPDATED);
-        intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
-        lbm.sendBroadcast(intent);
     }
 
     /*

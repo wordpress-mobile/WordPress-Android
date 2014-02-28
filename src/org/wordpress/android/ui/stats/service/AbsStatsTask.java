@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.content.ContentResolver;
+import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -71,6 +72,7 @@ abstract class AbsStatsTask implements Runnable {
     final RestRequest.Listener responseListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject response) {
+            AppLog.d(AppLog.T.STATS, getTaskName() + " responded");
             new Thread() {
                 @Override
                 public void run() {
@@ -89,6 +91,10 @@ abstract class AbsStatsTask implements Runnable {
     };
 
     ContentResolver getContentResolver() {
-        return WordPress.getContext().getContentResolver();
+        return getContext().getContentResolver();
+    }
+
+    Context getContext() {
+        return WordPress.getContext();
     }
 }

@@ -25,9 +25,25 @@ import java.util.concurrent.TimeUnit;
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
 
-    // broadcast action used to notify clients of update start/end
+    // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
     public static final String EXTRA_IS_UPDATING = "is-updating";
+
+    // broadcast action to notify clients when summary data has changed
+    public static final String ACTION_STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
+    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AppLog.i(T.STATS, "service created");
+    }
+
+    @Override
+    public void onDestroy() {
+        AppLog.i(T.STATS, "service destroyed");
+        super.onDestroy();
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,7 +112,7 @@ public class StatsService extends Service {
                 executor.submit(new VideoPlaysTask(blogId));
                 */
 
-                AppLog.i(T.STATS, "stats update started");
+                AppLog.i(T.STATS, "update started");
                 broadcastUpdate(true);
                 try {
                     // prevent additional tasks from being submitted, then wait for all tasks to complete
@@ -106,13 +122,13 @@ public class StatsService extends Service {
                         executor.shutdownNow();
                     }
                 } catch (InterruptedException e) {
-                    AppLog.e(T.STATS, e);
+                    AppLog.w(T.STATS, "executor interrupted");
                     // (re-)cancel if current thread also interrupted
                     executor.shutdownNow();
                     // preserve interrupt status
                     Thread.currentThread().interrupt();
                 } finally {
-                    AppLog.i(T.STATS, "stats update ended");
+                    AppLog.i(T.STATS, "update ended");
                     broadcastUpdate(false);
                 }
             }

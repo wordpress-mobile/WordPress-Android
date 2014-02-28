@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,9 +17,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+
+import java.io.Serializable;
 
 /**
  * Fragment for summary stats. Only a single page.
@@ -54,9 +63,21 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         
         return view;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
+
         refreshSummary();
     }
 
@@ -72,39 +93,56 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                 if (TextUtils.isEmpty(blogId))
                     blogId = "0";
 
-                StatsSummary stats = StatUtils.getSummary(blogId);
-                int posts = (stats != null ? stats.getPosts() : 0);
-                int categories = (stats != null ? stats.getCategories() : 0);
-                int tags = (stats != null ? stats.getTags() : 0);
-                int followers = (stats != null ? stats.getFollowersBlog() : 0);
-                int comments = (stats != null ? stats.getFollowersComments() : 0);
-                int shares = (stats != null ? stats.getShares() : 0);
-
-                final String fmtPosts = FormatUtils.formatDecimal(posts);
-                final String fmtCategories = FormatUtils.formatDecimal(categories);
-                final String fmtTags = FormatUtils.formatDecimal(tags);
-                final String fmtFollowers = FormatUtils.formatDecimal(followers);
-                final String fmtComments = FormatUtils.formatDecimal(comments);
-                final String fmtShares = FormatUtils.formatDecimal(shares);
+                final StatsSummary stats = StatUtils.getSummary(blogId);
 
                 handler.post(new Runnable() {
                     public void run() {
-                        if (getActivity() == null)
-                            return;
-                        mPostsCountView.setText(fmtPosts);
-                        mCategoriesCountView.setText(fmtCategories);
-                        mTagsCountView.setText(fmtTags);
-                        mFollowersCountView.setText(fmtFollowers);
-                        mCommentsCountView.setText(fmtComments);
-                        mSharesCountView.setText(fmtShares);
+                        refreshSummary(stats);
                     }
                 });
             }
         }.start();
+    }
+
+    private void refreshSummary(final StatsSummary stats) {
+        if (getActivity() == null)
+            return;
+
+        if (stats == null){
+            mPostsCountView.setText("0");
+            mCategoriesCountView.setText("0");
+            mTagsCountView.setText("0");
+            mFollowersCountView.setText("0");
+            mCommentsCountView.setText("0");
+            mSharesCountView.setText("0");
+        } else {
+            mPostsCountView.setText(FormatUtils.formatDecimal(stats.getPosts()));
+            mCategoriesCountView.setText(FormatUtils.formatDecimal(stats.getCategories()));
+            mTagsCountView.setText(FormatUtils.formatDecimal(stats.getTags()));
+            mFollowersCountView.setText(FormatUtils.formatDecimal(stats.getFollowersBlog()));
+            mCommentsCountView.setText(FormatUtils.formatDecimal(stats.getFollowersComments()));
+            mSharesCountView.setText(FormatUtils.formatDecimal(stats.getShares()));
+        }
     }
     
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
+
+    /*
+     * receives broadcast when summary data has been updated
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatsService.ACTION_STATS_SUMMARY_UPDATED)) {
+                Serializable serial = intent.getSerializableExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA);
+                if (serial instanceof StatsSummary) {
+                    refreshSummary((StatsSummary) serial);
+                }
+            }
+        }
+    };
 }

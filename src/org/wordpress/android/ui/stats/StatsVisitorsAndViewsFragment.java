@@ -20,11 +20,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
+
+import java.io.Serializable;
 
 /**
  * Fragment for visitors and views stats. Has three pages, for DAY, WEEK and MONTH stats.
@@ -92,7 +94,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         super.onResume();
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.ACTION_STATS_SUMMARY_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
 
         refreshSummary();
     }
@@ -139,14 +141,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 final StatsSummary summary = StatUtils.getSummary(blogId);
                 handler.post(new Runnable() {
                     public void run() {
-                        refreshViews(summary);
+                        refreshSummary(summary);
                     }
                 });
             }
         }.start();
     }
 
-    private void refreshViews(final StatsSummary stats) {
+    private void refreshSummary(final StatsSummary stats) {
         if (getActivity() == null)
             return;
 
@@ -166,7 +168,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     @Override
-    public String getTitle() {
+    protected String getTitle() {
         return getString(R.string.stats_view_visitors_and_views);
     }
 
@@ -177,10 +179,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
-            if (action.equals(StatUtils.ACTION_STATS_SUMMARY_UPDATED)) {
-                AppLog.i(AppLog.T.STATS, "summary changed");
-                StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                refreshViews(summary);
+            if (action.equals(StatsService.ACTION_STATS_SUMMARY_UPDATED)) {
+                Serializable serial = intent.getSerializableExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA);
+                if (serial instanceof StatsSummary) {
+                    refreshSummary((StatsSummary) serial);
+                }
             }
         }
     };
