@@ -3,6 +3,14 @@
  */
 package org.wordpress.android.networking;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import android.os.AsyncTask;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -17,18 +25,10 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
-import org.wordpress.android.util.DeviceUtils;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class RestClientUtils {
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
@@ -61,11 +61,7 @@ public class RestClientUtils {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
         mRestClient = RestClientFactory.instantiate(queue);
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            mRestClient.setUserAgent(DeviceUtils.getBlackBerryUserAgent());
-        } else {
-            mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
-        }
+        mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
     }
 
     /**
