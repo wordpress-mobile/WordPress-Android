@@ -29,6 +29,10 @@ import java.util.HashSet;
  * Created by nbradbury on 1/29/14.
  */
 public class CommentAdapter extends BaseAdapter {
+    protected static interface DataLoadedListener {
+        public void onDataLoaded(boolean isEmpty);
+    }
+
     protected static interface OnLoadMoreListener {
         public void onLoadMore();
     }
@@ -38,6 +42,7 @@ public class CommentAdapter extends BaseAdapter {
     }
 
     private final LayoutInflater mInflater;
+    private final DataLoadedListener mDataLoadedListener;
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final OnSelectedItemsChangeListener mOnSelectedChangeListener;
 
@@ -57,10 +62,12 @@ public class CommentAdapter extends BaseAdapter {
     private boolean mEnableSelection;
 
     protected CommentAdapter(Context context,
+                             DataLoadedListener onDataLoadedListener,
                              OnLoadMoreListener onLoadMoreListener,
                              OnSelectedItemsChangeListener onChangeListener) {
         mInflater = LayoutInflater.from(context);
 
+        mDataLoadedListener = onDataLoadedListener;
         mOnLoadMoreListener = onLoadMoreListener;
         mOnSelectedChangeListener = onChangeListener;
 
@@ -338,6 +345,10 @@ public class CommentAdapter extends BaseAdapter {
                 mComments = (CommentList)(tmpComments.clone());
                 notifyDataSetChanged();
             }
+
+            if (mDataLoadedListener != null)
+                mDataLoadedListener.onDataLoaded(isEmpty());
+
             mIsLoadTaskRunning = false;
         }
     }

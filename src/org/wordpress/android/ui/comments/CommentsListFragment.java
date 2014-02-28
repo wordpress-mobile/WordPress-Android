@@ -44,6 +44,7 @@ public class CommentsListFragment extends Fragment {
 
     private ProgressBar mProgressLoadMore;
     private ListView mListView;
+    private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
 
@@ -59,6 +60,22 @@ public class CommentsListFragment extends Fragment {
 
     private CommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
+            /*
+             * called after comments have been loaded
+             */
+            CommentAdapter.DataLoadedListener dataLoadedListener = new CommentAdapter.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (!hasActivity())
+                        return;
+                    if (isEmpty) {
+                        showEmptyView();
+                    } else {
+                        hideEmptyView();
+                    }
+                }
+            };
+
             // adapter calls this to request more comments from server when it reaches the end
             CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
                 @Override
@@ -84,7 +101,10 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mCommentAdapter = new CommentAdapter(getActivity(), loadMoreListener, changeListener);
+            mCommentAdapter = new CommentAdapter(getActivity(),
+                                                 dataLoadedListener,
+                                                 loadMoreListener,
+                                                 changeListener);
         }
         return mCommentAdapter;
     }
@@ -128,7 +148,7 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setEmptyView(view.findViewById(android.R.id.empty));
+        mEmptyView = view.findViewById(android.R.id.empty);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -418,6 +438,16 @@ public class CommentsListFragment extends Fragment {
 
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
+    }
+
+    private void showEmptyView() {
+        if (mEmptyView != null)
+            mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyView() {
+        if (mEmptyView != null)
+            mEmptyView.setVisibility(View.GONE);
     }
 
     /*
