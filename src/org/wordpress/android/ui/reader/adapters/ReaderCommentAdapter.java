@@ -120,15 +120,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         CommentViewHolder holder;
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
-            holder = new CommentViewHolder();
-            holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
-            holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
-            holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
-            holder.txtReply = (TextView) convertView.findViewById(R.id.text_reply);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-            holder.spacerIndent = convertView.findViewById(R.id.spacer_indent);
-            holder.spacerTop = convertView.findViewById(R.id.spacer_top);
-            holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
+            holder = new CommentViewHolder(convertView);
             convertView.setTag(holder);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
@@ -197,20 +189,34 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_NEWER);
 
+        // hide divider if this is the last comment
+        holder.divider.setVisibility(position < getCount()-1 ? View.VISIBLE : View.INVISIBLE);
+
         return convertView;
     }
 
-
-
     private static class CommentViewHolder {
-        private TextView txtAuthor;
-        private TextView txtText;
-        private TextView txtDate;
-        private TextView txtReply;
-        private WPNetworkImageView imgAvatar;
-        private View spacerIndent;
-        private View spacerTop;
-        private ProgressBar progress;
+        private final TextView txtAuthor;
+        private final TextView txtText;
+        private final TextView txtDate;
+        private final TextView txtReply;
+        private final WPNetworkImageView imgAvatar;
+        private final View spacerIndent;
+        private final View spacerTop;
+        private final ProgressBar progress;
+        private final View divider;
+
+        CommentViewHolder(View view) {
+            txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
+            txtText = (TextView) view.findViewById(R.id.text_comment_text);
+            txtDate = (TextView) view.findViewById(R.id.text_comment_date);
+            txtReply = (TextView) view.findViewById(R.id.text_reply);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+            spacerIndent = view.findViewById(R.id.spacer_indent);
+            spacerTop = view.findViewById(R.id.spacer_top);
+            progress = (ProgressBar) view.findViewById(R.id.progress);
+            divider = view.findViewById(R.id.divider_comment);
+        }
     }
 
     /*
