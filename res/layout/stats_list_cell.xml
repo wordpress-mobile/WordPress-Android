@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/margin_small"
     android:paddingLeft="@dimen/margin_small"
-
+    android:paddingRight="@dimen/margin_small"
     android:paddingBottom="@dimen/margin_small">
 
     <LinearLayout

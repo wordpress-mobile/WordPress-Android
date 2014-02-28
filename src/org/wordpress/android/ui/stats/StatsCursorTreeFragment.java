@@ -320,6 +320,11 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
             } else {
                 View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
+                // remove the right padding so the child total aligns with the group total
+                childView.setPadding(childView.getPaddingLeft(),
+                                     childView.getPaddingTop(),
+                                     0,
+                                     childView.getPaddingBottom());
                 childContainer.addView(childView);
             }
         }
