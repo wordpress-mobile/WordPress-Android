@@ -139,8 +139,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 final StatsSummary summary = StatUtils.getSummary(blogId);
                 handler.post(new Runnable() {
                     public void run() {
-                        if (getActivity() != null)
-                            refreshViews(summary);
+                        refreshViews(summary);
                     }
                 });
             }
@@ -148,36 +147,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     private void refreshViews(final StatsSummary stats) {
-        final Handler handler = new Handler();
+        if (getActivity() == null)
+            return;
 
-        new Thread() {
-            @Override
-            public void run() {
-                int visitorsToday = (stats != null ? stats.getVisitorsToday() : 0);
-                int viewsToday = (stats != null ? stats.getViewsToday() : 0);
-                int visitorsBestEver = (stats != null ? stats.getViewsBestDayTotal() : 0);
-                int viewsAllTime = (stats != null ? stats.getViewsAllTime() : 0);
-                int commentsAllTime = (stats != null ? stats.getCommentsAllTime() : 0);
-
-                final String fmtVisitorsToday = FormatUtils.formatDecimal(visitorsToday);
-                final String fmtViewsToday = FormatUtils.formatDecimal(viewsToday);
-                final String fmtVisitorsBestEver = FormatUtils.formatDecimal(visitorsBestEver);
-                final String fmtViewsAllTime = FormatUtils.formatDecimal(viewsAllTime);
-                final String fmtCommentsAllTime = FormatUtils.formatDecimal(commentsAllTime);
-
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (getActivity() == null)
-                            return;
-                        mVisitorsToday.setText(fmtVisitorsToday);
-                        mViewsToday.setText(fmtViewsToday);
-                        mViewsBestEver.setText(fmtVisitorsBestEver);
-                        mViewsAllTime.setText(fmtViewsAllTime);
-                        mCommentsAllTime.setText(fmtCommentsAllTime);
-                    }
-                });
-            }
-        }.start();
+        if (stats == null) {
+            mVisitorsToday.setText("0");
+            mViewsToday.setText("0");
+            mViewsBestEver.setText("0");
+            mViewsAllTime.setText("0");
+            mCommentsAllTime.setText("0");
+        } else {
+            mVisitorsToday.setText(FormatUtils.formatDecimal(stats.getVisitorsToday()));
+            mViewsToday.setText(FormatUtils.formatDecimal(stats.getViewsToday()));
+            mViewsBestEver.setText(FormatUtils.formatDecimal(stats.getViewsBestDayTotal()));
+            mViewsAllTime.setText(FormatUtils.formatDecimal(stats.getViewsAllTime()));
+            mCommentsAllTime.setText(FormatUtils.formatDecimal(stats.getCommentsAllTime()));
+        }
     }
 
     @Override

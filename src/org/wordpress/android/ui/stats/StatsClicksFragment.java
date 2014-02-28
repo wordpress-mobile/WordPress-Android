@@ -161,7 +161,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
             } else {
-                holder.networkImageView.setImageDrawable(null);
+                holder.networkImageView.setImageResource(R.drawable.stats_blank_image);
             }
 
             // expand/collapse chevron

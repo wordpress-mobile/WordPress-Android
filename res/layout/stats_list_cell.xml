@@ -13,7 +13,6 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/stats_list_cell_image"
-            android:background="@drawable/stats_blank_image"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:layout_width="24dp"

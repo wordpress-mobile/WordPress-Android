@@ -96,6 +96,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
             
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
         }
     }
 

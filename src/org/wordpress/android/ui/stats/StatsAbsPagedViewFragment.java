@@ -148,23 +148,25 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     protected abstract Fragment getFragment(int position);
         
     @Override
-    public void onCursorLoaded(final Uri uri, final Cursor cursor) {
+    public void onCursorLoaded(final Uri uri, Cursor cursor) {
+        if (!cursor.moveToFirst())
+            return;
+
+        int colDate = cursor.getColumnIndex("date");
+        if (colDate == -1)
+            return;
+
+        final long date = cursor.getLong(colDate);
         final Handler handler = new Handler();
+
         new Thread() {
             @Override
             public void run() {
-                if (!cursor.moveToFirst())
-                    return;
-
-                int colDate = cursor.getColumnIndex("date");
-                if (colDate == -1)
-                    return;
-                long date = cursor.getLong(colDate);
                 long currentDate = StatUtils.getCurrentDateMs();
-
                 String timeframe = uri.getQueryParameter("timeframe");
                 if (timeframe == null)
                     return;
+
                 boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
                 boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());
 
