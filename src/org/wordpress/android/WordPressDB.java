@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
@@ -51,7 +52,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 25;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -164,6 +165,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
         CommentTable.createTables(db);
+        TrustedSslDomainTable.createTable(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -235,11 +237,14 @@ public class WordPressDB {
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
                 currentVersion++;
-            // version 23 added CommentTable.java, version 24 changed the comment table schema
-            case 22 :
+                // version 23 added CommentTable.java, version 24 changed the comment table schema
+            case 22:
                 currentVersion++;
             case 23:
                 CommentTable.reset(db);
+                currentVersion++;
+            case 24:
+                // create table TrustedSslDomainTable
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -274,22 +279,17 @@ public class WordPressDB {
     private void migrateDrafts() {
         try {
             // Migrate drafts to unified posts table
-            Cursor c = db.query("localdrafts", new String[] { "blogID",
-                    "title", "content", "picturePaths", "date",
-                    "categories", "tags", "status", "password",
-                    "latitude", "longitude" }, null, null, null, null,
-                    "id desc");
+            Cursor c = db.query("localdrafts",
+                    new String[]{"blogID", "title", "content", "picturePaths", "date", "categories", "tags", "status",
+                                 "password", "latitude", "longitude"}, null, null, null, null, "id desc");
             int numRows = c.getCount();
             c.moveToFirst();
 
             for (int i = 0; i < numRows; ++i) {
                 if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1),
-                            c.getString(2), "", c.getString(3),
-                            c.getLong(4), c.getString(5),
-                            c.getString(6), c.getString(7),
-                            c.getString(8), c.getDouble(9),
-                            c.getDouble(10), false, "", false);
+                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
+                            c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(
+                            10), false, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     savePost(post, c.getInt(0));
@@ -301,19 +301,16 @@ public class WordPressDB {
             db.delete("localdrafts", null, null);
 
             // pages
-            c = db.query("localpagedrafts", new String[] { "blogID",
-                    "title", "content", "picturePaths", "date",
-                    "status", "password" }, null, null, null, null,
-                    "id desc");
+            c = db.query("localpagedrafts",
+                    new String[]{"blogID", "title", "content", "picturePaths", "date", "status", "password"}, null,
+                    null, null, null, "id desc");
             numRows = c.getCount();
             c.moveToFirst();
 
             for (int i = 0; i < numRows; ++i) {
                 if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1),
-                            c.getString(2), "", c.getString(3),
-                            c.getLong(4), c.getString(5), "", "",
-                            c.getString(6), 0, 0, true, "", false);
+                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
+                            c.getString(5), "", "", c.getString(6), 0, 0, true, "", false);
                     post.setLocalDraft(true);
                     post.setPost_status("localdraft");
                     post.setIsPage(true);
@@ -324,7 +321,7 @@ public class WordPressDB {
             c.close();
             db.delete("localpagedrafts", null, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            // Ignore exception (localdrafts doesn't exist)
         }
     }
 
@@ -442,7 +439,7 @@ public class WordPressDB {
     public boolean isDotComAccountVisible(int blogId) {
         String[] args = {Integer.toString(blogId)};
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
-                " WHERE isHidden = 0 AND blogId=?", args);
+                                         " WHERE isHidden = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
@@ -459,6 +456,10 @@ public class WordPressDB {
     }
 
     public boolean saveBlog(Blog blog) {
+        if (blog.getLocalTableBlogId() == -1) {
+            return addBlog(blog);
+        }
+
         ContentValues values = new ContentValues();
         values.put("url", blog.getUrl());
         values.put("homeURL", blog.getHomeURL());
@@ -525,66 +526,77 @@ public class WordPressDB {
         }
     }
 
-    public List<Object> getBlog(int id) {
-        String[] fields = new String[]{"url", "blogName", "username", "password", "httpuser",
-                "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage",
-                "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location",
-                "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid",
-                "wpVersion", "postFormats", "lastCommentId", "isScaledImage", "scaledImgWidth",
-                "homeURL", "blog_options", "isAdmin", "isHidden"};
-        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + id, null, null, null, null);
+    public Blog instantiateBlogByLocalId(int localId) {
+        String[] fields =
+                new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
+                             "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService",
+                             "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
+                             "api_blogid", "wpVersion", "postFormats", "lastCommentId", "isScaledImage",
+                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
+        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + localId, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
 
-        List<Object> returnVector = new Vector<Object>();
+        Blog blog = new Blog();
         if (numRows > 0) {
             if (c.getString(0) != null) {
-                returnVector.add(c.getString(0));
-                returnVector.add(c.getString(1));
-                returnVector.add(c.getString(2));
-                returnVector.add(decryptPassword(c.getString(3)));
-                if (c.getString(4) == null) {
-                    returnVector.add("");
+                blog.setLocalTableBlogId(localId);
+                blog.setUrl(c.getString(c.getColumnIndex("url"))); // 0
+
+                blog.setBlogName(c.getString(c.getColumnIndex("blogName"))); // 1
+                blog.setUsername(c.getString(c.getColumnIndex("username"))); // 2
+                blog.setPassword(decryptPassword(c.getString(c.getColumnIndex("password")))); // 3
+                if (c.getString(c.getColumnIndex("httpuser")) == null) {
+                    blog.setHttpuser("");
                 } else {
-                    returnVector.add(c.getString(4));
+                    blog.setHttpuser(c.getString(c.getColumnIndex("httpuser")));
                 }
-                if (c.getString(5) == null) {
-                    returnVector.add("");
+                if (c.getString(c.getColumnIndex("httppassword")) == null) {
+                    blog.setHttppassword("");
                 } else {
-                    returnVector.add(decryptPassword(c.getString(5)));
+                    blog.setHttppassword(decryptPassword(c.getString(c.getColumnIndex("httppassword"))));
                 }
-                returnVector.add(c.getString(6));
-                returnVector.add(c.getInt(7));
-                returnVector.add(c.getInt(8));
-                returnVector.add(c.getString(9));
-                returnVector.add(c.getInt(10));
-                returnVector.add(c.getInt(11));
-                returnVector.add(c.getInt(12));
-                returnVector.add(c.getInt(13));
-                returnVector.add(c.getInt(14));
-                returnVector.add(c.getString(15));
-                returnVector.add(decryptPassword(c.getString(16)));
-                returnVector.add(c.getString(17));
-                returnVector.add(c.getString(18));
-                returnVector.add(c.getString(19));
-                returnVector.add(c.getString(20));
-                returnVector.add(c.getInt(21));
-                returnVector.add(c.getInt(22));
-                returnVector.add(c.getInt(23));
-                returnVector.add(c.getString(24));
-                returnVector.add(c.getString(25));
-                returnVector.add(c.getInt(26));
-                returnVector.add(c.getInt(27));
-            } else {
-                returnVector = null;
+                blog.setImagePlacement(c.getString(c.getColumnIndex("imagePlacement")));
+                blog.setFeaturedImageCapable(c.getInt(c.getColumnIndex("centerThumbnail")) > 0);
+                blog.setFullSizeImage(c.getInt(c.getColumnIndex("fullSizeImage")) > 0);
+                blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
+                blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
+                blog.setRunService(c.getInt(c.getColumnIndex("runService")) > 0);
+                blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
+                blog.setLocation(c.getInt(c.getColumnIndex("location")) > 0);
+                blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
+                if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
+                    blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));
+                }
+                if (c.getString(c.getColumnIndex("dotcom_password")) != null) {
+                    blog.setDotcom_password(decryptPassword(c.getString(c.getColumnIndex("dotcom_password"))));
+                }
+                if (c.getString(c.getColumnIndex("api_key")) != null) {
+                    blog.setApi_key(c.getString(c.getColumnIndex("api_key")));
+                }
+                if (c.getString(c.getColumnIndex("api_blogid")) != null) {
+                    blog.setApi_blogid(c.getString(c.getColumnIndex("api_blogid")));
+                }
+                if (c.getString(c.getColumnIndex("wpVersion")) != null) {
+                    blog.setWpVersion(c.getString(c.getColumnIndex("wpVersion")));
+                }
+                blog.setPostFormats(c.getString(c.getColumnIndex("postFormats")));
+                blog.setLastCommentId(c.getInt(c.getColumnIndex("lastCommentId")));
+                blog.setScaledImage(c.getInt(c.getColumnIndex("isScaledImage")) > 0);
+                blog.setScaledImageWidth(c.getInt(c.getColumnIndex("scaledImgWidth")));
+                blog.setHomeURL(c.getString(c.getColumnIndex("homeURL")));
+                if (c.getString(c.getColumnIndex("blog_options")) == null) {
+                    blog.setBlogOptions("");
+                } else {
+                    blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
+                }
+                blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
+                blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
             }
-        } else {
-            returnVector = null;
         }
         c.close();
-
-        return returnVector;
+        return blog;
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
@@ -600,7 +612,7 @@ public class WordPressDB {
 
         c.close();
         try {
-            return new Blog(id);
+            return instantiateBlogByLocalId(id);
         } catch (Exception e) {
             return null;
         }
@@ -677,11 +689,12 @@ public class WordPressDB {
             String[] args = {Integer.toString(remoteBlogId), xmlRpcUrl};
             return SqlUtils.intForQuery(db, sql, args);
         }
-   }
+    }
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
-        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?", new String[]{Integer.toString(remoteBlogId)});
-        if (localBlogID==0) {
+        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
+                new String[]{Integer.toString(remoteBlogId)});
+        if (localBlogID == 0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
         }
         return localBlogID;
@@ -811,6 +824,13 @@ public class WordPressDB {
         return (result == 1);
     }
 
+    public Object[] arrayListToArray(Object array) {
+        if (array instanceof ArrayList) {
+            return ((ArrayList) array).toArray();
+        }
+        return (Object[]) array;
+    }
+
     public boolean savePosts(List<?> postValues, int blogID, boolean isPage) {
         boolean returnValue = false;
         if (postValues.size() != 0) {
@@ -819,10 +839,10 @@ public class WordPressDB {
                     ContentValues values = new ContentValues();
                     Map<?, ?> thisHash = (Map<?, ?>) postValues.get(i);
                     values.put("blogID", blogID);
-                    if (thisHash.get((isPage) ? "page_id" : "postid") == null)
+                    if (thisHash.get((isPage) ? "page_id" : "postid") == null) {
                         return false;
-                    String postID = thisHash.get((isPage) ? "page_id" : "postid")
-                            .toString();
+                    }
+                    String postID = thisHash.get((isPage) ? "page_id" : "postid").toString();
                     values.put("postid", postID);
                     values.put("title", thisHash.get("title").toString());
                     Date d;
@@ -838,25 +858,22 @@ public class WordPressDB {
                         values.put("date_created_gmt", d.getTime());
                     } catch (Exception e) {
                         d = new Date((Long) values.get("dateCreated"));
-                        values.put("date_created_gmt",
-                                d.getTime() + (d.getTimezoneOffset() * 60000));
+                        values.put("date_created_gmt", d.getTime() + (d.getTimezoneOffset() * 60000));
                     }
-                    values.put("description", thisHash.get("description")
-                            .toString());
+                    values.put("description", thisHash.get("description").toString());
                     values.put("link", thisHash.get("link").toString());
                     values.put("permaLink", thisHash.get("permaLink").toString());
 
-                    Object[] cats = (Object[]) thisHash.get("categories");
+                    Object[] categories = arrayListToArray(thisHash.get("categories"));
                     JSONArray jsonArray = new JSONArray();
-                    if (cats != null) {
-                        for (int x = 0; x < cats.length; x++) {
-                            jsonArray.put(cats[x].toString());
+                    if (categories != null) {
+                        for (int x = 0; x < categories.length; x++) {
+                            jsonArray.put(categories[x].toString());
                         }
                     }
                     values.put("categories", jsonArray.toString());
 
-                    Object[] custom_fields = (Object[]) thisHash
-                            .get("custom_fields");
+                    Object[] custom_fields = arrayListToArray(thisHash.get("custom_fields"));
                     jsonArray = new JSONArray();
                     if (custom_fields != null) {
                         for (int x = 0; x < custom_fields.length; x++) {
@@ -864,71 +881,54 @@ public class WordPressDB {
                             // Update geo_long and geo_lat from custom fields, if
                             // found:
                             Map<?, ?> customField = (Map<?, ?>) custom_fields[x];
-                            if (customField.get("key") != null
-                                    && customField.get("value") != null) {
-                                if (customField.get("key").equals("geo_longitude"))
-                                    values.put("longitude", customField
-                                            .get("value").toString());
-                                if (customField.get("key").equals("geo_latitude"))
-                                    values.put("latitude", customField.get("value")
-                                            .toString());
+                            if (customField.get("key") != null && customField.get("value") != null) {
+                                if (customField.get("key").equals("geo_longitude")) {
+                                    values.put("longitude", customField.get("value").toString());
+                                }
+                                if (customField.get("key").equals("geo_latitude")) {
+                                    values.put("latitude", customField.get("value").toString());
+                                }
                             }
                         }
                     }
                     values.put("custom_fields", jsonArray.toString());
 
-                    values.put("mt_excerpt",
-                            thisHash.get((isPage) ? "excerpt" : "mt_excerpt")
-                                    .toString());
-                    values.put("mt_text_more",
-                            thisHash.get((isPage) ? "text_more" : "mt_text_more")
-                                    .toString());
-                    values.put("mt_allow_comments",
-                            (Integer) thisHash.get("mt_allow_comments"));
-                    values.put("mt_allow_pings",
-                            (Integer) thisHash.get("mt_allow_pings"));
+                    values.put("mt_excerpt", thisHash.get((isPage) ? "excerpt" : "mt_excerpt").toString());
+                    values.put("mt_text_more", thisHash.get((isPage) ? "text_more" : "mt_text_more").toString());
+                    values.put("mt_allow_comments", (Integer) thisHash.get("mt_allow_comments"));
+                    values.put("mt_allow_pings", (Integer) thisHash.get("mt_allow_pings"));
                     values.put("wp_slug", thisHash.get("wp_slug").toString());
-                    values.put("wp_password", thisHash.get("wp_password")
-                            .toString());
-                    values.put("wp_author_id", thisHash.get("wp_author_id")
-                            .toString());
-                    values.put("wp_author_display_name",
-                            thisHash.get("wp_author_display_name").toString());
-                    values.put("post_status",
-                            thisHash.get((isPage) ? "page_status" : "post_status")
-                                    .toString());
+                    values.put("wp_password", thisHash.get("wp_password").toString());
+                    values.put("wp_author_id", thisHash.get("wp_author_id").toString());
+                    values.put("wp_author_display_name", thisHash.get("wp_author_display_name").toString());
+                    values.put("post_status", thisHash.get((isPage) ? "page_status" : "post_status").toString());
                     values.put("userid", thisHash.get("userid").toString());
 
                     int isPageInt = 0;
                     if (isPage) {
                         isPageInt = 1;
                         values.put("isPage", true);
-                        values.put("wp_page_parent_id",
-                                thisHash.get("wp_page_parent_id").toString());
-                        values.put("wp_page_parent_title",
-                                thisHash.get("wp_page_parent_title").toString());
+                        values.put("wp_page_parent_id", thisHash.get("wp_page_parent_id").toString());
+                        values.put("wp_page_parent_title", thisHash.get("wp_page_parent_title").toString());
                     } else {
-                        values.put("mt_keywords", thisHash.get("mt_keywords")
-                                .toString());
+                        values.put("mt_keywords", thisHash.get("mt_keywords").toString());
                         try {
-                            values.put("wp_post_format",
-                                    thisHash.get("wp_post_format").toString());
+                            values.put("wp_post_format", thisHash.get("wp_post_format").toString());
                         } catch (Exception e) {
                             values.put("wp_post_format", "");
                         }
                     }
 
-                    int result = db.update(POSTS_TABLE, values, "postID=" + postID
-                            + " AND isPage=" + isPageInt, null);
-                    if (result == 0)
+                    int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
+                    if (result == 0) {
                         returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-                    else
+                    } else {
                         returnValue = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
         }
         return (returnValue);
     }

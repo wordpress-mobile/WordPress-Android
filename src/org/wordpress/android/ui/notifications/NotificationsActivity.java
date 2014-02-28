@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.wordpress.android.WordPress.restClient;
+import static org.wordpress.android.WordPress.getRestClientUtils;
 
 public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
@@ -199,7 +199,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                         }
                     }
                 };
-                restClient.getNotifications(params, handler, handler);
+                getRestClientUtils().getNotifications(params, handler, handler);
             }
         } else {
             // on a tablet: open first note if none selected
@@ -273,38 +273,35 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         // if note is "unread" set note to "read"
         if (note.isUnread()) {
             // send a request to mark note as read
-            restClient.markNoteAsRead(note,
-                new RestRequest.Listener(){
-                    @Override
-                    public void onResponse(JSONObject response){
-                        if (isFinishing())
-                            return;
+            getRestClientUtils().markNoteAsRead(note, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (isFinishing()) return;
 
-                        final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
+                            final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
 
-                        note.setUnreadCount("0");
-                        if (notesAdapter.getPosition(note) < 0) {
-                            // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
-                            // in the adapter and find a match with the noteID
-                            for (int i=0; i<notesAdapter.getCount(); i++) {
-                                Note item = notesAdapter.getItem(i);
-                                if( item.getId().equals(note.getId()) ) {
-                                    item.setUnreadCount("0");
-                                    break;
+                            note.setUnreadCount("0");
+                            if (notesAdapter.getPosition(note) < 0) {
+                                // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
+                                // in the adapter and find a match with the noteID
+                                for (int i = 0; i < notesAdapter.getCount(); i++) {
+                                    Note item = notesAdapter.getItem(i);
+                                    if (item.getId().equals(note.getId())) {
+                                        item.setUnreadCount("0");
+                                        break;
+                                    }
                                 }
                             }
+
+                            WordPress.wpDB.addNote(note, false); //Update the DB
+                            notesAdapter.notifyDataSetChanged();
                         }
-                       
-                        WordPress.wpDB.addNote(note, false); //Update the DB
-                        notesAdapter.notifyDataSetChanged();
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
+                        }
                     }
-                },
-                new RestRequest.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
-                    }
-                }
             );
         }
 
@@ -355,7 +352,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                         }
                     }
                 };
-                WordPress.restClient.getNotifications(params, handler, handler);
+                WordPress.getRestClientUtils().getNotifications(params, handler, handler);
             }
         };
         RestRequest.ErrorListener failure = new RestRequest.ErrorListener(){
@@ -372,7 +369,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 }
             }
         };
-        WordPress.restClient.moderateComment(siteId, commentId, status, success, failure);
+        WordPress.getRestClientUtils().moderateComment(siteId, commentId, status, success, failure);
     }
 
     /*
@@ -448,9 +445,11 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 adapter.addAll(new ArrayList<Note>(), true);
 
                 Context context = NotificationsActivity.this;
-                if(context!=null)
-                    ToastUtils.showToastOrAuthAlert(context, error, context.getString(R.string.error_refresh_notifications));
-                
+                if (context != null) {
+                    ToastUtils.showToastOrAuthAlert(context, error, context.getString(
+                            R.string.error_refresh_notifications));
+                }
+
                 stopAnimatingRefreshButton(mRefreshMenuItem);
                 mShouldAnimateRefreshButton = false;
             }
@@ -458,20 +457,18 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
     }
 
-    private void updateLastSeen(String timestamp){
-        restClient.markNotificationsSeen(timestamp,
-            new RestRequest.Listener(){
-                @Override
-                public void onResponse(JSONObject response){
-                    AppLog.d(T.NOTIFS, String.format("Set last seen time %s", response));
+    private void updateLastSeen(String timestamp) {
+        getRestClientUtils().markNotificationsSeen(timestamp, new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(T.NOTIFS, String.format("Set last seen time %s", response));
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.d(T.NOTIFS, String.format("Could not set last seen time %s", error));
+                    }
                 }
-            },
-            new RestRequest.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error){
-                    AppLog.d(T.NOTIFS, String.format("Could not set last seen time %s", error));
-                }
-            }
         );
     }
 
@@ -489,7 +486,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 adapter.addAll(notes, false);
             }
         };
-        restClient.getNotifications(params, notesHandler, notesHandler);
+        getRestClientUtils().getNotifications(params, notesHandler, notesHandler);
     }
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {

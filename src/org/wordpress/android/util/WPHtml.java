@@ -838,16 +838,16 @@ class HtmlToSpannedConverter implements ContentHandler {
         String src = attributes.getValue("android-uri");
         ImageHelper ih = new ImageHelper();
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
-
-        if (mediaData != null || (src != null && src.contains("video"))) {
-            Bitmap resizedBitmap;
-
-            if (mediaData != null)
-                resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
-            else
+        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, src);
+        if (resizedBitmap == null && src != null) {
+            if (src.contains("video")) {
                 resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
+            } else {
+                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
+            }
+        }
 
+        if (resizedBitmap != null) {
             int len = text.length();
             text.append("\uFFFC");
 
