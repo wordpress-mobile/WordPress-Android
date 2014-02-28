@@ -231,6 +231,10 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
+        // stop animating the refresh button to prevent it from appearing in the
+        // reader fragment's ActionBar
+        onAnimateRefreshButton(false);
+
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
