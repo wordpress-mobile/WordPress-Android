@@ -149,7 +149,10 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
-            getListView().setAdapter(getPostListAdapter());
+            if (getListView().getAdapter() == null) {
+                getListView().setAdapter(getPostListAdapter());
+            }
+
             getPostListAdapter().loadPosts();
         }
     }
@@ -177,11 +180,13 @@ public class PostsListFragment extends ListFragment {
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
-        if (!loadMore) {
+        int postCount = getPostListAdapter().getRemotePostCount();
+        if (loadMore) {
+            postCount += POSTS_REQUEST_COUNT;
+        } else {
             mOnRefreshListener.onRefresh(true);
-            postCount = POSTS_REQUEST_COUNT;
         }
+
         List<Object> apiArgs = new Vector<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(mIsPage);

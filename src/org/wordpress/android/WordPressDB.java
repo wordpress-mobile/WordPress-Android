@@ -928,6 +928,10 @@ public class WordPressDB {
                         values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
                     }
 
+                    if (shouldOverwrite) {
+                        values.put("isLocalChange", SqlUtils.boolToSql(false));
+                    }
+
                     String whereClause = "blogID=? AND postID=? AND isPage=?";
                     if (!shouldOverwrite) {
                         whereClause += " AND NOT isLocalChange=1";
