@@ -58,10 +58,18 @@ public class ToastUtils {
         JSONObject errorObj = VolleyUtils.volleyErrorToJSON(error);
         if (errorObj != null) {
             try {
-                message = (String) errorObj.get("message");
-                String error_code = (String) errorObj.get("error");
-                if (error_code!=null && error_code.equals("invalid_token"))
-                    isInvalidTokenError = true;
+                if (errorObj.has("error_description")) { //OAuth token request error
+                    //{"error_description":"Incorrect username or password.","error":"invalid_request"}
+                    message = (String) errorObj.get("error_description");
+                    String error_code = (String) errorObj.get("error");
+                    if (error_code!=null && error_code.equals("invalid_request") && message.toLowerCase().contains("incorrect username or password"))
+                        isInvalidTokenError = true;
+                } else {
+                    message = (String) errorObj.get("message");
+                    String error_code = (String) errorObj.get("error");
+                    if (error_code!=null && error_code.equals("invalid_token"))
+                        isInvalidTokenError = true;
+                }
             } catch (JSONException e) {
                 AppLog.e(T.API, e);
             }
