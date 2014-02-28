@@ -350,6 +350,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return (getActivity() != null && !isRemoving());
     }
 
+    private boolean hostIsReaderActivity() {
+        return (getActivity() instanceof ReaderActivity);
+    }
+
     /*
      * full-screen mode hides the ActionBar and icon bar
      */
@@ -453,9 +457,11 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // retain title of the host activity, then clear it until post is loaded
-        mOriginalTitle = getTitle();
-        setTitle(null);
+        // retain title of the host if it's the reader activity, then clear it until post is loaded
+        if (activity instanceof ReaderActivity) {
+            mOriginalTitle = getTitle();
+            setTitle(null);
+        }
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
@@ -483,7 +489,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public void onDetach() {
         // return the activity's title to what it was
-        if (getActivity() != null && mOriginalTitle != null) {
+        if (hostIsReaderActivity() && mOriginalTitle != null) {
             setTitle(mOriginalTitle);
         }
         super.onDetach();
@@ -1291,9 +1297,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 return;
             }
 
-            // set the activity title to the post's title
+            // set the activity title to the post's title if this is being shown in the reader
             final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
-            setTitle(postTitle);
+            if (hostIsReaderActivity())
+                setTitle(postTitle);
 
             txtTitle.setText(postTitle);
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));

@@ -94,10 +94,15 @@ public class CommentsActivity extends WPActionBarActivity
                 updateCommentList();
                 return true;
             case android.R.id.home:
-                FragmentManager fm = getSupportFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStack();
-                    return true;
+                if (isXLarge()) {
+                    // let WPActionBarActivity handle it (toggles menu drawer)
+                    return super.onOptionsItemSelected(item);
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
                 }
                 break;
         }

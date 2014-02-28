@@ -125,8 +125,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mIsXLargeDevice = true;
+
+        mIsXLargeDevice = ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -214,11 +214,22 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
+     * returns true if this is an extra-large device in landscape mode
+     */
+    protected boolean isXLargeLandscape() {
+        return mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    protected boolean isXLarge() {
+        return mIsXLargeDevice;
+    }
+
+    /**
      * Attach a menu drawer to the Activity
      * Set to be a static drawer if on a landscape x-large device
      */
     private MenuDrawer attachMenuDrawer() {
-        mIsStaticMenuDrawer = mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        mIsStaticMenuDrawer = isXLargeLandscape();
         final MenuDrawer menuDrawer;
         if (mIsStaticMenuDrawer) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
@@ -350,7 +361,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     protected void startActivityWithDelay(final Intent i) {
-        if (mIsXLargeDevice && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isXLargeLandscape()) {
             // Tablets in landscape don't need a delay because the menu drawer doesn't close
             startActivity(i);
         } else {
