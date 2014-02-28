@@ -350,7 +350,7 @@ public class ReaderActivity extends WPActionBarActivity
      * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
      */
     public boolean isFullScreenSupported() {
-        return (SysUtils.isGteAndroid4());
+        return (SysUtils.isGteAndroid4()) && !isStaticMenuDrawer();
     }
 
     /*

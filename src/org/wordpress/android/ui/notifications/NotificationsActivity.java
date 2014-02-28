@@ -225,10 +225,15 @@ public class NotificationsActivity extends WPActionBarActivity
             refreshNotes();
             return true;
         } else if (item.getItemId() == android.R.id.home){
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                popNoteDetail();
-                return true;
+            if (isXLarge()) {
+                // let WPActionBarActivity handle it (toggles menu drawer)
+                return super.onOptionsItemSelected(item);
+            } else {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    popNoteDetail();
+                    return true;
+                }
             }
         }
         return super.onOptionsItemSelected(item);

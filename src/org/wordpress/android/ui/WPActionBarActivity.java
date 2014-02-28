@@ -111,8 +111,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isAnimatingRefreshButton;
     protected boolean mShouldAnimateRefreshButton;
     protected boolean mShouldFinish;
-    private boolean mIsXLargeDevice;
-    private boolean mIsStaticMenuDrawer;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
@@ -125,8 +123,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mIsXLargeDevice = ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -217,11 +213,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * returns true if this is an extra-large device in landscape mode
      */
     protected boolean isXLargeLandscape() {
-        return mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        return isXLarge() && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
     protected boolean isXLarge() {
-        return mIsXLargeDevice;
+        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
     }
 
     /**
@@ -229,9 +225,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Set to be a static drawer if on a landscape x-large device
      */
     private MenuDrawer attachMenuDrawer() {
-        mIsStaticMenuDrawer = isXLargeLandscape();
         final MenuDrawer menuDrawer;
-        if (mIsStaticMenuDrawer) {
+        if (isStaticMenuDrawer()) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
@@ -248,7 +243,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public boolean isStaticMenuDrawer() {
-        return mIsStaticMenuDrawer;
+        return isXLargeLandscape();
     }
 
     /*
@@ -691,7 +686,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        if (mIsXLargeDevice) {
+        if (isXLarge()) {
             if (mMenuDrawer != null) {
                 // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
                 View content = mMenuDrawer.getContentContainer().getChildAt(0);
