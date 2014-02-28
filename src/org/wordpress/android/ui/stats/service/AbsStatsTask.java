@@ -9,6 +9,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 2/25/14.
@@ -52,7 +53,7 @@ abstract class AbsStatsTask implements Runnable {
             try {
                 mSyncObject.wait(WAIT_TIMEOUT);
             } catch (InterruptedException e) {
-                AppLog.w(AppLog.T.STATS, getTaskName() + " interrupted");
+                AppLog.w(T.STATS, getTaskName() + " interrupted");
             }
         }
     }
@@ -72,7 +73,7 @@ abstract class AbsStatsTask implements Runnable {
     final RestRequest.Listener responseListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject response) {
-            AppLog.d(AppLog.T.STATS, getTaskName() + " responded");
+            AppLog.d(T.STATS, getTaskName() + " responded");
             new Thread() {
                 @Override
                 public void run() {
@@ -85,7 +86,7 @@ abstract class AbsStatsTask implements Runnable {
     final RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            AppLog.e(AppLog.T.STATS, getTaskName() + " failed", error);
+            AppLog.e(T.STATS, getTaskName() + " failed", error);
             notifyResponseReceived();
         }
     };

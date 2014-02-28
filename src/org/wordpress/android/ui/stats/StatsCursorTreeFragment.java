@@ -27,7 +27,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -203,7 +202,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     mAdapter.setChildrenCursor(loader.getId(), data);
                 } catch (NullPointerException e) {
                     // do nothing
-                    AppLog.e(AppLog.T.STATS, e);
                 }
             }
         }

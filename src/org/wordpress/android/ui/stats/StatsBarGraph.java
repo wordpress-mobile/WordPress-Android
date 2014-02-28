@@ -17,8 +17,8 @@ import org.wordpress.android.R;
  */
 class StatsBarGraph extends GraphView {
 
-	public StatsBarGraph(Context context, String title) {
-		super(context, title);
+	public StatsBarGraph(Context context) {
+		super(context, "");
 
         setProperties();
 	}

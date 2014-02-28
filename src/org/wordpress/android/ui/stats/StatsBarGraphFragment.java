@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -64,7 +63,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+        getActivity().getContentResolver().registerContentObserver(StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver);
     }
 
     @Override
@@ -87,11 +86,12 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         if (TextUtils.isEmpty(blogId))
             blogId = "0";
         StatsBarChartUnit unit = getBarChartUnit();
-        return new CursorLoader(getActivity(), getUri(), null, "blogId=? AND unit=?", new String[] { blogId, unit.name() }, null);
-    }
-
-    private Uri getUri() {
-        return StatsContentProvider.STATS_BAR_CHART_DATA_URI;
+        return new CursorLoader(getActivity(),
+                                StatsContentProvider.STATS_BAR_CHART_DATA_URI,
+                                null,
+                                "blogId=? AND unit=?",
+                                new String[] { blogId, unit.name() },
+                                null);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
                             graphView = (GraphView) mGraphContainer.getChildAt(0);
                         } else {
                             mGraphContainer.removeAllViews();
-                            graphView = new StatsBarGraph(getActivity(), "");
+                            graphView = new StatsBarGraph(getActivity());
                             mGraphContainer.addView(graphView);
                         }
 

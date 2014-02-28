@@ -289,7 +289,6 @@ public class StatsActivity extends WPActionBarActivity {
         // split layout into two for 720DP tablets and 600DP tablets in landscape
         if (Utils.getSmallestWidthDP() >= TABLET_720DP || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape()))
             loadSplitLayout();
-
     }
 
     private boolean isInLandscape() {
@@ -297,11 +296,7 @@ public class StatsActivity extends WPActionBarActivity {
             Display display = getWindowManager().getDefaultDisplay();
             Point point = new Point();
             display.getSize(point);
-            if (point.y < point.x) {
-                return true;
-            } else {
-                return false;
-            }
+            return (point.y < point.x);
         } else {
             return false;
         }
