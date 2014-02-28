@@ -206,7 +206,6 @@ public class PostsListFragment extends ListFragment {
                     if (mProgressFooterView != null) {
                         mProgressFooterView.setVisibility(View.GONE);
                     }
-                    return;
                 }
 
                 getPostListAdapter().loadPosts();
