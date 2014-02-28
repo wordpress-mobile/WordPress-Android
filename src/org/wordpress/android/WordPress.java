@@ -34,8 +34,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
@@ -400,6 +400,7 @@ public class WordPress extends Application {
     public static void signOut(Context context) {
         removeWpComUserRelatedData(context);
 
+        TrustedSslDomainTable.emptyTable();
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
@@ -481,11 +482,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    if (DeviceUtils.getInstance().isBlackBerry()) {
-                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-                    } else {
-                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    }
+                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
@@ -508,11 +505,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    if (DeviceUtils.getInstance().isBlackBerry()) {
-                        defaultHeaders.put("User-Agent", DeviceUtils.getBlackBerryUserAgent());
-                    } else {
-                        defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    }
+                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);

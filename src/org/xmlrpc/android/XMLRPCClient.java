@@ -25,11 +25,15 @@ import android.util.Xml;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
@@ -39,7 +43,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 
 /**
  * A WordPress XMLRPC Client.
@@ -59,74 +63,65 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
-    private ConnectionClient client;
-    private HttpPost postMethod;
-    private XmlSerializer serializer;
-    private HttpParams httpParams;
+    private DefaultHttpClient mClient;
+    private HttpPost mPostMethod;
+    private XmlSerializer mSerializer;
+    private HttpParams mHttpParams;
 
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
      * @param XMLRPC server URI
      */
     public XMLRPCClient(URI uri, String httpuser, String httppasswd) {
-        postMethod = new HttpPost(uri);
-        postMethod.addHeader("Content-Type", "text/xml");
+        mPostMethod = new HttpPost(uri);
+        mPostMethod.addHeader("Content-Type", "text/xml");
+        mPostMethod.addHeader("charset", "UTF-8");
+        mPostMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
 
-        postMethod.addHeader("charset", "UTF-8");
+        mHttpParams = mPostMethod.getParams();
+        HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
 
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            postMethod.addHeader("User-Agent", DeviceUtils.getBlackBerryUserAgent());
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
+        mClient = instantiateClientForUri(uri, credentials);
+
+        mSerializer = Xml.newSerializer();
+    }
+
+    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
+        DefaultHttpClient client;
+        if (TrustedSslDomainTable.isDomainTrusted(uri.getHost())) {
+            if (uri.getScheme() != null && uri.getScheme().equals("https")) {
+                int port = uri.getPort();
+                if (port == -1) {
+                    port = 443;
+                }
+                try {
+                    client = new ConnectionClient(credentials, port);
+                } catch (KeyManagementException e) {
+                    client = new ConnectionClient(credentials);
+                } catch (NoSuchAlgorithmException e) {
+                    client = new ConnectionClient(credentials);
+                } catch (KeyStoreException e) {
+                    client = new ConnectionClient(credentials);
+                } catch (UnrecoverableKeyException e) {
+                    client = new ConnectionClient(credentials);
+                }
+            } else {
+                // that case should never happen, TrustedSslDomainTable should only contain ssl hosts
+                client = new ConnectionClient(credentials);
+            }
         } else {
-            postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
+            client = new DefaultHttpClient();
+            HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
+            BasicCredentialsProvider cP = new BasicCredentialsProvider();
+            cP.setCredentials(AuthScope.ANY, credentials);
+            client.setCredentialsProvider(cP);
         }
-
-        httpParams = postMethod.getParams();
-        HttpProtocolParams.setUseExpectContinue(httpParams, false);
-
-        //username & password not needed
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(httpuser, httppasswd);
-
-        //this gets connections working over https
-        if (uri.getScheme() != null){
-            if(uri.getScheme().equals("https")) {
-                if(uri.getPort() == -1)
-                    try {
-                        client = new ConnectionClient(creds, 443);
-                    } catch (KeyManagementException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (NoSuchAlgorithmException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (KeyStoreException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (UnrecoverableKeyException e) {
-                        client = new ConnectionClient(creds);
-                    }
-                    else
-                        try {
-                            client = new ConnectionClient(creds, uri.getPort());
-                        } catch (KeyManagementException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (NoSuchAlgorithmException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (KeyStoreException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (UnrecoverableKeyException e) {
-                            client = new ConnectionClient(creds);
-                        }
-            }
-            else {
-                client = new ConnectionClient(creds);
-            }
-        }
-        else{
-            client = new ConnectionClient(creds);
-        }
-
-        serializer = Xml.newSerializer();
+        return client;
     }
 
     public void addQuickPostHeader(String type) {
-        postMethod.addHeader("WP-QUICK-POST", type);
+        mPostMethod.addHeader("WP-QUICK-POST", type);
     }
 
     /**
@@ -151,9 +146,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     public void setAuthorizationHeader(String authToken) {
         if( authToken != null)
-            postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
+            mPostMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
         else
-            postMethod.removeHeaders("Authorization");
+            mPostMethod.removeHeaders("Authorization");
     }
 
     /**
@@ -296,24 +291,24 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
 
             FileWriter fileWriter = new FileWriter(tempFile);
-            serializer.setOutput(fileWriter);
+            mSerializer.setOutput(fileWriter);
 
-            serializer.startDocument(null, null);
-            serializer.startTag(null, TAG_METHOD_CALL);
+            mSerializer.startDocument(null, null);
+            mSerializer.startTag(null, TAG_METHOD_CALL);
             // set method name
-            serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            mSerializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
             if (params != null && params.length != 0) {
                 // set method params
-                serializer.startTag(null, TAG_PARAMS);
+                mSerializer.startTag(null, TAG_PARAMS);
                 for (int i = 0; i < params.length; i++) {
-                    serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-                    XMLRPCSerializer.serialize(serializer, params[i]);
-                    serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                    mSerializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    XMLRPCSerializer.serialize(mSerializer, params[i]);
+                    mSerializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
                 }
-                serializer.endTag(null, TAG_PARAMS);
+                mSerializer.endTag(null, TAG_PARAMS);
             }
-            serializer.endTag(null, TAG_METHOD_CALL);
-            serializer.endDocument();
+            mSerializer.endTag(null, TAG_METHOD_CALL);
+            mSerializer.endDocument();
 
             fileWriter.flush();
             fileWriter.close();
@@ -321,42 +316,42 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"");
             fEntity.setContentType("text/xml");
             //fEntity.setChunked(true);
-            postMethod.setEntity(fEntity);
+            mPostMethod.setEntity(fEntity);
         } else {
             StringWriter bodyWriter = new StringWriter();
-            serializer.setOutput(bodyWriter);
+            mSerializer.setOutput(bodyWriter);
 
-            serializer.startDocument(null, null);
-            serializer.startTag(null, TAG_METHOD_CALL);
+            mSerializer.startDocument(null, null);
+            mSerializer.startTag(null, TAG_METHOD_CALL);
             // set method name
-            serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            mSerializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
             if (params != null && params.length != 0) {
                 // set method params
-                serializer.startTag(null, TAG_PARAMS);
+                mSerializer.startTag(null, TAG_PARAMS);
                 for (int i = 0; i < params.length; i++) {
-                    serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    mSerializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
                     if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
-                        XMLRPCSerializer.serialize(serializer, params[i]);
+                        XMLRPCSerializer.serialize(mSerializer, params[i]);
                     } else {
-                        XMLRPCSerializer.serialize(serializer, params[i]);
+                        XMLRPCSerializer.serialize(mSerializer, params[i]);
                     }
-                    serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                    mSerializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
                 }
-                serializer.endTag(null, TAG_PARAMS);
+                mSerializer.endTag(null, TAG_PARAMS);
             }
-            serializer.endTag(null, TAG_METHOD_CALL);
-            serializer.endDocument();
+            mSerializer.endTag(null, TAG_METHOD_CALL);
+            mSerializer.endDocument();
 
             HttpEntity entity = new StringEntity(bodyWriter.toString());
             //Log.i("WordPress", bodyWriter.toString());
-            postMethod.setEntity(entity);
+            mPostMethod.setEntity(entity);
         }
 
-        //set timeout to 40 seconds, does it need to be set for both client and method?
-        client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-        postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        //set timeout to 40 seconds, does it need to be set for both mClient and method?
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
     }
 
     /**
@@ -448,7 +443,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 preparePostMethod(method, params, tempFile);
 
                 // execute HTTP POST request
-                HttpResponse response = client.execute(postMethod);
+                HttpResponse response = mClient.execute(mPostMethod);
                 int statusCode = response.getStatusLine().getStatusCode();
                 deleteTempFile(method, tempFile);
                 if (statusCode != HttpStatus.SC_OK) {

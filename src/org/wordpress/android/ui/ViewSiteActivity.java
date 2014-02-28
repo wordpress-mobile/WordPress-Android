@@ -35,6 +35,8 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
     }
 
     private void loadSiteURL() {
+        if (mBlog == null)
+            return;
         String siteURL = null;
         Gson gson = new Gson();
         Type type = new TypeToken<Map<?, ?>>() {}.getType();

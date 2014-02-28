@@ -6,11 +6,13 @@ import android.webkit.URLUtil;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.SSLHandshakeException;
+
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
 
@@ -41,6 +45,8 @@ public class SetupBlog {
     private String mSelfHostedURL;
 
     private boolean mHttpAuthRequired;
+    private boolean mErroneousSslCertificate;
+    private boolean mAllSslCertificatesTrusted;
 
     public SetupBlog() {
     }
@@ -89,6 +95,14 @@ public class SetupBlog {
         return mHttpAuthRequired;
     }
 
+    public void setAllSslCertificatesTrusted(boolean allSslCertificatesTrusted) {
+        mAllSslCertificatesTrusted = allSslCertificatesTrusted;
+    }
+
+    public boolean isErroneousSslCertificates() {
+        return mErroneousSslCertificate;
+    }
+
     public List<Map<String, Object>> getBlogList() {
         if (mSelfHostedURL != null && mSelfHostedURL.length() != 0) {
             mXmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedURL);
@@ -111,6 +125,9 @@ public class SetupBlog {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
+        if (mAllSslCertificatesTrusted) {
+            TrustedSslDomainTable.trustDomain(uri);
+        }
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
@@ -130,6 +147,9 @@ public class SetupBlog {
             }
             return userBlogList;
         } catch (XMLRPCException e) {
+            if (mAllSslCertificatesTrusted) {
+                TrustedSslDomainTable.removeTrustedDomain(uri);
+            }
             String message = e.getMessage();
             if (message.contains("code 403")) {
                 mErrorMsgId = R.string.username_or_password_incorrect;
@@ -142,6 +162,49 @@ public class SetupBlog {
             }
             return null;
         }
+    }
+
+    private String getRsdUrl(String baseUrl, boolean ignoreSslCertificate) throws SSLHandshakeException {
+        String rsdUrl;
+        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl, ignoreSslCertificate);
+        if (rsdUrl == null) {
+            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl, ignoreSslCertificate);
+        }
+        return rsdUrl;
+    }
+
+    private String getmXmlrpcByUserEnteredPath(String baseUrl) {
+        String xmlRpcUrl = null;
+        // Try the user entered path
+        URI uri = URI.create(baseUrl);
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
+        try {
+            client.call("system.listMethods");
+            xmlRpcUrl = baseUrl;
+            mIsCustomUrl = true;
+        } catch (XMLRPCException e) {
+            AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
+            if (e.getMessage().contains("401")) {
+                mHttpAuthRequired = true;
+                return null;
+            }
+
+            // Guess the xmlrpc path
+            String guessURL = baseUrl;
+            if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
+                guessURL = guessURL.substring(0, guessURL.length() - 1);
+            }
+            guessURL += "/xmlrpc.php";
+            uri = URI.create(guessURL);
+            client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
+            try {
+                client.call("system.listMethods");
+                xmlRpcUrl = guessURL;
+            } catch (XMLRPCException ex) {
+                AppLog.w(T.NUX, "system.listMethods failed on: " + guessURL);
+            }
+        }
+        return xmlRpcUrl;
     }
 
     // Attempts to retrieve the xmlrpc url for a self-hosted site, in this order:
@@ -164,7 +227,11 @@ public class SetupBlog {
 
         // Add http to the beginning of the URL if needed
         if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-            url = "http://" + url; // default to http
+            if (mAllSslCertificatesTrusted) {
+                url = "https://" + url; // default to https in case previous ssl error detected
+            } else {
+                url = "http://" + url; // default to http
+            }
         }
 
         if (!URLUtil.isValidUrl(url)) {
@@ -173,47 +240,28 @@ public class SetupBlog {
         }
 
         // Attempt to get the XMLRPC URL via RSD
-        String rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(url);
-        if (rsdUrl == null) {
-            rsdUrl = ApiHelper.getRSDMetaTagHref(url);
+        String rsdUrl;
+        try {
+            rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
         }
 
-        if (rsdUrl != null) {
-            xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
-            if (xmlrpcUrl == null)
-                xmlrpcUrl = rsdUrl.replace("?rsd", "");
-        } else {
-            // Try the user entered path
-            try {
-                URI nuri = URI.create(url);
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(nuri, mHttpUsername, mHttpPassword);
-                try {
-                    client.call("system.listMethods");
-                    xmlrpcUrl = url;
-                    mIsCustomUrl = true;
-                } catch (XMLRPCException e) {
-
-                    if (e.getMessage().contains("401")) {
-                        mHttpAuthRequired = true;
-                        return null;
-                    }
-
-                    // Guess the xmlrpc path
-                    String guessURL = url;
-                    if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
-                        guessURL = guessURL.substring(0, guessURL.length() - 1);
-                    }
-                    guessURL += "/xmlrpc.php";
-                    URI guestUri = URI.create(guessURL);
-                    client = XMLRPCFactory.instantiate(guestUri, mHttpUsername, mHttpPassword);
-                    try {
-                        client.call("system.listMethods");
-                        xmlrpcUrl = guessURL;
-                    } catch (XMLRPCException ex) {
-                    }
+        try {
+            if (rsdUrl != null) {
+                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl, mAllSslCertificatesTrusted);
+                if (xmlrpcUrl == null) {
+                    xmlrpcUrl = rsdUrl.replace("?rsd", "");
                 }
-            } catch (Exception e) {
+            } else {
+                xmlrpcUrl = getmXmlrpcByUserEnteredPath(url);
             }
+        } catch (SSLHandshakeException e) {
+            // That should not happen cause mAllSslCertificatesTrusted will be true here or the certificate valid
         }
         return xmlrpcUrl;
     }
