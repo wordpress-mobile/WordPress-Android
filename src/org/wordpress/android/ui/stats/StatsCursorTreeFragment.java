@@ -27,6 +27,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AniUtils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -149,7 +150,9 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, this);
     }
-    
+
+    int mNumChildLoaders = 0;
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (WordPress.getCurrentBlog() == null)
@@ -160,22 +163,23 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             blogId = "0";
         
         Uri uri = getGroupUri();
-        
+
         if (id == LOADER_URI_GROUP_INDEX) {
             return new CursorLoader(getActivity(), uri, null, "blogId=?", new String[] { blogId }, null);
         } else {
+            mNumChildLoaders++;
             uri = getChildrenUri();
             String groupId = args.getString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID);
             long date = args.getLong(StatsCursorLoaderCallback.BUNDLE_DATE);
             return new CursorLoader(getActivity(), uri, null, "blogId=? AND groupId=? AND date=?", new String[] { blogId, groupId, date + "" }, null);
         }
-        
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // cursor is for groups
-        if (loader.getId() == LOADER_URI_GROUP_INDEX) {
+        boolean isGroupLoader = (loader.getId() == LOADER_URI_GROUP_INDEX);
+        if (isGroupLoader) {
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
@@ -194,6 +198,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 mAdapter.changeCursor(data);
         } else {
             // cursor is for children
+            if (mNumChildLoaders > 0)
+                mNumChildLoaders--;
             if (mAdapter != null) {
                 // due to a race condition that occurs when stats are refreshed,
                 // it is possible to have more rows in the listview initially than when done refreshing,
@@ -206,14 +212,18 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             }
         }
 
-        configureEmptyLabel();
-        reloadLinearLayout();
+        // refresh views if this was a group loader, or if all child loaders have completed
+        if (isGroupLoader || mNumChildLoaders == 0) {
+            configureEmptyLabel();
+            reloadLinearLayout();
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         
         mGroupIdToExpandedMap.clear();
+        mNumChildLoaders = 0;
         
         if (mAdapter != null)
             mAdapter.changeCursor(null);
@@ -265,7 +275,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
             // add children if this group is expanded
             if (isExpanded) {
-                showChildViews(i, groupView);
+                showChildViews(i, groupView, false);
             }
 
             // toggle expand/collapse when group view is tapped
@@ -278,7 +288,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     boolean shouldExpand = !mGroupIdToExpandedMap.get(groupPosition);
                     mGroupIdToExpandedMap.put(groupPosition, shouldExpand);
                     if (shouldExpand) {
-                        showChildViews(groupPosition, groupView);
+                        showChildViews(groupPosition, groupView, true);
                     } else {
                         hideChildViews(groupView);
                     }
@@ -287,12 +297,14 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         }
     }
 
-    private void showChildViews(int groupPosition, View groupView) {
+    private void showChildViews(int groupPosition, View groupView, boolean animate) {
         int childCount = Math.min(mAdapter.getChildrenCount(groupPosition), StatsActivity.STATS_CHILD_MAX_ITEMS);
         if (childCount == 0)
             return;
 
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        if (childContainer == null)
+            return;
 
         int numExistingViews = childContainer.getChildCount();
         if (childCount < numExistingViews) {
@@ -312,12 +324,19 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             }
         }
 
-        childContainer.setVisibility(View.VISIBLE);
+        if (childContainer.getVisibility() != View.VISIBLE) {
+            if (animate)
+                AniUtils.fadeIn(childContainer);
+            childContainer.setVisibility(View.VISIBLE);
+        }
+
         setGroupChevron(true, groupView);
     }
 
     private void hideChildViews(View groupView) {
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        if (childContainer == null)
+            return;
         childContainer.setVisibility(View.GONE);
         setGroupChevron(false, groupView);
     }
