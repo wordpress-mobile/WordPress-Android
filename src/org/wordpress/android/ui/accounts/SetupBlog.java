@@ -133,7 +133,7 @@ public class SetupBlog {
         try {
             Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
             if (userBlogs == null) { // Could happen if the returned server response is truncated
-                mErrorMsgId = R.string.no_network_message;
+                mErrorMsgId = R.string.xmlrpc_error;;
                 return null;
             }
             Arrays.sort(userBlogs, Utils.BlogNameComparator);
@@ -142,7 +142,7 @@ public class SetupBlog {
                 try {
                     userBlogList.add((Map<String, Object>) blog);
                 } catch (ClassCastException e) {
-                    AppLog.e(T.NUX, "invalid date received from XMLRPC call wp.getUsersBlogs");
+                    AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
                 }
             }
             return userBlogList;
@@ -157,8 +157,10 @@ public class SetupBlog {
                 mErrorMsgId = R.string.xmlrpc_error;
             } else if (message.contains("425")) {
                 mErrorMsgId = R.string.account_two_step_auth_enabled;
+            } else if (message.contains("XmlPullParserException")) {
+                mErrorMsgId = R.string.xmlrpc_error;
             } else {
-                mErrorMsgId = R.string.no_network_message;
+                mErrorMsgId = R.string.no_site_error;
             }
             return null;
         }
