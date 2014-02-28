@@ -79,8 +79,7 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.comments.CommentsActivity" />
         <activity
             android:name=".ui.comments.EditCommentActivity" />
 

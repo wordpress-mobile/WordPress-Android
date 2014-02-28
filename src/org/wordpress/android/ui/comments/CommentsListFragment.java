@@ -253,6 +253,9 @@ public class CommentsListFragment extends Fragment {
         CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
     }
 
+    protected long getHighlightedCommentId() {
+        return (hasCommentAdapter() ? getCommentAdapter().getHighlightedCommentId() : 0);
+    }
     protected void setHighlightedCommentId(long commentId) {
         getCommentAdapter().setHighlightedCommentId(commentId);
     }

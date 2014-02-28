@@ -171,6 +171,9 @@ public class CommentAdapter extends BaseAdapter {
     /*
      * this is used for tablet UI to highlight the comment displayed in the detail view
      */
+    protected long getHighlightedCommentId() {
+        return mHighlightedCommentId;
+    }
     protected void setHighlightedCommentId(long commentId) {
         if (mHighlightedCommentId == commentId)
             return;

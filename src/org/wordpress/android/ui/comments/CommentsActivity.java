@@ -28,7 +28,7 @@ public class CommentsActivity extends WPActionBarActivity
                    CommentActions.OnCommentChangeListener {
 
     private MenuItem mRefreshMenuItem;
-
+    private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,17 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
+
+        if (savedInstanceState != null) {
+            // restore the highlighted comment (for tablet UI after rotation)
+            long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
+            if (commentId != 0) {
+                if (hasListFragment())
+                    getListFragment().setHighlightedCommentId(commentId);
+                if (hasDetailFragment())
+                    getDetailFragment().setComment(WordPress.getCurrentLocalTableBlogId(), commentId);
+            }
+        }
     }
 
     @Override
@@ -268,6 +279,12 @@ public class CommentsActivity extends WPActionBarActivity
         // https://code.google.com/p/android/issues/detail?id=19917
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
+        }
+        // retain the id of the highlighted comment
+        if (hasListFragment()) {
+            long commentId = getListFragment().getHighlightedCommentId();
+            if (commentId != 0 )
+                outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
         }
         super.onSaveInstanceState(outState);
     }

@@ -264,7 +264,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mComment != null);
     }
 
-    private long getCommentId() {
+    protected long getCommentId() {
         return (mComment != null ? mComment.commentID : 0);
     }
 
