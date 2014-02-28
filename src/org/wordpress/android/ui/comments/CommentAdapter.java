@@ -28,16 +28,16 @@ import java.util.HashSet;
 /**
  * Created by nbradbury on 1/29/14.
  */
-public class CommentAdapter extends BaseAdapter {
-    protected static interface DataLoadedListener {
+class CommentAdapter extends BaseAdapter {
+    static interface DataLoadedListener {
         public void onDataLoaded(boolean isEmpty);
     }
 
-    protected static interface OnLoadMoreListener {
+    static interface OnLoadMoreListener {
         public void onLoadMore();
     }
 
-    protected static interface OnSelectedItemsChangeListener {
+    static interface OnSelectedItemsChangeListener {
         public void onSelectedItemsChanged();
     }
 
@@ -61,10 +61,10 @@ public class CommentAdapter extends BaseAdapter {
 
     private boolean mEnableSelection;
 
-    protected CommentAdapter(Context context,
-                             DataLoadedListener onDataLoadedListener,
-                             OnLoadMoreListener onLoadMoreListener,
-                             OnSelectedItemsChangeListener onChangeListener) {
+    CommentAdapter(Context context,
+                   DataLoadedListener onDataLoadedListener,
+                   OnLoadMoreListener onLoadMoreListener,
+                   OnSelectedItemsChangeListener onChangeListener) {
         mInflater = LayoutInflater.from(context);
 
         mDataLoadedListener = onDataLoadedListener;
@@ -96,14 +96,14 @@ public class CommentAdapter extends BaseAdapter {
         return position;
     }
 
-    protected void clear() {
+    void clear() {
         if (mComments.size() > 0) {
             mComments.clear();
             notifyDataSetChanged();
         }
     }
 
-    protected void setEnableSelection(boolean enable) {
+    void setEnableSelection(boolean enable) {
         if (enable == mEnableSelection)
             return;
 
@@ -115,7 +115,7 @@ public class CommentAdapter extends BaseAdapter {
         }
     }
 
-    protected void clearSelectedComments() {
+    void clearSelectedComments() {
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
             notifyDataSetChanged();
@@ -124,11 +124,11 @@ public class CommentAdapter extends BaseAdapter {
         }
     }
 
-    protected int getSelectedCommentCount() {
+    int getSelectedCommentCount() {
         return mSelectedPositions.size();
     }
 
-    protected CommentList getSelectedComments() {
+    CommentList getSelectedComments() {
         CommentList comments = new CommentList();
         if (!mEnableSelection)
             return comments;
@@ -145,7 +145,7 @@ public class CommentAdapter extends BaseAdapter {
         return mSelectedPositions.contains(position);
     }
 
-    protected void setItemSelected(int position, boolean isSelected, View view) {
+    void setItemSelected(int position, boolean isSelected, View view) {
         if (isItemSelected(position) == isSelected)
             return;
 
@@ -171,17 +171,17 @@ public class CommentAdapter extends BaseAdapter {
             mOnSelectedChangeListener.onSelectedItemsChanged();
     }
 
-    protected void toggleItemSelected(int position, View view) {
+    void toggleItemSelected(int position, View view) {
         setItemSelected(position, !isItemSelected(position), view);
     }
 
     /*
      * this is used for tablet UI to highlight the comment displayed in the detail view
      */
-    protected long getHighlightedCommentId() {
+    long getHighlightedCommentId() {
         return mHighlightedCommentId;
     }
-    protected void setHighlightedCommentId(long commentId) {
+    void setHighlightedCommentId(long commentId) {
         if (mHighlightedCommentId == commentId)
             return;
         mHighlightedCommentId = commentId;
@@ -192,12 +192,12 @@ public class CommentAdapter extends BaseAdapter {
         return (position >= 0 && position < mComments.size());
     }
 
-    protected void replaceComments(final CommentList comments) {
+    void replaceComments(final CommentList comments) {
         mComments.replaceComments(comments);
         notifyDataSetChanged();
     }
 
-    protected void deleteComments(final CommentList comments) {
+    void deleteComments(final CommentList comments) {
         mComments.deleteComments(comments);
         notifyDataSetChanged();
     }
@@ -296,7 +296,7 @@ public class CommentAdapter extends BaseAdapter {
      * load comments using an AsyncTask
      */
     @SuppressLint("NewApi")
-    protected void loadComments() {
+    void loadComments() {
         if (mIsLoadTaskRunning)
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
 

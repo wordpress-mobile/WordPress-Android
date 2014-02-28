@@ -117,7 +117,7 @@ public class CommentsListFragment extends Fragment {
         return getCommentAdapter().getSelectedCommentCount();
     }
 
-    protected void clear() {
+    void clear() {
         if (hasCommentAdapter())
             getCommentAdapter().clear();
     }
@@ -273,10 +273,10 @@ public class CommentsListFragment extends Fragment {
         CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
     }
 
-    protected long getHighlightedCommentId() {
+    long getHighlightedCommentId() {
         return (hasCommentAdapter() ? getCommentAdapter().getHighlightedCommentId() : 0);
     }
-    protected void setHighlightedCommentId(long commentId) {
+    void setHighlightedCommentId(long commentId) {
         getCommentAdapter().setHighlightedCommentId(commentId);
     }
 
@@ -314,7 +314,7 @@ public class CommentsListFragment extends Fragment {
         });
     }
 
-    protected void loadComments() {
+    void loadComments() {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
@@ -326,7 +326,7 @@ public class CommentsListFragment extends Fragment {
      * existing ones
      */
     @SuppressLint("NewApi")
-    protected void updateComments(boolean loadMore) {
+    void updateComments(boolean loadMore) {
         if (mIsUpdatingComments)
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
         if (SysUtils.canUseExecuteOnExecutor()) {

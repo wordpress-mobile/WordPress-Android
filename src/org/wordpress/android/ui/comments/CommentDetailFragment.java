@@ -105,7 +105,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(int localBlogId, long commentId) {
+    static CommentDetailFragment newInstance(int localBlogId, long commentId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setComment(localBlogId, commentId);
         return fragment;
@@ -194,7 +194,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    protected void setComment(int localBlogId, long commentId) {
+    void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
@@ -264,7 +264,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mComment != null);
     }
 
-    protected long getCommentId() {
+    long getCommentId() {
         return (mComment != null ? mComment.commentID : 0);
     }
 
@@ -279,7 +279,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * reload the current comment from the local database
      */
-    protected void reloadComment() {
+    void reloadComment() {
         if (!hasComment())
             return;
         Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
@@ -289,7 +289,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * resets to no comment
      */
-    protected void clear() {
+    void clear() {
         setNote(null);
         setComment(0, null);
     }

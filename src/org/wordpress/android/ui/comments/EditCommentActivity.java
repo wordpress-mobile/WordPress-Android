@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
-    protected static final String ARG_LOCAL_BLOG_ID = "blog_id";
-    protected static final String ARG_COMMENT_ID = "comment_id";
+    static final String ARG_LOCAL_BLOG_ID = "blog_id";
+    static final String ARG_COMMENT_ID = "comment_id";
 
     private static final int ID_DIALOG_SAVING = 0;
 

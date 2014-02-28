@@ -189,6 +189,25 @@ public class CommentsActivity extends WPActionBarActivity
         return (getReaderFragment() != null);
     }
 
+    void showReaderFragment(long remoteBlogId, long postId) {
+        // stop animating the refresh button to prevent it from appearing in the
+        // reader fragment's ActionBar
+        onAnimateRefreshButton(false);
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.executePendingTransactions();
+
+        Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentTransaction ft = fm.beginTransaction();
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (hasDetailFragment())
+            ft.hide(getDetailFragment());
+        ft.commit();
+    }
+
     /*
      * called from comment list when user taps a comment
      */
@@ -231,19 +250,7 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(long remoteBlogId, long postId) {
-        // stop animating the refresh button to prevent it from appearing in the
-        // reader fragment's ActionBar
-        onAnimateRefreshButton(false);
-
-        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (hasDetailFragment())
-            ft.hide(getDetailFragment());
-        ft.commit();
+        showReaderFragment(remoteBlogId, postId);
     }
 
     /*
