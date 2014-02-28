@@ -67,6 +67,8 @@ public class StatsActivity extends WPActionBarActivity {
     private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
 
+    private static final String KEY_VERIFIED_CREDS = "verified_creds";
+
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
 
@@ -76,6 +78,7 @@ public class StatsActivity extends WPActionBarActivity {
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private boolean mIsUpdatingStats;
+    private boolean mHasVerifiedCreds;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -166,6 +169,7 @@ public class StatsActivity extends WPActionBarActivity {
             
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
         mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
+        mHasVerifiedCreds = savedInstanceState.getBoolean(KEY_VERIFIED_CREDS);
         mIsRestoredFromState = true;
     }
     
@@ -175,6 +179,7 @@ public class StatsActivity extends WPActionBarActivity {
         
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+        outState.putBoolean(KEY_VERIFIED_CREDS, mHasVerifiedCreds);
     }
 
     private void startWPComLoginActivity() {
@@ -364,6 +369,7 @@ public class StatsActivity extends WPActionBarActivity {
             }
             
             if (getBlogId() == null) {
+                stopStatsService();
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
                 if (WordPress.getCurrentBlog().isAdmin()) {
@@ -427,6 +433,7 @@ public class StatsActivity extends WPActionBarActivity {
         super.onBlogChanged();
 
         stopStatsService();
+        mHasVerifiedCreds = false;
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -489,7 +496,10 @@ public class StatsActivity extends WPActionBarActivity {
             }
         }
 
-        verifyCredentials(blogId);
+        // verify the users credentials if it hasn't already been done
+        if (!mHasVerifiedCreds) {
+            verifyCredentials(blogId);
+        }
 
         // start service to get stats
         Intent intent = new Intent(this, StatsService.class);
@@ -502,7 +512,7 @@ public class StatsActivity extends WPActionBarActivity {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(final JSONObject response) {
-                        // nop
+                        mHasVerifiedCreds = true;
                     }
                 },
                 new RestRequest.ErrorListener() {
@@ -513,6 +523,7 @@ public class StatsActivity extends WPActionBarActivity {
                         if (mSignInDialog != null && mSignInDialog.isShowing()) {
                             return;
                         }
+                        stopStatsService();
 
                         if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                             // This site has the wrong WP.com credentials

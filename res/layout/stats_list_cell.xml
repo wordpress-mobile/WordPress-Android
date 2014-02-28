@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_small">
+    android:paddingTop="@dimen/margin_small"
+    android:paddingLeft="@dimen/margin_small"
+
+    android:paddingBottom="@dimen/margin_small">
 
     <LinearLayout
         android:layout_width="match_parent"
