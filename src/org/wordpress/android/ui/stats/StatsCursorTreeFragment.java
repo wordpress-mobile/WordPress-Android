@@ -18,6 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +32,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.SysUtils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -290,7 +295,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                     if (shouldExpand) {
                         showChildViews(groupPosition, groupView, true);
                     } else {
-                        hideChildViews(groupView);
+                        hideChildViews(groupView, true);
                     }
                 }
             });
@@ -335,23 +340,36 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             childContainer.setVisibility(View.VISIBLE);
         }
 
-        setGroupChevron(true, groupView);
+        setGroupChevron(true, groupView, animate);
     }
 
-    private void hideChildViews(View groupView) {
+    private void hideChildViews(View groupView, boolean animate) {
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null)
             return;
         childContainer.setVisibility(View.GONE);
-        setGroupChevron(false, groupView);
+        setGroupChevron(false, groupView, animate);
     }
 
     /*
      * shows the correct up/down chevron for the passed group
      */
-    private void setGroupChevron(boolean isGroupExpanded, View groupView) {
+    private void setGroupChevron(boolean isGroupExpanded, View groupView, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
-        chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_up : R.drawable.stats_chevron_down);
+        chevron.clearAnimation();
+
+        // animate the expand/collapse on ICS+ (older devices sometimes have jittery animation)
+        if (animate && SysUtils.isGteAndroid4()) {
+            float start = (isGroupExpanded ? 0.0f : -90.0f);
+            float end = (isGroupExpanded ? -90.0f : 0.0f);
+            Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotate.setDuration(150);
+            rotate.setInterpolator(new AccelerateInterpolator());
+            rotate.setFillAfter(true);
+            chevron.startAnimation(rotate);
+        } else {
+            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_up : R.drawable.stats_chevron_down);
+        }
     }
 
     @Override
