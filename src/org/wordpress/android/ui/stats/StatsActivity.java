@@ -18,6 +18,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
@@ -428,11 +429,18 @@ public class StatsActivity extends WPActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void scrollToTop() {
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+        if (scrollView != null)
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
+    }
+
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
 
         stopStatsService();
+        scrollToTop();
         mHasVerifiedCreds = false;
 
         FragmentManager fm = getSupportFragmentManager();
