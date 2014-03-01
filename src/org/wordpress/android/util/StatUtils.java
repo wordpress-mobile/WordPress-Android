@@ -9,6 +9,7 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -228,9 +229,14 @@ public class StatUtils {
     public static void setTextHyperlink(TextView textView, String linkUrl, String linkName) {
         if (textView == null || linkUrl == null || linkName == null)
             return;
-        String html = "<a href=\"" + linkUrl + "\">" + linkName + "</a>";
-        textView.setText(Html.fromHtml(html));
-        textView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        if (linkUrl.equals(linkName)) {
+            textView.setText(linkUrl);
+            Linkify.addLinks(textView, Linkify.WEB_URLS);
+        } else {
+            String html = "<a href=\"" + linkUrl + "\">" + linkName + "</a>";
+            textView.setText(Html.fromHtml(html));
+            textView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        }
     }
 
 }
