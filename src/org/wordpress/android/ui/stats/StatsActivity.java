@@ -140,7 +140,7 @@ public class StatsActivity extends WPActionBarActivity {
                 String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                 WordPress.getCurrentBlog().setDotcom_username(username);
                 WordPress.getCurrentBlog().setDotcom_password(password);
-                WordPress.getCurrentBlog().save();
+                WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
                 refreshStats();
             } else {
                 startWPComLoginActivity();
@@ -484,9 +484,9 @@ public class StatsActivity extends WPActionBarActivity {
         }
         
         final String blogId;
-        if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch())
+        if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch()) {
             blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        else {
+        } else {
             blogId = getBlogId();
             if (blogId == null) {
                 //Refresh Jetpack Settings
@@ -508,7 +508,7 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void verifyCredentials(final String blogId) {
-        WordPress.restClient.getStatsSummary(blogId,
+        WordPress.getRestClientUtils().getStatsSummary(blogId,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(final JSONObject response) {
@@ -568,7 +568,7 @@ public class StatsActivity extends WPActionBarActivity {
 
                 if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
                     currentBlog.setApi_blogid(jetpackBlogId);
-                    currentBlog.save();
+                    WordPress.wpDB.saveBlog(currentBlog);
                 }
 
                 return jetpackBlogId;

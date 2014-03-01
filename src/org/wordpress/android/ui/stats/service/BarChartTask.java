@@ -40,7 +40,7 @@ class BarChartTask extends AbsStatsTask {
 
     @Override
     void sendRequest() {
-        WordPress.restClient.getStatsBarChartData(mBlogId, mBarChartUnit, 30, responseListener, errorListener);
+        WordPress.getRestClientUtils().getStatsBarChartData(mBlogId, mBarChartUnit, 30, responseListener, errorListener);
     }
 
     @Override

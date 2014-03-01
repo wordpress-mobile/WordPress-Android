@@ -172,11 +172,11 @@
                     android:layout_alignParentTop="false"
                     android:paddingRight="8dp"
                     android:enabled="false"
+                    android:focusable="false"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
                     android:textColor="@color/grey_medium"
-                    android:textIsSelectable="true"
                     android:textSize="@dimen/nux_edit_field_font_size"/>
 
                 <ImageView

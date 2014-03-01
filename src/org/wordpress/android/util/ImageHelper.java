@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.util.FloatMath;
+import android.text.TextUtils;
 import android.view.Display;
 import android.widget.ImageView;
 
@@ -25,148 +24,88 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ImageHelper {
-    
+
     public static int[] getImageSize(Uri uri, Context context){
         String path = null;
-        if (uri.toString().contains("content:")) {
-            String[] projection;
-            Uri imgPath;
-
-            projection = new String[] { Images.Media._ID, Images.Media.DATA };
-
-            imgPath = uri;
-
-            Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
-            String thumbData = "";
-
-            if (cur.moveToFirst()) {
-                int dataColumn;
-                dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                thumbData = cur.getString(dataColumn);
-                path = thumbData;
-            }
-            cur.close();
-        } else { // file is not in media library
-            path = uri.toString().replace("file://", "");
-        }
-        
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile( path, options);
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
-        int[] dimensions = { imageWidth, imageHeight};
-        return dimensions;
-    }
-    
-    public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny, String fileExtension) {
-        // creates a thumbnail and returns the bytes
 
-        int finalHeight = 0;
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-        int width = opts.outWidth;
-
-        int finalWidth = 500; // default to this if there's a problem
-        // Change dimensions of thumbnail
-
-        if (tiny) {
-            finalWidth = 150;
-        }
-
-        byte[] finalBytes;
-
-        if (sMaxImageWidth.equals("Original Size")) {
-            finalBytes = bytes;
-        } else {
-            finalWidth = Integer.parseInt(sMaxImageWidth);
-            if (finalWidth > width) {
-                // don't resize
-                finalBytes = bytes;
-            } else {
-                int sample = 0;
-
-                float fWidth = width;
-                sample = Double.valueOf(FloatMath.ceil(fWidth / 1200)).intValue();
-
-                if (sample == 3) {
-                    sample = 4;
-                } else if (sample > 4 && sample < 8) {
-                    sample = 8;
+        if (uri.toString().contains("content:")) {
+            String[] projection = new String[] { Images.Media._ID, Images.Media.DATA };
+            Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
+            if (cur != null) {
+                if (cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    path = cur.getString(dataColumn);
                 }
-
-                opts.inSampleSize = sample;
-                opts.inJustDecodeBounds = false;
-
-                try {
-                    bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                } catch (OutOfMemoryError e) {
-                    // out of memory
-                    return null;
-                }
-                
-                if (bm == null)
-                    return null;
-
-                float percentage = (float) finalWidth / bm.getWidth();
-                float proportionateHeight = bm.getHeight() * percentage;
-                finalHeight = (int) Math.rint(proportionateHeight);
-
-                float scaleWidth = ((float) finalWidth) / bm.getWidth();
-                float scaleHeight = ((float) finalHeight) / bm.getHeight();
-
-                float scaleBy = Math.min(scaleWidth, scaleHeight);
-
-                // Create a matrix for the manipulation
-                Matrix matrix = new Matrix();
-                // Resize the bitmap
-                matrix.postScale(scaleBy, scaleBy);
-                if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))) {
-                    matrix.postRotate(Integer.valueOf(orientation));
-                }
-
-                Bitmap resized;
-                try {
-                    resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-                } catch (OutOfMemoryError e) {
-                    return null;
-                }
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                if (fileExtension != null && fileExtension.equalsIgnoreCase("png"))
-                    format = Bitmap.CompressFormat.PNG;
-                resized.compress(format, 85, baos);
-
-                bm.recycle(); // free up memory
-                resized.recycle();
-
-                finalBytes = baos.toByteArray();
+                cur.close();
             }
         }
 
-        return finalBytes;
+        if (TextUtils.isEmpty(path)) {
+            //The file isn't ContentResolver, or it can't be access by ContentResolver. Try to access the file directly.
+            path = uri.toString().replace("content://media", "");
+            path = path.replace("file://", "");
+        }
 
+        BitmapFactory.decodeFile(path, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+        return new int[]{imageWidth, imageHeight};
     }
 
+    //Read the orientation from ContentResolver. If it fails, read from EXIF.
+    public int getImageOrientation(Context ctx, String filePath) {
+        Uri curStream;
+        String orientation = null;
+        
+        if (!filePath.contains("content://"))
+            curStream = Uri.parse("content://media" + filePath);
+        else
+            curStream = Uri.parse(filePath);
+
+        try {
+            Cursor cur = ctx.getContentResolver().query(curStream, new String[] { Images.Media.ORIENTATION }, null, null, null);
+            if (cur != null) {
+                if(cur.moveToFirst()) {
+                    orientation = cur.getString(cur.getColumnIndex(Images.Media.ORIENTATION));
+                }
+                cur.close();
+            }
+        } catch (Exception errReadingContentResolver) {
+            AppLog.e(T.UTILS, errReadingContentResolver);
+        }
+        
+        if (TextUtils.isEmpty(orientation)) {
+            orientation = getExifOrientation(filePath, "");
+        }
+        
+        int calculatedOrientation;
+        try {
+            calculatedOrientation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
+        } catch (NumberFormatException e) {
+            AppLog.e(T.UTILS, e);
+            calculatedOrientation = 0;
+        }
+        
+        return calculatedOrientation;
+    }
+    
+    
+    
     public String getExifOrientation(String path, String orientation) {
         ExifInterface exif;
         try {
             exif = new ExifInterface(path);
         } catch (IOException e) {
+            AppLog.e(T.UTILS, e);
             return orientation;
         }
         String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
@@ -184,38 +123,6 @@ public class ImageHelper {
             orientation = "0";
         }
         return orientation;
-    }
-
-    // borrowed from
-    // http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html
-    class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-
-        public BitmapDownloaderTask(ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
-
-        @Override
-        // Actual download method, run in the task thread
-        protected Bitmap doInBackground(String... params) {
-            // params comes from the execute() call: params[0] is the url.
-            return downloadBitmap(params[0]);
-        }
-
-        @Override
-        // Once the image is downloaded, associates it to the imageView
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-
-            if (imageViewReference != null) {
-                ImageView imageView = imageViewReference.get();
-                if (imageView != null && bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
     }
 
     public static Bitmap downloadBitmap(String url) {
@@ -237,8 +144,7 @@ public class ImageHelper {
                 InputStream inputStream = null;
                 try {
                     inputStream = entity.getContent();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    return bitmap;
+                    return BitmapFactory.decodeStream(inputStream);
                 } finally {
                     if (inputStream != null) {
                         inputStream.close();
@@ -253,122 +159,6 @@ public class ImageHelper {
             AppLog.w(T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
         }
         return null;
-    }
-
-    public Map<String, Object> getImageBytesForPath(String filePath, Context ctx) {
-        Uri curStream = null;
-        String[] projection;
-        Map<String, Object> mediaData = new HashMap<String, Object>();
-        String title = "", orientation = "";
-        byte[] bytes;
-        if (filePath != null) {
-            if (!filePath.contains("content://"))
-                curStream = Uri.parse("content://media" + filePath);
-            else
-                curStream = Uri.parse(filePath);
-        }
-        if (curStream != null) {
-            if (filePath.contains("video")) {
-                int videoId = 0;
-                try {
-                    videoId = Integer.parseInt(curStream.getLastPathSegment());
-                } catch (NumberFormatException e) {
-                }
-                ContentResolver crThumb = ctx.getContentResolver();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 1;
-                Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
-                        options);
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                try {
-                    videoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    bytes = stream.toByteArray();
-                    title = "Video";
-                    videoBitmap = null;
-                } catch (Exception e) {
-                    return null;
-                }
-
-            } else {
-                projection = new String[] { Images.Thumbnails._ID, Images.Thumbnails.DATA, Images.Media.ORIENTATION };
-
-                String path = "";
-                Cursor cur;
-                try {
-                    cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
-                } catch (Exception e1) {
-                    return null;
-                }
-                File jpeg = null;
-                if (cur != null) {
-                    String thumbData = "";
-
-                    if (cur.moveToFirst()) {
-
-                        int dataColumn, orientationColumn;
-
-                        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                        thumbData = cur.getString(dataColumn);
-                        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-                        orientation = cur.getString(orientationColumn);
-                        if (orientation == null)
-                            orientation = "";
-                    }
-                    cur.close();
-
-                    if (thumbData == null) {
-                        return null;
-                    }
-
-                    jpeg = new File(thumbData);
-                    path = thumbData;
-                } else {
-                    path = filePath.toString().replace("file://", "");
-                    jpeg = new File(path);
-                }
-
-                title = jpeg.getName();
-
-                try {
-                    bytes = new byte[(int) jpeg.length()];
-                } catch (Exception e) {
-                    return null;
-                } catch (OutOfMemoryError e) {
-                    return null;
-                }
-
-                DataInputStream in = null;
-                try {
-                    in = new DataInputStream(new FileInputStream(jpeg));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                try {
-                    in.readFully(bytes);
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-
-                title = jpeg.getName();
-                if (orientation == "") {
-                    orientation = getExifOrientation(path, orientation);
-                }
-            }
-
-            mediaData.put("bytes", bytes);
-            mediaData.put("title", title);
-            mediaData.put("orientation", orientation);
-
-            return mediaData;
-
-        } else {
-            return null;
-        }
-
     }
     
     /** From http://developer.android.com/training/displaying-bitmaps/load-bitmap.html **/
@@ -475,37 +265,104 @@ public class ImageHelper {
         }
     }
 
+
+    public  String getTitleForWPImageSpan(Context ctx, String filePath) {
+        if (filePath == null)
+            return null;
+
+        Uri curStream;
+        String title;
+
+        if (!filePath.contains("content://"))
+            curStream = Uri.parse("content://media" + filePath);
+        else
+            curStream = Uri.parse(filePath);
+
+        if (filePath.contains("video")) {
+            return "Video";
+        } else {
+            String[] projection = new String[] { Images.Thumbnails.DATA };
+            
+            Cursor cur;
+            try {
+                cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
+            } catch (Exception e1) {
+                AppLog.e(T.UTILS, e1);
+                return null;
+            }
+            File jpeg;
+            if (cur != null) {
+                String thumbData = "";
+                if (cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    thumbData = cur.getString(dataColumn);
+                }
+                cur.close();
+                if (thumbData == null) {
+                    return null;
+                }
+                jpeg = new File(thumbData);
+            } else {
+                String path = filePath.toString().replace("file://", "");
+                jpeg = new File(path);
+            }
+            title = jpeg.getName();
+            return title;
+        }
+    }
+    
     /**
      * Resizes an image to be placed in the Post Content Editor
      * @param ctx
-     * @param bytes
-     * @param orientation
+     * @param filePath
      * @return resized bitmap
      */
-    public Bitmap getThumbnailForWPImageSpan(Context ctx, byte[] bytes, String orientation) {
+    public Bitmap getThumbnailForWPImageSpan(Context ctx, String filePath) {
+        if (filePath==null)
+            return null;
+        
         Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
         if (width > height)
             width = height;
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+        Uri curUri;
+        
+        if (!filePath.contains("content://"))
+            curUri = Uri.parse("content://media" + filePath);
+        else
+            curUri = Uri.parse(filePath);
+        
+        if (filePath.contains("video")) {
+            int videoId = 0;
+            try {
+                videoId = Integer.parseInt(curUri.getLastPathSegment());
+            } catch (NumberFormatException e) {
+            }
+            ContentResolver crThumb = ctx.getContentResolver();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 1;
+            return MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
+                    options);
+        } else {
+            int[] dimensions = getImageSize(curUri, ctx);
+            float conversionFactor = 0.40f;
+            if (dimensions[0] > dimensions[1]) //width > height
+                conversionFactor = 0.60f;
+            int resizedWitdh = (int) (width * conversionFactor);
 
-        float conversionFactor = 0.40f;
+            // create resized picture
+            int rotation = getImageOrientation(ctx, filePath);
+            byte[] bytes = createThumbnailFromUri(ctx, curUri, resizedWitdh, null, rotation);
 
-        if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.70f;
-
-        byte[] finalBytes = createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
-                orientation, true, null);
-
-        if (finalBytes == null) {
-            return null;
+            // upload resized picture
+            if (bytes != null && bytes.length > 0) {
+                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            } else {
+                return null;
+            }
         }
-
-        return BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
     }
     
     public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
@@ -516,10 +373,8 @@ public class ImageHelper {
         float percentage = (float) resizeWidth / largeBitmap.getWidth();
         float proportionateHeight = largeBitmap.getHeight() * percentage;
         int resizeHeight = (int) Math.rint(proportionateHeight);
-        
-        Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
-        
-        return scaled;
+
+        return Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
     }
 
     /**
@@ -527,74 +382,78 @@ public class ImageHelper {
      * require passing the full-size image as an array of bytes[]
      */
     public byte[] createThumbnailFromUri(Context context,
-                                         Uri imageUri,
-                                         int maxWidth,
-                                         String fileExtension,
-                                         int rotation) {
+            Uri imageUri,
+            int maxWidth,
+            String fileExtension,
+            int rotation) {
         if (context == null || imageUri == null)
             return null;
 
-        AssetFileDescriptor descriptor = null;
-        try {
-            try {
-                descriptor = context.getContentResolver().openAssetFileDescriptor(imageUri, "r");
-            } catch (FileNotFoundException e) {
-                AppLog.e(T.UTILS, e);
-                return null;
-            }
-
-            // get just the image bounds
-            BitmapFactory.Options optBounds = new BitmapFactory.Options();
-            optBounds.inJustDecodeBounds = true;
-            BitmapFactory.decodeFileDescriptor(descriptor.getFileDescriptor(), null, optBounds);
-
-            // determine correct scale value (should be power of 2)
-            // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
-            int scale = 1;
-            if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
-                double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
-                scale = (int) d;
-            }
-
-            BitmapFactory.Options optActual = new BitmapFactory.Options();
-            optActual.inSampleSize = scale;
-
-            final Bitmap bmpResized = BitmapFactory.decodeFileDescriptor(descriptor.getFileDescriptor(), null, optActual);
-            if (bmpResized == null)
-                return null;
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            final Bitmap.CompressFormat fmt;
-            if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
-                fmt = Bitmap.CompressFormat.PNG;
-            } else {
-                fmt = Bitmap.CompressFormat.JPEG;
-            }
-
-            // apply rotation
-            if (rotation != 0) {
-                Matrix matrix = new Matrix();
-                matrix.setRotate(rotation);
-                final Bitmap bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
-                bmpRotated.compress(fmt, 100, stream);
-                bmpResized.recycle();
-                bmpRotated.recycle();
-            } else {
-                bmpResized.compress(fmt, 100, stream);
-                bmpResized.recycle();
-            }
-
-            return stream.toByteArray();
-
-        } finally {
-            if (descriptor!=null) {
-                try {
-                    descriptor.close();
-                } catch (IOException e) {
-                    AppLog.e(T.UTILS, e);
+        String filePath = null;
+        if (imageUri.toString().contains("content:")) {
+            String[] projection = new String[] { Images.Media.DATA };
+            Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+            if (cur != null) {
+                if (cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    filePath = cur.getString(dataColumn);
                 }
+                cur.close();
             }
         }
+
+        if (TextUtils.isEmpty(filePath)) {
+            //access the file directly
+            filePath = imageUri.toString().replace("content://media", "");
+            filePath = filePath.replace("file://", "");
+        }
+
+        // get just the image bounds
+        BitmapFactory.Options optBounds = new BitmapFactory.Options();
+        optBounds.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(filePath, optBounds);
+
+        // determine correct scale value (should be power of 2)
+        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
+        int scale = 1;
+        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
+            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
+            scale = (int) d;
+        }
+
+        BitmapFactory.Options optActual = new BitmapFactory.Options();
+        optActual.inSampleSize = scale;
+
+        Bitmap bmpResized;
+
+        bmpResized = BitmapFactory.decodeFile(filePath, optActual);
+
+        if (bmpResized == null)
+            return null;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        final Bitmap.CompressFormat fmt;
+        if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
+            fmt = Bitmap.CompressFormat.PNG;
+        } else {
+            fmt = Bitmap.CompressFormat.JPEG;
+        }
+
+        // apply rotation
+        if (rotation != 0) {
+            Matrix matrix = new Matrix();
+            matrix.setRotate(rotation);
+            final Bitmap bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+            bmpRotated.compress(fmt, 100, stream);
+            bmpResized.recycle();
+            bmpRotated.recycle();
+        } else {
+            bmpResized.compress(fmt, 100, stream);
+            bmpResized.recycle();
+        }
+
+        return stream.toByteArray();
     }
 
 }

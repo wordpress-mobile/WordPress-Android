@@ -75,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private static final String TAG = "WPActionBarActivity";
 
     /**
-     * Request code used when no accounts exist, and user is prompted to add an
+     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
      */
     private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
-     * Request code for reloading menu after returning from  the PreferencesActivity.
+     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
      */
     private static final int SETTINGS_REQUEST = 200;
     /**
-     * Request code for re-authentication
+     * AuthenticatorRequest code for re-authentication
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 

@@ -243,7 +243,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
-                siteUrl, siteName, language, restClient, getActivity(), new ErrorListener(),
+                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {

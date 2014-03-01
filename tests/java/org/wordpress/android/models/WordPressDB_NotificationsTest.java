@@ -10,6 +10,8 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
@@ -71,7 +73,8 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
         assertEquals(note.getSubject(), note2.getSubject());
     }
 
-    public void testAddNoteClearNotes() {
+    public void testAddNoteClearNotes()
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext, "empty_tables.sql");
         WordPressDB wpdb = WordPress.wpDB;
 
@@ -79,7 +82,12 @@ public class WordPressDB_NotificationsTest extends InstrumentationTestCase {
         wpdb.addNote(note, true);
         ArrayList<Note> notes = wpdb.getLatestNotes();
         assertTrue(notes.size() >= 0);
-        wpdb.clearNotes();
+
+        // call wpdb.clearNotes();
+        Method method = WordPressDB.class.getDeclaredMethod("clearNotes");
+        method.setAccessible(true);
+        method.invoke(wpdb);
+
         notes = wpdb.getLatestNotes();
         assertTrue(notes.size() == 0);
     }

@@ -132,7 +132,7 @@ public class ReaderPostActions {
                     actionListener.onActionResult(false);
             }
         };
-        WordPress.restClient.post(path, listener, errorListener);
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
     }
@@ -183,7 +183,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.restClient.post(sb.toString(), params, null, listener, errorListener);
+        WordPress.getRestClientUtils().post(sb.toString(), params, null, listener, errorListener);
     }
 
     /*
@@ -209,7 +209,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.restClient.get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost post,
@@ -303,7 +303,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.restClient.get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
     /*
@@ -373,7 +373,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.restClient.get(endpoint, null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(endpoint, null, null, listener, errorListener);
     }
     private static void handleUpdatePostsWithTagResponse(final String tagName,
                                                          final ReaderActions.RequestDataAction updateAction,

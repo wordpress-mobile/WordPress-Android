@@ -40,7 +40,7 @@ class TopPostsAndPagesTask extends AbsStatsTask {
 
     @Override
     void sendRequest() {
-        WordPress.restClient.getStatsTopPosts(mBlogId, mDate, responseListener, errorListener);
+        WordPress.getRestClientUtils().getStatsTopPosts(mBlogId, mDate, responseListener, errorListener);
     }
 
     @Override

@@ -261,7 +261,6 @@
     <string name="post_signature">Post signature</string>
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
-    <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
     <string name="preview">Preview</string>
 
     <!-- new account view -->
@@ -511,7 +510,6 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="app_title_blackberry">WordPress for BlackBerry</string>
     <string name="publisher">Publisher: Automattic, Inc</string>
     <string name="copyright">©2014 Automattic, Inc</string>
     <string name="version">Version</string>
@@ -711,4 +709,6 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
+    <string name="ssl_certificate_error">Invalid SSL certificate</string>
+    <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
 </resources>

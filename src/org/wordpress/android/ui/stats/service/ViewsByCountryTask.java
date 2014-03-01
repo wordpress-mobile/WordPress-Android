@@ -40,7 +40,7 @@ class ViewsByCountryTask extends AbsStatsTask {
 
     @Override
     void sendRequest() {
-        WordPress.restClient.getStatsGeoviews(mBlogId, mDate, responseListener, errorListener);
+        WordPress.getRestClientUtils().getStatsGeoviews(mBlogId, mDate, responseListener, errorListener);
     }
 
     @Override

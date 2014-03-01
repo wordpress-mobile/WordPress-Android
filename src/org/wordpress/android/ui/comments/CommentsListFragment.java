@@ -182,7 +182,6 @@ public class CommentsListFragment extends Fragment {
         }
         getActivity().showDialog(dlgId);
 
-
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {

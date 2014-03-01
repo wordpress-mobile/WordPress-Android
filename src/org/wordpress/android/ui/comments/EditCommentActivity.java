@@ -17,6 +17,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -24,8 +25,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -215,7 +217,7 @@ public class EditCommentActivity extends SherlockActivity {
         protected Boolean doInBackground(Void... params) {
             final Blog blog;
             try {
-                blog = new Blog(mLocalBlogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
             } catch (Exception e) {
                 AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
@@ -233,17 +235,10 @@ public class EditCommentActivity extends SherlockActivity {
             postHash.put("author_url",   authorUrl);
             postHash.put("author_email", authorEmail);
 
-            XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
-            Object[] xmlParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
-                    Long.toString(mCommentId),
-                    postHash};
+            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), Long.toString(
+                    mCommentId), postHash};
 
             try {
                 Object result = client.call("wp.editComment", xmlParams);
@@ -311,5 +306,4 @@ public class EditCommentActivity extends SherlockActivity {
             super.onBackPressed();
         }
     }
-
 }

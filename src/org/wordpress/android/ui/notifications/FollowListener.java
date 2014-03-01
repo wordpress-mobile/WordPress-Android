@@ -12,14 +12,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 class FollowListener implements FollowRow.OnFollowListener {
-    
+
     protected Context currentContent = null;
-    
+
     public FollowListener(Context currentContent) {
         super();
         this.currentContent = currentContent;
     }
-    
+
     class FollowResponseHandler implements Listener, ErrorListener {
         private FollowRow mRow;
         private String mSiteId;
@@ -56,11 +56,11 @@ class FollowListener implements FollowRow.OnFollowListener {
     @Override
     public void onFollow(final FollowRow row, final String siteId){
         FollowResponseHandler handler = new FollowResponseHandler(row, siteId, true);
-        WordPress.restClient.followSite(siteId, handler, handler);
+        WordPress.getRestClientUtils().followSite(siteId, handler, handler);
     }
     @Override
     public void onUnfollow(final FollowRow row, final String siteId){
         FollowResponseHandler handler = new FollowResponseHandler(row, siteId, false);
-        WordPress.restClient.unfollowSite(siteId, handler, handler);
+        WordPress.getRestClientUtils().unfollowSite(siteId, handler, handler);
     }
 }

@@ -151,7 +151,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, this);
     }
 
-    int mNumChildLoaders = 0;
+    private int mNumChildLoaders = 0;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

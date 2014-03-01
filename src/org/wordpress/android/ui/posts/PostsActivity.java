@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -34,8 +35,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -502,11 +504,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         protected Boolean doInBackground(Post... params) {
             boolean result = false;
             post = params[0];
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object[] postParams = { "", post.getPostid(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -594,11 +594,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             post = params[0];
             if (post == null)
                 return null;
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object versionResult = new Object();
             try {
                 if (mIsPage) {
@@ -793,7 +791,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public void onDetailPostAction(int action, Post post) {
-
         onPostAction(action, post);
 
     }

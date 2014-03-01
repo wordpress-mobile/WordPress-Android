@@ -35,7 +35,7 @@ class SearchEngineTermsTask extends AbsStatsTask {
 
     @Override
     void sendRequest() {
-        WordPress.restClient.getStatsSearchEngineTerms(mBlogId, mDate, responseListener, errorListener);
+        WordPress.getRestClientUtils().getStatsSearchEngineTerms(mBlogId, mDate, responseListener, errorListener);
     }
 
     @Override

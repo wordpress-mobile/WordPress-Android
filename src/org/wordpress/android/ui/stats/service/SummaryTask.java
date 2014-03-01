@@ -26,7 +26,7 @@ class SummaryTask extends AbsStatsTask {
 
     @Override
     void sendRequest() {
-        WordPress.restClient.getStatsSummary(mBlogId, responseListener, errorListener);
+        WordPress.getRestClientUtils().getStatsSummary(mBlogId, responseListener, errorListener);
     }
 
     @Override
