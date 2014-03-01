@@ -430,7 +430,7 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void scrollToTop() {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view_stats);
         if (scrollView != null)
             scrollView.fullScroll(ScrollView.FOCUS_UP);
     }
