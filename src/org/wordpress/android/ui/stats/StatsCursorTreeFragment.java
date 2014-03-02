@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.RotateAnimation;
@@ -246,7 +247,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
      * interpolator for all expand/collapse animations
      */
     private Interpolator getInterpolator() {
-        return new AccelerateDecelerateInterpolator();
+        return new AccelerateInterpolator();
     }
 
     private void reloadGroupViews() {
