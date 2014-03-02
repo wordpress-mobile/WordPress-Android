@@ -12,6 +12,7 @@ import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -75,42 +76,46 @@ public class StatsService extends Service {
                 final String today = StatUtils.getCurrentDate();
                 final String yesterday = StatUtils.getYesterdaysDate();
 
-                // visitors and views
-                executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
-                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
-                executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
+                try {
+                    // visitors and views
+                    executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
+                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
+                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
 
-                // top posts and pages
-                executor.submit(new TopPostsAndPagesTask(blogId, today));
-                executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
+                    // top posts and pages
+                    executor.submit(new TopPostsAndPagesTask(blogId, today));
+                    executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
 
-                // views by country
-                executor.submit(new ViewsByCountryTask(blogId, today));
-                executor.submit(new ViewsByCountryTask(blogId, yesterday));
+                    // views by country
+                    executor.submit(new ViewsByCountryTask(blogId, today));
+                    executor.submit(new ViewsByCountryTask(blogId, yesterday));
 
-                // clicks
-                executor.submit(new ClicksTask(blogId, today));
-                executor.submit(new ClicksTask(blogId, yesterday));
+                    // clicks
+                    executor.submit(new ClicksTask(blogId, today));
+                    executor.submit(new ClicksTask(blogId, yesterday));
 
-                // referrers
-                executor.submit(new ReferrersTask(blogId, today));
-                executor.submit(new ReferrersTask(blogId, yesterday));
+                    // referrers
+                    executor.submit(new ReferrersTask(blogId, today));
+                    executor.submit(new ReferrersTask(blogId, yesterday));
 
-                // search engine terms
-                executor.submit(new SearchEngineTermsTask(blogId, today));
-                executor.submit(new SearchEngineTermsTask(blogId, yesterday));
+                    // search engine terms
+                    executor.submit(new SearchEngineTermsTask(blogId, today));
+                    executor.submit(new SearchEngineTermsTask(blogId, yesterday));
 
-                /*
-                // comments
-                executor.submit(new CommentsTopTask(blogId));
-                executor.submit(new CommentsMostTask(blogId));
-                // tags and categories
-                executor.submit(new TagsAndCategoriesTask(blogId));
-                // top authors
-                executor.submit(new TopAuthorsTask(blogId));
-                // video plays
-                executor.submit(new VideoPlaysTask(blogId));
-                */
+                    /*
+                    // comments
+                    executor.submit(new CommentsTopTask(blogId));
+                    executor.submit(new CommentsMostTask(blogId));
+                    // tags and categories
+                    executor.submit(new TagsAndCategoriesTask(blogId));
+                    // top authors
+                    executor.submit(new TopAuthorsTask(blogId));
+                    // video plays
+                    executor.submit(new VideoPlaysTask(blogId));
+                    */
+                } catch (RejectedExecutionException e) {
+                    AppLog.e(T.STATS, e);
+                }
 
                 AppLog.i(T.STATS, "update started");
                 broadcastUpdate(true);
