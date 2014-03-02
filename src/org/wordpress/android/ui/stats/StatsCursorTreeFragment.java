@@ -18,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,8 +32,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.SysUtils;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
@@ -70,7 +70,9 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     private final ContentObserver mContentObserver = new MyObserver(new Handler());
     
     private StatsCursorInterface mCallback;
-    
+
+    private static final int ANIM_DURATION = 150;
+
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
@@ -219,7 +221,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         // refresh views if this was a group loader, or if all child loaders have completed
         if (isGroupLoader || mNumChildLoaders == 0) {
             configureEmptyLabel();
-            reloadLinearLayout();
+            reloadGroupViews();
         }
     }
 
@@ -232,15 +234,22 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
-        reloadLinearLayout();
+        reloadGroupViews();
     }
 
     public void setListAdapter(CursorTreeAdapter adapter) {
         mAdapter = adapter;
-        reloadLinearLayout();
+        reloadGroupViews();
     }
 
-    private void reloadLinearLayout() {
+    /*
+     * interpolator for all expand/collapse animations
+     */
+    private Interpolator getInterpolator() {
+        return new AccelerateDecelerateInterpolator();
+    }
+
+    private void reloadGroupViews() {
         if (getActivity() == null || mLinearLayout == null || mAdapter == null)
             return;
 
@@ -334,8 +343,12 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         }
 
         if (childContainer.getVisibility() != View.VISIBLE) {
-            if (animate)
-                AniUtils.fadeIn(childContainer);
+            if (animate) {
+                Animation expand = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
+                expand.setDuration(ANIM_DURATION);
+                expand.setInterpolator(getInterpolator());
+                childContainer.startAnimation(expand);
+            }
             childContainer.setVisibility(View.VISIBLE);
         }
 
@@ -346,7 +359,26 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null)
             return;
-        childContainer.setVisibility(View.GONE);
+        if (childContainer.getVisibility() != View.GONE) {
+            if (animate) {
+                Animation expand = new ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f);
+                expand.setDuration(ANIM_DURATION);
+                expand.setInterpolator(getInterpolator());
+                expand.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) { }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        childContainer.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+                });
+                childContainer.startAnimation(expand);
+            } else {
+                childContainer.setVisibility(View.GONE);
+            }
+        }
         setGroupChevron(false, groupView, animate);
     }
 
@@ -355,15 +387,16 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
      */
     private void setGroupChevron(boolean isGroupExpanded, View groupView, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
-        chevron.clearAnimation();
+        if (chevron == null)
+            return;
 
-        // animate the expand/collapse on ICS+ (older devices sometimes have jittery animation)
-        if (animate && SysUtils.isGteAndroid4()) {
+        // animate the expand/collapse
+        if (animate) {
             float start = (isGroupExpanded ? 0.0f : -90.0f);
             float end = (isGroupExpanded ? -90.0f : 0.0f);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotate.setDuration(150);
-            rotate.setInterpolator(new AccelerateInterpolator());
+            rotate.setDuration(ANIM_DURATION);
+            rotate.setInterpolator(getInterpolator());
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
