@@ -28,7 +28,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:visibility="gone"
-            android:src="@drawable/stats_chevron_down" />
+            android:src="@drawable/stats_chevron_right" />
 
         <TextView
             android:id="@+id/stats_list_cell_entry"
@@ -40,6 +40,7 @@
             android:paddingLeft="@dimen/margin_small"
             android:maxLines="3"
             android:textColorLink="@color/wordpress_blue"
+            android:autoLink="none"
             android:textSize="@dimen/text_sz_medium" />
 
         <TextView

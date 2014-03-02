@@ -392,15 +392,15 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
         // animate the expand/collapse
         if (animate) {
-            float start = (isGroupExpanded ? 0.0f : -90.0f);
-            float end = (isGroupExpanded ? -90.0f : 0.0f);
+            float start = (isGroupExpanded ? 0.0f : 90.0f);
+            float end = (isGroupExpanded ? 90.0f : 0.0f);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);
             rotate.setInterpolator(getInterpolator());
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
-            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_up : R.drawable.stats_chevron_down);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_down : R.drawable.stats_chevron_right);
         }
     }
 
