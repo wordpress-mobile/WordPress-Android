@@ -15,7 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for search engine term stats. Has two pages, for Today's and Yesterday's stats.
@@ -83,15 +82,8 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
             String entry = cursor.getString(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.SEARCH));
             int total = cursor.getInt(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.VIEWS));
 
-            if (entry != null && entry.startsWith("http")) {
-                StatUtils.setTextHyperlink(holder.entryTextView, entry, entry);
-            } else {
-                holder.entryTextView.setText(entry);
-            }
-
+            holder.entryTextView.setText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            // no icon
             holder.networkImageView.setVisibility(View.GONE);
         }
 

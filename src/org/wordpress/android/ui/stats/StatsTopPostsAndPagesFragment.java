@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,12 +87,8 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
 
             // entries
-            if (!TextUtils.isEmpty(url)) {
-                StatUtils.setTextHyperlink(holder.entryTextView, url, entry);
-            } else {
-                holder.entryTextView.setText(entry);
-            }
-            
+            StatUtils.setTextOrLink(holder.entryTextView, url, entry);
+
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 

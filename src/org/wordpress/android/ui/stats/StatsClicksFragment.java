@@ -117,11 +117,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
 
             // name, url
-            if (name != null && name.startsWith("http")) {
-                StatUtils.setTextHyperlink(holder.entryTextView, name, name);
-            } else {
-                holder.entryTextView.setText(name);
-            }
+            StatUtils.setTextOrLink(holder.entryTextView, name, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
@@ -148,11 +144,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
 
             // name, url
-            if (!TextUtils.isEmpty(url)) {
-                StatUtils.setTextHyperlink(holder.entryTextView, url, name);
-            } else {
-                holder.entryTextView.setText(name);
-            }
+            StatUtils.setTextOrLink(holder.entryTextView, url, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

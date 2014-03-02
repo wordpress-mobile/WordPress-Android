@@ -9,6 +9,7 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
@@ -224,17 +225,25 @@ public class StatUtils {
     }
 
     /*
-     * used by various fragments to set a textView to a clickable hyperlink
+     * used by stats fragments to set a textView's text and make it a clickable link if
+     * it contains a url
      */
-    public static void setTextHyperlink(TextView textView, String linkUrl, String linkName) {
-        if (textView == null || linkUrl == null || linkName == null)
+    public static void setTextOrLink(TextView textView, String linkUrl, String linkName) {
+        if (textView == null)
             return;
-        if (linkUrl.equals(linkName)) {
+
+        if (TextUtils.isEmpty(linkUrl)) {
+            textView.setText(linkName);
+            if (linkName != null && linkName.startsWith("http")) {
+                Linkify.addLinks(textView, Linkify.WEB_URLS);
+            }
+        } else if (TextUtils.isEmpty(linkName)) {
             textView.setText(linkUrl);
-            Linkify.addLinks(textView, Linkify.WEB_URLS);
+            if (linkUrl != null && linkUrl.startsWith("http")) {
+                Linkify.addLinks(textView, Linkify.WEB_URLS);
+            }
         } else {
-            String html = "<a href=\"" + linkUrl + "\">" + linkName + "</a>";
-            textView.setText(Html.fromHtml(html));
+            textView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
     }

@@ -228,7 +228,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
 
-            StatUtils.setTextHyperlink(mMostCommentedText, activePostUrl, activePost);
+            StatUtils.setTextOrLink(mMostCommentedText, activePostUrl, activePost);
         }
 
 
