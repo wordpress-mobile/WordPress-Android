@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 
@@ -250,7 +252,17 @@ public class MediaItemFragment extends SherlockFragment {
                 final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
                 loadLocalImage(mImageView, filePath, width, height);
             } else {
-                ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
+                // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
+                String thumbnailURL = null;
+                if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
+                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int)screenWidth);
+                }
+
+                if (thumbnailURL != null) {
+                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, WordPress.imageLoader);
+                } else {
+                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
+                }
             }
             mImageView.setVisibility(View.VISIBLE);
             
