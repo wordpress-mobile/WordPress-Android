@@ -67,9 +67,9 @@ public class StatsService extends Service {
      * submit and process all stats tasks - tasks are submitted in the order they're displayed:
      *  Visitors and views (summary)
      *  Top posts & pages
+     *  Views by country
      *  Referrers
      *  Clicks
-     *  Views by country
      *  Search engine terms
      */
     private static final int EXECUTOR_TIMEOUT_SECONDS = 60;
@@ -92,6 +92,10 @@ public class StatsService extends Service {
                     executor.submit(new TopPostsAndPagesTask(blogId, today));
                     executor.submit(new TopPostsAndPagesTask(blogId, yesterday));
 
+                    // views by country
+                    executor.submit(new ViewsByCountryTask(blogId, today));
+                    executor.submit(new ViewsByCountryTask(blogId, yesterday));
+
                     // referrers
                     executor.submit(new ReferrersTask(blogId, today));
                     executor.submit(new ReferrersTask(blogId, yesterday));
@@ -99,10 +103,6 @@ public class StatsService extends Service {
                     // clicks
                     executor.submit(new ClicksTask(blogId, today));
                     executor.submit(new ClicksTask(blogId, yesterday));
-
-                    // views by country
-                    executor.submit(new ViewsByCountryTask(blogId, today));
-                    executor.submit(new ViewsByCountryTask(blogId, yesterday));
 
                     // search engine terms
                     executor.submit(new SearchEngineTermsTask(blogId, today));

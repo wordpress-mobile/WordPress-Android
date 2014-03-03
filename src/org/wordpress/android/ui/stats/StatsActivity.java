@@ -301,22 +301,22 @@ public class StatsActivity extends WPActionBarActivity {
         mFragmentContainer.removeView(frameView);
         columnLeft.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
         mFragmentContainer.removeView(frameView);
         columnLeft.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
         mFragmentContainer.removeView(frameView);
         columnLeft.addView(frameView);
 
         /*
          * right column
          */
-        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
         mFragmentContainer.removeView(frameView);
         columnRight.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
         mFragmentContainer.removeView(frameView);
         columnRight.addView(frameView);
 
