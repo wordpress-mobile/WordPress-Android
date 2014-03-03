@@ -80,7 +80,7 @@ public class ToastUtils {
         }
 
         if (isInvalidTokenError && (context instanceof FragmentActivity)) {
-            showAuthErrorDialog(context);
+            showAuthErrorDialog((FragmentActivity) context);
         } else {
             String fallbackErrorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(
                     R.string.error_generic) : friendlyMessage;
@@ -113,7 +113,7 @@ public class ToastUtils {
 
         if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && (xmlrpcMessage.contains(
                 "code 403") || is2StepsAuthEnabled)) {
-            showAuthErrorDialog(context);
+            showAuthErrorDialog((FragmentActivity) context);
         } else {
             String errorMessage = null;
             if (isLoginLimitReached) {
@@ -128,8 +128,7 @@ public class ToastUtils {
         }
     }
 
-    private static void showAuthErrorDialog(Context context) {
-        FragmentActivity activity = (FragmentActivity) context;
+    private static void showAuthErrorDialog(FragmentActivity activity) {
         if (activity.isFinishing()) {
             return;
         }
