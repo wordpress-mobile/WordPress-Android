@@ -26,5 +26,6 @@ class StatsViewHolder {
         networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
         networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
         networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
+        networkImageView.setImageResource(R.drawable.stats_blank_image);
     }
 }
