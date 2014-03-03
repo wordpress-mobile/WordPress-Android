@@ -177,7 +177,7 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void requestPosts(boolean loadMore) {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null || mIsFetchingPosts)
             return;
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
