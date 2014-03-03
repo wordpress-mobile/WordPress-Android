@@ -26,6 +26,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlpull.v1.XmlPullParser;
 
@@ -202,6 +203,11 @@ public class ApiHelper {
 
         public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
             if (context == null || blog == null) {
+                cancel(true);
+                return;
+            }
+
+            if (!NetworkUtils.isNetworkAvailable(context)) {
                 cancel(true);
                 return;
             }

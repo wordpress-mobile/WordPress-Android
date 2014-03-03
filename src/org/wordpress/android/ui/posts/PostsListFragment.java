@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 
@@ -181,7 +182,10 @@ public class PostsListFragment extends ListFragment {
     }
 
     public void requestPosts(boolean loadMore) {
-        if (WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+        if (!hasActivity() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+            return;
+
+        if (!NetworkUtils.checkConnection(getActivity()))
             return;
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
