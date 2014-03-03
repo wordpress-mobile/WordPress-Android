@@ -270,13 +270,12 @@ public class ReaderActivity extends WPActionBarActivity
         if (!NetworkUtils.isNetworkAvailable(this))
             return;
 
-        mHasPerformedInitialUpdate = true;
-
         // animate refresh button in post list if tags are being updated for the first time
         ReaderPostListFragment listFragment = getListFragment();
         final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
-        if (animateRefresh)
-            listFragment.animateRefreshButton(true);
+        if (animateRefresh) {
+            listFragment.setIsUpdating(true);
+        }
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -284,12 +283,15 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
+                mHasPerformedInitialUpdate = true;
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
-                    if (animateRefresh)
-                        listFragment.animateRefreshButton(false);
-                    if (result == UpdateResult.CHANGED)
+                    if (animateRefresh) {
+                        listFragment.setIsUpdating(false);
+                    }
+                    if (result == UpdateResult.CHANGED) {
                         listFragment.refreshTags();
+                    }
                 }
 
                 // now that tags have been retrieved, perform the other requests - first update
