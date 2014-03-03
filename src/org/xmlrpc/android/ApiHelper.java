@@ -407,6 +407,11 @@ public class ApiHelper {
                 if (result != null && result.length > 0) {
                     List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
 
+                    if (!loadMore) {
+                        WordPress.wpDB.deleteUploadedPosts(
+                                blog.getLocalTableBlogId(), isPage);
+                    }
+
                     // If we're loading more posts, only save the posts at the end of the array.
                     // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
                     // since it allows for an offset parameter.
