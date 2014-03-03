@@ -4,23 +4,14 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
-  android:minHeight="50dip">
+  android:paddingTop="@dimen/margin_small"
+  android:paddingBottom="@dimen/margin_small">
 
   <ProgressBar
     android:id="@+id/progressbar"
-    android:layout_width="20dip"
-    android:layout_height="20dip"
+    android:layout_width="28dp"
+    android:layout_height="28dp"
     android:layout_centerVertical="true"
     style="?android:attr/progressBarStyleInverse" />
 
-  <TextView
-    android:text="@string/loading"
-    android:textSize="16dip"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
-    android:layout_toRightOf="@+id/progressbar"
-    android:layout_centerVertical="true"
-    android:gravity="center"
-    android:padding="10dip"
-    android:textColor="#FF464646" />
 </RelativeLayout>
