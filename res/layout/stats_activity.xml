@@ -51,15 +51,7 @@
             android:layout_marginRight="@dimen/margin_medium" />
 
         <FrameLayout
-            android:id="@+id/stats_geoviews_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium" />
-
-        <FrameLayout
-            android:id="@+id/stats_totals_followers_shares_container"
+            android:id="@+id/stats_referrers_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
@@ -68,6 +60,31 @@
 
         <FrameLayout
             android:id="@+id/stats_clicks_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium" />
+
+        <FrameLayout
+            android:id="@+id/stats_geoviews_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium" />
+
+        <FrameLayout
+            android:id="@+id/stats_searchengine_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium" />
+
+        <FrameLayout
+            android:id="@+id/stats_totals_followers_shares_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
@@ -87,13 +104,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium" /> -->
-        <FrameLayout
-            android:id="@+id/stats_referrers_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium" />
+
         <!--<FrameLayout
             android:id="@+id/stats_video_container"
             android:layout_width="match_parent"
@@ -108,13 +119,6 @@
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium" /> -->
-        <FrameLayout
-            android:id="@+id/stats_searchengine_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium" />
+
     </LinearLayout>
 </ScrollView>
