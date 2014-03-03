@@ -2,24 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/stats_pager_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/stats_tablet_header_title"
-        android:padding="6dp"
-        android:text="@string/stats_view_totals_followers_and_shares"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_small" />
+        style="@style/StatsPagerTitle" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/stats_white_background"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -34,13 +27,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="@dimen/margin_medium" >
+                android:padding="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_posts_count"
@@ -68,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="@dimen/margin_medium" >
+                android:padding="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_categories_count"
@@ -96,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="@dimen/margin_medium" >
+                android:padding="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_tags_count"
@@ -130,13 +123,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:padding="@dimen/margin_medium" >
+                android:padding="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_followers_count"
@@ -163,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="@dimen/margin_medium" >
+                android:padding="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_comments_count"
@@ -196,7 +189,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_medium" >
+            android:padding="@dimen/margin_medium">
 
             <TextView
                 android:id="@+id/stats_totals_followers_shares_shares_count"

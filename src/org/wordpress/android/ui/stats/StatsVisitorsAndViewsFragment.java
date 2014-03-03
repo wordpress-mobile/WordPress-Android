@@ -27,6 +27,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Fragment for visitors and views stats. Has three pages, for DAY, WEEK and MONTH stats.
@@ -53,7 +54,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
-        titleTextView.setText(getTitle());
+        titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
         mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);

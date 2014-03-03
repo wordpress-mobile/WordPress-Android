@@ -24,6 +24,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Fragment for summary stats. Only a single page.
@@ -42,6 +43,9 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_totals_followers_shares, container, false);
+
+        final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
+        titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
         mPostsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_posts_count);
         mCategoriesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_categories_count);
