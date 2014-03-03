@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    non-tablet layout for notifications
+    non-tablet layout for comments
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_fragment_container"
@@ -9,8 +9,9 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
-        android:id="@+id/fragment_notes_list"
+        android:id="@+id/fragment_comment_list"
+        android:tag="@string/fragment_tag_comment_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:name="org.wordpress.android.ui.comments.CommentsListFragment" />
 </RelativeLayout>

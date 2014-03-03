@@ -33,8 +33,8 @@ import org.wordpress.android.util.ToastUtils;
  * don't want the activity re-created while the reblog is being submitted
  */
 public class ReaderReblogActivity extends FragmentActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_POST_ID = "post_id";
 
     private long mBlogId;
     private long mPostId;
