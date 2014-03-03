@@ -62,6 +62,7 @@ public class WPMobileStatsUtil {
     public static final String StatsPropertyPostDetailClickedKeyboardToolbarMoreButton = "clicked_keyboard_toolbar_more_button";
     public static final String StatsPropertyPostDetailClickedKeyboardToolbarPictureButton = "clicked_keyboard_toolbar_picture_button";
     public static final String StatsPropertyPostDetailClickedUpdate = "clicked_update_button";
+    public static final String StatsPropertyPostDetailClickedSaveDraft = "clicked_save_draft_button";
     public static final String StatsPropertyPostDetailClickedPublish = "clicked_publish_button";
 
     public static final String StatsEventPostDetailOpenedEditor = "Post - Opened Editor";

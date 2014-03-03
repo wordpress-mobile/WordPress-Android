@@ -6,6 +6,11 @@
         android:showAsAction="always"
         android:title="@string/preview"/>
     <item
+        android:id="@+id/menu_save_draft"
+        android:icon="@drawable/ab_icon_save"
+        android:showAsAction="always"
+        android:title="@string/save_draft"/>
+    <item
         android:id="@+id/menu_save_post"
         android:icon="@drawable/ab_icon_send_lite"
         android:showAsAction="always"

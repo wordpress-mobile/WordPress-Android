@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
@@ -115,6 +116,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
                 mOriginalPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
+                if (mIsNewPost) {
+                    // New posts are drafts by default
+                    mPost.setPost_status("draft");
+                    mOriginalPost.setPost_status("draft");
+                }
 
                 if (isPage) {
                     WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
@@ -224,12 +230,21 @@ public class EditPostActivity extends SherlockFragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
+        MenuItem saveDraftMenuItem = menu.findItem(R.id.menu_save_draft);
         MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             previewMenuItem.setVisible(false);
+            saveDraftMenuItem.setVisible(false);
             saveMenuItem.setVisible(false);
         } else {
             previewMenuItem.setVisible(true);
+            // Display the save draft menu item if the post is new (no post id) or it is saved
+            // server-side and does not have a "published" status.
+            if(mPost != null && (mPost.getPostid() == null || !mPost.getPost_status().equals("publish")) ) {
+                saveDraftMenuItem.setVisible(true);
+            } else {
+                saveDraftMenuItem.setVisible(false);
+            }
             saveMenuItem.setVisible(true);
         }
 
@@ -254,6 +269,14 @@ public class EditPostActivity extends SherlockFragmentActivity {
             setResult(RESULT_OK, i);
             finish();
             return true;
+        } else if (itemId == R.id.menu_save_draft) {
+            WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedSaveDraft);
+            savePost(false);
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
+            ToastUtils.showToast(this, R.string.post_draft_saved);
+            // The current post is now the original post
+            mOriginalPost = mPost.clone();
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == android.R.id.home) {

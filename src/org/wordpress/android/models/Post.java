@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
-public class Post implements Serializable {
+public class Post implements Serializable, Cloneable{
 
     // Increment this value if this model changes
     // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
@@ -492,4 +492,14 @@ public class Post implements Serializable {
     public boolean isNew() {
         return getId() >= 0;
     }
+
+    @Override
+    public Post clone() {
+        try {
+            return (Post)super.clone();
+        } catch(CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
 }
