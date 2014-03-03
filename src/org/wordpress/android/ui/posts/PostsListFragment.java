@@ -105,10 +105,10 @@ public class PostsListFragment extends ListFragment {
                 PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
                 if (postsListPost == null)
                     return;
-                if (!mIsFetchingPosts) {
+                if (!mIsFetchingPosts || isLoadingMorePosts()) {
                     showPost(postsListPost.getPostId());
                 } else if (hasActivity()) {
-                    Toast.makeText(getActivity(), R.string.please_wait_refresh_done,
+                    Toast.makeText(getActivity(), mIsPage ? R.string.loading_pages : R.string.loading_posts,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -176,6 +176,10 @@ public class PostsListFragment extends ListFragment {
         }
     }
 
+    public boolean isLoadingMorePosts() {
+        return mIsFetchingPosts && (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE);
+    }
+
     public void requestPosts(boolean loadMore) {
         if (WordPress.getCurrentBlog() == null || mIsFetchingPosts)
             return;
@@ -200,15 +204,17 @@ public class PostsListFragment extends ListFragment {
                 mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
+
                 mOnRefreshListener.onRefresh(false);
+                if (mProgressFooterView != null) {
+                    mProgressFooterView.setVisibility(View.GONE);
+                }
+
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
                 } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
                     // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
                     mCanLoadMorePosts = false;
-                    if (mProgressFooterView != null) {
-                        mProgressFooterView.setVisibility(View.GONE);
-                    }
                 }
 
                 getPostListAdapter().loadPosts();
@@ -219,9 +225,11 @@ public class PostsListFragment extends ListFragment {
                 mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
+
                 mOnRefreshListener.onRefresh(false);
                 if (mProgressFooterView != null)
                     mProgressFooterView.setVisibility(View.GONE);
+
                 if (!TextUtils.isEmpty(errorMessage) && !getActivity().isFinishing()) {
                     FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
