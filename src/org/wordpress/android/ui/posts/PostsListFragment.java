@@ -149,7 +149,10 @@ public class PostsListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
-            getListView().setAdapter(getPostListAdapter());
+            if (getListView().getAdapter() == null) {
+                getListView().setAdapter(getPostListAdapter());
+            }
+
             getPostListAdapter().loadPosts();
         }
     }
