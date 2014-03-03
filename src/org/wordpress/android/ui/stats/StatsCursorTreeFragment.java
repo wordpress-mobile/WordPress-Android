@@ -385,15 +385,16 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     /*
      * shows the correct up/down chevron for the passed group
      */
-    private void setGroupChevron(boolean isGroupExpanded, View groupView, boolean animate) {
+    private void setGroupChevron(final boolean isGroupExpanded, View groupView, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null)
             return;
 
-        // animate the expand/collapse
         if (animate) {
-            float start = (isGroupExpanded ? 0.0f : 90.0f);
-            float end = (isGroupExpanded ? 90.0f : 0.0f);
+            // make sure we start with the correct chevron for the prior state before animating it
+            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_right : R.drawable.stats_chevron_down);
+            float start = (isGroupExpanded ? 0.0f : 0.0f);
+            float end = (isGroupExpanded ? 90.0f : -90.0f);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);
             rotate.setInterpolator(getInterpolator());
