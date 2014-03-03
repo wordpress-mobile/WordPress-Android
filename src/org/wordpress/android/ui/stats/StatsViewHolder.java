@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats;
 
+import android.text.Html;
+import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -7,6 +10,8 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 /**
  * Created by nbradbury on 2/25/14.
@@ -26,6 +31,41 @@ class StatsViewHolder {
         networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
         networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
         networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
-        networkImageView.setImageResource(R.drawable.stats_blank_image);
+    }
+
+    /*
+     * used by stats fragments to set the entry text, making it a clickable link if a url is passed
+     */
+    public void setEntryTextOrLink(String linkUrl, String linkName) {
+        if (entryTextView == null)
+            return;
+
+        if (TextUtils.isEmpty(linkUrl)) {
+            entryTextView.setText(linkName);
+            if (linkName != null && linkName.startsWith("http")) {
+                Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
+            }
+        } else if (TextUtils.isEmpty(linkName)) {
+            entryTextView.setText(linkUrl);
+            if (linkUrl != null && linkUrl.startsWith("http")) {
+                Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
+            }
+        } else {
+            entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
+            entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        }
+    }
+
+    /*
+     * used by stats fragments to show a downloadable icon or default image
+     */
+    public void showNetworkImage(String imageUrl) {
+        if (networkImageView == null)
+            return;
+        if (imageUrl != null && imageUrl.startsWith("http")) {
+            networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+        } else {
+            networkImageView.setImageResource(R.drawable.stats_blank_image);
+        }
     }
 }

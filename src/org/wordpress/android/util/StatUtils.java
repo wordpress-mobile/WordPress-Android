@@ -8,10 +8,6 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.util.Linkify;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -223,29 +219,4 @@ public class StatUtils {
         }
         return stat;
     }
-
-    /*
-     * used by stats fragments to set a textView's text and make it a clickable link if
-     * it contains a url
-     */
-    public static void setTextOrLink(TextView textView, String linkUrl, String linkName) {
-        if (textView == null)
-            return;
-
-        if (TextUtils.isEmpty(linkUrl)) {
-            textView.setText(linkName);
-            if (linkName != null && linkName.startsWith("http")) {
-                Linkify.addLinks(textView, Linkify.WEB_URLS);
-            }
-        } else if (TextUtils.isEmpty(linkName)) {
-            textView.setText(linkUrl);
-            if (linkUrl != null && linkUrl.startsWith("http")) {
-                Linkify.addLinks(textView, Linkify.WEB_URLS);
-            }
-        } else {
-            textView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
-            textView.setMovementMethod(WPLinkMovementMethod.getInstance());
-        }
-    }
-
 }

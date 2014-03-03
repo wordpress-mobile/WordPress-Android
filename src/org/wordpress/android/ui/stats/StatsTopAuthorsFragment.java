@@ -7,13 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsTopAuthorsTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
@@ -96,11 +94,7 @@ public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             
             // image
-            if (!TextUtils.isEmpty(imageUrl)) {
-                holder.networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
-            } else {
-                holder.networkImageView.setImageDrawable(null);
-            }
+            holder.showNetworkImage(imageUrl);
         }
     }
 

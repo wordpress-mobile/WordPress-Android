@@ -15,7 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
@@ -87,7 +86,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
 
             // entries
-            StatUtils.setTextOrLink(holder.entryTextView, url, entry);
+            holder.setEntryTextOrLink(url, entry);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

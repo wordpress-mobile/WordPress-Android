@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,11 +127,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             if (mType == TOP_COMMENTERS) {
                 String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
                 holder.networkImageView.setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    holder.networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                } else {
-                    holder.networkImageView.setImageDrawable(null);
-                }
+                holder.showNetworkImage(imageUrl);
             } else {
                 holder.networkImageView.setVisibility(View.GONE);
             }
@@ -228,7 +223,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
 
-            StatUtils.setTextOrLink(mMostCommentedText, activePostUrl, activePost);
+           // StatUtils.setEntryTextOrLink(mMostCommentedText, activePostUrl, activePost);
         }
 
 

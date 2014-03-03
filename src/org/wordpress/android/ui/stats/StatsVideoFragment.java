@@ -109,7 +109,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
 
             // entries
-            StatUtils.setTextOrLink(holder.entryTextView, url, entry);
+            holder.setEntryTextOrLink(url, entry);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

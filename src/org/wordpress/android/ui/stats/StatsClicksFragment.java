@@ -7,19 +7,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
@@ -117,7 +114,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
 
             // name, url
-            StatUtils.setTextOrLink(holder.entryTextView, name, name);
+            holder.setEntryTextOrLink(name, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
@@ -144,17 +141,13 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
             int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
 
             // name, url
-            StatUtils.setTextOrLink(holder.entryTextView, url, name);
+            holder.setEntryTextOrLink(url, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
-            if (!TextUtils.isEmpty(icon)) {
-                holder.networkImageView.setImageUrl(icon, WordPress.imageLoader);
-            } else {
-                holder.networkImageView.setImageResource(R.drawable.stats_blank_image);
-            }
+            holder.showNetworkImage(icon);
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
