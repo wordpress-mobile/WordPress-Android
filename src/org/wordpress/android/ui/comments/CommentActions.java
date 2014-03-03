@@ -55,8 +55,9 @@ public class CommentActions {
      * comments (moderated, deleted, added, etc.)
      */
     public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
+    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED}
     public static interface OnCommentChangeListener {
-        public void onCommentChanged(ChangedFrom changedFrom);
+        public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
     }
 
 
@@ -122,10 +123,10 @@ public class CommentActions {
     /**
      * reply to an individual comment
      */
-    protected static void submitReplyToComment(final int accountId,
-                                               final Comment comment,
-                                               final String replyText,
-                                               final CommentActionListener actionListener) {
+    static void submitReplyToComment(final int accountId,
+                                     final Comment comment,
+                                     final String replyText,
+                                     final CommentActionListener actionListener) {
 
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
@@ -194,9 +195,9 @@ public class CommentActions {
      * submitReplyToComment() in that it enables responding to a reply to a comment this
      * user made on someone else's blog
      */
-    protected static void submitReplyToCommentNote(final Note note,
-                                                   final String replyText,
-                                                   final CommentActionListener actionListener) {
+    static void submitReplyToCommentNote(final Note note,
+                                         final String replyText,
+                                         final CommentActionListener actionListener) {
         if (note == null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
@@ -227,10 +228,10 @@ public class CommentActions {
     /**
      * change the status of a single comment
      */
-    protected static void moderateComment(final int accountId,
-                                          final Comment comment,
-                                          final CommentStatus newStatus,
-                                          final CommentActionListener actionListener) {
+    static void moderateComment(final int accountId,
+                                final Comment comment,
+                                final CommentStatus newStatus,
+                                final CommentActionListener actionListener) {
 
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
@@ -295,10 +296,10 @@ public class CommentActions {
      * change the status of multiple comments
      * TODO: investigate using system.multiCall to perform a single call to moderate the list
      */
-    protected static void moderateComments(final int accountId,
-                                           final CommentList comments,
-                                           final CommentStatus newStatus,
-                                           final OnCommentsModeratedListener actionListener) {
+    static void moderateComments(final int accountId,
+                                 final CommentList comments,
+                                 final CommentStatus newStatus,
+                                 final OnCommentsModeratedListener actionListener) {
 
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {

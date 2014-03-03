@@ -31,6 +31,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -41,9 +42,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderPostAdapter extends BaseAdapter {
     private String mCurrentTag;
 
-    private int mPhotonWidth;
-    private int mPhotonHeight;
-    private int mAvatarSz;
+    private final int mPhotonWidth;
+    private final int mPhotonHeight;
+    private final int mAvatarSz;
 
     private final float mRowAnimationFromYDelta;
     private final int mRowAnimationDuration;
@@ -57,11 +58,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final String mFollowing;
     private final String mFollow;
 
-    private ReaderActions.RequestReblogListener mReblogListener;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderActions.DataRequestedListener mDataRequestedListener;
+    private final ReaderActions.RequestReblogListener mReblogListener;
+    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    private boolean mEnableImagePreload;
+    private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
 
@@ -99,8 +100,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
-    public void setTag(String tagName) {
-        mCurrentTag = tagName;
+    public String getCurrentTag() {
+        return StringUtils.notNullStr(mCurrentTag);
+    }
+
+    public void setCurrentTag(String tagName) {
+        mCurrentTag = StringUtils.notNullStr(tagName);
         reload(false);
     }
 
@@ -367,7 +372,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * animate in the passed view - uses faster property animation on ICS and above, falls back to
      * animation resource for older devices
      */
-    private DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
+    private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
     @SuppressLint("NewApi")
     private void animateRow(View view) {
         if (SysUtils.isGteAndroid4()) {
@@ -551,7 +556,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }
 
-    private ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
+    private final ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
         @Override
         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
             // nop

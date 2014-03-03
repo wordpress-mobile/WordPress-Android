@@ -33,12 +33,12 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderUserAdapter extends BaseAdapter {
     public static enum ReaderUserListType {UNKNOWN, LIKE_POST}
 
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private ReaderUserList mUsers = new ReaderUserList();
     private ReaderUserListType mListType = ReaderUserListType.UNKNOWN;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderPost mPost;
-    private int mAvatarSz;
+    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderPost mPost;
+    private final int mAvatarSz;
 
     public ReaderUserAdapter(Context context,
                              ReaderUserListType listType,

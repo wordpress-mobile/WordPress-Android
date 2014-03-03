@@ -126,23 +126,6 @@ public class ReaderCommentTable {
     }
 
     /*
-     * returns the # of parents a comments has, used to determine its indentation when displayed
-     */
-    public static int getNumParentsForComment(ReaderPost post, long commentId) {
-        if (post==null)
-            return 0;
-
-        int indentLevel = -1;
-        do {
-            indentLevel++;
-            String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(commentId)};
-            commentId = SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), "SELECT parent_id FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
-        } while (commentId!=0);
-
-        return indentLevel;
-    }
-
-    /*
      * purge comments attached to posts that no longer exist
      */
     protected static int purge(SQLiteDatabase db) {
