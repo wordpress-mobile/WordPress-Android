@@ -3,7 +3,7 @@
     <item
         android:id="@+id/menu_preview_post"
         android:icon="@drawable/ic_post_preview"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/preview"/>
     <item
         android:id="@+id/menu_save_draft"
@@ -12,7 +12,6 @@
         android:title="@string/save_draft"/>
     <item
         android:id="@+id/menu_save_post"
-        android:icon="@drawable/ab_icon_send_lite"
         android:showAsAction="always"
-        android:title="@string/upload"/>
+        android:title="@string/publish_post"/>
 </menu>

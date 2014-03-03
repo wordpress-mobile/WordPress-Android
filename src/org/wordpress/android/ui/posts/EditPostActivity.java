@@ -23,7 +23,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
@@ -239,13 +238,15 @@ public class EditPostActivity extends SherlockFragmentActivity {
         } else {
             previewMenuItem.setVisible(true);
             // Display the save draft menu item if the post is new (no post id) or it is saved
-            // server-side and does not have a "published" status.
+            // server-side and does not have a "published" status. Update the save menu item title
+            // depending on the status of the current post.
             if(mPost != null && (mPost.getPostid() == null || !mPost.getPost_status().equals("publish")) ) {
                 saveDraftMenuItem.setVisible(true);
+                saveMenuItem.setTitle(R.string.publish_post);
             } else {
                 saveDraftMenuItem.setVisible(false);
+                saveMenuItem.setTitle(R.string.update);
             }
-            saveMenuItem.setVisible(true);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -262,6 +263,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
             }
             savePost(false);
+            // If the current post's status is draft, then automatically set it to publish.
+            if (mPost.getPost_status().equals("draft")) {
+                mPost.setPost_status("publish");
+            }
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -274,7 +279,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
-            ToastUtils.showToast(this, R.string.post_draft_saved);
+            Toast.makeText(this, getResources().getText(R.string.post_draft_saved), Toast.LENGTH_SHORT).show();
             // The current post is now the original post
             mOriginalPost = mPost.clone();
         } else if (itemId == R.id.menu_preview_post) {
