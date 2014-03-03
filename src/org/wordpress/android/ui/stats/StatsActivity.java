@@ -289,15 +289,6 @@ public class StatsActivity extends WPActionBarActivity {
             loadSplitLayout();
     }
 
-    /*
-    Visitors and views
-    Top posts & pages
-    Referrers
-    Clicks
-    Views by country
-    Search engine terms
-    Totals, followers & shares
-     */
     private void loadSplitLayout() {
         LinearLayout columnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
         LinearLayout columnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
