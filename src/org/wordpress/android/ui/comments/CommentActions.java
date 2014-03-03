@@ -99,7 +99,7 @@ public class CommentActions {
                 int newCommentID;
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
-                } catch (XMLRPCException e) {
+                } catch (Exception e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
                 }
@@ -169,7 +169,7 @@ public class CommentActions {
                         AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
                         newCommentID = -1;
                     }
-                } catch (XMLRPCException e) {
+                } catch (Exception e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
                 }
@@ -271,7 +271,7 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call("wp.editComment", params);
-                } catch (final XMLRPCException e) {
+                } catch (final Exception e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     result = null;
                 }
@@ -349,7 +349,7 @@ public class CommentActions {
                             comment.setStatus(newStatusStr);
                             moderatedComments.add(comment);
                         }
-                    } catch (final XMLRPCException e) {
+                    } catch (final Exception e) {
                         AppLog.e(T.COMMENTS, e.getMessage(), e);
                     }
                 }
@@ -399,7 +399,7 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call("wp.deleteComment", params);
-                } catch (final XMLRPCException e) {
+                } catch (final Exception e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     result = null;
                 }
@@ -459,7 +459,7 @@ public class CommentActions {
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);
-                    } catch (final XMLRPCException e) {
+                    } catch (final Exception e) {
                         AppLog.e(T.COMMENTS, e.getMessage(), e);
                     }
                 }

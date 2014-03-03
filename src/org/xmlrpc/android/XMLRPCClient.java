@@ -161,7 +161,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method, Object[] params) throws XMLRPCException {
+    public Object call(String method, Object[] params) throws Exception {
         return call(method, params, null);
     }
 
@@ -172,12 +172,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method) throws XMLRPCException {
+    public Object call(String method) throws Exception {
         return call(method, null, null);
     }
 
 
-    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException {
+    public Object call(String method, Object[] params, File tempFile) throws Exception {
         return new Caller().callXMLRPC(method, params, tempFile);
     }
 
@@ -410,7 +410,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 listener.onSuccess(threadId, o);
             } catch(CancelException ex) {
                 // Don't notify the listener, if the call has been canceled.
-            } catch (XMLRPCException ex) {
+            } catch (Exception ex) {
                 listener.onFailure(threadId, ex);
             } finally {
                 backgroundCalls.remove(threadId);
@@ -438,7 +438,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          * @throws XMLRPCException
          */
         @SuppressWarnings("unchecked")
-        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException {
+        private Object callXMLRPC(String method, Object[] params, File tempFile) throws Exception {
             try {
                 preparePostMethod(method, params, tempFile);
 
@@ -477,14 +477,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
-            } catch (XMLRPCException e) {
-                // catch & propagate XMLRPCException/XMLRPCFault
+            } catch (Exception e) {
                 deleteTempFile(method, tempFile);
                 throw e;
-            } catch (Exception e) {
-                // wrap any other Exception(s) around XMLRPCException
-                deleteTempFile(method, tempFile);
-                throw new XMLRPCException(e);
             }
         }
     }

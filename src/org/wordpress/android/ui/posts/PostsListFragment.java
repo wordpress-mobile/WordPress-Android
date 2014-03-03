@@ -637,7 +637,8 @@ public class PostsListFragment extends ListFragment {
                         WordPress.wpDB.savePosts(postsList, mBlog.getLocalTableBlogId(), mIsPage);
                     }
                 }
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
+                AppLog.e(AppLog.T.POSTS, e);
             }
 
             return success;

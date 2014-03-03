@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.XMLRPCClient;
@@ -197,8 +198,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         try {
             result = (Object[]) mClient.call("wp.getCategories", params);
             success = true;
-        } catch (XMLRPCException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (success) {
@@ -249,8 +250,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         Object result = null;
         try {
             result = mClient.call("wp.newCategory", params);
-        } catch (XMLRPCException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {
@@ -357,8 +358,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         try {
             result = (Map<?, ?>) mClient.call("wp.getTerm", params);
-        } catch (XMLRPCException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {

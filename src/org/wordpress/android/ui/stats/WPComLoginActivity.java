@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -147,10 +148,16 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     WordPress.wpDB.saveBlog(blog);
                 }
                 return true;
-            } catch (XMLRPCException e) {
-                if (!TextUtils.isEmpty(e.getMessage())){
-                    mIsWpcomAccountWith2FA = e.getMessage().contains("code 425");
+            }
+            catch (XMLRPCFault xmlRpcFault) {
+                AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+                if (xmlRpcFault.getFaultCode() == 425) {
+                    mIsWpcomAccountWith2FA = true;
                 }
+                return false;
+            } catch (Exception e) {
+                AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+                mIsWpcomAccountWith2FA = false;
                 return false;
             }
         }

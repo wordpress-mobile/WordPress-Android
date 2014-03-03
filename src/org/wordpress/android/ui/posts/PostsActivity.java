@@ -31,6 +31,7 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -518,7 +519,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost",
                         (mIsPage) ? pageParams : postParams);
                 result = true;
-            } catch (final XMLRPCException e) {
+            } catch (final Exception e) {
+                AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
                         (mIsPage) ? getResources().getText(R.string.page)
                                   : getResources().getText(R.string.post));
@@ -539,7 +541,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
             try {
                 ApiHelper.refreshComments(PostsActivity.this, commentParams);
-            } catch (final XMLRPCException e) {
+            } catch (final Exception e) {
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
             }
             return null;
@@ -612,7 +614,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                     versionResult = (Object) client.call("metaWeblog.getPost",
                             vParams);
                 }
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
+                AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
                 return null;
             }

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -118,7 +119,7 @@ public class ApiHelper {
                 result = client.call("wp.getPostFormats", params);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return result;
@@ -252,7 +253,7 @@ public class ApiHelper {
                 } catch (ClassCastException cce) {
                     setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                     return false;
-                } catch (XMLRPCException e) {
+                } catch (Exception e) {
                     setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                     return false;
                 }
@@ -277,7 +278,7 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return false;
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
@@ -289,7 +290,7 @@ public class ApiHelper {
                     mBlog.getPassword(), hPost};
             try {
                 ApiHelper.refreshComments(mContext, commentParams);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
@@ -311,7 +312,7 @@ public class ApiHelper {
     }
 
     public static CommentList refreshComments(Context context, Object[] commentParams)
-            throws XMLRPCException {
+            throws Exception {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
             return null;
@@ -319,11 +320,7 @@ public class ApiHelper {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        try {
-            result = (Object[]) client.call("wp.getComments", commentParams);
-        } catch (XMLRPCException e) {
-            throw new XMLRPCException(e);
-        }
+        result = (Object[]) client.call("wp.getComments", commentParams);
 
         if (result.length == 0) {
             return null;
@@ -416,16 +413,17 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return 0;
-            } catch (XMLRPCException e) {
-                AppLog.e(T.API, e);
-                // user does not have permission to view media gallery
-                if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
-                    return 0;
+            }
+            catch (XMLRPCFault xmlRpcFault) {
+                if (xmlRpcFault.getFaultCode() == 401) {
+                    setError(ErrorType.NO_UPLOAD_FILES_CAP, xmlRpcFault.getMessage(), xmlRpcFault);
                 } else {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                    return 0;
+                    setError(ErrorType.NETWORK_XMLRPC, xmlRpcFault.getMessage(), xmlRpcFault);
                 }
+                return 0;
+            } catch (Exception e) {
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                return 0;
             }
 
             if (blogId == null) {
@@ -510,7 +508,7 @@ public class ApiHelper {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
 
@@ -566,7 +564,7 @@ public class ApiHelper {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
 
@@ -643,7 +641,7 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return null;
             }
@@ -713,7 +711,7 @@ public class ApiHelper {
                 }
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return null;
@@ -769,9 +767,7 @@ public class ApiHelper {
             Map<?, ?> resultMap = null;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
-            } catch (ClassCastException cce) {
-                AppLog.e(T.API, cce);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 AppLog.e(T.API, e);
             }
 

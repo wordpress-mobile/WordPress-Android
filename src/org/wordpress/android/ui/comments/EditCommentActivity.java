@@ -251,7 +251,7 @@ public class EditCommentActivity extends SherlockActivity {
                     CommentTable.updateComment(mLocalBlogId, mComment);
                 }
                 return isSaved;
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
             }

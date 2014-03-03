@@ -402,12 +402,12 @@ public class PostUploadService extends Service {
                 post.setLocalChange(false);
                 post.update();
                 return true;
-            } catch (final XMLRPCException e) {
+            } catch (final Exception e) {
                 mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
                         .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
-                        + " " + cleanXMLRPCErrorMessage(e.getMessage());
+                        + " " + e.getMessage();
                 mIsMediaError = false;
-                AppLog.i(T.EDITOR, mErrorMessage);
+                AppLog.e(T.EDITOR, mErrorMessage, e);
             }
 
             return false;
@@ -818,9 +818,8 @@ public class PostUploadService extends Service {
         private Object uploadFileHelper(XMLRPCClientInterface client, Object[] params, File tempFile) {
             try {
                 return client.call("wp.uploadFile", params, tempFile);
-            } catch (XMLRPCException e) {
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " +
-                                cleanXMLRPCErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
@@ -832,18 +831,5 @@ public class PostUploadService extends Service {
 
     private File createTempUploadFile(String fileExtension) throws IOException {
         return File.createTempFile("wp-", fileExtension, context.getCacheDir());
-    }
-
-    private String cleanXMLRPCErrorMessage(String message) {
-        if (message != null) {
-            if (message.contains(": "))
-                message = message.substring(message.indexOf(": ") + 2, message.length());
-            if (message.contains("[code"))
-                message = message.substring(0, message.indexOf("[code"));
-            message = StringUtils.unescapeHTML(message);
-            return message;
-        } else {
-            return "";
-        }
     }
 }
