@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.RenamingDelegatingContext;
 
@@ -44,6 +45,9 @@ public class ActivityRobotiumTestCase<T extends Activity> extends ActivityInstru
         // Set default variant
         RestClientFactoryTest.setPrefixAllInstances("default");
         XMLRPCFactoryTest.setPrefixAllInstances("default");
+
+        SQLiteDatabase db = TestUtils.loadDBFromDump(mTargetContext, getInstrumentation().getContext(),
+                "empty_tables.sql");
     }
 
     @Override
