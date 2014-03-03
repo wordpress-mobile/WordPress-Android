@@ -226,7 +226,7 @@ public class NotificationsActivity extends WPActionBarActivity
                 refreshNotes();
                 return true;
             case android.R.id.home:
-                if (isLarge()) {
+                if (isLargeOrXLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
