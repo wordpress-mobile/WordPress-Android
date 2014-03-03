@@ -54,7 +54,6 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/margin_small"
         android:id="@+id/layout_child_container"
         android:visibility="gone"
         android:layout_width="match_parent"

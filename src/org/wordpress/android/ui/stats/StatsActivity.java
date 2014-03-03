@@ -85,9 +85,7 @@ public class StatsActivity extends WPActionBarActivity {
     private static final int TABLET_720DP = 720;
     private static final int TABLET_600DP = 600;
     private LinearLayout mFragmentContainer;
-    private LinearLayout mColumnLeft;
-    private LinearLayout mColumnRight;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,8 +105,6 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
-        mColumnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
-        mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
 
         loadStatsFragments();
         setTitle(R.string.stats);
@@ -233,22 +229,20 @@ public class StatsActivity extends WPActionBarActivity {
 
         StatsAbsViewFragment fragment;
 
-        // TODO: lines commented out are awaiting stats apis
-
         if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
             ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
+            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
-
-//        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
-//            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-//        }
 
         if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
@@ -260,16 +254,6 @@ public class StatsActivity extends WPActionBarActivity {
             ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
         }
 
-//        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
-//            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-//        }
-
-//        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
-//            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
-//        }
-
         if (fm.findFragmentByTag(StatsTotalsFollowersAndSharesFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
             ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
@@ -280,21 +264,91 @@ public class StatsActivity extends WPActionBarActivity {
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
-//        if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
-//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
-//            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
-//        }
-
-        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
-            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
-            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+        // TODO: awaiting stats APIs
+        /*if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
+            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
         }
+        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
+            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+        }
+        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
+            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
+        }
+        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
+            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+        }*/
 
         ft.commit();
 
         // split layout into two for 720DP tablets and 600DP tablets in landscape
         if (Utils.getSmallestWidthDP() >= TABLET_720DP || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape()))
             loadSplitLayout();
+    }
+
+    /*
+    Visitors and views
+    Top posts & pages
+    Referrers
+    Clicks
+    Views by country
+    Search engine terms
+    Totals, followers & shares
+     */
+    private void loadSplitLayout() {
+        LinearLayout columnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
+        LinearLayout columnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
+        FrameLayout frameView;
+
+        /*
+         * left column
+         */
+        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
+        mFragmentContainer.removeView(frameView);
+        columnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
+        mFragmentContainer.removeView(frameView);
+        columnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
+        mFragmentContainer.removeView(frameView);
+        columnLeft.addView(frameView);
+
+        /*
+         * right column
+         */
+        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
+        mFragmentContainer.removeView(frameView);
+        columnRight.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
+        mFragmentContainer.removeView(frameView);
+        columnRight.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_totals_followers_shares_container);
+        mFragmentContainer.removeView(frameView);
+        columnRight.addView(frameView);
+
+        // TODO: awaiting stats APIs
+        /*frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
+        mFragmentContainer.removeView(frameView);
+        columnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
+        mFragmentContainer.removeView(frameView);
+        columnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
+        mFragmentContainer.removeView(frameView);
+        columnRight.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
+        mFragmentContainer.removeView(frameView);
+        columnRight.addView(frameView);*/
     }
 
     private boolean isInLandscape() {
@@ -306,53 +360,6 @@ public class StatsActivity extends WPActionBarActivity {
         } else {
             return false;
         }
-    }
-
-    private void loadSplitLayout() {
-        FrameLayout frameView;
-
-        // TODO: lines commented out are awaiting stats apis
-
-        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_totals_followers_shares_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-
-//        frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
-//        mFragmentContainer.removeView(frameView);
-//        mColumnLeft.addView(frameView);
-
-//        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
-//        mFragmentContainer.removeView(frameView);
-//        mColumnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
-
-//        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
-//        mFragmentContainer.removeView(frameView);
-//        mColumnRight.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
-
-//        frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
-//        mFragmentContainer.removeView(frameView);
-//        mColumnRight.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
-
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
