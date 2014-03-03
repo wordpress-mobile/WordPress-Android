@@ -54,7 +54,7 @@ public class StatsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
-        startTasks(blogId);
+        startTasks(blogId, startId);
         return START_NOT_STICKY;
     }
 
@@ -73,7 +73,7 @@ public class StatsService extends Service {
      *  Search engine terms
      */
     private static final int EXECUTOR_TIMEOUT_SECONDS = 60;
-    private void startTasks(final String blogId) {
+    private void startTasks(final String blogId, final int startId) {
         final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(getMaxConcurrentTasks());
 
         new Thread() {
@@ -141,6 +141,7 @@ public class StatsService extends Service {
                 } finally {
                     AppLog.i(T.STATS, "update ended");
                     broadcastUpdate(false);
+                    stopSelf(startId);
                 }
             }
         }.start();
