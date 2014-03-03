@@ -14,7 +14,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -68,7 +67,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
-    private ProgressBar mProgress;
     private MenuItem mRefreshMenuItem;
 
     private String mCurrentTag;
@@ -133,10 +131,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
 
-        // progress bar that appears when loading more posts
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
-        mProgress.setVisibility(View.GONE);
-
         // set the listView's scroll listeners so we can detect up/down scrolling
         mListView.setOnScrollListener(this);
 
@@ -154,8 +148,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         // pull to refresh layout setup
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener((OnRefreshListener) this).setup(
-                mPullToRefreshLayout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
 
         mListView.setAdapter(getPostAdapter());
 
