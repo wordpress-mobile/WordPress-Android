@@ -785,6 +785,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
@@ -810,6 +812,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
@@ -874,6 +878,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!isSelected())
                 mShouldFinish = true;
 
