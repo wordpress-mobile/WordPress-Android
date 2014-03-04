@@ -8,12 +8,8 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -33,21 +29,33 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 import java.util.Map;
 
-public class ManageBlogsActivity extends SherlockListActivity {
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+public class ManageBlogsActivity extends SherlockListActivity implements OnRefreshListener {
     private List<Map<String, Object>> mAccounts;
-    private MenuItem mRefreshMenuItem;
     private static boolean mIsRefreshing;
     private ListScrollPositionManager mListScrollPositionManager;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.empty_listview);
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
         setTitle(getString(R.string.blogs_visibility));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Pull to refresh
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+
+        // Load accounts and update from server
         loadAccounts();
+        refreshBlogs();
     }
 
     @Override
@@ -63,18 +71,18 @@ public class ManageBlogsActivity extends SherlockListActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.manage_blogs, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        refreshBlogs();
         return true;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        refreshBlogs();
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.menu_refresh:
-                refreshBlogs();
-                return true;
             case R.id.menu_show_all:
                 selectAll();
                 return true;
@@ -89,8 +97,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
     }
 
     private void selectAll() {
-        for (int i = 0; i < mAccounts.size(); ++i) {
-            Map<String, Object> item = mAccounts.get(i);
+        for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", false);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(true);
@@ -98,47 +105,15 @@ public class ManageBlogsActivity extends SherlockListActivity {
     }
 
     private void deselectAll() {
-        for (int i = 0; i < mAccounts.size(); ++i) {
-            Map<String, Object> item = mAccounts.get(i);
+        for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", true);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(false);
         ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
     }
 
-    private void startAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null && mIsRefreshing) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(
-                    getResources().getLayout(R.layout.menu_refresh_view), null);
-            RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF,
-                    0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim.setInterpolator(new LinearInterpolator());
-            anim.setRepeatCount(Animation.INFINITE);
-            anim.setDuration(1400);
-            iv.startAnimation(anim);
-            mRefreshMenuItem.setActionView(iv);
-        }
-    }
-
-    private void stopAnimatingRefreshButton() {
-        mIsRefreshing = false;
-        if (mRefreshMenuItem != null) {
-            if (mRefreshMenuItem.getActionView() == null) {
-                return ;
-            }
-            mRefreshMenuItem.getActionView().clearAnimation();
-            mRefreshMenuItem.setActionView(null);
-        }
-    }
-
     private void refreshBlogs() {
-        if (!mIsRefreshing) {
-            mIsRefreshing = true;
-            startAnimatingRefreshButton();
-            new SetupBlogTask().execute();
-        }
+        new SetupBlogTask().execute();
     }
 
     private void loadAccounts() {
@@ -164,8 +139,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) getContext().
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(mResource, parent, false);
             CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
             String name = MapUtils.getMapStr(getItem(position), "blogName");
@@ -185,12 +159,12 @@ public class ManageBlogsActivity extends SherlockListActivity {
 
         @Override
         protected void onPreExecute() {
+            mPullToRefreshLayout.setRefreshing(true);
             mSetupBlog = new SetupBlog();
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-                    getApplicationContext());
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            String password = WordPressDB.decryptPassword(settings.
-                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
+            String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE,
+                    null));
             mSetupBlog.setUsername(username);
             mSetupBlog.setPassword(password);
         }
@@ -213,7 +187,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
             mListScrollPositionManager.saveScrollOffset();
             loadAccounts();
             mListScrollPositionManager.restoreScrollOffset();
-            stopAnimatingRefreshButton();
+            mPullToRefreshLayout.setRefreshing(false);
         }
     }
 }
