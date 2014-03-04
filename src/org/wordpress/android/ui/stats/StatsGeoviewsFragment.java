@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,19 +10,14 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 
 /**
- * Fragment for geoview stats. Has two pages, for Today's and Yesterday's stats.
+ * Fragment for geoview (views by country) stats. Has two pages, for Today's and Yesterday's stats.
  */
 public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     
@@ -41,26 +33,21 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             return getFragment(position);
         }
-
         @Override
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel(); 
         }
-
     }
 
     @Override
@@ -77,52 +64,34 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     }
     
     public static class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
-            String entry = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.COUNTRY));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
-
-            // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
-            
-
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
-            // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
-            // image
-            view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
-            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-            if (imageUrl != null && imageUrl.length() > 0) {
-                imageView.setErrorImageResId(R.drawable.stats_blank_image);
-                imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                imageView.setVisibility(View.VISIBLE);
-                errorImageView.setVisibility(View.GONE);
-            } else {
-                imageView.setVisibility(View.GONE);
-                errorImageView.setVisibility(View.VISIBLE);
-            }
-            
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
 
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+            
+            String entry = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.COUNTRY));
+            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
+
+            holder.entryTextView.setText(entry);
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            
+            // image (country flag)
+            holder.showNetworkImage(imageUrl);
+        }
     }
     
     @Override

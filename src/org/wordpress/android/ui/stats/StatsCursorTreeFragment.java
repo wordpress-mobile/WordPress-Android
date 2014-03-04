@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Interpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.widget.CursorTreeAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,19 +60,19 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
 
     public static final String TAG = StatsCursorTreeFragment.class.getSimpleName();
-    
-    private TextView mEntryLabel;
-    private TextView mTotalsLabel;
+
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
     
     private SparseBooleanArray mGroupIdToExpandedMap;
 
     private CursorTreeAdapter mAdapter;
-    private ContentObserver mContentObserver = new MyObserver(new Handler());
+    private final ContentObserver mContentObserver = new MyObserver(new Handler());
     
     private StatsCursorInterface mCallback;
-    
+
+    private static final int ANIM_DURATION = 150;
+
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
@@ -112,13 +118,19 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
         View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
-        
-        mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        mEntryLabel.setText(getEntryLabelResId());
-        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
-        mTotalsLabel.setText(getTotalsLabelResId());
+
+        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
+        entryLabel.setText(getEntryLabelResId());
+        TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        totalsLabel.setText(getTotalsLabelResId());
+
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
-        mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
+        String label = getString(getEmptyLabelResId());
+        if (label != null && label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
+        }
         configureEmptyLabel();
 
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
@@ -144,34 +156,36 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, this);
     }
-    
+
+    private int mNumChildLoaders = 0;
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (WordPress.getCurrentBlog() == null)
             return null;
 
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
+        if (TextUtils.isEmpty(blogId))
+            blogId = "0";
         
         Uri uri = getGroupUri();
-        
-        if (id == LOADER_URI_GROUP_INDEX) { 
+
+        if (id == LOADER_URI_GROUP_INDEX) {
             return new CursorLoader(getActivity(), uri, null, "blogId=?", new String[] { blogId }, null);
         } else {
+            mNumChildLoaders++;
             uri = getChildrenUri();
             String groupId = args.getString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID);
             long date = args.getLong(StatsCursorLoaderCallback.BUNDLE_DATE);
             return new CursorLoader(getActivity(), uri, null, "blogId=? AND groupId=? AND date=?", new String[] { blogId, groupId, date + "" }, null);
         }
-        
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        
         // cursor is for groups
-        if (loader.getId() == LOADER_URI_GROUP_INDEX) {
-
+        boolean isGroupLoader = (loader.getId() == LOADER_URI_GROUP_INDEX);
+        if (isGroupLoader) {
             // start loaders on children
             while (data.moveToNext()) {
                 String groupId = data.getString(data.getColumnIndex("groupId"));
@@ -184,18 +198,18 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
 
-
             mCallback.onCursorLoaded(getGroupUri(), data);
             
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
         } else {
             // cursor is for children
+            if (mNumChildLoaders > 0)
+                mNumChildLoaders--;
             if (mAdapter != null) {
-                // due to a race condition that occurs when stats are refreshed, 
+                // due to a race condition that occurs when stats are refreshed,
                 // it is possible to have more rows in the listview initially than when done refreshing,
                 // causing null pointer exceptions to occur. 
-                
                 try {
                     mAdapter.setChildrenCursor(loader.getId(), data);
                 } catch (NullPointerException e) {
@@ -203,72 +217,194 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 }
             }
         }
-        
-        configureEmptyLabel();
-        reloadLinearLayout();
+
+        // refresh views if this was a group loader, or if all child loaders have completed
+        if (isGroupLoader || mNumChildLoaders == 0) {
+            configureEmptyLabel();
+            reloadGroupViews();
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         
         mGroupIdToExpandedMap.clear();
+        mNumChildLoaders = 0;
         
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
-        reloadLinearLayout();
+        reloadGroupViews();
     }
 
     public void setListAdapter(CursorTreeAdapter adapter) {
         mAdapter = adapter;
-        reloadLinearLayout();
+        reloadGroupViews();
     }
 
-    private void reloadLinearLayout() {
-        if (mLinearLayout == null || mAdapter == null)
-            return; 
-        
-        mLinearLayout.removeAllViews();
-        
-        // limit number of items to show otherwise it would cause performance issues on the linearlayout
+    /*
+     * interpolator for all expand/collapse animations
+     */
+    private Interpolator getInterpolator() {
+        return new AccelerateInterpolator();
+    }
+
+    private void reloadGroupViews() {
+        if (getActivity() == null || mLinearLayout == null || mAdapter == null)
+            return;
+
         int groupCount = Math.min(mAdapter.getGroupCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+        if (groupCount == 0) {
+            mLinearLayout.removeAllViews();
+            return;
+        }
+
+        int numExistingGroupViews = mLinearLayout.getChildCount();
+        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+
+        // remove excess views
+        if (groupCount < numExistingGroupViews) {
+            int numToRemove = numExistingGroupViews - groupCount;
+            mLinearLayout.removeViews(groupCount, numToRemove);
+            numExistingGroupViews = groupCount;
+        }
+
+        // add each group
         for (int i = 0; i < groupCount; i++) {
-            
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            View view = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
-            view.setTag(i);
-            mLinearLayout.addView(view);
-            view.setOnClickListener(new OnClickListener() {
-                
+            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
+
+            // reuse existing view when possible
+            final View groupView;
+            if (i < numExistingGroupViews) {
+                View convertView = mLinearLayout.getChildAt(i);
+                groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
+                groupView.setBackgroundColor(bgColor);
+            } else {
+                groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
+                groupView.setBackgroundColor(bgColor);
+                mLinearLayout.addView(groupView);
+            }
+
+            // add children if this group is expanded
+            if (isExpanded) {
+                showChildViews(i, groupView, false);
+            }
+
+            // toggle expand/collapse when group view is tapped
+            final int groupPosition = i;
+            groupView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (Integer) v.getTag();
-                    mGroupIdToExpandedMap.put(position, !mGroupIdToExpandedMap.get(position));
-                    reloadLinearLayout();
+                    if (mAdapter.getChildrenCount(groupPosition) == 0)
+                        return;
+                    boolean shouldExpand = !mGroupIdToExpandedMap.get(groupPosition);
+                    mGroupIdToExpandedMap.put(groupPosition, shouldExpand);
+                    if (shouldExpand) {
+                        showChildViews(groupPosition, groupView, true);
+                    } else {
+                        hideChildViews(groupView, true);
+                    }
                 }
             });
-
-            // add divider
-            getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
-            
-            
-            if (isExpanded) {
-                int childrenCount = mAdapter.getChildrenCount(i);
-                for (int j = 0; j < childrenCount; j++) {
-                    boolean isLastChild = (j == childrenCount - 1);
-                    View childView = mAdapter.getChildView(i, j, isLastChild, null, mLinearLayout);
-                    mLinearLayout.addView(childView);
-                    
-                    // add divider
-                    getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
-                    
-                }
-            }
-            
         }
-        
     }
-    
+
+    private void showChildViews(int groupPosition, View groupView, boolean animate) {
+        int childCount = Math.min(mAdapter.getChildrenCount(groupPosition), StatsActivity.STATS_CHILD_MAX_ITEMS);
+        if (childCount == 0)
+            return;
+
+        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        if (childContainer == null)
+            return;
+
+        int numExistingViews = childContainer.getChildCount();
+        if (childCount < numExistingViews) {
+            int numToRemove = numExistingViews - childCount;
+            childContainer.removeViews(childCount, numToRemove);
+            numExistingViews = childCount;
+        }
+
+        for (int i = 0; i < childCount; i++) {
+            boolean isLastChild = (i == childCount - 1);
+            if (i < numExistingViews) {
+                View convertView = childContainer.getChildAt(i);
+                mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
+            } else {
+                View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
+                // remove the right padding so the child total aligns with the group total
+                childView.setPadding(childView.getPaddingLeft(),
+                                     childView.getPaddingTop(),
+                                     0,
+                                     childView.getPaddingBottom());
+                childContainer.addView(childView);
+            }
+        }
+
+        if (childContainer.getVisibility() != View.VISIBLE) {
+            if (animate) {
+                Animation expand = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
+                expand.setDuration(ANIM_DURATION);
+                expand.setInterpolator(getInterpolator());
+                childContainer.startAnimation(expand);
+            }
+            childContainer.setVisibility(View.VISIBLE);
+        }
+
+        setGroupChevron(true, groupView, animate);
+    }
+
+    private void hideChildViews(View groupView, boolean animate) {
+        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        if (childContainer == null)
+            return;
+        if (childContainer.getVisibility() != View.GONE) {
+            if (animate) {
+                Animation expand = new ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f);
+                expand.setDuration(ANIM_DURATION);
+                expand.setInterpolator(getInterpolator());
+                expand.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) { }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        childContainer.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+                });
+                childContainer.startAnimation(expand);
+            } else {
+                childContainer.setVisibility(View.GONE);
+            }
+        }
+        setGroupChevron(false, groupView, animate);
+    }
+
+    /*
+     * shows the correct up/down chevron for the passed group
+     */
+    private void setGroupChevron(final boolean isGroupExpanded, View groupView, boolean animate) {
+        final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+        if (chevron == null)
+            return;
+
+        if (animate) {
+            // make sure we start with the correct chevron for the prior state before animating it
+            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_right : R.drawable.stats_chevron_down);
+            float start = (isGroupExpanded ? 0.0f : 0.0f);
+            float end = (isGroupExpanded ? 90.0f : -90.0f);
+            Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotate.setDuration(ANIM_DURATION);
+            rotate.setInterpolator(getInterpolator());
+            rotate.setFillAfter(true);
+            chevron.startAnimation(rotate);
+        } else {
+            chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_down : R.drawable.stats_chevron_right);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();

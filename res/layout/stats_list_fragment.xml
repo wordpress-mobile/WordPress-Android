@@ -5,12 +5,12 @@
     android:orientation="vertical"
     android:paddingLeft="6dp"
     android:paddingRight="10dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="@dimen/margin_medium">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp" >
+        android:paddingTop="@dimen/margin_extra_large" >
 
         <TextView
             android:id="@+id/stats_list_entry_label"
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="@dimen/margin_small"
             android:text="TITLE" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="4dp"
+            android:layout_marginRight="@dimen/margin_small"
             android:text="VIEWS" />
     </RelativeLayout>
 
@@ -55,7 +55,7 @@
         android:id="@+id/stats_list_empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="@dimen/margin_extra_large"
         android:visibility="gone" />
 
 </LinearLayout>

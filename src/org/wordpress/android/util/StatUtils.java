@@ -1,31 +1,19 @@
 package org.wordpress.android.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
@@ -35,19 +23,24 @@ import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
  * A utility class to help with date parsing and saving summaries in stats
  */
 public class StatUtils {
-
-    public static final String STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
-    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
     
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    
     /** Converts date in the form of 2013-07-18 to ms **/
     @SuppressLint("SimpleDateFormat")
 	public static long toMs(String date) {
@@ -154,7 +147,7 @@ public class StatUtils {
         StatsSummary stat = null;
         try {
             FileInputStream fis = WordPress.getContext().openFileInput(STAT_SUMMARY + blogId);
-            StringBuffer fileContent = new StringBuffer("");
+            StringBuilder fileContent = new StringBuilder();
 
             byte[] buffer = new byte[1024];
 
@@ -198,7 +191,7 @@ public class StatUtils {
         StatsVideoSummary stat = null;
         try {
             FileInputStream fis = WordPress.getContext().openFileInput(STAT_VIDEO_SUMMARY + blogId);
-            StringBuffer fileContent = new StringBuffer("");
+            StringBuilder fileContent = new StringBuilder();
 
             byte[] buffer = new byte[1024];
 
@@ -226,12 +219,4 @@ public class StatUtils {
         }
         return stat;
     }
-    
-    public static void broadcastSummaryUpdated(StatsSummary stats) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
-        Intent intent = new Intent(STATS_SUMMARY_UPDATED);
-        intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
-        lbm.sendBroadcast(intent);
-    }
-    
 }
