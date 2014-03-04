@@ -671,6 +671,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public void startAnimatingRefreshButton(MenuItem refreshItem) {
+        // TODO: remove this function
         if (refreshItem != null && !isAnimatingRefreshButton) {
             isAnimatingRefreshButton = true;
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -687,6 +688,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public void stopAnimatingRefreshButton(MenuItem refreshItem) {
+        // TODO: remove this function
         isAnimatingRefreshButton = false;
         if (refreshItem != null && refreshItem.getActionView() != null) {
             refreshItem.getActionView().clearAnimation();

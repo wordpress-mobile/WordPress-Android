@@ -16,18 +16,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
-                   OnAnimateRefreshButtonListener,
                    CommentDetailFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
-
-    private MenuItem mRefreshMenuItem;
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
 
     @Override
@@ -77,20 +73,12 @@ public class CommentsActivity extends WPActionBarActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.basic_menu, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                updateCommentList();
-                return true;
             case android.R.id.home:
                 if (isLargeOrXLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
@@ -104,7 +92,6 @@ public class CommentsActivity extends WPActionBarActivity
                 }
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -188,10 +175,6 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     void showReaderFragment(long remoteBlogId, long postId) {
-        // stop animating the refresh button to prevent it from appearing in the
-        // reader fragment's ActionBar
-        onAnimateRefreshButton(false);
-
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
@@ -272,22 +255,11 @@ public class CommentsActivity extends WPActionBarActivity
     /*
      * tell the comment list to get recent comments from server
      */
-    private void updateCommentList() {
+    public void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
-        if (listFragment != null)
+        if (listFragment != null) {
             listFragment.updateComments(false);
-    }
-
-    @Override
-    public void onAnimateRefreshButton(boolean start) {
-        if (start) {
-            mShouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(mRefreshMenuItem);
-        } else {
-            mShouldAnimateRefreshButton = false;
-            this.stopAnimatingRefreshButton(mRefreshMenuItem);
         }
-
     }
 
     @Override

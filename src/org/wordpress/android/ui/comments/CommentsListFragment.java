@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuInflater;
@@ -40,19 +39,22 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommentsListFragment extends Fragment {
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+public class CommentsListFragment extends Fragment implements OnRefreshListener {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     private boolean mHasAutoRefreshedComments = false;
 
-    private ProgressBar mProgressLoadMore;
+    private PullToRefreshLayout mPullToRefreshLayout;
     private ListView mListView;
     private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
 
     private OnCommentSelectedListener mOnCommentSelectedListener;
-    private OnAnimateRefreshButtonListener mOnAnimateRefreshButton;
     private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
@@ -122,8 +124,14 @@ public class CommentsListFragment extends Fragment {
     }
 
     void clear() {
-        if (hasCommentAdapter())
+        if (hasCommentAdapter()) {
             getCommentAdapter().clear();
+        }
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        updateComments(false);
     }
 
     @Override
@@ -151,7 +159,6 @@ public class CommentsListFragment extends Fragment {
             // check that the containing activity implements our callback
             mOnCommentSelectedListener = (OnCommentSelectedListener) activity;
             mOnCommentChangeListener = (OnCommentChangeListener) activity;
-            mOnAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString() + " must implement Callback");
@@ -165,9 +172,9 @@ public class CommentsListFragment extends Fragment {
         mListView = (ListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
 
-        // progress bar that appears when loading more comments
-        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
-        mProgressLoadMore.setVisibility(View.GONE);
+        // pull to refresh layout setup
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
 
         return view;
     }
@@ -341,8 +348,10 @@ public class CommentsListFragment extends Fragment {
      */
     @SuppressLint("NewApi")
     void updateComments(boolean loadMore) {
-        if (mIsUpdatingComments)
+        if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
+            return;
+        }
         if (SysUtils.canUseExecuteOnExecutor()) {
             new UpdateCommentsTask(loadMore).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
@@ -366,16 +375,13 @@ public class CommentsListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
-            if (isLoadingMore) {
-                showLoadingProgress();
-            } else {
-                mOnAnimateRefreshButton.onAnimateRefreshButton(true);
-            }
+            mPullToRefreshLayout.setRefreshing(true);
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            mPullToRefreshLayout.setRefreshComplete();
             mIsUpdatingComments = false;
         }
 
@@ -416,12 +422,7 @@ public class CommentsListFragment extends Fragment {
             mIsUpdatingComments = false;
             if (!hasActivity())
                 return;
-
-            if (isLoadingMore) {
-                hideLoadingProgress();
-            } else {
-                mOnAnimateRefreshButton.onAnimateRefreshButton(false);
-            }
+            mPullToRefreshLayout.setRefreshComplete();
 
             if (isCancelled())
                 return;
@@ -449,10 +450,6 @@ public class CommentsListFragment extends Fragment {
         public void onCommentSelected(Comment comment);
     }
 
-    public interface OnAnimateRefreshButtonListener {
-        public void onAnimateRefreshButton(boolean start);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (outState.isEmpty()) {
@@ -474,18 +471,6 @@ public class CommentsListFragment extends Fragment {
     private void hideEmptyView() {
         if (mEmptyView != null)
             mEmptyView.setVisibility(View.GONE);
-    }
-
-    /*
-     * show/hide progress bar which appears at the bottom when loading more comments
-     */
-    private void showLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null)
-            mProgressLoadMore.setVisibility(View.VISIBLE);
-    }
-    private void hideLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null)
-            mProgressLoadMore.setVisibility(View.GONE);
     }
 
     /****
