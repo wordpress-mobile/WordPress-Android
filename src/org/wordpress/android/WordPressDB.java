@@ -958,7 +958,6 @@ public class WordPressDB {
         int numRows = c.getCount();
         c.moveToFirst();
 
-        Date d = new Date();
         for (int i = 0; i < numRows; ++i) {
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
 
