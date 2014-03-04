@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -51,13 +52,17 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 /**
  * The native stats activity, accessible via the menu drawer.
  * <p>
  * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity {
+public class StatsActivity extends WPActionBarActivity implements OnRefreshListener {
 
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
@@ -73,13 +78,13 @@ public class StatsActivity extends WPActionBarActivity {
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
 
-    private MenuItem mRefreshMenuItem;
     private int mResultCode = -1;
     private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private boolean mIsUpdatingStats;
     private boolean mHasVerifiedCreds;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -105,6 +110,10 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
+
+        // pull to refresh layout setup
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
 
         loadStatsFragments();
         setTitle(R.string.stats);
@@ -144,9 +153,18 @@ public class StatsActivity extends WPActionBarActivity {
             }
             return;
         }
-        
-        if (!mIsRestoredFromState)
+
+        if (!mIsRestoredFromState) {
             refreshStats();
+        }
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        // make sure we have a connection before proceeding (will alert user if not)
+        if (NetworkUtils.checkConnection(this)) {
+            refreshStats();
+        }
     }
 
     @Override
@@ -156,24 +174,22 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        
-        stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-            
+
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
         mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
         mHasVerifiedCreds = savedInstanceState.getBoolean(KEY_VERIFIED_CREDS);
         mIsRestoredFromState = true;
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putBoolean(KEY_VERIFIED_CREDS, mHasVerifiedCreds);
@@ -185,12 +201,11 @@ public class StatsActivity extends WPActionBarActivity {
         loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
         startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
-            
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
                 if (getBlogId() == null) {
@@ -355,18 +370,18 @@ public class StatsActivity extends WPActionBarActivity {
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> statsActivityWeakRef;
-        
+
         public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
             this.statsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
         }
-       
+
         @Override
         public void onSuccess() {
             if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
                     || !statsActivityWeakRef.get().mIsInFront) {
                 return;
             }
-            
+
             if (getBlogId() == null) {
                 stopStatsService();
                 // Blog has not returned a jetpack_client_id
@@ -406,18 +421,12 @@ public class StatsActivity extends WPActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_refresh) {
-            // make sure we have a connection before proceeding (will alert user if not)
-            if (NetworkUtils.checkConnection(this))
-                refreshStats();
-            return true;
-        } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
+        if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
@@ -488,7 +497,7 @@ public class StatsActivity extends WPActionBarActivity {
             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }
-        
+
         final String blogId;
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch()) {
             blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
@@ -591,8 +600,7 @@ public class StatsActivity extends WPActionBarActivity {
         stopService(new Intent(this, StatsService.class));
         if (mIsUpdatingStats) {
             mIsUpdatingStats = false;
-            if (mRefreshMenuItem != null)
-                stopAnimatingRefreshButton(mRefreshMenuItem);
+            mPullToRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -605,12 +613,10 @@ public class StatsActivity extends WPActionBarActivity {
             String action = StringUtils.notNullStr(intent.getAction());
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                if (mRefreshMenuItem != null) {
-                    if (mIsUpdatingStats) {
-                        startAnimatingRefreshButton(mRefreshMenuItem);
-                    } else {
-                        stopAnimatingRefreshButton(mRefreshMenuItem);
-                    }
+                if (mIsUpdatingStats) {
+                    mPullToRefreshLayout.setRefreshing(true);
+                } else {
+                    mPullToRefreshLayout.setRefreshing(false);
                 }
             }
         }

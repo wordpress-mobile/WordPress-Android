@@ -667,7 +667,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * this to perform activity-specific cleanup upon signout
      */
     public void onSignout() {
-
     }
 
     public void startAnimatingRefreshButton(MenuItem refreshItem) {

@@ -70,7 +70,6 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
         // pull to refresh layout setup
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
-
         return view;
     }
 
@@ -80,7 +79,6 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
             ((NotificationsActivity) getActivity()).refreshNotes();
         }
     }
-
 
     public void animateRefresh(boolean refresh) {
         mPullToRefreshLayout.setRefreshing(refresh);
