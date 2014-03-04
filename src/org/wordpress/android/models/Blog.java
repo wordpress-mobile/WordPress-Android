@@ -450,11 +450,15 @@ public class Blog {
     }
 
     public boolean isPhotonCapable() {
-        return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
+        return ((isDotcomFlag() && !isPrivate()) || (isJetpackPowered() && !hasValidHTTPAuthCredentials()));
     }
 
     public boolean hasValidJetpackCredentials() {
         return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
+    }
+
+    public boolean hasValidHTTPAuthCredentials() {
+        return !TextUtils.isEmpty(getHttppassword()) && !TextUtils.isEmpty(getHttpuser());
     }
 
     /**
