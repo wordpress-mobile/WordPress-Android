@@ -11,8 +11,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 
 
 /**
@@ -37,7 +37,7 @@ public class WebViewActivity extends WPActionBarActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 

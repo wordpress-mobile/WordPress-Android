@@ -45,7 +45,6 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -56,6 +55,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class WordPress extends Application {
@@ -482,7 +482,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
+                    defaultHeaders.put("User-Agent", getUserAgent());
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
@@ -505,7 +505,7 @@ public class WordPress extends Application {
                     }
 
                     HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
+                    defaultHeaders.put("User-Agent", getUserAgent());
                     headers.putAll(defaultHeaders);
 
                     return super.performRequest(request, headers);
@@ -514,6 +514,33 @@ public class WordPress extends Application {
 
             return stack;
         }
+    }
+
+    /**
+     * User-Agent string when making HTTP connections. Used for both API traffic and WebViews.
+     * Format follows http://tools.ietf.org/html/rfc2616#section-14.43, ex:
+     *  "wp-android/2.6.3 (Android 4.4.2; en_US; LGE hammerhead)"
+     *  "wp-android/2.6.3 (Android 2.3.7; en_US; unknown vbox86p)"
+     *  "wp-android/2.6.3 (Android 4.4.2; en_US; asus nakasi)"
+     **/
+    private static final String USER_AGENT_APPNAME = "wp-android";
+    private static String mUserAgent;
+    public static String getUserAgent() {
+        if (mUserAgent == null) {
+            PackageInfo pkgInfo;
+            try {
+                String pkgName = getContext().getApplicationInfo().packageName;
+                pkgInfo = getContext().getPackageManager().getPackageInfo(pkgName, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                return USER_AGENT_APPNAME;
+            }
+
+            mUserAgent = USER_AGENT_APPNAME + "/" + pkgInfo.versionName
+                       + " (Android " + Build.VERSION.RELEASE + "; "
+                       + Locale.getDefault().toString() + "; "
+                       + Build.MANUFACTURER + " " + Build.PRODUCT + ")";
+        }
+        return mUserAgent;
     }
 
     /*

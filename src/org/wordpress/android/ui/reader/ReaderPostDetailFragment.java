@@ -34,7 +34,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -284,7 +283,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // setup the webView
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.setWebViewClient(readerWebViewClient);
-        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
