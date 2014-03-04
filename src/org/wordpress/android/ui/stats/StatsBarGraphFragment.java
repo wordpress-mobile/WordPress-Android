@@ -95,7 +95,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, final Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (getActivity() == null)
             return;
 
@@ -110,57 +110,44 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
             return;
         }
 
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                final int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
-                final String[] horLabels = new String[numPoints];
-                GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
-                GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
+        int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
+        final String[] horLabels = new String[numPoints];
+        GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
+        GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
 
-                StatsBarChartUnit unit = getBarChartUnit();
-                for (int i = numPoints - 1; i >= 0; i--) {
-                    views[i] = new GraphView.GraphViewData(i, getViews(cursor));
-                    visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
-                    horLabels[i] = getDateLabel(cursor, unit);
-                    cursor.moveToNext();
-                }
+        StatsBarChartUnit unit = getBarChartUnit();
+        for (int i = numPoints - 1; i >= 0; i--) {
+            views[i] = new GraphView.GraphViewData(i, getViews(cursor));
+            visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
+            horLabels[i] = getDateLabel(cursor, unit);
+            cursor.moveToNext();
+        }
 
-                final GraphViewSeries viewsSeries = new GraphViewSeries(views);
-                final GraphViewSeries visitorsSeries = new GraphViewSeries(visitors);
+        GraphViewSeries viewsSeries = new GraphViewSeries(views);
+        GraphViewSeries visitorsSeries = new GraphViewSeries(visitors);
 
-                viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-                viewsSeries.getStyle().padding = Utils.dpToPx(1);
-                visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
-                visitorsSeries.getStyle().padding = Utils.dpToPx(3);
+        viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+        viewsSeries.getStyle().padding = Utils.dpToPx(1);
+        visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
+        visitorsSeries.getStyle().padding = Utils.dpToPx(3);
 
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (getActivity() == null)
-                            return;
+        // Update or create a new GraphView
+        GraphView graphView;
+        if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
+            graphView = (GraphView) mGraphContainer.getChildAt(0);
+        } else {
+            mGraphContainer.removeAllViews();
+            graphView = new StatsBarGraph(getActivity());
+            mGraphContainer.addView(graphView);
+        }
 
-                        // Update or create a new GraphView
-                        GraphView graphView;
-                        if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-                            graphView = (GraphView) mGraphContainer.getChildAt(0);
-                        } else {
-                            mGraphContainer.removeAllViews();
-                            graphView = new StatsBarGraph(getActivity());
-                            mGraphContainer.addView(graphView);
-                        }
-
-                        if (graphView != null) {
-                            graphView.removeAllSeries();
-                            graphView.addSeries(viewsSeries);
-                            graphView.addSeries(visitorsSeries);
-                            graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
-                            graphView.setHorizontalLabels(horLabels);
-                        }
-                    }
-                });
-            }
-        }.start();
+        if (graphView != null) {
+            graphView.removeAllSeries();
+            graphView.addSeries(viewsSeries);
+            graphView.addSeries(visitorsSeries);
+            graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
+            graphView.setHorizontalLabels(horLabels);
+        }
     }
 
     @Override
