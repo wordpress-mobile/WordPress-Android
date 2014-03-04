@@ -86,25 +86,25 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             // Refresh blog content when returning to the app
             new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
                     new ApiHelper.GenericCallback() {
-                @Override
-                public void onSuccess() {
-                    if (!isFinishing())
-                        updateMenuDrawer();
-                }
+                        @Override
+                        public void onSuccess() {
+                            if (!isFinishing())
+                                updateMenuDrawer();
+                        }
 
-                @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    if (!isFinishing())
-                        ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
-                }
-            }).execute(false);
+                        @Override
+                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                            if (!isFinishing())
+                                ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
+                        }
+                    }).execute(false);
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
             if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID && lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
                 Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-                while(itemIterator.hasNext()){
+                while (itemIterator.hasNext()) {
                     MenuDrawerItem item = itemIterator.next();
                     // if we have a matching item id, and it's not selected and it's visible, call it
                     if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
@@ -138,7 +138,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         WordPress.currentPost = null;
 
-         WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener(){
+        WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener() {
 
             @Override
             public void OnPostUploaded() {
@@ -148,7 +148,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 checkForLocalChanges(false);
             }
 
-         });
+        });
 
         if (savedInstanceState != null)
             popPostDetail();

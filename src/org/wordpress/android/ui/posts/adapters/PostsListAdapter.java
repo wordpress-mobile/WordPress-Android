@@ -124,7 +124,8 @@ public class PostsListAdapter extends BaseAdapter {
                 wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_medium));
             }
 
-            formattedStatus = formattedStatus.toUpperCase(Locale.getDefault());
+            // Make status upper-case and add line break to stack vertically
+            formattedStatus = formattedStatus.toUpperCase(Locale.getDefault()).replace(" ", "\n");
             wrapper.getStatus().setText(formattedStatus);
         }
 
