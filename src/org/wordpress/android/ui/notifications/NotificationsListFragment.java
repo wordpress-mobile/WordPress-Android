@@ -27,7 +27,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class NotificationsListFragment extends ListFragment {
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+public class NotificationsListFragment extends ListFragment implements OnRefreshListener {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
     private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
@@ -35,6 +39,7 @@ public class NotificationsListFragment extends ListFragment {
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
     private boolean mIsAddingNotes;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     /**
      * For responding to tapping of notes
@@ -60,7 +65,25 @@ public class NotificationsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.empty_listview, container, false);
+        View view = inflater.inflate(R.layout.empty_listview, container, false);
+
+        // pull to refresh layout setup
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+
+        return view;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        if (hasActivity() && getActivity() instanceof NotificationsActivity) {
+            ((NotificationsActivity) getActivity()).refreshNotes();
+        }
+    }
+
+
+    public void animateRefresh(boolean refresh) {
+        mPullToRefreshLayout.setRefreshing(refresh);
     }
 
     @Override

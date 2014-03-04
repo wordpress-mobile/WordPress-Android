@@ -47,10 +47,12 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.wordpress.android.WordPress.getRestClientUtils;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class NotificationsActivity extends WPActionBarActivity
                                    implements CommentActions.OnCommentChangeListener,
-                                              CommentDetailFragment.OnPostClickListener {
+                                              CommentDetailFragment.OnPostClickListener,
+                                              OnRefreshListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
@@ -65,7 +67,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private final Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
     private NotificationsListFragment mNotesList;
-    private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private List<Note> mNotes;
@@ -151,6 +152,11 @@ public class NotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
+    @Override
+    public void onRefreshStarted(View view) {
+        refreshNotes();
+    }
+
     private void createBroadcastReceiver() {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -222,9 +228,6 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                refreshNotes();
-                return true;
             case android.R.id.home:
                 if (isLargeOrXLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
@@ -248,11 +251,6 @@ public class NotificationsActivity extends WPActionBarActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
         return true;
     }
 
@@ -408,7 +406,6 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-
     /*
      * triggered from the comment details fragment whenever a comment is changed (moderated, added,
      * deleted, etc.) - refresh notifications so changes are reflected here
@@ -428,10 +425,10 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    private void refreshNotes(){
+    public void refreshNotes(){
         mFirstLoadComplete = false;
         mShouldAnimateRefreshButton = true;
-        startAnimatingRefreshButton(mRefreshMenuItem);
+        mNotesList.animateRefresh(true);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(final List<Note> notes) {
@@ -445,7 +442,7 @@ public class NotificationsActivity extends WPActionBarActivity
                             @Override
                             public void run() {
                                 refreshNotificationsListFragment(notes);
-                                stopAnimatingRefreshButton(mRefreshMenuItem);
+                                mNotesList.animateRefresh(false);
                             }
                         });
                     }
@@ -463,8 +460,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     ToastUtils.showToastOrAuthAlert(context, error, context.getString(
                             R.string.error_refresh_notifications));
                 }
-
-                stopAnimatingRefreshButton(mRefreshMenuItem);
+                mNotesList.animateRefresh(false);
                 mShouldAnimateRefreshButton = false;
             }
         };
