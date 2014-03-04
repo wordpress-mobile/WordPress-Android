@@ -45,14 +45,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * The theme browser. Accessible via side menu drawer. 
+ * The theme browser. Accessible via side menu drawer.
  */
 public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         TabListener {
 
-    public static final String THEME_REFRESH_INTENT_NOTIFICATION = "THEME_REFRESH_INTENT_NOTIFICATION"; 
-    
+    public static final String THEME_REFRESH_INTENT_NOTIFICATION = "THEME_REFRESH_INTENT_NOTIFICATION";
+    public static final String THEME_REFRESH_PARAM_FINISHED = "THEME_REFRESH_PARAM_FINISHED";
+
     private HorizontalTabView mTabView;
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
@@ -61,7 +62,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private ThemeDetailsFragment mDetailsFragment;
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
-    private MenuItem refreshMenuItem;
 
     private boolean mIsActivatingTheme = false;
     private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
@@ -97,7 +97,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         mTabView = (HorizontalTabView) findViewById(R.id.horizontalTabView1);
         mTabView.setTabListener(this);
-        
+
         int count = ThemeSortType.values().length;
         for (int i = 0; i < count; i++) {
             String title = ThemeSortType.values()[i].getTitle();
@@ -124,7 +124,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
         return true;
     }
-    
+
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
@@ -148,12 +148,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         super.onResume();
         if (areThemesAccessible()) {
             mIsRunning = true;
-            
+
             // fetch themes if we don't have any
-            if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0)
+            if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
                 fetchThemes();
+                setRefreshing(true);
+            }
         }
-    };
+    }
 
     @Override
     public void onTabSelected(HorizontalTabView.Tab tab) {
@@ -161,7 +163,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     public class ThemePagerAdapter extends FragmentStatePagerAdapter {
-
         public ThemePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -180,29 +181,21 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         public CharSequence getPageTitle(int position) {
             return ThemeSortType.getTheme(position).getTitle();
         }
-
     }
 
-    private void fetchThemes() {
+    public void fetchThemes() {
         if (mFetchingThemes)
             return;
-
         String siteId = getBlogId();
-
         mFetchingThemes = true;
-        startAnimatingRefreshButton();
-
         WordPress.getRestClientUtils().getThemes(siteId, 0, 0, new Listener() {
-
             @Override
             public void onResponse(JSONObject response) {
                 new FetchThemesTask().execute(response);
             }
         }, new ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError response) {
-
                 if (response.toString().equals(AuthFailureError.class.getName())) {
                     String errorTitle = getString(R.string.theme_auth_error_title);
                     String errorMsg = getString(R.string.theme_auth_error_message);
@@ -220,8 +213,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                 }
 
                 mFetchingThemes = false;
-                stopAnimatingRefreshButton();
-                refreshViewPager();
+                setRefreshing(false);
             }
         });
     }
@@ -237,7 +229,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     Theme theme = Theme.fromJSON(response);
                     if (theme != null) {
                         WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
-                        refreshViewPager();
+                        setRefreshing(false);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.THEMES, e);
@@ -245,7 +237,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             }
         }, new ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError response) {
             }
@@ -255,13 +246,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
-
         inflater.inflate(R.menu.theme, menu);
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mFetchingThemes) {
-            startAnimatingRefreshButton();
-        }
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -276,11 +261,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                 setupBaseLayout();
                 return true;
             }
-        } else if (itemId == R.id.menu_refresh) {
-            fetchThemes();
-            return true;
         } else if (itemId == R.id.menu_search) {
-            stopAnimatingRefreshButton(refreshMenuItem);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
                 mSearchFragment = ThemeSearchFragment.newInstance();
@@ -341,45 +322,34 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     AppLog.e(T.THEMES, e);
                 }
             }
-            
+
             fetchCurrentTheme();
 
             if (themes != null && themes.size() > 0) {
                 return themes;
             }
-            
+
             return null;
 
         }
 
         @Override
         protected void onPostExecute(final ArrayList<Theme> result) {
-            
+
             runOnUiThread(new Runnable() {
-                
+
                 @Override
                 public void run() {
                     mFetchingThemes = false;
-                    stopAnimatingRefreshButton();
                     if (result == null) {
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
                     }
-                    refreshViewPager();        
+                    setRefreshing(false);
                 }
             });
-            
+
         }
 
-    }
-
-    private void startAnimatingRefreshButton() {
-        if (refreshMenuItem != null && mFetchingThemes)
-            startAnimatingRefreshButton(refreshMenuItem);
-    }
-
-    private void stopAnimatingRefreshButton() {
-        if (refreshMenuItem != null && !mFetchingThemes)
-            stopAnimatingRefreshButton(refreshMenuItem);
     }
 
     @Override
@@ -401,7 +371,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             ft.addToBackStack(null);
             ft.commit();
         } else {
-            
+
             // show details as a dialog
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
@@ -469,11 +439,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         if (mDetailsFragment != null) {
                             mDetailsFragment.onThemeActivated(true);
                         }
-                        refreshViewPager();
-                        
+                        setRefreshing(false);
+
                         if (ref.get() != null && mIsRunning && fragment instanceof ThemePreviewFragment) {
                             FragmentManager fm = ref.get().getSupportFragmentManager();
-                            
+
                             if (fm.getBackStackEntryCount() > 0) {
                                 fm.popBackStack();
                                 setupBaseLayout();
@@ -501,12 +471,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         super.onBlogChanged();
         if (areThemesAccessible()) {
             fetchThemes();
+            setRefreshing(true);
         }
     };
 
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {
-
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -529,9 +499,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         setupBaseLayout();
     }
 
-    private void refreshViewPager() {
+    private void setRefreshing(boolean refreshing) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         Intent intent = new Intent(THEME_REFRESH_INTENT_NOTIFICATION);
+        intent.putExtra(THEME_REFRESH_PARAM_FINISHED, refreshing);
         lbm.sendBroadcast(intent);
     }
 }

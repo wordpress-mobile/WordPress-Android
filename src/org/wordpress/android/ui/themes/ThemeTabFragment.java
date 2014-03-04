@@ -27,26 +27,30 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
 
-/**
- * A fragment display the themes on a grid view. 
- */
-public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener {
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
+/**
+ * A fragment display the themes on a grid view.
+ */
+public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener,
+                                                                  OnRefreshListener {
     public enum ThemeSortType {
-        TRENDING("Trending"), 
+        TRENDING("Trending"),
         NEWEST("Newest"),
-        POPULAR("Popular"); 
-        
+        POPULAR("Popular");
+
         private String mTitle;
 
         private ThemeSortType(String title) {
             mTitle = title;
         }
-        
+
         public String getTitle() {
             return mTitle;
         }
-        
+
         public static ThemeSortType getTheme(int position) {
             if (position < ThemeSortType.values().length)
                 return ThemeSortType.values()[position];
@@ -58,7 +62,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     public interface ThemeTabFragmentCallback {
         public void onThemeSelected(String themeId);
     }
-    
+
     protected static final String ARGS_SORT = "ARGS_SORT";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
@@ -67,94 +71,112 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
-    
+    private PullToRefreshLayout mPullToRefreshLayout;
+
     public static ThemeTabFragment newInstance(ThemeSortType sort) {
-        
         ThemeTabFragment fragment = new ThemeTabFragment();
-        
+
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
         fragment.setArguments(args);
-        
+
         return fragment;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         try {
             mCallback = (ThemeTabFragmentCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ThemeTabFragmentCallback");
         }
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
         View view = inflater.inflate(R.layout.theme_tab_fragment, container, false);
-        
+
         setRetainInstance(true);
-        
+
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-        
+
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
-        
+
+        // pull to refresh layout setup
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+
         restoreState(savedInstanceState);
-        
+
         return view;
     }
-    
+
+    @Override
+    public void onRefreshStarted(View view) {
+        if (getActivity() instanceof ThemeBrowserActivity) {
+            ((ThemeBrowserActivity) getActivity()).fetchThemes();
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
         lbm.registerReceiver(mReceiver, new IntentFilter(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION)) {
-                refresh();
+                if (intent.getBooleanExtra(ThemeBrowserActivity.THEME_REFRESH_PARAM_FINISHED, false)) {
+                    if (!mPullToRefreshLayout.isRefreshing()) {
+                        mPullToRefreshLayout.setRefreshing(true);
+                    }
+                } else {
+                    refresh();
+                    if (mPullToRefreshLayout.isRefreshing()) {
+                        mPullToRefreshLayout.setRefreshing(false);
+                    }
+                }
             }
         }
     };
-    
+
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mSavedScrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSTION, 0);
         }
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
         if (WordPress.getCurrentBlog() == null)
             return;
-        
+
         Cursor cursor = fetchThemes(getThemeSortType());
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
         mGridView.setSelection(mSavedScrollPosition);
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -167,14 +189,14 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         if (getArguments().containsKey(ARGS_SORT))  {
             sortType = getArguments().getInt(ARGS_SORT);
         }
-        
+
         return ThemeSortType.getTheme(sortType);
     }
-    
+
     private Cursor fetchThemes(ThemeSortType themeSortType) {
-        
+
         String blogId = getBlogId();
-        
+
         switch(themeSortType) {
             case POPULAR:
                 return WordPress.wpDB.getThemesPopularity(blogId);
@@ -183,9 +205,9 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
             case TRENDING:
             default:
                 return WordPress.wpDB.getThemesTrending(blogId);
-                
+
         }
-        
+
     }
 
     private void refresh() {
@@ -193,12 +215,12 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         if (mAdapter == null) {
             mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         }
-        
-        if (mNoResultText.isShown())
+        if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
+        }
         mAdapter.changeCursor(cursor);
     }
-    
+
     protected String getBlogId() {
         return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
@@ -213,7 +235,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-        
+
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeTabAdapter class
@@ -227,11 +249,10 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
 
                     @Override
                     public void onResponse(ImageContainer response, boolean isImmediate) { }
-                    
+
                 });
                 container.cancelRequest();
             }
-        }        
+        }
     }
-    
 }
