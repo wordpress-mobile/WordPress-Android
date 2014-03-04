@@ -138,6 +138,9 @@ public class PostsListAdapter extends BaseAdapter {
     }
 
     public void loadPosts() {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+
         // load posts from db
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -185,20 +188,17 @@ public class PostsListAdapter extends BaseAdapter {
         }
     }
 
-    private class LoadPostsTask extends AsyncTask <Void, Void, Void> {
+    private class LoadPostsTask extends AsyncTask <Void, Void, List<PostsListPost>> {
         @Override
-        protected Void doInBackground(Void... nada) {
-            if (WordPress.getCurrentBlog() != null) {
-                List<PostsListPost> postsList = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
-                setPosts(postsList);
-            }
-
-            return null;
+        protected List<PostsListPost> doInBackground(Void... nada) {
+            return WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
         }
 
         @Override
-        protected void onPostExecute(Void nada) {
+        protected void onPostExecute(List<PostsListPost> postsList) {
+            setPosts(postsList);
             notifyDataSetChanged();
+
             if (mOnPostsLoadedListener != null && mPosts != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
