@@ -37,7 +37,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -289,15 +288,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaEditFragment.loadMedia(null);
 
             // hide if in phone
-            if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible())
+            if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
                 getSupportFragmentManager().popBackStack();
+            }
         }
 
         getSupportFragmentManager().executePendingTransactions();
 
         // clear item fragment (only visible on phone)
-        if (mMediaItemFragment != null && mMediaItemFragment.isVisible())
+        if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             getSupportFragmentManager().popBackStack();
+        }
 
         // reset the media fragment
         if (mMediaGridFragment != null) {
@@ -306,13 +307,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
                 mMediaGridFragment.refreshMediaFromServer(0, false);
-                startAnimatingRefreshButton();
+                mMediaGridFragment.setRefreshing(true);
             }
         }
 
         // check what features (e.g. video) the user has
         getFeatureSet();
-    };
+    }
 
     @Override
     public void onMediaItemSelected(String mediaId) {
@@ -351,23 +352,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
-        stopAnimatingRefreshButton();
-
         getSupportMenuInflater().inflate(R.menu.media, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        startAnimatingRefreshButton();
-
         return true;
-    }
-
-    private void startAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null && mMediaGridFragment != null && mMediaGridFragment.isRefreshing())
-            startAnimatingRefreshButton(mRefreshMenuItem);
-    }
-
-    private void stopAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null)
-            stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     @Override
@@ -408,13 +394,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             if (!TextUtils.isEmpty(mQuery)) {
                 onQueryTextSubmit(mQuery);
                 mSearchView.setQuery(mQuery, true);
-            }
-            return true;
-        } else if (itemId == R.id.menu_refresh) {
-
-            if (mMediaGridFragment != null) {
-                mMediaGridFragment.refreshMediaFromServer(0, false);
-                startAnimatingRefreshButton();
             }
             return true;
         } else if (itemId == R.id.menu_edit_media) {
@@ -480,24 +459,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemListDownloaded() {
-        stopAnimatingRefreshButton();
-
-        if (mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
-            mMediaItemFragment.loadDefaultMedia();
+        if (mMediaItemFragment != null) {
+            mMediaGridFragment.setRefreshing(false);
+            if (mMediaItemFragment.isInLayout()) {
+                mMediaItemFragment.loadDefaultMedia();
+            }
         }
     }
 
     @Override
     public void onMediaItemListDownloadStart() {
-        // start animation delayed to prevent glitch where the progress spinner
-        // disappears when it is started and stopped and then restarted too quickly in succession
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                startAnimatingRefreshButton();
-            }
-        }, 500);
+        mMediaGridFragment.setRefreshing(true);
     }
 
     @Override
