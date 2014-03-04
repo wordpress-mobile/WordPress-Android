@@ -454,6 +454,81 @@ public class ApiHelper {
         }
     }
 
+    /**
+     * Fetch a single post or page from the XML-RPC API and save/update it in the DB
+     */
+    public static class FetchSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess();
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+
+        public FetchSinglePostTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            String postId = (String) arguments.get(1);
+            boolean isPage = (Boolean) arguments.get(2);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] apiParams;
+            if (isPage) {
+                apiParams = new Object[]{
+                        blog.getRemoteBlogId(),
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            } else {
+                apiParams = new Object[]{
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            }
+
+            try {
+                Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+                if (result != null && result instanceof Map) {
+                    Map postMap = (HashMap) result;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                    postsList.add(postMap);
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true);
+                }
+
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess();
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);

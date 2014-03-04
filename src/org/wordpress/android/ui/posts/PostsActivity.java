@@ -138,18 +138,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         WordPress.currentPost = null;
 
-        WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener() {
-
-            @Override
-            public void OnPostUploaded() {
-                if (isFinishing())
-                    return;
-
-                checkForLocalChanges(false);
-            }
-
-        });
-
         if (savedInstanceState != null)
             popPostDetail();
 

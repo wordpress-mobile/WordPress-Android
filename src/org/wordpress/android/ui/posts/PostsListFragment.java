@@ -25,7 +25,7 @@ import org.xmlrpc.android.ApiHelper;
 import java.util.List;
 import java.util.Vector;
 
-public class PostsListFragment extends ListFragment {
+public class PostsListFragment extends ListFragment implements WordPress.OnPostUploadedListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -132,6 +132,9 @@ public class PostsListFragment extends ListFragment {
                 }
             });
         }
+
+        WordPress.setOnPostUploadedListener(this);
+
     }
 
     public void onAttach(Activity activity) {
@@ -202,7 +205,7 @@ public class PostsListFragment extends ListFragment {
             mProgressFooterView.setVisibility(View.VISIBLE);
         }
 
-        ApiHelper.FetchPostsTask fetchPostsTaskTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+        ApiHelper.FetchPostsTask fetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
                 mIsFetchingPosts = false;
@@ -249,7 +252,7 @@ public class PostsListFragment extends ListFragment {
         });
 
         mIsFetchingPosts = true;
-        fetchPostsTaskTask.execute(apiArgs);
+        fetchPostsTask.execute(apiArgs);
     }
 
     protected void clear() {
@@ -268,6 +271,49 @@ public class PostsListFragment extends ListFragment {
 
     private boolean hasActivity() {
         return getActivity() != null;
+    }
+
+    @Override
+    public void OnPostUploaded(String postId) {
+        if (!hasActivity())
+            return;
+
+        if (!NetworkUtils.checkConnection(getActivity()))
+            return;
+
+        // Fetch the newly uploaded post
+        if (!TextUtils.isEmpty(postId)) {
+            List<Object> apiArgs = new Vector<Object>();
+            apiArgs.add(WordPress.getCurrentBlog());
+            apiArgs.add(postId);
+            apiArgs.add(mIsPage);
+
+            ApiHelper.FetchSinglePostTask fetchPostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (!hasActivity())
+                        return;
+
+                    mIsFetchingPosts = false;
+                    mOnRefreshListener.onRefresh(false);
+                    getPostListAdapter().loadPosts();
+                }
+
+                @Override
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    if (!hasActivity())
+                        return;
+
+                    Toast.makeText(getActivity(), R.string.error_refresh_posts, Toast.LENGTH_SHORT).show();
+                    mIsFetchingPosts = false;
+                    mOnRefreshListener.onRefresh(false);
+                }
+            });
+
+            mOnRefreshListener.onRefresh(true);
+            mIsFetchingPosts = true;
+            fetchPostTask.execute(apiArgs);
+        }
     }
 
     public interface OnPostSelectedListener {
