@@ -14,6 +14,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.util.Base64;
@@ -128,7 +129,8 @@ public class VolleyUtils {
     }
     
     private static void addDefaultHeaders(Request<?> request, Map<String, String> headers, Blog blog){
-        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && blog.hasValidHTTPAuthCredentials()) {
+        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") 
+                && blog != null && blog.hasValidHTTPAuthCredentials()) {
             HashMap<String, String> authParams = new HashMap<String, String>();
             String creds = String.format("%s:%s", blog.getHttpuser(), blog.getHttppassword());
             String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
@@ -198,4 +200,47 @@ public class VolleyUtils {
         }
     }
     
+    public static HttpStack getDefaultHTTPClientStack(final Context ctx) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            HurlStack stack = new HurlStack() {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                        throws IOException, AuthFailureError {
+                    addDefaultHeaders(request, headers, null);
+                    
+                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
+                        headers.putAll(authParams);
+                    }
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+
+        } else {
+            HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                        throws IOException, AuthFailureError {
+                    addDefaultHeaders(request, headers, null);
+                    
+                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
+                        headers.putAll(authParams);
+                    }
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+        }
+    }
 }
