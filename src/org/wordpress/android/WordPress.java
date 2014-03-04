@@ -517,11 +517,13 @@ public class WordPress extends Application {
     }
 
     /**
-     * User-Agent string when making HTTP connections. Used for both API traffic and WebViews.
-     * Format follows http://tools.ietf.org/html/rfc2616#section-14.43, ex:
-     *  "wp-android/2.6.3 (Android 4.4.2; en_US; LGE hammerhead)"
-     *  "wp-android/2.6.3 (Android 2.3.7; en_US; unknown vbox86p)"
-     *  "wp-android/2.6.3 (Android 4.4.2; en_US; asus nakasi)"
+     * User-Agent string when making HTTP connections, for both API traffic and WebViews.
+     * Follows the format detailed at http://tools.ietf.org/html/rfc2616#section-14.43,
+     * ie: "AppName/AppVersion (OS Version; Locale; Device)"
+     *    "wp-android/2.6.3 (Android 4.4.2; en_US; LGE hammerhead)"
+     *    "wp-android/2.6.3 (Android 2.3.7; en_US; unknown vbox86p)"
+     *    "wp-android/2.6.3 (Android 4.4.2; en_US; asus nakasi)"
+     * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
