@@ -102,7 +102,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
+        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getDefaultHTTPClientStack(this));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag(TAG);
 
@@ -464,56 +464,6 @@ public class WordPress extends Application {
         }
 
         return loginURL;
-    }
-
-    public static HttpStack getHttpClientStack() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            HurlStack stack = new HurlStack() {
-                @Override
-                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                        throws IOException, AuthFailureError {
-
-                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
-                        // Add the auth header to access private WP.com files
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
-                        headers.putAll(authParams);
-                    }
-
-                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", getUserAgent());
-                    headers.putAll(defaultHeaders);
-
-                    return super.performRequest(request, headers);
-                }
-            };
-
-            return stack;
-
-        } else {
-            HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
-                @Override
-                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                        throws IOException, AuthFailureError {
-
-                    if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com")) {
-                        // Add the auth header to access private WP.com files
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
-                        headers.putAll(authParams);
-                    }
-
-                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", getUserAgent());
-                    headers.putAll(defaultHeaders);
-
-                    return super.performRequest(request, headers);
-                }
-            };
-
-            return stack;
-        }
     }
 
     /**

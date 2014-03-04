@@ -1,10 +1,26 @@
 package org.wordpress.android.util;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import android.content.Context;
+import android.util.Base64;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageRequest;
@@ -13,20 +29,10 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Base64;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 9/3/13.
@@ -120,7 +126,8 @@ public class VolleyUtils {
     }
     
     private static void addDefaultHeaders(Request<?> request, Map<String, String> headers, Blog blog){
-        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && blog.hasValidHTTPAuthCredentials()) {
+        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") 
+                && blog != null && blog.hasValidHTTPAuthCredentials()) {
             HashMap<String, String> authParams = new HashMap<String, String>();
             String creds = String.format("%s:%s", blog.getHttpuser(), blog.getHttppassword());
             String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
@@ -133,31 +140,70 @@ public class VolleyUtils {
         headers.putAll(defaultHeaders);
     }
     
-    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
+    public static TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            HurlStack stack = new HurlStack() {
-                @Override
-                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                        throws IOException, AuthFailureError {
-                    addDefaultHeaders(request, headers, currentBlog);
-                    return super.performRequest(request, headers);
-                }
-            };
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
 
-            return stack;
-        } else {
-            HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
-                @Override
-                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                        throws IOException, AuthFailureError {
-                    addDefaultHeaders(request, headers, currentBlog);
-                    return super.performRequest(request, headers);
-                }
-            };
-
-            return stack;
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
         }
+    };
+    
+    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
+        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
+        SSLSocketFactory mSslSocketFactory = null;
+
+        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+            try {
+                SSLContext context = SSLContext.getInstance("SSL");
+                context.init(null, trustAllCerts, new SecureRandom());
+                mSslSocketFactory = context.getSocketFactory();
+            } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, e);
+            } catch (KeyManagementException e) {
+                AppLog.e(T.API, e);
+            }
+        }
+
+        HurlStack stack = new HurlStack(null, mSslSocketFactory) {
+            @Override
+            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError {
+                addDefaultHeaders(request, headers, currentBlog);
+                return super.performRequest(request, headers);
+            }
+        };
+
+        return stack;
     }
     
+    public static HttpStack getDefaultHTTPClientStack(final Context ctx) {
+
+        HurlStack stack = new HurlStack() {
+            @Override
+            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError {
+                addDefaultHeaders(request, headers, null);
+
+                if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && WordPress.getWPComAuthToken(ctx) != null) {
+                    // Add the auth header to access private WP.com files
+                    HashMap<String, String> authParams = new HashMap<String, String>();
+                    authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
+                    headers.putAll(authParams);
+                }
+
+                return super.performRequest(request, headers);
+            }
+        };
+
+        return stack;
+    }
+
 }
