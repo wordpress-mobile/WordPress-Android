@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class PostsListPost {
 
+    private static int TEN_SECONDS_MILLIS = 10000;
+
     private int postId;
     private int blogId;
     private String title;
@@ -66,7 +68,7 @@ public class PostsListPost {
         // Check if post is scheduled
         Date d = new Date();
         String postStatus = StringUtils.notNullStr(status);
-        if (getDateCreatedGmt() > d.getTime() && postStatus.equals("publish")) {
+        if (getDateCreatedGmt() - TEN_SECONDS_MILLIS > d.getTime() && postStatus.equals("publish")) {
             postStatus = "scheduled";
         }
 
