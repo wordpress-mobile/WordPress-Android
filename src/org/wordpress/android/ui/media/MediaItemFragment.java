@@ -257,7 +257,7 @@ public class MediaItemFragment extends SherlockFragment {
                     String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int)screenWidth);
                     ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, WordPress.imageLoader);
                 } else {
-                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
+                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, MediaBrowserActivity.imageLoader);
                 }
             }
             mImageView.setVisibility(View.VISIBLE);
