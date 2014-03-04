@@ -1,33 +1,5 @@
 package org.xmlrpc.android;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Xml;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.ServerError;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.BlogIdentifier;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.xmlpull.v1.XmlPullParser;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
@@ -36,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,8 +25,36 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Xml;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.BlogIdentifier;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
 
 public class ApiHelper {
     public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
@@ -813,25 +812,13 @@ public class ApiHelper {
     /**
      * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
      * verified hostnames)
+     * 
      */
-    public static void trustAllSslCertificates(boolean trustAll) {
+    private static void trustAllSslCertificates(boolean trustAll) {
         try {
-            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }};
             if (trustAll) {
                 SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAllCerts, new SecureRandom());
+                context.init(null, VolleyUtils.trustAllCerts, new SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
                     @Override

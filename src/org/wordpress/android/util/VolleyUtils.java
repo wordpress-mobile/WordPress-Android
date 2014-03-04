@@ -1,5 +1,23 @@
 package org.wordpress.android.util;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import android.net.http.AndroidHttpClient;
+import android.os.Build;
+import android.util.Base64;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,20 +31,10 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Base64;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 9/3/13.
@@ -133,10 +141,40 @@ public class VolleyUtils {
         headers.putAll(defaultHeaders);
     }
     
-    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
+    public static TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
 
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }
+    };
+    
+    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
+        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
+        SSLSocketFactory mSslSocketFactory = null;
+        
+        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+            try {
+                SSLContext context = SSLContext.getInstance("SSL");
+                context.init(null, trustAllCerts, new SecureRandom());
+                mSslSocketFactory = context.getSocketFactory();
+            } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, e);
+            } catch (KeyManagementException e) {
+                AppLog.e(T.API, e);
+            }
+        }
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            HurlStack stack = new HurlStack() {
+            HurlStack stack = new HurlStack(null, mSslSocketFactory) {
                 @Override
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                         throws IOException, AuthFailureError {
