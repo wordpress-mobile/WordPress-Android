@@ -330,11 +330,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             VolleyUtils.cancelAllRequests(mRequestQueue);
         }
         
-        if (WordPress.getCurrentBlog().hasValidHTTPAuthCredentials()) {
+        if (WordPress.getCurrentBlog() != null && VolleyUtils.isCustomHTTPClientStackNeeded(WordPress.getCurrentBlog())) {
             // Volley networking setup
-            mRequestQueue = Volley.newRequestQueue(this, 
-                    VolleyUtils.getHttpAuthClientStack(WordPress.getCurrentBlog().getHttpuser(), WordPress.getCurrentBlog().getHttppassword())
-                    );
+            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getCustomHTTPClientStack(WordPress.getCurrentBlog()));
             imageLoader = new ImageLoader(mRequestQueue, WordPress.getBitmapCache());
             // http://stackoverflow.com/a/17035814
             imageLoader.setBatchedResponseDelay(0);

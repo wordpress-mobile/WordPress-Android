@@ -13,7 +13,10 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
+import org.wordpress.android.models.Blog;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -22,6 +25,7 @@ import java.util.Map;
 
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Base64;
 
 /**
@@ -101,54 +105,53 @@ public class VolleyUtils {
         };
         requestQueue.cancelAll(filter);
     }
+
+    /*
+     * Return true if the blog is protected with HTTP Basic Auth, or it's using a self-signed certificate 
+     */
+    public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
+        if (currentBlog.hasValidHTTPAuthCredentials())
+            return true;
+        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
+        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+            return true;
+        }
+        return false;
+    }
     
+    private static void addDefaultHeaders(Request<?> request, Map<String, String> headers, Blog blog){
+        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && blog.hasValidHTTPAuthCredentials()) {
+            HashMap<String, String> authParams = new HashMap<String, String>();
+            String creds = String.format("%s:%s", blog.getHttpuser(), blog.getHttppassword());
+            String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+            authParams.put("Authorization", auth);
+            headers.putAll(authParams);
+        }
+
+        HashMap<String, String> defaultHeaders = new HashMap<String, String>();
+        defaultHeaders.put("User-Agent", Constants.USER_AGENT + "/" + WordPress.versionName);
+        headers.putAll(defaultHeaders);
+    }
     
-    public static HttpStack getHttpAuthClientStack(final String httpuser, final String httppasswd) {
+    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             HurlStack stack = new HurlStack() {
                 @Override
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                         throws IOException, AuthFailureError {
-
-                    if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com")) {
-                        // Add the auth header to access private WP.com files
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        String creds = String.format("%s:%s", httpuser, httppasswd);
-                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                        authParams.put("Authorization", auth);
-                        headers.putAll(authParams);
-                    }
-
-                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    headers.putAll(defaultHeaders);
-
+                    addDefaultHeaders(request, headers, currentBlog);
                     return super.performRequest(request, headers);
                 }
             };
 
             return stack;
-
         } else {
             HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
                 @Override
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                         throws IOException, AuthFailureError {
-
-                    if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com")) {
-                        // Add the auth header to access private WP.com files
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        String creds = String.format("%s:%s", httpuser, httppasswd);
-                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                        authParams.put("Authorization", auth);
-                        headers.putAll(authParams);
-                    }
-
-                    HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                    defaultHeaders.put("User-Agent", "wp-android/" + WordPress.versionName);
-                    headers.putAll(defaultHeaders);
-
+                    addDefaultHeaders(request, headers, currentBlog);
                     return super.performRequest(request, headers);
                 }
             };
