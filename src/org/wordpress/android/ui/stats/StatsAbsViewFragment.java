@@ -58,12 +58,12 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
         return fragment;
     }
 
-    protected static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
-    
+    private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
+
     protected StatsViewType getViewType() {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
         return StatsViewType.values()[ordinal];
     }
     
-    public abstract String getTitle();
+    protected abstract String getTitle();
 }

@@ -10,12 +10,7 @@
 
         <TextView
             android:id="@+id/stats_pager_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/stats_tablet_header_title"
-            android:padding="6dp"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            style="@style/StatsPagerTitle" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +25,7 @@
                 android:id="@+id/stats_pager_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal"
                 android:visibility="gone" />
 
@@ -42,36 +37,36 @@
                 android:gravity="center_vertical">
 
                 <View
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="@dimen/margin_large"
+                    android:layout_height="@dimen/margin_large"
                     android:background="@color/stats_bar_graph_views"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp" />
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="16dp"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_extra_large"
                     android:text="@string/stats_totals_views"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_sz_small" />
 
                 <View
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="@dimen/margin_large"
+                    android:layout_height="@dimen/margin_large"
                     android:background="@color/stats_bar_graph_visitors"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp" />
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"
                     android:text="@string/stats_totals_visitors"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_sz_small" />
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +78,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
@@ -100,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/stats_visitors_and_views_header_today"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -114,7 +109,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp">
+                            android:padding="@dimen/margin_medium">
 
                             <TextView
                                 android:id="@+id/stats_visitors_and_views_today_visitors_count"
@@ -138,7 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp">
+                            android:padding="@dimen/margin_medium">
 
                             <TextView
                                 android:id="@+id/stats_visitors_and_views_today_views_count"
@@ -173,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/stats_visitors_and_views_header_best_ever"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <TextView
                         android:id="@+id/stats_visitors_and_views_best_ever_views_count"
@@ -181,7 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:text="0" />
 
                     <TextView
@@ -208,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/stats_visitors_and_views_header_all_time"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -222,7 +217,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp">
+                            android:padding="@dimen/margin_medium">
 
                             <TextView
                                 android:id="@+id/stats_visitors_and_views_all_time_view_count"
@@ -246,7 +241,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp">
+                            android:padding="@dimen/margin_medium">
 
                             <TextView
                                 android:id="@+id/stats_visitors_and_views_all_time_comment_count"

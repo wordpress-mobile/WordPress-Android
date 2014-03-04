@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,10 +20,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
-import java.text.DecimalFormat;
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -32,7 +34,9 @@ import java.util.Locale;
  * A summary of the blog's stats are also shown on each page.
  */ 
 public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implements RadioGroup.OnCheckedChangeListener {
-    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
+    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(),
+                                                           StatsBarChartUnit.WEEK.getLabel(),
+                                                           StatsBarChartUnit.MONTH.getLabel() };
 
     private TextView mVisitorsToday;
     private TextView mViewsToday;
@@ -44,25 +48,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     private int mSelectedButtonIndex = 0;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                refreshViews(summary);
-            }
-        }
-    };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
-        titleTextView.setText(getTitle());
+        titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
         mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);
@@ -93,10 +85,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
 
         refreshSummary();
     }
@@ -109,11 +108,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     private void loadBarChartFragmentForIndex(int index) {
         if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
-            StatsBarChartUnit unit = StatsBarChartUnit.DAY;
-            if (index == 1)
-                unit = StatsBarChartUnit.WEEK;
-            else if (index == 2)
-                unit = StatsBarChartUnit.MONTH;
+            final StatsBarChartUnit unit;
+            switch (index) {
+                case 1:
+                    unit = StatsBarChartUnit.WEEK;
+                    break;
+                case 2:
+                    unit = StatsBarChartUnit.MONTH;
+                    break;
+                default:
+                    unit = StatsBarChartUnit.DAY;
+            }
+
             StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
@@ -126,67 +132,60 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
-
-        final String statsBlogId = blogId;
-        new AsyncTask<Void, Void, StatsSummary>() {
-
+        final Handler handler = new Handler();
+        new Thread() {
             @Override
-            protected StatsSummary doInBackground(Void... params) {
-                return StatUtils.getSummary(statsBlogId);
-            }
-
-            protected void onPostExecute(final StatsSummary result) {
-                if (getActivity() == null)
-                    return;
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
+            public void run() {
+                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                if (TextUtils.isEmpty(blogId))
+                    blogId = "0";
+                final StatsSummary summary = StatUtils.getSummary(blogId);
+                handler.post(new Runnable() {
                     public void run() {
-                        refreshViews(result);
+                        refreshSummary(summary);
                     }
                 });
-            };
-
-        }.execute();
-
+            }
+        }.start();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void refreshSummary(final StatsSummary stats) {
+        if (getActivity() == null)
+            return;
 
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
-    }
-
-    protected void refreshViews(StatsSummary stats) {
-        int visitorsToday = 0;
-        int viewsToday = 0;
-        int visitorsBestEver = 0;
-        int viewsAllTime = 0;
-        int commentsAllTime = 0;
-
-        if (stats != null) {
-            visitorsToday = stats.getVisitorsToday();
-            viewsToday = stats.getViewsToday();
-            visitorsBestEver = stats.getViewsBestDayTotal();
-            viewsAllTime = stats.getViewsAllTime();
-            commentsAllTime = stats.getCommentsAllTime();
+        if (stats == null) {
+            mVisitorsToday.setText("0");
+            mViewsToday.setText("0");
+            mViewsBestEver.setText("0");
+            mViewsAllTime.setText("0");
+            mCommentsAllTime.setText("0");
+        } else {
+            mVisitorsToday.setText(FormatUtils.formatDecimal(stats.getVisitorsToday()));
+            mViewsToday.setText(FormatUtils.formatDecimal(stats.getViewsToday()));
+            mViewsBestEver.setText(FormatUtils.formatDecimal(stats.getViewsBestDayTotal()));
+            mViewsAllTime.setText(FormatUtils.formatDecimal(stats.getViewsAllTime()));
+            mCommentsAllTime.setText(FormatUtils.formatDecimal(stats.getCommentsAllTime()));
         }
-
-        DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-
-        mVisitorsToday.setText(formatter.format(visitorsToday));
-        mViewsToday.setText(formatter.format(viewsToday));
-        mViewsBestEver.setText(formatter.format(visitorsBestEver));
-        mViewsAllTime.setText(formatter.format(viewsAllTime));
-        mCommentsAllTime.setText(formatter.format(commentsAllTime));
     }
 
     @Override
-    public String getTitle() {
+    protected String getTitle() {
         return getString(R.string.stats_view_visitors_and_views);
     }
+
+    /*
+     * receives broadcast when summary data has been updated
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatsService.ACTION_STATS_SUMMARY_UPDATED)) {
+                Serializable serial = intent.getSerializableExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA);
+                if (serial instanceof StatsSummary) {
+                    refreshSummary((StatsSummary) serial);
+                }
+            }
+        }
+    };
 }
