@@ -129,7 +129,7 @@ public class VolleyUtils {
         }
 
         HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-        defaultHeaders.put("User-Agent", Constants.USER_AGENT + "/" + WordPress.versionName);
+        defaultHeaders.put("User-Agent", WordPress.getUserAgent());
         headers.putAll(defaultHeaders);
     }
     
