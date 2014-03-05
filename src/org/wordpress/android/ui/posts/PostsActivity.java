@@ -259,7 +259,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         } else {
             popPostDetail();
             attemptToSelectPost();
-            mShouldAnimateRefreshButton = true;
             mPostList.refreshPosts(false);
         }
     }
@@ -321,11 +320,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         if (mIsPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
-        }
-
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            onRefresh(true);
         }
         return true;
     }
@@ -418,11 +412,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             public void run() {
                 if (start) {
                     attemptToSelectPost();
-                    mShouldAnimateRefreshButton = true;
                     startAnimatingRefreshButton(mRefreshMenuItem);
                     mIsRefreshing = true;
                 } else {
-                    mShouldAnimateRefreshButton = false;
                     stopAnimatingRefreshButton(mRefreshMenuItem);
                     mIsRefreshing = false;
                 }

@@ -47,12 +47,10 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.wordpress.android.WordPress.getRestClientUtils;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class NotificationsActivity extends WPActionBarActivity
                                    implements CommentActions.OnCommentChangeListener,
-                                              CommentDetailFragment.OnPostClickListener,
-                                              OnRefreshListener {
+                                              CommentDetailFragment.OnPostClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
@@ -150,11 +148,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // remove window background since background color is set in fragment (reduces overdraw)
         getWindow().setBackgroundDrawable(null);
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        refreshNotes();
     }
 
     private void createBroadcastReceiver() {
@@ -427,7 +420,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
     public void refreshNotes(){
         mFirstLoadComplete = false;
-        mShouldAnimateRefreshButton = true;
         mNotesList.animateRefresh(true);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
@@ -462,7 +454,6 @@ public class NotificationsActivity extends WPActionBarActivity
                             R.string.error_refresh_notifications));
                 }
                 mNotesList.animateRefresh(false);
-                mShouldAnimateRefreshButton = false;
             }
         };
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
