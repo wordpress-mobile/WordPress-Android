@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.PullToRefreshHeaderTransformer;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PhotonUtils;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class NotificationsListFragment extends ListFragment implements OnRefreshListener {
@@ -69,7 +71,11 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
 
         // pull to refresh layout setup
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        PullToRefreshHeaderTransformer headerTransformer = new PullToRefreshHeaderTransformer();
+        ActionBarPullToRefresh.from(getActivity())
+                              .options(Options.create().headerTransformer(headerTransformer).build())
+                              .allChildrenArePullable().listener(this)
+                              .setup(mPullToRefreshLayout);
         return view;
     }
 
