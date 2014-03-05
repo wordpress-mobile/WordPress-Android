@@ -228,15 +228,12 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem saveDraftMenuItem = menu.findItem(R.id.menu_save_draft);
         MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
-            previewMenuItem.setVisible(false);
             saveDraftMenuItem.setVisible(false);
             saveMenuItem.setVisible(false);
         } else {
-            previewMenuItem.setVisible(true);
             // Display the save draft menu item if the post is new (no post id) or it is saved
             // server-side and does not have a "published" status. Update the save menu item title
             // depending on the status of the current post.
@@ -282,8 +279,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
             Toast.makeText(this, getResources().getText(R.string.post_draft_saved), Toast.LENGTH_SHORT).show();
             // The current post is now the original post
             mOriginalPost = mPost.clone();
-        } else if (itemId == R.id.menu_preview_post) {
-            mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == android.R.id.home) {
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -397,6 +392,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     public void showPostSettings() {
         mViewPager.setCurrentItem(PAGE_SETTINGS);
+    }
+
+    public void showPostPreview() {
+        mViewPager.setCurrentItem(PAGE_PREVIEW);
     }
 
     /**

@@ -164,6 +164,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 mActivity.showPostSettings();
             }
         });
+        Button postPreviewButton = (Button) rootView.findViewById(R.id.post_preview_button);
+        postPreviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.showPostPreview();
+            }
+        });
         mBoldToggleButton = (ToggleButton) rootView.findViewById(R.id.bold);
         mEmToggleButton = (ToggleButton) rootView.findViewById(R.id.em);
         mBquoteToggleButton = (ToggleButton) rootView.findViewById(R.id.bquote);
