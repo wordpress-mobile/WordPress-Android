@@ -19,6 +19,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 
@@ -31,6 +32,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnRefreshListener mOnRefreshListener;
+    private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
@@ -68,13 +70,22 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                         // No posts, let's request some
                         requestPosts(false);
                     } else if (mShouldSelectFirstPost) {
-                        // Select the first row on a tablet, if available
+                        // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
                         if (mPostsListAdapter.getCount() > 0) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                                 getListView().setItemChecked(0, true);
+                            }
+                        }
+                    } else if (Utils.isTablet()) {
+                        // Reload the last selected position, if available
+                        int selectedPosition = getListView().getCheckedItemPosition();
+                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
+                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
+                            if (postsListPost != null) {
+                                showPost(postsListPost.getPostId());
                             }
                         }
                     }
@@ -143,6 +154,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             // check that the containing activity implements our callback
             mOnPostSelectedListener = (OnPostSelectedListener) activity;
             mOnRefreshListener = (OnRefreshListener) activity;
+            mOnSinglePostLoadedListener = (OnSinglePostLoadedListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -297,6 +309,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     mIsFetchingPosts = false;
                     mOnRefreshListener.onRefresh(false);
                     getPostListAdapter().loadPosts();
+                    mOnSinglePostLoadedListener.onSinglePostLoaded();
                 }
 
                 @Override
@@ -326,5 +339,9 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     public interface OnPostActionListener {
         public void onPostAction(int action, Post post);
+    }
+
+    public interface OnSinglePostLoadedListener {
+        public void onSinglePostLoaded();
     }
 }

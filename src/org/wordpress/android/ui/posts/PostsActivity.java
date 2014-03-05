@@ -47,7 +47,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+        OnRefreshListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
+        OnDetailPostActionListener, OnDialogConfirmListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
 
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
@@ -140,6 +141,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         if (savedInstanceState != null)
             popPostDetail();
+
+        attemptToSelectPost();
 
         WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
@@ -248,7 +251,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             }
         } else {
             popPostDetail();
-            attemptToSelectPost();
             mShouldAnimateRefreshButton = true;
             mPostList.requestPosts(false);
         }
@@ -277,7 +279,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             checkForLocalChanges(false);
             WordPress.postsShouldRefresh = false;
         }
-        attemptToSelectPost();
     }
 
     @Override
@@ -398,7 +399,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             @Override
             public void run() {
                 if (start) {
-                    attemptToSelectPost();
                     mShouldAnimateRefreshButton = true;
                     startAnimatingRefreshButton(mRefreshMenuItem);
                     mIsRefreshing = true;
@@ -462,7 +462,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
                 post.delete();
-                attemptToSelectPost();
                 mPostList.requestPosts(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
@@ -772,6 +771,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onDialogConfirm() {
         mPostList.requestPosts(true);
+    }
+
+    @Override
+    public void onSinglePostLoaded() {
+        popPostDetail();
     }
 
     @Override
