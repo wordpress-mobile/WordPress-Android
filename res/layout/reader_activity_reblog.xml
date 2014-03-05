@@ -21,6 +21,21 @@
         android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey_medium_dark"
+        android:padding="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@+id/divider_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_label_reblog_empty" />
+
     <RelativeLayout
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
