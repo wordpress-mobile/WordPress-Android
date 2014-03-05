@@ -142,6 +142,10 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
         }
     }
 
+    public void setAllNotesLoaded(boolean allNotesLoaded) {
+        mAllNotesLoaded = allNotesLoaded;
+    }
+
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
     }

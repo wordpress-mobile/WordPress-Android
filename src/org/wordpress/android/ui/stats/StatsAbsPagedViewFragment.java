@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -149,6 +148,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         
     @Override
     public void onCursorLoaded(final Uri uri, Cursor cursor) {
+        if (getActivity() == null)
+            return;
         if (!cursor.moveToFirst())
             return;
 
@@ -156,58 +157,46 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         if (colDate == -1)
             return;
 
-        final long date = cursor.getLong(colDate);
-        final Handler handler = new Handler();
+        String timeframe = uri.getQueryParameter("timeframe");
+        if (timeframe == null)
+            return;
 
-        new Thread() {
-            @Override
-            public void run() {
-                long currentDate = StatUtils.getCurrentDateMs();
-                String timeframe = uri.getQueryParameter("timeframe");
-                if (timeframe == null)
-                    return;
+        long date = cursor.getLong(colDate);
+        long currentDate = StatUtils.getCurrentDateMs();
 
-                boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
-                boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());
+        boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
+        boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());
 
-                final String label0;
-                final String label1;
-                if (isToday) {
-                    if (date < currentDate) { // old stats
-                        label0 = StatUtils.msToString(date, "MMM d");
-                        label1 = StatUtils.msToString(date - ONE_DAY, "MMM d"); // assume the second set of stats is also old, and one day behind
-                    } else {
-                        label0 = StatsTimeframe.TODAY.getLabel();
-                        label1 = StatsTimeframe.YESTERDAY.getLabel();
-                    }
-                } else if (isYesterday) {
-                    label0 = null;
-                    currentDate -= ONE_DAY;
-                    if (date < currentDate) {// old stats
-                        label1 = StatUtils.msToString(date, "MMM d");
-                    } else {
-                        label1 = StatsTimeframe.YESTERDAY.getLabel();
-                    }
-                } else {
-                    return;
-                }
-
-                if (mRadioGroup == null)
-                    return;
-                final RadioButton radio0 = (RadioButton) mRadioGroup.getChildAt(0);
-                final RadioButton radio1 = (RadioButton) mRadioGroup.getChildAt(1);
-
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (getActivity() == null)
-                            return;
-                        if (label0 != null && radio0 != null)
-                            radio0.setText(label0);
-                        if (label1 != null && radio1 != null)
-                            radio1.setText(label1);
-                    }
-                });
+        final String label0;
+        final String label1;
+        if (isToday) {
+            if (date < currentDate) { // old stats
+                label0 = StatUtils.msToString(date, "MMM d");
+                label1 = StatUtils.msToString(date - ONE_DAY, "MMM d"); // assume the second set of stats is also old, and one day behind
+            } else {
+                label0 = StatsTimeframe.TODAY.getLabel();
+                label1 = StatsTimeframe.YESTERDAY.getLabel();
             }
-        }.start();
+        } else if (isYesterday) {
+            label0 = null;
+            currentDate -= ONE_DAY;
+            if (date < currentDate) {// old stats
+                label1 = StatUtils.msToString(date, "MMM d");
+            } else {
+                label1 = StatsTimeframe.YESTERDAY.getLabel();
+            }
+        } else {
+            return;
+        }
+
+        if (mRadioGroup == null)
+            return;
+        final RadioButton radio0 = (RadioButton) mRadioGroup.getChildAt(0);
+        final RadioButton radio1 = (RadioButton) mRadioGroup.getChildAt(1);
+
+        if (label0 != null && radio0 != null)
+            radio0.setText(label0);
+        if (label1 != null && radio1 != null)
+            radio1.setText(label1);
     }
 }
