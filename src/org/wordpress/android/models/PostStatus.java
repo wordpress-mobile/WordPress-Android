@@ -5,15 +5,17 @@ package org.wordpress.android.models;
  */
 public enum PostStatus {
     UNKNOWN,
+    PUBLISHED,
     DRAFT,
     PRIVATE,
     PENDING,
-    SCHEDULED, //NOTE: Only used locally, WP has a 'future' status but it is not returned from the metaWeblog API
-    PUBLISHED;
+    SCHEDULED; //NOTE: Only used locally, WP has a 'future' status but it is not returned from the metaWeblog API
 
     public static PostStatus fromString(String value) {
         if (value == null)
             return PostStatus.UNKNOWN;
+        if (value.equals("publish"))
+            return PUBLISHED;
         if (value.equals("draft"))
             return PostStatus.DRAFT;
         if (value.equals("private"))
@@ -22,14 +24,14 @@ public enum PostStatus {
             return PENDING;
         if (value.equals("future"))
             return SCHEDULED;
-        if (value.equals("publish"))
-            return PUBLISHED;
 
         return PostStatus.UNKNOWN;
     }
 
     public static String toString(PostStatus status) {
         switch (status) {
+            case PUBLISHED:
+                return "publish";
             case DRAFT:
                 return "draft";
             case PRIVATE:
@@ -38,8 +40,6 @@ public enum PostStatus {
                 return "pending";
             case SCHEDULED:
                 return "future";
-            case PUBLISHED:
-                return "publish";
             default:
                 return "";
         }
