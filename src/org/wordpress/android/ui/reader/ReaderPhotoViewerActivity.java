@@ -22,7 +22,7 @@ import org.wordpress.android.widgets.photoview.PhotoViewAttacher;
  * Full-screen photo viewer, relies on widgets.photoview for pinch/zoom & double tap enlargement
  */
 public class ReaderPhotoViewerActivity extends FragmentActivity {
-    protected static final String ARG_IMAGE_URL = "image_url";
+    static final String ARG_IMAGE_URL = "image_url";
     private String mImageUrl;
 
     @Override

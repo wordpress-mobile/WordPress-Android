@@ -758,9 +758,9 @@ public class PostUploadService extends Service {
 
             if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType).toLowerCase();
+                String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
                 if (!TextUtils.isEmpty(fileExtensionFromMimeType)) {
-                    originalFileName += "." + fileExtensionFromMimeType;
+                    originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
                 } else {
                     //We're still without an extension - split the mime type and retrieve it
                    String[] split = mimeType.split("/");

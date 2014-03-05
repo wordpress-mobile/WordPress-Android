@@ -33,6 +33,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.NotificationsListFragment.NotesAdapter;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -47,7 +48,9 @@ import java.util.Set;
 
 import static org.wordpress.android.WordPress.getRestClientUtils;
 
-public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnCommentChangeListener {
+public class NotificationsActivity extends WPActionBarActivity
+                                   implements CommentActions.OnCommentChangeListener,
+                                              CommentDetailFragment.OnPostClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
@@ -79,7 +82,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
+        mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
@@ -218,17 +221,26 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.equals(mRefreshMenuItem)) {
-            refreshNotes();
-            return true;
-        } else if (item.getItemId() == android.R.id.home){
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                popNoteDetail();
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                refreshNotes();
                 return true;
-            }
+            case android.R.id.home:
+                if (isLargeOrXLarge()) {
+                    // let WPActionBarActivity handle it (toggles menu drawer)
+                    return super.onOptionsItemSelected(item);
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        popNoteDetail();
+                        return true;
+                    } else {
+                        return super.onOptionsItemSelected(item);
+                    }
+                }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -246,7 +258,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     public void popNoteDetail(){
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
             fm.popBackStack();
         }
@@ -325,13 +337,15 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
         noteFragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
-        View container = findViewById(R.id.note_fragment_container);
-        transaction.replace(R.id.note_fragment_container, fragment);
+        View container = findViewById(R.id.layout_fragment_container);
+        transaction.replace(R.id.layout_fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         // only add to backstack if we're removing the list view from the fragment container
-        if (container.findViewById(R.id.notes_list) != null) {
+        if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             transaction.addToBackStack(null);
+            if (mNotesList != null)
+                transaction.hide(mNotesList);
         }
         transaction.commitAllowingStateLoss();
     }
@@ -363,7 +377,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                     return;
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
                 FragmentManager fm = getSupportFragmentManager();
-                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
+                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.layout_fragment_container);
                 if (f != null) {
                     f.animateModeration(false);
                 }
@@ -382,7 +396,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         // TODO: position will be -1 for notes displayed from push notification, even though the note exists
         int position = mNotesList.getNotesAdapter().updateNote(originalNote, updatedNote);
 
-        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment_container);
+        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.layout_fragment_container);
         if (f != null) {
             // if this is the active note, update it in the fragment
             if (position >= 0 && position == mNotesList.getListView().getCheckedItemPosition()) {
@@ -397,10 +411,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     /*
      * triggered from the comment details fragment whenever a comment is changed (moderated, added,
-     * deleted, etc.) - refresh notifications show changes are reflected here
+     * deleted, etc.) - refresh notifications so changes are reflected here
      */
     @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         refreshNotes();
     }
 
@@ -422,6 +436,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             @Override
             public void onNotes(final List<Note> notes) {
                 mFirstLoadComplete = true;
+                mNotesList.setAllNotesLoaded(false);
                 // nbradbury - saving notes can be slow, so do it in the background
                 new Thread() {
                     @Override
@@ -599,4 +614,20 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             return dialog;
         return super.onCreateDialog(id);
     }
+
+    /*
+     * called when a link to a post is tapped - shows the post in a reader detail fragment
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        // TODO: hide detail fragment if it exists to reduce overdraw
+        ft.commit();
+    }
+
 }

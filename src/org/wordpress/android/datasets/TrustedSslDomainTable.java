@@ -54,7 +54,7 @@ public class TrustedSslDomainTable {
     }
 
     public static boolean isDomainTrusted(String domain) {
-        return SqlUtils.intForQuery(getDb(), "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE domain=?",
+        return domain != null && SqlUtils.intForQuery(getDb(), "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE domain=?",
                 new String[]{domain}) > 0;
     }
 }

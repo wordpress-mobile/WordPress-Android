@@ -79,8 +79,7 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.comments.CommentsActivity" />
         <activity
             android:name=".ui.comments.EditCommentActivity" />
 
@@ -162,12 +161,8 @@
         <activity
             android:name=".ui.reader.ReaderActivity"
             android:theme="@style/WordPress.Theme.NoBackground"
-            android:label="@string/app_name">
+            android:label="@string/reader">
         </activity>
-        <activity
-            android:name=".ui.reader.ReaderPostDetailActivity"
-            android:theme="@style/WordPress.Theme.NoBackground"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
@@ -265,6 +260,10 @@
             android:name=".util.MediaDeleteService"
             android:label="Media Delete Service" >
         </service>
+
+        <service android:name=".ui.stats.service.StatsService"
+            android:label="Stats Update Service"
+            android:exported="false" />
 
     </application>
 

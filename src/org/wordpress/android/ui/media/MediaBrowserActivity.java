@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.media;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -32,12 +35,17 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
+
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -48,12 +56,8 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The main activity in which the user can browse their media.
@@ -84,6 +88,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private Handler mHandler;
     private int mMultiSelectCount;
     private String mQuery;
+    
+    public static ImageLoader imageLoader;
+    private RequestQueue mRequestQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +102,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return;
         }
 
+        setupImageLoadingQueue();
+        
         mHandler = new Handler();
 
         setTitle(R.string.media);
@@ -312,8 +321,27 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         // check what features (e.g. video) the user has
         getFeatureSet();
+        
+        setupImageLoadingQueue();
     };
 
+    private void setupImageLoadingQueue(){
+        if( mRequestQueue!=null ){
+            VolleyUtils.cancelAllRequests(mRequestQueue);
+        }
+        
+        if (WordPress.getCurrentBlog() != null && VolleyUtils.isCustomHTTPClientStackNeeded(WordPress.getCurrentBlog())) {
+            // Volley networking setup
+            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getCustomHTTPClientStack(WordPress.getCurrentBlog()));
+            imageLoader = new ImageLoader(mRequestQueue, WordPress.getBitmapCache());
+            // http://stackoverflow.com/a/17035814
+            imageLoader.setBatchedResponseDelay(0);
+        } else {
+            mRequestQueue = null;
+            imageLoader = WordPress.imageLoader;
+        }
+    }
+    
     @Override
     public void onMediaItemSelected(String mediaId) {
 

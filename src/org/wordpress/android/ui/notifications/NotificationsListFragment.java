@@ -121,6 +121,10 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
+    public void setAllNotesLoaded(boolean allNotesLoaded) {
+        mAllNotesLoaded = allNotesLoaded;
+    }
+
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
     }

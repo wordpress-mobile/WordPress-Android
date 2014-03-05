@@ -111,8 +111,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isAnimatingRefreshButton;
     protected boolean mShouldAnimateRefreshButton;
     protected boolean mShouldFinish;
-    private boolean mIsXLargeDevice;
-    private boolean mIsStaticMenuDrawer;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
@@ -125,8 +123,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mIsXLargeDevice = true;
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -214,13 +210,30 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
+     * returns true if this is an extra-large device in landscape mode
+     */
+    protected boolean isXLargeLandscape() {
+        return isXLarge() && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    protected boolean isXLarge() {
+        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_XLARGE);
+    }
+
+    protected boolean isLargeOrXLarge() {
+        int mask = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK);
+        return (mask == Configuration.SCREENLAYOUT_SIZE_LARGE
+             || mask == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+    }
+
+    /**
      * Attach a menu drawer to the Activity
      * Set to be a static drawer if on a landscape x-large device
      */
     private MenuDrawer attachMenuDrawer() {
-        mIsStaticMenuDrawer = mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         final MenuDrawer menuDrawer;
-        if (mIsStaticMenuDrawer) {
+        if (isStaticMenuDrawer()) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
@@ -237,7 +250,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public boolean isStaticMenuDrawer() {
-        return mIsStaticMenuDrawer;
+        return isXLargeLandscape();
     }
 
     /*
@@ -343,14 +356,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
-                .getThemedContext(), R.layout.sherlock_spinner_dropdown_item, blogNames);
+        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
+                getSupportActionBar().getThemedContext(),
+                R.layout.spinner_menu_dropdown_item,
+                R.id.menu_text_dropdown,
+                blogNames
+        );
+
         mBlogSpinner.setAdapter(mSpinnerAdapter);
         mListView.addHeaderView(spinnerWrapper);
     }
 
     protected void startActivityWithDelay(final Intent i) {
-        if (mIsXLargeDevice && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isXLargeLandscape()) {
             // Tablets in landscape don't need a delay because the menu drawer doesn't close
             startActivity(i);
         } else {
@@ -541,7 +559,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     } else if (blogNames.length > 1 && mBlogSpinner != null) {
                         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
                                 getSupportActionBar().getThemedContext(),
-                                R.layout.sherlock_spinner_dropdown_item, blogNames);
+                                R.layout.spinner_menu_dropdown_item,
+                                R.id.menu_text_dropdown,
+                                blogNames
+                        );
                         mBlogSpinner.setAdapter(mSpinnerAdapter);
                     }
 
@@ -683,7 +704,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        if (mIsXLargeDevice) {
+        if (isXLarge()) {
             if (mMenuDrawer != null) {
                 // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
                 View content = mMenuDrawer.getContentContainer().getChildAt(0);
@@ -785,6 +806,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
@@ -810,6 +833,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
@@ -874,6 +899,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!isSelected())
                 mShouldFinish = true;
 

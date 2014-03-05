@@ -4,6 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:choiceMode="singleChoice"
+        android:divider="@drawable/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/reader_list_selector"
+        android:scrollingCache="true"
+        android:textColor="#444444"
+        tools:listitem="@layout/comment_listitem" />
+
     <org.wordpress.android.widgets.WPTextView
         android:id="@id/android:empty"
         style="@style/WordPress.EmptyList.Title"
@@ -16,24 +29,11 @@
         android:visibility="gone"
         android:text="@string/comments_empty_list" />
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="#00000000"
-        android:choiceMode="singleChoice"
-        android:divider="@drawable/list_divider"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/reader_list_selector"
-        android:scrollingCache="true"
-        android:textColor="#444444"
-        tools:listitem="@layout/comment_row" />
-
     <ProgressBar
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_medium"
         android:id="@+id/progress_loading" />
 </RelativeLayout>
