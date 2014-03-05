@@ -295,7 +295,11 @@ public class ReaderPostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (parent instanceof ListView) {
-                        ((ListView) parent).performItemClick(holder.imgBtnComment, position, getItemId(position));
+                        ListView listView = (ListView) parent;
+                        // the base listView onItemClick includes the header count in the position,
+                        // so do the same here
+                        int index = position + listView.getHeaderViewsCount();
+                        listView.performItemClick(holder.imgBtnComment, index, getItemId(position));
                     }
                 }
             });
