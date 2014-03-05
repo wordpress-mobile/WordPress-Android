@@ -232,7 +232,6 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
                 } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
-                    // TODO: What if a user has exactly POSTS_REQUESTS_COUNT posts on their blog?
                     mCanLoadMorePosts = false;
                 }
 

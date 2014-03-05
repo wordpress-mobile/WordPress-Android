@@ -64,6 +64,10 @@ public class PostsListPost {
         this.dateCreatedGmt = dateCreatedGmt;
     }
 
+    public String getOriginalStatus() {
+        return StringUtils.notNullStr(status);
+    }
+
     public String getStatus() {
         // Check if post is scheduled
         Date d = new Date();

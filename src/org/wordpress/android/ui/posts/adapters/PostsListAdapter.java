@@ -197,21 +197,53 @@ public class PostsListAdapter extends BaseAdapter {
         }
     }
 
-    private class LoadPostsTask extends AsyncTask <Void, Void, List<PostsListPost>> {
+    private class LoadPostsTask extends AsyncTask <Void, Void, Boolean> {
+        List<PostsListPost> loadedPosts;
+
         @Override
-        protected List<PostsListPost> doInBackground(Void... nada) {
-            return WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+        protected Boolean doInBackground(Void... nada) {
+            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+            if (postsListMatch(loadedPosts)) {
+                return false;
+            }
+
+            return true;
         }
 
         @Override
-        protected void onPostExecute(List<PostsListPost> postsList) {
-            setPosts(postsList);
-            notifyDataSetChanged();
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                setPosts(loadedPosts);
+                notifyDataSetChanged();
 
-            if (mOnPostsLoadedListener != null && mPosts != null) {
-                mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
+                if (mOnPostsLoadedListener != null && mPosts != null) {
+                    mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
+                }
             }
         }
+    }
+
+    public boolean postsListMatch(List<PostsListPost> newPostsList) {
+        if (newPostsList == null || mPosts == null || mPosts.size() != newPostsList.size())
+            return false;
+
+        for (int i = 0; i < newPostsList.size(); i++) {
+            PostsListPost newPost = newPostsList.get(i);
+            PostsListPost currentPost = mPosts.get(i);
+
+            if (!newPost.getTitle().equals(currentPost.getTitle()))
+                return false;
+            if (!(newPost.getDateCreatedGmt() == currentPost.getDateCreatedGmt()))
+                return false;
+            if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
+                return false;
+            if (!(newPost.isLocalDraft() == currentPost.isLocalDraft()))
+                return false;
+            if (!(newPost.hasLocalChanges() == currentPost.hasLocalChanges()))
+                return false;
+        }
+
+        return true;
     }
 
     public int getRemotePostCount() {
