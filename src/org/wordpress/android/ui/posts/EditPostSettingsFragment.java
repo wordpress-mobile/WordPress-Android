@@ -39,6 +39,7 @@ import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -235,20 +236,19 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             if (post.getWP_password() != null)
                 mPasswordEditText.setText(post.getWP_password());
 
-            if (post.getPost_status() != null) {
-                String status = post.getPost_status();
-
-                if (status.equals("publish")) {
+            switch (post.getStatusEnum()) {
+                case PUBLISHED:
                     mStatusSpinner.setSelection(0, true);
-                } else if (status.equals("draft")) {
+                    break;
+                case DRAFT:
                     mStatusSpinner.setSelection(1, true);
-                } else if (status.equals("pending")) {
+                    break;
+                case PENDING:
                     mStatusSpinner.setSelection(2, true);
-                } else if (status.equals("private")) {
+                    break;
+                case PRIVATE:
                     mStatusSpinner.setSelection(3, true);
-                } else if (status.equals("localdraft")) {
-                    mStatusSpinner.setSelection(0, true);
-                }
+                    break;
             }
 
             if (!post.isPage()) {
@@ -442,16 +442,16 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         switch (selectedStatus) {
             case 0:
-                status = "publish";
+                status = PostStatus.toString(PostStatus.PUBLISHED);
                 break;
             case 1:
-                status = "draft";
+                status = PostStatus.toString(PostStatus.DRAFT);
                 break;
             case 2:
-                status = "pending";
+                status = PostStatus.toString(PostStatus.PENDING);
                 break;
             case 3:
-                status = "private";
+                status = PostStatus.toString(PostStatus.PRIVATE);
                 break;
         }
 

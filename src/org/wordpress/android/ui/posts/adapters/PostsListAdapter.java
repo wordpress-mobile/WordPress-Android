@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.SysUtils;
@@ -85,12 +86,12 @@ public class PostsListAdapter extends BaseAdapter {
         }
 
         String date = post.getFormattedDate();
-        String status = post.getStatus();
 
         String titleText = post.getTitle();
         if (titleText.equals(""))
             titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
         wrapper.getTitle().setText(titleText);
+
         if (post.isLocalDraft()) {
             wrapper.getDate().setVisibility(View.GONE);
         } else {
@@ -99,7 +100,7 @@ public class PostsListAdapter extends BaseAdapter {
         }
 
         String formattedStatus = "";
-        if (status.equals("publish") && !post.isLocalDraft() && !post.hasLocalChanges()) {
+        if (post.getStatusEnum() == PostStatus.PUBLISHED && !post.isLocalDraft() && !post.hasLocalChanges()) {
             wrapper.getStatus().setVisibility(View.GONE);
         } else {
             wrapper.getStatus().setVisibility(View.VISIBLE);
@@ -107,18 +108,25 @@ public class PostsListAdapter extends BaseAdapter {
                 formattedStatus = mContext.getResources().getString(R.string.local_draft);
             } else if (post.hasLocalChanges()) {
                 formattedStatus = mContext.getResources().getString(R.string.local_changes);
-            } else if (status.equals("draft")) {
-                formattedStatus = mContext.getResources().getString(R.string.draft);
-            } else if (status.equals("pending")) {
-                formattedStatus = mContext.getResources().getString(R.string.pending_review);
-            } else if (status.equals("private")) {
-                formattedStatus = mContext.getResources().getString(R.string.post_private);
-            } else if (status.equals("scheduled")) {
-                formattedStatus = mContext.getResources().getString(R.string.scheduled);
+            } else {
+                switch (post.getStatusEnum()) {
+                    case DRAFT:
+                        formattedStatus = mContext.getResources().getString(R.string.draft);
+                        break;
+                    case PRIVATE:
+                        formattedStatus = mContext.getResources().getString(R.string.post_private);
+                        break;
+                    case PENDING:
+                        formattedStatus = mContext.getResources().getString(R.string.pending_review);
+                        break;
+                    case SCHEDULED:
+                        formattedStatus = mContext.getResources().getString(R.string.scheduled);
+                        break;
+                }
             }
 
             // Set post status TextView color
-            if (post.isLocalDraft() || status.equals("draft") || post.hasLocalChanges()) {
+            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges()) {
                 wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_dark));
             } else {
                 wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_medium));

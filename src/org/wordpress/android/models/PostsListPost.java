@@ -68,8 +68,9 @@ public class PostsListPost {
         // Check if post is scheduled
         Date d = new Date();
         String postStatus = StringUtils.notNullStr(status);
+        // Subtract 10 seconds from the server GMT date, in case server and device time slightly differ
         if (getDateCreatedGmt() - TEN_SECONDS_MILLIS > d.getTime() && postStatus.equals("publish")) {
-            postStatus = "scheduled";
+            postStatus = "future";
         }
 
         return postStatus;
@@ -77,6 +78,10 @@ public class PostsListPost {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public PostStatus getStatusEnum() {
+        return PostStatus.fromString(getStatus());
     }
 
     public String getFormattedDate() {
