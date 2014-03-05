@@ -10,6 +10,7 @@
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ListView
             android:id="@android:id/list"
             style="@style/ReaderListView.PostList"
@@ -18,15 +19,16 @@
             android:divider="@color/reader_divider_grey"
             android:dividerHeight="@dimen/margin_large"
             tools:listitem="@layout/reader_listitem_post_excerpt"/>
+
+        <include
+            android:id="@+id/empty_view"
+            layout="@layout/reader_empty_view"/>
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
         android:text="@string/reader_label_new_posts_one"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <include
-        android:id="@+id/empty_view"
-        layout="@layout/reader_empty_view" />
 </RelativeLayout>
