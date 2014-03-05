@@ -73,8 +73,9 @@ public class PostsListPost {
         Date d = new Date();
         String postStatus = StringUtils.notNullStr(status);
         // Subtract 10 seconds from the server GMT date, in case server and device time slightly differ
-        if (getDateCreatedGmt() - TEN_SECONDS_MILLIS > d.getTime() && postStatus.equals("publish")) {
-            postStatus = "future";
+        if (getDateCreatedGmt() - TEN_SECONDS_MILLIS > d.getTime() &&
+                PostStatus.fromString(getOriginalStatus()) == PostStatus.PUBLISHED) {
+            postStatus = PostStatus.toString(PostStatus.SCHEDULED);
         }
 
         return postStatus;
