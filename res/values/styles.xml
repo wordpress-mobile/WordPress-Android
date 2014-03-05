@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
         <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -314,5 +315,10 @@
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Pull to refresh styling -->
+    <style name="Widget.Custom.PtrHeader" parent="android:Widget">
+        <item name="ptrProgressBarColor">@color/blue_dark</item>
     </style>
 </resources>
