@@ -5,14 +5,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import android.content.Context;
 import android.util.Base64;
@@ -30,8 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog.T;
 
 /**
@@ -113,15 +111,12 @@ public class VolleyUtils {
     }
 
     /*
-     * Return true if the blog is protected with HTTP Basic Auth, or it's using a self-signed certificate 
+     * Return true if the blog is protected with HTTP Basic Auth 
      */
     public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
         if (currentBlog.hasValidHTTPAuthCredentials())
             return true;
-        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-            return true;
-        }
+        
         return false;
     }
     
@@ -140,36 +135,18 @@ public class VolleyUtils {
         headers.putAll(defaultHeaders);
     }
     
-    public static TrustManager[] trustAllCerts = new TrustManager[]{
-        new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return new X509Certificate[0];
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }
-    };
     
     public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
-        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
         SSLSocketFactory mSslSocketFactory = null;
-
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-            try {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAllCerts, new SecureRandom());
-                mSslSocketFactory = context.getSocketFactory();
-            } catch (NoSuchAlgorithmException e) {
-                AppLog.e(T.API, e);
-            } catch (KeyManagementException e) {
-                AppLog.e(T.API, e);
-            }
+        try {
+            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager() };
+            SSLContext context = SSLContext.getInstance("SSL");
+            context.init(null, trustAllowedCerts, new SecureRandom());
+            mSslSocketFactory = context.getSocketFactory();
+        } catch (NoSuchAlgorithmException e) {
+            AppLog.e(T.API, e);
+        } catch (KeyManagementException e) {
+            AppLog.e(T.API, e);
         }
 
         HurlStack stack = new HurlStack(null, mSslSocketFactory) {
@@ -185,8 +162,19 @@ public class VolleyUtils {
     }
     
     public static HttpStack getDefaultHTTPClientStack(final Context ctx) {
+        SSLSocketFactory mSslSocketFactory = null;
+        try {
+            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager() };
+            SSLContext context = SSLContext.getInstance("SSL");
+            context.init(null, trustAllowedCerts, new SecureRandom());
+            mSslSocketFactory = context.getSocketFactory();
+        } catch (NoSuchAlgorithmException e) {
+            AppLog.e(T.API, e);
+        } catch (KeyManagementException e) {
+            AppLog.e(T.API, e);
+        }
 
-        HurlStack stack = new HurlStack() {
+        HurlStack stack = new HurlStack(null, mSslSocketFactory) {
             @Override
             public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError {

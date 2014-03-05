@@ -166,11 +166,11 @@ public class SetupBlog {
         }
     }
 
-    private String getRsdUrl(String baseUrl, boolean ignoreSslCertificate) throws SSLHandshakeException {
+    private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
         String rsdUrl;
-        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl, ignoreSslCertificate);
+        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl);
         if (rsdUrl == null) {
-            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl, ignoreSslCertificate);
+            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl);
         }
         return rsdUrl;
     }
@@ -244,7 +244,7 @@ public class SetupBlog {
         // Attempt to get the XMLRPC URL via RSD
         String rsdUrl;
         try {
-            rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
+            rsdUrl = getRsdUrl(url);
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
@@ -255,7 +255,7 @@ public class SetupBlog {
 
         try {
             if (rsdUrl != null) {
-                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl, mAllSslCertificatesTrusted);
+                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
                 if (xmlrpcUrl == null) {
                     xmlrpcUrl = rsdUrl.replace("?rsd", "");
                 }
