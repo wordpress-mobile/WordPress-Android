@@ -42,6 +42,7 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
     private boolean mAllNotesLoaded;
     private boolean mIsAddingNotes;
     private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHeaderTransformer mHeaderTransformer;
 
     /**
      * For responding to tapping of notes
@@ -71,9 +72,9 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
 
         // pull to refresh layout setup
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        PullToRefreshHeaderTransformer headerTransformer = new PullToRefreshHeaderTransformer();
+        mHeaderTransformer = new PullToRefreshHeaderTransformer();
         ActionBarPullToRefresh.from(getActivity())
-                              .options(Options.create().headerTransformer(headerTransformer).build())
+                              .options(Options.create().headerTransformer(mHeaderTransformer).build())
                               .allChildrenArePullable().listener(this)
                               .setup(mPullToRefreshLayout);
         return view;
@@ -87,6 +88,7 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
     }
 
     public void animateRefresh(boolean refresh) {
+        mHeaderTransformer.setShowProgressBarOnly(refresh);
         mPullToRefreshLayout.setRefreshing(refresh);
     }
 

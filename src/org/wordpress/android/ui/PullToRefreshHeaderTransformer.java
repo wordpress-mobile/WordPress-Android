@@ -1,41 +1,64 @@
 package org.wordpress.android.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
-import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.AbsDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.R;
+import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
-public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
+public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer {
     private View mHeaderView;
     private ViewGroup mContentLayout;
     private long mAnimationDuration;
-    private boolean mShowOnlyProgressBar = true;
+    private boolean mShowProgressBarOnly;
+    private Animation mHeaderInAnimation, mHeaderOutAnimation;
+
+    public void setShowProgressBarOnly(boolean progressBarOnly) {
+        mShowProgressBarOnly = progressBarOnly;
+    }
 
     @Override
     public void onViewCreated(Activity activity, View headerView) {
         super.onViewCreated(activity, headerView);
         mHeaderView = headerView;
         mContentLayout = (ViewGroup) headerView.findViewById(R.id.ptr_content);
+
+        mHeaderInAnimation = AnimationUtils.loadAnimation(activity,
+                uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_in);
+        mHeaderOutAnimation = AnimationUtils.loadAnimation(activity,
+                uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_out);
+
+        if (mHeaderOutAnimation != null || mHeaderInAnimation != null) {
+            final AnimationCallback callback = new AnimationCallback();
+            if (mHeaderOutAnimation != null) {
+                mHeaderOutAnimation.setAnimationListener(callback);
+            }
+        }
     }
 
-
     @Override
-    public boolean showHeaderView() {
-        final boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
+    public boolean hideHeaderView() {
+        mShowProgressBarOnly = false;
+        return super.hideHeaderView();
+    }
+
+    private boolean showHeaderViewICSAndPostICS() {
+        boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
 
         if (changeVis) {
             mHeaderView.setVisibility(View.VISIBLE);
             AnimatorSet animSet = new AnimatorSet();
             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(mHeaderView, "alpha", 0f, 1f);
-            if (!mShowOnlyProgressBar) {
+            if (!mShowProgressBarOnly) {
                 ObjectAnimator transAnim = ObjectAnimator.ofFloat(mContentLayout, "translationY",
-                    -mContentLayout.getHeight(), 0f);
+                        -mContentLayout.getHeight(), 0f);
                 animSet.playTogether(transAnim, alphaAnim);
             } else {
                 mContentLayout.setVisibility(View.INVISIBLE);
@@ -44,44 +67,57 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
             animSet.setDuration(mAnimationDuration);
             animSet.start();
         }
+        return changeVis;
+    }
 
+    private boolean showHeaderViewPreICS() {
+        boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
+        mContentLayout.setVisibility(View.VISIBLE);
+        if (changeVis) {
+            if (mHeaderInAnimation != null) {
+                mHeaderView.startAnimation(mHeaderInAnimation);
+            }
+            mHeaderView.setVisibility(View.VISIBLE);
+            if (mShowProgressBarOnly) {
+                mContentLayout.setVisibility(View.INVISIBLE);
+            }
+        }
         return changeVis;
     }
 
     @Override
-    public boolean hideHeaderView() {
-        final boolean changeVis = mHeaderView.getVisibility() != View.GONE;
-
-        if (changeVis) {
-            Animator animator;
-            if (mContentLayout.getAlpha() >= 0.5f) {
-                // If the content layout is showing, translate and fade out
-                animator = new AnimatorSet();
-                ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(mHeaderView, "alpha", 1f, 0f);
-                ObjectAnimator transAnim = ObjectAnimator.ofFloat(mContentLayout, "translationY", 0f,
-                        -mContentLayout.getHeight());
-                ((AnimatorSet) animator).playTogether(transAnim, alphaAnim);
-            } else {
-                // If the content layout isn't showing (minimized), just fade out
-                animator = ObjectAnimator.ofFloat(mHeaderView, "alpha", 1f, 0f);
-            }
-            animator.setDuration(mAnimationDuration);
-            animator.addListener(new HideAnimationCallback());
-            animator.start();
+    public boolean showHeaderView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return showHeaderViewICSAndPostICS();
         }
-
-        return changeVis;
+        return showHeaderViewPreICS();
     }
 
+    @Override
+    public void onReset() {
+        super.onReset();
+        // Reset the Content Layout
+        if (mContentLayout != null) {
+            Compat.setAlpha(mContentLayout, 1f);
+            mContentLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
-    class HideAnimationCallback extends AnimatorListenerAdapter {
+    class AnimationCallback implements Animation.AnimationListener {
         @Override
-        public void onAnimationEnd(Animator animation) {
-            View headerView = getHeaderView();
-            if (headerView != null) {
-                headerView.setVisibility(View.GONE);
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            if (animation == mHeaderOutAnimation) {
+                mHeaderView.setVisibility(View.GONE);
+                onReset();
             }
-            onReset();
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
         }
     }
 }

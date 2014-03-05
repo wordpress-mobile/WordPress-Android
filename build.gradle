@@ -57,10 +57,11 @@ android {
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.android.support:support-v4:19.0.+'
-        compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abs:+') {
+        compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abs:0.9.2') {
             exclude module: 'support-v4'
             exclude module: 'actionbarsherlock'
         }
+        compile 'com.github.castorflex.smoothprogressbar:library:+'
         instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         instrumentTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
         instrumentTestCompile 'org.objenesis:objenesis:2.1'
