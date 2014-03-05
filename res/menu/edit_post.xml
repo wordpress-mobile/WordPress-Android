@@ -7,7 +7,7 @@
         android:title="@string/preview"/>
     <item
         android:id="@+id/menu_save_draft"
-        android:icon="@drawable/ab_icon_save"
+        android:icon="@drawable/ic_action_save_draft"
         android:showAsAction="always"
         android:title="@string/save_draft"/>
     <item
