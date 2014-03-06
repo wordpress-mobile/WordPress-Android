@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,6 +14,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -101,11 +100,11 @@ public class PostUploadService extends Service {
         return mFeatureSet;
     }
 
-    private void uploadNextPost(){
+    private void uploadNextPost() {
         synchronized (listOfPosts) {
-            if( currentTask == null ) { //make sure nothing is running
+            if (currentTask == null) { //make sure nothing is running
                 currentUploadingPost = null;
-                if ( listOfPosts.size() > 0 ) {
+                if (listOfPosts.size() > 0) {
                     currentUploadingPost = listOfPosts.remove(0);
                     currentTask = new UploadPostTask();
                     currentTask.execute(currentUploadingPost);
@@ -125,9 +124,9 @@ public class PostUploadService extends Service {
     }
 
     public static boolean isUploading(Post post) {
-        if ( currentUploadingPost != null && currentUploadingPost.equals(post) )
+        if (currentUploadingPost != null && currentUploadingPost.equals(post))
             return true;
-        if( listOfPosts != null && listOfPosts.size() > 0 && listOfPosts.contains(post))
+        if (listOfPosts != null && listOfPosts.size() > 0 && listOfPosts.contains(post))
             return true;
         return false;
     }
@@ -139,7 +138,7 @@ public class PostUploadService extends Service {
         private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
         private int notificationID;
-        private Notification n;
+        public NotificationCompat.Builder builder;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
@@ -164,15 +163,15 @@ public class PostUploadService extends Service {
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                         notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                n.flags |= Notification.FLAG_AUTO_CANCEL;
-                n.icon = android.R.drawable.stat_notify_error;
+                builder = new NotificationCompat.Builder(context);
+                builder.setAutoCancel(true);
+                builder.setSmallIcon(android.R.drawable.stat_notify_error);
                 String errorText = context.getResources().getText(R.string.upload_failed).toString();
                 if (mIsMediaError)
                     errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
-                n.setLatestEventInfo(context, (mIsMediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
-                        (mIsMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage, pendingIntent);
-
-                nm.notify(notificationID, n); // needs a unique id
+                builder.setContentTitle(errorText)
+                        .setContentIntent(pendingIntent);
+                nm.notify(notificationID, builder.build()); // needs a unique id
             }
 
             postUploaded();
@@ -189,8 +188,10 @@ public class PostUploadService extends Service {
             String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                     .getText(R.string.post_id));
             String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
-            n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
-
+            builder = new NotificationCompat.Builder(context);
+            builder.setContentTitle(message)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setWhen(System.currentTimeMillis());
             Intent notificationIntent = new Intent(context, PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -198,11 +199,10 @@ public class PostUploadService extends Service {
             notificationIntent.addCategory("android.intent.category.LAUNCHER");
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            n.setLatestEventInfo(context, message, message, pendingIntent);
-
+            builder.setContentIntent(pendingIntent);
             notificationID = (new Random()).nextInt() + post.getBlogID();
-            nm.notify(notificationID, n); // needs a unique id
+            nm.notify(notificationID, builder.build()); // needs a unique id
+
 
             Blog blog;
             try {
@@ -244,7 +244,16 @@ public class PostUploadService extends Service {
                     imageTags.add(matcher.group());
                 }
 
+                int mediaCounter = 0;
                 for (String tag : imageTags) {
+                    mediaCounter++;
+                    int mediaSize = imageTags.size();
+                    String customMessage = "Uploading " + mediaCounter + " of " + mediaSize + " media items";
+                    builder.setContentTitle(message)
+                            .setContentText(customMessage)
+                            .setSmallIcon(R.drawable.notification_icon);
+                    builder.setProgress(0, 0, true);
+                    nm.notify(notificationID, builder.build());
 
                     Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                     Matcher m = p.matcher(tag);
@@ -277,6 +286,12 @@ public class PostUploadService extends Service {
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError)
                 return false;
+
+            //Removing the text denoting the uploaded files
+            builder = new NotificationCompat.Builder(context);
+            builder.setContentTitle(message).setProgress(0,0,true);
+            builder.setSmallIcon(R.drawable.notification_icon);
+            nm.notify(notificationID, builder.build());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
             String[] theCategories = null;
@@ -361,7 +376,7 @@ public class PostUploadService extends Service {
 
                     Map<Object, Object> hLongitude = new HashMap<Object, Object>();
                     hLongitude.put("key", "geo_longitude");
-                    hLongitude.put("value",post.getLongitude());
+                    hLongitude.put("value", post.getLongitude());
 
                     Map<Object, Object> hPublic = new HashMap<Object, Object>();
                     hPublic.put("key", "geo_public");
@@ -382,8 +397,8 @@ public class PostUploadService extends Service {
             if (post.getQuickPostType() != null) {
                 client.addQuickPostHeader(post.getQuickPostType());
             }
-            n.setLatestEventInfo(context, message, message, n.contentIntent);
-            nm.notify(notificationID, n);
+            builder.setContentTitle(message);
+            nm.notify(notificationID, builder.build());
             if (post.getWP_password() != null) {
                 contentStruct.put("wp_password", post.getWP_password());
             }
@@ -684,7 +699,7 @@ public class PostUploadService extends Service {
 
                 if (fullSizeUrl == null && resizedPictureURL != null) {
                     fullSizeUrl = resizedPictureURL;
-                } else if (fullSizeUrl != null && resizedPictureURL == null){
+                } else if (fullSizeUrl != null && resizedPictureURL == null) {
                     resizedPictureURL = fullSizeUrl;
                 }
 
@@ -707,7 +722,7 @@ public class PostUploadService extends Service {
 
             if (TextUtils.isEmpty(mimeType)) {
                 try {
-                    String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
+                    String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://" + mediaFile.getPath();
                     URL urlForGuessingMime = new URL(filePathForGuessingMime);
                     URLConnection uc = urlForGuessingMime.openConnection();
                     String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
@@ -716,10 +731,9 @@ public class PostUploadService extends Service {
                         mimeType = guessedContentType;
                     }
                 } catch (MalformedURLException e) {
-                    AppLog.e(T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
-                }
-                catch (IOException e) {
-                    AppLog.e(T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
+                    AppLog.e(T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
+                } catch (IOException e) {
+                    AppLog.e(T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
                 }
             }
 
@@ -763,9 +777,9 @@ public class PostUploadService extends Service {
                     originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
                 } else {
                     //We're still without an extension - split the mime type and retrieve it
-                   String[] split = mimeType.split("/");
-                   String guessedExt = split.length > 1 ? split[1] : split[0];
-                   originalFileName += "." + guessedExt;
+                    String[] split = mimeType.split("/");
+                    String guessedExt = split.length > 1 ? split[1] : split[0];
+                    originalFileName += "." + guessedExt;
                 }
             } else {
                 //No mimetype and no extension!!
@@ -790,7 +804,7 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            Object[] params = { 1, blog.getUsername(), blog.getPassword(), pictureParams };
+            Object[] params = {1, blog.getUsername(), blog.getPassword(), pictureParams};
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
                 mIsMediaError = true;
@@ -820,7 +834,7 @@ public class PostUploadService extends Service {
                 return client.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " +
-                                cleanXMLRPCErrorMessage(e.getMessage());
+                        cleanXMLRPCErrorMessage(e.getMessage());
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
