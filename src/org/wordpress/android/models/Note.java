@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ public class Note {
     private transient String mSubject;
     private transient String mIconUrl;
     private transient String mTimestamp;
+    private transient String mSnippet;
 
     // TODO: add other types
     private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
@@ -171,6 +173,7 @@ public class Note {
             mIconUrl = queryJSON("subject.icon", "");
         return mIconUrl;
     }
+
     /**
      * Removes HTML and cleans up newlines and whitespace
      */
@@ -179,12 +182,14 @@ public class Note {
             mCommentPreview = getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
         return mCommentPreview;
     }
+
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
      */
     public Spanned getCommentBody(){
         return mComment;
     }
+
     /**
      * For a comment note the text is in the body object's last item. It currently
      * is only provided in HTML format.
@@ -192,12 +197,14 @@ public class Note {
     String getCommentText(){
         return queryJSON("body.items[last].html", "");
     }
+
     /**
      * The inverse of isRead
      */
     public Boolean isUnread(){
         return !isRead();
     }
+
     /**
      * A note can have an "unread" of 0 or more ("likes" can have unread of 2+) to indicate the
      * quantity of likes that are "unread" within the single note. So for a note to be "read" it
@@ -206,6 +213,7 @@ public class Note {
     Boolean isRead(){
         return getUnreadCount().equals("0");
     }
+
     /**
      * For some reason the unread count is a string in the JSON API but is truly represented
      * by an Integer. We can handle a simple string.
@@ -213,6 +221,7 @@ public class Note {
     public String getUnreadCount(){
         return queryJSON("unread", "0");
     }
+
     /**
      *
      */
@@ -223,6 +232,7 @@ public class Note {
             AppLog.e(T.NOTIFS, "Failed to set unread property", e);
         }
     }
+
     public Reply buildReply(String content){
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
@@ -368,6 +378,20 @@ public class Note {
     }
     public long getCommentParentId() {
         return mCommentParentId;
+    }
+
+    /*
+     * plain-text snippet returned by the server - currently shown only for comments
+     */
+    public String getSnippet() {
+        if (mSnippet == null) {
+            mSnippet = queryJSON("snippet", "");
+        }
+        return mSnippet;
+    }
+
+    public boolean hasSnippet() {
+        return !TextUtils.isEmpty(getSnippet());
     }
 
     /**
