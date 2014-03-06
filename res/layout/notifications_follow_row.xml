@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:singleLine="true"
             android:textSize="20dp" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

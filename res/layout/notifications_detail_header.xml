@@ -12,7 +12,7 @@
     android:paddingBottom="16dp"
     android:paddingLeft="16dp">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/margin_large"
     android:paddingTop="@dimen/margin_medium">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/unread_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

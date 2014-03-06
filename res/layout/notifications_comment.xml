@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:fillViewport="true" >
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/header"
@@ -35,7 +35,7 @@
                 android:id="@+id/moderate_section"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="fill_parent"
@@ -43,7 +43,7 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/list_divider" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/moderate_comment_header"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
@@ -55,14 +55,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingBottom="8dp" >
+                    android:paddingBottom="8dp">
 
                     <LinearLayout
                         android:id="@+id/moderate_buttons_container"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="3" >
+                        android:weightSum="3">
 
                         <ImageButton
                             android:id="@+id/note_moderate_approve"
@@ -104,7 +104,7 @@
                             android:visibility="gone" />
                     </LinearLayout>
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/comment_moderating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -115,14 +115,14 @@
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
-            
+
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:scaleType="fitXY"
                 android:src="@drawable/list_divider" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/note_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:padding="8dp" >
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/note_reply_field"
