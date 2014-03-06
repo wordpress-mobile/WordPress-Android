@@ -120,23 +120,11 @@ public class VolleyUtils {
         return false;
     }
     
-    private static void addDefaultHeaders(Request<?> request, Map<String, String> headers, Blog blog){
-        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") 
-                && blog != null && blog.hasValidHTTPAuthCredentials()) {
-            HashMap<String, String> authParams = new HashMap<String, String>();
-            String creds = String.format("%s:%s", blog.getHttpuser(), blog.getHttppassword());
-            String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-            authParams.put("Authorization", auth);
-            headers.putAll(authParams);
-        }
-
-        HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-        defaultHeaders.put("User-Agent", WordPress.getUserAgent());
-        headers.putAll(defaultHeaders);
+    public static HttpStack getHTTPClientStack(final Context ctx) {
+        return getHTTPClientStack(ctx, null);
     }
     
-    
-    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
+    public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
         SSLSocketFactory mSslSocketFactory = null;
         try {
             TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager() };
@@ -153,39 +141,27 @@ public class VolleyUtils {
             @Override
             public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError {
-                addDefaultHeaders(request, headers, currentBlog);
-                return super.performRequest(request, headers);
-            }
-        };
+                
+                if (request.getUrl() != null) {
+                    if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && currentBlog != null && currentBlog.hasValidHTTPAuthCredentials()) {
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        String creds = String.format("%s:%s", currentBlog.getHttpuser(), currentBlog.getHttppassword());
+                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                        authParams.put("Authorization", auth);
+                        headers.putAll(authParams);
+                    }
 
-        return stack;
-    }
-    
-    public static HttpStack getDefaultHTTPClientStack(final Context ctx) {
-        SSLSocketFactory mSslSocketFactory = null;
-        try {
-            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager() };
-            SSLContext context = SSLContext.getInstance("SSL");
-            context.init(null, trustAllowedCerts, new SecureRandom());
-            mSslSocketFactory = context.getSocketFactory();
-        } catch (NoSuchAlgorithmException e) {
-            AppLog.e(T.API, e);
-        } catch (KeyManagementException e) {
-            AppLog.e(T.API, e);
-        }
-
-        HurlStack stack = new HurlStack(null, mSslSocketFactory) {
-            @Override
-            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                    throws IOException, AuthFailureError {
-                addDefaultHeaders(request, headers, null);
-
-                if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && WordPress.getWPComAuthToken(ctx) != null) {
-                    // Add the auth header to access private WP.com files
-                    HashMap<String, String> authParams = new HashMap<String, String>();
-                    authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
-                    headers.putAll(authParams);
+                    if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && ctx != null && WordPress.getWPComAuthToken(ctx) != null) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
+                        headers.putAll(authParams);
+                    }
                 }
+                
+                HashMap<String, String> defaultHeaders = new HashMap<String, String>();
+                defaultHeaders.put("User-Agent", WordPress.getUserAgent());
+                headers.putAll(defaultHeaders);
 
                 return super.performRequest(request, headers);
             }
@@ -193,5 +169,4 @@ public class VolleyUtils {
 
         return stack;
     }
-
 }
