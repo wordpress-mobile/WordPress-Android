@@ -59,9 +59,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         if (!footerText.equals("")) {
             noteFooter.setText(footerText);
             String footerUrl = JSONUtil.getString(bodyObject, "header_link");
-            if (!footerUrl.equals("")) {
-                noteFooter.setUrl(footerUrl);
-            }
+            noteFooter.setNote(getNote(), footerUrl);
             list.addFooterView(noteFooter);
         }
         // set the adapter

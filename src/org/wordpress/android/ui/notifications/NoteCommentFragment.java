@@ -160,9 +160,8 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             mModerateSection.setVisibility(View.GONE);
 
         String url = getNote().queryJSON("body.items[last].header_link", "");
-        if (!url.equals("")) {
-            mDetailHeader.setUrl(url);
-        }
+        mDetailHeader.setNote(getNote(), url);
+
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
         mFollowRow.setDefaultText(Html.fromHtml(getNote().queryJSON("body.items[-1].header_text", "")));
         mFollowRow.setAction(followAction);

@@ -5,14 +5,18 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Note;
 
 public class DetailHeader extends LinearLayout {
+
     public DetailHeader(Context context){
         super(context);
     }
@@ -28,30 +32,55 @@ public class DetailHeader extends LinearLayout {
     public void setText(CharSequence text){
         getTextView().setText(text);
     }
-    public void setUrl(final String url){
-        if (url == null) {
+
+    public void setNote(final Note note, final String url) {
+        final ImageView indicator = (ImageView) findViewById(R.id.indicator);
+
+        if (note == null) {
+            indicator.setVisibility(View.GONE);
             setClickable(false);
             setOnClickListener(null);
-        } else {
+            return;
+        }
+
+        boolean isComment = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() != 0);
+        boolean isPost = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
+
+        if (isPost || isComment) {
+            indicator.setVisibility(View.VISIBLE);
+            indicator.setImageResource(R.drawable.ic_navigate_next);
             setClickable(true);
-            setOnClickListener(new View.OnClickListener(){
+            setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
-                    Context context = getContext();
-                    Intent intent = new Intent(context, NotificationsWebViewActivity.class);
-                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
-                    context.startActivity(intent);
+                public void onClick(View view) {
+                    showPost(note.getBlogId(), note.getPostId());
                 }
             });
+        } else if (!TextUtils.isEmpty(url)) {
+            indicator.setVisibility(View.VISIBLE);
+            indicator.setImageResource(R.drawable.dashboard_icon_wp);
+            setClickable(true);
+            setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showUrl(url);
+                }
+            });
+        } else {
+            indicator.setVisibility(View.GONE);
+            setClickable(false);
+            setOnClickListener(null);
         }
     }
-    public void setClickable(boolean clickable){
-        super.setClickable(clickable);
-        View indicator = findViewById(R.id.indicator);
-        if (clickable == false) {
-            indicator.setVisibility(GONE);
-        } else {
-            indicator.setVisibility(VISIBLE);
-        }
+
+    private void showUrl(String url) {
+        Context context = getContext();
+        Intent intent = new Intent(context, NotificationsWebViewActivity.class);
+        intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
+        context.startActivity(intent);
+    }
+
+    private void showPost(int blogId, int postId) {
+        // TODO
     }
 }

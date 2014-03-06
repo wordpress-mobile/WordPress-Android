@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
@@ -55,10 +54,7 @@ public class SingleLineListFragment extends ListFragment implements Notification
         noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         String footerUrl = currentNote.queryJSON("body.header_link", "");
-        if (!footerUrl.equals("")) {
-            noteHeader.setUrl(footerUrl);
-            noteHeader.setClickable(true);
-        }
+        noteHeader.setNote(getNote(), footerUrl);
         
         list.addHeaderView(noteHeader);
         

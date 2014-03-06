@@ -59,9 +59,7 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         noteFooter.setText(footerText);
         JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
         String itemURL = JSONUtil.getString(bodyObject, "header_link");
-        if (!itemURL.equals("")) {
-            noteFooter.setUrl(itemURL);
-        }            
+        noteFooter.setNote(getNote(), itemURL);
         
         return view;
     }
