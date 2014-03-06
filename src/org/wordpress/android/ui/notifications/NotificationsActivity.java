@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -419,6 +420,9 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     public void refreshNotes(){
+        if (!NetworkUtils.checkConnection(this))
+            return;
+
         mFirstLoadComplete = false;
         mNotesList.animateRefresh(true);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
