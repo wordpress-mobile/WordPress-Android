@@ -100,7 +100,12 @@ public class SetupBlog {
     public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
         if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
             try {
-                URI uri = URI.create(mSelfHostedURL);
+                URI uri;
+                if (!(mSelfHostedURL.toLowerCase().startsWith("http://")) && !(mSelfHostedURL.toLowerCase().startsWith("https://"))) {
+                    uri = URI.create("http://"+mSelfHostedURL);
+                } else {
+                    uri = URI.create(mSelfHostedURL);
+                }
                 TrustedSslDomainTable.trustDomain(uri);
                 mCurrentSslCertificatesForcedTrusted = trusted;
             } catch (Exception e1) {
