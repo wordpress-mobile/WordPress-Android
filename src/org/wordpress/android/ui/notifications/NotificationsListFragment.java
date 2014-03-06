@@ -218,6 +218,7 @@ public class NotificationsListFragment extends ListFragment {
                 }
             }
         }
+
         /*
          * replaces an existing note with an updated one, returns the index of the note
          * or -1 if it doesn't exist

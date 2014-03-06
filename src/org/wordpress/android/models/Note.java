@@ -25,47 +25,48 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class Note {
-    protected static final String TAG="NoteModel";
-
-    protected static final String NOTE_UNKNOWN_TYPE="unknown";
-    public static final String NOTE_COMMENT_TYPE="comment";
-    public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
-    public static final String NOTE_LIKE_TYPE="like";
-    public static final String NOTE_MATCHER_TYPE = "automattcher";
+    private static final String NOTE_UNKNOWN_TYPE     = "unknown";
+    private static final String NOTE_COMMENT_TYPE     = "comment";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_LIKE_TYPE         = "like";
+    private static final String NOTE_MATCHER_TYPE     = "automattcher";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
-    public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
-    public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
-    public static final String BIG_BADGE_TEMPLATE="big-badge";
+    private static final String SINGLE_LINE_LIST_TEMPLATE = "single-line-list";
+    private static final String MULTI_LINE_LIST_TEMPLATE  = "multi-line-list";
+    private static final String BIG_BADGE_TEMPLATE        = "big-badge";
 
     // JSON action keys
-    private static final String ACTION_KEY_REPLY = "replyto-comment";
-    private static final String ACTION_KEY_APPROVE = "approve-comment";
+    private static final String ACTION_KEY_REPLY     = "replyto-comment";
+    private static final String ACTION_KEY_APPROVE   = "approve-comment";
     private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
-    private static final String ACTION_KEY_SPAM = "spam-comment";
+    private static final String ACTION_KEY_SPAM      = "spam-comment";
 
     public static enum EnabledActions {ACTION_REPLY,
                                        ACTION_APPROVE,
                                        ACTION_UNAPPROVE,
                                        ACTION_SPAM}
 
-    // FIXME: add other types
-    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
-        put("c", "comment");
-    }};
-
-
     private Map<String,JSONObject> mActions;
-    private Reply mReply;
-    private JSONObject mNoteJSON;
+    private final JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
     private boolean mPlaceholder = false;
 
-    private transient String mCommentPreview = null;
-    private transient String mSubject = null;
-    private transient String mIconUrl = null;
-    private transient String mTimestamp = null;
+    private int mBlogId;
+    private int mPostId;
+    private long mCommentId;
+    private long mCommentParentId;
+
+    private transient String mCommentPreview;
+    private transient String mSubject;
+    private transient String mIconUrl;
+    private transient String mTimestamp;
+
+    // TODO: add other types
+    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
+        put("c", "comment");
+    }};
 
     /**
      * Create a note using JSON from REST API
@@ -188,7 +189,7 @@ public class Note {
      * For a comment note the text is in the body object's last item. It currently
      * is only provided in HTML format.
      */
-    public String getCommentText(){
+    String getCommentText(){
         return queryJSON("body.items[last].html", "");
     }
     /**
@@ -202,7 +203,7 @@ public class Note {
      * quantity of likes that are "unread" within the single note. So for a note to be "read" it
      * should have "0"
      */
-    public Boolean isRead(){
+    Boolean isRead(){
         return getUnreadCount().equals("0");
     }
     /**
@@ -226,8 +227,7 @@ public class Note {
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
-        Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
-        return reply;
+        return new Reply(this, String.format("%s/replies/new", restPath), content);
     }
 
     /**
@@ -252,7 +252,7 @@ public class Note {
         }
     }
 
-    public String getTemplate(){
+    String getTemplate(){
         return queryJSON("body.template", "");
     }
     public Boolean isMultiLineListTemplate(){
@@ -324,22 +324,52 @@ public class Note {
      * pre-loads commonly-accessed fields - avoids performance hit of loading these
      * fields inside an adapter's getView()
      **/
-    protected void preloadContent(){
+    void preloadContent(){
         if (isCommentType()) {
             // pre-load the comment HTML for being displayed. Cleans up emoticons.
             mComment = HtmlUtils.fromHtml(getCommentText());
             // pre-load the preview text
             getCommentPreview();
         }
+
         // pre-load the subject and avatar url
         getSubject();
         getIconURL();
+
+        // pre-load site/post/comment IDs
+        preloadMetaIds();
     }
 
-    protected Object queryJSON(String query){
-        Object defaultObject = "";
-        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+    /*
+     * nbradbury - preload the blog, post, & comment IDs from the meta section
+     * ids={"site":61509427,"self":993925505,"post":161,"comment":178,"comment_parent":0}
+     */
+    private void preloadMetaIds() {
+        JSONObject jsonMeta = getJSONMeta();
+        if (jsonMeta == null)
+            return;
+        JSONObject jsonIDs = jsonMeta.optJSONObject("ids");
+        if (jsonIDs == null)
+            return;
+        mBlogId = jsonIDs.optInt("site");
+        mPostId = jsonIDs.optInt("post");
+        mCommentId = jsonIDs.optLong("comment");
+        mCommentParentId = jsonIDs.optLong("comment_parent");
     }
+
+    public int getBlogId() {
+        return mBlogId;
+    }
+    public int getPostId() {
+        return mPostId;
+    }
+    public long getCommentId() {
+        return mCommentId;
+    }
+    public long getCommentParentId() {
+        return mCommentParentId;
+    }
+
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
@@ -358,9 +388,9 @@ public class Note {
      * Represents a user replying to a note. Holds
      */
     public static class Reply {
-        private Note mNote;
-        private String mContent;
-        private String mRestPath;
+        private final Note mNote;
+        private final String mContent;
+        private final String mRestPath;
         private JSONObject mCommentJson;
 
         Reply(Note note, String restPath, String content){

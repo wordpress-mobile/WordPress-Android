@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
@@ -23,10 +22,8 @@ import org.wordpress.android.util.JSONUtil;
 
 public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment {
     public static final String TAG="NoteDetail";
-    public static final String NOTE_ID_ARGUMENT="note_id";
-    public static final String NOTE_JSON_ARGUMENT="note_json";
-    
-    protected Note mNote;
+
+    private Note mNote;
     
     @Override
     public void onCreate(Bundle bundle){
@@ -44,8 +41,8 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
 
         // No note? No service.
         if (getNote() == null)
-            return;        
-        
+            return;
+
         // set the header
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
@@ -99,7 +96,8 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     }
     
     class NoteAdapter extends BaseAdapter {
-        private JSONArray mItems;
+        private final JSONArray mItems;
+
         NoteAdapter(){
             mItems = getNote().queryJSON("body.items", new JSONArray());
         }
