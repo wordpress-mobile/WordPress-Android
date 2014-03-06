@@ -109,9 +109,10 @@ public class WPTrustManager implements X509TrustManager {
                 String name = cert.getSubjectX500Principal() != null ? cert.getSubjectX500Principal().getName() : null;
                 if (name==null)
                     continue;
+                name = name.toLowerCase();
                 try {
-                    if (name.indexOf("CN=")>-1)
-                    name = name.substring(name.indexOf("CN=")).replace("CN=", "");
+                    if (name.indexOf("cn=")>-1)
+                        name = name.substring(name.indexOf("cn=")).replace("cn=", "");
                     if (name.indexOf(",")>0)
                         name = name.substring(0,name.indexOf(","));
                     if (TrustedSslDomainTable.isDomainTrusted(name)) {
