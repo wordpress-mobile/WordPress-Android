@@ -1111,8 +1111,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
               .append("  p, div { line-height: 1.6em; font-size: 1em; }")
               .append("  h1, h2 { line-height: 1.2em; }");
 
-        // use a consistent top/bottom margin for paragraphs
-        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginExtraSmall, marginExtraSmall))
+        // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
               .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
