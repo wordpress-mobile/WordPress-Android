@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@android:color/white">
 
     <org.wordpress.android.widgets.WPTextView
@@ -16,7 +17,6 @@
         android:id="@+id/divider_title"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/text_title"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
@@ -31,7 +31,6 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:gravity="center"
         android:visibility="gone"
-        android:layout_below="@+id/divider_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reader_label_reblog_empty" />
@@ -40,7 +39,6 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider_title"
         android:padding="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPTextView
@@ -97,4 +95,4 @@
     </RelativeLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

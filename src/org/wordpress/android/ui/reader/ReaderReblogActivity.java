@@ -119,10 +119,8 @@ public class ReaderReblogActivity extends FragmentActivity {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             // show empty message and hide other views if there are no visible blogs to reblog to
-            TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
-            View contentView = findViewById(R.id.layout_content);
-            txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+            final View contentView = findViewById(R.id.layout_content);
 
             // empty message includes a link to settings so user can change blog visibility
             if (isEmpty) {
@@ -137,6 +135,9 @@ public class ReaderReblogActivity extends FragmentActivity {
                     }
                 });
             }
+
+            txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
     };
 
