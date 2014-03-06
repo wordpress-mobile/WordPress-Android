@@ -513,6 +513,7 @@ public class Post implements Serializable {
         newPost.wp_slug = this.wp_slug;
         newPost.localDraft = this.localDraft;
         newPost.quickPostType = this.quickPostType;
+        newPost.uploaded = this.uploaded;
 
         return newPost;
     }

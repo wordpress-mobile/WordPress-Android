@@ -21,4 +21,11 @@ public class PostListTest extends ActivityRobotiumTestCase<PostsActivity> {
         mSolo.clickOnActionBarItem(R.id.menu_new_post);
         mSolo.clickOnActionBarItem(R.id.menu_save_post);
     }
+
+    public void testSaveDraftPost() throws Exception {
+        login();
+        mSolo.clickOnText(mSolo.getString(R.string.posts));
+        mSolo.clickOnActionBarItem(R.id.menu_new_post);
+        mSolo.clickOnActionBarItem(R.id.menu_save_draft);
+    }
 }
