@@ -27,7 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
-import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
+import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
@@ -239,7 +239,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeTabAdapter class
-            ThemeTabAdapter.ViewHolder tag =  (ViewHolder) niv.getTag();
+            ScreenshotHolder tag =  (ScreenshotHolder) niv.getTag();
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {

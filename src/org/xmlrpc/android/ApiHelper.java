@@ -409,6 +409,7 @@ public class ApiHelper {
                 result = (Object[]) client.call((isPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", xmlrpcParams);
                 if (result != null && result.length > 0) {
+                    mPostCount = result.length;
                     List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
 
                     if (!loadMore) {
@@ -430,7 +431,6 @@ public class ApiHelper {
                     }
 
                     WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
-                    mPostCount = postsList.size();
                 }
                 return true;
             } catch (XMLRPCException e) {

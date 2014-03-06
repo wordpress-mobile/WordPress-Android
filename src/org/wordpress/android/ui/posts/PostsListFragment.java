@@ -146,12 +146,12 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             }
         });
 
-        TextView textview = (TextView) getActivity().findViewById(R.id.title_empty);
-        if (textview != null) {
+        TextView textView = (TextView) getActivity().findViewById(R.id.title_empty);
+        if (textView != null) {
             if (mIsPage) {
-                textview.setText(getText(R.string.pages_empty_list));
+                textView.setText(getText(R.string.pages_empty_list));
             } else {
-                textview.setText(getText(R.string.posts_empty_list));
+                textView.setText(getText(R.string.posts_empty_list));
             }
         }
 
@@ -214,6 +214,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
+            mCanLoadMorePosts = true;
             mPullToRefreshHelper.setRefreshing(true);
             postCount = POSTS_REQUEST_COUNT;
         }

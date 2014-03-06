@@ -16,6 +16,10 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -38,7 +42,6 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.RelativeSizeSpan;
@@ -52,11 +55,6 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.MediaGallery;
-import org.wordpress.android.models.Post;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -64,10 +62,13 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML
@@ -493,8 +494,24 @@ public class WPHtml {
             String title = mediaFile.getTitle();
             String caption = mediaFile.getCaption();
             int width = mediaFile.getWidth();
-
-            content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
+            
+            String inlineCSS = " ";
+            try {
+                String localBlogID = imageSpan.getMediaFile().getBlogId();
+                Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
+                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+                if (!mediaFile.getMimeType().equals("image/gif") && !currentBlog.getMaxImageWidth().equals("Original Size")) {
+                    int maxImageWidth = Integer.parseInt(currentBlog.getMaxImageWidth());
+                    width = Math.min(width, maxImageWidth); //use the correct resize settings.
+                    if (!currentBlog.isDotcomFlag()) { //Use inline CSS on self-hosted blogs to enforce picture resize settings
+                        inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
+                    }
+                }
+            } catch (Exception e) {
+                AppLog.e(T.UTILS, "Error while loading blog resize settings", e);
+            }
+            
+            content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
             if (!caption.equals("")) {
