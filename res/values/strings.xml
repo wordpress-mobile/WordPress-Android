@@ -64,7 +64,6 @@
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
-    <string name="load_more">Load more</string>
     <string name="load_settings">Load settings now?</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
@@ -79,7 +78,6 @@
     <string name="unattached">Unattached</string>
     <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
-    <string name="please_wait_refresh_done">Loading items…</string>
     <string name="learn_more">Learn more</string>
 
     <!-- Media Gallery Action Bar -->
@@ -183,6 +181,8 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
+    <string name="loading_posts">Loading posts&#8230;</string>
+    <string name="loading_pages">Loading pages&#8230;</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading&#8230;</string>
@@ -616,6 +616,8 @@
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
     <string name="reader_label_reply">Reply</string>
+    <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
+    <string name="reader_label_reblog_empty_link">Change blog visibility</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>

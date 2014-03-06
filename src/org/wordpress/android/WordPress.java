@@ -254,17 +254,17 @@ public class WordPress extends Application {
     }
 
     public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded();
+        public abstract void OnPostUploaded(String postId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
         onPostUploadedListener = listener;
     }
 
-    public static void postUploaded() {
+    public static void postUploaded(String postId) {
         if (onPostUploadedListener != null) {
             try {
-                onPostUploadedListener.OnPostUploaded();
+                onPostUploadedListener.OnPostUploaded(postId);
             } catch (Exception e) {
                 postsShouldRefresh = true;
             }
