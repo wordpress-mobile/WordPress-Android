@@ -195,6 +195,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
+            mCanLoadMorePosts = true;
             mOnRefreshListener.onRefresh(true);
             postCount = POSTS_REQUEST_COUNT;
         }

@@ -224,7 +224,7 @@ public class PostsListAdapter extends BaseAdapter {
     }
 
     public boolean postsListMatch(List<PostsListPost> newPostsList) {
-        if (newPostsList == null || mPosts == null || mPosts.size() != newPostsList.size())
+        if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size())
             return false;
 
         for (int i = 0; i < newPostsList.size(); i++) {
