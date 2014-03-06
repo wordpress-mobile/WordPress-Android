@@ -1111,15 +1111,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
               .append("  p, div { line-height: 1.6em; font-size: 1em; }")
               .append("  h1, h2 { line-height: 1.2em; }");
 
+        // use a consistent top/bottom margin for paragraphs
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginExtraSmall, marginExtraSmall))
+              .append("    p:first-child { margin-top: 0px; }");
+
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
               .append("        border: 1px solid ").append(greyLight).append("; ")
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
-
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
