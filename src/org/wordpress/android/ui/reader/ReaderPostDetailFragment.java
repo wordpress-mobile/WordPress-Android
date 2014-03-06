@@ -1107,7 +1107,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         sbHtml.append("<style type='text/css'>")
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
+              .append("  body, p, div { max-width: 100% !important;}")
+              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+              .append("  h1, h2 { line-height: 1.2em; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
