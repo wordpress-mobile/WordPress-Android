@@ -40,7 +40,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -221,12 +220,11 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onRefreshStarted(View view) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_no_connection,
-                    ToastUtils.Duration.LONG);
-        } else {
-            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
         }
+        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
     }
 
     /*

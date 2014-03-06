@@ -26,6 +26,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
+import org.wordpress.android.util.NetworkUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -116,6 +117,10 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
 
     @Override
     public void onRefreshStarted(View view) {
+        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
         if (getActivity() instanceof ThemeBrowserActivity) {
             ((ThemeBrowserActivity) getActivity()).fetchThemes();
         }

@@ -20,6 +20,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.PullToRefreshHeaderTransformer;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -82,7 +83,11 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
 
     @Override
     public void onRefreshStarted(View view) {
-        if (hasActivity() && getActivity() instanceof NotificationsActivity) {
+        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
+        if (getActivity() instanceof NotificationsActivity) {
             ((NotificationsActivity) getActivity()).refreshNotes();
         }
     }

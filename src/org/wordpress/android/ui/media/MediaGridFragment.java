@@ -186,6 +186,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onRefreshStarted(View view) {
+        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
         refreshMediaFromServer(0, false);
     }
 

@@ -161,10 +161,11 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
 
     @Override
     public void onRefreshStarted(View view) {
-        // make sure we have a connection before proceeding (will alert user if not)
-        if (NetworkUtils.checkConnection(this)) {
-            refreshStats();
+        if (!NetworkUtils.checkConnection(this)) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
         }
+        refreshStats();
     }
 
     @Override

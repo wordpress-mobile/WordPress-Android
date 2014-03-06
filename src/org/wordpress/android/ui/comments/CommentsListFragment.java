@@ -131,6 +131,10 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
 
     @Override
     public void onRefreshStarted(View view) {
+        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
         updateComments(false);
     }
 

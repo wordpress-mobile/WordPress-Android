@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -76,6 +77,10 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
 
     @Override
     public void onRefreshStarted(View view) {
+        if (!NetworkUtils.checkConnection(this)) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
         refreshBlogs();
     }
 
@@ -163,8 +168,7 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
             mSetupBlog = new SetupBlog();
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE,
-                    null));
+            String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
             mSetupBlog.setUsername(username);
             mSetupBlog.setPassword(password);
         }
