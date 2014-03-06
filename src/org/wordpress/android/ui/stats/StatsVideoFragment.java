@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +25,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
@@ -87,48 +81,39 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
         } else {
-            VideoSummaryFragment fragment = new VideoSummaryFragment();
-            return fragment;
+            return new VideoSummaryFragment();
         }
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.NAME));
             String url = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
 
             // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            } else {
-                entryTextView.setText(entry);
-            }
+            holder.setEntryTextOrLink(url, entry);
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
         }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
-        }
-
     }
 
     @Override
@@ -187,15 +172,12 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                 @Override
                 protected StatsVideoSummary doInBackground(String... params) {
                     final String blogId = params[0];
-                    
-                    StatsVideoSummary stats = StatUtils.getVideoSummary(blogId);
-                    
-                    return stats;
+                    return StatUtils.getVideoSummary(blogId);
                 }
                 
                 protected void onPostExecute(StatsVideoSummary result) {
                     refreshSummaryViews(result);
-                };
+                }
             }.execute(blogId);
         }
 
@@ -232,7 +214,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                                             refreshSummary();      
                                         }
                                     });
-                                };
+                                }
                                 
                             }.execute();
                             
@@ -248,7 +230,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                     });
         }
         
-        protected void refreshSummaryViews(StatsVideoSummary result) {
+        void refreshSummaryViews(StatsVideoSummary result) {
 
             String header = "";
             int plays = 0;
@@ -264,11 +246,9 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                 header = String.format(getString(R.string.stats_video_summary_header), result.getTimeframe());
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             mHeader.setText(header);
-            mPlays.setText(formatter.format(plays));
-            mImpressions.setText(formatter.format(impressions));
+            mPlays.setText(FormatUtils.formatDecimal(plays));
+            mImpressions.setText(FormatUtils.formatDecimal(impressions));
             mPlaybackTotals.setText(playbackTotals + "");
             mBandwidth.setText(bandwidth);
         }

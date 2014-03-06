@@ -90,4 +90,13 @@ public class LoginTest extends ActivityRobotiumTestCase<WelcomeActivity> {
         mSolo.enterText(2, "test");
         mSolo.clickOnText(mSolo.getString(R.string.nux_welcome_create_account));
     }
+
+    public void testLoginMalformedGetUsersBlog() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("malformed-getusersblog");
+        mSolo.enterText(0, "test");
+        mSolo.enterText(1, "test");
+        mSolo.clickOnText(mSolo.getString(R.string.sign_in));
+        mSolo.sleep(100000);
+    }
 }

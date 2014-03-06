@@ -13,7 +13,7 @@ public enum StatsTimeframe {
     SUMMARY(R.string.stats_summary),
     ;
 
-    private int mLabelResId;
+    private final int mLabelResId;
 
     private StatsTimeframe(int labelResId) {
         mLabelResId = labelResId;

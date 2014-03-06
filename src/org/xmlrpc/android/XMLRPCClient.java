@@ -1,24 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -37,13 +18,31 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A WordPress XMLRPC Client.
@@ -76,7 +75,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mPostMethod = new HttpPost(uri);
         mPostMethod.addHeader("Content-Type", "text/xml");
         mPostMethod.addHeader("charset", "UTF-8");
-        mPostMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
+        mPostMethod.addHeader("User-Agent", WordPress.getUserAgent());
 
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);

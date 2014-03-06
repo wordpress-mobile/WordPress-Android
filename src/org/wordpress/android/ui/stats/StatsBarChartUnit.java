@@ -13,7 +13,7 @@ public enum StatsBarChartUnit {
     MONTH(R.string.stats_timeframe_months),
     ;
 
-    private int mLabelResId;
+    private final int mLabelResId;
 
     private StatsBarChartUnit(int labelResId) {
         mLabelResId = labelResId;

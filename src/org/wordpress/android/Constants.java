@@ -22,12 +22,6 @@ public class Constants {
     public static int QUICK_POST_VIDEO_CAMERA = 2;
     public static int QUICK_POST_VIDEO_LIBRARY = 3;
 
-    /**
-     * User-Agent string used when making HTTP connections. This is used both for API traffic as
-     * well as embedded WebViews.
-     */
-    public static final String USER_AGENT = "wp-android";
-
     /*
      * Reader constants
      */
@@ -38,9 +32,8 @@ public class Constants {
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 15;                       // 15 minute delay between automatic updates
 
     // intent IDs
-    public static final int INTENT_READER_POST_DETAIL = 1000;
-    public static final int INTENT_READER_TAGS        = 1001;
-    public static final int INTENT_READER_REBLOG      = 1002;
+    public static final int INTENT_READER_TAGS        = 1000;
+    public static final int INTENT_READER_REBLOG      = 1001;
     public static final int INTENT_COMMENT_EDITOR     = 1010;
 
 }

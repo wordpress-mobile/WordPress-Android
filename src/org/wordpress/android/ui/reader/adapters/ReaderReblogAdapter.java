@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 
@@ -21,14 +22,20 @@ import java.util.Map;
 
 /**
  * Created by nbradbury on 9/19/13.
- * adapter which display list of blogs (accounts) for user to choose from when reblogging
+ * adapter which displays list of blogs (accounts) for user to choose from when reblogging
  */
 public class ReaderReblogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
+    private final DataLoadedListener mDataLoadedListener;
+    private final long mExcludeBlogId;
     private SimpleAccountList mAccounts = new SimpleAccountList();
 
-    public ReaderReblogAdapter(Context context) {
+    public ReaderReblogAdapter(Context context,
+                               long excludeBlogId,
+                               DataLoadedListener dataLoadedListener) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mExcludeBlogId = excludeBlogId;
+        mDataLoadedListener = dataLoadedListener;
         loadAccounts();
     }
 
@@ -38,6 +45,18 @@ public class ReaderReblogAdapter extends BaseAdapter {
             new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             new LoadAccountsTask().execute();
+        }
+    }
+
+    public void reload() {
+        clear();
+        loadAccounts();
+    }
+
+    private void clear() {
+        if (mAccounts.size() > 0) {
+            mAccounts.clear();
+            notifyDataSetChanged();
         }
     }
 
@@ -108,17 +127,21 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
             for (Map<String, Object> curHash : accounts) {
                 int blogId = (Integer) curHash.get("blogId");
-                String blogName = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                if (TextUtils.isEmpty(blogName))
-                    blogName = curHash.get("url").toString();
+                // don't add if this is the blog we're excluding (prevents reblogging to
+                // the same blog the post is from)
+                if (blogId != mExcludeBlogId) {
+                    String blogName = StringUtils.unescapeHTML(curHash.get("blogName").toString());
+                    if (TextUtils.isEmpty(blogName))
+                        blogName = curHash.get("url").toString();
 
-                SimpleAccountItem item = new SimpleAccountItem(blogId, blogName);
+                    SimpleAccountItem item = new SimpleAccountItem(blogId, blogName);
 
-                // if this is the current blog, insert it at the top so it's automatically selected
-                if (tmpAccounts.size() > 0 && blogId == currentRemoteBlogId) {
-                    tmpAccounts.add(0, item);
-                } else {
-                    tmpAccounts.add(item);
+                    // if this is the current blog, insert it at the top so it's automatically selected
+                    if (tmpAccounts.size() > 0 && blogId == currentRemoteBlogId) {
+                        tmpAccounts.add(0, item);
+                    } else {
+                        tmpAccounts.add(item);
+                    }
                 }
             }
             return true;
@@ -130,6 +153,9 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 mAccounts = (SimpleAccountList) tmpAccounts.clone();
                 notifyDataSetChanged();
             }
+
+            if (mDataLoadedListener != null)
+                mDataLoadedListener.onDataLoaded(isEmpty());
         }
     }
 }

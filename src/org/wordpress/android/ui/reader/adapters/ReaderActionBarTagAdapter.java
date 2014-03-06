@@ -28,8 +28,8 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderActions.DataLoadedListener mDataListener;
-    private int mPaddingForStaticDrawer;
-    private boolean mIsStaticMenuDrawer;
+    private final int mPaddingForStaticDrawer;
+    private final boolean mIsStaticMenuDrawer;
 
     public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderActions.DataLoadedListener dataListener) {
         mDataListener = dataListener;
@@ -59,7 +59,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshTags() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "Load tags task already running");
+            AppLog.w(T.READER, "reader tag adapter > Load tags task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -112,7 +112,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
 
     private boolean mIsTaskRunning = false;
     private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderTagList tmpTags = new ReaderTagList();
+        private final ReaderTagList tmpTags = new ReaderTagList();
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -134,7 +134,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
             if (result) {
                 mTags = (ReaderTagList) tmpTags.clone();
                 notifyDataSetChanged();
-                if (mDataListener!=null)
+                if (mDataListener != null)
                     mDataListener.onDataLoaded(mTags.isEmpty());
             }
             mIsTaskRunning = false;

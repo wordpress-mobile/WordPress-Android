@@ -7,8 +7,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -21,7 +21,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         if (android.os.Build.VERSION.SDK_INT >= 11) { 
             mWebView.getSettings().setDisplayZoomControls(false);
         }

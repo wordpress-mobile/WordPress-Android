@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background for reader post list items
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#e5f7fe" />
+            <stroke android:color="@color/blue_light" android:width="1px" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/reader_post_background" />
+</selector>

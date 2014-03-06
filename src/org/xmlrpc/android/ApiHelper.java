@@ -28,6 +28,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
@@ -35,11 +36,10 @@ import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,8 +57,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class ApiHelper {
     public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
@@ -973,25 +971,13 @@ public class ApiHelper {
     /**
      * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
      * verified hostnames)
+     * 
      */
-    public static void trustAllSslCertificates(boolean trustAll) {
+    private static void trustAllSslCertificates(boolean trustAll) {
         try {
-            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }};
             if (trustAll) {
                 SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAllCerts, new SecureRandom());
+                context.init(null, VolleyUtils.trustAllCerts, new SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
                     @Override

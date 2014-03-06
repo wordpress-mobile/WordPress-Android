@@ -20,7 +20,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog;
@@ -65,7 +64,7 @@ public class ReaderAuthActions {
                     URI uri = URI.create(URI_LOGIN);
                     HttpPost postMethod = new HttpPost(uri);
                     postMethod.addHeader("charset", "UTF-8");
-                    postMethod.addHeader("User-Agent", Constants.USER_AGENT);
+                    postMethod.addHeader("User-Agent", WordPress.getUserAgent());
 
                     UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password);
 

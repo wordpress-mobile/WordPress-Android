@@ -1,16 +1,14 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 
-import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
@@ -19,8 +17,10 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.RefreshType;
+import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -30,73 +30,121 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.SysUtils;
 
 /*
  * created by nbradbury
- * this activity serves as the host for ReaderPostListFragment
+ * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
  */
 
-public class ReaderActivity extends WPActionBarActivity {
-    private static final String TAG_FRAGMENT_POST_LIST = "reader_post_list";
-    private static final String KEY_INITIAL_UPDATE = "initial_update";
-    private static final String KEY_HAS_PURGED = "has_purged";
+public class ReaderActivity extends WPActionBarActivity
+                            implements OnPostSelectedListener,
+                                       FragmentManager.OnBackStackChangedListener,
+                                       ReaderPostDetailFragment.PostChangeListener,
+                                       ReaderFullScreenUtils.FullScreenListener {
 
-    private MenuItem mRefreshMenuItem;
-    private boolean mIsUpdating = false;
-    private boolean mHasPerformedInitialUpdate = false;
-    private boolean mHasPerformedPurge = false;
+    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
+
+    public static final String ARG_READER_FRAGMENT = "reader_fragment";
+
+    private static boolean mHasPerformedInitialUpdate = false;
+    private static boolean mHasPerformedPurge = false;
+    private boolean mIsFullScreen = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (isFullScreenSupported())
+            ReaderFullScreenUtils.enableActionBarOverlay(this);
+
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.reader_activity_main);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setSupportProgressBarVisibility(false);
-
         createMenuDrawer(R.layout.reader_activity_main);
 
-        if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-            mHasPerformedPurge = savedInstanceState.getBoolean(KEY_HAS_PURGED);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+        if (savedInstanceState == null) {
+            // determine which fragment to show, default to post list
+            final ReaderFragmentType fragmentType;
+            if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
+                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
+            } else {
+                fragmentType = ReaderFragmentType.POST_LIST;
+            }
+            switch (fragmentType) {
+                case POST_LIST:
+                    String tagName = getIntent().getStringExtra(ReaderPostListFragment.KEY_TAG_NAME);
+                    if (TextUtils.isEmpty(tagName))
+                        tagName = UserPrefs.getReaderTag();
+                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+                        tagName = ReaderTag.TAG_NAME_DEFAULT;
+                    showListFragment(tagName);
+                    break;
+                case POST_DETAIL:
+                    long blogId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
+                    long postId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
+                    showDetailFragment(blogId, postId);
+                    break;
+            }
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_REFRESH_POSTS));
-        if (getPostListFragment() == null)
-            showPostListFragment();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        checkMenuDrawer();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        // purge the database of older data at startup
+        // at startup, purge the database of older data and perform an initial update - note
+        // that these booleans are static
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
-
         if (!mHasPerformedInitialUpdate)
             performInitialUpdate();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.putBoolean(KEY_HAS_PURGED, mHasPerformedPurge);
+    public void onBackStackChanged() {
+        checkMenuDrawer();
+        // return from full-screen when backstack changes
+        if (isFullScreen())
+            onRequestFullScreen(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
+            super.onBackPressed();
+        } else if (hasListFragment() && hasDetailFragment()) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home && hasDetailFragment()) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * show the drawer indicator if there isn't a detail fragment
+     */
+    private void checkMenuDrawer() {
+        if (mMenuDrawer == null) {
+            AppLog.w(T.READER, "reader activity > null menu drawer");
+            return;
+        }
+        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+        mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
     }
 
     @Override
@@ -104,36 +152,17 @@ public class ReaderActivity extends WPActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         boolean isResultOK = (resultCode==Activity.RESULT_OK);
-        final ReaderPostListFragment readerFragment = getPostListFragment();
+        final ReaderPostListFragment listFragment = getListFragment();
+        final ReaderPostDetailFragment detailFragment = getDetailFragment();
 
         switch (requestCode) {
             // user just returned from the tag editor
             case Constants.INTENT_READER_TAGS :
-                if (isResultOK && readerFragment!=null && data!=null) {
+                if (isResultOK && listFragment != null && data != null) {
                     // reload tags if they were changed, and set the last tag added as the current one
                     if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
-                        readerFragment.reloadTags();
                         String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
-                        if (!TextUtils.isEmpty(lastAddedTag))
-                            readerFragment.setCurrentTag(lastAddedTag);
-                    }
-                }
-                break;
-
-            // user just returned from post detail, reload the displayed post if it changed (will
-            // only be RESULT_OK if changed)
-            case Constants.INTENT_READER_POST_DETAIL:
-                if (isResultOK && readerFragment!=null && data!=null) {
-                    long blogId = data.getLongExtra(ReaderPostDetailActivity.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderPostDetailActivity.ARG_POST_ID, 0);
-                    boolean isBlogFollowStatusChanged = data.getBooleanExtra(ReaderPostDetailActivity.ARG_BLOG_FOLLOW_STATUS_CHANGED, false);
-                    ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
-                    if (updatedPost != null) {
-                        readerFragment.reloadPost(updatedPost);
-                        //Update 'following' status on all other posts in the same blog.
-                        if (isBlogFollowStatusChanged) {
-                            readerFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.isFollowedByCurrentUser);
-                        }
+                        listFragment.doTagsChanged(lastAddedTag);
                     }
                 }
                 break;
@@ -141,59 +170,16 @@ public class ReaderActivity extends WPActionBarActivity {
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
             case Constants.INTENT_READER_REBLOG:
-                if (isResultOK && readerFragment!=null && data!=null) {
+                if (isResultOK && data!=null) {
                     long blogId = data.getLongExtra(ReaderReblogActivity.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderReblogActivity.ARG_POST_ID, 0);
-                    readerFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    if (listFragment != null)
+                        listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    if (detailFragment != null)
+                        detailFragment.reloadPost();
                 }
                 break;
         }
-    }
-
-    protected void setIsUpdating(boolean isUpdating) {
-        if (mRefreshMenuItem == null)
-            return;
-        mIsUpdating = isUpdating;
-        if (isUpdating) {
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        } else {
-            stopAnimatingRefreshButton(mRefreshMenuItem);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.reader_native, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(this, null);
-                return true;
-            case R.id.menu_refresh :
-                ReaderPostListFragment fragment = getPostListFragment();
-                if (fragment!=null) {
-                    if (!NetworkUtils.isNetworkAvailable(this)) {
-                        ToastUtils.showToast(this, R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
-                    } else {
-                        fragment.updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
-                    }
-                    return true;
-                }
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -201,38 +187,81 @@ public class ReaderActivity extends WPActionBarActivity {
         super.onSignout();
         mHasPerformedInitialUpdate = false;
 
-        // reader database will have been cleared by the time this is called, but the fragment must
-        // be removed or else it will continue to show the same articles - onResume() will take care
-        // of re-displaying the fragment if necessary
-        removePostListFragment();
+        // reader database will have been cleared by the time this is called, but the fragments must
+        // be removed or else they will continue to show the same articles - onResume() will take care
+        // of re-displaying the correct fragment if necessary
+        removeFragments();
     }
 
     /*
-     * show fragment containing list of latest posts
+     * remove both the list & detail fragments
      */
-    private void showPostListFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, ReaderPostListFragment.newInstance(this), TAG_FRAGMENT_POST_LIST)
-                .commit();
-    }
-
-    private void removePostListFragment() {
-        ReaderPostListFragment fragment = getPostListFragment();
-        if (fragment==null)
+    private void removeFragments() {
+        Fragment listFragment = getListFragment();
+        Fragment detailFragment = getDetailFragment();
+        if (listFragment == null && detailFragment == null)
             return;
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (detailFragment != null)
+            ft.remove(detailFragment);
+        if (listFragment != null)
+            ft.remove(listFragment);
+
+        ft.commit();
+    }
+
+    /*
+     * show fragment containing list of latest posts for a specific tag
+     */
+    private void showListFragment(final String tagName) {
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName);
         getSupportFragmentManager()
                 .beginTransaction()
-                .remove(fragment)
+                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
-    private ReaderPostListFragment getPostListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_POST_LIST);
-        if (fragment==null)
+    private ReaderPostListFragment getListFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        if (fragment == null)
             return null;
         return ((ReaderPostListFragment) fragment);
+    }
+
+    private boolean hasListFragment() {
+        return (getListFragment() != null);
+    }
+
+    /*
+     * show fragment containing detail for passed post
+     */
+    private void showDetailFragment(long blogId, long postId) {
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        // if list fragment exists, replace it with the detail and add to backstack
+        if (hasListFragment()) {
+            ft.replace(R.id.fragment_container, fragment, tagForFragment);
+            ft.addToBackStack(tagForFragment);
+        } else {
+            ft.add(R.id.fragment_container, fragment, tagForFragment);
+        }
+
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
+    }
+
+    private ReaderPostDetailFragment getDetailFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
+        if (fragment == null)
+            return null;
+        return ((ReaderPostDetailFragment) fragment);
+    }
+
+    private boolean hasDetailFragment() {
+        return (getDetailFragment() != null);
     }
 
     /*
@@ -244,13 +273,11 @@ public class ReaderActivity extends WPActionBarActivity {
 
         mHasPerformedInitialUpdate = true;
 
-        // if tags have never been updated, animate the refresh button if it's not already animating
-        // so user knows something is happening (since reader will be blank until tags have updated)
-        final boolean showUpdate = !mIsUpdating && ReaderTagTable.isEmpty();
-
-        // We can't call setIsUpdating(showUpdate) yet, race condition may occur when mRefreshMenuItem is being
-        // initialized (double animation) or is null (no animation)
-        mShouldAnimateRefreshButton = showUpdate;
+        // animate refresh button in post list if tags are being updated for the first time
+        ReaderPostListFragment listFragment = getListFragment();
+        final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
+        if (animateRefresh)
+            listFragment.animateRefreshButton(true);
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -258,28 +285,26 @@ public class ReaderActivity extends WPActionBarActivity {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                if (showUpdate)
-                    setIsUpdating(false);
-
-                // make sure post list reflects any tag changes
-                if (result == UpdateResult.CHANGED) {
-                    ReaderPostListFragment fragment = getPostListFragment();
-                    if (fragment != null)
-                        fragment.refreshTags();
+                ReaderPostListFragment listFragment = getListFragment();
+                if (listFragment != null) {
+                    if (animateRefresh)
+                        listFragment.animateRefreshButton(false);
+                    if (result == UpdateResult.CHANGED)
+                        listFragment.refreshTags();
                 }
 
                 // now that tags have been retrieved, perform the other requests - first update
                 // the current user to ensure we have their user_id as well as their latest info
                 // in case they changed their avatar, name, etc. since last time
-                AppLog.i(T.READER, "updating current user");
+                AppLog.i(T.READER, "reader activity > updating current user");
                 ReaderUserActions.updateCurrentUser(null);
 
                 // update followed blogs
-                AppLog.i(T.READER, "updating followed blogs");
+                AppLog.i(T.READER, "reader activity > updating followed blogs");
                 ReaderBlogActions.updateFollowedBlogs();
 
                 // update cookies so that we can show authenticated images in WebViews
-                AppLog.i(T.READER, "updating cookies");
+                AppLog.i(T.READER, "reader activity > updating cookies");
                 ReaderAuthActions.updateCookies(ReaderActivity.this);
             }
         };
@@ -287,19 +312,70 @@ public class ReaderActivity extends WPActionBarActivity {
     }
 
     /*
-     * this broadcast receiver handles the ACTION_REFRESH_POSTS action, which may be called from the
-     * post list fragment if the device is rotated while an update is in progress
+     * user tapped a post in the post list fragment
      */
-    protected static final String ACTION_REFRESH_POSTS = "action_refresh_posts";
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ACTION_REFRESH_POSTS.equals(intent.getAction())) {
-                AppLog.i(T.READER, "received ACTION_REFRESH_POSTS");
-                ReaderPostListFragment fragment = getPostListFragment();
-                if (fragment != null)
-                    fragment.refreshPosts();
-            }
+    @Override
+    public void onPostSelected(long blogId, long postId) {
+        showDetailFragment(blogId, postId);
+    }
+
+    /*
+     * post detail is requesting fullscreen mode
+     */
+    @Override
+    public boolean onRequestFullScreen(boolean enableFullScreen) {
+        if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen)
+            return false;
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null)
+            return false;
+
+        if (enableFullScreen) {
+            actionBar.hide();
+        } else {
+            actionBar.show();
         }
-    };
+
+        mIsFullScreen = enableFullScreen;
+        return true;
+    }
+
+    @Override
+    public boolean isFullScreen() {
+        return mIsFullScreen;
+    }
+
+    /*
+     * auto-hiding the ActionBar is jittery/buggy on Gingerbread (and probably other
+     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
+     */
+    public boolean isFullScreenSupported() {
+        return (SysUtils.isGteAndroid4()) && !isStaticMenuDrawer();
+    }
+
+    /*
+     * called from post detail when user changes a post (like/unlike/follow/unfollow) so we can
+     * update the list fragment to reflect the change - note that by the time this has been called,
+     * the post will already have been changed in SQLite
+     */
+    @Override
+    public void onPostChanged(long blogId, long postId, ReaderPostDetailFragment.PostChangeType changeType) {
+        ReaderPostListFragment listFragment = getListFragment();
+        if (listFragment == null)
+            return;
+
+        switch (changeType) {
+            case FOLLOWED:
+            case UNFOLLOWED:
+                // if follow status has changed, update the follow status on other posts in this blog
+                listFragment.updateFollowStatusOnPostsForBlog(blogId, changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                break;
+            default:
+                // otherwise, reload the updated post so that changes are reflected
+                final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
+                listFragment.reloadPost(updatedPost);
+        }
+    }
+
 }

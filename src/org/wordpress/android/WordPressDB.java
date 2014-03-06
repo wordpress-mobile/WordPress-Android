@@ -528,6 +528,12 @@ public class WordPressDB {
         }
     }
 
+    /**
+     * Instantiate a new Blog object from it's local id
+     *
+     * @param localId local blog id
+     * @return a new Blog instance or null if the localId was not found
+     */
     public Blog instantiateBlogByLocalId(int localId) {
         String[] fields =
                 new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
@@ -535,14 +541,12 @@ public class WordPressDB {
                              "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "lastCommentId", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
-        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + localId, null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        Blog blog = new Blog();
-        if (numRows > 0) {
+        Blog blog = null;
+        if (c.moveToFirst()) {
             if (c.getString(0) != null) {
+                blog = new Blog();
                 blog.setLocalTableBlogId(localId);
                 blog.setUrl(c.getString(c.getColumnIndex("url"))); // 0
 
@@ -602,22 +606,14 @@ public class WordPressDB {
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)", new String[]{dotComBlogId, dotComBlogId}, null, null, null);
-
-        int id = -1;
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        if (numRows > 0) {
-            id = c.getInt(0);
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
+                new String[]{dotComBlogId, dotComBlogId}, null, null, null);
+        Blog blog = null;
+        if (c.moveToFirst()) {
+            blog = instantiateBlogByLocalId(c.getInt(0));
         }
-
         c.close();
-        try {
-            return instantiateBlogByLocalId(id);
-        } catch (Exception e) {
-            return null;
-        }
+        return blog;
     }
 
     public List<String> loadStatsLogin(int id) {

@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/theme_icon_tag_current"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

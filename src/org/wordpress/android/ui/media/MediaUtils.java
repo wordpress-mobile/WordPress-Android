@@ -285,6 +285,7 @@ public class MediaUtils {
         WPImageSpan imageSpan = new WPImageSpan(context, isVideo ? R.drawable.media_movieclip : R.drawable.remote_image, uri);
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
+        mediaFile.setBlogId(blogId);
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
         mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
