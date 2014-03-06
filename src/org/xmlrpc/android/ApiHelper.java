@@ -1,5 +1,36 @@
 package org.xmlrpc.android;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Xml;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.BlogIdentifier;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
+import org.xmlpull.v1.XmlPullParser;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
@@ -8,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,41 +58,9 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Xml;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.ServerError;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.BlogIdentifier;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
-
 public class ApiHelper {
     public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
-    /** Called when the activity is first created. */
-    private static XMLRPCClient client;
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
 
@@ -201,6 +201,11 @@ public class ApiHelper {
 
         public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
             if (context == null || blog == null) {
+                cancel(true);
+                return;
+            }
+
+            if (!NetworkUtils.isNetworkAvailable(context)) {
                 cancel(true);
                 return;
             }
@@ -366,6 +371,160 @@ public class ApiHelper {
         CommentTable.saveComments(localBlogId, comments);
 
         return comments;
+    }
+
+    public static class FetchPostsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess(int postCount);
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+        private int mPostCount;
+
+        public FetchPostsTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            boolean isPage = (Boolean) arguments.get(1);
+            int recordCount = (Integer) arguments.get(2);
+            boolean loadMore = (Boolean) arguments.get(3);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] result;
+            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), recordCount };
+            try {
+                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                        : "metaWeblog.getRecentPosts", xmlrpcParams);
+                if (result != null && result.length > 0) {
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+
+                    if (!loadMore) {
+                        WordPress.wpDB.deleteUploadedPosts(
+                                blog.getLocalTableBlogId(), isPage);
+                    }
+
+                    // If we're loading more posts, only save the posts at the end of the array.
+                    // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
+                    // since it allows for an offset parameter.
+                    int startPosition = 0;
+                    if (loadMore && result.length > PostsListFragment.POSTS_REQUEST_COUNT) {
+                        startPosition = result.length - PostsListFragment.POSTS_REQUEST_COUNT;
+                    }
+
+                    for (int ctr = startPosition; ctr < result.length; ctr++) {
+                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                        postsList.add(postMap);
+                    }
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
+                    mPostCount = postsList.size();
+                }
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess(mPostCount);
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fetch a single post or page from the XML-RPC API and save/update it in the DB
+     */
+    public static class FetchSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess();
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+
+        public FetchSinglePostTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            String postId = (String) arguments.get(1);
+            boolean isPage = (Boolean) arguments.get(2);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] apiParams;
+            if (isPage) {
+                apiParams = new Object[]{
+                        blog.getRemoteBlogId(),
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            } else {
+                apiParams = new Object[]{
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            }
+
+            try {
+                Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+                if (result != null && result instanceof Map) {
+                    Map postMap = (HashMap) result;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                    postsList.add(postMap);
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true);
+                }
+
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess();
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
     }
 
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
@@ -812,7 +971,7 @@ public class ApiHelper {
     /**
      * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
      * verified hostnames)
-     * 
+     *
      */
     private static void trustAllSslCertificates(boolean trustAll) {
         try {
