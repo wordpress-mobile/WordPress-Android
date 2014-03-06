@@ -436,6 +436,7 @@ public class NotificationsActivity extends WPActionBarActivity
             @Override
             public void onNotes(final List<Note> notes) {
                 mFirstLoadComplete = true;
+                mNotesList.setAllNotesLoaded(false);
                 // nbradbury - saving notes can be slow, so do it in the background
                 new Thread() {
                     @Override
