@@ -19,9 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -674,32 +671,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * this to perform activity-specific cleanup upon signout
      */
     public void onSignout() {
-    }
-
-    public void startAnimatingRefreshButton(MenuItem refreshItem) {
-        // TODO: remove this function
-        if (refreshItem != null && !isAnimatingRefreshButton) {
-            isAnimatingRefreshButton = true;
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(
-                    getResources().getLayout(R.layout.menu_refresh_view), null);
-            RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF,
-                    0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim.setInterpolator(new LinearInterpolator());
-            anim.setRepeatCount(Animation.INFINITE);
-            anim.setDuration(1400);
-            iv.startAnimation(anim);
-            refreshItem.setActionView(iv);
-        }
-    }
-
-    public void stopAnimatingRefreshButton(MenuItem refreshItem) {
-        // TODO: remove this function
-        isAnimatingRefreshButton = false;
-        if (refreshItem != null && refreshItem.getActionView() != null) {
-            refreshItem.getActionView().clearAnimation();
-            refreshItem.setActionView(null);
-        }
     }
 
     @Override

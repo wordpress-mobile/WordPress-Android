@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -39,9 +36,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -58,6 +52,11 @@ import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main activity in which the user can browse their media.
@@ -410,7 +409,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
             return true;
         } else if (itemId == R.id.menu_search) {
-            stopAnimatingRefreshButton(mRefreshMenuItem);
             mSearchMenuItem = item;
             mSearchMenuItem.setOnActionExpandListener(this);
             mSearchMenuItem.expandActionView();

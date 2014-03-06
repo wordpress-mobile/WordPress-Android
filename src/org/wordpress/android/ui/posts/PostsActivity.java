@@ -28,10 +28,9 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
-import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -46,24 +45,18 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
-        OnDetailPostActionListener, OnDialogConfirmListener {
+public class PostsActivity extends WPActionBarActivity
+        implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
+                   OnDetailPostActionListener, OnDialogConfirmListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
-
-    private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
-    public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3,
-            POST_VIEW = 5;
+    public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_VIEW = 5;
     public static final int ACTIVITY_EDIT_POST = 0;
-
-    private PostsListFragment mPostList;
-    private MenuItem mRefreshMenuItem;
-
+    private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public ProgressDialog mLoadingDialog;
     public boolean mIsPage = false;
-    public boolean mIsRefreshing = false;
+    public boolean mIsRefreshing = false; // TODO: remove me
     public String mErrorMsg = "";
-
+    private PostsListFragment mPostList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -218,7 +211,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
     };
 
-    protected void checkForLocalChanges(boolean shouldPrompt) {
+    public void checkForLocalChanges(boolean shouldPrompt) {
         if (WordPress.getCurrentBlog() == null)
             return;
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
@@ -297,8 +290,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-
         if (mIsPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
         }
@@ -324,11 +315,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
-            return true;
-        } else if (itemId == R.id.menu_new_post) {
+        if (itemId == R.id.menu_new_post) {
             newPost();
             return true;
         } else if (itemId == android.R.id.home) {
@@ -384,22 +371,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 f.loadPost(post);
             }
         }
-    }
-
-    @Override
-    public void onRefresh(final boolean start) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (start) {
-                    startAnimatingRefreshButton(mRefreshMenuItem);
-                    mIsRefreshing = true;
-                } else {
-                    stopAnimatingRefreshButton(mRefreshMenuItem);
-                    mIsRefreshing = false;
-                }
-            }
-        });
     }
 
     @Override
