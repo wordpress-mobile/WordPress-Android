@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 
 public class DetailHeader extends LinearLayout {
 
@@ -81,6 +82,6 @@ public class DetailHeader extends LinearLayout {
     }
 
     private void showPost(int blogId, int postId) {
-        // TODO
+        ReaderActivityLauncher.showReaderPostDetail(getContext(), blogId, postId);
     }
 }
