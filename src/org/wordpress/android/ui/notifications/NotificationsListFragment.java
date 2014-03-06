@@ -129,6 +129,24 @@ public class NotificationsListFragment extends ListFragment {
         return (getActivity() != null && !isRemoving());
     }
 
+    private static class NoteViewHolder {
+        private final TextView txtDetail;
+        private final TextView unreadIndicator;
+        private final TextView txtDate;
+        private final ProgressBar placeholderLoading;
+        private final WPNetworkImageView imgAvatar;
+        private final ImageView imgNoteIcon;
+
+        NoteViewHolder(View view) {
+            txtDetail = (TextView) view.findViewById(R.id.note_detail);
+            unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
+            imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
+        }
+    }
+
     class NotesAdapter extends ArrayAdapter<Note> {
         final int mAvatarSz;
 
@@ -150,28 +168,29 @@ public class NotificationsListFragment extends ListFragment {
             View view = super.getView(position, convertView, parent);
             final Note note = getItem(position);
 
-            final TextView txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
-            final TextView txtDate = (TextView) view.findViewById(R.id.text_date);
-            final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            final WPNetworkImageView imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
-            final ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
-
-            if (note.isCommentType()) {
-                txtDetail.setText(note.getCommentPreview());
-                txtDetail.setVisibility(View.VISIBLE);
+            final NoteViewHolder holder;
+            if (view.getTag() instanceof  NoteViewHolder) {
+                holder = (NoteViewHolder) view.getTag();
             } else {
-                txtDetail.setVisibility(View.GONE);
+                holder = new NoteViewHolder(view);
+                view.setTag(holder);
             }
 
-            txtDate.setText(note.getTimeSpan());
-            imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
+            if (note.isCommentType()) {
+                holder.txtDetail.setText(note.getCommentPreview());
+                holder.txtDetail.setVisibility(View.VISIBLE);
+            } else {
+                holder.txtDetail.setVisibility(View.GONE);
+            }
+
+            holder.txtDate.setText(note.getTimeSpan());
+            holder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
             String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
-            unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
-            placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
+            holder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
+            holder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
             return view;
         }
