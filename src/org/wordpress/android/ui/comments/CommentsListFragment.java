@@ -25,6 +25,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
@@ -40,15 +42,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class CommentsListFragment extends Fragment implements OnRefreshListener {
+public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     private boolean mHasAutoRefreshedComments = false;
 
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
     private View mEmptyView;
     private CommentAdapter mCommentAdapter;
@@ -130,15 +130,6 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
     }
 
     @Override
-    public void onRefreshStarted(View view) {
-        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        updateComments(false);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
@@ -176,10 +167,19 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
 
-        // pull to refresh layout setup
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
-
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        updateComments(false);
+                    }
+                });
         return view;
     }
 
@@ -295,7 +295,8 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
             }
         };
 
-        CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
+        CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH,
+                listener);
     }
 
     long getHighlightedCommentId() {
@@ -379,13 +380,13 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
-            mPullToRefreshLayout.setRefreshing(true);
+            mPullToRefreshHelper.setRefreshing(true);
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mPullToRefreshLayout.setRefreshComplete();
+            mPullToRefreshHelper.setRefreshing(false);
             mIsUpdatingComments = false;
         }
 
@@ -426,7 +427,7 @@ public class CommentsListFragment extends Fragment implements OnRefreshListener 
             mIsUpdatingComments = false;
             if (!hasActivity())
                 return;
-            mPullToRefreshLayout.setRefreshComplete();
+            mPullToRefreshHelper.setRefreshing(false);
 
             if (isCancelled())
                 return;

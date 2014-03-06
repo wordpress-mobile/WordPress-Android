@@ -35,6 +35,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -53,8 +55,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -62,7 +62,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity implements OnRefreshListener {
+public class StatsActivity extends WPActionBarActivity {
 
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
@@ -84,7 +84,7 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
     private boolean mNoMenuDrawer = false;
     private boolean mIsUpdatingStats;
     private boolean mHasVerifiedCreds;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -111,9 +111,18 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
-        // pull to refresh layout setup
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshStats();
+                    }
+                });
 
         loadStatsFragments();
         setTitle(R.string.stats);
@@ -157,15 +166,6 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
         if (!mIsRestoredFromState) {
             refreshStats();
         }
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        if (!NetworkUtils.checkConnection(this)) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        refreshStats();
     }
 
     @Override
@@ -601,7 +601,7 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
         stopService(new Intent(this, StatsService.class));
         if (mIsUpdatingStats) {
             mIsUpdatingStats = false;
-            mPullToRefreshLayout.setRefreshing(false);
+            mPullToRefreshHelper.setRefreshing(false);
         }
     }
 
@@ -614,11 +614,7 @@ public class StatsActivity extends WPActionBarActivity implements OnRefreshListe
             String action = StringUtils.notNullStr(intent.getAction());
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                if (mIsUpdatingStats) {
-                    mPullToRefreshLayout.setRefreshing(true);
-                } else {
-                    mPullToRefreshLayout.setRefreshing(false);
-                }
+                mPullToRefreshHelper.setRefreshing(mIsUpdatingStats);
             }
         }
     };

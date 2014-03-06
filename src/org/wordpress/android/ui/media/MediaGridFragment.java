@@ -32,6 +32,8 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
@@ -45,15 +47,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * The grid displaying the media items.
  * It appears as 2 columns on phone and 1 column on tablet (essentially a listview)
  */
 public class MediaGridFragment extends Fragment implements OnItemClickListener,
-        MediaGridAdapterCallback, RecyclerListener, MultiSelectListener, OnRefreshListener {
+        MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -86,7 +86,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
     private CustomSpinner mSpinner;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -173,24 +173,23 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         });
 
-        // pull to refresh layout setup
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshMediaFromServer(0, false);
+                    }
+                });
 
         restoreState(savedInstanceState);
-
         setupSpinnerAdapter();
-
         return view;
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        refreshMediaFromServer(0, false);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -376,7 +375,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                                     mGridView.setSelection(0);
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshLayout.setRefreshing(false);
+                                mPullToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -403,7 +402,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                                 mIsRefreshing = false;
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshLayout.setRefreshing(false);
+                                mPullToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -661,6 +660,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshLayout.setRefreshing(refreshing);
+        mPullToRefreshHelper.setRefreshing(refreshing);
     }
 }

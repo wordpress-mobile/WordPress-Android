@@ -21,6 +21,8 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -31,14 +33,12 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class ManageBlogsActivity extends SherlockListActivity implements OnRefreshListener {
+public class ManageBlogsActivity extends SherlockListActivity {
     private List<Map<String, Object>> mAccounts;
     private static boolean mIsRefreshing;
     private ListScrollPositionManager mListScrollPositionManager;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,18 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Pull to refresh
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        new SetupBlogTask().execute();
+                    }
+                });
 
         // Load accounts and update from server
         loadAccounts();
@@ -73,15 +82,6 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.manage_blogs, menu);
         return true;
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        if (!NetworkUtils.checkConnection(this)) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        refreshBlogs();
     }
 
     @Override
@@ -118,6 +118,7 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
     }
 
     private void refreshBlogs() {
+        mPullToRefreshHelper.setRefreshing(true);
         new SetupBlogTask().execute();
     }
 
@@ -164,7 +165,6 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
 
         @Override
         protected void onPreExecute() {
-            mPullToRefreshLayout.setRefreshing(true);
             mSetupBlog = new SetupBlog();
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
@@ -191,7 +191,7 @@ public class ManageBlogsActivity extends SherlockListActivity implements OnRefre
             mListScrollPositionManager.saveScrollOffset();
             loadAccounts();
             mListScrollPositionManager.restoreScrollOffset();
-            mPullToRefreshLayout.setRefreshing(false);
+            mPullToRefreshHelper.setRefreshing(false);
         }
     }
 }

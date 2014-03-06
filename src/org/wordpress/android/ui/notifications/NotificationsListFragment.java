@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.PullToRefreshHeaderTransformer;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -30,11 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class NotificationsListFragment extends ListFragment implements OnRefreshListener {
+public class NotificationsListFragment extends ListFragment {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
     private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
@@ -42,8 +40,7 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
     private boolean mIsAddingNotes;
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private PullToRefreshHeaderTransformer mHeaderTransformer;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     /**
      * For responding to tapping of notes
@@ -71,30 +68,26 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.empty_listview, container, false);
 
-        // pull to refresh layout setup
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        mHeaderTransformer = new PullToRefreshHeaderTransformer();
-        ActionBarPullToRefresh.from(getActivity())
-                              .options(Options.create().headerTransformer(mHeaderTransformer).build())
-                              .allChildrenArePullable().listener(this)
-                              .setup(mPullToRefreshLayout);
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        if (getActivity() instanceof NotificationsActivity) {
+                            ((NotificationsActivity) getActivity()).refreshNotes();
+                        }
+                    }
+                });
         return view;
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
-        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        if (getActivity() instanceof NotificationsActivity) {
-            ((NotificationsActivity) getActivity()).refreshNotes();
-        }
-    }
-
     public void animateRefresh(boolean refresh) {
-        mHeaderTransformer.setShowProgressBarOnly(refresh);
-        mPullToRefreshLayout.setRefreshing(refresh);
+        mPullToRefreshHelper.setRefreshing(refresh);
     }
 
     @Override
@@ -326,5 +319,4 @@ public class NotificationsListFragment extends ListFragment implements OnRefresh
         }
         super.onSaveInstanceState(outState);
     }
-
 }

@@ -52,7 +52,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         TabListener {
 
     public static final String THEME_REFRESH_INTENT_NOTIFICATION = "THEME_REFRESH_INTENT_NOTIFICATION";
-    public static final String THEME_REFRESH_PARAM_FINISHED = "THEME_REFRESH_PARAM_FINISHED";
+    public static final String THEME_REFRESH_PARAM_REFRESHING = "THEME_REFRESH_PARAM_REFRESHING";
 
     private HorizontalTabView mTabView;
     private ThemePagerAdapter mThemePagerAdapter;
@@ -184,38 +184,42 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     public void fetchThemes() {
-        if (mFetchingThemes)
+        if (mFetchingThemes) {
             return;
+        }
         String siteId = getBlogId();
         mFetchingThemes = true;
         WordPress.getRestClientUtils().getThemes(siteId, 0, 0, new Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                new FetchThemesTask().execute(response);
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError response) {
-                if (response.toString().equals(AuthFailureError.class.getName())) {
-                    String errorTitle = getString(R.string.theme_auth_error_title);
-                    String errorMsg = getString(R.string.theme_auth_error_message);
-
-                    if (mIsRunning) {
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg, errorTitle);
-                        ft.add(fragment, "alert");
-                        ft.commitAllowingStateLoss();
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        new FetchThemesTask().execute(response);
                     }
-                    AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
-                } else {
-                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
-                    AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
-                }
+                }, new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError response) {
+                        if (response.toString().equals(AuthFailureError.class.getName())) {
+                            String errorTitle = getString(R.string.theme_auth_error_title);
+                            String errorMsg = getString(R.string.theme_auth_error_message);
 
-                mFetchingThemes = false;
-                setRefreshing(false);
-            }
-        });
+                            if (mIsRunning) {
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
+                                        errorTitle);
+                                ft.add(fragment, "alert");
+                                ft.commitAllowingStateLoss();
+                            }
+                            AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
+                        } else {
+                            Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG)
+                                 .show();
+                            AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
+                        }
+
+                        mFetchingThemes = false;
+                        setRefreshing(false);
+                    }
+                }
+        );
     }
 
     private void fetchCurrentTheme() {
@@ -223,24 +227,24 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    Theme theme = Theme.fromJSON(response);
-                    if (theme != null) {
-                        WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
-                        setRefreshing(false);
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Theme theme = Theme.fromJSON(response);
+                            if (theme != null) {
+                                WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
+                                setRefreshing(false);
+                            }
+                        } catch (JSONException e) {
+                            AppLog.e(T.THEMES, e);
+                        }
                     }
-                } catch (JSONException e) {
-                    AppLog.e(T.THEMES, e);
+                }, new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError response) {
+                    }
                 }
-
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError response) {
-            }
-        });
+        );
     }
 
     @Override
@@ -427,8 +431,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
         mIsActivatingTheme = true;
 
-        WordPress.getRestClientUtils().setTheme(siteId, themeId,
-                new Listener() {
+        WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
 
                     @Override
                     public void onResponse(JSONObject arg0) {
@@ -451,18 +454,18 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                             }
                         }
                     }
-                },
-                new ErrorListener() {
+                }, new ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
                         mIsActivatingTheme = false;
-                        if (mDetailsFragment != null && mDetailsFragment.isVisible())
-                            mDetailsFragment.onThemeActivated(false);
-                        if (ref.get() != null)
-                            Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
+                        if (mDetailsFragment != null && mDetailsFragment.isVisible()) mDetailsFragment.onThemeActivated(
+                                false);
+                        if (ref.get() != null) Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG)
+                                                    .show();
                     }
-                });
+                }
+        );
 
     }
 
@@ -502,7 +505,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private void setRefreshing(boolean refreshing) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         Intent intent = new Intent(THEME_REFRESH_INTENT_NOTIFICATION);
-        intent.putExtra(THEME_REFRESH_PARAM_FINISHED, refreshing);
+        intent.putExtra(THEME_REFRESH_PARAM_REFRESHING, refreshing);
         lbm.sendBroadcast(intent);
     }
 }

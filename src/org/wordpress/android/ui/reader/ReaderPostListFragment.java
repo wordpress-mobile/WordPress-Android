@@ -28,6 +28,8 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -42,8 +44,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by nbradbury on 6/30/13.
@@ -51,8 +51,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class ReaderPostListFragment extends SherlockFragment
                                     implements AbsListView.OnScrollListener,
-                                               ActionBar.OnNavigationListener,
-                                               OnRefreshListener {
+                                               ActionBar.OnNavigationListener {
 
     static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
@@ -62,7 +61,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private OnPostSelectedListener mPostSelectedListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
@@ -145,12 +144,20 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
-        // pull to refresh layout setup
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
-
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                    }
+                });
         mListView.setAdapter(getPostAdapter());
-
         return view;
     }
 
@@ -216,15 +223,6 @@ public class ReaderPostListFragment extends SherlockFragment
             default :
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-            mPullToRefreshLayout.setRefreshing(false);
-            return;
-        }
-        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
     }
 
     /*
@@ -507,7 +505,7 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
         mIsUpdating = isUpdating;
-        mPullToRefreshLayout.setRefreshing(mIsUpdating);
+        mPullToRefreshHelper.setRefreshing(mIsUpdating);
     }
 
     /*
