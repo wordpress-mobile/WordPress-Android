@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
-import java.net.IDN;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -100,12 +98,7 @@ public class SetupBlog {
     public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
         if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
             try {
-                URI uri;
-                if (!(mSelfHostedURL.toLowerCase().startsWith("http://")) && !(mSelfHostedURL.toLowerCase().startsWith("https://"))) {
-                    uri = URI.create("http://"+mSelfHostedURL);
-                } else {
-                    uri = URI.create(mSelfHostedURL);
-                }
+                URI uri = URI.create(UrlUtils.addHttpProcolIfNeeded(mSelfHostedURL, false));
                 TrustedSslDomainTable.trustDomain(uri);
                 mCurrentSslCertificatesForcedTrusted = trusted;
             } catch (Exception e1) {
@@ -232,24 +225,10 @@ public class SetupBlog {
         String xmlrpcUrl = null;
 
         // Convert IDN names to punycode if necessary
-        if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
-            if (url.toLowerCase().startsWith("http://")) {
-                url = "http://" + IDN.toASCII(url.substring(7));
-            } else if (url.toLowerCase().startsWith("https://")) {
-                url = "https://" + IDN.toASCII(url.substring(8));
-            } else {
-                url = IDN.toASCII(url);
-            }
-        }
+        url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-            if (mCurrentSslCertificatesForcedTrusted) {
-                url = "https://" + url; // default to https in case previous ssl error detected
-            } else {
-                url = "http://" + url; // default to http
-            }
-        }
+        url = UrlUtils.addHttpProcolIfNeeded(url, mCurrentSslCertificatesForcedTrusted);
 
         if (!URLUtil.isValidUrl(url)) {
             mErrorMsgId = R.string.invalid_url_message;
