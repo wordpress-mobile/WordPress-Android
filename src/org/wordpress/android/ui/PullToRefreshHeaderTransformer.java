@@ -34,7 +34,7 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
                 uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_in);
         mHeaderOutAnimation = AnimationUtils.loadAnimation(activity,
                 uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_out);
-
+        mAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
         if (mHeaderOutAnimation != null || mHeaderInAnimation != null) {
             final AnimationCallback callback = new AnimationCallback();
             if (mHeaderOutAnimation != null) {
@@ -51,21 +51,20 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
 
     private boolean showHeaderViewICSAndPostICS() {
         boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
-
+        mContentLayout.setVisibility(View.VISIBLE);
         if (changeVis) {
             mHeaderView.setVisibility(View.VISIBLE);
             AnimatorSet animSet = new AnimatorSet();
             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(mHeaderView, "alpha", 0f, 1f);
-            if (!mShowProgressBarOnly) {
-                ObjectAnimator transAnim = ObjectAnimator.ofFloat(mContentLayout, "translationY",
-                        -mContentLayout.getHeight(), 0f);
-                animSet.playTogether(transAnim, alphaAnim);
-            } else {
-                mContentLayout.setVisibility(View.INVISIBLE);
-                animSet.play(alphaAnim);
-            }
+            ObjectAnimator transAnim = ObjectAnimator.ofFloat(mContentLayout, "translationY",
+                    -mContentLayout.getHeight(), 0f);
+            animSet.playTogether(transAnim, alphaAnim);
+            animSet.play(alphaAnim);
             animSet.setDuration(mAnimationDuration);
             animSet.start();
+            if (mShowProgressBarOnly) {
+                mContentLayout.setVisibility(View.INVISIBLE);
+            }
         }
         return changeVis;
     }
@@ -91,6 +90,12 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
             return showHeaderViewICSAndPostICS();
         }
         return showHeaderViewPreICS();
+    }
+
+    @Override
+    public void onPulled(float percentagePulled) {
+        Compat.setAlpha(mContentLayout, 1f);
+        super.onPulled(percentagePulled);
     }
 
     @Override
