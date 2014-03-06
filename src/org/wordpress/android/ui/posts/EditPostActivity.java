@@ -278,7 +278,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             startService(new Intent(this, PostUploadService.class));
             Toast.makeText(this, getResources().getText(R.string.post_draft_saved), Toast.LENGTH_SHORT).show();
             // The current post is now the original post
-            mOriginalPost = mPost.clone();
+            mOriginalPost = mPost.copy();
         } else if (itemId == android.R.id.home) {
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -359,6 +359,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 savePost(false);
                 WordPress.currentPost = mPost;
+                PostUploadService.addPostToUpload(mPost);
+                startService(new Intent(getApplicationContext(), PostUploadService.class));
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);

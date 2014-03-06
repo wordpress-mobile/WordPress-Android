@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
-public class Post implements Serializable, Cloneable{
+public class Post implements Serializable {
 
     // Increment this value if this model changes
     // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
@@ -493,13 +493,28 @@ public class Post implements Serializable, Cloneable{
         return getId() >= 0;
     }
 
-    @Override
-    public Post clone() {
-        try {
-            return (Post)super.clone();
-        } catch(CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Post copy() {
+        Post newPost = new Post(this.blogID, this.title, this.description, this.mt_excerpt,
+                                this.mediaPaths, this.date_created_gmt, this.categories, this.mt_keywords,
+                                this.post_status, this.wp_password, this.latitude, this.longitude,
+                                this.isPage, this.wp_post_format, this.isLocalChange);
+        newPost.id = this.id;
+        newPost.postid = this.postid;
+        newPost.dateCreated = this.dateCreated;
+        newPost.custom_fields = this.custom_fields;
+        newPost.link = this.link;
+        newPost.mt_allow_comments = this.mt_allow_comments;
+        newPost.mt_allow_pings = this.mt_allow_pings;
+        newPost.mt_text_more = this.mt_text_more;
+        newPost.permaLink = this.permaLink;
+        newPost.userid = this.userid;
+        newPost.wp_author_display_name = this.wp_author_display_name;
+        newPost.wp_author_id = this.wp_author_id;
+        newPost.wp_slug = this.wp_slug;
+        newPost.localDraft = this.localDraft;
+        newPost.quickPostType = this.quickPostType;
+
+        return newPost;
     }
 
 }
