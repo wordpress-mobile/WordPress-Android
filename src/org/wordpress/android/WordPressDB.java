@@ -539,11 +539,12 @@ public class WordPressDB {
                              "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "lastCommentId", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
-        Cursor c = db.query(SETTINGS_TABLE, fields, "id=" + localId, null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
-        Blog blog = new Blog();
+        Blog blog = null;
         if (c.moveToFirst()) {
             if (c.getString(0) != null) {
+                blog = new Blog();
                 blog.setLocalTableBlogId(localId);
                 blog.setUrl(c.getString(c.getColumnIndex("url"))); // 0
 
@@ -597,8 +598,6 @@ public class WordPressDB {
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
             }
-        } else {
-            return null;
         }
         c.close();
         return blog;
@@ -607,11 +606,12 @@ public class WordPressDB {
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
         Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
                 new String[]{dotComBlogId, dotComBlogId}, null, null, null);
+        Blog blog = null;
         if (c.moveToFirst()) {
-            return instantiateBlogByLocalId(c.getInt(0));
+            blog = instantiateBlogByLocalId(c.getInt(0));
         }
         c.close();
-        return null;
+        return blog;
     }
 
     public List<String> loadStatsLogin(int id) {
