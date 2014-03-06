@@ -361,6 +361,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setHttpPassword(password);
         }
 
+        private void setCurrentSslCertificatesForcedTrusted(boolean trustAll) {
+            mIsCurrentSslCertificatesForcedTrusted = trustAll;
+        }
+        
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
@@ -426,7 +430,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    mIsCurrentSslCertificatesForcedTrusted = true;
+                    setupBlogTask.setCurrentSslCertificatesForcedTrusted(true);
                     setupBlogTask.execute();
                 }
             });

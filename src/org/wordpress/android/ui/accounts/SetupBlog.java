@@ -137,9 +137,7 @@ public class SetupBlog {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
-        if (mCurrentSslCertificatesForcedTrusted) {
-            TrustedSslDomainTable.trustDomain(uri);
-        }
+
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
