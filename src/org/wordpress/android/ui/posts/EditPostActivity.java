@@ -236,7 +236,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
         } else {
             // Display the save draft menu item if the post does not have a "published" status and
             // update the save menu item title depending on the status of the current post.
-            if(mPost != null && (!mPost.getPost_status().equals("publish")) ) {
+            if(mPost != null && mPost.getPost_status() != null
+                              && !mPost.getPost_status().equals("publish")) {
                 saveDraftMenuItem.setVisible(true);
                 saveMenuItem.setTitle(R.string.publish_post);
             } else {
