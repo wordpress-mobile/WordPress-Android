@@ -5,6 +5,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,31 +44,35 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         if (getNote() == null)
             return;
 
-        // set the header
+        JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
+        final String footerUrl = (bodyObject != null ? JSONUtil.getString(bodyObject, "header_link") : "");
+
+        // header text will be the subject ("These people like your comment"), footer text will be
+        // a snippet of the comment
+        final String headerText = getHeaderText();
+        final String footerText = getFooterText();
+
+        // full header text is the subject + snippet
+        final String fullHeaderText;
+        if (TextUtils.isEmpty(footerText)) {
+            fullHeaderText = headerText;
+        } else {
+            fullHeaderText = headerText + "<br><small>&quot;" + footerText + "&quot;</small>";
+        }
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        noteHeader.setText(getHeaderText());
+        noteHeader.setText(Html.fromHtml(fullHeaderText));
         noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-        noteHeader.setClickable(false);
-        list.addHeaderView(noteHeader);
-        
-        // set the footer
-        DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);        
-        JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
-        String footerText = getFooterText();
-        if (!TextUtils.isEmpty(footerText)) {
-            noteFooter.setText(footerText);
-            String footerUrl = JSONUtil.getString(bodyObject, "header_link");
-            noteFooter.setNote(getNote(), footerUrl);
-            if (getActivity() instanceof OnPostClickListener) {
-                noteFooter.setOnPostClickListener(((OnPostClickListener)getActivity()));
-            }
-            if (getActivity() instanceof OnCommentClickListener) {
-                noteFooter.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
-            }
-            list.addFooterView(noteFooter);
+        noteHeader.setNote(getNote(), footerUrl);
+        if (getActivity() instanceof OnPostClickListener) {
+            noteHeader.setOnPostClickListener(((OnPostClickListener)getActivity()));
         }
+        if (getActivity() instanceof OnCommentClickListener) {
+            noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
+        }
+        list.addHeaderView(noteHeader);
 
         // set the adapter
         setListAdapter(new NoteAdapter());
@@ -102,28 +107,31 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     
     class NoteAdapter extends BaseAdapter {
         private final JSONArray mItems;
+        private final LayoutInflater mInflater;
 
         NoteAdapter(){
             mItems = getNote().queryJSON("body.items", new JSONArray());
+            mInflater = getActivity().getLayoutInflater();
         }
         
         public View getView(int position, View cachedView, ViewGroup parent){
-            View v;
+            final View view;
             if (cachedView == null) {
-                v = getActivity().getLayoutInflater().inflate(R.layout.notifications_follow_row, null);
+                view = mInflater.inflate(R.layout.notifications_follow_row, null);
             } else {
-                v = cachedView;
+                view = cachedView;
             }
+
             JSONObject noteItem = getItem(position+1); //This is because element at position 0 of body.items must be discarded.
             JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
 
-            FollowRow row = (FollowRow) v;
+            FollowRow row = (FollowRow) view;
             row.setFollowListener(new FollowListener());
             row.setAction(followAction);
             row.setNameText(JSONUtil.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
             
-            return v;
+            return view;
         }
         
         public long getItemId(int position){
