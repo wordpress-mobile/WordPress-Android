@@ -826,7 +826,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     Comment comment = Comment.fromJSON(jsonObject);
                     if (comment != null) {
-                        CommentTable.addComment(localBlogId, comment);
+                        // save comment to local db if localBlogId is valid
+                        if (localBlogId > 0)
+                            CommentTable.addComment(localBlogId, comment);
+                        // now, at long last, show the comment
                         setComment(localBlogId, comment);
                     }
                 }
