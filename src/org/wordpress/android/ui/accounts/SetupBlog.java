@@ -98,7 +98,11 @@ public class SetupBlog {
     public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
         if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
             try {
-                URI uri = URI.create(UrlUtils.addHttpProcolIfNeeded(mSelfHostedURL, false));
+                // Convert IDN names to punycode if necessary
+                String sanitizedURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedURL);
+                // Add http to the beginning of the URL if needed
+                sanitizedURL = UrlUtils.addHttpProcolIfNeeded(sanitizedURL, false);
+                URI uri = URI.create(sanitizedURL);
                 TrustedSslDomainTable.trustDomain(uri);
                 mCurrentSslCertificatesForcedTrusted = trusted;
             } catch (Exception e1) {
