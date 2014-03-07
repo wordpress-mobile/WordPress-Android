@@ -54,7 +54,6 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String NOTIFICATION_ACTION      = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA            = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA  = "fromNotification";
-    private static final String NOTE_REPLY_EXTRA        = "replyContent";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initial_update";
@@ -224,15 +223,22 @@ public class NotificationsActivity extends WPActionBarActivity
             return null;
 
         if (note.isCommentType()) {
+            // show comment detail for comment notifications
             return CommentDetailFragment.newInstance(note);
         } else if (note.isCommentLikeType()) {
             return new NoteCommentLikeFragment();
         } else if (note.isAutomattcherType()) {
-            return new NoteMatcherFragment();
-        } else if (note.isMultiLineListTemplate()){
-            // TODO
+            // show reader post detail for automattchers about posts - note that comment
+            // automattchers are handled by note.isCommentType() above
+            boolean isPost = (note.getBlogId() !=0 && note.getPostId() != 0 && note.getCommentId() == 0);
+            if (isPost) {
+                return ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
+            } else {
+                // right now we'll never get here
+                return new NoteMatcherFragment();
+            }
         } else if (note.isSingleLineListTemplate()) {
-            return new SingleLineListFragment();
+            return new NoteSingleLineListFragment();
         } else if (note.isBigBadgeTemplate()) {
             return new BigBadgeFragment();
         }
@@ -246,6 +252,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private void openNote(final Note note){
         if (note == null || isFinishing())
             return;
+
         // if note is "unread" set note to "read"
         if (note.isUnread()) {
             // send a request to mark note as read
@@ -296,15 +303,18 @@ public class NotificationsActivity extends WPActionBarActivity
             return;
         }
 
-        // set arguments from activity intent
-        Intent intent = getIntent();
+        // set arguments from activity if called from a notification
+        /*Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
             if (intent.hasExtra(NOTE_REPLY_EXTRA) || intent.hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
                 detailFragment.setArguments(intent.getExtras());
             }
-        }
+        }*/
 
-        ((NotificationFragment) detailFragment).setNote(note);
+        // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
+        // fragment used here that is not a NotificationFragment)
+        if (detailFragment instanceof NotificationFragment)
+            ((NotificationFragment) detailFragment).setNote(note);
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();

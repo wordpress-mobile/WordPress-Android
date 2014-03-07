@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 
-public class SingleLineListFragment extends ListFragment implements NotificationFragment {
+public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
     
     @Override
