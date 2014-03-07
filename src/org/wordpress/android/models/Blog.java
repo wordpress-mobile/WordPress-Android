@@ -358,10 +358,19 @@ public class Blog {
     }
 
     public void setBlogOptions(String blogOptions) {
-        this.blogOptions = blogOptions;
+        JSONObject options;
         try {
-            JSONObject options = new JSONObject(blogOptions);
-            String  jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+            options = new JSONObject(blogOptions);
+            this.blogOptions = blogOptions;
+        } catch (JSONException e) {
+            //default to empty JSON object
+            this.blogOptions = "{}"; 
+            options = new JSONObject();
+            e.printStackTrace();
+        }
+
+        try {
+            String  jetpackBlogId = options.has("jetpack_client_id") ? options.getJSONObject("jetpack_client_id").getString("value") : null;
             if (jetpackBlogId != null)
                 this.setApi_blogid(jetpackBlogId);
         } catch (JSONException e) {

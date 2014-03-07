@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.accounts;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,18 +34,14 @@ import android.widget.TextView;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.emailchecker.EmailChecker;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     final private static String DOT_COM_BASE_URL = "https://wordpress.com";
@@ -350,7 +351,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
-        private boolean mIsAllSslCertificatesTrusted;
+        private boolean mIsCurrentSslCertificatesForcedTrusted;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -360,10 +361,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setHttpPassword(password);
         }
 
-        private void setAllSslCertificatesTrusted(boolean trustAll) {
-            mIsAllSslCertificatesTrusted = trustAll;
+        private void setCurrentSslCertificatesForcedTrusted(boolean trustAll) {
+            mIsCurrentSslCertificatesForcedTrusted = trustAll;
         }
-
+        
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
@@ -373,10 +374,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
             if (mSelfHosted) {
                 mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
+                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(mIsCurrentSslCertificatesForcedTrusted);
             } else {
                 mSetupBlog.setSelfHostedURL(null);
+                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(false); //wpcom always false
             }
-            mSetupBlog.setAllSslCertificatesTrusted(mIsAllSslCertificatesTrusted);
             startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
                     R.string.connecting_wpcom));
         }
@@ -428,13 +430,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    setupBlogTask.setAllSslCertificatesTrusted(true);
+                    setupBlogTask.setCurrentSslCertificatesForcedTrusted(true);
                     setupBlogTask.execute();
                 }
             });
             alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     // Canceled.
+                    mIsCurrentSslCertificatesForcedTrusted = false;
                 }
             });
             alert.show();
