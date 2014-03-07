@@ -39,26 +39,18 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
+            android:background="@drawable/reader_transparent_selector"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_medium" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/follow_divider"
-        android:layout_width="1px"
-        android:layout_height="fill_parent"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_follow"
+        style="@style/ReaderTextView.Follow"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:background="@color/grey_light" />
-
-    <ImageButton
-        android:id="@+id/follow_button"
-        android:tint="@color/grey_medium"
-        android:layout_width="@dimen/avatar_sz_medium"
-        android:layout_height="@dimen/avatar_sz_medium"
-        android:src="@drawable/follow_indicator"
-        android:contentDescription="@string/follow"
-        android:background="@drawable/list_bg_selector"
         android:padding="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium" />
+        android:layout_marginRight="@dimen/margin_medium"
+        android:text="@string/reader_btn_follow" />
 
 </org.wordpress.android.ui.notifications.FollowRow>
