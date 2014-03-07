@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -254,7 +255,8 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+                R.string.fragment_tag_reader_post_detail));
         if (fragment == null)
             return null;
         return ((ReaderPostDetailFragment) fragment);
@@ -275,7 +277,7 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderPostListFragment listFragment = getListFragment();
         final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
         if (animateRefresh) {
-            listFragment.setIsUpdating(true);
+            listFragment.setIsUpdating(true, RequestDataAction.LOAD_NEWER);
         }
 
         // request the list of tags first and don't perform other calls until it returns - this
@@ -288,7 +290,7 @@ public class ReaderActivity extends WPActionBarActivity
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
                     if (animateRefresh) {
-                        listFragment.setIsUpdating(false);
+                        listFragment.setIsUpdating(false, RequestDataAction.LOAD_NEWER);
                     }
                     if (result == UpdateResult.CHANGED) {
                         listFragment.refreshTags();

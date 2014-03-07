@@ -31,4 +31,12 @@
         android:text="@string/reader_label_new_posts_one"
         android:visibility="gone"/>
 
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/ReaderProgressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/margin_large"/>
 </RelativeLayout>

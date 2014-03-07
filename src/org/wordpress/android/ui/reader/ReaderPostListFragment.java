@@ -14,13 +14,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -65,7 +65,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
-    private MenuItem mRefreshMenuItem;
+    private ProgressBar mProgress;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
@@ -144,6 +144,10 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
+        // progress bar that appears when loading more posts
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
+        mProgress.setVisibility(View.GONE);
+
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
                 (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
@@ -210,7 +214,6 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.reader_native, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         checkActionBar();
     }
 
@@ -226,8 +229,23 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-         * ensures that the ActionBar is correctly set to list navigation mode using the tag adapter
-         */
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
+     */
+    private void showLoadingProgress() {
+        if (hasActivity() && mProgress != null) {
+            mProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingProgress() {
+        if (hasActivity() && mProgress != null) {
+            mProgress.setVisibility(View.GONE);
+        }
+    }
+
+    /*
+     * ensures that the ActionBar is correctly set to list navigation mode using the tag adapter
+     */
     private void checkActionBar() {
         // skip out if we're in list navigation mode, since that means the actionBar is
         // already correctly configured
@@ -460,7 +478,7 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        setIsUpdating(true);
+        setIsUpdating(true, updateAction);
         setEmptyTitleAndDescriptionForCurrentTag();
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
@@ -478,7 +496,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     return;
                 }
 
-                setIsUpdating(false);
+                setIsUpdating(false, updateAction);
 
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
@@ -500,12 +518,24 @@ public class ReaderPostListFragment extends SherlockFragment
         return mIsUpdating;
     }
 
-    public void setIsUpdating(boolean isUpdating) {
+    public void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
         }
+        switch (updateAction) {
+            case LOAD_OLDER:
+                // if these are older posts, show/hide message bar at bottom
+                if (isUpdating) {
+                    showLoadingProgress();
+                } else {
+                    hideLoadingProgress();
+                }
+                break;
+            default:
+                mPullToRefreshHelper.setRefreshing(isUpdating);
+                break;
+        }
         mIsUpdating = isUpdating;
-        mPullToRefreshHelper.setRefreshing(mIsUpdating);
     }
 
     /*
