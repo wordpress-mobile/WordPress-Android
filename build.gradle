@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -62,10 +62,10 @@ android {
             exclude module: 'support-v4'
         }
         compile 'com.github.castorflex.smoothprogressbar:library:+'
-        instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
-        instrumentTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-        instrumentTestCompile 'org.objenesis:objenesis:2.1'
-        instrumentTestCompile 'org.mockito:mockito-core:+'
+        androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
+        androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
+        androidTestCompile 'org.objenesis:objenesis:2.1'
+        androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
