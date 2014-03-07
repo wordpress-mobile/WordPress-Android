@@ -797,7 +797,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
         // first try to get from local db, if that fails request it from the server
-        Comment comment = CommentTable.getComment(localBlogId, commentId);
+        final Comment comment = (localBlogId > 0 ? CommentTable.getComment(localBlogId, commentId) : null);
         if (comment != null) {
             setComment(localBlogId, comment);
         } else {
