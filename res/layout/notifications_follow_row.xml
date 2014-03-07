@@ -6,16 +6,17 @@
     android:focusable="true"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_gravity="center_vertical"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
-    android:paddingLeft="@dimen/margin_large">
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/avatar"
-        android:layout_height="@dimen/avatar_sz_medium"
-        android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_height="@dimen/avatar_sz_small"
+        android:layout_width="@dimen/avatar_sz_small"
         android:background="@color/grey_light"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/margin_medium" />
 
     <LinearLayout
@@ -28,8 +29,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/name"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_large" />
@@ -50,8 +50,6 @@
         style="@style/ReaderTextView.Follow"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:padding="@dimen/margin_medium"
         android:text="@string/reader_btn_follow" />
 
 </org.wordpress.android.ui.notifications.FollowRow>
