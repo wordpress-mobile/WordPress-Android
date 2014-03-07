@@ -270,6 +270,7 @@ public class PostsActivity extends WPActionBarActivity
         }
         if (WordPress.postsShouldRefresh) {
             checkForLocalChanges(false);
+            mPostList.setRefreshing(true);
             WordPress.postsShouldRefresh = false;
         }
     }
@@ -422,6 +423,7 @@ public class PostsActivity extends WPActionBarActivity
                 Toast.makeText(PostsActivity.this, getResources().getText((mIsPage) ?
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
+                mPostList.setRefreshing(true);
                 checkForLocalChanges(false);
                 post.delete();
                 mPostList.requestPosts(false);

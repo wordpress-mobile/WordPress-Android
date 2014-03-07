@@ -215,6 +215,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     }
                 }
             }
+            mNotesList.animateRefresh(true);
             refreshNotes();
         }
     }
@@ -406,6 +407,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        mNotesList.animateRefresh(true);
         refreshNotes();
     }
 
@@ -419,12 +421,11 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    public void refreshNotes(){
+    public void refreshNotes() {
         if (!NetworkUtils.checkConnection(this))
             return;
 
         mFirstLoadComplete = false;
-        mNotesList.animateRefresh(true);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(final List<Note> notes) {

@@ -156,6 +156,7 @@ public class StatsActivity extends WPActionBarActivity {
                 WordPress.getCurrentBlog().setDotcom_username(username);
                 WordPress.getCurrentBlog().setDotcom_password(password);
                 WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
+                mPullToRefreshHelper.setRefreshing(true);
                 refreshStats();
             } else {
                 startWPComLoginActivity();
@@ -164,6 +165,7 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         if (!mIsRestoredFromState) {
+            mPullToRefreshHelper.setRefreshing(true);
             refreshStats();
         }
     }
@@ -223,8 +225,10 @@ public class StatsActivity extends WPActionBarActivity {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
-                                if (!isFinishing())
+                                if (!isFinishing()) {
+                                    mPullToRefreshHelper.setRefreshing(true);
                                     refreshStats();
+                                }
                             }
                         }
                         @Override
@@ -233,7 +237,8 @@ public class StatsActivity extends WPActionBarActivity {
                         }
                     }, "wp.getOptions", params);
                 }
-            refreshStats();
+                mPullToRefreshHelper.setRefreshing(true);
+                refreshStats();
             }
         }
     }
@@ -479,6 +484,7 @@ public class StatsActivity extends WPActionBarActivity {
 
         ft.commit();
 
+        mPullToRefreshHelper.setRefreshing(true);
         refreshStats();
     }
 
@@ -614,7 +620,9 @@ public class StatsActivity extends WPActionBarActivity {
             String action = StringUtils.notNullStr(intent.getAction());
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                mPullToRefreshHelper.setRefreshing(mIsUpdatingStats);
+                if (!mIsUpdatingStats) {
+                    mPullToRefreshHelper.setRefreshing(false);
+                }
             }
         }
     };

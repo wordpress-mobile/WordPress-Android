@@ -86,8 +86,10 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
-                    if (mCanLoadMoreComments && !mIsUpdatingComments)
+                    if (mCanLoadMoreComments && !mIsUpdatingComments) {
                         updateComments(true);
+                        mPullToRefreshHelper.setRefreshing(true);
+                    }
                 }
             };
 
@@ -144,6 +146,7 @@ public class CommentsListFragment extends Fragment {
         getCommentAdapter().loadComments();
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
+            mPullToRefreshHelper.setRefreshing(true);
             mHasAutoRefreshedComments = true;
         }
     }
@@ -181,6 +184,10 @@ public class CommentsListFragment extends Fragment {
                     }
                 });
         return view;
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        mPullToRefreshHelper.setRefreshing(refreshing);
     }
 
     private void dismissDialog(int id) {
@@ -380,7 +387,6 @@ public class CommentsListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
-            mPullToRefreshHelper.setRefreshing(true);
         }
 
         @Override

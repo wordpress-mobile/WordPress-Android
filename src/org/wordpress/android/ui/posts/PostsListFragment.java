@@ -182,6 +182,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         }
     }
 
+    public void setRefreshing(boolean refreshing) {
+        mPullToRefreshHelper.setRefreshing(refreshing);
+    }
+
     private void showPost(long selectedID) {
         if (WordPress.getCurrentBlog() == null)
             return;
@@ -215,7 +219,6 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
             mCanLoadMorePosts = true;
-            mPullToRefreshHelper.setRefreshing(true);
             postCount = POSTS_REQUEST_COUNT;
         }
         List<Object> apiArgs = new Vector<Object>();
