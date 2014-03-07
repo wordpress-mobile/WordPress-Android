@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuInflater;
@@ -48,6 +49,7 @@ public class CommentsListFragment extends Fragment {
     private boolean mCanLoadMoreComments = true;
     private boolean mHasAutoRefreshedComments = false;
 
+    private ProgressBar mProgressLoadMore;
     private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
     private View mEmptyView;
@@ -88,7 +90,6 @@ public class CommentsListFragment extends Fragment {
                 public void onLoadMore() {
                     if (mCanLoadMoreComments && !mIsUpdatingComments) {
                         updateComments(true);
-                        mPullToRefreshHelper.setRefreshing(true);
                     }
                 }
             };
@@ -169,6 +170,10 @@ public class CommentsListFragment extends Fragment {
 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
+
+        // progress bar that appears when loading more comments
+        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
+        mProgressLoadMore.setVisibility(View.GONE);
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
@@ -387,6 +392,9 @@ public class CommentsListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
+            if (isLoadingMore) {
+                showLoadingProgress();
+            }
         }
 
         @Override
@@ -431,8 +439,12 @@ public class CommentsListFragment extends Fragment {
 
         protected void onPostExecute(CommentList comments) {
             mIsUpdatingComments = false;
-            if (!hasActivity())
+            if (!hasActivity()) {
                 return;
+            }
+            if (isLoadingMore) {
+                hideLoadingProgress();
+            }
             mPullToRefreshHelper.setRefreshing(false);
 
             if (isCancelled())
@@ -482,6 +494,21 @@ public class CommentsListFragment extends Fragment {
     private void hideEmptyView() {
         if (mEmptyView != null)
             mEmptyView.setVisibility(View.GONE);
+    }
+
+    /**
+     * show/hide progress bar which appears at the bottom when loading more comments
+     */
+    private void showLoadingProgress() {
+        if (hasActivity() && mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingProgress() {
+        if (hasActivity() && mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.GONE);
+        }
     }
 
     /****
