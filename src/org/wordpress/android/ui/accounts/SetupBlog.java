@@ -14,10 +14,12 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -158,24 +160,39 @@ public class SetupBlog {
                 }
             }
             return userBlogList;
-        } catch (XMLRPCException e) {
+        }
+        catch (XmlPullParserException parserException) {
+            mErrorMsgId = R.string.xmlrpc_error;
+            AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
+        }
+        catch (XMLRPCFault xmlRpcFault) {
+            AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+            switch (xmlRpcFault.getFaultCode()) {
+                case 403:
+                    mErrorMsgId = R.string.username_or_password_incorrect;
+                    break;
+                case 404:
+                    mErrorMsgId = R.string.xmlrpc_error;
+                    break;
+                case 425:
+                    mErrorMsgId = R.string.account_two_step_auth_enabled;
+                    break;
+                default:
+                    mErrorMsgId = R.string.no_site_error;
+                    break;
+            }
+        }
+        catch (XMLRPCException xmlRpcException) {
+            AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
+            mErrorMsgId = R.string.no_site_error;
+        } catch (Exception e) {
+            AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             if (mCurrentSslCertificatesForcedTrusted) {
                 TrustedSslDomainTable.removeTrustedDomain(uri);
             }
-            String message = e.getMessage();
-            if (message.contains("code 403")) {
-                mErrorMsgId = R.string.username_or_password_incorrect;
-            } else if (message.contains("404")) {
-                mErrorMsgId = R.string.xmlrpc_error;
-            } else if (message.contains("425")) {
-                mErrorMsgId = R.string.account_two_step_auth_enabled;
-            } else if (message.contains("XmlPullParserException")) {
-                mErrorMsgId = R.string.xmlrpc_error;
-            } else {
-                mErrorMsgId = R.string.no_site_error;
-            }
-            return null;
+            mErrorMsgId = R.string.no_site_error;
         }
+        return null;
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
@@ -196,7 +213,7 @@ public class SetupBlog {
             client.call("system.listMethods");
             xmlRpcUrl = baseUrl;
             mIsCustomUrl = true;
-        } catch (XMLRPCException e) {
+        } catch (Exception e) {
             AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
             if (e.getMessage().contains("401")) {
                 mHttpAuthRequired = true;
@@ -214,7 +231,7 @@ public class SetupBlog {
             try {
                 client.call("system.listMethods");
                 xmlRpcUrl = guessURL;
-            } catch (XMLRPCException ex) {
+            } catch (Exception ex) {
                 AppLog.w(T.NUX, "system.listMethods failed on: " + guessURL);
             }
         }
