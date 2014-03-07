@@ -120,7 +120,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             FollowRow row = (FollowRow) v;
             row.setFollowListener(new FollowListener());
             row.setAction(followAction);
-            row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
+            row.setNameText(JSONUtil.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
             
             return v;

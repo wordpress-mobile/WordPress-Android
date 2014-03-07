@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 public class FollowRow extends LinearLayout {
@@ -112,7 +113,7 @@ public class FollowRow extends LinearLayout {
         return (TextView) findViewById(R.id.text_follow);
     }
 
-    TextView getTextView() {
+    TextView getNameTextView() {
         return (TextView) findViewById(R.id.name);
     }
 
@@ -120,8 +121,15 @@ public class FollowRow extends LinearLayout {
         return (TextView) findViewById(R.id.url);
     }
 
-    protected void setText(CharSequence text) {
-        getTextView().setText(text);
+    protected void setNameText(String text) {
+        TextView nameText = getNameTextView();
+        if (TextUtils.isEmpty(text)) {
+            nameText.setVisibility(View.GONE);
+        } else {
+            // text may contain html entities, so it must be unescaped for display
+            nameText.setText(HtmlUtils.fastUnescapeHtml(text));
+            nameText.setVisibility(View.VISIBLE);
+        }
     }
 
     protected boolean isSiteId(String siteId) {

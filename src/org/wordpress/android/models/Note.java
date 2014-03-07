@@ -186,7 +186,7 @@ public class Note {
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
      */
-    public Spanned getCommentBody(){
+    Spanned getCommentBody(){
         return mComment;
     }
 
@@ -274,7 +274,7 @@ public class Note {
     public Boolean isBigBadgeTemplate(){
         return getTemplate().equals(BIG_BADGE_TEMPLATE);
     }
-    public Map<String,JSONObject> getActions(){
+    Map<String,JSONObject> getActions(){
         if (mActions == null) {
             try {
                 JSONArray actions = queryJSON("body.actions", new JSONArray());
@@ -383,7 +383,7 @@ public class Note {
     /*
      * plain-text snippet returned by the server - currently shown only for comments
      */
-    public String getSnippet() {
+    String getSnippet() {
         if (mSnippet == null) {
             mSnippet = queryJSON("snippet", "");
         }
