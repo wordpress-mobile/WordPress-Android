@@ -361,7 +361,7 @@ public class Blog {
         this.blogOptions = blogOptions;
         try {
             JSONObject options = new JSONObject(blogOptions);
-            String  jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+            String  jetpackBlogId = options.has("jetpack_client_id") ? options.getJSONObject("jetpack_client_id").getString("value") : null;
             if (jetpackBlogId != null)
                 this.setApi_blogid(jetpackBlogId);
         } catch (JSONException e) {
