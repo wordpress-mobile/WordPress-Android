@@ -41,10 +41,8 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.wordpress.android.WordPress.getRestClientUtils;
 
@@ -60,8 +58,6 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initial_update";
-
-    private final Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
     private NotificationsListFragment mNotesList;
     private MenuItem mRefreshMenuItem;
@@ -87,49 +83,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // Load notes
         mNotes = WordPress.wpDB.getLatestNotes();
-
-        fragmentDetectors.add(new FragmentDetector(){
-            @Override
-            public Fragment getFragment(Note note){
-                if (note.isCommentType()) {
-                    return CommentDetailFragment.newInstance(note);
-                }
-                return null;
-            }
-        });
-        fragmentDetectors.add(new FragmentDetector() {
-            @Override
-            public Fragment getFragment(Note note) {
-                if (note.isMultiLineListTemplate()){
-                    Fragment fragment = null;
-                    if (note.isCommentLikeType())
-                        fragment = new NoteCommentLikeFragment();
-                    else if (note.isAutomattcherType())
-                        fragment = new NoteMatcherFragment();
-                    return fragment;
-                }
-                return null;
-            }
-        });
-        fragmentDetectors.add(new FragmentDetector() {
-            @Override
-            public Fragment getFragment(Note note) {
-                if (note.isSingleLineListTemplate()) {
-                    return new SingleLineListFragment();
-                }
-                return null;
-            }
-        });
-        fragmentDetectors.add(new FragmentDetector(){
-            @Override
-            public Fragment getFragment(Note note){
-                AppLog.d(T.NOTIFS, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
-                if (note.isBigBadgeTemplate()) {
-                    return new BigBadgeFragment();
-                }
-                return null;
-            }
-        });
 
         GCMIntentService.activeNotificationsMap.clear();
 
@@ -262,19 +215,31 @@ public class NotificationsActivity extends WPActionBarActivity
             fm.popBackStack();
         }
     }
+
     /**
-     * Tries to pick the correct fragment detail type for a given note using the
-     * fragment detectors
+     * Tries to pick the correct fragment detail type for a given note
      */
-    private Fragment fragmentForNote(Note note){
-        for (FragmentDetector detector: fragmentDetectors) {
-            Fragment fragment = detector.getFragment(note);
-            if (fragment != null){
-                return fragment;
-            }
+    private Fragment getDetailFragmentForNote(Note note){
+        if (note == null)
+            return null;
+
+        if (note.isCommentType()) {
+            return CommentDetailFragment.newInstance(note);
+        } else if (note.isCommentLikeType()) {
+            return new NoteCommentLikeFragment();
+        } else if (note.isAutomattcherType()) {
+            return new NoteMatcherFragment();
+        } else if (note.isMultiLineListTemplate()){
+            // TODO
+        } else if (note.isSingleLineListTemplate()) {
+            return new SingleLineListFragment();
+        } else if (note.isBigBadgeTemplate()) {
+            return new BigBadgeFragment();
         }
+
         return null;
     }
+
     /**
      *  Open a note fragment based on the type of note
      */
@@ -287,7 +252,8 @@ public class NotificationsActivity extends WPActionBarActivity
             getRestClientUtils().markNoteAsRead(note, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            if (isFinishing()) return;
+                            if (isFinishing())
+                                return;
 
                             final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
 
@@ -317,36 +283,44 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         FragmentManager fm = getSupportFragmentManager();
+
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0){
             fm.popBackStack();
         }
-        Fragment fragment = fragmentForNote(note);
-        if (fragment == null) {
+
+        // create detail fragment for this note type
+        Fragment detailFragment = getDetailFragmentForNote(note);
+        if (detailFragment == null) {
             AppLog.d(T.NOTIFS, String.format("No fragment found for %s", note.toJSONObject()));
             return;
         }
-        // swap the fragment
-        NotificationFragment noteFragment = (NotificationFragment) fragment;
+
+        // set arguments from activity intent
         Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
             if (intent.hasExtra(NOTE_REPLY_EXTRA) || intent.hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
-                fragment.setArguments(intent.getExtras());
+                detailFragment.setArguments(intent.getExtras());
             }
         }
-        noteFragment.setNote(note);
-        FragmentTransaction transaction = fm.beginTransaction();
-        View container = findViewById(R.id.layout_fragment_container);
-        transaction.replace(R.id.layout_fragment_container, fragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
+        ((NotificationFragment) detailFragment).setNote(note);
+
+        // swap the fragment
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.layout_fragment_container, detailFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
         // only add to backstack if we're removing the list view from the fragment container
+        View container = findViewById(R.id.layout_fragment_container);
         if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
-            transaction.addToBackStack(null);
+            ft.addToBackStack(null);
             if (mNotesList != null)
-                transaction.hide(mNotesList);
+                ft.hide(mNotesList);
         }
-        transaction.commitAllowingStateLoss();
+
+        ft.commitAllowingStateLoss();
     }
 
     /*
@@ -509,10 +483,6 @@ public class NotificationsActivity extends WPActionBarActivity
         public void showError(){
             showError(getString(R.string.error_generic));
         }
-    }
-
-    private abstract class FragmentDetector {
-        abstract public Fragment getFragment(Note note);
     }
 
     @Override

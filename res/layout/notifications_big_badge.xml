@@ -42,7 +42,7 @@
             android:textAlignment="center"
             android:textColorLink="@color/reader_hyperlink"
             android:textIsSelectable="true"
-            android:textSize="@dimen/text_sz_extra_large" />
+            android:textSize="@dimen/text_sz_large" />
     </LinearLayout>
 
 </ScrollView>
