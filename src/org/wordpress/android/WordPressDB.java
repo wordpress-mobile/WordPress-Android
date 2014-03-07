@@ -593,7 +593,7 @@ public class WordPressDB {
                 blog.setScaledImageWidth(c.getInt(c.getColumnIndex("scaledImgWidth")));
                 blog.setHomeURL(c.getString(c.getColumnIndex("homeURL")));
                 if (c.getString(c.getColumnIndex("blog_options")) == null) {
-                    blog.setBlogOptions("");
+                    blog.setBlogOptions("{}");
                 } else {
                     blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
                 }
