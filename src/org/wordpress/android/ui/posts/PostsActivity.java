@@ -214,31 +214,28 @@ public class PostsActivity extends WPActionBarActivity
     public void checkForLocalChanges(boolean shouldPrompt) {
         if (WordPress.getCurrentBlog() == null)
             return;
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
+                mIsPage);
         if (hasLocalChanges) {
-            if (!shouldPrompt)
+            if (!shouldPrompt) {
                 return;
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    PostsActivity.this);
-            dialogBuilder.setTitle(getResources().getText(
-                    R.string.local_changes));
+            }
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                int whichButton) {
+                        public void onClick(DialogInterface dialog, int whichButton) {
                             popPostDetail();
                             attemptToSelectPost();
                             mPostList.requestPosts(false);
                         }
                     });
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                int whichButton) {
-                            //just close the window
-                        }
-                    });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    mPostList.setRefreshing(false);
+                }
+            });
             dialogBuilder.setCancelable(true);
             if (!isFinishing()) {
                 dialogBuilder.create().show();
@@ -246,6 +243,7 @@ public class PostsActivity extends WPActionBarActivity
         } else {
             popPostDetail();
             mPostList.requestPosts(false);
+            mPostList.setRefreshing(true);
         }
     }
 
@@ -423,10 +421,10 @@ public class PostsActivity extends WPActionBarActivity
                 Toast.makeText(PostsActivity.this, getResources().getText((mIsPage) ?
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
-                mPostList.setRefreshing(true);
                 checkForLocalChanges(false);
                 post.delete();
                 mPostList.requestPosts(false);
+                mPostList.setRefreshing(true);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
@@ -735,6 +733,7 @@ public class PostsActivity extends WPActionBarActivity
     @Override
     public void onDialogConfirm() {
         mPostList.requestPosts(true);
+        mPostList.setRefreshing(true);
     }
 
     @Override

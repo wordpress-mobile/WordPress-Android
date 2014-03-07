@@ -85,10 +85,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded(int postCount) {
-
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some
                         requestPosts(false);
+                        setRefreshing(true);
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
