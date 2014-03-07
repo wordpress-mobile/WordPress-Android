@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,7 +186,7 @@ public class SetupBlog {
         catch (XMLRPCException xmlRpcException) {
             AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
             mErrorMsgId = R.string.no_site_error;
-        } catch (Exception e) {
+        } catch (IOException e) {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             if (mCurrentSslCertificatesForcedTrusted) {
                 TrustedSslDomainTable.removeTrustedDomain(uri);
@@ -204,6 +205,14 @@ public class SetupBlog {
         return rsdUrl;
     }
 
+    private boolean isHTTPAuthErrorMessage(Exception e) {
+        if (e != null && e.getMessage().contains("401")) {
+            mHttpAuthRequired = true;
+            return mHttpAuthRequired;
+        } 
+        return false;
+    }
+    
     private String getmXmlrpcByUserEnteredPath(String baseUrl) {
         String xmlRpcUrl = null;
         // Try the user entered path
@@ -213,29 +222,45 @@ public class SetupBlog {
             client.call("system.listMethods");
             xmlRpcUrl = baseUrl;
             mIsCustomUrl = true;
-        } catch (Exception e) {
+            return xmlRpcUrl;
+        } catch (XMLRPCException e) {
             AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
-            if (e.getMessage().contains("401")) {
-                mHttpAuthRequired = true;
+            if (isHTTPAuthErrorMessage(e)) {
                 return null;
             }
-
-            // Guess the xmlrpc path
-            String guessURL = baseUrl;
-            if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
-                guessURL = guessURL.substring(0, guessURL.length() - 1);
+        } catch (IOException e) {
+            AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
+            if (isHTTPAuthErrorMessage(e)) {
+                return null;
             }
-            guessURL += "/xmlrpc.php";
-            uri = URI.create(guessURL);
-            client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
-            try {
-                client.call("system.listMethods");
-                xmlRpcUrl = guessURL;
-            } catch (Exception ex) {
-                AppLog.w(T.NUX, "system.listMethods failed on: " + guessURL);
+        } catch (XmlPullParserException e) {
+            AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
+            if (isHTTPAuthErrorMessage(e)) {
+                return null;
             }
         }
-        return xmlRpcUrl;
+
+        // Guess the xmlrpc path
+        String guessURL = baseUrl;
+        if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
+            guessURL = guessURL.substring(0, guessURL.length() - 1);
+        }
+        guessURL += "/xmlrpc.php";
+        uri = URI.create(guessURL);
+        client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
+        try {
+            client.call("system.listMethods");
+            xmlRpcUrl = guessURL;
+            return xmlRpcUrl;
+        } catch (XMLRPCException ex) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, ex);
+        } catch (IOException e1) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e1);
+        } catch (XmlPullParserException e1) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e1);
+        }
+        
+        return null;
     }
 
     // Attempts to retrieve the xmlrpc url for a self-hosted site, in this order:

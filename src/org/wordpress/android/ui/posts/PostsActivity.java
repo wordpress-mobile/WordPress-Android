@@ -35,12 +35,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -496,10 +498,21 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                     WordPress.currentBlog.getPassword(), post.getPostid() };
 
             try {
-                client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost",
-                        (mIsPage) ? pageParams : postParams);
+                client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
                 result = true;
-            } catch (final Exception e) {
+            } catch (final XMLRPCException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
+                        (mIsPage) ? getResources().getText(R.string.page)
+                                  : getResources().getText(R.string.post));
+                result = false;
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
+                        (mIsPage) ? getResources().getText(R.string.page)
+                                  : getResources().getText(R.string.post));
+                result = false;
+            } catch (XmlPullParserException e) {
                 AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
                         (mIsPage) ? getResources().getText(R.string.page)
@@ -594,7 +607,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                     versionResult = (Object) client.call("metaWeblog.getPost",
                             vParams);
                 }
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = getResources().getText(R.string.error_generic).toString();
+                return null;
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = getResources().getText(R.string.error_generic).toString();
+                return null;
+            } catch (XmlPullParserException e) {
                 AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
                 return null;

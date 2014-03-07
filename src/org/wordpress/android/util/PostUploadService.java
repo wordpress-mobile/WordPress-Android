@@ -32,6 +32,8 @@ import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -410,17 +412,26 @@ public class PostUploadService extends Service {
                 post.setLocalChange(false);
                 post.update();
                 return true;
-            } catch (final Exception e) {
-                mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
-                        .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
-                        + " " + e.getMessage();
-                mIsMediaError = false;
-                AppLog.e(T.EDITOR, mErrorMessage, e);
+            } catch (final XMLRPCException e) {
+                setUploadPostErrorMessage(e);
+            } catch (IOException e) {
+                setUploadPostErrorMessage(e);
+            } catch (XmlPullParserException e) {
+                setUploadPostErrorMessage(e);
             }
 
             return false;
         }
 
+        
+        private void setUploadPostErrorMessage(Exception e) {
+            mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
+                    .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
+                    + " " + e.getMessage();
+            mIsMediaError = false;
+            AppLog.e(T.EDITOR, mErrorMessage, e);
+        }
+        
         public String uploadMediaFile(MediaFile mf, Blog blog) {
             String content = "";
 
@@ -826,7 +837,13 @@ public class PostUploadService extends Service {
         private Object uploadFileHelper(XMLRPCClientInterface client, Object[] params, File tempFile) {
             try {
                 return client.call("wp.uploadFile", params, tempFile);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) { //XMLRPCException, IOException, XmlPullParserException
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                return null;
+            } catch (IOException e) {
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                return null;
+            } catch (XmlPullParserException e) {
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } finally {

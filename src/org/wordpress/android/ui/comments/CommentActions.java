@@ -16,10 +16,14 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,7 +103,13 @@ public class CommentActions {
                 int newCommentID;
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
-                } catch (Exception e) {
+                } catch (XMLRPCException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    newCommentID = -1;
+                } catch (IOException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    newCommentID = -1;
+                } catch (XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
                 }
@@ -169,7 +179,13 @@ public class CommentActions {
                         AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
                         newCommentID = -1;
                     }
-                } catch (Exception e) {
+                } catch (XMLRPCException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    newCommentID = -1;
+                } catch (IOException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    newCommentID = -1;
+                } catch (XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
                 }
@@ -271,7 +287,13 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call("wp.editComment", params);
-                } catch (final Exception e) {
+                } catch (final XMLRPCException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    result = null;
+                } catch (IOException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    result = null;
+                } catch (XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     result = null;
                 }
@@ -349,7 +371,11 @@ public class CommentActions {
                             comment.setStatus(newStatusStr);
                             moderatedComments.add(comment);
                         }
-                    } catch (final Exception e) {
+                    } catch (final XMLRPCException e) {
+                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    } catch (IOException e) {
+                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    } catch (XmlPullParserException e) {
                         AppLog.e(T.COMMENTS, e.getMessage(), e);
                     }
                 }
@@ -399,7 +425,13 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call("wp.deleteComment", params);
-                } catch (final Exception e) {
+                } catch (final XMLRPCException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    result = null;
+                } catch (IOException e) {
+                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    result = null;
+                } catch (XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     result = null;
                 }

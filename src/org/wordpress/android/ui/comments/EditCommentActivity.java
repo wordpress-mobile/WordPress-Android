@@ -25,10 +25,13 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -251,7 +254,13 @@ public class EditCommentActivity extends SherlockActivity {
                     CommentTable.updateComment(mLocalBlogId, mComment);
                 }
                 return isSaved;
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
+                return false;
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.COMMENTS, e);
+                return false;
+            } catch (XmlPullParserException e) {
                 AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
             }
