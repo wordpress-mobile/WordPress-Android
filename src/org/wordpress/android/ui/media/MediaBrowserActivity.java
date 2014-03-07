@@ -332,7 +332,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         if (WordPress.getCurrentBlog() != null && VolleyUtils.isCustomHTTPClientStackNeeded(WordPress.getCurrentBlog())) {
             // Volley networking setup
-            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getCustomHTTPClientStack(WordPress.getCurrentBlog()));
+            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this, WordPress.getCurrentBlog()));
             imageLoader = new ImageLoader(mRequestQueue, WordPress.getBitmapCache());
             // http://stackoverflow.com/a/17035814
             imageLoader.setBatchedResponseDelay(0);

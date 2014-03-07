@@ -102,7 +102,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getDefaultHTTPClientStack(this));
+        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag(TAG);
 
