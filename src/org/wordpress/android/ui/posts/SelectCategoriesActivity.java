@@ -28,6 +28,8 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -153,37 +155,19 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             mPullToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
                 populateOrFetchCategories();
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success),
-                        Toast.LENGTH_SHORT).show();
-            }
-            if (finalResult.equals("addCategory_failed")) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
-                dialogBuilder.setTitle(getResources().getText(R.string.adding_cat_failed));
-                dialogBuilder.setMessage(getResources().getText(R.string.adding_cat_failed_check));
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing())
-                    dialogBuilder.create().show();
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
+                }
+            } else if (finalResult.equals("addCategory_failed")) {
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
+                }
             } else if (finalResult.equals("gotCategories")) {
                 populateOrFetchCategories();
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
             } else if (finalResult.equals("FAIL")) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
-                dialogBuilder.setTitle(getResources().getText(R.string.category_refresh_error));
-                dialogBuilder.setMessage(categoryErrorMsg);
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing())
-                    dialogBuilder.create().show();
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
+                }
             }
         }
     };

@@ -54,9 +54,7 @@
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
-    <string name="refreshing_categories">Refreshing categories</string>
     <string name="connection_error">Connection error</string>
-    <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="cancel_edit">Cancel edit</string>
@@ -283,10 +281,8 @@
     <string name="category_parent">Category parent (optional):</string>
     <string name="none">None</string>
     <string name="adding_cat_failed">Adding category failed</string>
-    <string name="adding_cat_failed_check">Check your settings and try again</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
-    <string name="cat_adding_category">Adding category</string>
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
