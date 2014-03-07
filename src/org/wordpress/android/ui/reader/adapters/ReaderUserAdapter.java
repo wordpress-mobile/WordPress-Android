@@ -14,23 +14,23 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
- * Created by nbradbury on 6/27/13.
+ * Created by nbradbury on 6/27/13 - owner must call setUsers() with the list of
+ * users to display
  */
 public class ReaderUserAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderUserList mUsers = new ReaderUserList();
-    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
 
-    public ReaderUserAdapter(Context context,
-                             ReaderActions.DataLoadedListener dataLoadedListener) {
+    public ReaderUserAdapter(Context context, DataLoadedListener dataLoadedListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mDataLoadedListener = dataLoadedListener;

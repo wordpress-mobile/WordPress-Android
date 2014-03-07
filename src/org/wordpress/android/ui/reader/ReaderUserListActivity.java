@@ -79,8 +79,8 @@ public class ReaderUserListActivity extends FragmentActivity {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
 
         getListView().setAdapter(getAdapter());
-        updateTitle();
         loadUsers();
+        updateTitle();
     }
 
     @Override

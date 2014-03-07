@@ -7,10 +7,10 @@
     android:focusable="true"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingTop="8dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp">
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
@@ -18,14 +18,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:textColor="#505050"
-        android:textSize="16sp" />
+        android:textColor="@color/grey_medium_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <ImageView
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/grey_medium"
         android:visibility="gone"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="@dimen/margin_medium" />
 
 </org.wordpress.android.ui.notifications.DetailHeader>

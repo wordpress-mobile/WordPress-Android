@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#FFFFFF"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
@@ -16,9 +16,7 @@
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:minHeight="170dp"
-            android:minWidth="170dp"
+            android:layout_marginBottom="@dimen/margin_large"
             android:scaleType="fitCenter" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -27,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:drawableLeft="@drawable/note_icon_stats"
-            android:padding="16dp"
+            android:padding="@dimen/margin_large"
             android:text="@string/view_stats_activity"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_large"
@@ -39,12 +37,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
             android:textAlignment="center"
             android:textColorLink="@color/reader_hyperlink"
             android:textIsSelectable="true"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_sz_extra_large" />
     </LinearLayout>
 
 </ScrollView>
