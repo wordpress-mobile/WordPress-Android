@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -64,7 +65,6 @@ public class FollowRow extends LinearLayout {
 
     protected void setAction(JSONObject actionJSON) {
         final TextView followButton = getFollowButton();
-        final TextView siteTextView = getSiteTextView();
 
         getImageView().setDefaultImageResId(R.drawable.placeholder);
         try {
@@ -75,25 +75,26 @@ public class FollowRow extends LinearLayout {
                 followButton.setVisibility(VISIBLE);
                 followButton.setOnClickListener(new ClickListener());
                 followButton.setOnLongClickListener(new LongClickListener());
-                siteTextView.setText(getSiteDomain());
                 setClickable(true);
             } else {
                 mParams = null;
                 followButton.setVisibility(GONE);
                 followButton.setOnClickListener(null);
-                siteTextView.setText("");
                 setClickable(false);
             }
 
-            if (hasParams())
+            if (hasParams()) {
                 setSiteUrl(mParams.optString(BLOG_URL_PARAM, null));
+            } else {
+                setSiteUrl(null);
+            }
 
             updateFollowButton(isFollowing());
 
         } catch (JSONException e) {
             AppLog.e(T.NOTIFS, String.format("Could not set action from %s", actionJSON), e);
             followButton.setVisibility(GONE);
-            getSiteTextView().setText("");
+            setSiteUrl(null);
             setClickable(false);
             mParams = null;
         }
@@ -153,7 +154,11 @@ public class FollowRow extends LinearLayout {
 
     void setSiteUrl(String url) {
         mBlogURL = url;
-        if (url != null) {
+        final TextView siteTextView = getSiteTextView();
+
+        if (!TextUtils.isEmpty(url)) {
+            siteTextView.setText(getSiteDomain());
+            siteTextView.setVisibility(View.VISIBLE);
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -170,6 +175,7 @@ public class FollowRow extends LinearLayout {
             });
         } else {
             this.setOnClickListener(null);
+            siteTextView.setVisibility(View.GONE);
         }
     }
 
