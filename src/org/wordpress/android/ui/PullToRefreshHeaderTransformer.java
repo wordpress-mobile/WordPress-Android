@@ -105,11 +105,7 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
     public boolean showHeaderView() {
         // Workaround to avoid this bug https://github.com/chrisbanes/ActionBar-PullToRefresh/issues/265
         // Note, that also remove the alpha animation triggered in showHeaderView
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Compat.setAlpha(mContentLayout, 1f);
-        } else {
-            mContentLayout.startAnimation(mSetMaxAlpha);
-        }
+        resetContentLayoutAlpha();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return showHeaderViewICSAndPostICS();
         }
@@ -131,6 +127,14 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
             mContentLayout.startAnimation(mHeaderOutAnimation);
         } else {
             mContentLayout.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void resetContentLayoutAlpha() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Compat.setAlpha(mContentLayout, 1f);
+        } else {
+            mContentLayout.startAnimation(mSetMaxAlpha);
         }
     }
 
