@@ -82,7 +82,7 @@ public class ViewPostFragment extends Fragment {
                             getActivity().getApplicationContext(),
                             EditPostActivity.class);
                     i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
-                    i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getId());
+                    i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
                     getActivity().startActivityForResult(i, PostsActivity.ACTIVITY_EDIT_POST);
                 }
 
@@ -171,12 +171,12 @@ public class ViewPostFragment extends Fragment {
         // locate views and determine content in the background to avoid ANR - especially
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
+        final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
+        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {
                 final TextView txtTitle = (TextView) getView().findViewById(R.id.postTitle);
-                final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
-                webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
                 final TextView txtContent = (TextView) getView().findViewById(R.id.viewPostTextView);
                 final ImageButton btnShareUrl = (ImageButton) getView().findViewById(R.id.sharePostLink);
                 final ImageButton btnViewPost = (ImageButton) getView().findViewById(R.id.viewPost);
@@ -186,7 +186,7 @@ public class ViewPostFragment extends Fragment {
                                         ? "(" + getResources().getText(R.string.untitled) + ")"
                                         : StringUtils.unescapeHTML(post.getTitle()));
 
-                final String postContent = post.getDescription() + "\n\n" + post.getMt_text_more();
+                final String postContent = post.getDescription() + "\n\n" + post.getMoreText();
 
                 final Spanned draftContent;
                 final String htmlContent;
@@ -223,7 +223,7 @@ public class ViewPostFragment extends Fragment {
                             webView.setVisibility(View.VISIBLE);
                             btnShareUrl.setVisibility(View.VISIBLE);
                             btnViewPost.setVisibility(View.VISIBLE);
-                            btnAddComment.setVisibility(post.isMt_allow_comments() ? View.VISIBLE : View.GONE);
+                            btnAddComment.setVisibility(post.isAllowComments() ? View.VISIBLE : View.GONE);
                             webView.loadDataWithBaseURL("file:///android_asset/",
                                                         htmlContent,
                                                         "text/html",
@@ -373,7 +373,7 @@ public class ViewPostFragment extends Fragment {
         };
 
         int accountId = WordPress.getCurrentLocalTableBlogId();
-        CommentActions.addComment(accountId, WordPress.currentPost.getPostid(), commentText, actionListener);
+        CommentActions.addComment(accountId, WordPress.currentPost.getRemotePostId(), commentText, actionListener);
     }
 
 }

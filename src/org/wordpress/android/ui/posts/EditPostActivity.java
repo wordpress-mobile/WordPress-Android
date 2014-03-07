@@ -110,11 +110,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 mIsNewPost = true;
             } else if (extras != null) {
                 // Load post from the postId passed in extras
-                long postId = extras.getLong(EXTRA_POSTID, -1);
+                long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
                 boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
-                mOriginalPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
+                mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
+                mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
 
                 if (isPage) {
                     WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
@@ -144,7 +144,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         }
 
         // Ensure we have a valid post
-        if (mPost == null || mPost.getId() < 0) {
+        if (mPost == null) {
             showErrorAndFinish(R.string.post_not_found);
             return;
         }

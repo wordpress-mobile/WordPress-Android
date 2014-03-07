@@ -163,15 +163,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         }
     }
 
-    private void showPost(long selectedID) {
+    private void showPost(long selectedId) {
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        Post post = new Post(WordPress.getCurrentLocalTableBlogId(), selectedID, mIsPage);
-        if (post.getId() >= 0) {
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
+        if (post != null) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);
-            mPostsListAdapter.notifyDataSetChanged();
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();

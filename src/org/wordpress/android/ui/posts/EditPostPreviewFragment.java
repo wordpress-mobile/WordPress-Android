@@ -43,7 +43,7 @@ public class EditPostPreviewFragment extends SherlockFragment {
             return;
 
         String postTitle = "<h1>" + post.getTitle() + "</h1>";
-        String postContent = postTitle + post.getDescription() + "\n\n" + post.getMt_text_more();
+        String postContent = postTitle + post.getDescription() + "\n\n" + post.getMoreText();
 
         if (post.isLocalDraft()) {
             mTextView.setVisibility(View.VISIBLE);

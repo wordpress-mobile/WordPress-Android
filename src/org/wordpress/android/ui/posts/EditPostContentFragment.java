@@ -86,7 +86,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -609,10 +608,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         // split up the post content if there's a more tag
         if (post.isLocalDraft() && content.contains(moreTag)) {
             post.setDescription(content.substring(0, content.indexOf(moreTag)));
-            post.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
+            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
         } else {
             post.setDescription(content);
-            post.setMt_text_more("");
+            post.setMoreText("");
         }
 
         if (!post.isLocalDraft())
@@ -1035,7 +1034,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
-        mediaFile.setPostID(mActivity.getPost().getId());
+        mediaFile.setPostID(mActivity.getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(is.getImageSource().toString());
         MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);

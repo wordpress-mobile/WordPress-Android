@@ -195,7 +195,6 @@ public class WordPressDB {
             case 10:
                 db.delete(POSTS_TABLE, null, null);
                 db.execSQL(CREATE_TABLE_POSTS);
-                migrateDrafts();
                 db.execSQL(ADD_POST_FORMATS);
                 currentVersion++;
             case 11:
@@ -276,55 +275,6 @@ public class WordPressDB {
         }
 
         c.close();
-    }
-
-    private void migrateDrafts() {
-        try {
-            // Migrate drafts to unified posts table
-            Cursor c = db.query("localdrafts",
-                    new String[]{"blogID", "title", "content", "picturePaths", "date", "categories", "tags", "status",
-                                 "password", "latitude", "longitude"}, null, null, null, null, "id desc");
-            int numRows = c.getCount();
-            c.moveToFirst();
-
-            for (int i = 0; i < numRows; ++i) {
-                if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
-                            c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(
-                            10), false, "", false);
-                    post.setLocalDraft(true);
-                    post.setPost_status("localdraft");
-                    savePost(post, c.getInt(0));
-                }
-                c.moveToNext();
-            }
-            c.close();
-
-            db.delete("localdrafts", null, null);
-
-            // pages
-            c = db.query("localpagedrafts",
-                    new String[]{"blogID", "title", "content", "picturePaths", "date", "status", "password"}, null,
-                    null, null, null, "id desc");
-            numRows = c.getCount();
-            c.moveToFirst();
-
-            for (int i = 0; i < numRows; ++i) {
-                if (c.getString(0) != null) {
-                    Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), "", c.getString(3), c.getLong(4),
-                            c.getString(5), "", "", c.getString(6), 0, 0, true, "", false);
-                    post.setLocalDraft(true);
-                    post.setPost_status("localdraft");
-                    post.setIsPage(true);
-                    savePost(post, c.getInt(0));
-                }
-                c.moveToNext();
-            }
-            c.close();
-            db.delete("localpagedrafts", null, null);
-        } catch (Exception e) {
-            // Ignore exception (localdrafts doesn't exist)
-        }
     }
 
     public boolean addBlog(Blog blog) {
@@ -817,7 +767,7 @@ public class WordPressDB {
     public boolean deletePost(Post post) {
         int result = db.delete(POSTS_TABLE,
                 "blogID=? AND id=?",
-                new String[]{String.valueOf(post.getBlogID()), String.valueOf(post.getId())});
+                new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
         return (result == 1);
     }
@@ -984,7 +934,7 @@ public class WordPressDB {
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
-            values.put("mt_text_more", post.getMt_text_more());
+            values.put("mt_text_more", post.getMoreText());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
             if (categoriesJsonArray != null) {
@@ -992,16 +942,16 @@ public class WordPressDB {
             }
 
             values.put("localDraft", post.isLocalDraft());
-            values.put("mt_keywords", post.getMt_keywords());
-            values.put("wp_password", post.getWP_password());
-            values.put("post_status", post.getPost_status());
+            values.put("mt_keywords", post.getKeywords());
+            values.put("wp_password", post.getPassword());
+            values.put("post_status", post.getPostStatus());
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
-            values.put("wp_post_format", post.getWP_post_format());
+            values.put("wp_post_format", post.getPostFormat());
             values.put("latitude", post.getLatitude());
             values.put("longitude", post.getLongitude());
             values.put("isLocalChange", post.isLocalChange());
-            values.put("mt_excerpt", post.getMt_excerpt());
+            values.put("mt_excerpt", post.getPostExcerpt());
 
             returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -1018,8 +968,8 @@ public class WordPressDB {
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
-            if (post.getMt_text_more() != null)
-                values.put("mt_text_more", post.getMt_text_more());
+            if (post.getMoreText() != null)
+                values.put("mt_text_more", post.getMoreText());
             values.put("uploaded", post.isUploaded());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
@@ -1029,20 +979,20 @@ public class WordPressDB {
 
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
-            values.put("mt_keywords", post.getMt_keywords());
-            values.put("wp_password", post.getWP_password());
-            values.put("post_status", post.getPost_status());
+            values.put("mt_keywords", post.getKeywords());
+            values.put("wp_password", post.getPassword());
+            values.put("post_status", post.getPostStatus());
             values.put("isPage", post.isPage());
-            values.put("wp_post_format", post.getWP_post_format());
+            values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
-            values.put("mt_excerpt", post.getMt_excerpt());
+            values.put("mt_excerpt", post.getPostExcerpt());
 
             int pageInt = 0;
             if (post.isPage())
                 pageInt = 1;
 
             success = db.update(POSTS_TABLE, values,
-                    "blogID=" + post.getBlogID() + " AND id=" + post.getId()
+                    "blogID=" + post.getLocalTableBlogId() + " AND id=" + post.getLocalTablePostId()
                             + " AND isPage=" + pageInt, null);
 
         }
@@ -1103,54 +1053,49 @@ public class WordPressDB {
 
     }
 
-    public List<Object> loadPost(int blogID, boolean isPage, long id) {
-        List<Object> values = null;
+    public Post getPostForLocalTablePostId(long localTablePostId) {
 
-        int pageInt = 0;
-        if (isPage)
-            pageInt = 1;
-        Cursor c = db.query(POSTS_TABLE, null, "blogID=" + blogID + " AND id="
-                + id + " AND isPage=" + pageInt, null, null, null, null);
+        Cursor c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
 
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            if (c.getString(0) != null) {
-                values = new Vector<Object>();
-                values.add(c.getLong(0));
-                values.add(c.getString(1));
-                values.add(c.getString(2));
-                values.add(c.getString(3));
-                values.add(c.getLong(4));
-                values.add(c.getLong(5));
-                values.add(c.getString(6));
-                values.add(c.getString(7));
-                values.add(c.getString(8));
-                values.add(c.getString(9));
-                values.add(c.getInt(10));
-                values.add(c.getInt(11));
-                values.add(c.getString(12));
-                values.add(c.getString(13));
-                values.add(c.getString(14));
-                values.add(c.getString(15));
-                values.add(c.getString(16));
-                values.add(c.getString(17));
-                values.add(c.getString(18));
-                values.add(c.getString(19));
-                values.add(c.getString(20));
-                values.add(c.getString(21));
-                values.add(c.getString(22));
-                values.add(c.getString(23));
-                values.add(c.getDouble(24));
-                values.add(c.getDouble(25));
-                values.add(c.getInt(26));
-                values.add(c.getInt(27));
-                values.add(c.getInt(28));
-                values.add(c.getInt(31));
-            }
+        Post post = new Post();
+        if (c.moveToFirst()) {
+                post.setLocalTablePostId(c.getLong(c.getColumnIndex("id")));
+                post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
+                post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
+                post.setTitle(c.getString(c.getColumnIndex("title")));
+                post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
+                post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
+                post.setCategories(c.getString(c.getColumnIndex("categories")));
+                post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
+                post.setDescription(c.getString(c.getColumnIndex("description")));
+                post.setLink(c.getString(c.getColumnIndex("link")));
+                post.setAllowComments(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_comments"))));
+                post.setAllowPings(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_pings"))));
+                post.setPostExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
+                post.setKeywords(c.getString(c.getColumnIndex("mt_keywords")));
+                post.setPermaLink(c.getString(c.getColumnIndex("permaLink")));
+                post.setPostStatus(c.getString(c.getColumnIndex("post_status")));
+                post.setUserId(c.getString(c.getColumnIndex("userid")));
+                post.setAuthorDisplayName(c.getString(c.getColumnIndex("wp_author_display_name")));
+                post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
+                post.setPassword(c.getString(c.getColumnIndex("wp_password")));
+                post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
+                post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
+                post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
+                post.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
+                post.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
+                post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
+                post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
+                post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
+                post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
+                post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
+                post.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
+        } else {
+            post = null;
         }
-        c.close();
 
-        return values;
+        c.close();
+        return post;
     }
 
     // Categories
@@ -1524,7 +1469,7 @@ public class WordPressDB {
 
     public MediaFile getMediaFile(String src, Post post) {
 
-        Cursor c = db.query(MEDIA_TABLE, null, "postID=" + post.getId()
+        Cursor c = db.query(MEDIA_TABLE, null, "postID=" + post.getLocalTablePostId()
                 + " AND filePath='" + src + "'", null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
@@ -1561,7 +1506,7 @@ public class WordPressDB {
 
     public void deleteMediaFilesForPost(Post post) {
 
-        db.delete(MEDIA_TABLE, "blogId='" + post.getBlogID() + "' AND postID=" + post.getId(), null);
+        db.delete(MEDIA_TABLE, "blogId='" + post.getLocalTableBlogId() + "' AND postID=" + post.getLocalTablePostId(), null);
 
     }
 
