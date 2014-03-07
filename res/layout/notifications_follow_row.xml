@@ -48,7 +48,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
         style="@style/ReaderTextView.Follow"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="bottom"
         android:layout_marginLeft="@dimen/margin_large"
         android:text="@string/reader_btn_follow" />
 
