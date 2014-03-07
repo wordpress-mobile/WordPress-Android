@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.IntentCompat;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -51,16 +50,15 @@ import static org.wordpress.android.WordPress.getRestClientUtils;
 
 public class NotificationsActivity extends WPActionBarActivity
                                    implements CommentActions.OnCommentChangeListener,
-                                              CommentDetailFragment.OnPostClickListener {
-    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
-    public static final String NOTE_ID_EXTRA="noteId";
-    public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
-    public static final String NOTE_REPLY_EXTRA="replyContent";
+                                              NotificationFragment.OnPostClickListener,
+                                              NotificationFragment.OnCommentClickListener {
+
+    public static final String NOTIFICATION_ACTION      = "org.wordpress.android.NOTIFICATION";
+    public static final String NOTE_ID_EXTRA            = "noteId";
+    public static final String FROM_NOTIFICATION_EXTRA  = "fromNotification";
+    private static final String NOTE_REPLY_EXTRA        = "replyContent";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-    public static final int FLAG_FROM_NOTE=Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                                            Intent.FLAG_ACTIVITY_NEW_TASK |
-                                            IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
+
     private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     private final Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
@@ -257,7 +255,7 @@ public class NotificationsActivity extends WPActionBarActivity
         return true;
     }
 
-    public void popNoteDetail(){
+    void popNoteDetail(){
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
@@ -351,65 +349,6 @@ public class NotificationsActivity extends WPActionBarActivity
         transaction.commitAllowingStateLoss();
     }
 
-    public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
-        RestRequest.Listener success = new RestRequest.Listener(){
-            @Override
-            public void onResponse(JSONObject response){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", originalNote.getId());
-                NotesResponseHandler handler = new NotesResponseHandler() {
-                    @Override
-                    public void onNotes(List<Note> notes) {
-                        // there should only be one note!
-                        if (!notes.isEmpty()) {
-                            Note updatedNote = notes.get(0);
-                            updateModeratedNote(originalNote, updatedNote);
-                        }
-                    }
-                };
-                WordPress.getRestClientUtils().getNotifications(params, handler, handler);
-            }
-        };
-        RestRequest.ErrorListener failure = new RestRequest.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error){
-                AppLog.d(T.NOTIFS, String.format("Error moderating comment: %s", error));
-                if (isFinishing())
-                    return;
-                Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
-                FragmentManager fm = getSupportFragmentManager();
-                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.layout_fragment_container);
-                if (f != null) {
-                    f.animateModeration(false);
-                }
-            }
-        };
-        WordPress.getRestClientUtils().moderateComment(siteId, commentId, status, success, failure);
-    }
-
-    /*
-     * passed note has just been moderated, update it in the list adapter and note fragment
-     */
-    private void updateModeratedNote(Note originalNote, Note updatedNote) {
-        if (isFinishing())
-            return;
-
-        // TODO: position will be -1 for notes displayed from push notification, even though the note exists
-        int position = mNotesList.getNotesAdapter().updateNote(originalNote, updatedNote);
-
-        NoteCommentFragment f = (NoteCommentFragment) getSupportFragmentManager().findFragmentById(R.id.layout_fragment_container);
-        if (f != null) {
-            // if this is the active note, update it in the fragment
-            if (position >= 0 && position == mNotesList.getListView().getCheckedItemPosition()) {
-                f.setNote(updatedNote);
-                f.onStart();
-            }
-            // stop animating the moderation
-            f.animateModeration(false);
-        }
-    }
-
-
     /*
      * triggered from the comment details fragment whenever a comment is changed (moderated, added,
      * deleted, etc.) - refresh notifications so changes are reflected here
@@ -463,11 +402,7 @@ public class NotificationsActivity extends WPActionBarActivity
                 final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.addAll(new ArrayList<Note>(), true);
 
-                Context context = NotificationsActivity.this;
-                if (context != null) {
-                    ToastUtils.showToastOrAuthAlert(context, error, context.getString(
-                            R.string.error_refresh_notifications));
-                }
+                ToastUtils.showToastOrAuthAlert(NotificationsActivity.this, error, getString(R.string.error_refresh_notifications));
 
                 stopAnimatingRefreshButton(mRefreshMenuItem);
                 mShouldAnimateRefreshButton = false;
@@ -620,18 +555,33 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     /*
-     * called when a link to a post is tapped - shows the post in a reader detail fragment
+     * called from fragment when a link to a post is tapped - shows the post in a reader
+     * detail fragment
      */
     @Override
-    public void onPostClicked(long remoteBlogId, long postId) {
+    public void onPostClicked(Note note, int remoteBlogId, int postId) {
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
           .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        // TODO: hide detail fragment if it exists to reduce overdraw
-        ft.commit();
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+          .commit();
+    }
+
+    /*
+     * called from fragment when a link to a comment is tapped - shows the comment in the comment
+     * detail fragment
+     */
+    @Override
+    public void onCommentClicked(Note note, int remoteBlogId, long commentId) {
+        CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
+        String tagForFragment = getString(R.string.fragment_tag_comment_detail);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.layout_fragment_container, commentFragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+          .commit();
     }
 
 }

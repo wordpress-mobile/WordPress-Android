@@ -65,10 +65,6 @@ import java.util.Map;
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
 
-    public static interface OnPostClickListener {
-        public void onPostClicked(long remoteBlogId, long postId);
-    }
-
     private int mLocalBlogId;
     private int mRemoteBlogId;
 
@@ -484,7 +480,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onClick(View v) {
                 if (mOnPostClickListener != null) {
-                    mOnPostClickListener.onPostClicked(mRemoteBlogId, mComment.postID);
+                    mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int)mComment.postID);
                 } else {
                     // right now this will happen from notifications
                     AppLog.i(T.COMMENTS, "comment detail > no post click listener");

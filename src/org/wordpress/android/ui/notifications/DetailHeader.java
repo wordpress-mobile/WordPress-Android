@@ -3,8 +3,10 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,9 +16,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 
 public class DetailHeader extends LinearLayout {
+    private NotificationFragment.OnPostClickListener mOnPostClickListener;
+    private NotificationFragment.OnCommentClickListener mOnCommentClickListener;
 
     public DetailHeader(Context context){
         super(context);
@@ -24,6 +27,7 @@ public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context, AttributeSet attributes){
         super(context, attributes);
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public DetailHeader(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
@@ -34,18 +38,27 @@ public class DetailHeader extends LinearLayout {
         getTextView().setText(text);
     }
 
+    /*
+     * set by the owning fragment, calls listener in NotificationsActivity to
+     * display the post/comment associated with this notification (if any)
+     */
+    public void setOnPostClickListener(NotificationFragment.OnPostClickListener listener) {
+        mOnPostClickListener = listener;
+    }
+    public void setOnCommentClickListener(NotificationFragment.OnCommentClickListener listener) {
+        mOnCommentClickListener = listener;
+    }
+
+    /*
+     * owning fragment calls this to pass it the note so the post or comment associated with
+     * the note can be opened. if there is no associated post or comment, then the passed
+     * url is navigated to instead.
+     */
     public void setNote(final Note note, final String url) {
         final ImageView indicator = (ImageView) findViewById(R.id.indicator);
 
-        if (note == null) {
-            indicator.setVisibility(View.GONE);
-            setClickable(false);
-            setOnClickListener(null);
-            return;
-        }
-
-        boolean isComment = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() != 0);
-        boolean isPost = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
+        final boolean isComment = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() != 0);
+        final boolean isPost = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
 
         if (isPost || isComment) {
             indicator.setVisibility(View.VISIBLE);
@@ -54,7 +67,11 @@ public class DetailHeader extends LinearLayout {
             setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPost(note.getBlogId(), note.getPostId());
+                    if (isComment && mOnCommentClickListener != null) {
+                        mOnCommentClickListener.onCommentClicked(note, note.getBlogId(), note.getCommentId());
+                    } else if (isPost && mOnPostClickListener != null) {
+                        mOnPostClickListener.onPostClicked(note, note.getBlogId(), note.getPostId());
+                    }
                 }
             });
         } else if (!TextUtils.isEmpty(url)) {
@@ -64,7 +81,9 @@ public class DetailHeader extends LinearLayout {
             setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showUrl(url);
+                    Intent intent = new Intent(getContext(), NotificationsWebViewActivity.class);
+                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
+                    getContext().startActivity(intent);
                 }
             });
         } else {
@@ -72,16 +91,5 @@ public class DetailHeader extends LinearLayout {
             setClickable(false);
             setOnClickListener(null);
         }
-    }
-
-    private void showUrl(String url) {
-        Context context = getContext();
-        Intent intent = new Intent(context, NotificationsWebViewActivity.class);
-        intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
-        context.startActivity(intent);
-    }
-
-    private void showPost(int blogId, int postId) {
-        ReaderActivityLauncher.showReaderPostDetail(getContext(), blogId, postId);
     }
 }

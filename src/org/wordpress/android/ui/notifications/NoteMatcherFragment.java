@@ -60,7 +60,14 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
         String itemURL = JSONUtil.getString(bodyObject, "header_link");
         noteFooter.setNote(getNote(), itemURL);
-        
+
+        if (getActivity() instanceof OnPostClickListener) {
+            noteFooter.setOnPostClickListener(((OnPostClickListener)getActivity()));
+        }
+        if (getActivity() instanceof OnCommentClickListener) {
+            noteFooter.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
+        }
+
         return view;
     }
     

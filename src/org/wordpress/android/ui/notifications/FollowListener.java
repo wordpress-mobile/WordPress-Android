@@ -13,7 +13,7 @@ import org.wordpress.android.util.AppLog.T;
 
 class FollowListener implements FollowRow.OnFollowListener {
 
-    protected Context currentContent = null;
+    private final Context currentContent;
 
     public FollowListener(Context currentContent) {
         super();
@@ -21,9 +21,9 @@ class FollowListener implements FollowRow.OnFollowListener {
     }
 
     class FollowResponseHandler implements Listener, ErrorListener {
-        private FollowRow mRow;
-        private String mSiteId;
-        private boolean mShouldFollow;
+        private final FollowRow mRow;
+        private final String mSiteId;
+        private final boolean mShouldFollow;
         FollowResponseHandler(FollowRow row, String siteId, boolean shouldFollow){
             mRow = row;
             mSiteId = siteId;

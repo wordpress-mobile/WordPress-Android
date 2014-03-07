@@ -70,7 +70,6 @@ public class NotificationUtils {
     }
 
     public static String unzipString(byte[] zbytes) {
-        String unzipped = null;
         try {
             // Add extra byte to array when Inflater is set to true
             byte[] input = new byte[zbytes.length + 1];
@@ -84,12 +83,11 @@ public class NotificationUtils {
                 bout.write(b);
             }
             bout.close();
-            unzipped = bout.toString();
+            return bout.toString();
         } catch (IOException io) {
             AppLog.e(T.NOTIFS, "Unzipping failed", io);
             return null;
         }
-        return unzipped;
     }
 
 
@@ -157,8 +155,7 @@ public class NotificationUtils {
         }
 
         ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<StringMap<Double>>();
-        for (int i = 0; i < blogsList.size(); i++) {
-            StringMap<Double> userBlog = blogsList.get(i);
+        for (StringMap<Double> userBlog : blogsList) {
             if (MapUtils.getMapBool(userBlog, "value")) {
                 mutedBlogsList.add(userBlog);
             }
@@ -212,7 +209,6 @@ public class NotificationUtils {
                     AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
                     AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
-                    return;
                 }
             }
         };

@@ -21,11 +21,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 
 public class SingleLineListFragment extends ListFragment implements NotificationFragment {
-    public static final String TAG="NoteDetail";
-    public static final String NOTE_ID_ARGUMENT="note_id";
-    public static final String NOTE_JSON_ARGUMENT="note_json";
-    
-    protected Note mNote;
+    private Note mNote;
     
     @Override
     public void onCreate(Bundle bundle){
@@ -55,7 +51,14 @@ public class SingleLineListFragment extends ListFragment implements Notification
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         String footerUrl = currentNote.queryJSON("body.header_link", "");
         noteHeader.setNote(getNote(), footerUrl);
-        
+
+        if (getActivity() instanceof OnPostClickListener) {
+            noteHeader.setOnPostClickListener(((OnPostClickListener)getActivity()));
+        }
+        if (getActivity() instanceof OnCommentClickListener) {
+            noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
+        }
+
         list.addHeaderView(noteHeader);
         
         // set the adapter
@@ -78,7 +81,7 @@ public class SingleLineListFragment extends ListFragment implements Notification
     }
     
     class NoteAdapter extends BaseAdapter {
-        private JSONArray mItems;
+        private final JSONArray mItems;
         NoteAdapter(){
             mItems = getNote().queryJSON("body.items", new JSONArray());
         }

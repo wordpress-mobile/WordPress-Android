@@ -21,7 +21,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 
 public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment {
-    public static final String TAG="NoteDetail";
 
     private Note mNote;
     
@@ -60,6 +59,12 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             noteFooter.setText(footerText);
             String footerUrl = JSONUtil.getString(bodyObject, "header_link");
             noteFooter.setNote(getNote(), footerUrl);
+            if (getActivity() instanceof OnPostClickListener) {
+                noteFooter.setOnPostClickListener(((OnPostClickListener)getActivity()));
+            }
+            if (getActivity() instanceof OnCommentClickListener) {
+                noteFooter.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
+            }
             list.addFooterView(noteFooter);
         }
         // set the adapter

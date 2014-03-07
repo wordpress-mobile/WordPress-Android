@@ -9,9 +9,11 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -35,20 +37,16 @@ public class FollowRow extends LinearLayout {
         public void onFollow( FollowRow row, String blogId);
     }
     
-    private static final String TAG="FollowRow";
-    private static String PARAMS_FIELD="params";
-    private static String TYPE_FIELD="type";
-    private static String ACTION_TYPE="follow";
-    private static String BLOG_ID_PARAM="blog_id";
-    private static String IS_FOLLOWING_PARAM="is_following";
-    private static String BLOG_URL_PARAM="blog_url";
-    private static String BLOG_DOMAIN_PARAM="blog_domain";
+    private static final String PARAMS_FIELD="params";
+    private static final String TYPE_FIELD="type";
+    private static final String ACTION_TYPE="follow";
+    private static final String BLOG_ID_PARAM="blog_id";
+    private static final String IS_FOLLOWING_PARAM="is_following";
+    private static final String BLOG_URL_PARAM="blog_url";
+    private static final String BLOG_DOMAIN_PARAM="blog_domain";
     
-    private boolean mFollowing = false;
-    private String mBlogId = null;
     private OnFollowListener mListener = null;
     private JSONObject mParams = null;
-    private CharSequence mDefaultText = "";
     private String mBlogURL = null;
     
     public FollowRow(Context context){
@@ -57,6 +55,7 @@ public class FollowRow extends LinearLayout {
     public FollowRow(Context context, AttributeSet attributes){
         super(context, attributes);
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public FollowRow(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
@@ -102,7 +101,7 @@ public class FollowRow extends LinearLayout {
     public JSONObject getParams(){
         return mParams;
     }
-    public boolean hasParams(){
+    boolean hasParams(){
         return mParams != null;
     }
     public NetworkImageView getImageView(){
@@ -111,18 +110,14 @@ public class FollowRow extends LinearLayout {
     public ImageButton getFollowButton(){
         return (ImageButton) findViewById(R.id.follow_button);
     }
-    public TextView getTextView(){
+    TextView getTextView(){
         return (TextView) findViewById(R.id.name);
     }
-    public TextView getSiteTextView(){
+    TextView getSiteTextView(){
         return (TextView) findViewById(R.id.url);
     }
     private View getFollowDivider() {
-        return (View) findViewById(R.id.follow_divider);
-    }
-    public void setDefaultText(CharSequence text){
-        setText(text);
-        mDefaultText = getTextView().getText();
+        return findViewById(R.id.follow_divider);
     }
     public void setText(CharSequence text){
         getTextView().setText(text);
@@ -144,21 +139,21 @@ public class FollowRow extends LinearLayout {
         };
         updateButton();
     }
-    public boolean isFollowing(){
+    boolean isFollowing(){
         if (hasParams()) {
             return mParams.optBoolean(IS_FOLLOWING_PARAM, false);
         } else {
             return false;
         }
     }
-    public String getSiteId(){
+    String getSiteId(){
         if (hasParams()) {
             return mParams.optString(BLOG_ID_PARAM, null);
         } else {
             return null;
         }
     }
-    public void setSiteUrl(String url){
+    void setSiteUrl(String url){
         mBlogURL = url;
         if (url != null) {
             this.setOnClickListener(new OnClickListener() {
@@ -183,23 +178,23 @@ public class FollowRow extends LinearLayout {
     public String getSiteUrl(){
         return mBlogURL;
     }
-    public String getSiteDomain(){
+    String getSiteDomain(){
         if (hasParams()) {
             return mParams.optString(BLOG_DOMAIN_PARAM, null);
         } else {
             return null;
         }
     }
-    public OnFollowListener getListener(){
+    OnFollowListener getListener(){
         return mListener;
     }
     public void setListener(OnFollowListener listener){
         mListener = listener;
     }
-    public boolean hasListener(){
+    boolean hasListener(){
         return mListener != null;
     }
-    protected void updateButton(){
+    void updateButton(){
         ImageButton followButton = getFollowButton();
         followButton.setSelected(isFollowing());
         if(isFollowing()){
@@ -208,7 +203,7 @@ public class FollowRow extends LinearLayout {
             followButton.setImageResource(R.drawable.follow_plus);
         }
     }
-    class ClickListener implements View.OnClickListener {
+    private class ClickListener implements View.OnClickListener {
         public void onClick(View v) {
             if (!hasListener()) {
                 return;
@@ -225,7 +220,7 @@ public class FollowRow extends LinearLayout {
         }
     }
     
-    class LongClickListener implements View.OnLongClickListener {
+    private class LongClickListener implements View.OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
             Toast.makeText(getContext(), getResources().getString(R.string.tooltip_follow), Toast.LENGTH_SHORT).show();
