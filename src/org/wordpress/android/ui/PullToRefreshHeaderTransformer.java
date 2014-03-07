@@ -18,7 +18,9 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
     private ViewGroup mContentLayout;
     private long mAnimationDuration;
     private boolean mShowProgressBarOnly;
-    private Animation mHeaderInAnimation, mHeaderOutAnimation;
+    private Animation mHeaderInAnimation;
+    private Animation mHeaderOutAnimation;
+    private Animation mSetMaxAlpha;
 
     public void setShowProgressBarOnly(boolean progressBarOnly) {
         mShowProgressBarOnly = progressBarOnly;
@@ -34,19 +36,15 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
                 uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_in);
         mHeaderOutAnimation = AnimationUtils.loadAnimation(activity,
                 uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_out);
+        mSetMaxAlpha = AnimationUtils.loadAnimation(activity, org.wordpress.android.R.anim.fade_in_compat);
         mAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
+
         if (mHeaderOutAnimation != null || mHeaderInAnimation != null) {
             final AnimationCallback callback = new AnimationCallback();
             if (mHeaderOutAnimation != null) {
                 mHeaderOutAnimation.setAnimationListener(callback);
             }
         }
-    }
-
-    @Override
-    public boolean hideHeaderView() {
-        mShowProgressBarOnly = false;
-        return super.hideHeaderView();
     }
 
     private boolean showHeaderViewICSAndPostICS() {
@@ -57,7 +55,7 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
             AnimatorSet animSet = new AnimatorSet();
             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(mHeaderView, "alpha", 0f, 1f);
             ObjectAnimator transAnim = ObjectAnimator.ofFloat(mContentLayout, "translationY",
-                    -mContentLayout.getHeight(), 0f);
+                    -mContentLayout.getHeight(), 10f);
             animSet.playTogether(transAnim, alphaAnim);
             animSet.play(alphaAnim);
             animSet.setDuration(mAnimationDuration);
@@ -72,6 +70,8 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
     private boolean showHeaderViewPreICS() {
         boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
         mContentLayout.setVisibility(View.VISIBLE);
+        mHeaderView.setVisibility(View.VISIBLE);
+
         if (changeVis) {
             if (mHeaderInAnimation != null) {
                 mHeaderView.startAnimation(mHeaderInAnimation);
@@ -85,7 +85,31 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
     }
 
     @Override
+    public boolean hideHeaderView() {
+        mShowProgressBarOnly = false;
+
+        // Super handles ICS+ anyway...
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return super.hideHeaderView();
+        }
+
+        final boolean changeVis = mHeaderView.getVisibility() != View.GONE;
+        if (changeVis) {
+            mHeaderView.setVisibility(View.GONE);
+            onReset();
+        }
+        return changeVis;
+    }
+
+    @Override
     public boolean showHeaderView() {
+        // Workaround to avoid this bug https://github.com/chrisbanes/ActionBar-PullToRefresh/issues/265
+        // Note, that also remove the alpha animation triggered in showHeaderView
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Compat.setAlpha(mContentLayout, 1f);
+        } else {
+            mContentLayout.startAnimation(mSetMaxAlpha);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return showHeaderViewICSAndPostICS();
         }
@@ -94,8 +118,20 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
 
     @Override
     public void onPulled(float percentagePulled) {
-        Compat.setAlpha(mContentLayout, 1f);
         super.onPulled(percentagePulled);
+    }
+
+    @Override
+    public void onRefreshMinimized() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            super.onRefreshMinimized();
+            return;
+        }
+        if (!mShowProgressBarOnly) {
+            mContentLayout.startAnimation(mHeaderOutAnimation);
+        } else {
+            mContentLayout.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
