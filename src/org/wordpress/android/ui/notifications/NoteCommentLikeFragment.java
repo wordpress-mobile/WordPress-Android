@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -44,28 +43,29 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         if (getNote() == null)
             return;
 
+        JSONArray bodyItems = getNote().queryJSON("body.items", new JSONArray());
         JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
-        final String footerUrl = (bodyObject != null ? JSONUtil.getString(bodyObject, "header_link") : "");
 
-        // header text will be the subject ("These people like your comment"), footer text will be
-        // a snippet of the comment
-        final String headerText = getHeaderText();
-        final String footerText = getFooterText();
-
-        // full header text is the subject + snippet
-        final String fullHeaderText;
-        if (TextUtils.isEmpty(footerText)) {
-            fullHeaderText = headerText;
-        } else {
-            fullHeaderText = headerText + "<br><small>&quot;" + footerText + "&quot;</small>";
-        }
+        // header subject will be the note subject ("These people like your comment"), header
+        // snippet will be a snippet of the comment
+        final String headerSubject = getHeaderText(bodyItems);
+        final String headerSnippet = getCommentSnippet(bodyItems);
+        final String headerLink = (bodyObject != null ? JSONUtil.getString(bodyObject, "header_link") : "");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        noteHeader.setText(Html.fromHtml(fullHeaderText));
+
+        // full header text is the subject + quoted snippet
+        if (TextUtils.isEmpty(headerSnippet)) {
+            noteHeader.setText(headerSubject);
+        } else {
+            noteHeader.setText(Html.fromHtml(headerSubject + "<br><small>&quot;" + headerSnippet + "&quot;</small>"));
+        }
+
         noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-        noteHeader.setNote(getNote(), footerUrl);
+        noteHeader.setNote(getNote(), headerLink);
+
         if (getActivity() instanceof OnPostClickListener) {
             noteHeader.setOnPostClickListener(((OnPostClickListener)getActivity()));
         }
@@ -74,15 +74,9 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         }
         list.addHeaderView(noteHeader);
 
-        // set the adapter
         setListAdapter(new NoteAdapter());
     }
-    
-    @Override
-    public void setListAdapter(ListAdapter adapter) {
-        super.setListAdapter(adapter);
-    }
-        
+
     @Override
     public void setNote(Note note){
         mNote = note;
@@ -93,15 +87,17 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         return mNote;
     }
     
-    private String getHeaderText() {
-        JSONArray mItems = getNote().queryJSON("body.items", new JSONArray());
-        JSONObject noteItem = JSONUtil.queryJSON(mItems, String.format("[%d]", 0), new JSONObject());
+    private String getHeaderText(JSONArray bodyItems) {
+        if (bodyItems == null)
+            return "";
+        JSONObject noteItem = JSONUtil.queryJSON(bodyItems, String.format("[%d]", 0), new JSONObject());
         return JSONUtil.getStringDecoded(noteItem, "header_text");
     }
     
-    private String getFooterText() {
-        JSONArray mItems = getNote().queryJSON("body.items", new JSONArray());
-        JSONObject noteItem = JSONUtil.queryJSON(mItems, String.format("[%d]", 0), new JSONObject());
+    private String getCommentSnippet(JSONArray bodyItems) {
+        if (bodyItems == null)
+            return "";
+        JSONObject noteItem = JSONUtil.queryJSON(bodyItems, String.format("[%d]", 0), new JSONObject());
         return JSONUtil.getStringDecoded(noteItem, "html");
     }
     
