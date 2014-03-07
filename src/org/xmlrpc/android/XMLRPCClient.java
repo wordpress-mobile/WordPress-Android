@@ -1,30 +1,5 @@
 package org.xmlrpc.android;
 
-import android.text.TextUtils;
-import android.util.Xml;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -43,6 +18,32 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.text.TextUtils;
+import android.util.Xml;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 
 /**
  * A WordPress XMLRPC Client.
@@ -160,7 +161,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method, Object[] params) throws Exception {
+    public Object call(String method, Object[] params) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, params, null);
     }
 
@@ -171,12 +172,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method) throws Exception {
+    public Object call(String method) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, null, null);
     }
 
 
-    public Object call(String method, Object[] params, File tempFile) throws Exception {
+    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
         return new Caller().callXMLRPC(method, params, tempFile);
     }
 
@@ -209,6 +210,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return parseXMLRPCResponse(is, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
             throws XMLRPCException, IOException, XmlPullParserException {
         // setup pull parser
@@ -281,7 +283,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
     }
 
-    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException {
+    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
         // prepare POST body
         if (method.equals("wp.uploadFile")) {
 
@@ -365,9 +367,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         private Object[] params;
         private File tempFile;
 
-        private volatile boolean canceled;
-        private ConnectionClient http;
-
         /**
          * Create a new Caller for asynchronous use.
          *
@@ -418,17 +417,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
 
         /**
-         * Cancel this call. This will abort the network communication.
-         */
-        public void cancel() {
-            // TODO this doesn't work
-            // Set the flag, that this thread has been canceled
-            canceled = true;
-            // Disconnect the connection to the server
-            http.getHttpRequestRetryHandler();
-        }
-
-        /**
          * Call method with optional parameters
          *
          * @param method name of method to call
@@ -436,15 +424,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          * @return deserialized method return value
          * @throws XMLRPCException
          */
-        @SuppressWarnings("unchecked")
-        private Object callXMLRPC(String method, Object[] params, File tempFile) throws Exception {
+        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
             try {
                 preparePostMethod(method, params, tempFile);
 
                 // execute HTTP POST request
                 HttpResponse response = mClient.execute(mPostMethod);
                 int statusCode = response.getStatusLine().getStatusCode();
-                deleteTempFile(method, tempFile);
                 if (statusCode != HttpStatus.SC_OK) {
                     if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                         //Try to intercept out of memory error here and show a better error message.
@@ -462,8 +448,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                                         newErrorMsg =
                                                 "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
                                     }
-                                    throw new XMLRPCException(
-                                            response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
+                                    throw new XMLRPCException(response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
                                 }
                             } catch (Exception e) {
                                 // eat all the exceptions here, we dont want to crash the app when trying to show a
@@ -471,14 +456,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             }
                         }
                     }
-                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " +
-                                              response.getStatusLine().getReasonPhrase());
+                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
-            } catch (Exception e) {
+            } finally {
                 deleteTempFile(method, tempFile);
-                throw e;
             }
         }
     }
@@ -492,5 +475,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     }
 
-    private class CancelException extends RuntimeException { }
+    private class CancelException extends RuntimeException {
+        private static final long serialVersionUID = 1L; 
+    }
 }
