@@ -540,10 +540,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // load last search query
         if (!TextUtils.isEmpty(mQuery))
             onQueryTextChange(mQuery);
-
-        mMenu.findItem(R.id.menu_refresh).setVisible(false);
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
-
         return true;
     }
 
@@ -558,8 +555,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilterVisibility(View.VISIBLE);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
-
-        mMenu.findItem(R.id.menu_refresh).setVisible(true);
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         return true;
     }
