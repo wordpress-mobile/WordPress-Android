@@ -23,7 +23,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -35,14 +38,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+
 public class SelectCategoriesActivity extends SherlockListActivity {
     String finalResult = "";
-    ProgressDialog pd;
     public String categoryErrorMsg = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
+    private PullToRefreshHelper mPullToRefreshHelper;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
@@ -97,6 +102,19 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             mSelectedCategories = new HashSet<String>();
         }
 
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshCategories();
+                    }
+                });
+
         populateOrFetchCategories();
     }
 
@@ -122,29 +140,23 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
     private void populateOrFetchCategories() {
         mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
-
         if (mCategories.getChildren().size() > 0) {
             populateCategoryList();
         } else {
+            mPullToRefreshHelper.setRefreshing(true);
             refreshCategories();
         }
     }
 
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
+            mPullToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
                 populateOrFetchCategories();
                 Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success),
                         Toast.LENGTH_SHORT).show();
             }
             if (finalResult.equals("addCategory_failed")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
-
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.adding_cat_failed));
                 dialogBuilder.setMessage(getResources().getText(R.string.adding_cat_failed_check));
@@ -158,23 +170,15 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (!isFinishing())
                     dialogBuilder.create().show();
             } else if (finalResult.equals("gotCategories")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
                 populateOrFetchCategories();
                 Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
             } else if (finalResult.equals("FAIL")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
-
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.category_refresh_error));
                 dialogBuilder.setMessage(categoryErrorMsg);
                 dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Just close the window.
-
                     }
                 });
                 dialogBuilder.setCancelable(true);
@@ -305,8 +309,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
-                                R.string.cat_adding_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -332,10 +334,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            refreshCategories();
-            return true;
-        } else if (itemId == R.id.menu_new_category) {
+        if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", blog.getLocalTableBlogId());
             Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
@@ -372,8 +371,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private void refreshCategories() {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
-        pd = ProgressDialog.show(SelectCategoriesActivity.this, null, getResources().getText(
-                R.string.refreshing_categories), true, true);
         Thread th = new Thread() {
             public void run() {
                 finalResult = fetchCategories();
