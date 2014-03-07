@@ -563,7 +563,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
+        ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
           .addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .commit();
@@ -578,7 +578,7 @@ public class NotificationsActivity extends WPActionBarActivity
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.layout_fragment_container, commentFragment, tagForFragment)
+        ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
           .addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .commit();
