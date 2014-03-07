@@ -234,10 +234,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
             saveDraftMenuItem.setVisible(false);
             saveMenuItem.setVisible(false);
         } else {
-            // Display the save draft menu item if the post is new or it is saved server-side
-            // and does not have a "published" status. Update the save menu item title
-            // depending on the status of the current post.
-            if(mPost != null && (mPost.isNew() || !mPost.getPost_status().equals("publish")) ) {
+            // Display the save draft menu item if the post does not have a "published" status and
+            // update the save menu item title depending on the status of the current post.
+            if(mPost != null && (!mPost.getPost_status().equals("publish")) ) {
                 saveDraftMenuItem.setVisible(true);
                 saveMenuItem.setTitle(R.string.publish_post);
             } else {
@@ -259,12 +258,13 @@ public class EditPostActivity extends SherlockFragmentActivity {
             } else {
                 WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
             }
-            savePost(false);
 
-            // If the current post is new and its status is draft, then automatically
-            // set status to publish.
-            if (mPost.isNew() && mPost.getPost_status().equals("draft")) {
+            // If the current post's status is not publish, then automatically set status to publish.
+            if (!mPost.getPost_status().equals("publish")) {
                 mPost.setPost_status("publish");
+                savePost(false, true);
+            } else {
+                savePost(false);
             }
 
             PostUploadService.addPostToUpload(mPost);
@@ -312,11 +312,19 @@ public class EditPostActivity extends SherlockFragmentActivity {
     }
 
     private void savePost(boolean isAutosave) {
+        this.savePost(isAutosave, false);
+    }
+
+    private void savePost(boolean isAutosave, boolean manualStatusSet) {
         // Update post content from fragment fields
-        if (mEditPostContentFragment != null)
+        if (mEditPostContentFragment != null) {
             mEditPostContentFragment.savePostContent(isAutosave);
-        if (mEditPostSettingsFragment != null)
-            mEditPostSettingsFragment.savePostSettings();
+        }
+
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.savePostSettings(manualStatusSet);
+        }
+
     }
 
     @Override

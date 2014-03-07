@@ -412,7 +412,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         }).setView(timePicker).show();
     }
 
-    public void savePostSettings() {
+    public void savePostSettings(boolean ignoreStatusSpinner) {
         Post post = mActivity.getPost();
         if (post == null)
             return;
@@ -440,19 +440,23 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         int selectedStatus = mStatusSpinner.getSelectedItemPosition();
         String status = "";
 
-        switch (selectedStatus) {
-            case 0:
-                status = "publish";
-                break;
-            case 1:
-                status = "draft";
-                break;
-            case 2:
-                status = "pending";
-                break;
-            case 3:
-                status = "private";
-                break;
+        if (ignoreStatusSpinner) {
+            status = post.getPost_status();
+        } else {
+            switch (selectedStatus) {
+                case 0:
+                    status = "publish";
+                    break;
+                case 1:
+                    status = "draft";
+                    break;
+                case 2:
+                    status = "pending";
+                    break;
+                case 3:
+                    status = "private";
+                    break;
+            }
         }
 
         Double latitude = 0.0;
