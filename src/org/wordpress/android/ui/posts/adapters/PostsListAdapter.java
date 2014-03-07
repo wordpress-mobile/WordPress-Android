@@ -231,6 +231,8 @@ public class PostsListAdapter extends BaseAdapter {
             PostsListPost newPost = newPostsList.get(i);
             PostsListPost currentPost = mPosts.get(i);
 
+            if (!(newPost.getPostId() == currentPost.getPostId()))
+                return false;
             if (!newPost.getTitle().equals(currentPost.getTitle()))
                 return false;
             if (!(newPost.getDateCreatedGmt() == currentPost.getDateCreatedGmt()))
