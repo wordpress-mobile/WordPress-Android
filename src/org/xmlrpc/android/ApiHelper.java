@@ -1,5 +1,24 @@
 package org.xmlrpc.android;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.StringReader;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLHandshakeException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -11,6 +30,8 @@ import com.android.volley.ServerError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
@@ -28,35 +49,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
-import org.xmlpull.v1.XmlPullParser;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.StringReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
 
 public class ApiHelper {
     public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
@@ -954,11 +946,11 @@ public class ApiHelper {
      * @param urlString URL of the blog to get the XML-RPC endpoint for.
      * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
      */
-    public static String getXMLRPCUrl(String urlString, boolean trustAllSslCertificates) throws SSLHandshakeException {
+    public static String getXMLRPCUrl(String urlString) throws SSLHandshakeException {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-        String html = getResponse(urlString, trustAllSslCertificates);
+        String html = getResponse(urlString);
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
             if (matcher.find()) {
@@ -969,49 +961,19 @@ public class ApiHelper {
     }
 
     /**
-     * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
-     * verified hostnames)
-     * 
-     */
-    private static void trustAllSslCertificates(boolean trustAll) {
-        try {
-            if (trustAll) {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, VolleyUtils.trustAllCerts, new SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String arg0, SSLSession arg1) {
-                        return true;
-                    }
-                });
-            } else {
-                // use defaults
-                HttpsURLConnection.setDefaultSSLSocketFactory((SSLSocketFactory) SSLSocketFactory
-                        .getDefault());
-                HttpsURLConnection.setDefaultHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
-            }
-        } catch (NoSuchAlgorithmException e) {
-            AppLog.e(T.API, e);
-        } catch (KeyManagementException e) {
-            AppLog.e(T.API, e);
-        }
-    }
-
-    /**
      * Synchronous method to fetch the String content at the specified URL.
      *
      * @param url                     URL to fetch contents for.
      * @param trustAllSslCertificates if true ignore SSL errors
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String url, boolean trustAllSslCertificates) throws SSLHandshakeException {
-        return getResponse(url, trustAllSslCertificates, 3);
+    public static String getResponse(final String url) throws SSLHandshakeException {
+        return getResponse(url, 3);
     }
 
-    private static String getResponse(final String url, boolean trustAllSslCertificates, int maxRedirection)
+    private static String getResponse(final String url, int maxRedirection)
             throws SSLHandshakeException {
-        trustAllSslCertificates(trustAllSslCertificates);
+
         RequestFuture<String> requestFuture = RequestFuture.newFuture();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, requestFuture, requestFuture);
         WordPress.requestQueue.add(stringRequest);
@@ -1028,7 +990,7 @@ public class ApiHelper {
                                                   networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
                     String newUrl = networkResponse.headers.get("Location");
                     if (maxRedirection > 0) {
-                        return getResponse(newUrl, trustAllSslCertificates, maxRedirection - 1);
+                        return getResponse(newUrl, maxRedirection - 1);
                     }
                 }
             }
@@ -1040,8 +1002,6 @@ public class ApiHelper {
         } catch (TimeoutException e) {
             AppLog.e(T.API, e);
             return null;
-        } finally {
-            trustAllSslCertificates(false);
         }
     }
 
@@ -1057,9 +1017,9 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHrefRegEx(String urlString, boolean trustAllSslCertificates)
+    public static String getRSDMetaTagHrefRegEx(String urlString)
             throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString, trustAllSslCertificates);
+        String html = ApiHelper.getResponse(urlString);
         if (html != null) {
             Matcher matcher = rsdLink.matcher(html);
             if (matcher.find()) {
@@ -1075,10 +1035,10 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHref(String urlString, boolean trustAllSslCertificates)
+    public static String getRSDMetaTagHref(String urlString)
             throws SSLHandshakeException {
         // get the html code
-        String data = ApiHelper.getResponse(urlString, trustAllSslCertificates);
+        String data = ApiHelper.getResponse(urlString);
 
         // parse the html and get the attribute for xmlrpc endpoint
         if (data != null) {
