@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -429,6 +430,9 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     private void refreshNotes(){
+        if (!NetworkUtils.checkConnection(this))
+            return;
+
         mFirstLoadComplete = false;
         mShouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(mRefreshMenuItem);
@@ -436,6 +440,7 @@ public class NotificationsActivity extends WPActionBarActivity
             @Override
             public void onNotes(final List<Note> notes) {
                 mFirstLoadComplete = true;
+                mNotesList.setAllNotesLoaded(false);
                 // nbradbury - saving notes can be slow, so do it in the background
                 new Thread() {
                     @Override

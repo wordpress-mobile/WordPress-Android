@@ -144,7 +144,7 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded();
+                WordPress.postUploaded(post.getPostid());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {
@@ -397,7 +397,15 @@ public class PostUploadService extends Service {
                         publishThis};
 
             try {
-                client.call((post.isLocalDraft() && !post.isUploaded()) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
+                if (post.isLocalDraft() && !post.isUploaded()) {
+                    Object newPostId = client.call("metaWeblog.newPost", params);
+                    if (newPostId instanceof String) {
+                        post.setPostid((String) newPostId);
+                    }
+                } else {
+                    client.call("metaWeblog.editPost", params);
+                }
+
                 post.setUploaded(true);
                 post.setLocalChange(false);
                 post.update();

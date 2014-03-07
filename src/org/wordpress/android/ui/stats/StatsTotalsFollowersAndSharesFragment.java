@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
@@ -17,10 +17,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
+import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
-import java.text.DecimalFormat;
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -37,21 +40,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
     
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                refreshViews(stats);
-            }
-        }
-    };
-    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_totals_followers_shares, container, false);
+
+        final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
+        titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
         mPostsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_posts_count);
         mCategoriesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_categories_count);
@@ -73,54 +67,66 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         
         return view;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
 
         refreshSummary();
     }
 
     private void refreshSummary() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId))
-            blogId = "0";
-
-        final String statsBlogId = blogId;
-        new AsyncTask<Void, Void, StatsSummary>() {
-
+        final Handler handler = new Handler();
+        new Thread() {
             @Override
-            protected StatsSummary doInBackground(Void... params) {
-                return StatUtils.getSummary(statsBlogId);
-            }
-            
-            protected void onPostExecute(final StatsSummary result) {
-                if (getActivity() == null)
+            public void run() {
+                if (WordPress.getCurrentBlog() == null)
                     return;
-                getActivity().runOnUiThread(new Runnable() {
-                    
-                    @Override
+
+                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                if (TextUtils.isEmpty(blogId))
+                    blogId = "0";
+
+                final StatsSummary stats = StatUtils.getSummary(blogId);
+
+                handler.post(new Runnable() {
                     public void run() {
-                        refreshViews(result);      
+                        refreshSummary(stats);
                     }
                 });
-            };
-            
-        }.execute();
-        
+            }
+        }.start();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
+    private void refreshSummary(final StatsSummary stats) {
+        if (getActivity() == null)
+            return;
+
+        if (stats == null){
+            mPostsCountView.setText("0");
+            mCategoriesCountView.setText("0");
+            mTagsCountView.setText("0");
+            mFollowersCountView.setText("0");
+            mCommentsCountView.setText("0");
+            mSharesCountView.setText("0");
+        } else {
+            mPostsCountView.setText(FormatUtils.formatDecimal(stats.getPosts()));
+            mCategoriesCountView.setText(FormatUtils.formatDecimal(stats.getCategories()));
+            mTagsCountView.setText(FormatUtils.formatDecimal(stats.getTags()));
+            mFollowersCountView.setText(FormatUtils.formatDecimal(stats.getFollowersBlog()));
+            mCommentsCountView.setText(FormatUtils.formatDecimal(stats.getFollowersComments()));
+            mSharesCountView.setText(FormatUtils.formatDecimal(stats.getShares()));
+        }
     }
     
     @Override
@@ -128,31 +134,19 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
 
-    protected void refreshViews(StatsSummary stats) {
-        int posts = 0;
-        int categories = 0;
-        int tags = 0;
-        int followers = 0;
-        int comments = 0;
-        int shares = 0;
-        
-        if (stats != null) {
-            posts = stats.getPosts();
-            categories = stats.getCategories();
-            tags = stats.getTags();
-            followers = stats.getFollowersBlog();
-            comments = stats.getFollowersComments();
-            shares = stats.getShares();
+    /*
+     * receives broadcast when summary data has been updated
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = StringUtils.notNullStr(intent.getAction());
+            if (action.equals(StatsService.ACTION_STATS_SUMMARY_UPDATED)) {
+                Serializable serial = intent.getSerializableExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA);
+                if (serial instanceof StatsSummary) {
+                    refreshSummary((StatsSummary) serial);
+                }
+            }
         }
-
-         DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-         
-         mPostsCountView.setText(formatter.format(posts));
-         mCategoriesCountView.setText(formatter.format(categories));
-         mTagsCountView.setText(formatter.format(tags));
-         mFollowersCountView.setText(formatter.format(followers));
-         mCommentsCountView.setText(formatter.format(comments));
-         mSharesCountView.setText(formatter.format(shares));
-    }
-
+    };
 }

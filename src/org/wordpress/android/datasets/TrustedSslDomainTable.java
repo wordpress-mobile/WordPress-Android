@@ -30,27 +30,36 @@ public class TrustedSslDomainTable {
         return getDb().delete(TABLE_NAME, null, null);
     }
 
-    public static void trustDomain(String domain) {
+    public static boolean trustDomain(String domain) {
         if (TextUtils.isEmpty(domain)) {
-            return;
+            return false;
         }
         ContentValues cv = new ContentValues();
         cv.put("domain", domain);
-        getDb().insert(TABLE_NAME, null, cv);
+        long res = getDb().insert(TABLE_NAME, null, cv);
+        return res > 0;
     }
 
-    public static void trustDomain(URI uri) {
+    public static boolean trustDomain(URI uri) {
+        if (uri==null)
+            return false;
         String domain = uri.getHost();
-        trustDomain(domain);
+        return trustDomain(domain);
     }
 
-    public static int removeTrustedDomain(String domain) {
-        return getDb().delete(TABLE_NAME, "domain=?", new String[]{domain});
+    public static boolean removeTrustedDomain(String domain) {
+        if (TextUtils.isEmpty(domain)) {
+            return false;
+        }
+        int res = getDb().delete(TABLE_NAME, "domain=?", new String[]{domain});
+        return res > 0;
     }
 
-    public static void removeTrustedDomain(URI uri) {
+    public static boolean removeTrustedDomain(URI uri) {
+        if (uri==null)
+            return false;
         String domain = uri.getHost();
-        removeTrustedDomain(domain);
+        return removeTrustedDomain(domain);
     }
 
     public static boolean isDomainTrusted(String domain) {

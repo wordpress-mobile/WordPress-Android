@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,14 +46,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
-    
-    private TextView mEntryLabel;
-    private TextView mTotalsLabel;
+
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
 
     private CursorAdapter mAdapter;
-    private ContentObserver mContentObserver = new MyObserver(new Handler());
+    private final ContentObserver mContentObserver = new MyObserver(new Handler());
     
     private StatsCursorInterface mCallback;
     
@@ -88,13 +87,19 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_list_fragment, container, false);
-        
-        mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        mEntryLabel.setText(getEntryLabelResId());
-        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
-        mTotalsLabel.setText(getTotalsLabelResId());
+
+        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
+        entryLabel.setText(getEntryLabelResId());
+        TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
-        mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
+
+        String empty = getString(getEmptyLabelResId());
+        if (empty != null && empty.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(empty));
+        } else {
+            mEmptyLabel.setText(empty);
+        }
         configureEmptyLabel();
 
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
@@ -128,8 +133,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         if (TextUtils.isEmpty(blogId)) blogId = "0";
-        CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
-        return cursorLoader;
+        return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
     }
 
     @Override
@@ -155,23 +159,42 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     }
 
     private void reloadLinearLayout() {
-        if (mLinearLayout == null || mAdapter == null)
-            return; 
-        
-        mLinearLayout.removeAllViews();
-        
-        // limit number of items to show otherwise it would cause performance issues on the linearlayout
-        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-        for (int i = 0; i < count; i++) {
-            View view = mAdapter.getView(i, null, mLinearLayout);
-            if (i % 2 == 1)
-                view.setBackgroundColor(getResources().getColor(R.color.stats_alt_row));
-            mLinearLayout.addView(view);
+        if (getActivity() == null || mLinearLayout == null || mAdapter == null)
+            return;
 
-            // add divider
-            getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
+        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
+        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+
+        if (count == 0) {
+            mLinearLayout.removeAllViews();
+            return;
         }
-        
+
+        int numExistingViews = mLinearLayout.getChildCount();
+        int altRowColor = getResources().getColor(R.color.stats_alt_row);
+
+        // remove excess views
+        if (count < numExistingViews) {
+            int numToRemove = numExistingViews - count;
+            mLinearLayout.removeViews(count, numToRemove);
+            numExistingViews = count;
+        }
+
+        for (int i = 0; i < count; i++) {
+            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
+            final View view;
+            // reuse existing view when possible
+            if (i < numExistingViews) {
+                View convertView = mLinearLayout.getChildAt(i);
+                view = mAdapter.getView(i, convertView, mLinearLayout);
+                view.setBackgroundColor(bgColor);
+            } else {
+                view = mAdapter.getView(i, null, mLinearLayout);
+                view.setBackgroundColor(bgColor);
+                mLinearLayout.addView(view);
+            }
+        }
+        mLinearLayout.invalidate();
     }
     
     @Override

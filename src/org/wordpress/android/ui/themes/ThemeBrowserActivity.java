@@ -309,6 +309,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private String getBlogId() {
+        if (WordPress.getCurrentBlog() == null)
+            return "0";
         return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 

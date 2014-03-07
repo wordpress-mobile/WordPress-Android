@@ -34,7 +34,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -284,7 +283,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // setup the webView
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.setWebViewClient(readerWebViewClient);
-        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
@@ -1108,7 +1107,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         sbHtml.append("<style type='text/css'>")
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
+              .append("  body, p, div { max-width: 100% !important;}")
+              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+              .append("  h1, h2 { line-height: 1.2em; }");
+
+        // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
+              .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
@@ -1116,9 +1121,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
               .append("        border: 1px solid ").append(greyLight).append("; ")
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
-
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");

@@ -356,8 +356,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
-                .getThemedContext(), R.layout.sherlock_spinner_dropdown_item, blogNames);
+        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
+                getSupportActionBar().getThemedContext(),
+                R.layout.spinner_menu_dropdown_item,
+                R.id.menu_text_dropdown,
+                blogNames
+        );
+
         mBlogSpinner.setAdapter(mSpinnerAdapter);
         mListView.addHeaderView(spinnerWrapper);
     }
@@ -554,7 +559,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     } else if (blogNames.length > 1 && mBlogSpinner != null) {
                         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
                                 getSupportActionBar().getThemedContext(),
-                                R.layout.sherlock_spinner_dropdown_item, blogNames);
+                                R.layout.spinner_menu_dropdown_item,
+                                R.id.menu_text_dropdown,
+                                blogNames
+                        );
                         mBlogSpinner.setAdapter(mSpinnerAdapter);
                     }
 
@@ -805,7 +813,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
-            intent.putExtra("viewPages", true);
+            intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

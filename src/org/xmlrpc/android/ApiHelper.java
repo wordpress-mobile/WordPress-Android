@@ -1,5 +1,24 @@
 package org.xmlrpc.android;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.StringReader;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLHandshakeException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -12,7 +31,8 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import org.wordpress.android.R;
+import org.xmlpull.v1.XmlPullParser;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -22,47 +42,17 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlpull.v1.XmlPullParser;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.StringReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class ApiHelper {
     public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
-    /** Called when the activity is first created. */
-    private static XMLRPCClient client;
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
 
@@ -119,7 +109,7 @@ public class ApiHelper {
                 result = client.call("wp.getPostFormats", params);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return result;
@@ -207,6 +197,11 @@ public class ApiHelper {
                 return;
             }
 
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                cancel(true);
+                return;
+            }
+
             mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
@@ -253,7 +248,7 @@ public class ApiHelper {
                 } catch (ClassCastException cce) {
                     setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                     return false;
-                } catch (Exception e) {
+                } catch (XMLRPCException e) {
                     setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                     return false;
                 }
@@ -278,7 +273,7 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return false;
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
@@ -290,7 +285,7 @@ public class ApiHelper {
                     mBlog.getPassword(), hPost};
             try {
                 ApiHelper.refreshComments(mContext, commentParams);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
             }
@@ -312,7 +307,7 @@ public class ApiHelper {
     }
 
     public static CommentList refreshComments(Context context, Object[] commentParams)
-            throws Exception {
+            throws XMLRPCException {
         Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
             return null;
@@ -320,7 +315,11 @@ public class ApiHelper {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        result = (Object[]) client.call("wp.getComments", commentParams);
+        try {
+            result = (Object[]) client.call("wp.getComments", commentParams);
+        } catch (XMLRPCException e) {
+            throw new XMLRPCException(e);
+        }
 
         if (result.length == 0) {
             return null;
@@ -364,6 +363,160 @@ public class ApiHelper {
         CommentTable.saveComments(localBlogId, comments);
 
         return comments;
+    }
+
+    public static class FetchPostsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess(int postCount);
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+        private int mPostCount;
+
+        public FetchPostsTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            boolean isPage = (Boolean) arguments.get(1);
+            int recordCount = (Integer) arguments.get(2);
+            boolean loadMore = (Boolean) arguments.get(3);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] result;
+            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), recordCount };
+            try {
+                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                        : "metaWeblog.getRecentPosts", xmlrpcParams);
+                if (result != null && result.length > 0) {
+                    mPostCount = result.length;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+
+                    if (!loadMore) {
+                        WordPress.wpDB.deleteUploadedPosts(
+                                blog.getLocalTableBlogId(), isPage);
+                    }
+
+                    // If we're loading more posts, only save the posts at the end of the array.
+                    // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
+                    // since it allows for an offset parameter.
+                    int startPosition = 0;
+                    if (loadMore && result.length > PostsListFragment.POSTS_REQUEST_COUNT) {
+                        startPosition = result.length - PostsListFragment.POSTS_REQUEST_COUNT;
+                    }
+
+                    for (int ctr = startPosition; ctr < result.length; ctr++) {
+                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                        postsList.add(postMap);
+                    }
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
+                }
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess(mPostCount);
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fetch a single post or page from the XML-RPC API and save/update it in the DB
+     */
+    public static class FetchSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess();
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+
+        public FetchSinglePostTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            String postId = (String) arguments.get(1);
+            boolean isPage = (Boolean) arguments.get(2);
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] apiParams;
+            if (isPage) {
+                apiParams = new Object[]{
+                        blog.getRemoteBlogId(),
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            } else {
+                apiParams = new Object[]{
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            }
+
+            try {
+                Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+                if (result != null && result instanceof Map) {
+                    Map postMap = (HashMap) result;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                    postsList.add(postMap);
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true);
+                }
+
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess();
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
     }
 
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
@@ -413,17 +566,16 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return 0;
-            }
-            catch (XMLRPCFault xmlRpcFault) {
-                if (xmlRpcFault.getFaultCode() == 401) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, xmlRpcFault.getMessage(), xmlRpcFault);
+            } catch (XMLRPCException e) {
+                AppLog.e(T.API, e);
+                // user does not have permission to view media gallery
+                if (e.getMessage().contains("401")) {
+                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
+                    return 0;
                 } else {
-                    setError(ErrorType.NETWORK_XMLRPC, xmlRpcFault.getMessage(), xmlRpcFault);
+                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                    return 0;
                 }
-                return 0;
-            } catch (Exception e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                return 0;
             }
 
             if (blogId == null) {
@@ -508,7 +660,7 @@ public class ApiHelper {
                 result = (Boolean) client.call("wp.editPost", apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
 
@@ -564,7 +716,7 @@ public class ApiHelper {
                 results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
 
@@ -641,7 +793,7 @@ public class ApiHelper {
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return null;
             }
@@ -711,7 +863,7 @@ public class ApiHelper {
                 }
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (Exception e) {
+            } catch (XMLRPCException e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
             return null;
@@ -767,7 +919,9 @@ public class ApiHelper {
             Map<?, ?> resultMap = null;
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
-            } catch (Exception e) {
+            } catch (ClassCastException cce) {
+                AppLog.e(T.API, cce);
+            } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
             }
 
@@ -792,11 +946,11 @@ public class ApiHelper {
      * @param urlString URL of the blog to get the XML-RPC endpoint for.
      * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
      */
-    public static String getXMLRPCUrl(String urlString, boolean trustAllSslCertificates) throws SSLHandshakeException {
+    public static String getXMLRPCUrl(String urlString) throws SSLHandshakeException {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-        String html = getResponse(urlString, trustAllSslCertificates);
+        String html = getResponse(urlString);
         if (html != null) {
             Matcher matcher = xmlrpcLink.matcher(html);
             if (matcher.find()) {
@@ -807,61 +961,19 @@ public class ApiHelper {
     }
 
     /**
-     * Make volley and other libs based on HttpsURLConnection trust all ssl certificates (self signed or non
-     * verified hostnames)
-     */
-    public static void trustAllSslCertificates(boolean trustAll) {
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }};
-            if (trustAll) {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAllCerts, new SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String arg0, SSLSession arg1) {
-                        return true;
-                    }
-                });
-            } else {
-                // use defaults
-                HttpsURLConnection.setDefaultSSLSocketFactory((SSLSocketFactory) SSLSocketFactory
-                        .getDefault());
-                HttpsURLConnection.setDefaultHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
-            }
-        } catch (NoSuchAlgorithmException e) {
-            AppLog.e(T.API, e);
-        } catch (KeyManagementException e) {
-            AppLog.e(T.API, e);
-        }
-    }
-
-    /**
      * Synchronous method to fetch the String content at the specified URL.
      *
      * @param url                     URL to fetch contents for.
      * @param trustAllSslCertificates if true ignore SSL errors
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String url, boolean trustAllSslCertificates) throws SSLHandshakeException {
-        return getResponse(url, trustAllSslCertificates, 3);
+    public static String getResponse(final String url) throws SSLHandshakeException {
+        return getResponse(url, 3);
     }
 
-    private static String getResponse(final String url, boolean trustAllSslCertificates, int maxRedirection)
+    private static String getResponse(final String url, int maxRedirection)
             throws SSLHandshakeException {
-        trustAllSslCertificates(trustAllSslCertificates);
+
         RequestFuture<String> requestFuture = RequestFuture.newFuture();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, requestFuture, requestFuture);
         WordPress.requestQueue.add(stringRequest);
@@ -878,7 +990,7 @@ public class ApiHelper {
                                                   networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
                     String newUrl = networkResponse.headers.get("Location");
                     if (maxRedirection > 0) {
-                        return getResponse(newUrl, trustAllSslCertificates, maxRedirection - 1);
+                        return getResponse(newUrl, maxRedirection - 1);
                     }
                 }
             }
@@ -890,8 +1002,6 @@ public class ApiHelper {
         } catch (TimeoutException e) {
             AppLog.e(T.API, e);
             return null;
-        } finally {
-            trustAllSslCertificates(false);
         }
     }
 
@@ -907,9 +1017,9 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHrefRegEx(String urlString, boolean trustAllSslCertificates)
+    public static String getRSDMetaTagHrefRegEx(String urlString)
             throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString, trustAllSslCertificates);
+        String html = ApiHelper.getResponse(urlString);
         if (html != null) {
             Matcher matcher = rsdLink.matcher(html);
             if (matcher.find()) {
@@ -925,10 +1035,10 @@ public class ApiHelper {
      * @param urlString
      * @return String RSD url
      */
-    public static String getRSDMetaTagHref(String urlString, boolean trustAllSslCertificates)
+    public static String getRSDMetaTagHref(String urlString)
             throws SSLHandshakeException {
         // get the html code
-        String data = ApiHelper.getResponse(urlString, trustAllSslCertificates);
+        String data = ApiHelper.getResponse(urlString);
 
         // parse the html and get the attribute for xmlrpc endpoint
         if (data != null) {

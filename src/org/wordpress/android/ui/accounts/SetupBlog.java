@@ -1,7 +1,23 @@
 package org.wordpress.android.ui.accounts;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.net.ssl.SSLHandshakeException;
+
 import android.content.Context;
+import android.text.TextUtils;
 import android.webkit.URLUtil;
+
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -14,25 +30,6 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.Utils;
-
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-import org.xmlrpc.android.XMLRPCFault;
-
-import java.net.IDN;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.net.ssl.SSLHandshakeException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
@@ -49,7 +46,7 @@ public class SetupBlog {
 
     private boolean mHttpAuthRequired;
     private boolean mErroneousSslCertificate;
-    private boolean mAllSslCertificatesTrusted;
+    private boolean mCurrentSslCertificatesForcedTrusted;
 
     public SetupBlog() {
     }
@@ -98,8 +95,22 @@ public class SetupBlog {
         return mHttpAuthRequired;
     }
 
-    public void setAllSslCertificatesTrusted(boolean allSslCertificatesTrusted) {
-        mAllSslCertificatesTrusted = allSslCertificatesTrusted;
+    public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
+        if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
+            try {
+                // Convert IDN names to punycode if necessary
+                String sanitizedURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedURL);
+                // Add http to the beginning of the URL if needed
+                sanitizedURL = UrlUtils.addHttpProcolIfNeeded(sanitizedURL, false);
+                URI uri = URI.create(sanitizedURL);
+                TrustedSslDomainTable.trustDomain(uri);
+                mCurrentSslCertificatesForcedTrusted = trusted;
+            } catch (Exception e1) {
+                AppLog.e(T.NUX, "Cannot trust the self-hosted URL", e1);
+            }
+        } else {
+            mCurrentSslCertificatesForcedTrusted = false;
+        }
     }
 
     public boolean isErroneousSslCertificates() {
@@ -128,9 +139,7 @@ public class SetupBlog {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
-        if (mAllSslCertificatesTrusted) {
-            TrustedSslDomainTable.trustDomain(uri);
-        }
+
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         Object[] params = {mUsername, mPassword};
         try {
@@ -149,49 +158,31 @@ public class SetupBlog {
                 }
             }
             return userBlogList;
-        }
-        catch (XmlPullParserException parserException) {
-            mErrorMsgId = R.string.xmlrpc_error;
-            AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
-            return null;
-        }
-        catch (XMLRPCFault xmlRpcFault) {
-            AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
-            switch (xmlRpcFault.getFaultCode()) {
-                case 403:
-                    mErrorMsgId = R.string.username_or_password_incorrect;
-                    break;
-                case 404:
-                    mErrorMsgId = R.string.xmlrpc_error;
-                    break;
-                case 425:
-                    mErrorMsgId = R.string.account_two_step_auth_enabled;
-                    break;
-                default:
-                    mErrorMsgId = R.string.no_site_error;
-                    break;
-            }
-            return null;
-        }
-        catch (XMLRPCException xmlRpcException) {
-            AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
-            mErrorMsgId = R.string.no_site_error;
-            return null;
-        } catch (Exception e) {
-            AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-            if (mAllSslCertificatesTrusted) {
+        } catch (XMLRPCException e) {
+            if (mCurrentSslCertificatesForcedTrusted) {
                 TrustedSslDomainTable.removeTrustedDomain(uri);
             }
-            mErrorMsgId = R.string.no_site_error;
+            String message = e.getMessage();
+            if (message.contains("code 403")) {
+                mErrorMsgId = R.string.username_or_password_incorrect;
+            } else if (message.contains("404")) {
+                mErrorMsgId = R.string.xmlrpc_error;
+            } else if (message.contains("425")) {
+                mErrorMsgId = R.string.account_two_step_auth_enabled;
+            } else if (message.contains("XmlPullParserException")) {
+                mErrorMsgId = R.string.xmlrpc_error;
+            } else {
+                mErrorMsgId = R.string.no_site_error;
+            }
             return null;
         }
     }
 
-    private String getRsdUrl(String baseUrl, boolean ignoreSslCertificate) throws SSLHandshakeException {
+    private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
         String rsdUrl;
-        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl, ignoreSslCertificate);
+        rsdUrl = ApiHelper.getRSDMetaTagHrefRegEx(baseUrl);
         if (rsdUrl == null) {
-            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl, ignoreSslCertificate);
+            rsdUrl = ApiHelper.getRSDMetaTagHref(baseUrl);
         }
         return rsdUrl;
     }
@@ -205,7 +196,7 @@ public class SetupBlog {
             client.call("system.listMethods");
             xmlRpcUrl = baseUrl;
             mIsCustomUrl = true;
-        } catch (Exception e) {
+        } catch (XMLRPCException e) {
             AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
             if (e.getMessage().contains("401")) {
                 mHttpAuthRequired = true;
@@ -223,7 +214,7 @@ public class SetupBlog {
             try {
                 client.call("system.listMethods");
                 xmlRpcUrl = guessURL;
-            } catch (Exception ex) {
+            } catch (XMLRPCException ex) {
                 AppLog.w(T.NUX, "system.listMethods failed on: " + guessURL);
             }
         }
@@ -238,24 +229,10 @@ public class SetupBlog {
         String xmlrpcUrl = null;
 
         // Convert IDN names to punycode if necessary
-        if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
-            if (url.toLowerCase().startsWith("http://")) {
-                url = "http://" + IDN.toASCII(url.substring(7));
-            } else if (url.toLowerCase().startsWith("https://")) {
-                url = "https://" + IDN.toASCII(url.substring(8));
-            } else {
-                url = IDN.toASCII(url);
-            }
-        }
+        url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-            if (mAllSslCertificatesTrusted) {
-                url = "https://" + url; // default to https in case previous ssl error detected
-            } else {
-                url = "http://" + url; // default to http
-            }
-        }
+        url = UrlUtils.addHttpProcolIfNeeded(url, mCurrentSslCertificatesForcedTrusted);
 
         if (!URLUtil.isValidUrl(url)) {
             mErrorMsgId = R.string.invalid_url_message;
@@ -265,7 +242,7 @@ public class SetupBlog {
         // Attempt to get the XMLRPC URL via RSD
         String rsdUrl;
         try {
-            rsdUrl = getRsdUrl(url, mAllSslCertificatesTrusted);
+            rsdUrl = getRsdUrl(url);
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
@@ -276,7 +253,7 @@ public class SetupBlog {
 
         try {
             if (rsdUrl != null) {
-                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl, mAllSslCertificatesTrusted);
+                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
                 if (xmlrpcUrl == null) {
                     xmlrpcUrl = rsdUrl.replace("?rsd", "");
                 }

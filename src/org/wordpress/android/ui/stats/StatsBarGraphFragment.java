@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -35,9 +34,9 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
 
     private LinearLayout mGraphContainer;
-    private ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
+    private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
 
-    static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
+    public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
 
         Bundle args = new Bundle();
@@ -46,7 +45,6 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
 
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +63,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+        getActivity().getContentResolver().registerContentObserver(StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver);
     }
 
     @Override
@@ -85,22 +83,23 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
             return null;
 
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId)) blogId = "0";
+        if (TextUtils.isEmpty(blogId))
+            blogId = "0";
         StatsBarChartUnit unit = getBarChartUnit();
-        return new CursorLoader(getActivity(), getUri(), null, "blogId=? AND unit=?", new String[] { blogId, unit.name() }, null);
-    }
-
-    private Uri getUri() {
-        return StatsContentProvider.STATS_BAR_CHART_DATA_URI;
+        return new CursorLoader(getActivity(),
+                                StatsContentProvider.STATS_BAR_CHART_DATA_URI,
+                                null,
+                                "blogId=? AND unit=?",
+                                new String[] { blogId, unit.name() },
+                                null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         if (getActivity() == null)
             return;
 
-        if (!cursor.moveToFirst() || cursor.getCount() == 0) {
+        if (!cursor.moveToFirst()) {
             Context context = mGraphContainer.getContext();
             if (context != null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
@@ -112,13 +111,12 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
         }
 
         int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
-
+        final String[] horLabels = new String[numPoints];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
         GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
-        String[] horLabels = new String[numPoints];
 
         StatsBarChartUnit unit = getBarChartUnit();
-        for(int i = numPoints - 1; i >= 0; i--) {
+        for (int i = numPoints - 1; i >= 0; i--) {
             views[i] = new GraphView.GraphViewData(i, getViews(cursor));
             visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
             horLabels[i] = getDateLabel(cursor, unit);
@@ -139,7 +137,7 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
             graphView = (GraphView) mGraphContainer.getChildAt(0);
         } else {
             mGraphContainer.removeAllViews();
-            graphView = new StatsBarGraph(getActivity(), "");
+            graphView = new StatsBarGraph(getActivity());
             mGraphContainer.addView(graphView);
         }
 

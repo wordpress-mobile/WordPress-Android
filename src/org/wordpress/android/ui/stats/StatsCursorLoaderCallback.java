@@ -8,7 +8,7 @@ import android.widget.CursorTreeAdapter;
  * An interface used by {@link CursorTreeAdapter} subclasses 
  * to communicate with the {@link StatsCursorTreeFragment}
  */
-public interface StatsCursorLoaderCallback {
+interface StatsCursorLoaderCallback {
 
     static final String BUNDLE_DATE = "BUNDLE_DATE";
     static final String BUNDLE_GROUP_ID = "BUNDLE_GROUP_ID";

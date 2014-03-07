@@ -18,9 +18,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

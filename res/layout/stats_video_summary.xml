@@ -7,14 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:padding="@dimen/margin_extra_large" >
 
         <TextView
             android:id="@+id/stats_video_summary_header"
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp" />
+            android:layout_marginLeft="@dimen/margin_small" />
 
         <include layout="@layout/stats_header_line"/>
 
@@ -28,10 +28,10 @@
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large" >
 
                 <TextView
                     android:id="@+id/stats_video_summary_plays_total"
@@ -52,9 +52,9 @@
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large" >
 
                 <TextView
                     android:id="@+id/stats_video_summary_impressions_total"
@@ -76,8 +76,8 @@
             style="@style/StatsWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="16dp" >
+            android:layout_marginTop="@dimen/margin_medium"
+            android:padding="@dimen/margin_extra_large" >
 
             <TextView
                 android:id="@+id/stats_video_summary_playback_length_total"
@@ -99,8 +99,8 @@
             style="@style/StatsWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="16dp" >
+            android:layout_marginTop="@dimen/margin_medium"
+            android:padding="@dimen/margin_extra_large" >
 
             <TextView
                 android:id="@+id/stats_video_summary_bandwidth_total"

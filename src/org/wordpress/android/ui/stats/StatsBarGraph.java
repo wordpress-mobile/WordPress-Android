@@ -15,10 +15,10 @@ import org.wordpress.android.R;
  * A Bar graph depicting the view and visitors.
  * Based on BarGraph from the GraphView library. 
  */
-public class StatsBarGraph extends GraphView {
+class StatsBarGraph extends GraphView {
 
-	public StatsBarGraph(Context context, String title) {
-		super(context, title);
+	public StatsBarGraph(Context context) {
+		super(context, "");
 
         setProperties();
 	}
@@ -94,8 +94,7 @@ public class StatsBarGraph extends GraphView {
 	protected double getMaxY() {
 		double maxY = super.getMaxY();
 
-		int divideBy = 1;
-		
+		final int divideBy;
 		if (maxY < 100)
 			divideBy = 10;
 		else if (maxY < 1000)
