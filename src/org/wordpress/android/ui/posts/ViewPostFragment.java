@@ -171,11 +171,12 @@ public class ViewPostFragment extends Fragment {
         // locate views and determine content in the background to avoid ANR - especially
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
+        final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
+        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {
                 final TextView txtTitle = (TextView) getView().findViewById(R.id.postTitle);
-                final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
                 final TextView txtContent = (TextView) getView().findViewById(R.id.viewPostTextView);
                 final ImageButton btnShareUrl = (ImageButton) getView().findViewById(R.id.sharePostLink);
                 final ImageButton btnViewPost = (ImageButton) getView().findViewById(R.id.viewPost);
@@ -209,8 +210,7 @@ public class ViewPostFragment extends Fragment {
                             return;
 
                         txtTitle.setText(title);
-                        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
-                        
+
                         if (post.isLocalDraft()) {
                             txtContent.setVisibility(View.VISIBLE);
                             webView.setVisibility(View.GONE);
