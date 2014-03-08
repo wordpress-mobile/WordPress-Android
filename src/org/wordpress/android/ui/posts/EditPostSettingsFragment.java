@@ -433,15 +433,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         long pubDateTimestamp = 0;
         if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
-            Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
-            mHour = c.get(Calendar.HOUR_OF_DAY);
-            mMinute = c.get(Calendar.MINUTE);
-            Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-            long timestamp = d.getTime();
-            pubDateTimestamp = timestamp;
+            Date d = new Date();
+            pubDateTimestamp = d.getTime();
         } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
