@@ -73,6 +73,7 @@ public class WordPress extends Application {
     public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
+    public static boolean draftWasSaved;
     public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
@@ -102,7 +103,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getDefaultHTTPClientStack(this));
+        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag(TAG);
 
@@ -254,17 +255,17 @@ public class WordPress extends Application {
     }
 
     public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded();
+        public abstract void OnPostUploaded(String postId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
         onPostUploadedListener = listener;
     }
 
-    public static void postUploaded() {
+    public static void postUploaded(String postId) {
         if (onPostUploadedListener != null) {
             try {
-                onPostUploadedListener.OnPostUploaded();
+                onPostUploadedListener.OnPostUploaded(postId);
             } catch (Exception e) {
                 postsShouldRefresh = true;
             }

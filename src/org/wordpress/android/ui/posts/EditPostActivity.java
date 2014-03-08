@@ -155,7 +155,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         }
 
         setTitle(WordPress.getCurrentBlog().getBlogName());
-
+        WordPress.draftWasSaved = false;
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -280,6 +280,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
+            WordPress.draftWasSaved = true;
             Toast.makeText(this, getResources().getText(R.string.post_draft_saved), Toast.LENGTH_SHORT).show();
             // The current post is now the original post
             mOriginalPost = mPost.copy();

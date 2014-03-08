@@ -276,6 +276,10 @@ public class Post implements Serializable {
         post_status = postStatus;
     }
 
+    public PostStatus getStatusEnum() {
+        return PostStatus.fromString(post_status);
+    }
+
     public String getPostid() {
         return postid;
     }

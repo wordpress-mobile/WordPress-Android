@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
@@ -25,7 +25,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
+import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 
 /**
  * A fragment display the themes on a grid view. 
@@ -217,7 +217,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeTabAdapter class
-            ThemeTabAdapter.ViewHolder tag =  (ViewHolder) niv.getTag();
+            ScreenshotHolder tag =  (ScreenshotHolder) niv.getTag();
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
