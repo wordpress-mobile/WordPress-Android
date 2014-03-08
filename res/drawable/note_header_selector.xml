@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background selector for text in notification detail header
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <stroke android:color="@color/blue_medium" android:width="1px" />
+            <solid android:color="@color/blue_extra_light" />
+            <padding android:bottom="@dimen/margin_large"
+                android:left="@dimen/margin_large"
+                android:right="@dimen/margin_large"
+                android:top="@dimen/margin_large" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:color="@color/grey_medium" android:width="1px" />
+            <solid android:color="@color/white" />
+            <padding android:bottom="@dimen/margin_large"
+                     android:left="@dimen/margin_large"
+                     android:right="@dimen/margin_large"
+                     android:top="@dimen/margin_large" />
+        </shape>
+    </item>
+
+</selector>

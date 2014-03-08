@@ -5,7 +5,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,10 +58,9 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         if (TextUtils.isEmpty(headerSnippet)) {
             noteHeader.setText(headerSubject);
         } else {
-            noteHeader.setText(Html.fromHtml(headerSubject + "<br><small>&quot;" + headerSnippet + "&quot;</small>"));
+            noteHeader.setText(headerSubject + " \"" + headerSnippet + "\"");
         }
 
-        noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setNote(getNote(), headerLink);
 

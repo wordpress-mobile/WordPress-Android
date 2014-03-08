@@ -55,14 +55,10 @@ public class DetailHeader extends LinearLayout {
      * url is navigated to instead.
      */
     public void setNote(final Note note, final String url) {
-        final ImageView indicator = (ImageView) findViewById(R.id.indicator);
-
         final boolean isComment = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() != 0);
         final boolean isPost = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
 
         if (isPost || isComment) {
-            indicator.setVisibility(View.VISIBLE);
-            indicator.setImageResource(R.drawable.ic_navigate_next);
             setClickable(true);
             setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,8 +71,6 @@ public class DetailHeader extends LinearLayout {
                 }
             });
         } else if (!TextUtils.isEmpty(url)) {
-            indicator.setVisibility(View.VISIBLE);
-            indicator.setImageResource(R.drawable.dashboard_icon_wp);
             setClickable(true);
             setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,7 +81,6 @@ public class DetailHeader extends LinearLayout {
                 }
             });
         } else {
-            indicator.setVisibility(View.GONE);
             setClickable(false);
             setOnClickListener(null);
         }

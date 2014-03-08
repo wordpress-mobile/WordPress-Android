@@ -38,7 +38,6 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         JSONObject subject = getNote().queryJSON("subject", new JSONObject());
         String headerText = JSONUtil.getStringDecoded(subject, "text");
         noteHeader.setText(headerText);
-        noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setClickable(false);
         
