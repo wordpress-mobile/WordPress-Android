@@ -252,12 +252,12 @@ public class SetupBlog {
             client.call("system.listMethods");
             xmlRpcUrl = guessURL;
             return xmlRpcUrl;
-        } catch (XMLRPCException ex) {
-            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, ex);
-        } catch (IOException e1) {
-            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e1);
-        } catch (XmlPullParserException e1) {
-            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e1);
+        } catch (XMLRPCException e) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
+        } catch (IOException e) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         }
         
         return null;

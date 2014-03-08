@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.comments;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -7,6 +11,11 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -16,16 +25,6 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-import org.xmlrpc.android.XMLRPCFault;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by nbradbury on 11/8/13.
@@ -104,13 +103,13 @@ public class CommentActions {
                 try {
                     newCommentID = (Integer) client.call("wp.newComment", params);
                 } catch (XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
                     newCommentID = -1;
                 } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
                     newCommentID = -1;
                 } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
                     newCommentID = -1;
                 }
 
@@ -180,13 +179,13 @@ public class CommentActions {
                         newCommentID = -1;
                     }
                 } catch (XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
                     newCommentID = -1;
                 } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
                     newCommentID = -1;
                 } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
                     newCommentID = -1;
                 }
 
@@ -287,14 +286,14 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call("wp.editComment", params);
-                } catch (final XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                } catch (XMLRPCException e) {
+                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
                 } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
                 } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
                 }
 
@@ -371,12 +370,12 @@ public class CommentActions {
                             comment.setStatus(newStatusStr);
                             moderatedComments.add(comment);
                         }
-                    } catch (final XMLRPCException e) {
-                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    } catch (XMLRPCException e) {
+                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     } catch (IOException e) {
-                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     } catch (XmlPullParserException e) {
-                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     }
                 }
 
@@ -426,13 +425,13 @@ public class CommentActions {
                 try {
                     result = client.call("wp.deleteComment", params);
                 } catch (final XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     result = null;
                 } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     result = null;
                 } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    AppLog.e(T.COMMENTS,"Error while deleting comment", e);
                     result = null;
                 }
 
@@ -491,8 +490,12 @@ public class CommentActions {
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);
-                    } catch (final Exception e) {
-                        AppLog.e(T.COMMENTS, e.getMessage(), e);
+                    } catch (XMLRPCException e) {
+                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
+                    } catch (IOException e) {
+                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
+                    } catch (XmlPullParserException e) {
+                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     }
                 }
 

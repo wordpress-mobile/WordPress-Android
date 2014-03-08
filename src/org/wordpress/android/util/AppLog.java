@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.android.volley.VolleyError;
 
+import org.xmlrpc.android.XMLRPCFault;
+
 import org.wordpress.android.WordPress;
 
 import java.util.ArrayList;

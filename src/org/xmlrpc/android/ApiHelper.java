@@ -83,7 +83,7 @@ public class ApiHelper {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             mThrowable = throwable;
-            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
+            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage, throwable);
         }
     }
 
@@ -580,33 +580,14 @@ public class ApiHelper {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return 0;
             } catch (XMLRPCException e) {
-                AppLog.e(T.API, e);
-                // user does not have permission to view media gallery
-                if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
-                    return 0;
-                } else {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                    return 0;
-                }
+                prepareErrorMessage(e);
+                return 0;
             } catch (IOException e) {
-                // user does not have permission to view media gallery
-                if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
-                    return 0;
-                } else {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                    return 0;
-                }
+                prepareErrorMessage(e);
+                return 0;
             } catch (XmlPullParserException e) {
-                // user does not have permission to view media gallery
-                if (e.getMessage().contains("401")) {
-                    setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
-                    return 0;
-                } else {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                    return 0;
-                }
+                prepareErrorMessage(e);
+                return 0;
             }
 
             if (blogId == null) {
@@ -634,6 +615,15 @@ public class ApiHelper {
             return results.length;
         }
 
+        private void prepareErrorMessage(Exception e) {
+            // user does not have permission to view media gallery
+            if (e.getMessage().contains("401")) {
+                setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
+            } else {
+                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+            }
+        }
+        
         @Override
         protected void onPostExecute(Integer result) {
             if (mCallback != null) {
@@ -969,13 +959,13 @@ public class ApiHelper {
             try {
                 resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
             } catch (ClassCastException cce) {
-                AppLog.e(T.API, cce);
+                AppLog.e(T.API, "wpcom.getFeatures error", cce);
             } catch (XMLRPCException e) {
-                AppLog.e(T.API, e);
+                AppLog.e(T.API, "wpcom.getFeatures error", e);
             } catch (IOException e) {
-                AppLog.e(T.API, e);
+                AppLog.e(T.API, "wpcom.getFeatures error", e);
             } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
+                AppLog.e(T.API, "wpcom.getFeatures error", e);
             }
 
             if (resultMap != null) {

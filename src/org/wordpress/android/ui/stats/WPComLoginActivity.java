@@ -153,21 +153,18 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
                 if (xmlRpcFault.getFaultCode() == 425) {
                     mIsWpcomAccountWith2FA = true;
+                    return false;
                 }
-                return false;
             } catch (XMLRPCException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-                mIsWpcomAccountWith2FA = false;
-                return false;
             } catch (IOException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-                mIsWpcomAccountWith2FA = false;
-                return false;
             } catch (XmlPullParserException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-                mIsWpcomAccountWith2FA = false;
-                return false;
             }
+            
+            mIsWpcomAccountWith2FA = false;
+            return false;
         }
 
         @Override

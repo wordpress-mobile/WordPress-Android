@@ -837,13 +837,16 @@ public class PostUploadService extends Service {
         private Object uploadFileHelper(XMLRPCClientInterface client, Object[] params, File tempFile) {
             try {
                 return client.call("wp.uploadFile", params, tempFile);
-            } catch (XMLRPCException e) { //XMLRPCException, IOException, XmlPullParserException
+            } catch (XMLRPCException e) {
+                AppLog.e(T.API, e);
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (IOException e) {
+                AppLog.e(T.API, e);
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (XmlPullParserException e) {
+                AppLog.e(T.API, e);
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } finally {

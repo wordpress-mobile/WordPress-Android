@@ -490,6 +490,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             Blog blog = WordPress.currentBlog;
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
+ 
             Object[] postParams = { "", post.getPostid(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -501,25 +502,20 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
                 result = true;
             } catch (final XMLRPCException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
-                        (mIsPage) ? getResources().getText(R.string.page)
-                                  : getResources().getText(R.string.post));
-                result = false;
+                mErrorMsg = prepareErrorMessage(e);
             } catch (IOException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
-                        (mIsPage) ? getResources().getText(R.string.page)
-                                  : getResources().getText(R.string.post));
-                result = false;
+                mErrorMsg = prepareErrorMessage(e);
             } catch (XmlPullParserException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
-                        (mIsPage) ? getResources().getText(R.string.page)
-                                  : getResources().getText(R.string.post));
-                result = false;
+                mErrorMsg = prepareErrorMessage(e);
             }
             return result;
+        }
+        
+        private String prepareErrorMessage(Exception e) {
+            AppLog.e(AppLog.T.POSTS, "Error while deleting post or page", e);
+            return String.format(getResources().getString(R.string.error_delete_post),
+                    (mIsPage) ? getResources().getText(R.string.page)
+                              : getResources().getText(R.string.post));
         }
     }
 
