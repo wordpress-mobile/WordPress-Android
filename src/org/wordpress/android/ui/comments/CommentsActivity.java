@@ -22,6 +22,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedL
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FragmentUtils;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -199,10 +200,10 @@ public class CommentsActivity extends WPActionBarActivity
 
         Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         FragmentTransaction ft = fm.beginTransaction();
+        FragmentUtils.setTransition(ft);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+          .addToBackStack(tagForFragment);
         if (hasDetailFragment())
             ft.hide(getDetailFragment());
         ft.commit();
@@ -224,11 +225,11 @@ public class CommentsActivity extends WPActionBarActivity
 
         if (detailFragment == null) {
             FragmentTransaction ft = fm.beginTransaction();
+            FragmentUtils.setTransition(ft);
             String tagForFragment = getString(R.string.fragment_tag_comment_detail);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
             ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment)
-              .addToBackStack(tagForFragment)
-              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+              .addToBackStack(tagForFragment);
             if (listFragment != null)
                 ft.hide(listFragment);
             ft.commitAllowingStateLoss();
