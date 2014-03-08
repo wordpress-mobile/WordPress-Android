@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -30,11 +31,13 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -89,6 +92,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    if (!isFinishing())
+                        ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
                 }
             }).execute(false);
 
@@ -346,7 +351,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();
@@ -499,11 +504,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         protected Boolean doInBackground(Post... params) {
             boolean result = false;
             post = params[0];
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object[] postParams = { "", post.getPostid(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -591,11 +594,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             post = params[0];
             if (post == null)
                 return null;
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object versionResult = new Object();
             try {
                 if (mIsPage) {
@@ -790,7 +791,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public void onDetailPostAction(int action, Post post) {
-
         onPostAction(action, post);
 
     }
@@ -816,6 +816,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         popPostDetail();
         attemptToSelectPost();
         mPostList.loadPosts(false);
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
     }
 }

@@ -1,5 +1,17 @@
 package org.xmlrpc.android;
 
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Xml;
+
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -17,14 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
-
-import android.util.Base64;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
-import org.wordpress.android.models.MediaFile;
 
 class XMLRPCSerializer {
     static final String TAG_NAME = "name";
@@ -46,6 +50,21 @@ class XMLRPCSerializer {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
 
+    private static final XmlSerializer serializeTester;
+
+    static {
+        serializeTester = Xml.newSerializer();
+        try {
+            serializeTester.setOutput(new NullOutputStream(), "UTF-8");
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.EDITOR, "IllegalArgumentException setting test serializer output stream", e );
+        } catch (IllegalStateException e) {
+            AppLog.e(AppLog.T.EDITOR, "IllegalStateException setting test serializer output stream", e );
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.EDITOR, "IOException setting test serializer output stream", e );
+        }
+    }
+
     @SuppressWarnings("unchecked")
     static void serialize(XmlSerializer serializer, Object object) throws IOException {
         // check for scalar types:
@@ -53,7 +72,10 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
         } else
         if (object instanceof Long) {
-            serializer.startTag(null, TYPE_I8).text(object.toString()).endTag(null, TYPE_I8);
+            // Note Long should be represented by a TYPE_I8 but the WordPress end point doesn't support <i8> tag
+            // Long usually represents IDs, so we convert them to string
+            serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
+            AppLog.w(T.API, "long type could be misinterpreted when sent to the WordPress XMLRPC end point");
         } else
         if (object instanceof Double || object instanceof Float) {
             serializer.startTag(null, TYPE_DOUBLE).text(object.toString()).endTag(null, TYPE_DOUBLE);
@@ -64,7 +86,7 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_BOOLEAN).text(boolStr).endTag(null, TYPE_BOOLEAN);
         } else
         if (object instanceof String) {
-            serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
+            serializer.startTag(null, TYPE_STRING).text(makeValidInputString((String) object)).endTag(null, TYPE_STRING);
         } else
         if (object instanceof Date || object instanceof Calendar) {
             Date date = (Date) object;
@@ -142,6 +164,38 @@ class XMLRPCSerializer {
         }
     }
 
+    private static final String makeValidInputString(final String input) throws IOException {
+        if (TextUtils.isEmpty(input))
+            return "";
+
+        if (serializeTester == null)
+            return input;
+
+        try {
+            // try to encode the string as-is, 99.9% of the time it's OK
+            serializeTester.text(input);
+            return input;
+        } catch (IllegalArgumentException e) {
+            // There are characters outside the XML unicode charset as specified by the XML 1.0 standard
+            // See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+            AppLog.e(AppLog.T.EDITOR, "There are characters outside the XML unicode charset as specified by the XML 1.0 standard", e );
+        }
+
+        // We need to do the following things:
+        // 1. Replace surrogates with HTML Entity.
+        // 2. Replace emoji with their textual versions (if available on WP)
+        // 3. Try to serialize the resulting string.
+        // 4. If it fails again, strip characters that are not allowed in XML 1.0
+        final String noEmojiString = StringUtils.replaceUnicodeSurrogateBlocksWithHTMLEntities(input);
+        try {
+            serializeTester.text(noEmojiString);
+            return noEmojiString;
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.EDITOR, "noEmojiString still contains characters outside the XML unicode charset as specified by the XML 1.0 standard", e );
+            return StringUtils.stripNonValidXMLCharacters(noEmojiString);
+        }
+    }
+
     static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, TAG_VALUE);
 
@@ -151,7 +205,12 @@ class XMLRPCSerializer {
         Object obj;
         if (typeNodeName.equals(TYPE_INT) || typeNodeName.equals(TYPE_I4)) {
             String value = parser.nextText();
-            obj = Integer.parseInt(value);
+            try {
+                obj = Integer.parseInt(value);
+            } catch (NumberFormatException nfe) {
+                AppLog.w(T.API, "Server replied with an invalid 4 bytes int value, trying to parse it as 8 bytes long");
+                obj = Long.parseLong(value);
+            }
         } else
         if (typeNodeName.equals(TYPE_I8)) {
             String value = parser.nextText();

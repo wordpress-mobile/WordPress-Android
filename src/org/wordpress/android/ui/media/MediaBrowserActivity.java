@@ -240,7 +240,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String message = getString(R.string.media_no_video_message);
         String infoTitle = getString(R.string.learn_more);
         String infoURL = Constants.videoPressURL;
-        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(message, title, false, infoTitle, infoURL);
+        WPAlertDialogFragment alert = WPAlertDialogFragment.newUrlInfoDialog(title, message, infoTitle, infoURL);
         ft.add(alert, "alert");
         ft.commitAllowingStateLoss();
     }
@@ -746,17 +746,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaGridFragment == null)
             return;
 
-        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), false);
-        if (newPost.getId() < 0) {
-            return;
-        }
-
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
         Intent i = new Intent(this, EditPostActivity.class);
         i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
-        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.get(0));
         startActivity(i);
     }
@@ -785,13 +778,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
 
-        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), false);
-        if (newPost.getId() < 0) {
-            return;
-        }
         Intent i = new Intent(this, EditPostActivity.class);
-        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
-        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
         i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
         startActivity(i);

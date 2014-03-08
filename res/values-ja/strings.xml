@@ -77,7 +77,7 @@
 	<string name="cannot_delete_multi_media_items">一部のメディアを再読み込みできませんでした。後ほどもう一度お試しください。</string>
 	<string name="invalid_username_too_short">ユーザー名は4文字以上にしてください。</string>
 	<string name="wait_until_upload_completes">アップロードが完了するまでお待ちください。</string>
-	<string name="stats_empty_top_posts">&lt;b>まだ人気の投稿またはページがありません。&lt;/b>この画面にはサイト内で最も頻繁に閲覧された投稿とページが表示されます。</string>
+	<string name="stats_empty_top_posts"><b>まだ人気の投稿またはページがありません。</b>この画面にはサイト内で最も頻繁に閲覧された投稿とページが表示されます。</string>
 	<string name="password_invalid">セキュリティ強度の高いパスワードが必要です。7文字以上の大文字・小文字・数字・記号を含むものにすることをおすすめします。</string>
 	<string name="http_authorization_required">認証が必要です</string>
 	<string name="blog_name_reserved_but_may_be_available">このサイト名は予約中ですが、数日中に利用可能になるかもしれません。</string>
@@ -285,9 +285,9 @@
 	<string name="confirm_delete_multi_media">本当にこの項目を削除しますか ?</string>
 	<string name="stats_bar_graph_empty">統計情報がありません。</string>
 	<string name="media_no_video_message">動画をアップロードするには VideoPress アップグレードを追加してください。</string>
-	<string name="stats_empty_referrers">&lt;b>リファラが見つかりません。&lt;/b>リファラとは、あなたのサイトへのリンクがクリックされたサイトの情報です。</string>
-	<string name="stats_empty_clicks">&lt;b>記録されたクリックがありません。&lt;/b>「クリック」とは、あなたのサイト上で訪問者がクリックした外部リンクの情報です。</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>検索キーワードが見つかりません。&lt;/b>検索キーワードとは、ユーザーがあなたのサイトを訪問する際に検索エンジンで使ったキーワードのことです。</string>
+	<string name="stats_empty_referrers"><b>リファラが見つかりません。</b>リファラとは、あなたのサイトへのリンクがクリックされたサイトの情報です。</string>
+	<string name="stats_empty_clicks"><b>記録されたクリックがありません。</b>「クリック」とは、あなたのサイト上で訪問者がクリックした外部リンクの情報です。</string>
+	<string name="stats_empty_search_engine_terms"><b>検索キーワードが見つかりません。</b>検索キーワードとは、ユーザーがあなたのサイトを訪問する際に検索エンジンで使ったキーワードのことです。</string>
 	<string name="custom_date">カスタム日付</string>
 	<string name="remote_changes">まだアップロードしていない投稿に変更を加えました。再読み込みしてローカルでの変更を上書きしますか ?</string>
 	<string name="upload">アップロード</string>

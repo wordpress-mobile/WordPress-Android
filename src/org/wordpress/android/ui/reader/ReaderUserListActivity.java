@@ -18,8 +18,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
  * Created by nbradbury on 7/8/13.
  */
 public class ReaderUserListActivity extends FragmentActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_POST_ID = "post_id";
 
     private ReaderPost mPost;
     private ReaderUserAdapter.ReaderUserListType mListType = ReaderUserAdapter.ReaderUserListType.UNKNOWN;
@@ -46,7 +46,7 @@ public class ReaderUserListActivity extends FragmentActivity {
     /*
      * called by adapter when data has been loaded
      */
-    private ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             // restore listView state - this returns to the previously scrolled-to item

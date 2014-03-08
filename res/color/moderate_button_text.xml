@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Text color for moderation buttons on comment detail
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/blue_medium" android:state_pressed="true" />
+    <item android:color="@color/blue_medium" android:state_selected="true" />
+    <item android:color="@color/blue_extra_dark" android:state_enabled="false" />
+    <item android:color="@color/white" />
+</selector>

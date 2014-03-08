@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -128,28 +129,34 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private float mLastYPos = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mActivity = (EditPostActivity)getActivity();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mActivity = (EditPostActivity) getActivity();
 
-        final ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_edit_post_content, container, false);
-
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_edit_post_content, container, false);
 
         mFormatBar = (LinearLayout) rootView.findViewById(R.id.format_bar);
-        mTitleEditText = (EditText)rootView.findViewById(R.id.post_title);
+        mTitleEditText = (EditText) rootView.findViewById(R.id.post_title);
         mTitleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // Go to full screen editor when 'next' button is tapped on soft keyboard
-                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar().isShowing())
+                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
+                }
                 return false;
             }
         });
-        mContentEditText = (WPEditText)rootView.findViewById(R.id.post_content);
-        mPostContentLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_content_wrapper);
-        mPostSettingsLinearLayout = (LinearLayout)rootView.findViewById(R.id.post_settings_wrapper);
+        mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
+        if (Build.VERSION.SDK_INT <= VERSION_CODES.GINGERBREAD_MR1) {
+            mContentEditText.setBackgroundResource(android.R.drawable.editbox_background_normal);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mContentEditText.getLayoutParams();
+            int sideMargin = mActivity.getResources().getDimensionPixelSize(
+                    R.dimen.post_editor_content_side_margin_gingerbread);
+            layoutParams.setMargins(sideMargin, layoutParams.topMargin, sideMargin, layoutParams.bottomMargin);
+            mContentEditText.setLayoutParams(layoutParams);
+        }
+        mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
+        mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
         Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
         postSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -459,6 +466,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         return false;
     }
 
+    protected boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
 
@@ -647,12 +658,17 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
+            if (!hasActivity()) {
+                return;
+            }
             if (ssb != null && ssb.length() > 0) {
                 Editable postContentEditable = mContentEditText.getText();
-                if (postContentEditable != null)
+                if (postContentEditable != null) {
                     postContentEditable.insert(0, ssb);
+                }
             } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                     .show();
             }
         }
     }
@@ -698,7 +714,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
@@ -711,13 +726,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
+            if (!hasActivity()) {
                 return;
-            
-            if (newUri != null)
+            }
+
+            if (newUri != null) {
                 addMedia(newUri, null);
-            else
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -805,13 +822,18 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onSuccess() {
+                        if (WordPress.getCurrentBlog() == null) {
+                            return;
+                        }
                         String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                         WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
                     }
 
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        if (hasActivity()) {
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -824,11 +846,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
         final int maxPictureWidthForContentEditor = 400;
         final int minPictureWidthForContentEditor = 200;
-        
+
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
             return;
-        
+
         final String mediaId = mediaFile.getMediaId();
         if (mediaId == null)
             return;
@@ -838,16 +860,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             String photonUrl = imageSpan.getImageSource().toString();
             imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
         } else {
-            //Not a Jetpack or wpcom blog
-           //imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
+            // Not a Jetpack or wpcom blog
+            // imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture
+            // of big dimensions can result in OOM Exception
             imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
 
         if (imageURL == null)
             return;
-        
-        WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
 
+        WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
             @Override
             public void onErrorResponse(VolleyError arg0) {
 
@@ -892,8 +914,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         MediaFile mediaFile = is.getMediaFile();
                         if (mediaFile == null)
                             continue;
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
-
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded() && hasActivity()) {
                             // replace the existing span with a new one with the correct image, re-add it to the same position.
                             int spanStart = s.getSpanStart(is);
                             int spanEnd = s.getSpanEnd(is);
@@ -1003,18 +1024,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mediaTitle = getResources().getString(R.string.video);
         } else {
             ImageHelper ih = new ImageHelper();
-            Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), getActivity());
 
-            if (mediaData == null) {
-                // data stream not returned
-                return false;
-            }
-
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            
             if (thumbnailBitmap == null)
                 return false;
 
-            mediaTitle = (String) mediaData.get("title");
+            mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);

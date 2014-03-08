@@ -8,14 +8,14 @@ import java.util.Map;
  * wrappers for extracting values from a Map object
  */
 public class MapUtils {
-
     /*
      * returns a String value for the passed key in the passed map
      * always returns "" instead of null
      */
     public static String getMapStr(final Map<?, ?> map, final String key) {
-        if (map==null || key==null || !map.containsKey(key))
+        if (map == null || key == null || !map.containsKey(key) || map.get(key) == null) {
             return "";
+        }
         return map.get(key).toString();
     }
 

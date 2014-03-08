@@ -75,16 +75,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private static final String TAG = "WPActionBarActivity";
 
     /**
-     * Request code used when no accounts exist, and user is prompted to add an
+     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
      */
     private static final int ADD_ACCOUNT_REQUEST = 100;
     /**
-     * Request code for reloading menu after returning from  the PreferencesActivity.
+     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
      */
     private static final int SETTINGS_REQUEST = 200;
     /**
-     * Request code for re-authentication
+     * AuthenticatorRequest code for re-authentication
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
@@ -111,8 +111,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isAnimatingRefreshButton;
     protected boolean mShouldAnimateRefreshButton;
     protected boolean mShouldFinish;
-    private boolean mIsXLargeDevice;
-    private boolean mIsStaticMenuDrawer;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
@@ -125,8 +123,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mIsXLargeDevice = true;
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -214,13 +210,30 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
+     * returns true if this is an extra-large device in landscape mode
+     */
+    protected boolean isXLargeLandscape() {
+        return isXLarge() && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    protected boolean isXLarge() {
+        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_XLARGE);
+    }
+
+    protected boolean isLargeOrXLarge() {
+        int mask = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK);
+        return (mask == Configuration.SCREENLAYOUT_SIZE_LARGE
+             || mask == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+    }
+
+    /**
      * Attach a menu drawer to the Activity
      * Set to be a static drawer if on a landscape x-large device
      */
     private MenuDrawer attachMenuDrawer() {
-        mIsStaticMenuDrawer = mIsXLargeDevice && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         final MenuDrawer menuDrawer;
-        if (mIsStaticMenuDrawer) {
+        if (isStaticMenuDrawer()) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
@@ -237,7 +250,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public boolean isStaticMenuDrawer() {
-        return mIsStaticMenuDrawer;
+        return isXLargeLandscape();
     }
 
     /*
@@ -350,7 +363,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     protected void startActivityWithDelay(final Intent i) {
-        if (mIsXLargeDevice && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isXLargeLandscape()) {
             // Tablets in landscape don't need a delay because the menu drawer doesn't close
             startActivity(i);
         } else {
@@ -548,6 +561,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
                         onBlogChanged();
+                    } else {
+                        // user has hidden all blogs
+                        onBlogChanged();
                     }
                     WordPress.registerForCloudMessaging(this);
                 }
@@ -620,10 +636,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     /**
-     * This method is called when the user changes the active blog.
+     * This method is called when the user changes the active blog or hides all blogs
      */
     public void onBlogChanged() {
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
+        WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
@@ -680,7 +696,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        if (mIsXLargeDevice) {
+        if (isXLarge()) {
             if (mMenuDrawer != null) {
                 // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
                 View content = mMenuDrawer.getContentContainer().getChildAt(0);
@@ -700,7 +716,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private class ReaderMenuItem extends MenuDrawerItem {
-
         ReaderMenuItem(){
             super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
         }
@@ -716,6 +731,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (!isSelected())
+                mShouldFinish = true;
             Intent intent;
             intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -781,10 +798,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof PagesActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra("viewPages", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -806,12 +825,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!(WPActionBarActivity.this instanceof CommentsActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
-            intent.putExtra("isNew",
-                    true);
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+            intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -871,11 +891,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
+            if (WordPress.getCurrentBlog() == null)
+                return;
             if (!isSelected())
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getLocalTableBlogId());
+            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);

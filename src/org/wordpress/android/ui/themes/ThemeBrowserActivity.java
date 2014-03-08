@@ -192,7 +192,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mFetchingThemes = true;
         startAnimatingRefreshButton();
 
-        WordPress.restClient.getThemes(siteId, 0, 0, new Listener() {
+        WordPress.getRestClientUtils().getThemes(siteId, 0, 0, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -209,7 +209,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     if (mIsRunning) {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
+                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg, errorTitle);
                         ft.add(fragment, "alert");
                         ft.commitAllowingStateLoss();
                     }
@@ -229,15 +229,18 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private void fetchCurrentTheme() {
         final String siteId = getBlogId();
 
-        WordPress.restClient.getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Theme theme = Theme.fromJSON(response);
-                    WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
-                    refreshViewPager();
+                    if (theme != null) {
+                        WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
+                        refreshViewPager();
+                    }
                 } catch (JSONException e) {
+                    AppLog.e(T.THEMES, e);
                 }
 
             }
@@ -328,12 +331,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
                             Theme theme = Theme.fromJSON(object);
-                            theme.save();
-                            themes.add(theme);
+                            if (theme != null) {
+                                theme.save();
+                                themes.add(theme);
+                            }
                         }
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(T.THEMES, e);
                 }
             }
             
@@ -452,7 +457,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
         mIsActivatingTheme = true;
 
-        WordPress.restClient.setTheme(siteId, themeId,
+        WordPress.getRestClientUtils().setTheme(siteId, themeId,
                 new Listener() {
 
                     @Override

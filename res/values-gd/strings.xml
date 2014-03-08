@@ -64,7 +64,7 @@
 	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
 	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
 	<string name="comment_approved">Chaidh aonta a thoirt ris a\' bheachd</string>
-	<string name="stats_empty_top_posts">&lt;b>Cha do lorg sinn gràinne-mhullaich phost no dhuilleagan fhathast.&lt;/b> Chì thu na puist is duilleagan air an deach coimhead as trice an-seo.</string>
+	<string name="stats_empty_top_posts"><b>Cha do lorg sinn gràinne-mhullaich phost no dhuilleagan fhathast.</b> Chì thu na puist is duilleagan air an deach coimhead as trice an-seo.</string>
 	<string name="unapproved">Ri dhèanamh</string>
 	<string name="invalid_username_too_short">Feumaidh ainm-cleachdaiche a bhith nas fhaide na 4 caractaran.</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>
@@ -276,11 +276,11 @@
 	<string name="passcode_enter_passcode">Cuir a-steach am PIN agad</string>
 	<string name="passcode_re_enter_passcode">Cuir a-steach am PIN agad a-rithist</string>
 	<string name="passcode_change_passcode">Atharraich am PIN</string>
-	<string name="stats_empty_referrers">&lt;b>Cha robh ath-threòrachadh ann.&lt;/b> Canar ath-threòrachadh ri cuideigin a bhriog air ceangal air làrach eile \'s a ràinig an làrach agad-sa air an dòigh sin.</string>
-	<string name="stats_empty_clicks">&lt;b>Cha deach briogadh a chlàradh.&lt;/b> Canar "briogadh" ri daoine a bhriogas air ceangal a tha a dol a-mach on làrach agad.</string>
+	<string name="stats_empty_referrers"><b>Cha robh ath-threòrachadh ann.</b> Canar ath-threòrachadh ri cuideigin a bhriog air ceangal air làrach eile \'s a ràinig an làrach agad-sa air an dòigh sin.</string>
+	<string name="stats_empty_clicks"><b>Cha deach briogadh a chlàradh.</b> Canar "briogadh" ri daoine a bhriogas air ceangal a tha a dol a-mach on làrach agad.</string>
 	<string name="stats_empty_tags_and_categories">Cha deach coimhead air post tagaichte no duilleag fhathast.</string>
 	<string name="stats_empty_video">Cha deach video sam bith a chluich fhathast.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Chan eil briathar-luirg ann.&lt;/b> \'S e na briathran-luirg na faclan no abairtean air an lorg daoine thu nuair a nì iad lorg.</string>
+	<string name="stats_empty_search_engine_terms"><b>Chan eil briathar-luirg ann.</b> \'S e na briathran-luirg na faclan no abairtean air an lorg daoine thu nuair a nì iad lorg.</string>
 	<string name="stats_bar_graph_empty">Chan eil stats ri fhaighinn.</string>
 	<string name="error_downloading_image">Mearachd a\' luchdadh a-nuas an deilbh. Feuch ris a-rithist.</string>
 	<string name="passcode_manage">Stiùirich glas a\' PIN</string>

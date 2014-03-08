@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.text.TextUtils;
+
 /**
  * Created by nbradbury on 7/11/13.
  * routines related to the Photon API
@@ -16,19 +18,15 @@ public class PhotonUtils {
      * replace it with a new ?s= parameter which requests the avatar at the exact size needed
      */
     public static String fixAvatar(final String imageUrl, int avatarSz) {
-        if (imageUrl==null)
-            throw new IllegalArgumentException("avatar imageUrl cannot be null");
+        if (TextUtils.isEmpty(imageUrl))
+            return "";
 
         // if this isn't a gravatar image, return as resized photon image url
         if (!imageUrl.contains("gravatar.com"))
             return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
 
-        // remove all other params
-        int queryPos = imageUrl.indexOf("?");
-        if (queryPos==-1)
-            return imageUrl + String.format("?s=%d", avatarSz);
-
-        return imageUrl.substring(0, queryPos) + String.format("?s=%d", avatarSz);
+        // remove all other params, then add query string for size and "mystery man" default
+        return UrlUtils.removeQuery(imageUrl) + String.format("?s=%d&d=mm", avatarSz);
     }
 
     /*
@@ -42,8 +40,8 @@ public class PhotonUtils {
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
-        if (imageUrl==null)
-            throw new IllegalArgumentException("photon imageUrl cannot be null");
+        if (TextUtils.isEmpty(imageUrl))
+            return "";
 
         // make sure it's valid
         int schemePos = imageUrl.indexOf("://");

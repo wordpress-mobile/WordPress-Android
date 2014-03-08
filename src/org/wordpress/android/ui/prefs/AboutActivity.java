@@ -14,7 +14,6 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.DeviceUtils;
 
 public class AboutActivity extends Activity implements OnClickListener {
 
@@ -29,11 +28,6 @@ public class AboutActivity extends Activity implements OnClickListener {
 
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            TextView appTitle = (TextView) findViewById(R.id.about_first_line);
-            appTitle.setText(getString(R.string.app_title_blackberry));
         }
 
         TextView version = (TextView) findViewById(R.id.about_version);

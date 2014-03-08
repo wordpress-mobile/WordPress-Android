@@ -34,12 +34,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -64,7 +64,6 @@ public class PostsListFragment extends ListFragment {
     private int mLoadedBlogId;
 
     public List<String> imageUrl = new Vector<String>();
-    public String errorMsg = "";
     public int totalDrafts = 0;
     public boolean isPage = false, shouldSelectAfterLoad = false;
     public int numRecords = 20;
@@ -146,8 +145,9 @@ public class PostsListFragment extends ListFragment {
                 } else {
                     if (!getActivity().isFinishing()) {
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(
-                                R.string.remote_changes), getString(R.string.local_changes), true);
+                        WPAlertDialogFragment alert = WPAlertDialogFragment.newConfirmDialog(
+                                getString(R.string.local_changes),
+                                getString(R.string.remote_changes));
                         ft.add(alert, "alert");
                         ft.commitAllowingStateLoss();
                     }
@@ -380,7 +380,7 @@ public class PostsListFragment extends ListFragment {
             if (loadedPosts == null) {
                 refreshPosts(false);
                 if (!isPage)
-                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(getActivity())).execute(false);
             }
             mListScrollPositionManager.restoreScrollOffset();
             return false;
@@ -527,7 +527,7 @@ public class PostsListFragment extends ListFragment {
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }
@@ -587,13 +587,6 @@ public class PostsListFragment extends ListFragment {
         protected void onPostExecute(Boolean result) {
             if (isCancelled() || !result) {
                 mOnRefreshListener.onRefresh(false);
-                if (getActivity() == null)
-                    return;
-                if (errorMsg != "" && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages
-                            : R.string.error_refresh_posts, ToastUtils.Duration.LONG);
-                    errorMsg = "";
-                }
                 return;
             }
 
@@ -618,17 +611,15 @@ public class PostsListFragment extends ListFragment {
             boolean success = false;
             List<?> arguments = args[0];
             mBlog = (Blog) arguments.get(0);
-            if (mBlog == null)
+            if (mBlog == null) {
                 return false;
+            }
             mIsPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
             mLoadMore = (Boolean) arguments.get(3);
-            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(),
-                    mBlog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
-            Object[] params = {mBlog.getRemoteBlogId(),
-                    mBlog.getUsername(),
-                    mBlog.getPassword(), recordCount};
+            Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), recordCount};
             try {
                 Object[] result = (Object[]) client.call((mIsPage) ? "wp.getPages"
                         : "metaWeblog.getRecentPosts", params);
@@ -647,9 +638,6 @@ public class PostsListFragment extends ListFragment {
                     }
                 }
             } catch (XMLRPCException e) {
-                errorMsg = e.getMessage();
-                if (errorMsg == null)
-                    errorMsg = getResources().getString(R.string.error_generic);
             }
 
             return success;
@@ -677,7 +665,7 @@ public class PostsListFragment extends ListFragment {
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(getString(R.string.post_not_found));
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }

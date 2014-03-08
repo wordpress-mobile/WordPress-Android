@@ -33,8 +33,8 @@ import org.wordpress.android.util.ToastUtils;
  * don't want the activity re-created while the reblog is being submitted
  */
 public class ReaderReblogActivity extends FragmentActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_POST_ID = "post_id";
 
     private long mBlogId;
     private long mPostId;
@@ -92,6 +92,12 @@ public class ReaderReblogActivity extends FragmentActivity {
             super.onBackPressed();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @SuppressLint("NewApi")
     private void loadPost() {
         if (SysUtils.canUseExecuteOnExecutor()) {
@@ -123,7 +129,7 @@ public class ReaderReblogActivity extends FragmentActivity {
     }
 
     private void submitReblog() {
-        if (mDestinationBlogId==0) {
+        if (mDestinationBlogId == 0) {
             ToastUtils.showToast(this, R.string.reader_toast_err_reblog_requires_blog);
             return;
         }
