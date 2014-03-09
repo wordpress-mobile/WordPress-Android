@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.net.http.SslError;
+import android.os.Build;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
@@ -14,11 +15,11 @@ import org.wordpress.android.models.Blog;
  * username and password of the blog configured for this activity.
  */
 public class WPWebViewClient extends WebViewClient {
-    private Blog blog;
+    private final Blog mBlog;
 
     public WPWebViewClient(Blog blog) {
         super();
-        this.blog = blog;
+        this.mBlog = blog;
     }
 
     @Override
@@ -38,17 +39,25 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-        handler.proceed(blog.getHttpuser(), blog.getHttppassword());
+        if (mBlog != null) {
+            handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
+        } else {
+            super.onReceivedHttpAuthRequest(view, handler, host, realm);
+        }
     }
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        String domain = UrlUtils.getDomainFromUrl(error.getUrl());
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-            handler.proceed();
-        } else {
-            super.onReceivedSslError(view, handler, error);
+        // error.getUrl() requires API 14
+        if (Build.VERSION.SDK_INT >= 14) {
+            String domain = UrlUtils.getDomainFromUrl(error.getUrl());
+            if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+                handler.proceed();
+                return;
+            }
         }
+
+        super.onReceivedSslError(view, handler, error);
     }
 }
 
