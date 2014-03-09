@@ -5,12 +5,10 @@ package org.wordpress.android.ui.notifications;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -75,9 +73,7 @@ public class DetailHeader extends LinearLayout {
             setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), NotificationsWebViewActivity.class);
-                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
-                    getContext().startActivity(intent);
+                    NotificationsWebViewActivity.openUrl(getContext(), url);
                 }
             });
         } else {

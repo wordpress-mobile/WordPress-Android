@@ -69,9 +69,7 @@ public class ReaderActivityLauncher {
             return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            Intent intent = new Intent(context, NotificationsWebViewActivity.class);
-            intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
-            context.startActivity(intent);
+            NotificationsWebViewActivity.openUrl(context, url);
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

@@ -11,8 +11,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -30,7 +28,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 public class FollowRow extends LinearLayout {
 
@@ -171,13 +168,7 @@ public class FollowRow extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if (mBlogURL != null) {
-                        try {
-                            Uri uri = Uri.parse(mBlogURL);
-                            getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                            AppLockManager.getInstance().setExtendedTimeout();
-                        } catch (Exception e) {
-                            AppLog.e(T.NOTIFS, e);
-                        }
+                        NotificationsWebViewActivity.openUrl(getContext(), mBlogURL);
                     }
                 }
             });
