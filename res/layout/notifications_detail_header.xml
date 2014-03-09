@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="center_vertical"
     android:paddingTop="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_medium"
@@ -19,5 +19,11 @@
         android:ellipsize="end"
         android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_medium" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_light" />
+
 
 </org.wordpress.android.ui.notifications.DetailHeader>

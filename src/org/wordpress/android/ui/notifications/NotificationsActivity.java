@@ -36,7 +36,6 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.FragmentUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -319,8 +318,8 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        FragmentUtils.setTransition(ft);
-        ft.replace(R.id.layout_fragment_container, detailFragment);
+        ft.replace(R.id.layout_fragment_container, detailFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // only add to backstack if we're removing the list view from the fragment container
         View container = findViewById(R.id.layout_fragment_container);
@@ -544,8 +543,8 @@ public class NotificationsActivity extends WPActionBarActivity
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentUtils.setTransition(ft);
         ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
           .commit();
     }
@@ -558,8 +557,8 @@ public class NotificationsActivity extends WPActionBarActivity
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentUtils.setTransition(ft);
         ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
           .commit();
     }

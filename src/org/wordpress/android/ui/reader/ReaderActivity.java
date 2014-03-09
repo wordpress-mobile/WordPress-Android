@@ -29,7 +29,6 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.FragmentUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 
@@ -241,7 +240,7 @@ public class ReaderActivity extends WPActionBarActivity
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentUtils.setTransition(ft);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // if list fragment exists, replace it with the detail and add to backstack
         if (hasListFragment()) {
