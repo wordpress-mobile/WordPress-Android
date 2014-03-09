@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
@@ -117,8 +118,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 mOriginalPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
                 if (mIsNewPost) {
                     // New posts are drafts by default
-                    mPost.setPost_status("draft");
-                    mOriginalPost.setPost_status("draft");
+                    mPost.setStatusEnum(PostStatus.DRAFT);
+                    mOriginalPost.setStatusEnum(PostStatus.DRAFT);
                 }
 
                 if (isPage) {
@@ -237,7 +238,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             // Display the save draft menu item if the post does not have a "published" status and
             // update the save menu item title depending on the status of the current post.
             if(mPost != null && mPost.getPost_status() != null
-                              && !mPost.getPost_status().equals("publish")) {
+                              && mPost.getStatusEnum() != PostStatus.PUBLISHED ) {
                 saveDraftMenuItem.setVisible(true);
                 saveMenuItem.setTitle(R.string.publish_post);
             } else {
@@ -261,8 +262,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
             }
 
             // If the current post's status is not publish, then automatically set status to publish.
-            if (!mPost.getPost_status().equals("publish")) {
-                mPost.setPost_status("publish");
+            if (mPost.getStatusEnum() != PostStatus.PUBLISHED) {
+                mPost.setStatusEnum(PostStatus.PUBLISHED);
                 savePost(false, true);
             } else {
                 savePost(false);
