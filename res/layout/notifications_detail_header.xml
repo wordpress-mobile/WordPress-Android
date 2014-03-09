@@ -5,11 +5,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:paddingTop="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium"
-    android:paddingBottom="@dimen/margin_medium"
-    android:paddingLeft="@dimen/margin_medium">
+    android:gravity="center_vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
@@ -17,12 +13,14 @@
         android:background="@drawable/note_header_selector"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:padding="@dimen/margin_large"
         android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_medium" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:background="@color/grey_light" />
 
 </org.wordpress.android.ui.notifications.DetailHeader>
