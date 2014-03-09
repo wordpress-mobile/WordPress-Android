@@ -43,7 +43,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         
         // load URL if one was provided in the intent
         String url = getIntent().getStringExtra(URL_TO_LOAD);
-        if (url != null) {
+        if (!TextUtils.isEmpty(url)) {
             loadUrl(url);
         }
     }

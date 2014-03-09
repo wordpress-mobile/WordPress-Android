@@ -10,7 +10,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
         android:layout_width="match_parent"
-        android:background="@drawable/note_header_selector"
+        android:background="@drawable/reader_transparent_selector"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:paddingLeft="@dimen/margin_large"
@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/margin_extra_large"
         android:paddingBottom="@dimen/margin_extra_large"
         android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textSize="@dimen/text_sz_large" />
 
     <View
         android:layout_width="match_parent"
