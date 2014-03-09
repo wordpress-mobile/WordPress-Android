@@ -29,6 +29,11 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.notification_follow_list, container, false);
+    }
     
     @Override
     public void onActivityCreated(Bundle bundle){
@@ -46,8 +51,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
             return;
         
         // set the header
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
+        final DetailHeader noteHeader = (DetailHeader) getView().findViewById(R.id.header);
         noteHeader.setText(JSONUtil.getStringDecoded(currentNote.queryJSON("subject", new JSONObject()), "text"));
         noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         String footerUrl = currentNote.queryJSON("body.header_link", "");
@@ -60,8 +64,6 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
             noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
         }
 
-        list.addHeaderView(noteHeader);
-        
         // set the adapter
         setListAdapter(new NoteAdapter());
     }

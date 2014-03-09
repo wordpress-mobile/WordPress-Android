@@ -28,7 +28,12 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
     }
-    
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.notification_follow_list, container, false);
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
@@ -51,8 +56,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         final String headerSnippet = getCommentSnippet(bodyItems);
         final String headerLink = (bodyObject != null ? JSONUtil.getString(bodyObject, "header_link") : "");
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
+        final DetailHeader noteHeader = (DetailHeader) getView().findViewById(R.id.header);
 
         // full header text is the subject + quoted snippet
         if (TextUtils.isEmpty(headerSnippet)) {
@@ -70,7 +74,6 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         if (getActivity() instanceof OnCommentClickListener) {
             noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
         }
-        list.addHeaderView(noteHeader);
 
         setListAdapter(new NoteAdapter());
     }
