@@ -13,7 +13,10 @@
         android:background="@drawable/note_header_selector"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:padding="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
         android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_medium" />
 
