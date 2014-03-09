@@ -24,6 +24,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
@@ -282,7 +283,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             WordPress.draftWasSaved = true;
-            Toast.makeText(this, getResources().getText(R.string.post_draft_saved), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, getString(R.string.post_draft_saved));
             // The current post is now the original post
             mOriginalPost = mPost.copy();
         } else if (itemId == android.R.id.home) {
