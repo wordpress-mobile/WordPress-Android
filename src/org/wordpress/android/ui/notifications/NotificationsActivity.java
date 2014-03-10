@@ -265,7 +265,7 @@ public class NotificationsActivity extends WPActionBarActivity
                             final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
 
                             note.setUnreadCount("0");
-                            if (notesAdapter.getPosition(note) < 0) {
+                            if (notesAdapter.indexOfNote(note) < 0) {
                                 // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
                                 // in the adapter and find a match with the noteID
                                 for (int i = 0; i < notesAdapter.getCount(); i++) {

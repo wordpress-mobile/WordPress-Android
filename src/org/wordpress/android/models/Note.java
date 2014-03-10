@@ -134,11 +134,38 @@ public class Note {
     }
 
     /*
-     * this is the text that is displayed in the notes adapter in NotificationListFragment
+     * returns subject as spanned html, with user names highlighted
      */
-    public String toString(){
-        return getSubject();
-    }
+    /*private transient Spanned mFormattedSubject;
+    public Spanned getFormattedSubject() {
+        if (mFormattedSubject == null) {
+            String subject = getSubject();
+            JSONArray items = queryJSON("body.items", new JSONArray());
+
+            if (items.length() > 0) {
+                StringBuilder sb = new StringBuilder(subject);
+                for (int i = 0; i < items.length(); i++) {
+                    try {
+                        String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
+                        if (!TextUtils.isEmpty(name)) {
+                            // note that we only replace the first instance of name to avoid false
+                            // matches
+                            int index = sb.indexOf(name);
+                            if (index > -1) {
+                                sb.replace(index, index + name.length(), "<b>" + name + "</b>");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        // nop
+                    }
+                }
+                mFormattedSubject = Html.fromHtml(sb.toString());
+            } else {
+                mFormattedSubject = Html.fromHtml(subject);
+            }
+        }
+        return mFormattedSubject;
+    }*/
 
     public JSONObject toJSONObject(){
         return mNoteJSON;

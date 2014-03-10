@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -20,6 +20,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class NotificationsListFragment extends ListFragment {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         // setup the initial notes adapter
-        mNotesAdapter = new NotesAdapter();
+        mNotesAdapter = new NotesAdapter(getActivity());
     }
 
     @Override
@@ -130,6 +131,7 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     private static class NoteViewHolder {
+        private final TextView txtLabel;
         private final TextView txtDetail;
         private final TextView unreadIndicator;
         private final TextView txtDate;
@@ -138,6 +140,7 @@ public class NotificationsListFragment extends ListFragment {
         private final ImageView imgNoteIcon;
 
         NoteViewHolder(View view) {
+            txtLabel = (TextView) view.findViewById(R.id.note_label);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
             txtDate = (TextView) view.findViewById(R.id.text_date);
@@ -147,33 +150,57 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
-    class NotesAdapter extends ArrayAdapter<Note> {
-        final int mAvatarSz;
-
-        NotesAdapter() {
-            this(getActivity());
-        }
+    class NotesAdapter extends BaseAdapter {
+        private final int mAvatarSz;
+        private final LayoutInflater mInflater;
+        private final ArrayList<Note> mNotes = new ArrayList<Note>();
 
         NotesAdapter(Context context) {
-            this(context, new ArrayList<Note>());
-        }
-
-        NotesAdapter(Context context, List<Note> notes) {
-            super(context, R.layout.note_list_item, R.id.note_label, notes);
+            mInflater = LayoutInflater.from(context);
             mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            final Note note = getItem(position);
+        public int getCount() {
+            return mNotes.size();
+        }
 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        private boolean isValidPosition(int position) {
+            return (position >= 0 && position < mNotes.size());
+        }
+
+        @Override
+        public Note getItem(int position) {
+            if (isValidPosition(position))
+                return mNotes.get(position);
+            return null;
+        }
+
+        public int indexOfNote(Note note) {
+            if (note == null)
+                return -1;
+            for (int i = 0; i < mNotes.size(); i++) {
+                if (StringUtils.equals(mNotes.get(i).getId(), note.getId()))
+                    return i;
+            }
+            return -1;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final Note note = getItem(position);
             final NoteViewHolder holder;
-            if (view.getTag() instanceof NoteViewHolder) {
-                holder = (NoteViewHolder) view.getTag();
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.note_list_item, null);
+                holder = new NoteViewHolder(convertView);
+                convertView.setTag(holder);
             } else {
-                holder = new NoteViewHolder(view);
-                view.setTag(holder);
+                holder = (NoteViewHolder) convertView.getTag();
             }
 
             if (note.isCommentType()) {
@@ -183,6 +210,7 @@ public class NotificationsListFragment extends ListFragment {
                 holder.txtDetail.setVisibility(View.GONE);
             }
 
+            holder.txtLabel.setText(note.getSubject());
             holder.txtDate.setText(note.getTimeSpan());
             holder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
@@ -192,7 +220,7 @@ public class NotificationsListFragment extends ListFragment {
             holder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
             holder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
-            return view;
+            return convertView;
         }
 
         public void addAll(List<Note> notes, boolean clearBeforeAdding) {
@@ -202,39 +230,17 @@ public class NotificationsListFragment extends ListFragment {
                 hideProgressFooter();
             } else {
                 Collections.sort(notes, new Note.TimeStampComparator());
-                // disable notifyOnChange while adding notes, otherwise notifyDataSetChanged
-                // will be triggered for each added note
-                setNotifyOnChange(false);
                 mIsAddingNotes = true;
                 try {
                     if (clearBeforeAdding)
-                        clear();
+                        mNotes.clear();
                     for (Note note: notes)
-                        add(note);
+                        mNotes.add(note);
                 } finally {
-                    setNotifyOnChange(true);
                     notifyDataSetChanged();
                     mIsAddingNotes = false;
                 }
             }
-        }
-
-        /*
-         * replaces an existing note with an updated one, returns the index of the note
-         * or -1 if it doesn't exist
-         */
-        public int updateNote(final Note originalNote, final Note updatedNote) {
-            if (originalNote==null || updatedNote==null)
-                return -1;
-
-            int position = getPosition(originalNote);
-            if (position >= 0) {
-                remove(originalNote);
-                insert(updatedNote, position);
-                notifyDataSetChanged();
-            }
-
-            return position;
         }
 
         @Override
