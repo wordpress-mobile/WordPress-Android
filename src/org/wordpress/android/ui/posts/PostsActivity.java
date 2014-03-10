@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -34,8 +35,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,7 +47,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+        OnRefreshListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
+        OnDetailPostActionListener, OnDialogConfirmListener {
+    public static final String EXTRA_VIEW_PAGES = "viewPages";
+
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3,
             POST_VIEW = 5;
@@ -82,24 +87,25 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             // Refresh blog content when returning to the app
             new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
                     new ApiHelper.GenericCallback() {
-                @Override
-                public void onSuccess() {
-                    if (!isFinishing())
-                        updateMenuDrawer();
-                }
+                        @Override
+                        public void onSuccess() {
+                            if (!isFinishing())
+                                updateMenuDrawer();
+                        }
 
-                @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
-                }
-            }).execute(false);
+                        @Override
+                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                            if (!isFinishing())
+                                ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
+                        }
+                    }).execute(false);
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
             if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID && lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
                 Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-                while(itemIterator.hasNext()){
+                while (itemIterator.hasNext()) {
                     MenuDrawerItem item = itemIterator.next();
                     // if we have a matching item id, and it's not selected and it's visible, call it
                     if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
@@ -122,7 +128,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         if (extras != null) {
-            mIsPage = extras.getBoolean("viewPages");
+            mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
             showErrorDialogIfNeeded(extras);
         }
 
@@ -133,20 +139,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         WordPress.currentPost = null;
 
-         WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener(){
-
-            @Override
-            public void OnPostUploaded() {
-                if (isFinishing())
-                    return;
-
-                checkForLocalChanges(false);
-            }
-
-         });
-
         if (savedInstanceState != null)
             popPostDetail();
+
+        attemptToSelectPost();
 
         WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
@@ -239,7 +235,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                                 int whichButton) {
                             popPostDetail();
                             attemptToSelectPost();
-                            mPostList.refreshPosts(false);
+                            mPostList.requestPosts(false);
                         }
                     });
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
@@ -255,9 +251,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             }
         } else {
             popPostDetail();
-            attemptToSelectPost();
             mShouldAnimateRefreshButton = true;
-            mPostList.refreshPosts(false);
+            mPostList.requestPosts(false);
         }
     }
 
@@ -280,13 +275,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (WordPress.isSignedIn(PostsActivity.this)) {
             showReaderIfNoBlog();
         }
-        if (mPostList.getListView().getCount() == 0)
-            mPostList.loadPosts(false);
         if (WordPress.postsShouldRefresh) {
             checkForLocalChanges(false);
             WordPress.postsShouldRefresh = false;
         }
-        attemptToSelectPost();
     }
 
     @Override
@@ -294,13 +286,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onPause();
         if (mIsRefreshing)
             stopAnimatingRefreshButton(mRefreshMenuItem);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mPostList.getPostsTask != null)
-            mPostList.getPostsTask.cancel(true);
     }
 
     @Override
@@ -369,7 +354,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (data != null) {
             if (requestCode == ACTIVITY_EDIT_POST && resultCode == RESULT_OK) {
                 if (data.getBooleanExtra("shouldRefresh", false)) {
-                    mPostList.loadPosts(false);
+                    mPostList.getPostListAdapter().loadPosts();
                 }
             }
         }
@@ -380,7 +365,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
-            mPostList.shouldSelectAfterLoad = true;
+            mPostList.setShouldSelectFirstPost(true);
         }
     }
 
@@ -414,7 +399,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             @Override
             public void run() {
                 if (start) {
-                    attemptToSelectPost();
                     mShouldAnimateRefreshButton = true;
                     startAnimatingRefreshButton(mRefreshMenuItem);
                     mIsRefreshing = true;
@@ -478,8 +462,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
                 post.delete();
-                attemptToSelectPost();
-                mPostList.loadPosts(false);
+                mPostList.requestPosts(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
@@ -501,11 +484,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         protected Boolean doInBackground(Post... params) {
             boolean result = false;
             post = params[0];
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object[] postParams = { "", post.getPostid(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -593,11 +574,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             post = params[0];
             if (post == null)
                 return null;
-            XMLRPCClient client = new XMLRPCClient(
-                    WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
-
+            Blog blog = WordPress.currentBlog;
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
             Object versionResult = new Object();
             try {
                 if (mIsPage) {
@@ -693,12 +672,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public void onPostAction(int action, final Post post) {
-        if (mPostList.getPostsTask != null) {
-            mPostList.getPostsTask.cancel(true);
-            //titleBar.stopRotatingRefreshIcon();
-            mIsRefreshing = false;
-        }
-
         // No post? No service.
         if (post == null) {
             Toast.makeText(PostsActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
@@ -723,7 +696,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                                 post.delete();
                                 popPostDetail();
                                 attemptToSelectPost();
-                                mPostList.loadPosts(false);
+                                mPostList.getPostListAdapter().loadPosts();
                             }
                         });
                 dialogBuilder.setNegativeButton(
@@ -792,16 +765,17 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public void onDetailPostAction(int action, Post post) {
-
         onPostAction(action, post);
-
     }
 
     @Override
     public void onDialogConfirm() {
-        mPostList.switcher.showNext();
-        mPostList.numRecords += 30;
-        mPostList.refreshPosts(true);
+        mPostList.requestPosts(true);
+    }
+
+    @Override
+    public void onSinglePostLoaded() {
+        popPostDetail();
     }
 
     @Override
@@ -817,7 +791,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onBlogChanged();
         popPostDetail();
         attemptToSelectPost();
-        mPostList.loadPosts(false);
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
+        mPostList.clear();
+        mPostList.getPostListAdapter().loadPosts();
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
     }
 }

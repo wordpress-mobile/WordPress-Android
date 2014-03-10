@@ -3,6 +3,7 @@ package org.wordpress.android.ui.comments;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -17,20 +18,22 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    OnAnimateRefreshButtonListener,
+                   CommentDetailFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
 
-    private CommentsListFragment mCommentListFragment;
     private MenuItem mRefreshMenuItem;
+    private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createMenuDrawer(R.layout.comments);
+        createMenuDrawer(R.layout.comment_activity);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -38,20 +41,35 @@ public class CommentsActivity extends WPActionBarActivity
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mCommentListFragment = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
-        WordPress.currentComment = null;
-
-        if (savedInstanceState != null)
-            popCommentDetail();
+        if (savedInstanceState != null) {
+            // restore the highlighted comment (for tablet UI after rotation)
+            long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
+            if (commentId != 0) {
+                if (hasListFragment())
+                    getListFragment().setHighlightedCommentId(commentId);
+            }
+        }
     }
 
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        if (mCommentListFragment != null)
-            mCommentListFragment.clear();
-        updateCommentList();
+
+        // clear the backstack
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        // clear and update the comment list
+        if (hasListFragment()) {
+            getListFragment().clear();
+            updateCommentList();
+        }
+
+        // clear comment detail
+        if (hasDetailFragment()) {
+            getDetailFragment().clear();
+        }
     }
 
     @Override
@@ -69,17 +87,22 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            popCommentDetail();
-            updateCommentList();
-            return true;
-        } else if (itemId == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                popCommentDetail();
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                updateCommentList();
                 return true;
-            }
+            case android.R.id.home:
+                if (isLargeOrXLarge()) {
+                    // let WPActionBarActivity handle it (toggles menu drawer)
+                    return super.onOptionsItemSelected(item);
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                        return true;
+                    }
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -92,14 +115,6 @@ public class CommentsActivity extends WPActionBarActivity
         }
     };
 
-    protected void popCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (f == null) {
-            fm.popBackStack();
-        }
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -107,10 +122,10 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     /*
-     * called from comment list & comment detail when comments are moderated, added, or deleted
+     * called from comment list & comment detail when comments are moderated/replied/trashed
      */
     @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom) {
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         // update the comment counter on the menu drawer
         updateMenuDrawer();
 
@@ -119,9 +134,76 @@ public class CommentsActivity extends WPActionBarActivity
                 reloadCommentDetail();
                 break;
             case COMMENT_DETAIL:
-                reloadCommentList();
+                switch (changeType) {
+                    case TRASHED:
+                        updateCommentList();
+                        // remove the detail view since comment was deleted
+                        FragmentManager fm = getSupportFragmentManager();
+                        if (fm.getBackStackEntryCount() > 0) {
+                            fm.popBackStack();
+                        }
+                        break;
+                    case REPLIED:
+                        updateCommentList();
+                        break;
+                    default:
+                        reloadCommentList();
+                        break;
+                }
                 break;
         }
+    }
+
+    private CommentDetailFragment getDetailFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_detail));
+        if (fragment == null)
+            return null;
+        return (CommentDetailFragment)fragment;
+    }
+
+    private boolean hasDetailFragment() {
+        return (getDetailFragment() != null);
+    }
+
+    private CommentsListFragment getListFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_list));
+        if (fragment == null)
+            return null;
+        return (CommentsListFragment)fragment;
+    }
+
+    private boolean hasListFragment() {
+        return (getListFragment() != null);
+    }
+
+    private ReaderPostDetailFragment getReaderFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
+        if (fragment == null)
+            return null;
+        return (ReaderPostDetailFragment)fragment;
+    }
+
+    private boolean hasReaderFragment() {
+        return (getReaderFragment() != null);
+    }
+
+    void showReaderFragment(long remoteBlogId, long postId) {
+        // stop animating the refresh button to prevent it from appearing in the
+        // reader fragment's ActionBar
+        onAnimateRefreshButton(false);
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.executePendingTransactions();
+
+        Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        FragmentTransaction ft = fm.beginTransaction();
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (hasDetailFragment())
+            ft.hide(getDetailFragment());
+        ft.commit();
     }
 
     /*
@@ -129,54 +211,71 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentSelected(Comment comment) {
+        if (comment == null)
+            return;
+
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
-        CommentDetailFragment f = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
 
-        if (comment != null && fm.getBackStackEntryCount() == 0) {
-            if (f == null || !f.isInLayout()) {
-                WordPress.currentComment = comment;
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.hide(mCommentListFragment);
-                f = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-                ft.add(R.id.commentDetailFragmentContainer, f);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
-            } else {
-                // tablet mode with list/detail side-by-side - show this comment in the detail view,
-                // and highlight it in the list view
-                f.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-                if (mCommentListFragment != null)
-                    mCommentListFragment.setHighlightedCommentId(comment.commentID);
-            }
+        CommentDetailFragment detailFragment = getDetailFragment();
+        CommentsListFragment listFragment = getListFragment();
+
+        if (detailFragment == null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            String tagForFragment = getString(R.string.fragment_tag_comment_detail);
+            detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
+            ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment)
+              .addToBackStack(tagForFragment)
+              .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            if (listFragment != null)
+                ft.hide(listFragment);
+            ft.commitAllowingStateLoss();
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        } else {
+            // tablet mode with list/detail side-by-side - remove the reader fragment if it exists,
+            // then show this comment in the detail view and highlight it in the list view
+            if (hasReaderFragment())
+                fm.popBackStackImmediate();
+            detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
+            if (listFragment != null)
+                listFragment.setHighlightedCommentId(comment.commentID);
         }
+    }
+
+    /*
+     * called from comment detail when user taps a link to a post - show the post in a
+     * reader detail fragment
+     */
+    @Override
+    public void onPostClicked(long remoteBlogId, long postId) {
+        showReaderFragment(remoteBlogId, postId);
     }
 
     /*
      * reload the comment in the detail view if it's showing
      */
     private void reloadCommentDetail() {
-        FragmentManager fm = getSupportFragmentManager();
-        CommentDetailFragment fragment = (CommentDetailFragment) fm.findFragmentById(R.id.commentDetail);
-        if (fragment != null)
-            fragment.reloadComment();
+        CommentDetailFragment detailFragment = getDetailFragment();
+        if (detailFragment != null)
+            detailFragment.reloadComment();
     }
 
     /*
      * reload the comment list from existing data
      */
     private void reloadCommentList() {
-        if (mCommentListFragment != null)
-            mCommentListFragment.loadComments();
+        CommentsListFragment listFragment = getListFragment();
+        if (listFragment != null)
+            listFragment.loadComments();
     }
 
     /*
      * tell the comment list to get recent comments from server
      */
     private void updateCommentList() {
-        if (mCommentListFragment != null)
-            mCommentListFragment.updateComments(false);
+        CommentsListFragment listFragment = getListFragment();
+        if (listFragment != null)
+            listFragment.updateComments(false);
     }
 
     @Override
@@ -197,6 +296,13 @@ public class CommentsActivity extends WPActionBarActivity
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
+        // retain the id of the highlighted comment
+        if (hasListFragment()) {
+            long commentId = getListFragment().getHighlightedCommentId();
+            if (commentId != 0 )
+                outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -207,5 +313,4 @@ public class CommentsActivity extends WPActionBarActivity
             return dialog;
         return super.onCreateDialog(id);
     }
-
 }

@@ -6,7 +6,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_grey">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -56,6 +57,8 @@
                     android:text="text_post_title"
                     android:maxLines="1"
                     android:ellipsize="end"
+                    android:paddingTop="@dimen/margin_extra_small"
+                    android:paddingBottom="@dimen/margin_extra_small"
                     android:textColor="@color/grey_medium"
                     android:textSize="@dimen/text_sz_large" />
 

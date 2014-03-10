@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,12 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.util.AppLog;
@@ -40,9 +43,11 @@ import java.util.Map;
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
+    private boolean mHasAutoRefreshedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private ListView mListView;
+    private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
 
@@ -51,6 +56,7 @@ public class CommentsListFragment extends Fragment {
     private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
+    private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
 
     private ListView getListView() {
         return mListView;
@@ -58,6 +64,22 @@ public class CommentsListFragment extends Fragment {
 
     private CommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
+            /*
+             * called after comments have been loaded
+             */
+            CommentAdapter.DataLoadedListener dataLoadedListener = new CommentAdapter.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (!hasActivity())
+                        return;
+                    if (isEmpty) {
+                        showEmptyView();
+                    } else {
+                        hideEmptyView();
+                    }
+                }
+            };
+
             // adapter calls this to request more comments from server when it reaches the end
             CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
                 @Override
@@ -83,7 +105,10 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mCommentAdapter = new CommentAdapter(getActivity(), loadMoreListener, changeListener);
+            mCommentAdapter = new CommentAdapter(getActivity(),
+                                                 dataLoadedListener,
+                                                 loadMoreListener,
+                                                 changeListener);
         }
         return mCommentAdapter;
     }
@@ -96,9 +121,17 @@ public class CommentsListFragment extends Fragment {
         return getCommentAdapter().getSelectedCommentCount();
     }
 
-    protected void clear() {
+    void clear() {
         if (hasCommentAdapter())
             getCommentAdapter().clear();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED);
+        }
     }
 
     @Override
@@ -106,7 +139,10 @@ public class CommentsListFragment extends Fragment {
         super.onActivityCreated(bundle);
         setUpListView();
         getCommentAdapter().loadComments();
-        updateComments(false);
+        if (!mHasAutoRefreshedComments) {
+            updateComments(false);
+            mHasAutoRefreshedComments = true;
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -124,10 +160,10 @@ public class CommentsListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_comments_fragment, container, false);
+        View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setEmptyView(view.findViewById(android.R.id.empty));
+        mEmptyView = view.findViewById(android.R.id.empty);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -146,7 +182,7 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private void moderateSelectedComments(CommentStatus newStatus) {
+    private void moderateSelectedComments(final CommentStatus newStatus) {
         final CommentList selectedComments = getCommentAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
 
@@ -180,7 +216,6 @@ public class CommentsListFragment extends Fragment {
         }
         getActivity().showDialog(dlgId);
 
-
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
@@ -191,8 +226,10 @@ public class CommentsListFragment extends Fragment {
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
+                    if (mOnCommentChangeListener != null) {
+                        ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, changeType);
+                    }
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -240,7 +277,7 @@ public class CommentsListFragment extends Fragment {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
                     if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST);
+                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, ChangeType.TRASHED);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -250,7 +287,10 @@ public class CommentsListFragment extends Fragment {
         CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
     }
 
-    protected void setHighlightedCommentId(int commentId) {
+    long getHighlightedCommentId() {
+        return (hasCommentAdapter() ? getCommentAdapter().getHighlightedCommentId() : 0);
+    }
+    void setHighlightedCommentId(long commentId) {
         getCommentAdapter().setHighlightedCommentId(commentId);
     }
 
@@ -288,7 +328,7 @@ public class CommentsListFragment extends Fragment {
         });
     }
 
-    protected void loadComments() {
+    void loadComments() {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
@@ -300,7 +340,7 @@ public class CommentsListFragment extends Fragment {
      * existing ones
      */
     @SuppressLint("NewApi")
-    protected void updateComments(boolean loadMore) {
+    void updateComments(boolean loadMore) {
         if (mIsUpdatingComments)
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
         if (SysUtils.canUseExecuteOnExecutor()) {
@@ -316,7 +356,7 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         final boolean isLoadingMore;
-        String errorMessage;
+        String xmlRpcErrorMessage;
 
         private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
@@ -344,6 +384,12 @@ public class CommentsListFragment extends Fragment {
             if (!hasActivity())
                 return null;
 
+            Blog blog = WordPress.getCurrentBlog();
+            if (blog == null) {
+                isError = true;
+                return null;
+            }
+
             Map<String, Object> hPost = new HashMap<String, Object>();
             if (isLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
@@ -353,14 +399,14 @@ public class CommentsListFragment extends Fragment {
                 hPost.put("number", COMMENTS_PER_PAGE);
             }
 
-            Object[] params = { WordPress.currentBlog.getRemoteBlogId(),
-                                WordPress.currentBlog.getUsername(),
-                                WordPress.currentBlog.getPassword(),
+            Object[] params = { blog.getRemoteBlogId(),
+                                blog.getUsername(),
+                                blog.getPassword(),
                                 hPost };
             try {
                 return ApiHelper.refreshComments(getActivity(), params);
             } catch (XMLRPCException e) {
-                errorMessage = e.getMessage();
+                xmlRpcErrorMessage = e.getMessage();
                 isError = true;
                 return null;
             }
@@ -384,8 +430,13 @@ public class CommentsListFragment extends Fragment {
 
             // result will be null on error OR if no more comments exists
             if (comments == null) {
-                if (isError && !getActivity().isFinishing())
-                    ToastUtils.showToastOrAuthAlert(getActivity(), errorMessage, getString(R.string.error_refresh_comments));
+                if (isError && !getActivity().isFinishing()) {
+                    if (!TextUtils.isEmpty(xmlRpcErrorMessage)) {
+                        ToastUtils.showToastOrAuthAlert(getActivity(), xmlRpcErrorMessage, getString(R.string.error_refresh_comments));
+                    } else {
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                    }
+                }
                 return;
             }
 
@@ -407,11 +458,22 @@ public class CommentsListFragment extends Fragment {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.putBoolean(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
         super.onSaveInstanceState(outState);
     }
 
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
+    }
+
+    private void showEmptyView() {
+        if (mEmptyView != null)
+            mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyView() {
+        if (mEmptyView != null)
+            mEmptyView.setVisibility(View.GONE);
     }
 
     /*

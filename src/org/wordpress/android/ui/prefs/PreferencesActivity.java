@@ -1,5 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -37,6 +46,8 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.passcodelock.AppLockManager;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -46,21 +57,10 @@ import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPEditTextPreference;
-import org.wordpress.passcodelock.AppLockManager;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
@@ -111,7 +111,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Request notification settings if needed
+        // AuthenticatorRequest notification settings if needed
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
             String settingsJson = mSettings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
@@ -315,23 +315,11 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             hideNotificationBlogsCategory();
         } else {
             if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-                if (DeviceUtils.getInstance().isBlackBerry()) {
-                    mTaglineTextPreference.setSummary(R.string.posted_from_blackberry);
-                    mTaglineTextPreference.setText(getString(R.string.posted_from_blackberry));
-                } else {
-                    mTaglineTextPreference.setSummary(R.string.posted_from);
-                    mTaglineTextPreference.setText(getString(R.string.posted_from));
-                }
+                mTaglineTextPreference.setSummary(R.string.posted_from);
+                mTaglineTextPreference.setText(getString(R.string.posted_from));
             } else {
                 mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
             }
-        }
-
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            PreferenceCategory appAboutSectionName = (PreferenceCategory) findPreference("wp_pref_app_about_section");
-            appAboutSectionName.setTitle(getString(R.string.app_title_blackberry));
-            Preference appName = (Preference) findPreference("wp_pref_app_title");
-            appName.setTitle(getString(R.string.app_title_blackberry));
         }
     }
 

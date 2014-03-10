@@ -17,6 +17,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -24,27 +25,28 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EditCommentActivity extends SherlockActivity {
-    protected static final String ARG_LOCAL_BLOG_ID = "blog_id";
-    protected static final String ARG_COMMENT_ID = "comment_id";
+    static final String ARG_LOCAL_BLOG_ID = "blog_id";
+    static final String ARG_COMMENT_ID = "comment_id";
 
     private static final int ID_DIALOG_SAVING = 0;
 
     private int mLocalBlogId;
-    private int mCommentId;
+    private long mCommentId;
     private Comment mComment;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setContentView(R.layout.edit_comment);
+        setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
 
         ActionBar actionBar = getSupportActionBar();
@@ -64,7 +66,7 @@ public class EditCommentActivity extends SherlockActivity {
             return false;
 
         mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
-        mCommentId = intent.getIntExtra(ARG_COMMENT_ID, 0);
+        mCommentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
         mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
         if (mComment == null)
             return false;
@@ -215,7 +217,7 @@ public class EditCommentActivity extends SherlockActivity {
         protected Boolean doInBackground(Void... params) {
             final Blog blog;
             try {
-                blog = new Blog(mLocalBlogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
             } catch (Exception e) {
                 AppLog.e(AppLog.T.COMMENTS, e);
                 return false;
@@ -233,17 +235,10 @@ public class EditCommentActivity extends SherlockActivity {
             postHash.put("author_url",   authorUrl);
             postHash.put("author_email", authorEmail);
 
-            XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
-            Object[] xmlParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
-                    mCommentId,
-                    postHash};
+            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), Long.toString(
+                    mCommentId), postHash};
 
             try {
                 Object result = client.call("wp.editComment", xmlParams);
@@ -311,5 +306,4 @@ public class EditCommentActivity extends SherlockActivity {
             super.onBackPressed();
         }
     }
-
 }

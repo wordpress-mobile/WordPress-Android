@@ -32,31 +32,31 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * Created by nbradbury on 6/27/13.
  */
 public class ReaderCommentAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
-    private ReaderPost mPost;
+    private final LayoutInflater mInflater;
+    private final ReaderPost mPost;
     private boolean mMoreCommentsExist;
 
     private static final int MAX_INDENT_LEVEL = 2;
-    private int mIndentPerLevel;
-    private int mAvatarSz;
-    private int mMaxImageSz;
+    private final int mIndentPerLevel;
+    private final int mAvatarSz;
+    private final int mMaxImageSz;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
 
-    private int mBgColorNormal;
-    private int mBgColorHighlight;
-    private int mLinkColor;
-    private int mNoLinkColor;
+    private final int mBgColorNormal;
+    private final int mBgColorHighlight;
+    private final int mLinkColor;
+    private final int mNoLinkColor;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();
-    private RequestReplyListener mReplyListener;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderActions.DataRequestedListener mDataRequestedListener;
+    private final RequestReplyListener mReplyListener;
+    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,
@@ -82,7 +82,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @SuppressLint("NewApi")
     public void refreshComments() {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "Load comments task already running");
+            AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -120,15 +120,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         CommentViewHolder holder;
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
-            holder = new CommentViewHolder();
-            holder.txtAuthor = (TextView) convertView.findViewById(R.id.text_comment_author);
-            holder.txtText = (TextView) convertView.findViewById(R.id.text_comment_text);
-            holder.txtDate = (TextView) convertView.findViewById(R.id.text_comment_date);
-            holder.txtReply = (TextView) convertView.findViewById(R.id.text_reply);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-            holder.spacerIndent = convertView.findViewById(R.id.spacer_indent);
-            holder.spacerTop = convertView.findViewById(R.id.spacer_top);
-            holder.progress = (ProgressBar) convertView.findViewById(R.id.progress);
+            holder = new CommentViewHolder(convertView);
             convertView.setTag(holder);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
@@ -197,20 +189,34 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_NEWER);
 
+        // hide divider if this is the last comment
+        holder.divider.setVisibility(position < getCount()-1 ? View.VISIBLE : View.INVISIBLE);
+
         return convertView;
     }
 
-
-
     private static class CommentViewHolder {
-        private TextView txtAuthor;
-        private TextView txtText;
-        private TextView txtDate;
-        private TextView txtReply;
-        private WPNetworkImageView imgAvatar;
-        private View spacerIndent;
-        private View spacerTop;
-        private ProgressBar progress;
+        private final TextView txtAuthor;
+        private final TextView txtText;
+        private final TextView txtDate;
+        private final TextView txtReply;
+        private final WPNetworkImageView imgAvatar;
+        private final View spacerIndent;
+        private final View spacerTop;
+        private final ProgressBar progress;
+        private final View divider;
+
+        CommentViewHolder(View view) {
+            txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
+            txtText = (TextView) view.findViewById(R.id.text_comment_text);
+            txtDate = (TextView) view.findViewById(R.id.text_comment_date);
+            txtReply = (TextView) view.findViewById(R.id.text_reply);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+            spacerIndent = view.findViewById(R.id.spacer_indent);
+            spacerTop = view.findViewById(R.id.spacer_top);
+            progress = (ProgressBar) view.findViewById(R.id.progress);
+            divider = view.findViewById(R.id.divider_comment);
+        }
     }
 
     /*

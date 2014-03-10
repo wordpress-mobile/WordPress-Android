@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -61,10 +62,8 @@ public class ReaderTagActions {
 
             case ADD :
                 originalTopic = null; // prevent compiler warning
-                ReaderTag newTopic = new ReaderTag();
-                newTopic.setTagName(tagName);
-                newTopic.tagType = ReaderTag.ReaderTagType.SUBSCRIBED;
-                newTopic.setEndpoint("/read/tags/" + tagNameForApi + "/posts");
+                String endpoint = "/read/tags/" + tagNameForApi + "/posts";
+                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.SUBSCRIBED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
@@ -117,7 +116,7 @@ public class ReaderTagActions {
                     actionListener.onActionResult(false);
             }
         };
-        WordPress.restClient.post(path, listener, errorListener);
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
     }
@@ -163,7 +162,7 @@ public class ReaderTagActions {
             }
         };
         AppLog.d(T.READER, "updating reader tags");
-        WordPress.restClient.get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get("read/menu", null, null, listener, errorListener);
     }
     private static void handleUpdateTagsResponse(final JSONObject jsonObject, final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject==null) {
@@ -235,11 +234,9 @@ public class ReaderTagActions {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic!=null) {
-                ReaderTag topic = new ReaderTag();
-                topic.tagType = topicType;
-                topic.setTagName(JSONUtil.getStringDecoded(jsonTopic, "title"));
-                topic.setEndpoint(JSONUtil.getString(jsonTopic, "URL"));
-                topics.add(topic);
+                String tagName = JSONUtil.getStringDecoded(jsonTopic, "title");
+                String endpoint = JSONUtil.getString(jsonTopic, "URL");
+                topics.add(new ReaderTag(tagName, endpoint, topicType));
             }
         }
 

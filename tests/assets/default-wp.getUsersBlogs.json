@@ -1,0 +1,20 @@
+[{"blogName":"taliwutblog","xmlrpc":"https://taliwutblog.wordpress.com/xmlrpc.php",
+      "blogid":"57991476",
+      "isAdmin":true,
+      "url":"https://taliwutblog.wordpress.com/"
+   },
+   {
+      "blogName":"Empty blog stays empty",
+      "xmlrpc":"https://tataliwut.wordpress.com/xmlrpc.php",
+      "blogid":"59073674",
+      "isAdmin":true,
+      "url":"https://tataliwut.wordpress.com/"
+   },
+   {
+      "blogName":"I Love Cute Cats",
+      "xmlrpc":"https://ilovecutecats.wordpress.com/xmlrpc.php",
+      "blogid":"61784930",
+      "isAdmin":true,
+      "url":"https://ilovecutecats.wordpress.com/"
+   }
+]

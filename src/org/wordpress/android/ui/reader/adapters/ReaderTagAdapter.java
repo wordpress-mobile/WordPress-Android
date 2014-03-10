@@ -30,13 +30,13 @@ public class ReaderTagAdapter extends BaseAdapter {
         public void onTagAction(ReaderTagActions.TagAction action, String tagName);
     }
 
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private ReaderTagList mTags = new ReaderTagList();
-    private TagActionListener mTagListener;
+    private final TagActionListener mTagListener;
     private ReaderTag.ReaderTagType mTagType;
     private ReaderActions.DataLoadedListener mDataLoadadListener;
-    private Drawable mDrawableAdd;
-    private Drawable mDrawableRemove;
+    private final Drawable mDrawableAdd;
+    private final Drawable mDrawableRemove;
 
     public ReaderTagAdapter(Context context, TagActionListener tagListener) {
         super();

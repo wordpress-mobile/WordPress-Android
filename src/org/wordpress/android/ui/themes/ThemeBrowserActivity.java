@@ -192,7 +192,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mFetchingThemes = true;
         startAnimatingRefreshButton();
 
-        WordPress.restClient.getThemes(siteId, 0, 0, new Listener() {
+        WordPress.getRestClientUtils().getThemes(siteId, 0, 0, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -209,7 +209,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     if (mIsRunning) {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
+                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg, errorTitle);
                         ft.add(fragment, "alert");
                         ft.commitAllowingStateLoss();
                     }
@@ -229,7 +229,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private void fetchCurrentTheme() {
         final String siteId = getBlogId();
 
-        WordPress.restClient.getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -309,6 +309,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private String getBlogId() {
+        if (WordPress.getCurrentBlog() == null)
+            return "0";
         return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
@@ -457,7 +459,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
         mIsActivatingTheme = true;
 
-        WordPress.restClient.setTheme(siteId, themeId,
+        WordPress.getRestClientUtils().setTheme(siteId, themeId,
                 new Listener() {
 
                     @Override

@@ -1,5 +1,9 @@
-
 package org.wordpress.android.ui.accounts;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,18 +34,14 @@ import android.widget.TextView;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.emailchecker.EmailChecker;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     final private static String DOT_COM_BASE_URL = "https://wordpress.com";
@@ -68,8 +68,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.nux_fragment_welcome, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
@@ -167,14 +166,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private void autocorrectUsername() {
-        if (mEmailAutoCorrected)
+        if (mEmailAutoCorrected) {
             return;
+        }
         final String email = EditTextUtils.getText(mUsernameEditText).trim();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find()) {
-            return ;
+            return;
         }
         // It looks like an email address, then try to correct it
         String suggest = mEmailChecker.suggestDomainCorrection(email);
@@ -351,6 +351,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
+        private boolean mIsCurrentSslCertificatesForcedTrusted;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -360,6 +361,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setHttpPassword(password);
         }
 
+        private void setCurrentSslCertificatesForcedTrusted(boolean trustAll) {
+            mIsCurrentSslCertificatesForcedTrusted = trustAll;
+        }
+        
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
@@ -369,11 +374,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
             if (mSelfHosted) {
                 mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
+                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(mIsCurrentSslCertificatesForcedTrusted);
             } else {
                 mSetupBlog.setSelfHostedURL(null);
+                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(false); //wpcom always false
             }
-            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) :
-                    getString(R.string.connecting_wpcom));
+            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
+                    R.string.connecting_wpcom));
         }
 
         @Override
@@ -386,46 +393,70 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             return userBlogList;
         }
 
+        private void httpAuthRequired() {
+            // Prompt for http credentials
+            mSetupBlog.setHttpAuthRequired(false);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(R.string.http_authorization_required);
+
+            View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
+            final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
+            final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
+            alert.setView(httpAuth);
+            alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    SetupBlogTask setupBlogTask = new SetupBlogTask();
+                    setupBlogTask.setHttpCredentials(EditTextUtils.getText(usernameEditText), EditTextUtils.getText(
+                            passwordEditText));
+                    setupBlogTask.execute();
+                }
+            });
+
+            alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Canceled.
+                }
+            });
+
+            alert.show();
+            endProgress();
+        }
+
+        private void askForSslTrust() {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getString(R.string.ssl_certificate_error));
+            alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
+            alert.setPositiveButton(
+                    android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    SetupBlogTask setupBlogTask = new SetupBlogTask();
+                    setupBlogTask.setCurrentSslCertificatesForcedTrusted(true);
+                    setupBlogTask.execute();
+                }
+            });
+            alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Canceled.
+                    mIsCurrentSslCertificatesForcedTrusted = false;
+                }
+            });
+            alert.show();
+            endProgress();
+        }
+
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
-            if (mSetupBlog.isHttpAuthRequired()) {
-                if (!hasActivity()) {
-                    return ;
-                }
-                // Prompt for http credentials
-                mSetupBlog.setHttpAuthRequired(false);
-                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setTitle(R.string.http_authorization_required);
-
-                View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
-                final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
-                final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
-                alert.setView(httpAuth);
-                final SetupBlogTask self = this;
-                alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        SetupBlogTask setupBlogTask = new SetupBlogTask();
-                        setupBlogTask.setHttpCredentials(EditTextUtils.getText(usernameEditText),
-                                EditTextUtils.getText(passwordEditText));
-                        setupBlogTask.execute();
-                    }
-                });
-
-                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Canceled.
-                    }
-                });
-
-                alert.show();
-                endProgress();
+            if (mSetupBlog.isErroneousSslCertificates() && hasActivity()) {
+                askForSslTrust();
                 return;
             }
 
-            if (userBlogList == null && mErrorMsgId != 0) {
-                if (!hasActivity()) {
-                    return ;
-                }
+            if (mSetupBlog.isHttpAuthRequired() && hasActivity()) {
+                httpAuthRequired();
+                return;
+            }
+
+            if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert;
                 if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
@@ -461,7 +492,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         mSetupBlog.getPassword()));
                 editor.commit();
                 // Fire off a request to get an access token
-                WordPress.restClient.get("me", new RestRequest.Listener() {
+                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         ReaderUserActions.setCurrentUser(jsonObject);

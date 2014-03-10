@@ -24,6 +24,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
@@ -142,7 +143,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
         blog.setLocation(mLocationCB.isChecked());
 
-        blog.save();
+        WordPress.wpDB.saveBlog(blog);
         
         if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
             WordPress.currentBlog = blog;
@@ -315,6 +316,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                     WordPress.wpDB.deleteLastBlogId();
                     WordPress.currentBlog = null;
                     mBlogDeleted = true;
+                    TrustedSslDomainTable.removeTrustedDomain(blog.getUri());
                     activity.finish();
                 } else {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);

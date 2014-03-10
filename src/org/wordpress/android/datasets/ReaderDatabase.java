@@ -78,11 +78,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         reset(db);
     }
 
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-    }
-
     private void createAllTables(SQLiteDatabase db) {
         ReaderCommentTable.createTables(db);
         ReaderLikeTable.createTables(db);

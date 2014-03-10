@@ -34,6 +34,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
+import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
@@ -63,6 +64,11 @@ import java.util.Map;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
+
+    public static interface OnPostClickListener {
+        public void onPostClicked(long remoteBlogId, long postId);
+    }
+
     private int mLocalBlogId;
     private int mRemoteBlogId;
 
@@ -87,6 +93,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
 
     private OnCommentChangeListener mOnCommentChangeListener;
+    private OnPostClickListener mOnPostClickListener;
+
+    private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
+    private static final String KEY_COMMENT_ID = "comment_id";
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -98,7 +108,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    protected static CommentDetailFragment newInstance(int localBlogId, int commentId) {
+    static CommentDetailFragment newInstance(int localBlogId, long commentId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setComment(localBlogId, commentId);
         return fragment;
@@ -111,6 +121,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNote(note);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
+            long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+            setComment(localBlogId, commentId);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (hasComment()) {
+            outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
+            outState.putLong(KEY_COMMENT_ID, getCommentId());
+        }
     }
 
     @Override
@@ -187,7 +216,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    protected void setComment(int localBlogId, int commentId) {
+    void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
@@ -220,11 +249,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
+        if (activity instanceof OnCommentChangeListener)
             mOnCommentChangeListener = (OnCommentChangeListener) activity;
-        } catch (ClassCastException e) {
-            mOnCommentChangeListener = null;
-        }
+        if (activity instanceof OnPostClickListener)
+            mOnPostClickListener = (OnPostClickListener) activity;
     }
 
     @Override
@@ -246,7 +274,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             reloadComment();
             // tell the host to reload the comment list
             if (mOnCommentChangeListener != null)
-                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
     }
 
@@ -258,7 +286,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mComment != null);
     }
 
-    private int getCommentId() {
+    long getCommentId() {
         return (mComment != null ? mComment.commentID : 0);
     }
 
@@ -273,26 +301,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * reload the current comment from the local database
      */
-    protected void reloadComment() {
+    void reloadComment() {
         if (!hasComment())
             return;
         Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
         setComment(mLocalBlogId, updatedComment);
     }
 
-    private void clearComment() {
+    /*
+     * resets to no comment
+     */
+    void clear() {
         setNote(null);
         setComment(0, null);
-    }
-
-    /*
-     * called after comment trashed to remove this fragment
-     */
-    private void closeThisFragment() {
-        if (!hasActivity())
-            return;
-        if (getActivity() instanceof CommentsActivity)
-            ((CommentsActivity)getActivity()).popCommentDetail();
     }
 
     /*
@@ -314,7 +335,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * display the current comment
      */
     private void showComment() {
-        if (!hasActivity())
+        if (!hasActivity() || getView() == null)
             return;
 
         // these two views contain all the other views except the progress bar
@@ -409,7 +430,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
      */
-    private void showPostTitle(final int blogId, final int postId) {
+    private void showPostTitle(final int blogId, final long postId) {
         if (!hasActivity())
             return;
 
@@ -462,18 +483,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtPostTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewPostInReader();
+                if (mOnPostClickListener != null) {
+                    mOnPostClickListener.onPostClicked(mRemoteBlogId, mComment.postID);
+                } else {
+                    // right now this will happen from notifications
+                    AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
+                }
             }
         });
-    }
-
-    /*
-     * open the post associated with this comment in the reader
-     */
-    private void viewPostInReader() {
-        if (!hasActivity() || !hasComment())
-            return;
-        ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
     }
 
     private void confirmDeleteComment() {
@@ -554,8 +572,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
-                if (succeeded && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
                 if (hasActivity()) {
                     dismissDialog(dlgId);
                     mLayoutButtons.setEnabled(true);
@@ -565,13 +581,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                     }
                     if (newStatus == CommentStatus.TRASH) {
-                        // clear the comment and remove this detail fragment if comment was trashed
-                        clearComment();
-                        closeThisFragment();
+                        // clear the comment if it was trashed
+                        clear();
                     } else {
                         // reflect the new status - note this MUST come after mComment.setStatus
                         updateStatusViews();
                     }
+                }
+
+                if (succeeded && mOnCommentChangeListener != null) {
+                    ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, changeType);
                 }
             }
         };
@@ -600,16 +620,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
+        // animate the buttons out (updateStatusViews will re-display them when request completes)
+        mLayoutButtons.clearAnimation();
+        AniUtils.flyOut(mLayoutButtons);
+
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsSubmittingReply = false;
                 if (succeeded && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL);
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
                 if (hasActivity()) {
                     mEditReply.setEnabled(true);
                     mImgSubmitReply.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
+                    updateStatusViews();
                     if (succeeded) {
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
@@ -845,6 +870,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         mIsRequestingComment = true;
-        WordPress.restClient.get(path, restListener, restErrListener);
+        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }

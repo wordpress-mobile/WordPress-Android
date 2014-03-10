@@ -466,6 +466,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         return false;
     }
 
+    protected boolean hasActivity() {
+        return (getActivity() != null && !isRemoving());
+    }
+
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
 
@@ -654,12 +658,17 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
+            if (!hasActivity()) {
+                return;
+            }
             if (ssb != null && ssb.length() > 0) {
                 Editable postContentEditable = mContentEditText.getText();
-                if (postContentEditable != null)
+                if (postContentEditable != null) {
                     postContentEditable.insert(0, ssb);
+                }
             } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                     .show();
             }
         }
     }
@@ -705,7 +714,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
@@ -718,13 +726,15 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
 
         protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
+            if (!hasActivity()) {
                 return;
+            }
 
-            if (newUri != null)
+            if (newUri != null) {
                 addMedia(newUri, null);
-            else
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -821,7 +831,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        if (getActivity() != null && !isRemoving()) {
+                        if (hasActivity()) {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                         }
                     }
@@ -850,8 +860,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             String photonUrl = imageSpan.getImageSource().toString();
             imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
         } else {
-            //Not a Jetpack or wpcom blog
-           //imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture of big dimensions can result in OOM Exception
+            // Not a Jetpack or wpcom blog
+            // imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture
+            // of big dimensions can result in OOM Exception
             imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
 
@@ -859,7 +870,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             return;
 
         WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
-
             @Override
             public void onErrorResponse(VolleyError arg0) {
 
@@ -904,8 +914,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         MediaFile mediaFile = is.getMediaFile();
                         if (mediaFile == null)
                             continue;
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
-
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded() && hasActivity()) {
                             // replace the existing span with a new one with the correct image, re-add it to the same position.
                             int spanStart = s.getSpanStart(is);
                             int spanEnd = s.getSpanEnd(is);
@@ -1015,18 +1024,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mediaTitle = getResources().getString(R.string.video);
         } else {
             ImageHelper ih = new ImageHelper();
-            Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), getActivity());
 
-            if (mediaData == null) {
-                // data stream not returned
-                return false;
-            }
-
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
+            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            
             if (thumbnailBitmap == null)
                 return false;
 
-            mediaTitle = (String) mediaData.get("title");
+            mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);

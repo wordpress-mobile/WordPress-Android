@@ -64,7 +64,6 @@
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
-    <string name="load_more">Load more</string>
     <string name="load_settings">Load settings now?</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
@@ -79,7 +78,6 @@
     <string name="unattached">Unattached</string>
     <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
-    <string name="please_wait_refresh_done">Loading items…</string>
     <string name="learn_more">Learn more</string>
 
     <!-- Media Gallery Action Bar -->
@@ -183,6 +181,8 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
+    <string name="loading_posts">Loading posts&#8230;</string>
+    <string name="loading_pages">Loading pages&#8230;</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading&#8230;</string>
@@ -261,7 +261,6 @@
     <string name="post_signature">Post signature</string>
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
-    <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
     <string name="preview">Preview</string>
 
     <!-- new account view -->
@@ -511,7 +510,6 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="app_title_blackberry">WordPress for BlackBerry</string>
     <string name="publisher">Publisher: Automattic, Inc</string>
     <string name="copyright">©2014 Automattic, Inc</string>
     <string name="version">Version</string>
@@ -618,6 +616,8 @@
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
     <string name="reader_label_reply">Reply</string>
+    <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
+    <string name="reader_label_reblog_empty_link">Change blog visibility</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
@@ -651,6 +651,12 @@
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
+
+    <!-- fragment tags - do not translate -->
+    <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
+    <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
+    <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
+    <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
@@ -711,4 +717,6 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
+    <string name="ssl_certificate_error">Invalid SSL certificate</string>
+    <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
 </resources>

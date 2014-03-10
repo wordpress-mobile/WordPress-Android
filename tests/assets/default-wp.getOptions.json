@@ -1,0 +1,32 @@
+{
+    "admin_url": {
+        "desc": "L&rsquo;adresse web de la zone d&rsquo;administration",
+        "readonly": true,
+        "value": "https://tataliwut.wordpress.com/wp-admin/"
+    },
+    "blog_public": {
+        "desc": "Acc\u00e8s aux renseignements confidentiels",
+        "readonly": true,
+        "value": "1"
+    },
+    "home_url": {
+        "desc": "Adresse web du site (URL)",
+        "readonly": true,
+        "value": "http://tataliwut.wordpress.com"
+    },
+    "login_url": {
+        "desc": "Adresse de connexion (URL)",
+        "readonly": true,
+        "value": "https://tataliwut.wordpress.com/wp-login.php"
+    },
+    "post_thumbnail": {
+        "desc": "Miniature d&rsquo;article",
+        "readonly": true,
+        "value": true
+    },
+    "software_version": {
+        "desc": "Software Version",
+        "readonly": true,
+        "value": "3.9-alpha"
+    }
+}

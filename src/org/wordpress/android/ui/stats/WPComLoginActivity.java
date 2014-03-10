@@ -18,15 +18,21 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 
 /**
  * An activity to let the user specify their WordPress.com credentials.
@@ -81,7 +87,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             }
         });
     }
-    
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -98,13 +104,17 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
+            URI uri;
+            try {
+                uri = new URI(Constants.wpcomXMLRPCURL);
+            } catch (URISyntaxException e) {
+                AppLog.e(T.API, "Invalid URI syntax: " + Constants.wpcomXMLRPCURL);
+                return false;
+            }
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, "", "");
             Object[] signInParams = { mUsername, mPassword };
-
             try {
                 client.call("wp.getUsersBlogs", signInParams);
-                
                 Blog blog = WordPress.getCurrentBlog();
                 if (blog != null) {
                     blog.setDotcom_username(mUsername);
@@ -123,15 +133,16 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
                     //Make sure to update credentials for .wpcom blog even if currentBlog is null
                     WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
-                    
+
                     // Update regular blog credentials for WP.com auth requests
                     if (blog != null) {
                         blog.setUsername(mUsername);
                         blog.setPassword(mPassword);
                     }
                 }
-                if (blog != null)
-                    blog.save();
+                if (blog != null) {
+                    WordPress.wpDB.saveBlog(blog);
+                }
                 return true;
             } catch (XMLRPCException e) {
                 if (!TextUtils.isEmpty(e.getMessage())){
@@ -145,7 +156,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         protected void onPostExecute(Boolean isSignedIn) {
             if (isSignedIn && !isFinishing()) {
                 if (!mIsJetpackAuthRequest) {
-                    WordPress.restClient.get("me", new RestRequest.Listener() {
+                    WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);

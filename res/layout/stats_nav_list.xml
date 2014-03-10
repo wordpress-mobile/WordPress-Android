@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_full_holo_light"
-    android:padding="8dp" >
+    android:padding="@dimen/margin_medium" >
 
     <ListView
         android:id="@+id/stats_nav_listview"

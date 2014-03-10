@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -46,8 +46,8 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.6.1"
-        versionCode 96
+        versionName "2.6.3"
+        versionCode 98
         minSdkVersion 9
         targetSdkVersion 19
     }
@@ -57,6 +57,10 @@ android {
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.android.support:support-v4:19.0.+'
+        androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
+        androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
+        androidTestCompile 'org.objenesis:objenesis:2.1'
+        androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
@@ -82,9 +86,6 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
@@ -105,7 +106,7 @@ android {
         instrumentTest.setRoot('tests')
     }
 
-} //end android
+} // end android
 
 // Generates the Config.java class using properties defined in gradle.properties
 // or by other means provided by Gradle
@@ -163,7 +164,7 @@ android.buildTypes.all { buildType ->
     }
 }
 
-//For app signing
+// For app signing
 if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0) {
     android {
         signingConfigs {

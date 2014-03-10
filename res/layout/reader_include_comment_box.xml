@@ -41,7 +41,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:paddingRight="@dimen/margin_medium"
-        android:src="@drawable/ic_send" />
+        android:src="@drawable/ab_icon_send" />
 
     <ProgressBar
         android:id="@+id/progress_submit_comment"

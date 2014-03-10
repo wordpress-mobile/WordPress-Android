@@ -16,8 +16,9 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +55,9 @@ public class CommentActions {
      * comments (moderated, deleted, added, etc.)
      */
     public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
+    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED}
     public static interface OnCommentChangeListener {
-        public void onCommentChanged(ChangedFrom changedFrom);
+        public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
     }
 
 
@@ -78,9 +80,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Map<String, Object> commentHash = new HashMap<String, Object>();
@@ -123,10 +123,10 @@ public class CommentActions {
     /**
      * reply to an individual comment
      */
-    protected static void submitReplyToComment(final int accountId,
-                                               final Comment comment,
-                                               final String replyText,
-                                               final CommentActionListener actionListener) {
+    static void submitReplyToComment(final int accountId,
+                                     final Comment comment,
+                                     final String replyText,
+                                     final CommentActionListener actionListener) {
 
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
@@ -140,13 +140,11 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Map<String, Object> replyHash = new HashMap<String, Object>();
-                replyHash.put("comment_parent", comment.commentID);
+                replyHash.put("comment_parent", Long.toString(comment.commentID));
                 replyHash.put("content", replyText);
                 replyHash.put("author", "");
                 replyHash.put("author_url", "");
@@ -156,13 +154,21 @@ public class CommentActions {
                         blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        Integer.valueOf(comment.postID),
+                        Long.toString(comment.postID),
                         replyHash };
 
 
-                int newCommentID;
+                long newCommentID;
                 try {
-                    newCommentID = (Integer) client.call("wp.newComment", params);
+                    Object newCommentIDObject = client.call("wp.newComment", params);
+                    if (newCommentIDObject instanceof Integer) {
+                        newCommentID = ((Integer) newCommentIDObject).longValue();
+                    } else if (newCommentIDObject instanceof Long) {
+                        newCommentID = (Long) newCommentIDObject;
+                    } else {
+                        AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
+                        newCommentID = -1;
+                    }
                 } catch (XMLRPCException e) {
                     AppLog.e(T.COMMENTS, e.getMessage(), e);
                     newCommentID = -1;
@@ -189,9 +195,9 @@ public class CommentActions {
      * submitReplyToComment() in that it enables responding to a reply to a comment this
      * user made on someone else's blog
      */
-    protected static void submitReplyToCommentNote(final Note note,
-                                                   final String replyText,
-                                                   final CommentActionListener actionListener) {
+    static void submitReplyToCommentNote(final Note note,
+                                         final String replyText,
+                                         final CommentActionListener actionListener) {
         if (note == null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
@@ -216,16 +222,16 @@ public class CommentActions {
         };
 
         Note.Reply reply = note.buildReply(replyText);
-        WordPress.restClient.replyToComment(reply, listener, errorListener);
+        WordPress.getRestClientUtils().replyToComment(reply, listener, errorListener);
     }
 
     /**
      * change the status of a single comment
      */
-    protected static void moderateComment(final int accountId,
-                                          final Comment comment,
-                                          final CommentStatus newStatus,
-                                          final CommentActionListener actionListener) {
+    static void moderateComment(final int accountId,
+                                final Comment comment,
+                                final CommentStatus newStatus,
+                                final CommentActionListener actionListener) {
 
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
@@ -246,10 +252,8 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                    blog.getUrl(),
-                    blog.getHttpuser(),
-                    blog.getHttppassword());
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                        blog.getHttppassword());
 
                 Map<String, String> postHash = new HashMap<String, String>();
                 postHash.put("status", CommentStatus.toString(newStatus));
@@ -261,7 +265,7 @@ public class CommentActions {
                 Object[] params = { blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        comment.commentID,
+                        Long.toString(comment.commentID),
                         postHash};
 
                 Object result;
@@ -292,10 +296,10 @@ public class CommentActions {
      * change the status of multiple comments
      * TODO: investigate using system.multiCall to perform a single call to moderate the list
      */
-    protected static void moderateComments(final int accountId,
-                                           final CommentList comments,
-                                           final CommentStatus newStatus,
-                                           final OnCommentsModeratedListener actionListener) {
+    static void moderateComments(final int accountId,
+                                 final CommentList comments,
+                                 final CommentStatus newStatus,
+                                 final OnCommentsModeratedListener actionListener) {
 
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
@@ -320,11 +324,8 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
-
                 for (Comment comment: comments) {
                     Map<String, String> postHash = new HashMap<String, String>();
                     postHash.put("status", newStatusStr);
@@ -337,7 +338,7 @@ public class CommentActions {
                             remoteBlogId,
                             blog.getUsername(),
                             blog.getPassword(),
-                            comment.commentID,
+                            Long.toString(comment.commentID),
                             postHash};
 
                     Object result;
@@ -386,9 +387,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 Object[] params = {
@@ -444,9 +443,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClient client = new XMLRPCClient(
-                        blog.getUrl(),
-                        blog.getHttpuser(),
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
                 for (Comment comment: comments) {

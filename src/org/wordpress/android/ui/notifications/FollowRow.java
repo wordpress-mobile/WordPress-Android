@@ -131,7 +131,8 @@ public class FollowRow extends LinearLayout {
         getTextView().setText(resourceId);
     }
     public boolean isSiteId(String siteId){
-        return getSiteId().equals(siteId);
+        String thisSiteId = getSiteId();
+        return (thisSiteId != null && thisSiteId.equals(siteId));
     }
     public void setFollowing(boolean following){
         if (hasParams()) {
