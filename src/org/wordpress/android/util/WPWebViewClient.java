@@ -1,7 +1,7 @@
 package org.wordpress.android.util;
 
+import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.os.Build;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
@@ -16,6 +16,7 @@ import org.wordpress.android.models.Blog;
  */
 public class WPWebViewClient extends WebViewClient {
     private final Blog mBlog;
+    private String mCurrentUrl;
 
     public WPWebViewClient(Blog blog) {
         super();
@@ -38,6 +39,12 @@ public class WPWebViewClient extends WebViewClient {
     }
 
     @Override
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
+        mCurrentUrl = url;
+    }
+
+    @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
         if (mBlog != null) {
             handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
@@ -48,13 +55,10 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        // error.getUrl() requires API 14
-        if (Build.VERSION.SDK_INT >= 14) {
-            String domain = UrlUtils.getDomainFromUrl(error.getUrl());
-            if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-                handler.proceed();
-                return;
-            }
+        String domain = UrlUtils.getDomainFromUrl(mCurrentUrl);
+        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+            handler.proceed();
+            return;
         }
 
         super.onReceivedSslError(view, handler, error);
