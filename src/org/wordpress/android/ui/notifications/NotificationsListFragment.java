@@ -82,7 +82,7 @@ public class NotificationsListFragment extends ListFragment {
                             ((NotificationsActivity) getActivity()).refreshNotes();
                         }
                     }
-                });
+                }, TextView.class);
 
         return view;
     }

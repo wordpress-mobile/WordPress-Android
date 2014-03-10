@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +57,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         View view = inflater.inflate(R.layout.post_listview, container, false);
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(), (PullToRefreshLayout) view.findViewById(
-                R.id.ptr_layout), new RefreshListener() {
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
             @Override
             public void onRefreshStarted(View view) {
                 if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
@@ -68,7 +69,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(),
                         new ApiHelper.VerifyCredentialsCallback(getActivity())).execute(false);
             }
-        });
+        }, LinearLayout.class);
         return view;
     }
 
