@@ -102,12 +102,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this));
-        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
-
-        // http://stackoverflow.com/a/17035814
-        imageLoader.setBatchedResponseDelay(0);
+        setupVolleyQueue();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
@@ -137,6 +132,14 @@ public class WordPress extends Application {
         if (NotificationUtils.getAppPushNotificationsName().equals("org.wordpress.android.beta.build")) {
             AppLog.enableRecording(true);
         }
+    }
+
+    public static void setupVolleyQueue() {
+        requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
     }
 
     private void initWpDb() {

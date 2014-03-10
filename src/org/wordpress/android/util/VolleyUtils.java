@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog.T;
 
@@ -127,13 +129,17 @@ public class VolleyUtils {
     public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
         SSLSocketFactory mSslSocketFactory = null;
         try {
-            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager() };
+            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getIstance(ctx).getLocalKeyStore()) };
             SSLContext context = SSLContext.getInstance("SSL");
             context.init(null, trustAllowedCerts, new SecureRandom());
             mSslSocketFactory = context.getSocketFactory();
         } catch (NoSuchAlgorithmException e) {
             AppLog.e(T.API, e);
         } catch (KeyManagementException e) {
+            AppLog.e(T.API, e);
+        } catch (GeneralSecurityException e) {
+            AppLog.e(T.API, e);
+        } catch (IOException e) {
             AppLog.e(T.API, e);
         }
 

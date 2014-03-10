@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -39,7 +41,13 @@ import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.prefs.LicensesActivity;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -351,7 +359,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
-        private boolean mIsCurrentSslCertificatesForcedTrusted;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -359,10 +366,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
             mSetupBlog.setHttpUsername(username);
             mSetupBlog.setHttpPassword(password);
-        }
-
-        private void setCurrentSslCertificatesForcedTrusted(boolean trustAll) {
-            mIsCurrentSslCertificatesForcedTrusted = trustAll;
         }
         
         @Override
@@ -374,10 +377,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
             if (mSelfHosted) {
                 mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
-                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(mIsCurrentSslCertificatesForcedTrusted);
             } else {
                 mSetupBlog.setSelfHostedURL(null);
-                mSetupBlog.setCurrentDomainSslCertificatesForcedTrusted(false); //wpcom always false
             }
             startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
                     R.string.connecting_wpcom));
@@ -430,14 +431,26 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    setupBlogTask.setCurrentSslCertificatesForcedTrusted(true);
+                    try {
+                        SelfSignedSSLCertsManager.getIstance(getActivity()).addCertificates(SelfSignedSSLCertsManager.getLastFailureChain());
+                    } catch (IOException e) {
+                        AppLog.e(T.NUX, e);
+
+                    } catch (GeneralSecurityException e) {
+                        AppLog.e(T.NUX, e);
+                    }
                     setupBlogTask.execute();
+                }
+            });
+            alert.setNeutralButton("Certificate Details", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getActivity(), LicensesActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                 }
             });
             alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    // Canceled.
-                    mIsCurrentSslCertificatesForcedTrusted = false;
                 }
             });
             alert.show();

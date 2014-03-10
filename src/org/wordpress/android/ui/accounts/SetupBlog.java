@@ -98,24 +98,6 @@ public class SetupBlog {
         return mHttpAuthRequired;
     }
 
-    public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
-        if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
-            try {
-                // Convert IDN names to punycode if necessary
-                String sanitizedURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedURL);
-                // Add http to the beginning of the URL if needed
-                sanitizedURL = UrlUtils.addHttpProcolIfNeeded(sanitizedURL, false);
-                URI uri = URI.create(sanitizedURL);
-                TrustedSslDomainTable.trustDomain(uri);
-                mCurrentSslCertificatesForcedTrusted = trusted;
-            } catch (Exception e1) {
-                AppLog.e(T.NUX, "Cannot trust the self-hosted URL", e1);
-            }
-        } else {
-            mCurrentSslCertificatesForcedTrusted = false;
-        }
-    }
-
     public boolean isErroneousSslCertificates() {
         return mErroneousSslCertificate;
     }
