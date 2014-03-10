@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,7 +48,7 @@ public class NotificationsListFragment extends ListFragment {
      */
     public interface NoteProvider {
         public boolean canRequestMore();
-        public void onRequestMoreNotifications(ListView listView, ListAdapter adapter);
+        public void onRequestMoreNotifications();
     }
 
     @Override
@@ -118,7 +117,7 @@ public class NotificationsListFragment extends ListFragment {
 
         if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
             showProgressFooter();
-            mNoteProvider.onRequestMoreNotifications(getListView(), getListAdapter());
+            mNoteProvider.onRequestMoreNotifications();
         }
     }
 
@@ -234,8 +233,9 @@ public class NotificationsListFragment extends ListFragment {
                 try {
                     if (clearBeforeAdding)
                         mNotes.clear();
-                    for (Note note: notes)
+                    for (Note note: notes) {
                         mNotes.add(note);
+                    }
                 } finally {
                     notifyDataSetChanged();
                     mIsAddingNotes = false;

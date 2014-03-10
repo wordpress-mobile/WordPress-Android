@@ -29,7 +29,7 @@ public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
-    public TextView getTextView(){
+    TextView getTextView(){
         return (TextView) findViewById(R.id.label);
     }
     public void setText(CharSequence text){

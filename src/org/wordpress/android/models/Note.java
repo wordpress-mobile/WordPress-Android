@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 
@@ -132,42 +131,6 @@ public class Note {
     public void setPlaceholder(boolean placeholder) {
         this.mPlaceholder = placeholder;
     }
-
-    /*
-     * returns subject as spanned html
-     */
-    /*private transient Spanned mFormattedSubject;
-    public Spanned getFormattedSubject() {
-        if (mFormattedSubject == null) {
-            StringBuilder sb = new StringBuilder(getSubject());
-
-            // highlight user names - note we skip the first item in replies because it's the
-            // actual header text (ex: "In reply to your comment") rather than a user name
-            if (isMultiLineListTemplate() || isSingleLineListTemplate()) {
-                JSONArray items = queryJSON("body.items", new JSONArray());
-                int startIndex = (isCommentType() ? 1 : 0);
-                if (items.length() > startIndex) {
-                    for (int i = startIndex; i < items.length(); i++) {
-                        try {
-                            String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
-                            if (!TextUtils.isEmpty(name)) {
-                                // note that we only replace the first instance to avoid false matches
-                                int index = sb.indexOf(name);
-                                if (index > -1) {
-                                    sb.replace(index, index + name.length(), "<b>" + name + "</b>");
-                                }
-                            }
-                        } catch (JSONException e) {
-                            // nop
-                        }
-                    }
-                }
-            }
-
-            mFormattedSubject = Html.fromHtml(sb.toString());
-        }
-        return mFormattedSubject;
-    }*/
 
     public JSONObject toJSONObject(){
         return mNoteJSON;
@@ -441,13 +404,12 @@ public class Note {
     }
 
     /**
-     * Represents a user replying to a note. Holds
+     * Represents a user replying to a note.
      */
     public static class Reply {
         private final Note mNote;
         private final String mContent;
         private final String mRestPath;
-        private JSONObject mCommentJson;
 
         Reply(Note note, String restPath, String content){
             mNote = note;
@@ -457,45 +419,57 @@ public class Note {
         public String getContent(){
             return mContent;
         }
-        public Note getNote(){
-            return mNote;
-        }
-        public String getUrl(){
-            if (isComplete()) {
-                return JSONUtil.queryJSON(mCommentJson, "URL", "");
-            }
-            return null;
-        }
-        public String getAvatarUrl(){
-            if (isComplete()) {
-                return JSONUtil.queryJSON(mCommentJson, "author.avatar_URL", "");
-            } else {
-                return "";
-            }
-        }
-        /**
-         * Passes through Html.fromHtml to remove markup and replaces smilies with emoji
-         */
-        public String getCommentPreview(){
-            if (isComplete()) {
-                String text = JSONUtil.queryJSON(mCommentJson, "content", "");
-                SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text);
-                return Emoticons.replaceEmoticonsWithEmoji(html).toString().trim();
-            } else {
-                return "";
-            }
-        }
         public String getRestPath(){
             return mRestPath;
         }
-        public boolean isComplete(){
-            return mCommentJson != null;
-        }
-        public JSONObject getCommentJson(){
-            return mCommentJson;
-        }
-        public void setCommentJson(JSONObject commentJson){
-            mCommentJson = commentJson;
-        }
     }
+
+    /*
+     * returns subject as spanned html with user names and quoted strings highlighted
+     */
+    /*private transient Spanned mFormattedSubject;
+    private static final String TAG_START = "</font><font color='#222222'>";
+    private static final String TAG_END = "</font><font color='#666666'>";
+    public Spanned getFormattedSubject() {
+        if (mFormattedSubject == null) {
+            StringBuilder sb = new StringBuilder(getSubject());
+
+            // highlight user names - note we skip the first item in replies because it's the
+            // actual header text (ex: "In reply to your comment") rather than a user name
+            if (isMultiLineListTemplate() || isSingleLineListTemplate()) {
+                JSONArray items = queryJSON("body.items", new JSONArray());
+                int startIndex = (isCommentType() ? 1 : 0);
+                if (items.length() > startIndex) {
+                    for (int i = startIndex; i < items.length(); i++) {
+                        try {
+                            String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
+                            if (!TextUtils.isEmpty(name)) {
+                                // note that we only replace the first instance to avoid false matches
+                                int index = sb.indexOf(name);
+                                if (index > -1) {
+                                    sb.replace(index, index + name.length(), TAG_START + name + TAG_END);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            // nop
+                        }
+                    }
+                }
+            }
+
+            // highlight quoted strings
+            int startQuote = sb.indexOf("\"");
+            while (startQuote > -1) {
+                int endQuote = sb.indexOf("\"", startQuote + 1);
+                if (endQuote == -1)
+                    break;
+                String quoted = sb.substring(startQuote, endQuote + 1);
+                sb.replace(startQuote, endQuote + 1, TAG_START + quoted + TAG_END);
+                startQuote = sb.indexOf("\"", endQuote + TAG_START.length() + TAG_END.length());
+            }
+
+            mFormattedSubject = Html.fromHtml(sb.toString());
+        }
+        return mFormattedSubject;
+    }*/
 }

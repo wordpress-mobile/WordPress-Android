@@ -61,7 +61,7 @@ public class FollowRow extends LinearLayout {
         super(context, attributes, defStyle);
     }
 
-    protected void setAction(JSONObject actionJSON) {
+    void setAction(JSONObject actionJSON) {
         final TextView followButton = getFollowButton();
 
         getImageView().setDefaultImageResId(R.drawable.placeholder);
@@ -102,11 +102,11 @@ public class FollowRow extends LinearLayout {
         return mParams != null;
     }
 
-    protected NetworkImageView getImageView() {
+    NetworkImageView getImageView() {
         return (NetworkImageView) findViewById(R.id.avatar);
     }
 
-    protected TextView getFollowButton() {
+    TextView getFollowButton() {
         return (TextView) findViewById(R.id.text_follow);
     }
 
@@ -118,7 +118,7 @@ public class FollowRow extends LinearLayout {
         return (TextView) findViewById(R.id.url);
     }
 
-    protected void setNameText(String text) {
+    void setNameText(String text) {
         TextView nameText = getNameTextView();
         if (TextUtils.isEmpty(text)) {
             nameText.setVisibility(View.GONE);
@@ -129,12 +129,12 @@ public class FollowRow extends LinearLayout {
         }
     }
 
-    protected boolean isSiteId(String siteId) {
+    boolean isSiteId(String siteId) {
         String thisSiteId = getSiteId();
         return (thisSiteId != null && thisSiteId.equals(siteId));
     }
 
-    protected void setFollowing(boolean following) {
+    void setFollowing(boolean following) {
         if (hasParams()) {
             try {
                 mParams.putOpt(IS_FOLLOWING_PARAM, following);
@@ -190,7 +190,7 @@ public class FollowRow extends LinearLayout {
         return mFollowListener;
     }
 
-    protected void setFollowListener(OnFollowListener listener) {
+    void setFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
     }
 

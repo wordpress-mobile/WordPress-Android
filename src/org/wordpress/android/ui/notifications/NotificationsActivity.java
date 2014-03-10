@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -434,7 +432,7 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         @Override
-        public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
+        public void onRequestMoreNotifications(){
             if (canRequestMore()) {
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 if (adapter.getCount() > 0) {

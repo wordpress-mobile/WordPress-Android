@@ -138,8 +138,8 @@ public class NotificationUtils {
 
 
         // Build the settings object to send back to WP.com
-        StringMap<?> mutedBlogsMap = (StringMap<?>) notificationSettings.get("muted_blogs");
-        StringMap<?> muteUntilMap = (StringMap<?>) notificationSettings.get("mute_until");
+        StringMap<?> mutedBlogsMap = notificationSettings.get("muted_blogs");
+        StringMap<?> muteUntilMap = notificationSettings.get("mute_until");
         ArrayList<StringMap<Double>> blogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
         notificationSettings.remove("muted_blogs");
         notificationSettings.remove("mute_until");
