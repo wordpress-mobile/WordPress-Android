@@ -6,7 +6,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
         // set the header
         final DetailHeader noteHeader = (DetailHeader) getView().findViewById(R.id.header);
         noteHeader.setText(JSONUtil.getStringDecoded(currentNote.queryJSON("subject", new JSONObject()), "text"));
-        noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         String footerUrl = currentNote.queryJSON("body.header_link", "");
         noteHeader.setNote(getNote(), footerUrl);
 

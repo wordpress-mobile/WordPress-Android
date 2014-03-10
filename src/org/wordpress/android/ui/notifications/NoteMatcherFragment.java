@@ -3,7 +3,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         JSONObject subject = getNote().queryJSON("subject", new JSONObject());
         String headerText = JSONUtil.getStringDecoded(subject, "text");
         noteHeader.setText(headerText);
-        noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setClickable(false);
         
         String gravURL = JSONUtil.queryJSON(noteBodyItemAtPositionZero, "icon", "");

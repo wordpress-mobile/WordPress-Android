@@ -6,7 +6,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,6 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             noteHeader.setText(headerSubject + " \"" + headerSnippet + "\"");
         }
 
-        noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setNote(getNote(), headerLink);
 
         if (getActivity() instanceof OnPostClickListener) {

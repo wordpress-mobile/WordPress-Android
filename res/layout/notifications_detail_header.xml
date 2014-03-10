@@ -4,26 +4,26 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="vertical"
-    android:gravity="center_vertical">
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
         android:layout_width="match_parent"
-        android:background="@drawable/note_detail_selector"
         android:layout_height="wrap_content"
+        android:background="@drawable/note_detail_selector"
         android:ellipsize="end"
+        android:gravity="center"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large"
         android:paddingBottom="@dimen/margin_large"
-        android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_large" />
-
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_sz_medium" />
+    
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:background="@color/grey_medium" />
+        android:background="@color/blue_dark"
+        android:layout_marginBottom="@dimen/margin_small"/>
 
 </org.wordpress.android.ui.notifications.DetailHeader>
