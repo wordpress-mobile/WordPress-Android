@@ -83,6 +83,7 @@ public class NotificationsListFragment extends ListFragment {
                         }
                     }
                 });
+
         return view;
     }
 
