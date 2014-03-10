@@ -37,18 +37,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An adapter for the media gallery listviews.
+ * An adapter for the media gallery listViews.
  */
 public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
-    private ArrayList<String> mCheckedItems;
+    private final ArrayList<String> mCheckedItems;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
     private int mGridItemWidth;
-    private Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
-    private Handler mHandler;
+    private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
+    private final Handler mHandler;
+    private final int mLocalImageWidth;
+    private final LayoutInflater mInflater;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -67,6 +69,8 @@ public class MediaGridAdapter extends CursorAdapter {
     public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
         super(context, c, flags);
         mCheckedItems = checkedItems;
+        mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
+        mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
     }
@@ -100,6 +104,7 @@ public class MediaGridAdapter extends CursorAdapter {
             uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
         }
     }
+
 	@SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
@@ -161,7 +166,7 @@ public class MediaGridAdapter extends CursorAdapter {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
         
-        String fileType = null;
+        String fileType;
         
         // get the file extension from the fileURL
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
@@ -196,7 +201,6 @@ public class MediaGridAdapter extends CursorAdapter {
             }
         }
 
-        
         // multi-select highlighting
         holder.frameLayout.setTag(mediaId);
         holder.frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -231,7 +235,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
                 // add onclick to retry failed uploads 
                 if (state.equals("failed")) {
-                    
                     state = "retry";
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         
@@ -253,8 +256,7 @@ public class MediaGridAdapter extends CursorAdapter {
                 holder.uploadStateView.setVisibility(View.GONE);
             }
         }
-        
-        
+
         // if we are near the end, make a call to fetch more
         int position = cursor.getPosition();
         if (position == mCursorDataCount - 1 && !mHasRetrievedAll) {
@@ -282,8 +284,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (thumbnailURL != null) {
             Uri uri = Uri.parse(thumbnailURL);
             String filepath = uri.getLastPathSegment();
-            
-    
+
             int placeholderResId = MediaUtils.getPlaceholder(filepath);
             imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
@@ -302,10 +303,8 @@ public class MediaGridAdapter extends CursorAdapter {
     }
     
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
-
         final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
-        
-        
+
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
@@ -329,7 +328,7 @@ public class MediaGridAdapter extends CursorAdapter {
                     
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
-                        if (imageView.getTag().equals(filePath))
+                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
                             imageView.setImageBitmap(bitmap);
                     }
                 });
@@ -346,10 +345,7 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private void fetchBitmap(final String filePath) {
-        int width = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
-        
-        BitmapWorkerTask task = new BitmapWorkerTask(null, width, width, new BitmapWorkerCallback() {
-            
+        BitmapWorkerTask task = new BitmapWorkerTask(null, mLocalImageWidth, mLocalImageWidth, new BitmapWorkerCallback() {
             @Override
             public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
                 mHandler.post(new Runnable() {
@@ -366,7 +362,6 @@ public class MediaGridAdapter extends CursorAdapter {
                         mFilePathToCallbackMap.remove(path);        
                     }
                 });
-                
             }
         });
         task.execute(filePath);
@@ -374,32 +369,29 @@ public class MediaGridAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup root) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        
         int itemViewType = getItemViewType(cursor.getPosition());
         
         // spacer and progress spinner views
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
-            return inflater.inflate(R.layout.media_grid_progress, root, false);
+            return mInflater.inflate(R.layout.media_grid_progress, root, false);
         } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
-            return inflater.inflate(R.layout.media_grid_item, root, false);
+            return mInflater.inflate(R.layout.media_grid_item, root, false);
         }
         
-        View view =  inflater.inflate(R.layout.media_grid_item, root, false);
-        
+        View view =  mInflater.inflate(R.layout.media_grid_item, root, false);
         ViewStub imageStub = (ViewStub) view.findViewById(R.id.media_grid_image_stub);
         
-        // We need to use viewstubs to inflate the image to either:
+        // We need to use ViewStubs to inflate the image to either:
         // - a regular ImageView (for local images)
         // - a FadeInNetworkImageView (for network images)
         // This is because the NetworkImageView can't load local images.
         // The other option would be to inflate multiple layouts, but that would lead
         // to extra near-duplicate xml files that would need to be maintained.
-        
-        if (itemViewType == ViewTypes.LOCAL.ordinal())
+        if (itemViewType == ViewTypes.LOCAL.ordinal()) {
             imageStub.setLayoutResource(R.layout.media_grid_image_local);
-        else
+        } else {
             imageStub.setLayoutResource(R.layout.media_grid_image_network);
+        }
         
         imageStub.inflate();
 
@@ -499,7 +491,7 @@ public class MediaGridAdapter extends CursorAdapter {
         mCallback = callback;
     }
 
-    public void setHasRetrieviedAll(boolean b) {
+    public void setHasRetrievedAll(boolean b) {
         mHasRetrievedAll = b;
     }
     

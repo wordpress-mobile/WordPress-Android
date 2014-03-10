@@ -344,7 +344,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
 
                     mIsRefreshing = false;
 
@@ -377,7 +377,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         }
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     }
 
                     // the activity may be cone by the time we get this, so check for it

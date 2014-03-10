@@ -212,7 +212,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                     if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
                         // There is no media at all
@@ -246,7 +246,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                         Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     }
 
                     // the activity may be cone by the time we get this, so check for it
