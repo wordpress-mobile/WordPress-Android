@@ -38,11 +38,6 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.empty_listview, container, false);
     }

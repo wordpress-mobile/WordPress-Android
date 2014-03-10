@@ -59,7 +59,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
-    //private List<Note> mNotes;
     private BroadcastReceiver mBroadcastReceiver;
 
     @Override
