@@ -22,7 +22,7 @@
             android:paddingLeft="0dp" />
     </FrameLayout>
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/media_filter_result_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
