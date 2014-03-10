@@ -173,6 +173,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         });
 
+        restoreState(savedInstanceState);
+        setupSpinnerAdapter();
+
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
                 (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
@@ -185,10 +188,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         }
                         refreshMediaFromServer(0, false);
                     }
-                });
+                }, LinearLayout.class);
 
-        restoreState(savedInstanceState);
-        setupSpinnerAdapter();
         return view;
     }
 
