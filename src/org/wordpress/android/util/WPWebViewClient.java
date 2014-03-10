@@ -46,7 +46,7 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-        if (mBlog != null) {
+        if (mBlog != null && mBlog.hasValidHTTPAuthCredentials()) {
             handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
         } else {
             super.onReceivedHttpAuthRequest(view, handler, host, realm);
