@@ -116,9 +116,7 @@ class NotesAdapter extends BaseAdapter {
             try {
                 if (clearBeforeAdding)
                     mNotes.clear();
-                for (Note note: notes) {
-                    mNotes.add(note);
-                }
+                mNotes.addAll(notes);
             } finally {
                 notifyDataSetChanged();
                 mIsAddingNotes = false;
