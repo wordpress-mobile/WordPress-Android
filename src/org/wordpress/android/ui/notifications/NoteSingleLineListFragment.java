@@ -29,7 +29,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
-        mAvatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        mAvatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
     }
 
     @Override

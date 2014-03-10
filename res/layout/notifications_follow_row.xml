@@ -12,8 +12,8 @@
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/avatar"
-        android:layout_height="@dimen/avatar_sz_small"
-        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_medium"
+        android:layout_width="@dimen/avatar_sz_medium"
         android:background="@color/grey_light"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/margin_medium" />
@@ -47,7 +47,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
         style="@style/ReaderTextView.Follow"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_large"
         android:text="@string/reader_btn_follow" />
 

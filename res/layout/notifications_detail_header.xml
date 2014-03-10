@@ -10,20 +10,20 @@
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/note_detail_selector"
+        android:background="@drawable/reader_transparent_selector"
         android:ellipsize="end"
         android:gravity="center"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingBottom="@dimen/margin_large"
-        android:textColor="@android:color/white"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_medium" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/blue_dark"
-        android:layout_marginBottom="@dimen/margin_small"/>
+        android:background="@color/reader_hyperlink"
+        android:layout_marginBottom="@dimen/margin_medium"/>
 
 </org.wordpress.android.ui.notifications.DetailHeader>
