@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -56,6 +57,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostUploadService extends Service {
+
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION = "POST_UPLOAD_INTENT_NOTIFICATION";
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION_EXTRA = "POST_UPLOAD_INTENT_NOTIFICATION_EXTRA";
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION_ERROR = "POST_UPLOAD_INTENT_NOTIFICATION_ERROR";
+
     private static Context context;
     private static final ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
@@ -147,6 +153,7 @@ public class PostUploadService extends Service {
                 WordPress.postUploaded(post.getPostid());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
+                sendUpdateBroadcast(post.getPostid(), null);
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
@@ -173,6 +180,7 @@ public class PostUploadService extends Service {
                         (mIsMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage, pendingIntent);
 
                 nm.notify(notificationID, n); // needs a unique id
+                sendUpdateBroadcast(post.getPostid(), errorText);
             }
 
             postUploaded();
@@ -853,5 +861,17 @@ public class PostUploadService extends Service {
         } else {
             return "";
         }
+    }
+
+    private void sendUpdateBroadcast(String postId, String errorMessage) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+        Intent intent = new Intent(POST_UPLOAD_INTENT_NOTIFICATION);
+        if (postId != null) {
+            intent.putExtra(POST_UPLOAD_INTENT_NOTIFICATION_EXTRA, postId);
+        }
+        if (errorMessage != null) {
+            intent.putExtra(POST_UPLOAD_INTENT_NOTIFICATION_ERROR, errorMessage);
+        }
+        lbm.sendBroadcast(intent);
     }
 }

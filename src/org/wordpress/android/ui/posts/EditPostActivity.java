@@ -1,13 +1,17 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -194,6 +198,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, new IntentFilter(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION));
+
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
     }
@@ -201,6 +209,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(mReceiver);
+
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
     }
@@ -210,6 +222,25 @@ public class EditPostActivity extends SherlockFragmentActivity {
         WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
         super.onDestroy();
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
+                String postId = intent.getStringExtra(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION_EXTRA);
+                String errorMessage = intent.getStringExtra(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION_ERROR);
+                if (errorMessage != null) {
+                    ToastUtils.showToast(context, getString(R.string.post_draft_error));
+                } else if (postId != null) {
+                    WordPress.draftWasSaved = true;
+                    ToastUtils.showToast(context, getString(R.string.post_draft_saved));
+                    // The current post is now the original post
+                    mOriginalPost = mPost.copy();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -282,10 +313,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
-            WordPress.draftWasSaved = true;
-            ToastUtils.showToast(this, getString(R.string.post_draft_saved));
-            // The current post is now the original post
-            mOriginalPost = mPost.copy();
         } else if (itemId == android.R.id.home) {
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 mViewPager.setCurrentItem(PAGE_CONTENT);

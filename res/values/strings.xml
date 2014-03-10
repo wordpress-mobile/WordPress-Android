@@ -253,6 +253,7 @@
     <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post deleted successfully</string>
     <string name="post_draft_saved">Draft saved successfully</string>
+    <string name="post_draft_error">Couldn\'t save draft</string>
     <string name="comment_added">Comment added successfully</string>
     <string name="delete_sure_post">Are you sure you want to delete the post</string>
     <string name="share_url_post">Share post</string>
