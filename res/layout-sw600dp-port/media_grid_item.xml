@@ -13,8 +13,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/margin_extra_large"
-        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_gravity="center_horizontal"
         android:inflatedId="@+id/media_grid_item_image" />
