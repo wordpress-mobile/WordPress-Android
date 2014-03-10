@@ -108,7 +108,7 @@ android {
             manifest.srcFile 'AndroidManifestBetagroup.xml'
         }
 
-        instrumentTest.setRoot('tests')
+        androidTest.setRoot('tests')
     }
 
 } // end android
