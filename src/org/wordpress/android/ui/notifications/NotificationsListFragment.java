@@ -169,7 +169,7 @@ public class NotificationsListFragment extends ListFragment {
             final Note note = getItem(position);
 
             final NoteViewHolder holder;
-            if (view.getTag() instanceof  NoteViewHolder) {
+            if (view.getTag() instanceof NoteViewHolder) {
                 holder = (NoteViewHolder) view.getTag();
             } else {
                 holder = new NoteViewHolder(view);

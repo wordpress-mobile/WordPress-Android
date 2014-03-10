@@ -21,18 +21,21 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.PhotonUtils;
 
 public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
+    private int mAvatarSz;
     
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
+        mAvatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.notification_follow_list, container, false);
+        return inflater.inflate(R.layout.notifications_follow_list, container, false);
     }
     
     @Override
@@ -109,8 +112,9 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
                 headerText = HtmlUtils.fastStripHtml(JSONUtil.queryJSON(noteItem, "header", ""));
             }
             row.setNameText(headerText);
-            row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
-            
+            String iconUrl = JSONUtil.queryJSON(noteItem, "icon", "");
+            row.getImageView().setImageUrl(PhotonUtils.fixAvatar(iconUrl, mAvatarSz), WordPress.imageLoader);
+
             return v;
         }
         // {"action":{"type":"follow","params":{"following-text":"Following","is_following":false,"following-hover-text":"Unfollow","blog_id":63708455,"blog_url":"http:\/\/madamesir.wordpress.com","blog_title":"Madame Sir","site_id":63708455,"stat-source":"note_reblog_post","follow-text":"Follow","blog_domain":"madamesir.wordpress.com"}},"icon_width":32,"icon_height":32,"icon":"https:\/\/1.gravatar.com\/avatar\/474a194639684ac63da9314aa816f520?s=256&d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G","header":"<a href=\"http:\/\/madamesir.wordpress.com\" class=\"wpn-user-blog-link\" target=\"_blank\" notes-data-click=\"reblog_note_rebloggers_blog\">madamesir<\/a>"}

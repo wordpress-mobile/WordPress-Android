@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_grey">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/header"
@@ -14,8 +13,7 @@
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:drawSelectorOnTop="false"
         tools:listitem="@layout/notifications_follow_row" />
 

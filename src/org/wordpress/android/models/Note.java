@@ -133,6 +133,9 @@ public class Note {
         this.mPlaceholder = placeholder;
     }
 
+    /*
+     * this is the text that is displayed in the notes adapter in NotificationListFragment
+     */
     public String toString(){
         return getSubject();
     }

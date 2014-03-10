@@ -22,8 +22,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:background="@color/grey_light" />
+        android:layout_height="1px"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:background="@color/reader_hyperlink" />
 
 </org.wordpress.android.ui.notifications.DetailHeader>

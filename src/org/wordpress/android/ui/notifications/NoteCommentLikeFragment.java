@@ -19,19 +19,22 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.PhotonUtils;
 
 public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment {
 
     private Note mNote;
+    private int mAvatarSz;
     
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
+        mAvatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.notification_follow_list, container, false);
+        return inflater.inflate(R.layout.notifications_follow_list, container, false);
     }
 
     @Override
@@ -126,7 +129,8 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             row.setFollowListener(new FollowListener());
             row.setAction(followAction);
             row.setNameText(JSONUtil.queryJSON(noteItem, "header_text", ""));
-            row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
+            String iconUrl = JSONUtil.queryJSON(noteItem, "icon", "");
+            row.getImageView().setImageUrl(PhotonUtils.fixAvatar(iconUrl, mAvatarSz), WordPress.imageLoader);
             
             return view;
         }
