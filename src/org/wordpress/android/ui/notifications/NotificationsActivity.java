@@ -29,7 +29,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
-import org.wordpress.android.ui.notifications.NotificationsListFragment.NotesAdapter;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
@@ -342,8 +341,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
     private void refreshNotificationsListFragment(List<Note> notes) {
         AppLog.d(T.NOTIFS, "refreshing note list fragment");
-        final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-        adapter.addAll(notes, true);
+        mNotesList.getNotesAdapter().addAll(notes, true);
         // mark last seen timestamp
         if (!notes.isEmpty()) {
             updateLastSeen(notes.get(0).getTimestamp());
@@ -381,8 +379,7 @@ public class NotificationsActivity extends WPActionBarActivity
             public void onErrorResponse(VolleyError error){
                 //We need to show an error message? and remove the loading indicator from the list?
                 mFirstLoadComplete = true;
-                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                adapter.addAll(new ArrayList<Note>(), true);
+                mNotesList.getNotesAdapter().addAll(new ArrayList<Note>(), true);
 
                 ToastUtils.showToastOrAuthAlert(NotificationsActivity.this, error, getString(R.string.error_refresh_notifications));
 
@@ -418,8 +415,8 @@ public class NotificationsActivity extends WPActionBarActivity
                 // API returns 'on or before' timestamp, so remove first item
                 if (notes.size() >= 1)
                     notes.remove(0);
-                NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                adapter.addAll(notes, false);
+                mNotesList.setAllNotesLoaded(notes.size() == 0);
+                mNotesList.getNotesAdapter().addAll(notes, false);
             }
         };
         getRestClientUtils().getNotifications(params, notesHandler, notesHandler);
@@ -434,7 +431,7 @@ public class NotificationsActivity extends WPActionBarActivity
         @Override
         public void onRequestMoreNotifications(){
             if (canRequestMore()) {
-                NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                NotesAdapter adapter = mNotesList.getNotesAdapter();
                 if (adapter.getCount() > 0) {
                     Note lastNote = adapter.getItem(adapter.getCount()-1);
                     requestNotesBefore(lastNote);
