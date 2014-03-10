@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textSize="@dimen/text_sz_large" />
     
     <View
         android:layout_width="match_parent"
