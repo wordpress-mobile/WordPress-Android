@@ -337,7 +337,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
             Callback callback = new Callback() {
 
-                // refersh db from server. If returned count is 0, we've retrieved all the media.
+                // refresh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
                 @Override

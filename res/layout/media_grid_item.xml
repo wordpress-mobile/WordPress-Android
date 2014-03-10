@@ -36,7 +36,7 @@
                 android:paddingLeft="@dimen/margin_small"
                 android:paddingRight="@dimen/margin_small" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_upload_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:background="@color/media_gallery_grid_label_bg"
             android:padding="@dimen/margin_medium">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:textSize="@dimen/text_sz_small"
                 android:textColor="@color/media_gallery_grid_label" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
