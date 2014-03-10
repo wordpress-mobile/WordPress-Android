@@ -84,6 +84,7 @@ public class MediaGridAdapter extends CursorAdapter {
         private final TextView titleView;
         private final TextView uploadDateView;
         private final ImageView imageView;
+        private final TextView fileTypeView;
         private final TextView dimensionView;
         private final CheckableFrameLayout frameLayout;
 
@@ -96,6 +97,7 @@ public class MediaGridAdapter extends CursorAdapter {
             titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
             uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
             imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
+            fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
             dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
             frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
 
@@ -144,7 +146,7 @@ public class MediaGridAdapter extends CursorAdapter {
         // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         if (holder.filenameView != null) {
-            holder.filenameView.setText("File name: " + fileName);
+            holder.filenameView.setText(fileName);
         }
         
         // title of media
@@ -156,7 +158,7 @@ public class MediaGridAdapter extends CursorAdapter {
         // upload date
         if (holder.uploadDateView != null) {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-            holder.uploadDateView.setText("Uploaded on: " + date);
+            holder.uploadDateView.setText(date);
         }
 
         // load image
@@ -166,23 +168,13 @@ public class MediaGridAdapter extends CursorAdapter {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
         
-        String fileType;
-        
-        // get the file extension from the fileURL
+        // get the file extension (type) from the fileURL
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         if (filePath == null)
             filePath = cursor.getString(cursor.getColumnIndex("fileURL"));
-        
         if (filePath != null) {
-            fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-            
-            // file type
-            TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-            if  (Utils.isXLarge(context)) {
-                fileTypeView.setText("File type: " + fileType);
-            } else {
-                fileTypeView.setText(fileType);
-            }
+            String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
+            holder.fileTypeView.setText(fileType);
         }
 
         // dimensions
@@ -193,7 +185,7 @@ public class MediaGridAdapter extends CursorAdapter {
                 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
-                    holder.dimensionView.setText("Dimensions: " + dimensions);
+                    holder.dimensionView.setText(dimensions);
                     holder.dimensionView.setVisibility(View.VISIBLE);
                 }
             } else {

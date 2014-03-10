@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    media grid item - tablet portrait
+-->
 <org.wordpress.android.ui.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/media_grid_frame_layout"
     android:layout_width="match_parent"
@@ -26,7 +29,8 @@
         android:duplicateParentState="true"
         android:focusable="false" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -46,7 +50,6 @@
             android:id="@+id/media_grid_item_upload_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_name"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_small" />
 
@@ -54,7 +57,6 @@
             android:id="@+id/media_grid_item_filename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_upload_date"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_small" />
 
@@ -62,7 +64,6 @@
             android:id="@+id/media_grid_item_filetype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_filename"
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_small" />
@@ -71,10 +72,9 @@
             android:id="@+id/media_grid_item_dimension"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_filetype"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_small" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/media_grid_item_upload_state_container"
