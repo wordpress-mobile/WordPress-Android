@@ -78,11 +78,15 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
     }
 
-    public NotesAdapter getNotesAdapter() {
+    protected NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), this);
         }
         return mNotesAdapter;
+    }
+
+    protected boolean hasAdapter() {
+        return (mNotesAdapter != null);
     }
 
     /*

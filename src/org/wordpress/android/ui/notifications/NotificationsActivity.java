@@ -59,7 +59,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
-    private List<Note> mNotes;
+    //private List<Note> mNotes;
     private BroadcastReceiver mBroadcastReceiver;
 
     @Override
@@ -77,34 +77,51 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        // Load notes
-        mNotes = WordPress.wpDB.getLatestNotes();
+        // load notes, and automatically show the note passed in the intent (if any) if
+        // activity isn't being restored
+        boolean launchWithNoteId = (savedInstanceState == null);
+        loadNotes(launchWithNoteId);
 
         GCMIntentService.activeNotificationsMap.clear();
 
-        if (savedInstanceState == null) {
-            launchWithNoteId();
-        } else {
+        if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
         }
 
-        refreshNotificationsListFragment(mNotes);
-
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             popNoteDetail();
-        if (mBroadcastReceiver == null)
+        }
+
+        if (mBroadcastReceiver == null) {
             createBroadcastReceiver();
+        }
 
         // remove window background since background color is set in fragment (reduces overdraw)
         getWindow().setBackgroundDrawable(null);
+    }
+
+    private void loadNotes(final boolean launchWithNoteId) {
+        new Thread() {
+            @Override
+            public void run() {
+                final List<Note> notes = WordPress.wpDB.getLatestNotes();
+                NotificationsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshNotificationsListFragment(notes);
+                        if (launchWithNoteId)
+                            launchWithNoteId();
+                    }
+                });
+            }
+        }.start();
     }
 
     private void createBroadcastReceiver() {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mNotes = WordPress.wpDB.getLatestNotes();
-                refreshNotificationsListFragment(mNotes);
+                loadNotes(false);
             }
         };
     }
@@ -145,8 +162,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     public void onNotes(List<Note> notes){
                         // there should only be one note!
                         if (!notes.isEmpty()) {
-                            Note note = notes.get(0);
-                            openNote(note);
+                            openNote(notes.get(0));
                         }
                     }
                 };
@@ -156,11 +172,8 @@ public class NotificationsActivity extends WPActionBarActivity
             // on a tablet: open first note if none selected
             String fragmentTag = mNotesList.getTag();
             if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
-                if (mNotes != null && mNotes.size() > 0) {
-                    Note note = mNotes.get(0);
-                    if (note != null) {
-                        openNote(note);
-                    }
+                if (mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
+                    openNote(mNotesList.getNotesAdapter().getItem(0));
                 }
             }
             refreshNotes();
@@ -460,14 +473,13 @@ public class NotificationsActivity extends WPActionBarActivity
             if( response == null ) {
                 //Not sure this could ever happen, but make sure we're catching all response types
                 AppLog.w(T.NOTIFS, "Success, but did not receive any notes");
-                mNotes = new ArrayList<Note>(0);
-                onNotes(mNotes);
+                onNotes(new ArrayList<Note>(0));
                 return;
             }
 
             try {
-                mNotes = NotificationUtils.parseNotes(response);
-                onNotes(mNotes);
+                List<Note> notes = NotificationUtils.parseNotes(response);
+                onNotes(notes);
             } catch (JSONException e) {
                 AppLog.e(T.NOTIFS, "Success, but can't parse the response", e);
                 showError(getString(R.string.error_parsing_response));
