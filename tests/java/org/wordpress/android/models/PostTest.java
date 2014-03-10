@@ -67,6 +67,22 @@ public class PostTest extends InstrumentationTestCase {
         assertEquals(post.getWP_author_display_name(), copiedPost.getWP_author_display_name());
         assertEquals(post.getWP_author_id(), copiedPost.getWP_author_id());
         assertEquals(post.getContent(), copiedPost.getContent());
+        assertEquals(post.getStatusEnum(), copiedPost.getStatusEnum());
+    }
+
+    public void testPostEnumStatus() {
+        post.setStatusEnum(PostStatus.DRAFT);
+        assertEquals(post.getStatusEnum(), PostStatus.DRAFT);
+        post.setStatusEnum(PostStatus.PUBLISHED);
+        assertEquals(post.getStatusEnum(), PostStatus.PUBLISHED);
+        post.setStatusEnum(PostStatus.PENDING);
+        assertEquals(post.getStatusEnum(), PostStatus.PENDING);
+        post.setStatusEnum(PostStatus.PRIVATE);
+        assertEquals(post.getStatusEnum(), PostStatus.PRIVATE);
+        post.setStatusEnum(PostStatus.SCHEDULED);
+        assertEquals(post.getStatusEnum(), PostStatus.SCHEDULED);
+        post.setStatusEnum(PostStatus.UNKNOWN);
+        assertEquals(post.getStatusEnum(), PostStatus.UNKNOWN);
     }
 
 }
