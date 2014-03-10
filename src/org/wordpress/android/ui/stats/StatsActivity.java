@@ -232,7 +232,7 @@ public class StatsActivity extends WPActionBarActivity {
                             }
                         }
                         @Override
-                        public void onFailure(long id, XMLRPCException error) {
+                        public void onFailure(long id, Exception error) {
                             AppLog.e(T.STATS, "Cannot load blog options (wp.getOptions failed and no jetpack_client_id is then available", error);
                         }
                     }, "wp.getOptions", params);

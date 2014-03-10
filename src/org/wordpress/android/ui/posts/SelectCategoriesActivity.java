@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -25,16 +22,19 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.xmlrpc.android.XMLRPCClient;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -186,7 +186,11 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             result = (Object[]) mClient.call("wp.getCategories", params);
             success = true;
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (success) {
@@ -238,7 +242,11 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         try {
             result = mClient.call("wp.newCategory", params);
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {
@@ -341,7 +349,11 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         try {
             result = (Map<?, ?>) mClient.call("wp.getTerm", params);
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {
