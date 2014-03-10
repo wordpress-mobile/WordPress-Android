@@ -48,7 +48,7 @@
         android:layout_alignLeft="@+id/note_label"
         android:layout_alignRight="@+id/note_label"
         android:layout_below="@+id/note_label"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/grey_medium"

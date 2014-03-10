@@ -36,13 +36,13 @@ class NotesAdapter extends BaseAdapter {
         public void onDataLoaded(boolean isEmpty);
     }
 
-    protected NotesAdapter(Context context, DataLoadedListener dataLoadedListener) {
+    NotesAdapter(Context context, DataLoadedListener dataLoadedListener) {
         mInflater = LayoutInflater.from(context);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mDataLoadedListener = dataLoadedListener;
     }
 
-    protected boolean isAddingNotes() {
+    boolean isAddingNotes() {
         return mIsAddingNotes;
     }
 

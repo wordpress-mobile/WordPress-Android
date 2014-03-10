@@ -40,8 +40,6 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        // setup the initial notes adapter
-        mNotesAdapter = new NotesAdapter(getActivity(), this);
     }
 
     @Override
@@ -52,15 +50,17 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         mProgressFooterView.setVisibility(View.GONE);
+
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnScrollListener(new ListScrollListener());
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
         listView.addFooterView(mProgressFooterView, null, false);
-        setListAdapter(mNotesAdapter);
+        setListAdapter(getNotesAdapter());
 
         // Set empty text if no notifications
         TextView textview = (TextView) listView.getEmptyView();
@@ -71,7 +71,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Note note = mNotesAdapter.getItem(position);
+        Note note = getNotesAdapter().getItem(position);
         l.setItemChecked(position, true);
         if (note != null && !note.isPlaceholder() && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
@@ -79,6 +79,9 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     public NotesAdapter getNotesAdapter() {
+        if (mNotesAdapter == null) {
+            mNotesAdapter = new NotesAdapter(getActivity(), this);
+        }
         return mNotesAdapter;
     }
 
@@ -115,7 +118,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
     }
 
-    protected void setAllNotesLoaded(boolean allNotesLoaded) {
+    void setAllNotesLoaded(boolean allNotesLoaded) {
         mAllNotesLoaded = allNotesLoaded;
     }
 
@@ -142,7 +145,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
                 return;
 
             // skip if all notes are loaded or notes are currently being added to the adapter
-            if (mAllNotesLoaded || mNotesAdapter.isAddingNotes())
+            if (mAllNotesLoaded || getNotesAdapter().isAddingNotes())
                 return;
 
             // if we're within 5 from the last item we should ask for more items
