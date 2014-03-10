@@ -74,7 +74,32 @@ public class MediaGridAdapter extends CursorAdapter {
     public ArrayList<String> getCheckedItems() {
         return mCheckedItems;
     }
-    
+
+    private static class GridViewHolder {
+        private final TextView filenameView;
+        private final TextView titleView;
+        private final TextView uploadDateView;
+        private final ImageView imageView;
+        private final TextView dimensionView;
+        private final CheckableFrameLayout frameLayout;
+
+        private final TextView stateTextView;
+        private final ProgressBar progressUpload;
+        private final RelativeLayout uploadStateView;
+
+        GridViewHolder(View view) {
+            filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
+            titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
+            uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
+            imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
+            dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
+            frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
+
+            stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
+            progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
+            uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
+        }
+    }
 	@SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
@@ -97,6 +122,14 @@ public class MediaGridAdapter extends CursorAdapter {
             view.setVisibility(View.INVISIBLE);
             return;
         }
+
+        final GridViewHolder holder;
+        if (view.getTag() instanceof GridViewHolder) {
+            holder = (GridViewHolder) view.getTag();
+        } else {
+            holder = new GridViewHolder(view);
+            view.setTag(holder);
+        }
         
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
@@ -104,32 +137,28 @@ public class MediaGridAdapter extends CursorAdapter {
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
-        TextView filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        if (filenameView != null) {
-            filenameView.setText("File name: " + fileName);
+        if (holder.filenameView != null) {
+            holder.filenameView.setText("File name: " + fileName);
         }
         
         // title of media
-        TextView titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
         String title = cursor.getString(cursor.getColumnIndex("title"));
         if (title == null || title.equals(""))
             title = fileName;
-        titleView.setText(title);
+        holder.titleView.setText(title);
         
         // upload date
-        TextView uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
-        if (uploadDateView != null) {
+        if (holder.uploadDateView != null) {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-            uploadDateView.setText("Uploaded on: " + date);
+            holder.uploadDateView.setText("Uploaded on: " + date);
         }
 
         // load image
-        final ImageView imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
         if (isLocalFile) {
-            loadLocalImage(cursor, imageView);
+            loadLocalImage(cursor, holder.imageView);
         } else {
-            loadNetworkImage(cursor, (NetworkImageView) imageView);
+            loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
         
         String fileType = null;
@@ -152,27 +181,25 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // dimensions
-        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-        if (dimensionView != null) {
+        if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = cursor.getInt(cursor.getColumnIndex("width"));
                 int height = cursor.getInt(cursor.getColumnIndex("height"));
                 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
-                    dimensionView.setText("Dimensions: " + dimensions);
-                    dimensionView.setVisibility(View.VISIBLE);
+                    holder.dimensionView.setText("Dimensions: " + dimensions);
+                    holder.dimensionView.setVisibility(View.VISIBLE);
                 }
             } else {
-                dimensionView.setVisibility(View.GONE);
+                holder.dimensionView.setVisibility(View.GONE);
             }
         }
 
         
         // multi-select highlighting
-        CheckableFrameLayout frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
-        frameLayout.setTag(mediaId);
-        frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        holder.frameLayout.setTag(mediaId);
+        holder.frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             
             @Override
             public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
@@ -187,33 +214,26 @@ public class MediaGridAdapter extends CursorAdapter {
                 
             }
         });
-        frameLayout.setChecked(mCheckedItems.contains(mediaId));
+        holder.frameLayout.setChecked(mCheckedItems.contains(mediaId));
         
         // resizing layout to fit nicely into grid view
-        updateGridWidth(context, frameLayout);        
+        updateGridWidth(context, holder.frameLayout);
         
         // show upload state
-        final TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
-        final ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-        final RelativeLayout uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
-        
-        if (stateTextView != null) {
-            
-            
+        if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
-                
                 // show the progressbar only when the state is uploading
                 if (state.equals("uploading")) {
-                    progressUpload.setVisibility(View.VISIBLE);
+                    holder.progressUpload.setVisibility(View.VISIBLE);
                 } else {
-                    progressUpload.setVisibility(View.GONE);
+                    holder.progressUpload.setVisibility(View.GONE);
                 }
 
                 // add onclick to retry failed uploads 
                 if (state.equals("failed")) {
                     
                     state = "retry";
-                    stateTextView.setOnClickListener(new OnClickListener() {
+                    holder.stateTextView.setOnClickListener(new OnClickListener() {
                         
                         @Override
                         public void onClick(View v) {
@@ -226,11 +246,11 @@ public class MediaGridAdapter extends CursorAdapter {
 
                     });
                 }
-                
-                stateTextView.setText(state);
-                uploadStateView.setVisibility(View.VISIBLE);
+
+                holder.stateTextView.setText(state);
+                holder.uploadStateView.setVisibility(View.VISIBLE);
             } else {
-                uploadStateView.setVisibility(View.GONE);
+                holder.uploadStateView.setVisibility(View.GONE);
             }
         }
         
@@ -382,6 +402,9 @@ public class MediaGridAdapter extends CursorAdapter {
             imageStub.setLayoutResource(R.layout.media_grid_image_network);
         
         imageStub.inflate();
+
+        GridViewHolder holder = new GridViewHolder(view);
+        view.setTag(holder);
         
         return view;
     }
