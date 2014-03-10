@@ -134,35 +134,37 @@ public class Note {
     }
 
     /*
-     * returns subject as spanned html, with user names highlighted
+     * returns subject as spanned html
      */
     /*private transient Spanned mFormattedSubject;
     public Spanned getFormattedSubject() {
         if (mFormattedSubject == null) {
-            String subject = getSubject();
-            JSONArray items = queryJSON("body.items", new JSONArray());
+            StringBuilder sb = new StringBuilder(getSubject());
 
-            if (items.length() > 0) {
-                StringBuilder sb = new StringBuilder(subject);
-                for (int i = 0; i < items.length(); i++) {
-                    try {
-                        String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
-                        if (!TextUtils.isEmpty(name)) {
-                            // note that we only replace the first instance of name to avoid false
-                            // matches
-                            int index = sb.indexOf(name);
-                            if (index > -1) {
-                                sb.replace(index, index + name.length(), "<b>" + name + "</b>");
+            // highlight user names - note we skip the first item in replies because it's the
+            // actual header text (ex: "In reply to your comment") rather than a user name
+            if (isMultiLineListTemplate() || isSingleLineListTemplate()) {
+                JSONArray items = queryJSON("body.items", new JSONArray());
+                int startIndex = (isCommentType() ? 1 : 0);
+                if (items.length() > startIndex) {
+                    for (int i = startIndex; i < items.length(); i++) {
+                        try {
+                            String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
+                            if (!TextUtils.isEmpty(name)) {
+                                // note that we only replace the first instance to avoid false matches
+                                int index = sb.indexOf(name);
+                                if (index > -1) {
+                                    sb.replace(index, index + name.length(), "<b>" + name + "</b>");
+                                }
                             }
+                        } catch (JSONException e) {
+                            // nop
                         }
-                    } catch (JSONException e) {
-                        // nop
                     }
                 }
-                mFormattedSubject = Html.fromHtml(sb.toString());
-            } else {
-                mFormattedSubject = Html.fromHtml(subject);
             }
+
+            mFormattedSubject = Html.fromHtml(sb.toString());
         }
         return mFormattedSubject;
     }*/

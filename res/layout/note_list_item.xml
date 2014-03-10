@@ -38,7 +38,8 @@
         android:layout_marginRight="@dimen/margin_large"
         android:layout_toLeftOf="@+id/text_date"
         android:layout_toRightOf="@+id/note_avatar"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textColor="@color/grey_extra_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/note_detail"
