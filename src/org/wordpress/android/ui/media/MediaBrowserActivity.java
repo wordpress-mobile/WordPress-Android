@@ -169,7 +169,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         getIntent().setAction(null);
     }
 
-    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
         }
@@ -323,7 +323,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         getFeatureSet();
         
         setupImageLoadingQueue();
-    };
+    }
 
     private void setupImageLoadingQueue(){
         if( mRequestQueue!=null ){
@@ -373,7 +373,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaEditFragment.loadMedia(mediaId);
         }
 
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

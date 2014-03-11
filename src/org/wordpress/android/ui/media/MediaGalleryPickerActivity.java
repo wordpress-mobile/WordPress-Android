@@ -45,7 +45,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
+    private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
@@ -190,7 +190,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         }, 1500);
     }
 
-    public void refreshMediaFromServer(int offset) {
+    void refreshMediaFromServer(int offset) {
         if (offset == 0 || !mIsRefreshing) {
             if (offset == mOldMediaSyncOffset) {
                 // we're pulling the same data again for some reason. Pull from the beginning.

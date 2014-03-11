@@ -80,23 +80,18 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
         
-        String fileType = null;
-        
         // get the file extension from the fileURL
         String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("filePath")));
         if (filePath.isEmpty())
             filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("fileURL")));
             
-        fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        
-        
         // file type
+        String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         if  (Utils.isXLarge(context)) {
             holder.fileTypeView.setText("File type: " + fileType);
         } else {
             holder.fileTypeView.setText(fileType);
         }
-        
 
         // dimensions
         if (holder.dimensionView != null) {

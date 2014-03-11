@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,9 +28,9 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +135,6 @@ public class MediaItemFragment extends SherlockFragment {
     }
     
     public void loadMedia(String mediaId) {
-        String id = mediaId;
         Blog blog = WordPress.getCurrentBlog();
         
         if (blog != null) {
@@ -145,10 +143,10 @@ public class MediaItemFragment extends SherlockFragment {
             Cursor cursor;
             
             // if the id is null, get the first media item in the database
-            if (id == null) {
+            if (mediaId == null) {
                 cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
             } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, id);
+                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
             }
             
             refreshViews(cursor);
