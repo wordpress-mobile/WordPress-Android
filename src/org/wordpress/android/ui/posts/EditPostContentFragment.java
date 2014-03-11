@@ -157,14 +157,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
-        Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
+        LinearLayout postSettingsButton = (LinearLayout) rootView.findViewById(R.id.post_settings_button);
         postSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActivity.showPostSettings();
             }
         });
-        Button postPreviewButton = (Button) rootView.findViewById(R.id.post_preview_button);
+        LinearLayout postPreviewButton = (LinearLayout) rootView.findViewById(R.id.post_preview_button);
         postPreviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,8 +214,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             if (!TextUtils.isEmpty(post.getTitle())) {
                 mTitleEditText.setText(post.getTitle());
             }
-
-            postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
+            TextView postSettingsButtonText = (TextView) rootView.findViewById(R.id.post_preview_button_text);
+            postSettingsButtonText.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
         }
 
         // Check for Android share action

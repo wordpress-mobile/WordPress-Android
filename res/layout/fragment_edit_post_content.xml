@@ -66,34 +66,61 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <LinearLayout
                 android:id="@+id/post_settings_button"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:textSize="18sp"
-                android:drawableLeft="@drawable/ic_post_settings"
                 android:background="@drawable/selectable_background_wordpress"
-                android:text="@string/post_settings"
+                android:clickable="true"
+                android:descendantFocusability="blocksDescendants"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:drawablePadding="6dp"
                 android:layout_weight="1"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="bottom">
 
-            <Button
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_post_settings" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="@string/post_settings" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/post_preview_button"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:textSize="18sp"
-                android:drawableLeft="@drawable/ic_post_preview_grey"
-                android:background="@drawable/selectable_background_wordpress"
-                android:text="@string/preview"
-                android:drawablePadding="6dp"
                 android:layout_toRightOf="@+id/post_settings_button"
+                android:background="@drawable/selectable_background_wordpress"
+                android:clickable="true"
+                android:descendantFocusability="blocksDescendants"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:drawablePadding="6dp"
                 android:layout_weight="1"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="bottom">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/ic_post_preview_grey" />
+
+                <TextView
+                    android:id="@+id/post_preview_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="@string/preview" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
