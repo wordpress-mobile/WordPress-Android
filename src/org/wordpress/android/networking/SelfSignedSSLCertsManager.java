@@ -102,7 +102,7 @@ public class SelfSignedSSLCertsManager {
     
     //Create an empty trust store file if missing
     private void createLocalKeyStoreFile() throws GeneralSecurityException, IOException {
-       // if (!localTrustStoreFile.exists()) { 
+       if (!localTrustStoreFile.exists()) { 
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(localTrustStoreFile);
@@ -118,7 +118,7 @@ public class SelfSignedSSLCertsManager {
                     }
                 }
             }
-     //   }
+        }
     }
     
     public void emptyLocalKeyStoreFile() {
