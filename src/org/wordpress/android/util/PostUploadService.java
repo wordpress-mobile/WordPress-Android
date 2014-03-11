@@ -29,6 +29,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -194,9 +195,20 @@ public class PostUploadService extends Service {
             // add the uploader to the notification bar
             nm = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
 
-            String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
+            StringBuilder message = new StringBuilder(context.getResources().getText(R.string.uploading));
+            String postOrPage = (String) (post.isPage() ? context.getResources()
+                    .getText(R.string.page_id) : context.getResources()
                     .getText(R.string.post_id));
-            String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
+            if (post.getStatusEnum() != PostStatus.PUBLISHED) {
+                message.append(" ");
+                message.append(context.getResources().getText(R.string.draft));
+                message.append(" ");
+                message.append(postOrPage);
+            } else {
+                message.append(" ");
+                message.append(postOrPage);
+            }
+
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
             Intent notificationIntent = new Intent(context, PostsActivity.class);
