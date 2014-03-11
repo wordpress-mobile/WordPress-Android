@@ -166,14 +166,16 @@ public class ReaderPost {
         // it as a video
         if (!post.hasFeaturedImage()) {
             JSONObject jsonMedia = json.optJSONObject("featured_media");
-            if (jsonMedia!=null) {
+            if (jsonMedia != null) {
                 String mediaUrl = JSONUtil.getString(jsonMedia, "uri");
-                String type = JSONUtil.getString(jsonMedia, "type");
-                boolean isVideo = (type!=null && type.equals("video"));
-                if (isVideo) {
-                    post.featuredVideo = mediaUrl;
-                } else {
-                    post.featuredImage = mediaUrl;
+                if (!TextUtils.isEmpty(mediaUrl)) {
+                    String type = JSONUtil.getString(jsonMedia, "type");
+                    boolean isVideo = (type != null && type.equals("video"));
+                    if (isVideo) {
+                        post.featuredVideo = mediaUrl;
+                    } else {
+                        post.featuredImage = mediaUrl;
+                    }
                 }
             }
 
@@ -257,7 +259,7 @@ public class ReaderPost {
     /*
      * called when a post doesn't have a featured image, searches post's content for an image that
      * may still be suitable as a featured image - only works with WP posts due to the search for
-     * specific WP image classes
+     * specific WP image classes (but will also work with RSS posts that come from WP blogs)
      */
     private static String findFeaturedImage(final String text) {
         if (text==null || !text.contains("<img "))
