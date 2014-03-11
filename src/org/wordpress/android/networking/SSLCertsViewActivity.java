@@ -2,6 +2,7 @@ package org.wordpress.android.networking;
 
 
 import android.os.Bundle;
+import android.webkit.WebSettings;
 
 import com.actionbarsherlock.app.ActionBar;
 
@@ -18,7 +19,7 @@ public class SSLCertsViewActivity extends WebViewActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getResources().getText(R.string.open_source_licenses));
+        setTitle(getResources().getText(R.string.ssl_certificate_details));
         
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -30,7 +31,9 @@ public class SSLCertsViewActivity extends WebViewActivity {
             StringBuilder sb = new StringBuilder("<html><body>");
             sb.append(certDetails);
             sb.append("</body></html>");
-            mWebView.loadData(sb.toString(), "text/html", "UTF-8");
+            WebSettings settings = mWebView.getSettings();
+            settings.setDefaultTextEncodingName("utf-8");
+            mWebView.loadDataWithBaseURL(null, sb.toString(), "text/html", "utf-8", null);
         }
     }
 }

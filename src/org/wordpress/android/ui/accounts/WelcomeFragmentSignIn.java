@@ -451,7 +451,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
                     try {
                         SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
-                        String lastFailureChainDescription = selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                        String lastFailureChainDescription = EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
                         intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
