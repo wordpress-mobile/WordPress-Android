@@ -1,32 +1,35 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SysUtils;
 
 /**
- * Created by nbradbury on 7/8/13.
+ * Created by nbradbury on 7/8/13 - displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends FragmentActivity {
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_POST_ID = "post_id";
 
-    private ReaderPost mPost;
-    private ReaderUserAdapter.ReaderUserListType mListType = ReaderUserAdapter.ReaderUserListType.UNKNOWN;
-
     private ListView mListView;
     private TextView mTxtTitle;
-
+    private ReaderPost mPost;
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
@@ -38,8 +41,8 @@ public class ReaderUserListActivity extends FragmentActivity {
 
     private ReaderUserAdapter mAdapter;
     private ReaderUserAdapter getAdapter() {
-        if (mAdapter==null)
-            mAdapter = new ReaderUserAdapter(this, mListType, mPost, mDataLoadedListener);
+        if (mAdapter == null)
+            mAdapter = new ReaderUserAdapter(this, mDataLoadedListener);
         return mAdapter;
     }
 
@@ -68,7 +71,6 @@ public class ReaderUserListActivity extends FragmentActivity {
         mTxtTitle.setVisibility(View.INVISIBLE);
 
         // for now this activity only supports showing users who like a specific post
-        mListType = ReaderUserAdapter.ReaderUserListType.LIKE_POST;
         long blogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ARG_POST_ID, 0);
         mPost = ReaderPostTable.getPost(blogId, postId);
@@ -77,6 +79,7 @@ public class ReaderUserListActivity extends FragmentActivity {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
 
         getListView().setAdapter(getAdapter());
+        loadUsers();
         updateTitle();
     }
 
@@ -94,48 +97,74 @@ public class ReaderUserListActivity extends FragmentActivity {
     }
 
     private void updateTitle() {
-        switch (mListType) {
-            case LIKE_POST:
-                final Handler handler = new Handler();
-                new Thread() {
+        new Thread() {
+            @Override
+            public void run() {
+                //int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+                int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
+                boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
+
+                final String title;
+                if (isLikedByCurrentUser) {
+                    switch (numLikes) {
+                        case 1 :
+                            title = getString(R.string.reader_likes_only_you);
+                            break;
+                        case 2 :
+                            title = getString(R.string.reader_likes_you_and_one);
+                            break;
+                        default :
+                            title = getString(R.string.reader_likes_you_and_multi, numLikes-1);
+                            break;
+                    }
+                } else {
+                    title = (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
+                }
+
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
-                        int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
-                        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
-                        final String title;
-                        if (isLikedByCurrentUser) {
-                            switch (numLikes) {
-                                case 1 :
-                                    title = getString(R.string.reader_likes_only_you);
-                                    break;
-                                case 2 :
-                                    title = getString(R.string.reader_likes_you_and_one);
-                                    break;
-                                default :
-                                    title = getString(R.string.reader_likes_you_and_multi, numLikes-1);
-                                    break;
-                            }
-                        } else {
-                            title = (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
-                        }
-
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mTxtTitle.setText(title);
-                                mTxtTitle.setVisibility(View.VISIBLE);
-                            }
-                        });
+                        mTxtTitle.setText(title);
+                        mTxtTitle.setVisibility(View.VISIBLE);
                     }
-                }.start();
-                break;
+                });
+            }
+        }.start();
+    }
 
-            default :
-                mTxtTitle.setText(R.string.reader_title_userlist_default);
-                mTxtTitle.setVisibility(View.VISIBLE);
-                break;
+    @SuppressLint("NewApi")
+    private void loadUsers() {
+        if (mIsTaskRunning)
+            AppLog.w(AppLog.T.READER, "user task already running");
+        if (SysUtils.canUseExecuteOnExecutor()) {
+            new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new LoadUsersTask().execute();
         }
     }
 
+    private boolean mIsTaskRunning = false;
+    private class LoadUsersTask extends AsyncTask<Void, Void, Boolean> {
+        ReaderUserList tmpUsers;
+        @Override
+        protected void onPreExecute() {
+            mIsTaskRunning = true;
+        }
+        @Override
+        protected void onCancelled() {
+            mIsTaskRunning = false;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, Constants.READER_MAX_USERS_TO_DISPLAY);
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                getAdapter().setUsers(tmpUsers);
+            }
+            mIsTaskRunning = false;
+        }
+    }
 }
