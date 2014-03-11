@@ -7,7 +7,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 
 /**
@@ -64,12 +63,11 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
         String domain = UrlUtils.getDomainFromUrl(mCurrentUrl);
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
+      //  if (TrustedSslDomainTable.isDomainTrusted(domain)) { //TODO: fixme!!!
             handler.proceed();
             return;
-        }
+      //  }
 
-        super.onReceivedSslError(view, handler, error);
+        //super.onReceivedSslError(view, handler, error);
     }
 }
-

@@ -114,6 +114,18 @@ public class SelfSignedSSLCertsManager {
      //   }
     }
     
+    public void emptyLocalKeyStoreFile() {
+        if (localTrustStoreFile.exists()) {
+            localTrustStoreFile.delete();
+        }
+        try {
+            createLocalKeyStoreFile();
+            localKeyStore = KeyStore.getInstance("BKS");
+        } catch (GeneralSecurityException e) {
+        } catch (IOException e) {
+        } 
+    }
+    
     private static String hashName(X500Principal principal) {
         try {
             byte[] digest = MessageDigest.getInstance("MD5").digest(principal.getEncoded());

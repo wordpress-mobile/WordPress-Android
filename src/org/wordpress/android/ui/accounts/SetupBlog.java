@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.net.ssl.SSLHandshakeException;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -25,7 +24,6 @@ import org.xmlrpc.android.XMLRPCFault;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -170,9 +168,6 @@ public class SetupBlog {
             mErrorMsgId = R.string.no_site_error;
         } catch (IOException e) {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-            if (mCurrentSslCertificatesForcedTrusted) {
-                TrustedSslDomainTable.removeTrustedDomain(uri);
-            }
             mErrorMsgId = R.string.no_site_error;
         }
         return null;
