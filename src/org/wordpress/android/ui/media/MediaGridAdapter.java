@@ -51,6 +51,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private final Handler mHandler;
     private final int mLocalImageWidth;
     private final LayoutInflater mInflater;
+    private boolean mIsCurrentBlogPhotonCapable;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -68,11 +69,18 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
         super(context, c, flags);
+
         mCheckedItems = checkedItems;
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
+
+        checkPhotonCapable();
+    }
+
+    private void checkPhotonCapable() {
+        mIsCurrentBlogPhotonCapable = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
     
     public ArrayList<String> getCheckedItems() {
@@ -261,12 +269,12 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean inMultiSelect() {
         return mCallback.isInMultiSelect();
     }
-    
+
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
 
         // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
+        if (mIsCurrentBlogPhotonCapable){
             String imageURL = cursor.getString(cursor.getColumnIndex("fileURL"));
             if (imageURL != null) {
                 thumbnailURL = StringUtils.getPhotonUrl(imageURL, mGridItemWidth);
@@ -280,7 +288,9 @@ public class MediaGridAdapter extends CursorAdapter {
             int placeholderResId = MediaUtils.getPlaceholder(filepath);
             imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
-            imageView.setDefaultImageResId(placeholderResId);
+
+            // no default image while downloading
+            imageView.setDefaultImageResId(0);
 
             if (MediaUtils.isValidImage(filepath)) { 
                 imageView.setTag(thumbnailURL);
@@ -438,6 +448,8 @@ public class MediaGridAdapter extends CursorAdapter {
 
     @Override
     public Cursor swapCursor(Cursor newCursor) {
+        checkPhotonCapable();
+
         if (newCursor == null) {
             mCursorDataCount = 0;
             return super.swapCursor(newCursor);
