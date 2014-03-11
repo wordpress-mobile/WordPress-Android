@@ -188,10 +188,11 @@ public class MediaItemFragment extends SherlockFragment {
 
         // added / upload date
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        if (mIsLocal)
+        if (mIsLocal) {
             mDateView.setText("Added on: " + date);
-        else
+        } else {
             mDateView.setText("Uploaded on: " + date);
+        }
         
         // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));

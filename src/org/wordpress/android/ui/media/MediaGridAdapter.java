@@ -387,8 +387,7 @@ public class MediaGridAdapter extends CursorAdapter {
         
         imageStub.inflate();
 
-        GridViewHolder holder = new GridViewHolder(view);
-        view.setTag(holder);
+        view.setTag(new GridViewHolder(view));
         
         return view;
     }
