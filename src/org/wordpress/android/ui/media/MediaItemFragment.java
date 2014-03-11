@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -279,6 +280,9 @@ public class MediaItemFragment extends SherlockFragment {
         }
         
         mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
+
+        // add a background color so something appears while image is downloaded
+        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.grey_light)));
     }
     
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
@@ -291,7 +295,6 @@ public class MediaItemFragment extends SherlockFragment {
                 imageView.setImageBitmap(bitmap);
             } else {
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
-                    
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);
