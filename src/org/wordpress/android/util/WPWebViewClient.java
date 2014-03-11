@@ -1,5 +1,8 @@
 package org.wordpress.android.util;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.webkit.HttpAuthHandler;
@@ -8,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 
 /**
  * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
@@ -62,12 +66,15 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        String domain = UrlUtils.getDomainFromUrl(mCurrentUrl);
-      //  if (TrustedSslDomainTable.isDomainTrusted(domain)) { //TODO: fixme!!!
-            handler.proceed();
-            return;
-      //  }
+        try {
+            if (SelfSignedSSLCertsManager.getIstance(view.getContext()).isCertificateTrusted(error.getCertificate())) {
+                handler.proceed();
+                return;
+            }
+        } catch (GeneralSecurityException e) {
+        } catch (IOException e) {
+        }
 
-        //super.onReceivedSslError(view, handler, error);
+        super.onReceivedSslError(view, handler, error);
     }
 }

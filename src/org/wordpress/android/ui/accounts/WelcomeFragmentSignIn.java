@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -36,8 +35,6 @@ import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -46,9 +43,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.prefs.LicensesActivity;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -360,6 +354,50 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mForgotPassword.setEnabled(true);
     }
 
+    
+    protected void askForSslTrust() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.ssl_certificate_error));
+        alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
+        alert.setPositiveButton(
+                android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                SetupBlogTask setupBlogTask = new SetupBlogTask();
+                try {
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                    selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
+                } catch (IOException e) {
+                    AppLog.e(T.NUX, e);
+                } catch (GeneralSecurityException e) {
+                    AppLog.e(T.NUX, e);
+                }
+                setupBlogTask.execute();
+            }
+        });
+        alert.setNeutralButton("Certificate Details", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
+                try {
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                    String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" 
+                            + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+                    getActivity().startActivityForResult(intent, WelcomeActivity.SHOW_CERT_DETAILS);
+                } catch (GeneralSecurityException e) {
+                    AppLog.e(T.NUX, e);
+                } catch (IOException e) {
+                    AppLog.e(T.NUX, e);
+                }
+            }
+        });
+        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.show();
+        endProgress();
+    }
+    
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
@@ -427,48 +465,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
-        private void askForSslTrust() {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getString(R.string.ssl_certificate_error));
-            alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
-            alert.setPositiveButton(
-                    android.R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    try {
-                        SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
-                        selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
-                    } catch (IOException e) {
-                        AppLog.e(T.NUX, e);
-                    } catch (GeneralSecurityException e) {
-                        AppLog.e(T.NUX, e);
-                    }
-                    setupBlogTask.execute();
-                }
-            });
-            alert.setNeutralButton("Certificate Details", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
-                    try {
-                        SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
-                        String lastFailureChainDescription = EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-                        intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        startActivity(intent);
-                    } catch (GeneralSecurityException e) {
-                        AppLog.e(T.NUX, e);
-                    } catch (IOException e) {
-                        AppLog.e(T.NUX, e);
-                    }
-                }
-            });
-            alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-            alert.show();
-            endProgress();
-        }
+
 
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {

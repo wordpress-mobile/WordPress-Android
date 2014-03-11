@@ -1,5 +1,6 @@
 package org.wordpress.android.networking;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,13 +8,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import javax.security.auth.x500.X500Principal;
 
 import android.content.Context;
+import android.net.http.SslCertificate;
+import android.os.Bundle;
 
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
@@ -165,5 +172,41 @@ public class SelfSignedSSLCertsManager {
     
     public String getLastFailureChainDescription() {
         return (lastFailureChain == null ||  lastFailureChain.length == 0) ? "" :  lastFailureChain[0].toString();
+    }
+    
+    public boolean isCertificateTrusted(SslCertificate cert){
+        if (cert==null)
+            return false;
+        
+        Bundle bundle = SslCertificate.saveState(cert);
+        X509Certificate x509Certificate;
+        byte[] bytes = bundle.getByteArray("x509-certificate");
+        if (bytes == null) {
+            AppLog.e(T.API, "Cannot load the SSLCertificate bytes from the bundle!");
+            x509Certificate = null;
+        } else {
+            try {
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                Certificate certX509 = certFactory.generateCertificate(new ByteArrayInputStream(bytes));
+                x509Certificate = (X509Certificate) certX509;
+            } catch (CertificateException e) {
+                AppLog.e(T.API, "Cannot generate the X509Certificate with the bytes provided", e);
+                x509Certificate = null;
+            }
+        }
+        
+        if (x509Certificate==null)
+            return false;
+        
+        // Now I have an X509Certificate I can pass to an X509TrustManager for validation.
+        try {
+            String certificateAlias = this.getLocalKeyStore().getCertificateAlias(x509Certificate);
+            if(certificateAlias != null ) {
+                return true;
+            }
+        } catch (KeyStoreException e) {
+            AppLog.e(T.API, "Cannot check if the certificate is in KeyStore. Seems that Keystore is not initialized.", e);
+        }
+        return false;
     }
 }

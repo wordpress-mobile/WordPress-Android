@@ -57,7 +57,9 @@ import org.xmlpull.v1.XmlSerializer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.networking.WPTrustManager;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.TrustAllSSLSocketFactory;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * A WordPress XMLRPC Client.
@@ -118,16 +120,20 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 SchemeRegistry schemeRegistry = new SchemeRegistry();
                 schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
                 TrustAllSSLSocketFactory tasslf = new TrustAllSSLSocketFactory();
-                schemeRegistry.register(new Scheme("https", tasslf, 443));
+                schemeRegistry.register(new Scheme("https", tasslf, port));
                 ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
                 client = new DefaultHttpClient(cm, params);
             } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             } catch (KeyStoreException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             } catch (UnrecoverableKeyException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             }
             
