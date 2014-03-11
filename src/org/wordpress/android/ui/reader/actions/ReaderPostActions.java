@@ -242,6 +242,11 @@ public class ReaderPostActions {
                     if (post.hasFeaturedImage()) {
                         updatedPost.setFeaturedImage(post.getFeaturedImage());
                     }
+                    // likewise for featured video
+                    if (post.hasFeaturedVideo()) {
+                        updatedPost.setFeaturedVideo(post.getFeaturedVideo());
+                        updatedPost.isVideoPress = post.isVideoPress;
+                    }
                     ReaderPostTable.addOrUpdatePost(updatedPost);
                 }
 

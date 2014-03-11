@@ -1280,6 +1280,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 String path = StringUtils.notNullStr(uri.getLastPathSegment());
                 if (!mPost.getText().contains(path)) {
                     showFeaturedImage = true;
+                    // note that only the width is used here - the imageView will adjust
+                    // the height to match that of the image once loaded
                     featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(), 0);
                 }
             }
