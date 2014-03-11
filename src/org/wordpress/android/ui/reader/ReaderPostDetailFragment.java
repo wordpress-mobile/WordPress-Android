@@ -1277,10 +1277,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             // it will be shown between the post's title and its content (but skip mshots)
             if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
                 Uri uri = Uri.parse(mPost.getFeaturedImage());
-                if (!mPost.getText().contains(StringUtils.notNullStr(uri.getLastPathSegment()))) {
+                String path = StringUtils.notNullStr(uri.getLastPathSegment());
+                if (!mPost.getText().contains(path)) {
                     showFeaturedImage = true;
-                    int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
-                    featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(), 0);
                 }
             }
 

@@ -34,7 +34,7 @@ public class ReaderPost {
     private String tags;          // comma-separated list of tags
 
     public long timestamp;        // used for sorting
-    public String published;
+    private String published;
 
     private String url;
     private String featuredImage;
@@ -480,7 +480,7 @@ public class ReaderPost {
         return !TextUtils.isEmpty(tags);
     }
 
-    public List<String> getTagList() {
+    List<String> getTagList() {
         return Arrays.asList(getTags().split(","));
     }
 
