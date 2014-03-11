@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.notifications;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -14,8 +17,16 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 @SuppressLint("SetJavaScriptEnabled")
 public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
     
-    public static final String URL_TO_LOAD = "external_url";
-    
+    private static final String URL_TO_LOAD = "external_url";
+
+    public static void openUrl(Context context, String url) {
+        if (context == null || TextUtils.isEmpty(url))
+            return;
+        Intent intent = new Intent(context, NotificationsWebViewActivity.class);
+        intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
+        context.startActivity(intent);
+    }
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +43,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         
         // load URL if one was provided in the intent
         String url = getIntent().getStringExtra(URL_TO_LOAD);
-        if (url != null) {
+        if (!TextUtils.isEmpty(url)) {
             loadUrl(url);
         }
     }

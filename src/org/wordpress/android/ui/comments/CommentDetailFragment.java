@@ -56,7 +56,6 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
-import java.util.Map;
 
 /**
  * Created by nbradbury on 11/11/13.
@@ -64,10 +63,6 @@ import java.util.Map;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
-
-    public static interface OnPostClickListener {
-        public void onPostClicked(long remoteBlogId, long postId);
-    }
 
     private int mLocalBlogId;
     private int mRemoteBlogId;
@@ -484,7 +479,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onClick(View v) {
                 if (mOnPostClickListener != null) {
-                    mOnPostClickListener.onPostClicked(mRemoteBlogId, mComment.postID);
+                    mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int)mComment.postID);
                 } else {
                     // right now this will happen from notifications
                     AppLog.i(T.COMMENTS, "comment detail > no post click listener");
@@ -795,36 +790,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          */
         mEnabledActions = note.getEnabledActions();
 
-        /*
-         * in order to get the actual comment from a notification we need to extract the
-         * blogId/postId/commentId from the notification, and this info is buried in the
-         * actions array of the note's JSON. each action entry contains a "params"
-         * array which contains these IDs, so find the first action then extract the IDs
-         * from its params
-         */
-        Map<String,JSONObject> actions = note.getActions();
-        if (actions.size() > 0) {
-            String firstKey = actions.keySet().iterator().next();
-            JSONObject jsonAction = actions.get(firstKey);
-            JSONObject jsonParams = jsonAction.optJSONObject("params");
-            if (jsonParams != null) {
-                mRemoteBlogId = jsonParams.optInt("blog_id");
-                int commentId = jsonParams.optInt("comment_id");
+        mRemoteBlogId = note.getBlogId();
+        long commentId = note.getCommentId();
 
-                // note that the local blog id won't be found if the comment is from someone else's blog
-                int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
+        // note that the local blog id won't be found if the comment is from someone else's blog
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
-                // first try to get from local db, if that fails request it from the server
-                Comment comment = CommentTable.getComment(localBlogId, commentId);
-                if (comment != null) {
-                    setComment(localBlogId, comment);
-                } else {
-                    requestComment(localBlogId, mRemoteBlogId, commentId);
-                }
-            }
+        // first try to get from local db, if that fails request it from the server
+        final Comment comment = (localBlogId > 0 ? CommentTable.getComment(localBlogId, commentId) : null);
+        if (comment != null) {
+            setComment(localBlogId, comment);
         } else {
-            if (hasActivity())
-                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
+            requestComment(localBlogId, mRemoteBlogId, commentId);
         }
     }
 
@@ -835,7 +812,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     private void requestComment(final int localBlogId,
                                 final int remoteBlogId,
-                                final int commentId) {
+                                final long commentId) {
         final ProgressBar progress = (hasActivity() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
@@ -849,7 +826,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     Comment comment = Comment.fromJSON(jsonObject);
                     if (comment != null) {
-                        CommentTable.addComment(localBlogId, comment);
+                        // save comment to local db if localBlogId is valid
+                        if (localBlogId > 0)
+                            CommentTable.addComment(localBlogId, comment);
+                        // now, at long last, show the comment
                         setComment(localBlogId, comment);
                     }
                 }

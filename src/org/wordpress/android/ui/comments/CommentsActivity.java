@@ -15,16 +15,18 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    OnAnimateRefreshButtonListener,
-                   CommentDetailFragment.OnPostClickListener,
+                   NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
 
     private MenuItem mRefreshMenuItem;
@@ -247,7 +249,7 @@ public class CommentsActivity extends WPActionBarActivity
      * reader detail fragment
      */
     @Override
-    public void onPostClicked(long remoteBlogId, long postId) {
+    public void onPostClicked(Note note, int remoteBlogId, int postId) {
         showReaderFragment(remoteBlogId, postId);
     }
 

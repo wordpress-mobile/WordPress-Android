@@ -2,32 +2,28 @@
 <org.wordpress.android.ui.notifications.DetailHeader xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_bg_selector"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingTop="8dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp">
+    android:orientation="vertical">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:background="@drawable/reader_transparent_selector"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-light"
-        android:textColor="#505050"
-        android:textSize="16sp" />
-
-    <ImageView
-        android:id="@+id/indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:src="@drawable/dashboard_icon_wp"
-        android:tint="#858585" />
+        android:gravity="center"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:textColor="@color/reader_hyperlink"
+        android:textSize="@dimen/text_sz_large" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/reader_hyperlink"
+        android:layout_marginBottom="@dimen/margin_medium"/>
 
 </org.wordpress.android.ui.notifications.DetailHeader>

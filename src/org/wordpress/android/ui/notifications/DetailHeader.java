@@ -3,55 +3,82 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Note;
 
 public class DetailHeader extends LinearLayout {
+    private NotificationFragment.OnPostClickListener mOnPostClickListener;
+    private NotificationFragment.OnCommentClickListener mOnCommentClickListener;
+
     public DetailHeader(Context context){
         super(context);
     }
     public DetailHeader(Context context, AttributeSet attributes){
         super(context, attributes);
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public DetailHeader(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
-    public TextView getTextView(){
+    TextView getTextView(){
         return (TextView) findViewById(R.id.label);
     }
     public void setText(CharSequence text){
         getTextView().setText(text);
     }
-    public void setUrl(final String url){
-        if (url == null) {
-            setClickable(false);
-            setOnClickListener(null);
-        } else {
+
+    /*
+     * set by the owning fragment, calls listener in NotificationsActivity to
+     * display the post/comment associated with this notification (if any)
+     */
+    public void setOnPostClickListener(NotificationFragment.OnPostClickListener listener) {
+        mOnPostClickListener = listener;
+    }
+    public void setOnCommentClickListener(NotificationFragment.OnCommentClickListener listener) {
+        mOnCommentClickListener = listener;
+    }
+
+    /*
+     * owning fragment calls this to pass it the note so the post or comment associated with
+     * the note can be opened. if there is no associated post or comment, then the passed
+     * url is navigated to instead.
+     */
+    public void setNote(final Note note, final String url) {
+        final boolean isComment = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() != 0);
+        final boolean isPost = (note != null && note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
+
+        if (isPost || isComment) {
             setClickable(true);
-            setOnClickListener(new View.OnClickListener(){
+            setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
-                    Context context = getContext();
-                    Intent intent = new Intent(context, NotificationsWebViewActivity.class);
-                    intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
-                    context.startActivity(intent);
+                public void onClick(View view) {
+                    if (isComment && mOnCommentClickListener != null) {
+                        mOnCommentClickListener.onCommentClicked(note, note.getBlogId(), note.getCommentId());
+                    } else if (isPost && mOnPostClickListener != null) {
+                        mOnPostClickListener.onPostClicked(note, note.getBlogId(), note.getPostId());
+                    }
                 }
             });
-        }
-    }
-    public void setClickable(boolean clickable){
-        super.setClickable(clickable);
-        View indicator = findViewById(R.id.indicator);
-        if (clickable == false) {
-            indicator.setVisibility(GONE);
+        } else if (!TextUtils.isEmpty(url)) {
+            setClickable(true);
+            setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    NotificationsWebViewActivity.openUrl(getContext(), url);
+                }
+            });
         } else {
-            indicator.setVisibility(VISIBLE);
+            setClickable(false);
+            setOnClickListener(null);
         }
     }
 }
