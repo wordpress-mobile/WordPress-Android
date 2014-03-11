@@ -86,6 +86,7 @@
                     android:src="@drawable/ic_post_settings" />
 
                 <TextView
+                    android:id="@+id/post_preview_button_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
@@ -114,7 +115,6 @@
                     android:src="@drawable/ic_post_preview_grey" />
 
                 <TextView
-                    android:id="@+id/post_preview_button_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
