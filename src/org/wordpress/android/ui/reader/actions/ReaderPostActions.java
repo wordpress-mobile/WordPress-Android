@@ -236,7 +236,9 @@ public class ReaderPostActions {
                     AppLog.d(T.READER, "post updated");
                     // the endpoint for requesting a single post doesn't support featured images,
                     // so if the original post had a featured image, set the featured image for
-                    // the updated post to that of the original post
+                    // the updated post to that of the original post - this should be done even
+                    // if the updated post has a featured image since that was most likely
+                    // assigned by ReaderPost.findFeaturedImage()
                     if (post.hasFeaturedImage()) {
                         updatedPost.setFeaturedImage(post.getFeaturedImage());
                     }
