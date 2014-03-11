@@ -10,18 +10,15 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import android.text.TextUtils;
 import android.util.Xml;
@@ -32,18 +29,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -55,11 +45,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.TrustAllSSLSocketFactory;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.TrustAllSSLSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -103,6 +91,17 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mSerializer = Xml.newSerializer();
     }
 
+    
+    
+    private class ConnectionClient extends DefaultHttpClient {
+        public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+            super();
+            TrustAllSSLSocketFactory tasslf = new TrustAllSSLSocketFactory();
+            Scheme scheme = new Scheme("https", tasslf, port);
+            getConnectionManager().getSchemeRegistry().register(scheme);
+        }
+    }
+    
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
         DefaultHttpClient client = null;
         if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
@@ -115,14 +114,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
 
             try {
-                HttpParams params = new BasicHttpParams();
-                HttpConnectionParams.setConnectionTimeout(params, 30000);
-                SchemeRegistry schemeRegistry = new SchemeRegistry();
-                schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-                TrustAllSSLSocketFactory tasslf = new TrustAllSSLSocketFactory();
-                schemeRegistry.register(new Scheme("https", tasslf, port));
-                ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
-                client = new DefaultHttpClient(cm, params);
+                client = new ConnectionClient(port);
             } catch (NoSuchAlgorithmException e) {
                 AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;

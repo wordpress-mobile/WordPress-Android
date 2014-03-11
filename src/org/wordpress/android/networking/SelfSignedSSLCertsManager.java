@@ -202,6 +202,7 @@ public class SelfSignedSSLCertsManager {
         try {
             String certificateAlias = this.getLocalKeyStore().getCertificateAlias(x509Certificate);
             if(certificateAlias != null ) {
+                AppLog.w(T.API, "Current certificate " + x509Certificate.getSubjectDN().getName() +" is NOT in KeyStore.");
                 return true;
             }
         } catch (KeyStoreException e) {
