@@ -9,15 +9,19 @@ import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
-import java.security.KeyManagementException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 import android.text.TextUtils;
 import android.util.Xml;
@@ -28,10 +32,18 @@ import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -43,7 +55,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.networking.WPTrustManager;
+import org.wordpress.android.util.TrustAllSSLSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -88,35 +102,44 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     }
 
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
-        DefaultHttpClient client;
-        if (TrustedSslDomainTable.isDomainTrusted(uri.getHost())) {
-            if (uri.getScheme() != null && uri.getScheme().equals("https")) {
-                int port = uri.getPort();
-                if (port == -1) {
-                    port = 443;
-                }
-                try {
-                    client = new ConnectionClient(credentials, port);
-                } catch (KeyManagementException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (NoSuchAlgorithmException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (KeyStoreException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (UnrecoverableKeyException e) {
-                    client = new ConnectionClient(credentials);
-                }
-            } else {
-                // that case should never happen, TrustedSslDomainTable should only contain ssl hosts
-                client = new ConnectionClient(credentials);
-            }
-        } else {
+        DefaultHttpClient client = null;
+        if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+            //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
-            HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
-            BasicCredentialsProvider cP = new BasicCredentialsProvider();
-            cP.setCredentials(AuthScope.ANY, credentials);
-            client.setCredentialsProvider(cP);
+        } else {
+            int port = uri.getPort();
+            if (port == -1) {
+                port = 443;
+            }
+
+            try {
+                HttpParams params = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(params, 30000);
+                SchemeRegistry schemeRegistry = new SchemeRegistry();
+                schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+                TrustAllSSLSocketFactory tasslf = new TrustAllSSLSocketFactory();
+                schemeRegistry.register(new Scheme("https", tasslf, 443));
+                ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+                client = new DefaultHttpClient(cm, params);
+            } catch (NoSuchAlgorithmException e) {
+                client = null;
+            } catch (KeyStoreException e) {
+                client = null;
+            } catch (UnrecoverableKeyException e) {
+                client = null;
+            } catch (GeneralSecurityException e) {
+                client = null;
+            }
+            
+            if (client == null) {
+                client = new DefaultHttpClient();
+            }
         }
+        
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), 30000);
+        BasicCredentialsProvider cP = new BasicCredentialsProvider();
+        cP.setCredentials(AuthScope.ANY, credentials);
+        client.setCredentialsProvider(cP);        
         return client;
     }
 

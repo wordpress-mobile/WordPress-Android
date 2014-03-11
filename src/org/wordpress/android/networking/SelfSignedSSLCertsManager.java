@@ -27,8 +27,7 @@ public class SelfSignedSSLCertsManager {
     private File localTrustStoreFile;
     private KeyStore localKeyStore;
     
-    private static X509Certificate[] lastFailureChain;
-    
+    private X509Certificate[] lastFailureChain; //Used to hold the last self-signed certificate chain that doesn't pass trusting
     
     private SelfSignedSSLCertsManager(Context ctx) throws IOException, GeneralSecurityException {
         localTrustStoreFile = new File(ctx.getFilesDir(), "self_signed_certs_truststore.bks");
@@ -144,11 +143,15 @@ public class SelfSignedSSLCertsManager {
                 | ((bytes[offset] & 0xff) << 24);
     }
 
-    public static X509Certificate[] getLastFailureChain() {
+    public X509Certificate[] getLastFailureChain() {
         return lastFailureChain;
     }
 
-    public static void setLastFailureChain(X509Certificate[] lastFaiulreChain) {
+    public void setLastFailureChain(X509Certificate[] lastFaiulreChain) {
         lastFailureChain = lastFaiulreChain;
+    }
+    
+    public String getLastFailureChainDescription() {
+        return (lastFailureChain == null ||  lastFailureChain.length == 0) ? "" :  lastFailureChain[0].toString();
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.networking;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
@@ -62,7 +63,6 @@ public class WPTrustManager implements X509TrustManager {
             AppLog.i(T.API, "checkClientTrusted() with default trust manager...");
             defaultTrustManager.checkClientTrusted(chain, authType);
         } catch (CertificateException ce) {
-            AppLog.i(T.API, "checkClientTrusted() with local trust manager...");
             localTrustManager.checkClientTrusted(chain, authType);
         }
     }
@@ -72,7 +72,6 @@ public class WPTrustManager implements X509TrustManager {
             AppLog.i(T.API, "checkServerTrusted() with default trust manager...");
             defaultTrustManager.checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
-            AppLog.i(T.API, "checkServerTrusted() with local trust manager...");
             localTrustManager.checkServerTrusted(chain, authType);
         }
     }
@@ -101,15 +100,22 @@ public class WPTrustManager implements X509TrustManager {
 
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            AppLog.i(T.API, "checkClientTrusted() with local trust manager...");
             trustManager.checkClientTrusted(chain, authType);
         }
 
         @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             try {
+                AppLog.i(T.API, "checkServerTrusted() with local trust manager...");
                 trustManager.checkServerTrusted(chain, authType);
             } catch (CertificateException e) {
-                SelfSignedSSLCertsManager.setLastFailureChain(chain);
+                AppLog.e(T.API, "checkServerTrusted failed with local trust manager...", e);
+                try {
+                    SelfSignedSSLCertsManager.getIstance(null).setLastFailureChain(chain);
+                } catch (GeneralSecurityException e1) {
+                } catch (IOException e1) {
+                }
                 throw e;
             }
         }

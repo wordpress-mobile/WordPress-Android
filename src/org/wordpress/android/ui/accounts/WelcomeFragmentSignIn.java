@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -35,12 +36,15 @@ import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.wordpress.emailchecker.EmailChecker;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -432,10 +436,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 public void onClick(DialogInterface dialog, int which) {
                     SetupBlogTask setupBlogTask = new SetupBlogTask();
                     try {
-                        SelfSignedSSLCertsManager.getIstance(getActivity()).addCertificates(SelfSignedSSLCertsManager.getLastFailureChain());
+                        SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                        selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
                     } catch (IOException e) {
                         AppLog.e(T.NUX, e);
-
                     } catch (GeneralSecurityException e) {
                         AppLog.e(T.NUX, e);
                     }
@@ -444,9 +448,18 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             });
             alert.setNeutralButton("Certificate Details", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getActivity(), LicensesActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
+                    Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
+                    try {
+                        SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                        String lastFailureChainDescription = selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                        intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                    } catch (GeneralSecurityException e) {
+                        AppLog.e(T.NUX, e);
+                    } catch (IOException e) {
+                        AppLog.e(T.NUX, e);
+                    }
                 }
             });
             alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
