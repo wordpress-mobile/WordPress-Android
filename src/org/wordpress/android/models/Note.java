@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +15,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 
@@ -25,47 +25,49 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class Note {
-    protected static final String TAG="NoteModel";
-
-    protected static final String NOTE_UNKNOWN_TYPE="unknown";
-    public static final String NOTE_COMMENT_TYPE="comment";
-    public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
-    public static final String NOTE_LIKE_TYPE="like";
-    public static final String NOTE_MATCHER_TYPE = "automattcher";
+    private static final String NOTE_UNKNOWN_TYPE     = "unknown";
+    private static final String NOTE_COMMENT_TYPE     = "comment";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_LIKE_TYPE         = "like";
+    private static final String NOTE_MATCHER_TYPE     = "automattcher";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
-    public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
-    public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
-    public static final String BIG_BADGE_TEMPLATE="big-badge";
+    private static final String SINGLE_LINE_LIST_TEMPLATE = "single-line-list";
+    private static final String MULTI_LINE_LIST_TEMPLATE  = "multi-line-list";
+    private static final String BIG_BADGE_TEMPLATE        = "big-badge";
 
     // JSON action keys
-    private static final String ACTION_KEY_REPLY = "replyto-comment";
-    private static final String ACTION_KEY_APPROVE = "approve-comment";
+    private static final String ACTION_KEY_REPLY     = "replyto-comment";
+    private static final String ACTION_KEY_APPROVE   = "approve-comment";
     private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
-    private static final String ACTION_KEY_SPAM = "spam-comment";
+    private static final String ACTION_KEY_SPAM      = "spam-comment";
 
     public static enum EnabledActions {ACTION_REPLY,
                                        ACTION_APPROVE,
                                        ACTION_UNAPPROVE,
                                        ACTION_SPAM}
 
-    // FIXME: add other types
-    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
-        put("c", "comment");
-    }};
-
-
     private Map<String,JSONObject> mActions;
-    private Reply mReply;
-    private JSONObject mNoteJSON;
+    private final JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
     private boolean mPlaceholder = false;
 
-    private transient String mCommentPreview = null;
-    private transient String mSubject = null;
-    private transient String mIconUrl = null;
-    private transient String mTimestamp = null;
+    private int mBlogId;
+    private int mPostId;
+    private long mCommentId;
+    private long mCommentParentId;
+
+    private transient String mCommentPreview;
+    private transient String mSubject;
+    private transient String mIconUrl;
+    private transient String mTimestamp;
+    private transient String mSnippet;
+
+    // TODO: add other types
+    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
+        put("c", "comment");
+    }};
 
     /**
      * Create a note using JSON from REST API
@@ -130,10 +132,6 @@ public class Note {
         this.mPlaceholder = placeholder;
     }
 
-    public String toString(){
-        return getSubject();
-    }
-
     public JSONObject toJSONObject(){
         return mNoteJSON;
     }
@@ -170,6 +168,7 @@ public class Note {
             mIconUrl = queryJSON("subject.icon", "");
         return mIconUrl;
     }
+
     /**
      * Removes HTML and cleans up newlines and whitespace
      */
@@ -178,33 +177,38 @@ public class Note {
             mCommentPreview = getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
         return mCommentPreview;
     }
+
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
      */
-    public Spanned getCommentBody(){
+    Spanned getCommentBody(){
         return mComment;
     }
+
     /**
      * For a comment note the text is in the body object's last item. It currently
      * is only provided in HTML format.
      */
-    public String getCommentText(){
+    String getCommentText(){
         return queryJSON("body.items[last].html", "");
     }
+
     /**
      * The inverse of isRead
      */
     public Boolean isUnread(){
         return !isRead();
     }
+
     /**
      * A note can have an "unread" of 0 or more ("likes" can have unread of 2+) to indicate the
      * quantity of likes that are "unread" within the single note. So for a note to be "read" it
      * should have "0"
      */
-    public Boolean isRead(){
+    Boolean isRead(){
         return getUnreadCount().equals("0");
     }
+
     /**
      * For some reason the unread count is a string in the JSON API but is truly represented
      * by an Integer. We can handle a simple string.
@@ -212,6 +216,7 @@ public class Note {
     public String getUnreadCount(){
         return queryJSON("unread", "0");
     }
+
     /**
      *
      */
@@ -222,12 +227,12 @@ public class Note {
             AppLog.e(T.NOTIFS, "Failed to set unread property", e);
         }
     }
+
     public Reply buildReply(String content){
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
-        Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
-        return reply;
+        return new Reply(this, String.format("%s/replies/new", restPath), content);
     }
 
     /**
@@ -252,7 +257,7 @@ public class Note {
         }
     }
 
-    public String getTemplate(){
+    String getTemplate(){
         return queryJSON("body.template", "");
     }
     public Boolean isMultiLineListTemplate(){
@@ -264,7 +269,7 @@ public class Note {
     public Boolean isBigBadgeTemplate(){
         return getTemplate().equals(BIG_BADGE_TEMPLATE);
     }
-    public Map<String,JSONObject> getActions(){
+    Map<String,JSONObject> getActions(){
         if (mActions == null) {
             try {
                 JSONArray actions = queryJSON("body.actions", new JSONArray());
@@ -324,22 +329,66 @@ public class Note {
      * pre-loads commonly-accessed fields - avoids performance hit of loading these
      * fields inside an adapter's getView()
      **/
-    protected void preloadContent(){
+    void preloadContent(){
         if (isCommentType()) {
             // pre-load the comment HTML for being displayed. Cleans up emoticons.
             mComment = HtmlUtils.fromHtml(getCommentText());
             // pre-load the preview text
             getCommentPreview();
         }
+
         // pre-load the subject and avatar url
         getSubject();
         getIconURL();
+
+        // pre-load site/post/comment IDs
+        preloadMetaIds();
     }
 
-    protected Object queryJSON(String query){
-        Object defaultObject = "";
-        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+    /*
+     * nbradbury - preload the blog, post, & comment IDs from the meta section
+     * ids={"site":61509427,"self":993925505,"post":161,"comment":178,"comment_parent":0}
+     */
+    private void preloadMetaIds() {
+        JSONObject jsonMeta = getJSONMeta();
+        if (jsonMeta == null)
+            return;
+        JSONObject jsonIDs = jsonMeta.optJSONObject("ids");
+        if (jsonIDs == null)
+            return;
+        mBlogId = jsonIDs.optInt("site");
+        mPostId = jsonIDs.optInt("post");
+        mCommentId = jsonIDs.optLong("comment");
+        mCommentParentId = jsonIDs.optLong("comment_parent");
     }
+
+    public int getBlogId() {
+        return mBlogId;
+    }
+    public int getPostId() {
+        return mPostId;
+    }
+    public long getCommentId() {
+        return mCommentId;
+    }
+    public long getCommentParentId() {
+        return mCommentParentId;
+    }
+
+    /*
+     * plain-text snippet returned by the server - currently shown only for comments
+     */
+    String getSnippet() {
+        if (mSnippet == null) {
+            mSnippet = queryJSON("snippet", "");
+        }
+        return mSnippet;
+    }
+
+    public boolean hasSnippet() {
+        return !TextUtils.isEmpty(getSnippet());
+    }
+
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
@@ -355,13 +404,12 @@ public class Note {
     }
 
     /**
-     * Represents a user replying to a note. Holds
+     * Represents a user replying to a note.
      */
     public static class Reply {
-        private Note mNote;
-        private String mContent;
-        private String mRestPath;
-        private JSONObject mCommentJson;
+        private final Note mNote;
+        private final String mContent;
+        private final String mRestPath;
 
         Reply(Note note, String restPath, String content){
             mNote = note;
@@ -371,45 +419,57 @@ public class Note {
         public String getContent(){
             return mContent;
         }
-        public Note getNote(){
-            return mNote;
-        }
-        public String getUrl(){
-            if (isComplete()) {
-                return JSONUtil.queryJSON(mCommentJson, "URL", "");
-            }
-            return null;
-        }
-        public String getAvatarUrl(){
-            if (isComplete()) {
-                return JSONUtil.queryJSON(mCommentJson, "author.avatar_URL", "");
-            } else {
-                return "";
-            }
-        }
-        /**
-         * Passes through Html.fromHtml to remove markup and replaces smilies with emoji
-         */
-        public String getCommentPreview(){
-            if (isComplete()) {
-                String text = JSONUtil.queryJSON(mCommentJson, "content", "");
-                SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text);
-                return Emoticons.replaceEmoticonsWithEmoji(html).toString().trim();
-            } else {
-                return "";
-            }
-        }
         public String getRestPath(){
             return mRestPath;
         }
-        public boolean isComplete(){
-            return mCommentJson != null;
-        }
-        public JSONObject getCommentJson(){
-            return mCommentJson;
-        }
-        public void setCommentJson(JSONObject commentJson){
-            mCommentJson = commentJson;
-        }
     }
+
+    /*
+     * returns subject as spanned html with user names and quoted strings highlighted
+     */
+    /*private transient Spanned mFormattedSubject;
+    private static final String TAG_START = "</font><font color='#222222'>";
+    private static final String TAG_END = "</font><font color='#666666'>";
+    public Spanned getFormattedSubject() {
+        if (mFormattedSubject == null) {
+            StringBuilder sb = new StringBuilder(getSubject());
+
+            // highlight user names - note we skip the first item in replies because it's the
+            // actual header text (ex: "In reply to your comment") rather than a user name
+            if (isMultiLineListTemplate() || isSingleLineListTemplate()) {
+                JSONArray items = queryJSON("body.items", new JSONArray());
+                int startIndex = (isCommentType() ? 1 : 0);
+                if (items.length() > startIndex) {
+                    for (int i = startIndex; i < items.length(); i++) {
+                        try {
+                            String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
+                            if (!TextUtils.isEmpty(name)) {
+                                // note that we only replace the first instance to avoid false matches
+                                int index = sb.indexOf(name);
+                                if (index > -1) {
+                                    sb.replace(index, index + name.length(), TAG_START + name + TAG_END);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            // nop
+                        }
+                    }
+                }
+            }
+
+            // highlight quoted strings
+            int startQuote = sb.indexOf("\"");
+            while (startQuote > -1) {
+                int endQuote = sb.indexOf("\"", startQuote + 1);
+                if (endQuote == -1)
+                    break;
+                String quoted = sb.substring(startQuote, endQuote + 1);
+                sb.replace(startQuote, endQuote + 1, TAG_START + quoted + TAG_END);
+                startQuote = sb.indexOf("\"", endQuote + TAG_START.length() + TAG_END.length());
+            }
+
+            mFormattedSubject = Html.fromHtml(sb.toString());
+        }
+        return mFormattedSubject;
+    }*/
 }

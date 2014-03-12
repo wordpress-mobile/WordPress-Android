@@ -83,7 +83,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
      *   most_liked_day
      *   most_followed_day
      */
-    public boolean isStatsNote() {
+    boolean isStatsNote() {
         if (getNote() == null)
             return false;
 

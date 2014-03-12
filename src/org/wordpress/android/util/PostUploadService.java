@@ -34,6 +34,8 @@ import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -194,7 +196,6 @@ public class PostUploadService extends Service {
 
             // add the uploader to the notification bar
             nm = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
-
             StringBuilder message = new StringBuilder(context.getResources().getText(R.string.uploading));
             String postOrPage = (String) (post.isPage() ? context.getResources()
                     .getText(R.string.page_id) : context.getResources()
@@ -208,7 +209,6 @@ public class PostUploadService extends Service {
                 message.append(" ");
                 message.append(postOrPage);
             }
-
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
             Intent notificationIntent = new Intent(context, PostsActivity.class);
@@ -431,14 +431,23 @@ public class PostUploadService extends Service {
                 post.update();
                 return true;
             } catch (final XMLRPCException e) {
-                mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
-                        .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
-                        + " " + cleanXMLRPCErrorMessage(e.getMessage());
-                mIsMediaError = false;
-                AppLog.i(T.EDITOR, mErrorMessage);
+                setUploadPostErrorMessage(e);
+            } catch (IOException e) {
+                setUploadPostErrorMessage(e);
+            } catch (XmlPullParserException e) {
+                setUploadPostErrorMessage(e);
             }
 
             return false;
+        }
+
+
+        private void setUploadPostErrorMessage(Exception e) {
+            mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
+                    .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
+                    + " " + e.getMessage();
+            mIsMediaError = false;
+            AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
         public String uploadMediaFile(MediaFile mf, Blog blog) {
@@ -791,9 +800,9 @@ public class PostUploadService extends Service {
                     originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
                 } else {
                     //We're still without an extension - split the mime type and retrieve it
-                   String[] split = mimeType.split("/");
-                   String guessedExt = split.length > 1 ? split[1] : split[0];
-                   originalFileName += "." + guessedExt;
+                    String[] split = mimeType.split("/");
+                    String guessedExt = split.length > 1 ? split[1] : split[0];
+                    originalFileName += "." + guessedExt;
                 }
             } else {
                 //No mimetype and no extension!!
@@ -847,8 +856,16 @@ public class PostUploadService extends Service {
             try {
                 return client.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " +
-                                cleanXMLRPCErrorMessage(e.getMessage());
+                AppLog.e(T.API, e);
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                return null;
+            } catch (IOException e) {
+                AppLog.e(T.API, e);
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                return null;
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.API, e);
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
@@ -860,19 +877,6 @@ public class PostUploadService extends Service {
 
     private File createTempUploadFile(String fileExtension) throws IOException {
         return File.createTempFile("wp-", fileExtension, context.getCacheDir());
-    }
-
-    private String cleanXMLRPCErrorMessage(String message) {
-        if (message != null) {
-            if (message.contains(": "))
-                message = message.substring(message.indexOf(": ") + 2, message.length());
-            if (message.contains("[code"))
-                message = message.substring(0, message.indexOf("[code"));
-            message = StringUtils.unescapeHTML(message);
-            return message;
-        } else {
-            return "";
-        }
     }
 
     private void sendUpdateBroadcast(String postId, String errorMessage) {
