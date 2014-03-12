@@ -57,7 +57,6 @@ public class WPTrustManager implements X509TrustManager {
 
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
-            AppLog.i(T.API, "checkClientTrusted() with default trust manager...");
             defaultTrustManager.checkClientTrusted(chain, authType);
         } catch (CertificateException ce) {
             localTrustManager.checkClientTrusted(chain, authType);
@@ -66,7 +65,6 @@ public class WPTrustManager implements X509TrustManager {
 
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
-            AppLog.i(T.API, "checkServerTrusted() with default trust manager...");
             defaultTrustManager.checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
             localTrustManager.checkServerTrusted(chain, authType);
@@ -97,17 +95,15 @@ public class WPTrustManager implements X509TrustManager {
 
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            AppLog.i(T.API, "checkClientTrusted() with local trust manager...");
             trustManager.checkClientTrusted(chain, authType);
         }
 
         @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             try {
-                AppLog.i(T.API, "checkServerTrusted() with local trust manager...");
                 trustManager.checkServerTrusted(chain, authType);
             } catch (CertificateException e) {
-                AppLog.e(T.API, "checkServerTrusted failed with local trust manager...", e);
+                AppLog.e(T.API, "Cannot trust the certificate with the local trust manager...", e);
                 try {
                     SelfSignedSSLCertsManager.getInstance(null).setLastFailureChain(chain);
                 } catch (GeneralSecurityException e1) {
