@@ -3,6 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -18,14 +18,13 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationUtils.NoteUpdatedListener;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.ui.notifications.NotificationUtils.NoteChangeListener;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
-public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment,
-                                                                        NoteChangeListener {
+public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment, NoteUpdatedListener {
     private Note mNote;
     private int mAvatarSz;
     
@@ -49,16 +48,14 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
         list.setDividerHeight(1);
         list.setHeaderDividersEnabled(false);
 
-        Note currentNote = getNote();
-        
         // No note? No service.
-        if (currentNote == null)
+        if (getNote() == null)
             return;
         
         // set the header
         final DetailHeader noteHeader = (DetailHeader) getView().findViewById(R.id.header);
-        noteHeader.setText(JSONUtil.getStringDecoded(currentNote.queryJSON("subject", new JSONObject()), "text"));
-        String footerUrl = currentNote.queryJSON("body.header_link", "");
+        noteHeader.setText(JSONUtil.getStringDecoded(getNote().queryJSON("subject", new JSONObject()), "text"));
+        String footerUrl = getNote().queryJSON("body.header_link", "");
         noteHeader.setNote(getNote(), footerUrl);
 
         if (getActivity() instanceof OnPostClickListener) {
@@ -69,32 +66,23 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
         }
 
         // set the adapter
-        setListAdapter(new NoteAdapter());
+        setListAdapter(new NoteAdapter(getActivity()));
 
         // get the latest version of this note to ensure follow statuses are correct
         NotificationUtils.updateNotification(getNoteId(), this);
     }
 
     /*
-     * fired by NotificationUtils.updateNotification() when the notification has changed
+     * fired by NotificationUtils.updateNotification() when this note has been updated
      */
     @Override
-    public void onNoteChanged(int noteId) {
+    public void onNoteUpdated(int noteId) {
         if (getActivity() == null)
             return;
-        Note updatedNote = WordPress.wpDB.getNoteById(noteId);
-        if (updatedNote != null) {
-            setNote(updatedNote);
-            setListAdapter(new NoteAdapter());
-        }
+        setNote(WordPress.wpDB.getNoteById(noteId));
+        ((NoteAdapter)getListAdapter()).refresh();
     }
 
-
-    @Override
-    public void setListAdapter(ListAdapter adapter) {
-        super.setListAdapter(adapter);
-    }
-        
     @Override
     public void setNote(Note note){
         mNote = note;
@@ -112,24 +100,34 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     }
 
     class NoteAdapter extends BaseAdapter {
-        private final JSONArray mItems;
-        NoteAdapter(){
+        private JSONArray mItems;
+        private final LayoutInflater mInflater;
+
+        NoteAdapter(Context context){
             mItems = getNote().queryJSON("body.items", new JSONArray());
+            mInflater = LayoutInflater.from(context);
+        }
+
+        private void refresh() {
+            mItems = getNote().queryJSON("body.items", new JSONArray());
+            notifyDataSetChanged();
         }
         
         public View getView(int position, View cachedView, ViewGroup parent){
-            View v;
+            View view;
             if (cachedView == null) {
-                v = getActivity().getLayoutInflater().inflate(R.layout.notifications_follow_row, null);
+                view = mInflater.inflate(R.layout.notifications_follow_row, null);
             } else {
-                v = cachedView;
+                view = cachedView;
             }
+
             JSONObject noteItem = getItem(position);
             JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
 
-            FollowRow row = (FollowRow) v;
+            FollowRow row = (FollowRow) view;
             row.setFollowListener(new FollowListener());
             row.setAction(followAction);
+
             String headerText = JSONUtil.queryJSON(noteItem, "header_text", "");
             if (TextUtils.isEmpty(headerText)) {
                 // reblog notifications don't have "header_text" but they do have "header" which
@@ -137,12 +135,13 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
                 headerText = HtmlUtils.fastStripHtml(JSONUtil.queryJSON(noteItem, "header", ""));
             }
             row.setNameText(headerText);
+
             String iconUrl = JSONUtil.queryJSON(noteItem, "icon", "");
             row.getImageView().setImageUrl(PhotonUtils.fixAvatar(iconUrl, mAvatarSz), WordPress.imageLoader);
 
-            return v;
+            return view;
         }
-        // {"action":{"type":"follow","params":{"following-text":"Following","is_following":false,"following-hover-text":"Unfollow","blog_id":63708455,"blog_url":"http:\/\/madamesir.wordpress.com","blog_title":"Madame Sir","site_id":63708455,"stat-source":"note_reblog_post","follow-text":"Follow","blog_domain":"madamesir.wordpress.com"}},"icon_width":32,"icon_height":32,"icon":"https:\/\/1.gravatar.com\/avatar\/474a194639684ac63da9314aa816f520?s=256&d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G","header":"<a href=\"http:\/\/madamesir.wordpress.com\" class=\"wpn-user-blog-link\" target=\"_blank\" notes-data-click=\"reblog_note_rebloggers_blog\">madamesir<\/a>"}
+
         public long getItemId(int position){
             return (long) position;
         }
@@ -152,7 +151,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
         }
         
         public int getCount(){
-            return mItems.length();
+            return (mItems != null ? mItems.length() : 0);
         }
     }
 

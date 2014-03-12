@@ -3,6 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -17,10 +18,12 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationUtils.NoteUpdatedListener;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 
-public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment {
+public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment, NoteUpdatedListener {
 
     private Note mNote;
     private int mAvatarSz;
@@ -76,7 +79,21 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
         }
 
-        setListAdapter(new NoteAdapter());
+        setListAdapter(new NoteAdapter(getActivity()));
+
+        // get the latest version of this note to ensure follow statuses are correct
+        NotificationUtils.updateNotification(getNoteId(), this);
+    }
+
+    /*
+     * fired by NotificationUtils.updateNotification() when this note has been updated
+     */
+    @Override
+    public void onNoteUpdated(int noteId) {
+        if (getActivity() == null)
+            return;
+        setNote(WordPress.wpDB.getNoteById(noteId));
+        ((NoteAdapter)getListAdapter()).refresh();
     }
 
     @Override
@@ -88,7 +105,13 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     public Note getNote(){
         return mNote;
     }
-    
+
+    private int getNoteId() {
+        if (mNote == null)
+            return 0;
+        return StringUtils.stringToInt(mNote.getId());
+    }
+
     private String getHeaderText(JSONArray bodyItems) {
         if (bodyItems == null)
             return "";
@@ -104,12 +127,17 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     }
     
     class NoteAdapter extends BaseAdapter {
-        private final JSONArray mItems;
+        private JSONArray mItems;
         private final LayoutInflater mInflater;
 
-        NoteAdapter(){
+        NoteAdapter(Context context){
             mItems = getNote().queryJSON("body.items", new JSONArray());
-            mInflater = getActivity().getLayoutInflater();
+            mInflater = LayoutInflater.from(context);
+        }
+
+        private void refresh() {
+            mItems = getNote().queryJSON("body.items", new JSONArray());
+            notifyDataSetChanged();
         }
         
         public View getView(int position, View cachedView, ViewGroup parent){

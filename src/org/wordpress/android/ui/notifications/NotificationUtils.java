@@ -22,7 +22,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,8 +34,8 @@ import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
 
-    protected static interface NoteChangeListener {
-        void onNoteChanged(int noteId);
+    protected static interface NoteUpdatedListener {
+        void onNoteUpdated(int noteId);
     }
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
@@ -64,10 +63,9 @@ public class NotificationUtils {
     }
 
     /*
-     * updates a single notification, storing the result in the local db upon success - passed
-     * listener will fire onNoteChanged() if note is different than existing
+     * updates a single notification, storing the result in the local db upon success
      */
-    public static void updateNotification(final int noteId, final NoteChangeListener changeListener) {
+    public static void updateNotification(final int noteId, final NoteUpdatedListener updateListener) {
         if (noteId == 0)
             return;
 
@@ -77,30 +75,18 @@ public class NotificationUtils {
                 if (jsonObject == null)
                     return;
 
-                // parse the updated note, then compare it to existing note to see if it has changed
-                final Note updatedNote = new Note(jsonObject);
-                final Note existingNote = WordPress.wpDB.getNoteById(noteId);
-                final boolean isChanged;
-                if (existingNote == null) {
-                    isChanged = true;
-                } else if (existingNote.isUnread() != updatedNote.isUnread()) {
-                    isChanged = true;
-                    AppLog.d(T.NOTIFS, "note has been updated (unread changed)");
-                } else if (!StringUtils.equals(existingNote.getTimestamp(), updatedNote.getTimestamp())) {
-                    isChanged = true;
-                    AppLog.d(T.NOTIFS, "note has been updated (timestamp changed)");
-                } else {
-                    isChanged = false;
-                }
+                try {
+                    List<Note> notes = parseNotes(jsonObject);
+                    if (notes == null || notes.size() == 0)
+                        return;
 
-                // save to local db and fire listener if it has changed
-                if (isChanged) {
-                    WordPress.wpDB.addNote(updatedNote, false);
-                    if (changeListener != null) {
-                        changeListener.onNoteChanged(noteId);
+                    WordPress.wpDB.addNote(notes.get(0), false);
+                    if (updateListener != null) {
+                        updateListener.onNoteUpdated(noteId);
                     }
-                } else {
-                    AppLog.d(T.NOTIFS, "note has note been updated");
+                } catch (JSONException e) {
+                    AppLog.e(T.NOTIFS, e);
+                    return;
                 }
             }
         };
