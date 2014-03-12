@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,6 +50,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -213,24 +213,30 @@ public class ApiHelper {
     }
     
     public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
-        private final WeakReference<Activity> activityWeakRef;
+        private final WeakReference<PostsActivity> activityWeakRef;
         private boolean isWPCOM;
 
-        public VerifyCredentialsCallback(Activity refActivity, boolean isWPCOM) {
+        public VerifyCredentialsCallback(PostsActivity refActivity, boolean isWPCOM) {
             this.isWPCOM = isWPCOM;
-            this.activityWeakRef = new WeakReference<Activity>(refActivity);
+            this.activityWeakRef = new WeakReference<PostsActivity>(refActivity);
         }
 
         @Override
         public void onSuccess() {
+            PostsActivity act = activityWeakRef.get();
+            if (act == null || act.isFinishing()) {
+                return;
+            }
+            act.onRefresh(false);
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            Activity act = activityWeakRef.get();
+            PostsActivity act = activityWeakRef.get();
             if (act == null || act.isFinishing()) {
                 return;
             }
+            act.onRefresh(false);
             if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 askForSslTrust(act);
