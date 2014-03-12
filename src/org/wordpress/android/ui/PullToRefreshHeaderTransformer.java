@@ -2,6 +2,7 @@ package org.wordpress.android.ui;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.view.View;
@@ -52,6 +53,7 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private boolean showHeaderViewICSAndPostICS() {
         boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
         mContentLayout.setVisibility(View.VISIBLE);
