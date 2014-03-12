@@ -86,7 +86,6 @@ public class NotificationUtils {
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.NOTIFS, e);
-                    return;
                 }
             }
         };
