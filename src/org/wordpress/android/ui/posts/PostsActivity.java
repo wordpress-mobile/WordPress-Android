@@ -37,6 +37,8 @@ import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
+import org.xmlrpc.android.ApiHelper.VerifyCredentialsCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -335,8 +337,39 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
-            checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
+            //Check for local changes before starting the refresh
+            if (WordPress.getCurrentBlog() == null)
+                return true;
+           
+            final RefreshBlogContentTask refreshBlogContentTask = new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), 
+                    new ApiHelper.VerifyCredentialsCallback(this, WordPress.getCurrentBlog().isDotcomFlag()));
+            
+            boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+            if (hasLocalChanges) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+                dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
+                dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+                dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                refreshBlogContentTask.execute(false);
+                            }
+                        });
+                dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                    int whichButton) {
+                                //just close the window
+                            }
+                        });
+                dialogBuilder.setCancelable(true);
+                if (!isFinishing()) {
+                    dialogBuilder.create().show();
+                }
+            } else {
+                //No local changes. Refresh!
+                refreshBlogContentTask.execute(false);
+            }
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();

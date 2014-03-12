@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +22,10 @@ import java.util.regex.Pattern;
 import javax.net.ssl.SSLHandshakeException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Xml;
 
@@ -35,6 +39,7 @@ import com.google.gson.Gson;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -43,6 +48,8 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
@@ -165,10 +172,52 @@ public class ApiHelper {
         }
     }
 
+    private static void askForSslTrust(final Context ctx) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+        alert.setTitle(ctx.getString(R.string.ssl_certificate_error));
+        alert.setMessage(ctx.getString(R.string.ssl_certificate_ask_trust));
+        alert.setPositiveButton(
+                R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SelfSignedSSLCertsManager selfSignedSSLCertsManager;
+                        try {
+                            selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
+                            selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
+                        } catch (GeneralSecurityException e) {
+                            AppLog.e(T.API, e);
+                        } catch (IOException e) {
+                            AppLog.e(T.API, e);
+                        }
+                    }
+                });
+        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(ctx, SSLCertsViewActivity.class);
+                try {
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
+                    String lastFailureChainDescription = selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+                    ctx.startActivity(intent);
+                } catch (GeneralSecurityException e) {
+                    AppLog.e(T.API, e);
+                } catch (IOException e) {
+                    AppLog.e(T.API, e);
+                }
+            }
+        });
+        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.show();
+    }
+    
     public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<Activity> activityWeakRef;
+        private boolean isWPCOM;
 
-        public VerifyCredentialsCallback(Activity refActivity) {
+        public VerifyCredentialsCallback(Activity refActivity, boolean isWPCOM) {
+            this.isWPCOM = isWPCOM;
             this.activityWeakRef = new WeakReference<Activity>(refActivity);
         }
 
@@ -182,7 +231,12 @@ public class ApiHelper {
             if (act == null || act.isFinishing()) {
                 return;
             }
-            ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
+            if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
+                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+                askForSslTrust(act);
+            } else {
+                ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
+            }
         }
     }
 
