@@ -166,6 +166,11 @@ public class SetupBlog {
         catch (XMLRPCException xmlRpcException) {
             AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
             mErrorMsgId = R.string.no_site_error;
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(mXmlrpcUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
         } catch (IOException e) {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             mErrorMsgId = R.string.no_site_error;
@@ -280,7 +285,11 @@ public class SetupBlog {
                 xmlrpcUrl = getmXmlrpcByUserEnteredPath(url);
             }
         } catch (SSLHandshakeException e) {
-            // That should not happen cause mAllSslCertificatesTrusted will be true here or the certificate valid
+            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
         }
         return xmlrpcUrl;
     }

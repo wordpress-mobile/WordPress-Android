@@ -91,8 +91,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mSerializer = Xml.newSerializer();
     }
 
-    
-    
     private class ConnectionClient extends DefaultHttpClient {
         public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
             super();
