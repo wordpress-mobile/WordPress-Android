@@ -16,7 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/otm_message"
-        android:text="test test test test test test test test"
+        android:text="@string/ptr_tip_message"
+        android:textSize="@dimen/text_sz_medium"
         android:gravity="center"
         android:textColor="@color/white"/>
 </LinearLayout>
