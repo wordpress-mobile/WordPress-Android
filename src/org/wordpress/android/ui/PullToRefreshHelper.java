@@ -88,6 +88,18 @@ public class PullToRefreshHelper implements OnRefreshListener {
         public void onRefreshStarted(View view);
     }
 
+    public void hideTipTemporarily() {
+        if (mShowTip && mOnTopMessage != null) {
+            mOnTopMessage.hideAnimated();
+        }
+    }
+
+    public void showTip() {
+        if (mShowTip && mOnTopMessage != null) {
+            mOnTopMessage.showAnimated();
+        }
+    }
+
     private void hideTip() {
         if (mShowTip && mOnTopMessage != null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -96,18 +108,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
             editor.commit();
             mOnTopMessage.hideAnimated();
             mShowTip = false;
-        }
-    }
-
-    private void hideTipTemporarily() {
-        if (mShowTip && mOnTopMessage != null) {
-            mOnTopMessage.hideAnimated();
-        }
-    }
-
-    private void showTip() {
-        if (mShowTip && mOnTopMessage != null) {
-            mOnTopMessage.showAnimated();
         }
     }
 

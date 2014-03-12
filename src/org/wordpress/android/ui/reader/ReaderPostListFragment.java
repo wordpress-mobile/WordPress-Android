@@ -551,6 +551,7 @@ public class ReaderPostListFragment extends SherlockFragment
         }
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+        mPullToRefreshHelper.hideTipTemporarily();
     }
 
     private void hideNewPostsBar() {
@@ -567,6 +568,7 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
+        mPullToRefreshHelper.showTip();
     }
 
     /*
