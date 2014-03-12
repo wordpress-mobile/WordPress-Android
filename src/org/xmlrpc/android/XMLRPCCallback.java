@@ -23,6 +23,6 @@ public interface XMLRPCCallback {
 	 * @param id The id as returned by the XMLRPCClient.asyncCall(..) method for this request.
 	 * @param error The error occured.
 	 */
-	public void onFailure(long id, XMLRPCException error);
+	public void onFailure(long id, Exception error);
 
 }

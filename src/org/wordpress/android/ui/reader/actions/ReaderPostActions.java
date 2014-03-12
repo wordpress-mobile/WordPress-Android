@@ -234,12 +234,18 @@ public class ReaderPostActions {
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // the endpoint for requesting a single post doesn't always support featured images,
-                    // so if the original post had a featured image and the updated post doesn't, set
-                    // the featured image for the updated post to that of the original post
-                    if (post.hasFeaturedImage() && !updatedPost.hasFeaturedImage()) {
-                        AppLog.i(T.READER, "restored featured image after updating post");
+                    // the endpoint for requesting a single post doesn't support featured images,
+                    // so if the original post had a featured image, set the featured image for
+                    // the updated post to that of the original post - this should be done even
+                    // if the updated post has a featured image since that was most likely
+                    // assigned by ReaderPost.findFeaturedImage()
+                    if (post.hasFeaturedImage()) {
                         updatedPost.setFeaturedImage(post.getFeaturedImage());
+                    }
+                    // likewise for featured video
+                    if (post.hasFeaturedVideo()) {
+                        updatedPost.setFeaturedVideo(post.getFeaturedVideo());
+                        updatedPost.isVideoPress = post.isVideoPress;
                     }
                     ReaderPostTable.addOrUpdatePost(updatedPost);
                 }

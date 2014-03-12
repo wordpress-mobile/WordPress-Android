@@ -49,8 +49,8 @@ public class HtmlUtils {
     /*
      * convert html entities to actual Unicode characters - relies on commons apache lang
      */
-    protected static String fastUnescapeHtml(final String text) {
-        if (text==null || !text.contains("&"))
+    public static String fastUnescapeHtml(final String text) {
+        if (text == null || !text.contains("&"))
             return text;
         return StringEscapeUtils.unescapeHtml(text);
     }

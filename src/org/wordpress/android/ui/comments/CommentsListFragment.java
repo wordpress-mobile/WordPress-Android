@@ -405,7 +405,7 @@ public class CommentsListFragment extends Fragment {
                                 hPost };
             try {
                 return ApiHelper.refreshComments(getActivity(), params);
-            } catch (XMLRPCException e) {
+            } catch (Exception e) {
                 xmlRpcErrorMessage = e.getMessage();
                 isError = true;
                 return null;

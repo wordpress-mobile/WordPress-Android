@@ -26,10 +26,14 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -144,12 +148,23 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     WordPress.wpDB.saveBlog(blog);
                 }
                 return true;
-            } catch (XMLRPCException e) {
-                if (!TextUtils.isEmpty(e.getMessage())){
-                    mIsWpcomAccountWith2FA = e.getMessage().contains("code 425");
-                }
-                return false;
             }
+            catch (XMLRPCFault xmlRpcFault) {
+                AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+                if (xmlRpcFault.getFaultCode() == 425) {
+                    mIsWpcomAccountWith2FA = true;
+                    return false;
+                }
+            } catch (XMLRPCException e) {
+                AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+            } catch (IOException e) {
+                AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+            }
+            
+            mIsWpcomAccountWith2FA = false;
+            return false;
         }
 
         @Override
