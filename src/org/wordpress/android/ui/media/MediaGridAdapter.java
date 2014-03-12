@@ -9,11 +9,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.webkit.MimeTypeMap;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
@@ -131,27 +134,21 @@ public class MediaGridAdapter extends CursorAdapter {
         } else {
             loadNetworkImage(cursor, (NetworkImageView) imageView);
         }
-        
-        String fileType = null;
-        
+
         // get the file extension from the fileURL
-        String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
-        if (filePath == null)
-            filePath = cursor.getString(cursor.getColumnIndex("fileURL"));
-        
-        if (filePath != null) {
-            fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-            
-            // file type
-            TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-            if  (Utils.isXLarge(context)) {
-                fileTypeView.setText("File type: " + fileType);
-            } else {
-                fileTypeView.setText(fileType);
-            }
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        String fileExtension = StringUtils.notNullStr(MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType));
+        fileExtension = fileExtension.toUpperCase();
+        // file type
+        TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
+        if  (Utils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
+            fileTypeView.setText("File type: " + fileExtension);
+        } else {
+            fileTypeView.setText(fileExtension.toUpperCase());
         }
 
         // dimensions
+        String filePath = cursor.getString(cursor.getColumnIndex("fileURL"));
         TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
         if (dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
