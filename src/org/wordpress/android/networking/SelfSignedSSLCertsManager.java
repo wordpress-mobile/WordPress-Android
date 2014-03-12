@@ -133,9 +133,10 @@ public class SelfSignedSSLCertsManager {
         }
         try {
             createLocalKeyStoreFile();
-            localKeyStore = KeyStore.getInstance("BKS");
         } catch (GeneralSecurityException e) {
+            AppLog.e(T.API, "Cannot create/initialize local Keystore", e);
         } catch (IOException e) {
+            AppLog.e(T.API, "Cannot create/initialize local Keystore", e);
         } 
     }
     
