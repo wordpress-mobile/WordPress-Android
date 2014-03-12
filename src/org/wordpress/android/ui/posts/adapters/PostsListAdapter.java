@@ -231,15 +231,17 @@ public class PostsListAdapter extends BaseAdapter {
             PostsListPost newPost = newPostsList.get(i);
             PostsListPost currentPost = mPosts.get(i);
 
+            if (newPost.getPostId() != currentPost.getPostId())
+                return false;
             if (!newPost.getTitle().equals(currentPost.getTitle()))
                 return false;
-            if (!(newPost.getDateCreatedGmt() == currentPost.getDateCreatedGmt()))
+            if (newPost.getDateCreatedGmt() != currentPost.getDateCreatedGmt())
                 return false;
             if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
                 return false;
-            if (!(newPost.isLocalDraft() == currentPost.isLocalDraft()))
+            if (newPost.isLocalDraft() != currentPost.isLocalDraft())
                 return false;
-            if (!(newPost.hasLocalChanges() == currentPost.hasLocalChanges()))
+            if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
                 return false;
         }
 

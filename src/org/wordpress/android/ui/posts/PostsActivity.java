@@ -32,15 +32,18 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -483,11 +486,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         @Override
         protected Boolean doInBackground(Post... params) {
-            boolean result;
+            boolean result = false;
             post = params[0];
             Blog blog = WordPress.currentBlog;
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
+
             Object[] postParams = { "", post.getRemotePostId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -496,16 +500,23 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                     WordPress.currentBlog.getPassword(), post.getRemotePostId() };
 
             try {
-                client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost",
-                        (mIsPage) ? pageParams : postParams);
+                client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
                 result = true;
             } catch (final XMLRPCException e) {
-                mErrorMsg = String.format(getResources().getString(R.string.error_delete_post),
-                        (mIsPage) ? getResources().getText(R.string.page)
-                                  : getResources().getText(R.string.post));
-                result = false;
+                mErrorMsg = prepareErrorMessage(e);
+            } catch (IOException e) {
+                mErrorMsg = prepareErrorMessage(e);
+            } catch (XmlPullParserException e) {
+                mErrorMsg = prepareErrorMessage(e);
             }
             return result;
+        }
+        
+        private String prepareErrorMessage(Exception e) {
+            AppLog.e(AppLog.T.POSTS, "Error while deleting post or page", e);
+            return String.format(getResources().getString(R.string.error_delete_post),
+                    (mIsPage) ? getResources().getText(R.string.page)
+                              : getResources().getText(R.string.post));
         }
     }
 
@@ -520,7 +531,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
             try {
                 ApiHelper.refreshComments(PostsActivity.this, commentParams);
-            } catch (final XMLRPCException e) {
+            } catch (final Exception e) {
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
             }
             return null;
@@ -587,6 +598,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         WordPress.currentBlog.getPassword() };
                 getPostResult = client.call(mIsPage ? "wp.getPage" : "metaWeblog.getPost", vParams);
             } catch (XMLRPCException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = getResources().getText(R.string.error_generic).toString();
+                return null;
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, e);
+                mErrorMsg = getResources().getText(R.string.error_generic).toString();
+                return null;
+            } catch (XmlPullParserException e) {
+                AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
                 return null;
             }
