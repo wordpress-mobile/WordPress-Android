@@ -17,8 +17,7 @@ import org.wordpress.android.util.JSONUtil;
 
 public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
-    private NoteFollowAdapter mAdapter;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.notifications_follow_list, container, false);
@@ -50,15 +49,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
             noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
         }
 
-        // set the adapter
-        setListAdapter(getFollowAdapter());
-    }
-
-    private NoteFollowAdapter getFollowAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new NoteFollowAdapter(getActivity(), getNote());
-        }
-        return mAdapter;
+        setListAdapter(new NoteFollowAdapter(getActivity(), getNote(), false));
     }
 
     @Override

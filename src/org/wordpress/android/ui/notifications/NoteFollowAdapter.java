@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils.NoteUpdatedListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
@@ -21,21 +23,27 @@ import org.wordpress.android.util.StringUtils;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by nbradbury on 3/12/14.
+ * Created by nbradbury on 3/12/14 - adapter used by NoteSingleLineListFragment and
+ * NoteCommentLikeFragment to display list of liking/following users which enables
+ * following/unfollowing each of them
  */
 public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListener {
     private JSONArray mItems;
     private Note mNote;
+    private final boolean mDiscardFirstItem;
     private final int mAvatarSz;
     private final WeakReference<Context> mWeakContext;
     private final LayoutInflater mInflater;
 
-    NoteFollowAdapter(Context context, Note note) {
+    NoteFollowAdapter(Context context, Note note, boolean discardFirstItem) {
         mWeakContext = new WeakReference<Context>(context);
         mInflater = LayoutInflater.from(context);
+        mDiscardFirstItem = discardFirstItem;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+
         setNote(note);
-        // get the latest version of this note to ensure follow statuses are correct
+
+        // request the latest version of this note to ensure follow statuses are correct
         NotificationUtils.updateNotification(getNoteId(), this);
     }
 
@@ -44,10 +52,8 @@ public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListene
      */
     @Override
     public void onNoteUpdated(int noteId) {
-        if (!hasContext())
-            return;
-        setNote(WordPress.wpDB.getNoteById(noteId));
-        notifyDataSetChanged();
+        if (hasContext())
+            setNote(WordPress.wpDB.getNoteById(noteId));
     }
 
     private boolean hasContext() {
@@ -55,11 +61,36 @@ public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListene
     }
 
     private void setNote(Note note) {
+        boolean hasItems = (mItems != null);
+
         mNote = note;
+
+        final JSONArray items;
         if (mNote != null) {
-            mItems = mNote.queryJSON("body.items", new JSONArray());
+            items = mNote.queryJSON("body.items", new JSONArray());
         } else {
+            items = new JSONArray();
+        }
+
+        // the first body item in comment likes is the header ("This person liked your comment")
+        // and should be discarded
+        if (mDiscardFirstItem && items.length() > 0) {
+            // can't use mItems.remove(0) since it requires API 19
             mItems = new JSONArray();
+            for (int i = 1; i < items.length(); i++) {
+                try {
+                    mItems.put(items.get(i));
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.NOTIFS, e);
+                }
+            }
+        } else {
+            mItems = items;
+        }
+
+        // if the adapter had existing items, make sure the changes are reflected
+        if (hasItems) {
+            notifyDataSetChanged();
         }
     }
 

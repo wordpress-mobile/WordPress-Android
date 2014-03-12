@@ -75,17 +75,22 @@ public class NotificationUtils {
                 if (jsonObject == null)
                     return;
 
+                final List<Note> notes;
                 try {
-                    List<Note> notes = parseNotes(jsonObject);
-                    if (notes == null || notes.size() == 0)
+                    // response is an array of notes with a single note item
+                    notes = parseNotes(jsonObject);
+                    if (notes == null || notes.size() == 0) {
                         return;
-
-                    WordPress.wpDB.addNote(notes.get(0), false);
-                    if (updateListener != null) {
-                        updateListener.onNoteUpdated(noteId);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.NOTIFS, e);
+                    return;
+                }
+
+                WordPress.wpDB.addNote(notes.get(0), false);
+
+                if (updateListener != null) {
+                    updateListener.onNoteUpdated(noteId);
                 }
             }
         };
@@ -137,7 +142,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. What happened here?!?!");
             return;
         }
 
@@ -156,7 +161,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. What happened here?!?!");
             return;
         }
 
@@ -198,7 +203,7 @@ public class NotificationUtils {
         if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
             return;
 
-        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignement.
+        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
 
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);
