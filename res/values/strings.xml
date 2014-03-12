@@ -128,8 +128,6 @@
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
-    <string name="tab_posts">Posts</string>
-    <string name="tab_pages">Pages</string>
     <string name="tab_stats">Stats</string>
 
     <!-- themes -->
@@ -195,7 +193,6 @@
     <string name="comment_status_trash">Trashed</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
-    <string name="moderating_comment">Moderating comment</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -233,20 +230,16 @@
     <string name="blog_removed_successfully">Blog removed successfully</string>
 
     <!-- draft actions -->
-    <string name="draft_actions">Draft actions</string>
-    <string name="edit_draft">Edit draft</string>
     <string name="delete_draft">Delete draft</string>
     <string name="delete_sure">Are you sure you want to delete the draft</string>
 
     <!-- page actions -->
-    <string name="page_actions">Page actions</string>
     <string name="preview_page">Preview page</string>
     <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page deleted successfully</string>
     <string name="delete_sure_page">Are you sure you want to delete the page</string>
 
     <!-- post actions -->
-    <string name="post_actions">Post actions</string>
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post deleted successfully</string>
@@ -329,7 +322,6 @@
     <string name="help_stats">Need help?</string>
     <string name="stats_username">Username</string>
     <string name="stats_password">Password</string>
-    <string name="invalid_login">Incorrect login</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
 
@@ -427,7 +419,6 @@
     <string name="pending_review">Pending review</string>
     <string name="draft">Draft</string>
     <string name="post_private">Private</string>
-    <string name="published">Published</string>
     <string name="scheduled">Scheduled</string>
 
     <!-- QuickPress -->
@@ -460,16 +451,11 @@
     <string name="notifications_turn_off">Turn off</string>
     <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
     <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
-    <string name="tap_to_reply">Tap to reply</string>
     <string name="note_reply_successful">Reply published</string>
-    <string name="follow">Follow</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
-    <string name="moderate_comment">Moderate comment</string>
     <string name="tooltip_follow">Follow or unfollow this blog</string>
-    <string name="retry_reply">Reply failed. Tap to retry.</string>
     <string name="reply_failed">Reply failed</string>
-    <string name="tap_retry">Tap to retry</string>
     <string name="notifications_empty_list">No notifications</string>
 
     <!-- reader -->
