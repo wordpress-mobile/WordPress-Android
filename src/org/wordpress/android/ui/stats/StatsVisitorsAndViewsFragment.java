@@ -38,8 +38,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                                                            StatsBarChartUnit.WEEK.getLabel(),
                                                            StatsBarChartUnit.MONTH.getLabel() };
 
-    private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
-
     private TextView mVisitorsToday;
     private TextView mViewsToday;
     private TextView mViewsBestEver;
@@ -54,17 +52,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
-
         setRetainInstance(true);
 
-        initLayout(view);
-
-        restoreState(savedInstanceState);
-
-        return view;
-    }
-
-    private void initLayout (View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
@@ -92,13 +81,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
-    }
-
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            return;
-
-        mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
+        return view;
     }
 
     @Override
@@ -115,12 +98,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
 
         refreshSummary();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
     }
 
     @Override
