@@ -112,7 +112,7 @@ public class WPTrustManager implements X509TrustManager {
             } catch (CertificateException e) {
                 AppLog.e(T.API, "checkServerTrusted failed with local trust manager...", e);
                 try {
-                    SelfSignedSSLCertsManager.getIstance(null).setLastFailureChain(chain);
+                    SelfSignedSSLCertsManager.getInstance(null).setLastFailureChain(chain);
                 } catch (GeneralSecurityException e1) {
                 } catch (IOException e1) {
                 }

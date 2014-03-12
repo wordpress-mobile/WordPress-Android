@@ -42,7 +42,7 @@ public class SelfSignedSSLCertsManager {
         localKeyStore = loadTrustStore(ctx);
     }
     
-    public static synchronized SelfSignedSSLCertsManager getIstance(Context ctx) throws GeneralSecurityException, IOException {
+    public static synchronized SelfSignedSSLCertsManager getInstance(Context ctx) throws GeneralSecurityException, IOException {
         if (instance == null) {
             instance = new SelfSignedSSLCertsManager(ctx);
         }

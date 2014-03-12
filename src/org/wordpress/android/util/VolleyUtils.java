@@ -129,7 +129,7 @@ public class VolleyUtils {
     public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
         SSLSocketFactory mSslSocketFactory = null;
         try {
-            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getIstance(ctx).getLocalKeyStore()) };
+            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(ctx).getLocalKeyStore()) };
             SSLContext context = SSLContext.getInstance("SSL");
             context.init(null, trustAllowedCerts, new SecureRandom());
             mSslSocketFactory = context.getSocketFactory();

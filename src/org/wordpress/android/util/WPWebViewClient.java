@@ -67,7 +67,7 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
         try {
-            if (SelfSignedSSLCertsManager.getIstance(view.getContext()).isCertificateTrusted(error.getCertificate())) {
+            if (SelfSignedSSLCertsManager.getInstance(view.getContext()).isCertificateTrusted(error.getCertificate())) {
                 handler.proceed();
                 return;
             }

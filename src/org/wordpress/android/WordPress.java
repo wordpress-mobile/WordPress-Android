@@ -397,7 +397,7 @@ public class WordPress extends Application {
         removeWpComUserRelatedData(context);
 
         try {
-            SelfSignedSSLCertsManager.getIstance(context).emptyLocalKeyStoreFile();
+            SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         } catch (IOException e) {

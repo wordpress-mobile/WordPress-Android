@@ -364,7 +364,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             public void onClick(DialogInterface dialog, int which) {
                 SetupBlogTask setupBlogTask = new SetupBlogTask();
                 try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
                     selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
                 } catch (IOException e) {
                     AppLog.e(T.NUX, e);
@@ -378,7 +378,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
                 try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getIstance(getActivity());
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
                     String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" 
                             + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
                     intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
