@@ -261,4 +261,20 @@ public class StringUtils {
         }
         return out.toString();
     }
+
+    /*
+     * simple wrapper for Integer.valueOf(string) so caller doesn't need to catch NumberFormatException
+     */
+    public static int stringToInt(String s) {
+        return stringToInt(s, 0);
+    }
+    public static int stringToInt(String s, int defaultValue) {
+        if (s == null)
+            return defaultValue;
+        try {
+            return Integer.valueOf(s);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 }

@@ -20,9 +20,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.ui.notifications.NotificationUtils.NoteChangeListener;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 
-public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment {
+public class NoteSingleLineListFragment extends ListFragment implements NotificationFragment,
+                                                                        NoteChangeListener {
     private Note mNote;
     private int mAvatarSz;
     
@@ -67,8 +70,26 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
 
         // set the adapter
         setListAdapter(new NoteAdapter());
+
+        // get the latest version of this note to ensure follow statuses are correct
+        NotificationUtils.updateNotification(getNoteId(), this);
     }
-    
+
+    /*
+     * fired by NotificationUtils.updateNotification() when the notification has changed
+     */
+    @Override
+    public void onNoteChanged(int noteId) {
+        if (getActivity() == null)
+            return;
+        Note updatedNote = WordPress.wpDB.getNoteById(noteId);
+        if (updatedNote != null) {
+            setNote(updatedNote);
+            setListAdapter(new NoteAdapter());
+        }
+    }
+
+
     @Override
     public void setListAdapter(ListAdapter adapter) {
         super.setListAdapter(adapter);
@@ -83,7 +104,13 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     public Note getNote(){
         return mNote;
     }
-    
+
+    private int getNoteId() {
+        if (mNote == null)
+            return 0;
+        return StringUtils.stringToInt(mNote.getId());
+    }
+
     class NoteAdapter extends BaseAdapter {
         private final JSONArray mItems;
         NoteAdapter(){
