@@ -48,22 +48,6 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.empty_listview, container, false);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new RefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        if (getActivity() instanceof NotificationsActivity) {
-                            ((NotificationsActivity) getActivity()).refreshNotes();
-                        }
-                    }
-                }, TextView.class);
-
         return view;
     }
 
@@ -91,6 +75,22 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
+
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        if (getActivity() instanceof NotificationsActivity) {
+                            ((NotificationsActivity) getActivity()).refreshNotes();
+                        }
+                    }
+                }, TextView.class);
     }
 
     @Override
