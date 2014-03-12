@@ -96,13 +96,19 @@ public class SelfSignedSSLCertsManager {
             out = new FileOutputStream(localTrustStoreFile);
             localKeyStore.store(out, Config.DB_SECRET.toCharArray());
         } finally {
-            out.close();
+            if (out!=null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    AppLog.e(T.UTILS, e);
+                }
+            }
         }
     }
     
     //Create an empty trust store file if missing
     private void createLocalKeyStoreFile() throws GeneralSecurityException, IOException {
-       if (!localTrustStoreFile.exists()) { 
+        if (!localTrustStoreFile.exists()) { 
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(localTrustStoreFile);
