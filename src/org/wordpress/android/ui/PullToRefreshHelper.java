@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.PullToRefreshHeaderTransformer.OnTopScrollChangedListener;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -52,7 +53,17 @@ public class PullToRefreshHelper implements OnRefreshListener {
             );
         }
         setupWizard.setup(mPullToRefreshLayout);
-        showTip(activity);
+        mHeaderTransformer.setOnTopScrollChangedListener(new OnTopScrollChangedListener() {
+            @Override
+            public void onTopScrollChanged(boolean scrolledOnTop) {
+                if (scrolledOnTop) {
+                    showTip();
+                } else {
+                    hideTipTemporarily();
+                }
+            }
+        });
+        createTipView(activity);
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -76,17 +87,30 @@ public class PullToRefreshHelper implements OnRefreshListener {
             Editor editor = preferences.edit();
             editor.putBoolean(NEED_PTR_TIP, false);
             editor.commit();
-            mOnTopMessage.hide();
+            mOnTopMessage.hideAnimated();
             mShowTip = false;
         }
     }
 
-    private void showTip(Activity activity) {
+    private void hideTipTemporarily() {
+        if (mShowTip) {
+            mOnTopMessage.hideAnimated();
+        }
+    }
+
+    private void showTip() {
+        if (mShowTip) {
+            mOnTopMessage.showAnimated();
+        }
+    }
+
+    private void createTipView(Activity activity) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         mShowTip = preferences.getBoolean(NEED_PTR_TIP, true);
         if (mShowTip) {
             mOnTopMessage = new OnTopMessage(activity, mPullToRefreshLayout);
-            mOnTopMessage.show(activity.getString(R.string.ptr_tip_message));
+            mOnTopMessage.setMessage(activity.getString(R.string.ptr_tip_message));
+            mOnTopMessage.show();
         }
     }
 }

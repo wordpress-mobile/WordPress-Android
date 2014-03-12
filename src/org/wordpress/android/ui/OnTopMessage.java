@@ -14,6 +14,7 @@ public class OnTopMessage {
     private View mLayout;
     private TextView mTextView;
     private AlphaAnimation mHideAnimation;
+    private AlphaAnimation mShowAnimation;
 
     public OnTopMessage(Activity activity) {
         ViewGroup root = (ViewGroup) activity.findViewById(android.R.id.content);
@@ -34,8 +35,7 @@ public class OnTopMessage {
         mHideAnimation.setDuration(activity.getResources().getInteger(android.R.integer.config_mediumAnimTime));
         mHideAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -43,17 +43,27 @@ public class OnTopMessage {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
+        mShowAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mShowAnimation.setInterpolator(new AccelerateInterpolator());
+        mShowAnimation.setDuration(activity.getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
-    public void show(String message) {
-        mLayout.setVisibility(View.VISIBLE);
+    public void setMessage(String message) {
         mTextView.setText(message);
     }
 
-    public void hide() {
+    public void show() {
+        mLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void showAnimated() {
+        mLayout.setVisibility(View.VISIBLE);
+        mLayout.startAnimation(mShowAnimation);
+    }
+
+    public void hideAnimated() {
         mLayout.startAnimation(mHideAnimation);
     }
 }
