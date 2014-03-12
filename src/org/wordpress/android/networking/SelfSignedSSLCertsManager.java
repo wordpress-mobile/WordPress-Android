@@ -144,7 +144,7 @@ public class SelfSignedSSLCertsManager {
             byte[] digest = MessageDigest.getInstance("MD5").digest(principal.getEncoded());
             String result = Integer.toString(leInt(digest), 16);
             if (result.length() > 8) {
-                StringBuffer buff = new StringBuffer();
+                StringBuilder buff = new StringBuilder();
                 int padding = 8 - result.length();
                 for (int i = 0; i < padding; i++) {
                     buff.append("0");

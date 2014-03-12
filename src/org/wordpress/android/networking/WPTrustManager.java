@@ -6,6 +6,7 @@ import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.TrustManager;
@@ -34,12 +35,8 @@ public class WPTrustManager implements X509TrustManager {
             localTrustManager = new LocalStoreX509TrustManager(localKeyStore);
 
             List<X509Certificate> allIssuers = new ArrayList<X509Certificate>();
-            for (X509Certificate cert : defaultTrustManager.getAcceptedIssuers()) {
-                allIssuers.add(cert);
-            }
-            for (X509Certificate cert : localTrustManager.getAcceptedIssuers()) {
-                allIssuers.add(cert);
-            }
+            Collections.addAll(allIssuers, defaultTrustManager.getAcceptedIssuers());
+            Collections.addAll(allIssuers, localTrustManager.getAcceptedIssuers());
             acceptedIssuers = allIssuers.toArray(new X509Certificate[allIssuers.size()]);
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
