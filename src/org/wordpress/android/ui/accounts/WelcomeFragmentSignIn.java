@@ -360,7 +360,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         alert.setTitle(getString(R.string.ssl_certificate_error));
         alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
         alert.setPositiveButton(
-                android.R.string.yes, new DialogInterface.OnClickListener() {
+                R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 SetupBlogTask setupBlogTask = new SetupBlogTask();
                 try {
@@ -374,7 +374,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 setupBlogTask.execute();
             }
         });
-        alert.setNeutralButton("Certificate Details", new DialogInterface.OnClickListener() {
+        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
                 try {
@@ -390,7 +390,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
         });
-        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
