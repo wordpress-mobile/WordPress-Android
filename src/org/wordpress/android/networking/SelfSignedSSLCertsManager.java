@@ -209,12 +209,14 @@ public class SelfSignedSSLCertsManager {
         try {
             String certificateAlias = this.getLocalKeyStore().getCertificateAlias(x509Certificate);
             if(certificateAlias != null ) {
-                AppLog.w(T.API, "Current certificate " + x509Certificate.getSubjectDN().getName() +" is NOT in KeyStore.");
+                AppLog.w(T.API, "Current certificate " + x509Certificate.getSubjectDN().getName() +" is in KeyStore.");
                 return true;
             }
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Cannot check if the certificate is in KeyStore. Seems that Keystore is not initialized.", e);
         }
+        
+        AppLog.w(T.API, "Current certificate " + x509Certificate.getSubjectDN().getName() +" is NOT in KeyStore.");
         return false;
     }
 }
