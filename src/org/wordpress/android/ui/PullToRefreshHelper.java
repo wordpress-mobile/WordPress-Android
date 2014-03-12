@@ -19,7 +19,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 public class PullToRefreshHelper implements OnRefreshListener {
-    private static String NEED_PTR_TIP = "NEED_PTR_TIP";
+    private static final String NEED_PTR_TIP = "NEED_PTR_TIP";
     private PullToRefreshHeaderTransformer mHeaderTransformer;
     private PullToRefreshLayout mPullToRefreshLayout;
     private RefreshListener mRefreshListener;
@@ -65,12 +65,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
             }
         });
         createTipView(activity);
-    }
-
-    public void setTipViewTopMargin(int topMargin) {
-        if (mShowTip && mOnTopMessage != null) {
-            mOnTopMessage.setTopMargin(topMargin);
-        }
     }
 
     public void setRefreshing(boolean refreshing) {
