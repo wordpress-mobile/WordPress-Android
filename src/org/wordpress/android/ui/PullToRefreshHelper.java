@@ -9,6 +9,7 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.PullToRefreshHeaderTransformer.OnTopScrollChangedListener;
+import org.wordpress.android.util.DisplayUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -66,6 +67,12 @@ public class PullToRefreshHelper implements OnRefreshListener {
         createTipView(activity);
     }
 
+    public void setTipViewTopMargin(int topMargin) {
+        if (mShowTip && mOnTopMessage != null) {
+            mOnTopMessage.setTopMargin(topMargin);
+        }
+    }
+
     public void setRefreshing(boolean refreshing) {
         mHeaderTransformer.setShowProgressBarOnly(refreshing);
         mPullToRefreshLayout.setRefreshing(refreshing);
@@ -82,7 +89,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     private void hideTip() {
-        if (mShowTip) {
+        if (mShowTip && mOnTopMessage != null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             Editor editor = preferences.edit();
             editor.putBoolean(NEED_PTR_TIP, false);
@@ -93,13 +100,13 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     private void hideTipTemporarily() {
-        if (mShowTip) {
+        if (mShowTip && mOnTopMessage != null) {
             mOnTopMessage.hideAnimated();
         }
     }
 
     private void showTip() {
-        if (mShowTip) {
+        if (mShowTip && mOnTopMessage != null) {
             mOnTopMessage.showAnimated();
         }
     }
@@ -109,6 +116,10 @@ public class PullToRefreshHelper implements OnRefreshListener {
         mShowTip = preferences.getBoolean(NEED_PTR_TIP, true);
         if (mShowTip) {
             mOnTopMessage = new OnTopMessage(activity, mPullToRefreshLayout);
+            if (DisplayUtils.hasActionBarOverlay(activity.getWindow())) {
+                mOnTopMessage.setTopMargin(DisplayUtils.getActionBarHeight(mContext) +
+                                           activity.getResources().getDimensionPixelOffset(R.dimen.ptr_tip_margin_top));
+            }
             mOnTopMessage.setMessage(activity.getString(R.string.ptr_tip_message));
             mOnTopMessage.show();
         }

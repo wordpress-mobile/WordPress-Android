@@ -1,7 +1,6 @@
 
 package org.wordpress.android.ui;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -249,19 +246,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return isXLargeLandscape();
     }
 
-    /*
-     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
-     * API 11 since hasFeature() requires API 11
-     */
-    @SuppressLint("NewApi")
-    private boolean hasActionBarOverlay() {
-        if (getWindow()!=null && Build.VERSION.SDK_INT >= 11) {
-            return getWindow().hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        } else {
-            return false;
-        }
-    }
-
     private void initMenuDrawer() {
         initMenuDrawer(-1);
     }
@@ -279,7 +263,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         // if the ActionBar overlays window content, we must insert a view which is the same
         // height as the ActionBar as the first header in the ListView - without this the
         // ActionBar will cover the first item
-        if (hasActionBarOverlay()) {
+        if (DisplayUtils.hasActionBarOverlay(getWindow())) {
             final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
             RelativeLayout header = new RelativeLayout(this);
             header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));

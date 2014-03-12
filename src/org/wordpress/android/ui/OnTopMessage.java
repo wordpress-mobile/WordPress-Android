@@ -6,12 +6,14 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 
 public class OnTopMessage {
-    private View mLayout;
+    private LinearLayout mLayout;
     private TextView mTextView;
     private AlphaAnimation mHideAnimation;
     private AlphaAnimation mShowAnimation;
@@ -27,7 +29,7 @@ public class OnTopMessage {
 
     private void init(Activity activity, ViewGroup root) {
         View v = activity.getLayoutInflater().inflate(R.layout.on_top_message, root);
-        mLayout = v.findViewById(R.id.otm_layout);
+        mLayout = (LinearLayout) v.findViewById(R.id.otm_layout);
         mLayout.setVisibility(View.GONE);
         mTextView = (TextView) v.findViewById(R.id.otm_message);
         mHideAnimation = new AlphaAnimation(1.0f, 0.0f);
@@ -65,5 +67,12 @@ public class OnTopMessage {
 
     public void hideAnimated() {
         mLayout.startAnimation(mHideAnimation);
+    }
+
+    public void setTopMargin(int topMargin) {
+        LayoutParams layoutParams = (LayoutParams) mLayout.getLayoutParams();
+        layoutParams.setMargins(layoutParams.leftMargin, topMargin, layoutParams.rightMargin,
+                layoutParams.bottomMargin);
+        mLayout.setLayoutParams(layoutParams);
     }
 }
