@@ -28,26 +28,19 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
 
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -506,9 +499,9 @@ public class PostUploadService extends Service {
                 }
 
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaFileMimeType(videoFile, false);
+                    mimeType = MediaUtils.getMediaFileMimeType(videoFile);
                 }
-                String videoName = getMediaFileName(videoFile, mimeType);
+                String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
 
                 // try to upload the video
                 Map<String, Object> m = new HashMap<String, Object>();
@@ -601,9 +594,9 @@ public class PostUploadService extends Service {
                 }
 
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaFileMimeType(imageFile, true);
+                    mimeType = MediaUtils.getMediaFileMimeType(imageFile);
                 }
-                String fileName = getMediaFileName(imageFile, mimeType);
+                String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
                 ImageHelper ih = new ImageHelper();
@@ -718,80 +711,6 @@ public class PostUploadService extends Service {
                 }
             }
             return content;
-        }
-
-        private String getMediaFileMimeType(File mediaFile, boolean isImage) {
-            String originalFileName = mediaFile.getName().toLowerCase();
-            String mimeType = UrlUtils.getUrlMimeType(originalFileName);
-
-            if (TextUtils.isEmpty(mimeType)) {
-                try {
-                    String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
-                    URL urlForGuessingMime = new URL(filePathForGuessingMime);
-                    URLConnection uc = urlForGuessingMime.openConnection();
-                    String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
-                    // check if returned "content/unknown"
-                    if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown")) {
-                        mimeType = guessedContentType;
-                    }
-                } catch (MalformedURLException e) {
-                    AppLog.e(T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
-                }
-                catch (IOException e) {
-                    AppLog.e(T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
-                }
-            }
-
-            // No mimeType yet? Try to decode the image get the mimeType from there
-            if (isImage && TextUtils.isEmpty(mimeType)) {
-                try {
-                    DataInputStream inputStream = new DataInputStream(new FileInputStream(mediaFile));
-                    String mimeTypeFromStream = MediaUtils.getMimeTypeOfInputStream(inputStream);
-                    if (!TextUtils.isEmpty(mimeTypeFromStream)) {
-                        mimeType = mimeTypeFromStream;
-                    }
-                    inputStream.close();
-                } catch (FileNotFoundException e) {
-                    AppLog.e(T.API, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
-                } catch (IOException e) {
-                    AppLog.e(T.API, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
-                }
-            }
-
-            if (TextUtils.isEmpty(mimeType)) {
-                mimeType = "";
-            } else {
-                if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
-                    mimeType = "video/mp4";
-                }
-            }
-
-            return mimeType;
-        }
-
-        private String getMediaFileName(File mediaFile, String mimeType) {
-            String originalFileName = mediaFile.getName().toLowerCase();
-            String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
-            if (!TextUtils.isEmpty(extension))  //File name already has the extension in it
-                return originalFileName;
-
-            if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
-                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
-                if (!TextUtils.isEmpty(fileExtensionFromMimeType)) {
-                    originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
-                } else {
-                    //We're still without an extension - split the mime type and retrieve it
-                   String[] split = mimeType.split("/");
-                   String guessedExt = split.length > 1 ? split[1] : split[0];
-                   originalFileName += "." + guessedExt;
-                }
-            } else {
-                //No mimetype and no extension!!
-                AppLog.e(T.API, "No mimetype and no extension for " + mediaFile.getPath());
-            }
-
-            return originalFileName;
         }
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {

@@ -12,6 +12,7 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
