@@ -151,7 +151,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             try {
                 iconURL = URLDecoder.decode(iconURL, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));
