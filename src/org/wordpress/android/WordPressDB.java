@@ -1063,12 +1063,12 @@ public class WordPressDB {
                 post.setCategories(c.getString(c.getColumnIndex("categories")));
                 post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
                 post.setDescription(c.getString(c.getColumnIndex("description")));
-                post.setMoreText(c.getString(c.getColumnIndex("mt_text_more")));
                 post.setLink(c.getString(c.getColumnIndex("link")));
                 post.setAllowComments(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_comments"))));
                 post.setAllowPings(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_pings"))));
                 post.setPostExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
                 post.setKeywords(c.getString(c.getColumnIndex("mt_keywords")));
+                post.setMoreText(c.getString(c.getColumnIndex("mt_text_more")));
                 post.setPermaLink(c.getString(c.getColumnIndex("permaLink")));
                 post.setPostStatus(c.getString(c.getColumnIndex("post_status")));
                 post.setUserId(c.getString(c.getColumnIndex("userid")));
