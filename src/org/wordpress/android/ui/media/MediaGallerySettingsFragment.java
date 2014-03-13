@@ -43,8 +43,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
     private GalleryType mType;
     private int mNumColumns;
     private boolean mIsRandomOrder;
-    
-    private ExpandableHeightGridView mNumColumnsGrid;
+
     private View mNumColumnsContainer;
     private View mHeader;
 
@@ -68,7 +67,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         CIRCLES("circle"),
         SLIDESHOW("slideshow");
         
-        private String mTag;
+        private final String mTag;
 
         private GalleryType(String tag) {
             mTag = tag;
@@ -130,16 +129,16 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
         int visible = (mType == GalleryType.DEFAULT) ? View.VISIBLE : View.GONE;
         mNumColumnsContainer.setVisibility(visible);
-        
-        mNumColumnsGrid = (ExpandableHeightGridView) view.findViewById(R.id.media_gallery_num_columns_grid);
-        mNumColumnsGrid.setExpanded(true);
+
+        ExpandableHeightGridView numColumnsGrid = (ExpandableHeightGridView) view.findViewById(R.id.media_gallery_num_columns_grid);
+        numColumnsGrid.setExpanded(true);
         ArrayList<String> list = new ArrayList<String>(9);
         for (int i = 1; i <= 9; i++) {
             list.add(i + "");
         }
         
         mGridAdapter = new CustomGridAdapter(mNumColumns);
-        mNumColumnsGrid.setAdapter(mGridAdapter);
+        numColumnsGrid.setAdapter(mGridAdapter);
         
         mThumbnailCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_thumbnail_grid);
         mTiledCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_tiled);
@@ -259,7 +258,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
     private class CustomGridAdapter extends BaseAdapter implements OnCheckedChangeListener {
 
         private boolean mAllowCheckChanged;
-        private SparseBooleanArray mCheckedPositions;
+        private final SparseBooleanArray mCheckedPositions;
         
         public CustomGridAdapter(int selection) {
             mAllowCheckChanged = true;

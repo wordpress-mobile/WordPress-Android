@@ -1,23 +1,7 @@
 package org.wordpress.android.ui.media;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
-import java.util.TimeZone;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,17 +12,26 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
-import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
-
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.passcodelock.AppLockManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.Version;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.passcodelock.AppLockManager;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MediaUtils {
 
@@ -47,7 +40,6 @@ public class MediaUtils {
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
         public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
-        public static final int ACTIVITY_REQUEST_CODE_BROWSE_FILES = 1400;
     }
     
     public interface LaunchCameraCallback {
@@ -63,7 +55,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isDocument(String url) {
+    private static boolean isDocument(String url) {
         if (url == null)
             return false;
         
@@ -72,7 +64,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isPowerpoint(String url) {
+    private static boolean isPowerpoint(String url) {
         if (url == null)
             return false;
         
@@ -81,7 +73,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isSpreadsheet(String url) {
+    private static boolean isSpreadsheet(String url) {
         if (url == null)
             return false;
         
@@ -90,7 +82,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isVideo(String url) {
+    private static boolean isVideo(String url) {
         if (url == null)
             return false;
         if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") || 
@@ -215,9 +207,7 @@ public class MediaUtils {
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
         
-        Uri uri = Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
-        
-        return uri;
+        return Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
     }
     
     /**
@@ -391,8 +381,7 @@ public class MediaUtils {
             output.close();
             input.close();
 
-            Uri newUri = Uri.fromFile(f);
-            return newUri;
+            return Uri.fromFile(f);
         } catch (Exception e) {
             e.printStackTrace();
         }

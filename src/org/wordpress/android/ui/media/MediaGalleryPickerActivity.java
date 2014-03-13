@@ -45,7 +45,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
+    private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
@@ -190,7 +190,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         }, 1500);
     }
 
-    public void refreshMediaFromServer(int offset) {
+    void refreshMediaFromServer(int offset) {
         if (offset == 0 || !mIsRefreshing) {
             if (offset == mOldMediaSyncOffset) {
                 // we're pulling the same data again for some reason. Pull from the beginning.
@@ -212,7 +212,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                     if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
                         // There is no media at all
@@ -246,7 +246,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                         Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     }
 
                     // the activity may be cone by the time we get this, so check for it

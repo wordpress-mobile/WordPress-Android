@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    media grid item - tablet landscape
+-->
 <org.wordpress.android.ui.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/media_grid_frame_layout"
     android:layout_width="match_parent"
@@ -9,10 +12,10 @@
         android:id="@+id/media_grid_image_stub"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
         android:inflatedId="@+id/media_grid_item_image" />
 
     <CheckBox
@@ -25,56 +28,53 @@
         android:duplicateParentState="true"
         android:focusable="false" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginLeft="132dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp" >
+        android:layout_marginTop="@dimen/margin_medium" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_sz_small"
             android:textStyle="bold" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_upload_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_name"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_upload_date"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filetype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_filename"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_dimension"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_grid_item_filetype"
             android:singleLine="true"
-            android:textSize="12sp" />
-    </RelativeLayout>
+            android:textSize="@dimen/text_sz_small" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/media_grid_item_upload_state_container"
@@ -82,10 +82,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:background="@color/wordpress_blue"
-        android:paddingBottom="8dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="8dp"
-        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_small"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
         android:visibility="gone" >
 
         <ProgressBar
@@ -93,19 +93,19 @@
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp" />
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_medium" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_upload_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/media_grid_item_upload_progress"
             android:gravity="right"
-            android:paddingLeft="4dp"
+            android:paddingLeft="@dimen/margin_small"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
     </RelativeLayout>
 
 </org.wordpress.android.ui.CheckableFrameLayout>
