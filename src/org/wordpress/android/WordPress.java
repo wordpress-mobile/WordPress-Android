@@ -27,12 +27,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -42,7 +42,9 @@ import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -92,12 +94,7 @@ public class WordPress extends Application {
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this));
-        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
-
-        // http://stackoverflow.com/a/17035814
-        imageLoader.setBatchedResponseDelay(0);
+        setupVolleyQueue();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
@@ -125,6 +122,14 @@ public class WordPress extends Application {
 
         // Enable log recording
         AppLog.enableRecording(true);
+    }
+
+    public static void setupVolleyQueue() {
+        requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
     }
 
     private void initWpDb() {
@@ -388,7 +393,14 @@ public class WordPress extends Application {
     public static void signOut(Context context) {
         removeWpComUserRelatedData(context);
 
-        TrustedSslDomainTable.emptyTable();
+        try {
+            SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
+        } catch (GeneralSecurityException e) {
+            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
+        } catch (IOException e) {
+            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
+        }
+
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;

@@ -15,6 +15,9 @@ import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.networking.WPTrustManager;
+
 public class TrustAllSSLSocketFactory extends SSLSocketFactory {
     private javax.net.ssl.SSLSocketFactory factory;
 
@@ -22,7 +25,8 @@ public class TrustAllSSLSocketFactory extends SSLSocketFactory {
         super(null);
             try {
                 SSLContext sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, new TrustManager[] { new TrustAllManager() }, null);
+                TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(null).getLocalKeyStore()) };
+                sslcontext.init(null, trustAllowedCerts, null);
                 factory = sslcontext.getSocketFactory();
                 setHostnameVerifier(new AllowAllHostnameVerifier());
             } catch(Exception ex) { }

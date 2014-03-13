@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
@@ -111,7 +110,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         }
     }
 
-    private OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
+    private final OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
             // need this to stop the bug where onItemSelected is called during initialization, before user input
@@ -249,7 +248,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         setFilter(mFilter);
     }
 
-    public void resetSpinnerAdapter() {
+    void resetSpinnerAdapter() {
         setFiltersText(0, 0, 0);
         updateSpinnerAdapter();
     }
@@ -337,14 +336,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
             Callback callback = new Callback() {
 
-                // refersh db from server. If returned count is 0, we've retrieved all the media.
+                // refresh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
                 @Override
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
 
                     mIsRefreshing = false;
 
@@ -377,7 +376,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         }
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     }
 
                     // the activity may be cone by the time we get this, so check for it
@@ -458,7 +457,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         }
     }
 
-    public Cursor setDateFilter() {
+    Cursor setDateFilter() {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog == null)
@@ -519,9 +518,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         return null;
     }
 
-    public void showDatePicker() {
+    void showDatePicker() {
         // Inflate your custom layout containing 2 DatePickers
-        LayoutInflater inflater = (LayoutInflater) getActivity().getLayoutInflater();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         View customView = inflater.inflate(R.layout.date_range_dialog, null);
 
         // Define your date pickers

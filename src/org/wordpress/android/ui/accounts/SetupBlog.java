@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.net.ssl.SSLHandshakeException;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -25,7 +24,6 @@ import org.xmlrpc.android.XMLRPCFault;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -98,24 +96,6 @@ public class SetupBlog {
         return mHttpAuthRequired;
     }
 
-    public void setCurrentDomainSslCertificatesForcedTrusted(boolean trusted) {
-        if (trusted && !TextUtils.isEmpty(mSelfHostedURL)) {
-            try {
-                // Convert IDN names to punycode if necessary
-                String sanitizedURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedURL);
-                // Add http to the beginning of the URL if needed
-                sanitizedURL = UrlUtils.addHttpProcolIfNeeded(sanitizedURL, false);
-                URI uri = URI.create(sanitizedURL);
-                TrustedSslDomainTable.trustDomain(uri);
-                mCurrentSslCertificatesForcedTrusted = trusted;
-            } catch (Exception e1) {
-                AppLog.e(T.NUX, "Cannot trust the self-hosted URL", e1);
-            }
-        } else {
-            mCurrentSslCertificatesForcedTrusted = false;
-        }
-    }
-
     public boolean isErroneousSslCertificates() {
         return mErroneousSslCertificate;
     }
@@ -186,11 +166,13 @@ public class SetupBlog {
         catch (XMLRPCException xmlRpcException) {
             AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
             mErrorMsgId = R.string.no_site_error;
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(mXmlrpcUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
         } catch (IOException e) {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-            if (mCurrentSslCertificatesForcedTrusted) {
-                TrustedSslDomainTable.removeTrustedDomain(uri);
-            }
             mErrorMsgId = R.string.no_site_error;
         }
         return null;
@@ -303,7 +285,11 @@ public class SetupBlog {
                 xmlrpcUrl = getmXmlrpcByUserEnteredPath(url);
             }
         } catch (SSLHandshakeException e) {
-            // That should not happen cause mAllSslCertificatesTrusted will be true here or the certificate valid
+            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
         }
         return xmlrpcUrl;
     }

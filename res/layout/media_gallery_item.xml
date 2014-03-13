@@ -36,7 +36,7 @@
         android:layout_toRightOf="@id/media_grid_item_image"
         android:orientation="vertical" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,21 +45,21 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_upload_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textSize="12sp" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textSize="12sp" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filetype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:singleLine="true"
             android:textSize="12sp" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_dimension"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

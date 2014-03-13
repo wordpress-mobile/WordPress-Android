@@ -240,6 +240,7 @@ public class ReaderActivity extends WPActionBarActivity
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // if list fragment exists, replace it with the detail and add to backstack
         if (hasListFragment()) {
@@ -249,7 +250,6 @@ public class ReaderActivity extends WPActionBarActivity
             ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
 
