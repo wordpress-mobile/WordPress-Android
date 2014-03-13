@@ -93,19 +93,21 @@ public class NotificationUtils {
     }
 
 
-    public static void getPushNotificationSettings(Context context, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
-
-        if (!WordPress.hasValidWPComCredentials(context))
+    public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
+                                                   RestRequest.ErrorListener errorListener) {
+        if (!WordPress.hasValidWPComCredentials(context)) {
             return;
+        }
 
         String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken))
+        if (TextUtils.isEmpty(gcmToken)) {
             return;
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
+        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Get device settings skipped.");
             return;
         }
 
@@ -113,18 +115,19 @@ public class NotificationUtils {
     }
 
     public static void setPushNotificationSettings(Context context) {
-
-        if (!WordPress.hasValidWPComCredentials(context))
+        if (!WordPress.hasValidWPComCredentials(context)) {
             return;
+        }
 
         String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken))
+        if (TextUtils.isEmpty(gcmToken)) {
             return;
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
+        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Set device settings skipped.");
             return;
         }
 
