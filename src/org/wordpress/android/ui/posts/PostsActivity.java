@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -19,6 +20,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -189,12 +191,12 @@ public class PostsActivity extends WPActionBarActivity
 
     private void showErrorDialogIfNeeded(Bundle extras) {
         if (extras == null) {
-            return ;
+            return;
         }
         String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-        String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
-        String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
-        if (errorMessage != null) {
+        if (!TextUtils.isEmpty(errorMessage)) {
+            String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
+            String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
             showPostUploadErrorAlert(errorMessage, errorInfoTitle, errorInfoLink);
         }
     }

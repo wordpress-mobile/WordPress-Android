@@ -29,6 +29,7 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
@@ -149,7 +150,7 @@ public class PostUploadService extends Service {
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
-                Intent notificationIntent = new Intent(context, PostsActivity.class);
+                Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                                           | Intent.FLAG_ACTIVITY_NEW_TASK
                                           | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -192,7 +193,7 @@ public class PostUploadService extends Service {
             String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
-            Intent notificationIntent = new Intent(context, PostsActivity.class);
+            Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                                       | Intent.FLAG_ACTIVITY_NEW_TASK
                                       | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
