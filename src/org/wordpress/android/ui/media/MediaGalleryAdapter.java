@@ -11,7 +11,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
@@ -19,7 +18,7 @@ import org.wordpress.android.util.Utils;
  * Adapter for a drag-sort listview where the user can drag media items to sort their order 
  * for a media gallery
  */
-public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
+class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
     public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery) {
         super(context, layout, c, autoRequery);
@@ -121,7 +120,7 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         Uri uri = Uri.parse(thumbnailURL);
         if (uri != null && MediaUtils.isValidImage(uri.getLastPathSegment())) {
             imageView.setTag(thumbnailURL);
-            imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+            imageView.setImageUrl(thumbnailURL, MediaImageLoader.getInstance());
         } else {
             imageView.setImageUrl(null, null);
         }

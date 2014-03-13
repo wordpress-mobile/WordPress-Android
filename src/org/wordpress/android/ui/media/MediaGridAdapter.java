@@ -294,7 +294,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
             if (MediaUtils.isValidImage(filepath)) { 
                 imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, MediaBrowserActivity.imageLoader);
+                imageView.setImageUrl(thumbnailURL, MediaImageLoader.getInstance());
             } else {
                 imageView.setImageResource(placeholderResId);
             }

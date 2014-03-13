@@ -255,9 +255,9 @@ public class MediaItemFragment extends SherlockFragment {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
                     String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int)screenWidth);
-                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, WordPress.imageLoader);
+                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, MediaImageLoader.getInstance());
                 } else {
-                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, MediaBrowserActivity.imageLoader);
+                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, MediaImageLoader.getInstance());
                 }
             }
             mImageView.setVisibility(View.VISIBLE);

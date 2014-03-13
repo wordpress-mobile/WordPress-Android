@@ -1,17 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
 import android.content.Context;
 import android.util.Base64;
 
@@ -26,11 +14,22 @@ import com.android.volley.toolbox.ImageRequest;
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog.T;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 /**
  * Created by nbradbury on 9/3/13.
@@ -76,6 +75,21 @@ public class VolleyUtils {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    /*
+     * cancel all Volley requests that ARE for images
+     */
+    public static void cancelAllImageRequests(RequestQueue requestQueue) {
+        if (requestQueue==null)
+            return;
+        RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return (request instanceof ImageRequest);
+            }
+        };
+        requestQueue.cancelAll(filter);
     }
 
     /*

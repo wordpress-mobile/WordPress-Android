@@ -114,6 +114,12 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     }
 
     @Override
+    protected void onDestroy() {
+        MediaImageLoader.reset();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getSupportMenuInflater().inflate(R.menu.media_gallery, menu);

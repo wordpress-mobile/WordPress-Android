@@ -568,7 +568,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             String tag = (String) imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
+                ImageContainer container = MediaImageLoader.getInstance().get(tag, new ImageListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) { }

@@ -328,7 +328,7 @@ public class MediaEditFragment extends SherlockFragment {
                 loadLocalImage(mLocalImageView, imageUri, width, height);
                 mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             } else {
-                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
+                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, MediaImageLoader.getInstance());
                 mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             }
 
