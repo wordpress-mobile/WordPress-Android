@@ -156,11 +156,11 @@ public class PostUploadService extends Service {
                 notificationIntent.setAction(Intent.ACTION_MAIN);
                 notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-                notificationIntent.putExtra("errorMessage", mErrorMessage);
+                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
                 notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
                 if (mErrorUnavailableVideoPress) {
-                    notificationIntent.putExtra("errorInfoTitle", getString(R.string.learn_more));
-                    notificationIntent.putExtra("errorInfoLink", Constants.videoPressURL);
+                    notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
+                    notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
                 }
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
