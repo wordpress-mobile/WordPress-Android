@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -256,6 +257,16 @@ public class Blog {
     }
 
     public String getApi_blogid() {
+        if (api_blogid == null) {
+            JSONObject jsonOptions = getBlogOptionsJSONObject();
+            if (jsonOptions != null) {
+                String newApiBlogid = JSONUtil.queryJSON(jsonOptions, "jetpack_client_id.value", "");
+                if (!TextUtils.isEmpty(newApiBlogid)) {
+                    setApi_blogid(newApiBlogid);
+                    WordPress.wpDB.saveBlog(this);
+                }
+            }
+        }
         return api_blogid;
     }
 
