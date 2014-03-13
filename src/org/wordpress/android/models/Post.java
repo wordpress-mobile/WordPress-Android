@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -63,7 +62,6 @@ public class Post implements Serializable {
         this.localTableBlogId = blogId;
         this.isPage = isPage;
         this.localDraft = true;
-        save();
     }
 
     public long getLocalTablePostId() {
@@ -348,28 +346,6 @@ public class Post implements Serializable {
 
     public void setLocalChange(boolean isLocalChange) {
         this.isLocalChange = isLocalChange;
-    }
-
-    public boolean save() {
-        long newPostID = WordPress.wpDB.savePost(this, this.localTableBlogId);
-
-        if (newPostID >= 0 && this.isLocalDraft() && !this.isUploaded()) {
-            this.localTablePostId = newPostID;
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean update() {
-        int success = WordPress.wpDB.updatePost(this, this.localTableBlogId);
-
-        return success > 0;
-    }
-
-    public void delete() {
-        // deletes a post/page draft
-        WordPress.wpDB.deletePost(this);
     }
 
     public void setLocalTablePostId(long id) {

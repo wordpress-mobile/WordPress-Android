@@ -213,14 +213,14 @@ public class PostUploadService extends Service {
                 return false;
             }
 
-            if (post.getPostStatus() == null) {
+            if (TextUtils.isEmpty(post.getPostStatus())) {
                 post.setPostStatus("publish");
             }
             Boolean publishThis = false;
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
-            if (post.getMoreText() != null)
+            if (!TextUtils.isEmpty(post.getMoreText()))
                 moreCount++;
             String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
             Pattern pattern = Pattern.compile(imgTags);
@@ -385,7 +385,7 @@ public class PostUploadService extends Service {
             }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
             nm.notify(notificationID, n);
-            if (post.getPassword() != null) {
+            if (!TextUtils.isEmpty(post.getPassword())) {
                 contentStruct.put("wp_password", post.getPassword());
             }
             Object[] params;
@@ -409,7 +409,7 @@ public class PostUploadService extends Service {
 
                 post.setUploaded(true);
                 post.setLocalChange(false);
-                post.update();
+                WordPress.wpDB.updatePost(post);
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);

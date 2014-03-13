@@ -361,7 +361,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         }
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
-                        mActivity.getPost().delete();
+                        WordPress.wpDB.deletePost(mActivity.getPost());
                         mActivity.finish();
                     }
                     break;
@@ -376,7 +376,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                             Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
-                        mActivity.getPost().delete();
+                        WordPress.wpDB.deletePost(mActivity.getPost());
                         mActivity.finish();
                     }
                     break;
@@ -616,7 +616,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         if (!post.isLocalDraft())
             post.setLocalChange(true);
-        post.update();
+
+        WordPress.wpDB.updatePost(post);
     }
 
     public boolean hasEmptyContentFields() {

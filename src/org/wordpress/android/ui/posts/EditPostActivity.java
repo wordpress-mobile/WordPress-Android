@@ -107,6 +107,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
                 // Create a new post for share intents and QuickPress
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+                WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
             } else if (extras != null) {
                 // Load post from the postId passed in extras
@@ -312,8 +313,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
     private void showCancelAlert() {
         // Empty post? Let's not prompt then.
         if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
-            if (mIsNewPost)
-                mPost.delete();
+            if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            }
             finish();
             return;
         }
@@ -323,7 +325,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         // Compare the current Post to the original and if no changes have been made,
         // set the Post back to the original and go back to the previous view
         if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
-            mOriginalPost.update();
+            WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
             finish();
             return;
@@ -346,10 +348,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // When discard option is chosen, restore existing post or delete new post if it was autosaved.
                 if (mOriginalPost != null && !mIsNewPost) {
-                    mOriginalPost.update();
+                    WordPress.wpDB.updatePost(mOriginalPost);
                     WordPress.currentPost = mOriginalPost;
                 } else if (mPost != null && mIsNewPost) {
-                    mPost.delete();
+                    WordPress.wpDB.deletePost(mPost);
                 }
                 finish();
             }

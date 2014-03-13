@@ -26,7 +26,7 @@ public class PostTest extends InstrumentationTestCase {
     public void testPostSaveAndLoad() {
         Post post = new Post(1, false);
         post.setTitle("test-post");
-        post.save();
+        mDB.savePost(post);
 
         Post loadedPost = mDB.getPostForLocalTablePostId(post.getLocalTablePostId());
 

@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -233,7 +234,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 }
             }
 
-            if (post.getPassword() != null)
+            if (!TextUtils.isEmpty(post.getPassword()))
                 mPasswordEditText.setText(post.getPassword());
 
             switch (post.getStatusEnum()) {
@@ -480,7 +481,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         post.setLatitude(latitude);
         post.setLongitude(longitude);
         post.setPostFormat(postFormat);
-        post.update();
+
+        WordPress.wpDB.updatePost(post);
     }
 
     /**

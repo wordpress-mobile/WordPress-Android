@@ -325,6 +325,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+        WordPress.wpDB.savePost(newPost);
         Intent i = new Intent(this, EditPostActivity.class);
         i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
@@ -465,7 +466,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
-                post.delete();
+                WordPress.wpDB.deletePost(post);
                 mPostList.requestPosts(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
@@ -706,7 +707,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
-                                post.delete();
+                                WordPress.wpDB.deletePost(post);
                                 popPostDetail();
                                 attemptToSelectPost();
                                 mPostList.getPostListAdapter().loadPosts();

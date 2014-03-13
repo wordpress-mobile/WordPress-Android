@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -925,12 +924,12 @@ public class WordPressDB {
         return posts;
     }
 
-    public long savePost(Post post, int blogID) {
-        long returnValue = -1;
+    public long savePost(Post post) {
+        long result = -1;
         if (post != null) {
 
             ContentValues values = new ContentValues();
-            values.put("blogID", blogID);
+            values.put("blogID", post.getLocalTableBlogId());
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
@@ -953,23 +952,25 @@ public class WordPressDB {
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 
-            returnValue = db.insert(POSTS_TABLE, null, values);
+            result = db.insert(POSTS_TABLE, null, values);
 
+            if (result >= 0 && post.isLocalDraft() && !post.isUploaded()) {
+                post.setLocalTablePostId(result);
+            }
         }
-        return (returnValue);
+
+        return (result);
     }
 
-    public int updatePost(Post post, int blogID) {
-        int success = 0;
+    public int updatePost(Post post) {
+        int result = 0;
         if (post != null) {
 
             ContentValues values = new ContentValues();
-            values.put("blogID", blogID);
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
-            if (post.getMoreText() != null)
-                values.put("mt_text_more", post.getMoreText());
+            values.put("mt_text_more", post.getMoreText());
             values.put("uploaded", post.isUploaded());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
@@ -987,16 +988,15 @@ public class WordPressDB {
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 
-            int pageInt = 0;
-            if (post.isPage())
-                pageInt = 1;
-
-            success = db.update(POSTS_TABLE, values,
-                    "blogID=" + post.getLocalTableBlogId() + " AND id=" + post.getLocalTablePostId()
-                            + " AND isPage=" + pageInt, null);
-
+            result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
+                    new String[]{
+                        String.valueOf(post.getLocalTableBlogId()),
+                        String.valueOf(post.getLocalTablePostId()),
+                        String.valueOf(SqlUtils.boolToSql(post.isPage()))
+                    });
         }
-        return (success);
+
+        return (result);
     }
 
     public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
