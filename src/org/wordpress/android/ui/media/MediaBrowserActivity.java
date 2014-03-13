@@ -79,7 +79,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private MenuItem mRefreshMenuItem;
     private Menu mMenu;
     private FeatureSet mFeatureSet;
     private ActionMode mActionMode;
@@ -688,6 +687,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.media_multiselect, menu);
+        mMediaGridFragment.setPullToRefreshEnabled(false);
         return true;
     }
 
@@ -728,6 +728,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         mActionMode = null;
+        mMediaGridFragment.setPullToRefreshEnabled(true);
         cancelMultiSelect();
     }
 

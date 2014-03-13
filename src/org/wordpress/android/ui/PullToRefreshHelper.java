@@ -94,6 +94,10 @@ public class PullToRefreshHelper implements OnRefreshListener {
         }
     }
 
+    public void setEnabled(boolean enabled) {
+        mPullToRefreshLayout.setEnabled(enabled);
+    }
+
     private void hideTip() {
         if (mShowTip && mOnTopMessage != null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);

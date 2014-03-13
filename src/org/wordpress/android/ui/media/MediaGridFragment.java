@@ -663,4 +663,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void setRefreshing(boolean refreshing) {
         mPullToRefreshHelper.setRefreshing(refreshing);
     }
+
+    public void setPullToRefreshEnabled(boolean enabled) {
+        mPullToRefreshHelper.setEnabled(enabled);
+    }
 }

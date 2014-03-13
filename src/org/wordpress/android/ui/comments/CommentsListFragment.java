@@ -37,7 +37,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -526,8 +525,9 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void finishActionMode() {
-        if (mActionMode != null)
+        if (mActionMode != null) {
             mActionMode.finish();
+        }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
@@ -536,6 +536,7 @@ public class CommentsListFragment extends Fragment {
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
+            mPullToRefreshHelper.setEnabled(false);
             return true;
         }
 
@@ -598,6 +599,7 @@ public class CommentsListFragment extends Fragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             getCommentAdapter().setEnableSelection(false);
+            mPullToRefreshHelper.setEnabled(true);
             mActionMode = null;
         }
     }
