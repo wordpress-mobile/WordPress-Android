@@ -1,13 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -27,13 +19,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -45,9 +30,24 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -253,13 +253,12 @@ public class PostsActivity extends WPActionBarActivity
 
     protected void popPostDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm
-                .findFragmentById(R.id.postDetail);
+        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f == null) {
             try {
                 fm.popBackStack();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
         }
     }
@@ -624,8 +623,8 @@ public class PostsActivity extends WPActionBarActivity
                 String shortlink = html.substring(location, location + 30);
                 shortlink = shortlink.substring(0, shortlink.indexOf("'"));
                 return shortlink;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
         }
 
@@ -633,25 +632,25 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public String getHTML(String urlSource) {
-          URL url;
-          HttpURLConnection conn;
-          BufferedReader rd;
-          String line;
-          String result = "";
-          try {
-             url = new URL(urlSource);
-             conn = (HttpURLConnection) url.openConnection();
-             conn.setRequestMethod("GET");
-             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-             while ((line = rd.readLine()) != null) {
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line;
+        String result = "";
+        try {
+            url = new URL(urlSource);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = rd.readLine()) != null) {
                 result += line;
-             }
-             rd.close();
-          } catch (Exception e) {
-             e.printStackTrace();
-          }
-          return result;
-       }
+            }
+            rd.close();
+        } catch (IOException e) {
+            AppLog.e(T.POSTS, e);
+        }
+        return result;
+    }
 
     @Override
     public void onPostAction(int action, final Post post) {

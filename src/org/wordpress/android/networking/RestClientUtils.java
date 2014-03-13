@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -360,9 +362,9 @@ public class RestClientUtils {
 
                     return new JSONObject(result);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(T.UTILS, e);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    AppLog.e(T.UTILS, e);
                 }
                 return null;
             }

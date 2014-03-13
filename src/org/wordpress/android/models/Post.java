@@ -189,7 +189,7 @@ public class Post implements Serializable {
         try {
             jArray = new JSONArray(custom_fields);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.POSTS, e);
         }
         return jArray;
     }
