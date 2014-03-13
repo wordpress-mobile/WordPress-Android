@@ -14,6 +14,7 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
     public static final int CREATE_ACCOUNT_REQUEST = 3;
+    public static final int SHOW_CERT_DETAILS = 4;
     public static String START_FRAGMENT_KEY = "start-fragment";
 
     private WelcomeFragmentSignIn mWelcomeFragmentSignIn;
@@ -46,11 +47,15 @@ public class WelcomeActivity extends SherlockFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
+
+        if (requestCode == SHOW_CERT_DETAILS) {
+            mWelcomeFragmentSignIn.askForSslTrust();
+        } else if (resultCode == RESULT_OK && data != null) {
             String username = data.getStringExtra("username");
             if (username != null) {
                 mWelcomeFragmentSignIn.signInDotComUser();
             }
+
         }
     }
 }
