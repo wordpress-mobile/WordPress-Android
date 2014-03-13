@@ -348,7 +348,6 @@ public class PostUploadService extends Service {
                     contentStruct.put("categories", postCategories);
             }
 
-
             contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
             contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
