@@ -30,6 +30,7 @@ public class OnTopMessage {
     private void init(Activity activity, ViewGroup root) {
         View v = activity.getLayoutInflater().inflate(R.layout.on_top_message, root);
         mLayout = (LinearLayout) v.findViewById(R.id.otm_layout);
+        mLayout.setClickable(true);
         mLayout.setVisibility(View.GONE);
         mTextView = (TextView) v.findViewById(R.id.otm_message);
         mHideAnimation = new AlphaAnimation(1.0f, 0.0f);
