@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.webkit.MimeTypeMap;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -137,7 +136,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
         // get the file extension from the fileURL
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        String fileExtension = StringUtils.notNullStr(MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType));
+        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         fileExtension = fileExtension.toUpperCase();
         // file type
         TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);

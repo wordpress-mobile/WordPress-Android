@@ -459,15 +459,9 @@ public class MediaUtils {
             return originalFileName;
 
         if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
-            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-            String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
-            if (!TextUtils.isEmpty(fileExtensionFromMimeType)) {
-                originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
-            } else {
-                //We're still without an extension - split the mime type and retrieve it
-                String[] split = mimeType.split("/");
-                String guessedExt = split.length > 1 ? split[1] : split[0];
-                originalFileName += "." + guessedExt;
+            String fileExtension = getExtensionForMimeType(mimeType);
+            if (!TextUtils.isEmpty(fileExtension)) {
+                originalFileName += "." + fileExtension;
             }
         } else {
             //No mimetype and no extension!!
@@ -475,5 +469,20 @@ public class MediaUtils {
         }
 
         return originalFileName;
+    }
+
+    public static String getExtensionForMimeType(String mimeType) {
+        if (TextUtils.isEmpty(mimeType))
+            return "";
+
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
+        if (TextUtils.isEmpty(fileExtensionFromMimeType)) {
+            // We're still without an extension - split the mime type and retrieve it
+            String[] split = mimeType.split("/");
+            fileExtensionFromMimeType = split.length > 1 ? split[1] : split[0];
+        }
+
+        return fileExtensionFromMimeType.toLowerCase();
     }
 }
