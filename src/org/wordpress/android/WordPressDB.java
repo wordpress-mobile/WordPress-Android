@@ -1063,6 +1063,7 @@ public class WordPressDB {
                 post.setCategories(c.getString(c.getColumnIndex("categories")));
                 post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
                 post.setDescription(c.getString(c.getColumnIndex("description")));
+                post.setMoreText(c.getString(c.getColumnIndex("mt_text_more")));
                 post.setLink(c.getString(c.getColumnIndex("link")));
                 post.setAllowComments(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_comments"))));
                 post.setAllowPings(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_pings"))));
