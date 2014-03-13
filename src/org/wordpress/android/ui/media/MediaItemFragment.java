@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -135,7 +136,6 @@ public class MediaItemFragment extends SherlockFragment {
     }
 
     public void loadMedia(String mediaId) {
-        String id = mediaId;
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
@@ -144,10 +144,10 @@ public class MediaItemFragment extends SherlockFragment {
             Cursor cursor;
 
             // if the id is null, get the first media item in the database
-            if (id == null) {
+            if (mediaId == null) {
                 cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
             } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, id);
+                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
             }
 
             refreshViews(cursor);
@@ -188,10 +188,11 @@ public class MediaItemFragment extends SherlockFragment {
 
         // added / upload date
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        if (mIsLocal)
+        if (mIsLocal) {
             mDateView.setText("Added on: " + date);
-        else
+        } else {
             mDateView.setText("Uploaded on: " + date);
+        }
 
         // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
@@ -280,6 +281,9 @@ public class MediaItemFragment extends SherlockFragment {
         }
 
         mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
+
+        // add a background color so something appears while image is downloaded
+        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.grey_light)));
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
@@ -292,7 +296,6 @@ public class MediaItemFragment extends SherlockFragment {
                 imageView.setImageBitmap(bitmap);
             } else {
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
-
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);

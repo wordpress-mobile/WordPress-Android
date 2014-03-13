@@ -181,10 +181,8 @@ public class MediaEditFragment extends SherlockFragment {
         if (blog != null && getActivity() != null) {
             String blogId = String.valueOf(blog.getLocalTableBlogId());
 
-            Cursor cursor = null;
-
             if (mMediaId != null) {
-                cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
+                Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
                 refreshViews(cursor);
                 cursor.close();
             } else {
@@ -194,14 +192,14 @@ public class MediaEditFragment extends SherlockFragment {
         }
     }
 
-    public void hideKeyboard() {
+    void hideKeyboard() {
         if (getActivity() != null) {
             InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    public void editMedia() {
+    void editMedia() {
         hideKeyboard();
 
         final String mediaId = this.getMediaId();
@@ -299,19 +297,19 @@ public class MediaEditFragment extends SherlockFragment {
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
 
-        String imageUri = null;
-        if (isLocal)
+        final String imageUri;
+        if (isLocal) {
             imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
-        else
+        } else {
             imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
+        }
         if (MediaUtils.isValidImage(imageUri)) {
 
             int width = cursor.getInt(cursor.getColumnIndex("width"));
             int height = cursor.getInt(cursor.getColumnIndex("height"));
 
-            float screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-
             // differentiating between tablet and phone
+            float screenWidth;
             if (this.isInLayout()) {
                 screenWidth = mLinearLayout.getMeasuredWidth();
             } else {

@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import java.util.List;
+import java.util.Locale;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,13 +27,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Activity for configuring blog specific settings.
@@ -316,7 +315,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                     WordPress.wpDB.deleteLastBlogId();
                     WordPress.currentBlog = null;
                     mBlogDeleted = true;
-                    TrustedSslDomainTable.removeTrustedDomain(blog.getUri());
                     activity.finish();
                 } else {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);

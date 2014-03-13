@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_gallery_settings_title"
             style="@style/MediaGalleryText"
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp" >
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/MediaGalleryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/white" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/MediaGalleryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/MediaGalleryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

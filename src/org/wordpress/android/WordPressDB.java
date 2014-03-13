@@ -1,38 +1,5 @@
 package org.wordpress.android;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Base64;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Note;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,6 +18,38 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Base64;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
 
@@ -167,7 +166,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
         CommentTable.createTables(db);
-        TrustedSslDomainTable.createTable(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -244,9 +242,6 @@ public class WordPressDB {
                 currentVersion++;
             case 23:
                 CommentTable.reset(db);
-                currentVersion++;
-            case 24:
-                // create table TrustedSslDomainTable
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

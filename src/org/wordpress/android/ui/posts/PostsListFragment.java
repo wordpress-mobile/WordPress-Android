@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -65,11 +66,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     mPullToRefreshHelper.setRefreshing(false);
                     return;
                 }
-                ((PostsActivity) getActivity()).checkForLocalChanges(true);
-                new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(),
-                        new ApiHelper.VerifyCredentialsCallback(getActivity())).execute(false);
+                PostsActivity postsActivity = (PostsActivity) getActivity();
+                postsActivity.checkForLocalChanges(true);
+                Blog currentBlog = WordPress.getCurrentBlog();
+                new ApiHelper.RefreshBlogContentTask(postsActivity, currentBlog,
+                        new ApiHelper.VerifyCredentialsCallback(postsActivity, currentBlog.isDotcomFlag())
+                ).execute(false);
             }
-        }, LinearLayout.class);
+        }, LinearLayout.class
+        );
         return view;
     }
 
