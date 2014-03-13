@@ -350,7 +350,6 @@ public class MediaEditFragment extends SherlockFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         if (!isInLayout()) {
-            menu.findItem(R.id.menu_refresh).setVisible(false);
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
 

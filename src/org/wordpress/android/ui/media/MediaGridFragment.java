@@ -32,6 +32,8 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
@@ -43,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
  * The grid displaying the media items.
@@ -82,6 +86,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
     private CustomSpinner mSpinner;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -169,8 +174,21 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         });
 
         restoreState(savedInstanceState);
-
         setupSpinnerAdapter();
+
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshMediaFromServer(0, false);
+                    }
+                }, LinearLayout.class);
 
         return view;
     }
@@ -310,17 +328,17 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
-
         // do not refresh if custom date filter is shown
-        if(WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE)
+        if (WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE) {
             return;
+        }
 
         // do not refresh if in search
-        if (mSearchTerm != null && mSearchTerm.length() > 0)
+        if (mSearchTerm != null && mSearchTerm.length() > 0) {
             return;
+        }
 
-        if(offset == 0 || !mIsRefreshing) {
-
+        if (offset == 0 || !mIsRefreshing) {
             if (offset == mOldMediaSyncOffset) {
                 // we're pulling the same data again for some reason. Pull from the beginning.
                 offset = 0;
@@ -350,17 +368,15 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                     // the activity may be gone by the time this finishes, so check for it
                     if (getActivity() != null && MediaGridFragment.this.isVisible()) {
                         getActivity().runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 refreshSpinnerAdapter();
                                 setFilter(mFilter);
                                 if (!auto)
                                     mGridView.setSelection(0);
-
-
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
+                                mPullToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -387,6 +403,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                                 mIsRefreshing = false;
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
+                                mPullToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -406,10 +423,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
             mGridAdapter.changeCursor(cursor);
         }
-    }
-
-    public boolean isRefreshing() {
-        return mIsRefreshing;
     }
 
     @Override
@@ -647,4 +660,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         }
     }
 
+    public void setRefreshing(boolean refreshing) {
+        mPullToRefreshHelper.setRefreshing(refreshing);
+    }
+
+    public void setPullToRefreshEnabled(boolean enabled) {
+        mPullToRefreshHelper.setEnabled(enabled);
+    }
 }

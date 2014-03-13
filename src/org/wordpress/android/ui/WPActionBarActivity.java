@@ -1,7 +1,6 @@
 
 package org.wordpress.android.ui;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,10 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -109,7 +103,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
-    protected boolean mShouldAnimateRefreshButton;
     protected boolean mShouldFinish;
     private boolean mBlogSpinnerInitialized;
     private boolean mReauthCanceled;
@@ -253,19 +246,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         return isXLargeLandscape();
     }
 
-    /*
-     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
-     * API 11 since hasFeature() requires API 11
-     */
-    @SuppressLint("NewApi")
-    private boolean hasActionBarOverlay() {
-        if (getWindow()!=null && Build.VERSION.SDK_INT >= 11) {
-            return getWindow().hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        } else {
-            return false;
-        }
-    }
-
     private void initMenuDrawer() {
         initMenuDrawer(-1);
     }
@@ -283,7 +263,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         // if the ActionBar overlays window content, we must insert a view which is the same
         // height as the ActionBar as the first header in the ListView - without this the
         // ActionBar will cover the first item
-        if (hasActionBarOverlay()) {
+        if (DisplayUtils.hasActionBarOverlay(getWindow())) {
             final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
             RelativeLayout header = new RelativeLayout(this);
             header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
@@ -675,31 +655,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * this to perform activity-specific cleanup upon signout
      */
     public void onSignout() {
-
-    }
-
-    public void startAnimatingRefreshButton(MenuItem refreshItem) {
-        if (refreshItem != null && !isAnimatingRefreshButton) {
-            isAnimatingRefreshButton = true;
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(
-                    getResources().getLayout(R.layout.menu_refresh_view), null);
-            RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF,
-                    0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim.setInterpolator(new LinearInterpolator());
-            anim.setRepeatCount(Animation.INFINITE);
-            anim.setDuration(1400);
-            iv.startAnimation(anim);
-            refreshItem.setActionView(iv);
-        }
-    }
-
-    public void stopAnimatingRefreshButton(MenuItem refreshItem) {
-        isAnimatingRefreshButton = false;
-        if (refreshItem != null && refreshItem.getActionView() != null) {
-            refreshItem.getActionView().clearAnimation();
-            refreshItem.setActionView(null);
-        }
     }
 
     @Override
