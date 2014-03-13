@@ -1,5 +1,13 @@
 package org.wordpress.android.ui.posts;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -19,6 +27,14 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -30,24 +46,10 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -335,8 +337,41 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
-            checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.VerifyCredentialsCallback(this)).execute(false);
+            //Check for local changes before starting the refresh
+            if (WordPress.getCurrentBlog() == null)
+                return true;
+           
+            final RefreshBlogContentTask refreshBlogContentTask = new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), 
+                    new ApiHelper.VerifyCredentialsCallback(this, WordPress.getCurrentBlog().isDotcomFlag()));
+            
+            boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+            if (hasLocalChanges) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+                dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
+                dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+                dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                PostsActivity.this.onRefresh(true);
+                                refreshBlogContentTask.execute(false);
+                            }
+                        });
+                dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                    int whichButton) {
+                                //just close the window
+                            }
+                        });
+                dialogBuilder.setCancelable(true);
+                if (!isFinishing()) {
+                    dialogBuilder.create().show();
+                }
+            } else {
+                //No local changes. Refresh!
+                onRefresh(true);
+                refreshBlogContentTask.execute(false);
+            }
             return true;
         } else if (itemId == R.id.menu_new_post) {
             newPost();
