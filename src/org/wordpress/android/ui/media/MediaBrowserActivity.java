@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,9 +31,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -50,7 +46,6 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
-import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -83,12 +78,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private FeatureSet mFeatureSet;
     private ActionMode mActionMode;
 
-    private Handler mHandler;
     private int mMultiSelectCount;
     private String mQuery;
-
-    public static ImageLoader imageLoader;
-    private RequestQueue mRequestQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,10 +90,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             finish();
             return;
         }
-
-        setupImageLoadingQueue();
-
-        mHandler = new Handler();
 
         setTitle(R.string.media);
 
@@ -321,24 +308,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         // check what features (e.g. video) the user has
         getFeatureSet();
-        setupImageLoadingQueue();
-    }
-
-    private void setupImageLoadingQueue(){
-        if( mRequestQueue!=null ){
-            VolleyUtils.cancelAllRequests(mRequestQueue);
-        }
-
-        if (WordPress.getCurrentBlog() != null && VolleyUtils.isCustomHTTPClientStackNeeded(WordPress.getCurrentBlog())) {
-            // Volley networking setup
-            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this, WordPress.getCurrentBlog()));
-            imageLoader = new ImageLoader(mRequestQueue, WordPress.getBitmapCache());
-            // http://stackoverflow.com/a/17035814
-            imageLoader.setBatchedResponseDelay(0);
-        } else {
-            mRequestQueue = null;
-            imageLoader = WordPress.imageLoader;
-        }
     }
 
     @Override

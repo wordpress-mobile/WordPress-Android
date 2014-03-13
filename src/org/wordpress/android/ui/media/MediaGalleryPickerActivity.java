@@ -84,15 +84,15 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
+        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        refereshViews();
+        refreshViews();
     }
     
     @Override
@@ -103,7 +103,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
-    private void refereshViews() {
+    private void refreshViews() {
         if (WordPress.getCurrentBlog() == null)
             return;
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());

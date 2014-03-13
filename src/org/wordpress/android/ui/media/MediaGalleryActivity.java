@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +18,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.Utils;
+
+import java.util.ArrayList;
 
 /**
  * An activity where the user can manage a media gallery
