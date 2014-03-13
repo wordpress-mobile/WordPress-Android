@@ -29,13 +29,10 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaUtils;
-import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
-
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -152,13 +149,15 @@ public class PostUploadService extends Service {
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
-                Intent notificationIntent = new Intent(context, (post.isPage()) ? PagesActivity.class : PostsActivity.class);
-                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                notificationIntent.setAction("android.intent.action.MAIN");
-                notificationIntent.addCategory("android.intent.category.LAUNCHER");
+                Intent notificationIntent = new Intent(context, PostsActivity.class);
+                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                          | Intent.FLAG_ACTIVITY_NEW_TASK
+                                          | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                notificationIntent.setAction(Intent.ACTION_MAIN);
+                notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
                 notificationIntent.putExtra("errorMessage", mErrorMessage);
+                notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
                 if (mErrorUnavailableVideoPress) {
                     notificationIntent.putExtra("errorInfoTitle", getString(R.string.learn_more));
                     notificationIntent.putExtra("errorInfoLink", Constants.videoPressURL);
@@ -194,10 +193,12 @@ public class PostUploadService extends Service {
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
             Intent notificationIntent = new Intent(context, PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            notificationIntent.setAction("android.intent.action.MAIN");
-            notificationIntent.addCategory("android.intent.category.LAUNCHER");
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                      | Intent.FLAG_ACTIVITY_NEW_TASK
+                                      | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            notificationIntent.setAction(Intent.ACTION_MAIN);
+            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
