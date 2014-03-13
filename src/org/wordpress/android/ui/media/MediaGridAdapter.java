@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -52,6 +53,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private final int mLocalImageWidth;
     private final LayoutInflater mInflater;
     private boolean mIsCurrentBlogPhotonCapable;
+    private ImageLoader mImageLoader;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -67,7 +69,11 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
+    public MediaGridAdapter(Context context,
+                            Cursor c,
+                            int flags,
+                            ArrayList<String> checkedItems,
+                            ImageLoader imageLoader) {
         super(context, c, flags);
 
         mCheckedItems = checkedItems;
@@ -75,8 +81,17 @@ public class MediaGridAdapter extends CursorAdapter {
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
+        setImageLoader(imageLoader);
 
         checkPhotonCapable();
+    }
+
+    void setImageLoader(ImageLoader imageLoader) {
+        if (imageLoader != null) {
+            mImageLoader = imageLoader;
+        } else {
+            mImageLoader = WordPress.imageLoader;
+        }
     }
 
     private void checkPhotonCapable() {
@@ -294,7 +309,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
             if (MediaUtils.isValidImage(filepath)) { 
                 imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, MediaImageLoader.getInstance());
+                imageView.setImageUrl(thumbnailURL, mImageLoader);
             } else {
                 imageView.setImageResource(placeholderResId);
             }

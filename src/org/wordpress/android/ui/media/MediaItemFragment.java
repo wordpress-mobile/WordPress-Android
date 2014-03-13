@@ -24,6 +24,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -57,6 +58,7 @@ public class MediaItemFragment extends SherlockFragment {
     private TextView mFileTypeView;
     private TextView mDimensionsView;
     private MediaItemFragmentCallback mCallback;
+    private ImageLoader mImageLoader;
 
     private boolean mIsLocal;
     
@@ -79,6 +81,7 @@ public class MediaItemFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImageLoader = MediaImageLoader.getInstance();
         setHasOptionsMenu(true);
     }
     
@@ -255,9 +258,9 @@ public class MediaItemFragment extends SherlockFragment {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
                     String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int)screenWidth);
-                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, MediaImageLoader.getInstance());
+                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, mImageLoader);
                 } else {
-                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, MediaImageLoader.getInstance());
+                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
                 }
             }
             mImageView.setVisibility(View.VISIBLE);

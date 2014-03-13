@@ -131,12 +131,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     @Override
-    protected void onDestroy() {
-        MediaImageLoader.reset();
-        super.onDestroy();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_QUERY, mQuery);
@@ -314,9 +308,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 startAnimatingRefreshButton();
             }
         }
-
-        // reset the ImageLoader in case auth requirements have changed
-        MediaImageLoader.reset();
 
         // check what features (e.g. video) the user has
         getFeatureSet();

@@ -84,17 +84,11 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
+        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        MediaImageLoader.reset();
-        super.onDestroy();
-    }
-    
     @Override
     public void onResume() {
         super.onResume();

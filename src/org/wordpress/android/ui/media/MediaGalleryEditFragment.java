@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
@@ -23,6 +20,9 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * Fragment where containing a drag-sort listview where the user can drag items
  * to change their position in a media gallery
@@ -42,7 +42,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         if (savedInstanceState != null)
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
             
-        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true);
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, MediaImageLoader.getInstance());
         
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 

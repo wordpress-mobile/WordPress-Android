@@ -135,7 +135,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         mCheckedItems = new ArrayList<String>();
         mFiltersText = new String[Filter.values().length];
 
-        mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems);
+        mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems, MediaImageLoader.getInstance());
         mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
@@ -568,7 +568,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             String tag = (String) imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = MediaImageLoader.getInstance().get(tag, new ImageListener() {
+                ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) { }
@@ -627,11 +627,17 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         return mHasRetrievedAllMedia;
     }
 
-    public void reset() {
+    /*
+     * called by activity when blog is changed
+     */
+    protected void reset() {
         mCheckedItems.clear();
+
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
+
+        mGridAdapter.setImageLoader(MediaImageLoader.getInstance());
         mGridAdapter.changeCursor(null);
 
         resetSpinnerAdapter();

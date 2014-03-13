@@ -23,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -57,6 +58,7 @@ public class MediaEditFragment extends SherlockFragment {
     private String mMediaId;
     private ScrollView mScrollView;
     private View mLinearLayout;
+    private ImageLoader mImageLoader;
 
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
@@ -78,6 +80,7 @@ public class MediaEditFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mImageLoader = MediaImageLoader.getInstance();
 
         // retain this fragment across configuration changes
         setRetainInstance(true);
@@ -328,7 +331,7 @@ public class MediaEditFragment extends SherlockFragment {
                 loadLocalImage(mLocalImageView, imageUri, width, height);
                 mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             } else {
-                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, MediaImageLoader.getInstance());
+                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
                 mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             }
 
