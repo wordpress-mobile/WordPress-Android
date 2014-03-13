@@ -20,7 +20,7 @@ public class EditPostTest extends ActivityRobotiumTestCase<PostsActivity> {
         WordPressDB wpdb = WordPress.wpDB;
         Post post = new Post(59073674, false);
         post.setRemotePostId(null);
-        wpdb.savePost(post, 59073674);
+        wpdb.savePost(post);
         mSolo.clickOnText("null postid");
     }
 }
