@@ -336,12 +336,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlog(int id) {
-        try {
-            currentBlog = wpDB.instantiateBlogByLocalId(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        currentBlog = wpDB.instantiateBlogByLocalId(id);
         return currentBlog;
     }
 
