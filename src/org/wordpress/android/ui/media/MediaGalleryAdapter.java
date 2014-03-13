@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
@@ -19,80 +20,103 @@ import org.wordpress.android.util.Utils;
  * Adapter for a drag-sort listview where the user can drag media items to sort their order 
  * for a media gallery
  */
-public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
+class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
+    private ImageLoader mImageLoader;
 
-    public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery) {
+    public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery, ImageLoader imageLoader) {
         super(context, layout, c, autoRequery);
+        setImageLoader(imageLoader);
     }
 
+    void setImageLoader(ImageLoader imageLoader) {
+        if (imageLoader != null) {
+            mImageLoader = imageLoader;
+        } else {
+            mImageLoader = WordPress.imageLoader;
+        }
+    }
+
+    private static class GridViewHolder {
+        private final TextView filenameView;
+        private final TextView titleView;
+        private final TextView uploadDateView;
+        private final ImageView imageView;
+        private final TextView fileTypeView;
+        private final TextView dimensionView;
+
+        GridViewHolder(View view) {
+            filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
+            titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
+            uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
+            imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
+            fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
+            dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
+        }
+    }
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        final GridViewHolder holder;
+        if (view.getTag() instanceof GridViewHolder) {
+            holder = (GridViewHolder) view.getTag();
+        } else {
+            holder = new GridViewHolder(view);
+            view.setTag(holder);
+        }
 
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
-        TextView filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        if (filenameView != null) {
-            filenameView.setText("File name: " + fileName);
+        if (holder.filenameView != null) {
+            holder.filenameView.setText("File name: " + fileName);
         }
         
         // title of media
-        TextView titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
         String title = cursor.getString(cursor.getColumnIndex("title"));
         if (title == null || title.equals(""))
             title = fileName;
-        titleView.setText(title);
+        holder.titleView.setText(title);
         
         // upload date
-        TextView uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
-        if (uploadDateView != null) {
+        if (holder.uploadDateView != null) {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-            uploadDateView.setText("Uploaded on: " + date);
+            holder.uploadDateView.setText("Uploaded on: " + date);
         }
 
         // load image
-        final ImageView imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
         if (isLocalFile) {
             // should not be local file
         } else {
-            loadNetworkImage(cursor, (NetworkImageView) imageView);
+            loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
-        
-        String fileType = null;
         
         // get the file extension from the fileURL
         String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("filePath")));
         if (filePath.isEmpty())
             filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("fileURL")));
             
-        fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        
-        
         // file type
-        TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
+        String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         if  (Utils.isXLarge(context)) {
-            fileTypeView.setText("File type: " + fileType);
+            holder.fileTypeView.setText("File type: " + fileType);
         } else {
-            fileTypeView.setText(fileType);
+            holder.fileTypeView.setText(fileType);
         }
-        
 
         // dimensions
-        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-        if (dimensionView != null) {
+        if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = cursor.getInt(cursor.getColumnIndex("width"));
                 int height = cursor.getInt(cursor.getColumnIndex("height"));
                 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
-                    dimensionView.setText("Dimensions: " + dimensions);
-                    dimensionView.setVisibility(View.VISIBLE);
+                    holder.dimensionView.setText("Dimensions: " + dimensions);
+                    holder.dimensionView.setVisibility(View.VISIBLE);
                 }
             } else {
-                dimensionView.setVisibility(View.GONE);
+                holder.dimensionView.setVisibility(View.GONE);
             }
         }
 
@@ -108,7 +132,7 @@ public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         Uri uri = Uri.parse(thumbnailURL);
         if (uri != null && MediaUtils.isValidImage(uri.getLastPathSegment())) {
             imageView.setTag(thumbnailURL);
-            imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+            imageView.setImageUrl(thumbnailURL, mImageLoader);
         } else {
             imageView.setImageUrl(null, null);
         }

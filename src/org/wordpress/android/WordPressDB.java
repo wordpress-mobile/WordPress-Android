@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Note;
@@ -166,7 +165,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(CREATE_TABLE_NOTES);
         CommentTable.createTables(db);
-        TrustedSslDomainTable.createTable(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -242,9 +240,6 @@ public class WordPressDB {
                 currentVersion++;
             case 23:
                 CommentTable.reset(db);
-                currentVersion++;
-            case 24:
-                // create table TrustedSslDomainTable
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -1507,9 +1502,7 @@ public class WordPressDB {
     }
 
     public void deleteMediaFilesForPost(Post post) {
-
         db.delete(MEDIA_TABLE, "blogId='" + post.getLocalTableBlogId() + "' AND postID=" + post.getLocalTablePostId(), null);
-
     }
 
     /** Get the queued media files for upload for a given blogId **/
