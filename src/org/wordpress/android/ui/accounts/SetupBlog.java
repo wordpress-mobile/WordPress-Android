@@ -1,25 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.net.ssl.SSLHandshakeException;
-
 import android.content.Context;
 import android.webkit.URLUtil;
-
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-import org.xmlrpc.android.XMLRPCFault;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -31,6 +13,23 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.Utils;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.net.ssl.SSLHandshakeException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
@@ -191,10 +190,10 @@ public class SetupBlog {
         if (e != null && e.getMessage().contains("401")) {
             mHttpAuthRequired = true;
             return mHttpAuthRequired;
-        } 
+        }
         return false;
     }
-    
+
     private String getmXmlrpcByUserEnteredPath(String baseUrl) {
         String xmlRpcUrl = null;
         // Try the user entered path
@@ -241,7 +240,7 @@ public class SetupBlog {
         } catch (XmlPullParserException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         }
-        
+
         return null;
     }
 

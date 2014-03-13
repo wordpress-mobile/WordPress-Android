@@ -3,6 +3,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
         <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -19,7 +20,7 @@
         <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
-        
+
         <item name="android:activatedBackgroundIndicator">@drawable/list_bg_selector</item>
         <item name="activatedBackgroundIndicator">@drawable/list_bg_selector</item>
     </style>
@@ -44,5 +45,5 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
     </style>
-  
+
 </resources>
