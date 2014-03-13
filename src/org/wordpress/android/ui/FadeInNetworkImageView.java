@@ -19,9 +19,6 @@ import org.wordpress.android.util.SysUtils;
  */
 
 public class FadeInNetworkImageView extends NetworkImageView {
-    
-    private static final int FADE_IN_TIME_MS = 250;
- 
     public FadeInNetworkImageView(Context context) {
         super(context);
     }
@@ -39,14 +36,18 @@ public class FadeInNetworkImageView extends NetworkImageView {
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
 
+        if (getContext() == null)
+            return;
+        int duration = getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
+
         // use faster property animation if device supports it
         if (SysUtils.isGteAndroid4()) {
             ObjectAnimator alpha = ObjectAnimator.ofFloat(this, View.ALPHA, 0.25f, 1f);
-            alpha.setDuration(FADE_IN_TIME_MS);
+            alpha.setDuration(duration);
             alpha.start();
         } else {
             AlphaAnimation animation = new AlphaAnimation(0.25f, 1f);
-            animation.setDuration(FADE_IN_TIME_MS);
+            animation.setDuration(duration);
             this.startAnimation(animation);
         }
     }
