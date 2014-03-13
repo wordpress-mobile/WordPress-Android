@@ -7,11 +7,6 @@
         android:showAsAction="collapseActionView|ifRoom"
         android:title="@string/menu_search"/>
     <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/ab_icon_refresh"
-        android:showAsAction="always"
-        android:title="@string/refresh"/>
-    <item
         android:id="@+id/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="never"

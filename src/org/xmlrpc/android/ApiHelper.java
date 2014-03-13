@@ -1,5 +1,7 @@
 package org.xmlrpc.android;
 
+import java.util.Map;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +61,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class ApiHelper {
-    public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
+    public enum ErrorType {
+        NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
@@ -211,7 +213,7 @@ public class ApiHelper {
         });
         alert.show();
     }
-    
+
     public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<PostsActivity> activityWeakRef;
         private boolean isWPCOM;
@@ -227,7 +229,6 @@ public class ApiHelper {
             if (act == null || act.isFinishing()) {
                 return;
             }
-            act.onRefresh(false);
         }
 
         @Override
@@ -236,7 +237,6 @@ public class ApiHelper {
             if (act == null || act.isFinishing()) {
                 return;
             }
-            act.onRefresh(false);
             if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 askForSslTrust(act);
@@ -683,7 +683,7 @@ public class ApiHelper {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
         }
-        
+
         @Override
         protected void onPostExecute(Integer result) {
             if (mCallback != null) {

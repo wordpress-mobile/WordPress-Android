@@ -56,7 +56,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     private NotificationsListFragment mNotesList;
-    private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
@@ -175,6 +174,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     openNote(mNotesList.getNotesAdapter().getItem(0));
                 }
             }
+            mNotesList.animateRefresh(true);
             refreshNotes();
         }
     }
@@ -182,9 +182,6 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                refreshNotes();
-                return true;
             case android.R.id.home:
                 if (isLargeOrXLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
@@ -208,11 +205,6 @@ public class NotificationsActivity extends WPActionBarActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
         return true;
     }
 
@@ -348,6 +340,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        mNotesList.animateRefresh(true);
         refreshNotes();
     }
 
@@ -360,13 +353,11 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    private void refreshNotes(){
+    public void refreshNotes() {
         if (!NetworkUtils.checkConnection(this))
             return;
 
         mFirstLoadComplete = false;
-        mShouldAnimateRefreshButton = true;
-        startAnimatingRefreshButton(mRefreshMenuItem);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(final List<Note> notes) {
@@ -381,7 +372,7 @@ public class NotificationsActivity extends WPActionBarActivity
                             @Override
                             public void run() {
                                 refreshNotificationsListFragment(notes);
-                                stopAnimatingRefreshButton(mRefreshMenuItem);
+                                mNotesList.animateRefresh(false);
                             }
                         });
                     }
@@ -392,11 +383,8 @@ public class NotificationsActivity extends WPActionBarActivity
                 //We need to show an error message? and remove the loading indicator from the list?
                 mFirstLoadComplete = true;
                 mNotesList.getNotesAdapter().addAll(new ArrayList<Note>(), true);
-
                 ToastUtils.showToastOrAuthAlert(NotificationsActivity.this, error, getString(R.string.error_refresh_notifications));
-
-                stopAnimatingRefreshButton(mRefreshMenuItem);
-                mShouldAnimateRefreshButton = false;
+                mNotesList.animateRefresh(false);
             }
         };
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
