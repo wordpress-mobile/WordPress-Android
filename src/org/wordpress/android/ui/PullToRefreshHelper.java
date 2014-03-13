@@ -25,6 +25,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
     private RefreshListener mRefreshListener;
     private OnTopMessage mOnTopMessage;
     private boolean mShowTip;
+    private boolean mTipShouldBeVisible;
     private Context mContext;
 
     public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
@@ -83,19 +84,27 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     public void hideTipTemporarily() {
-        if (mShowTip && mOnTopMessage != null) {
+        if (mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
             mOnTopMessage.hideAnimated();
         }
+        mTipShouldBeVisible = false;
     }
 
     public void showTip() {
-        if (mShowTip && mOnTopMessage != null) {
+        if (mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
             mOnTopMessage.showAnimated();
         }
+        mTipShouldBeVisible = true;
     }
 
     public void setEnabled(boolean enabled) {
+        if (mTipShouldBeVisible && !enabled) {
+            hideTipTemporarily();
+        }
         mPullToRefreshLayout.setEnabled(enabled);
+        if (mTipShouldBeVisible && enabled) {
+            showTip();
+        }
     }
 
     private void hideTip() {
@@ -106,6 +115,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             editor.commit();
             mOnTopMessage.hideAnimated();
             mShowTip = false;
+            mTipShouldBeVisible = false;
         }
     }
 
@@ -120,6 +130,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             }
             mOnTopMessage.setMessage(activity.getString(R.string.ptr_tip_message));
             mOnTopMessage.show();
+            mTipShouldBeVisible = true;
         }
     }
 }
