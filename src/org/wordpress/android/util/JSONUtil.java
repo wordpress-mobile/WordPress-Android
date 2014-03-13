@@ -81,7 +81,7 @@ public class JSONUtil {
     /**
      * Given a JSONArray and a query (e.g. [0].property) it will traverse the array and
      * pull out the requested property.
-     * 
+     *
      * Acceptable indexes include negative numbers to reference items from the end of
      * the list as well as "last" and "first" as more explicit references to "0" and "-1"
      */
@@ -142,22 +142,22 @@ public class JSONUtil {
             try {
                 stringList.add(jsonArray.getString(i));
             } catch (JSONException e) {
-                e.printStackTrace();
+                AppLog.e(T.UTILS, e);
             }
         }
         return stringList;
     }
-    
+
     /**
      * Convert a string list in a JSONArray
      */
     public static JSONArray fromStringListToJSONArray(ArrayList<String> stringList) {
         JSONArray jsonArray = new JSONArray();
-        if(stringList != null)
+        if (stringList != null) {
             for (int i = 0; i < stringList.size(); i++) {
                 jsonArray.put(stringList.get(i));
             }
-        
+        }
         return jsonArray;
     }
 

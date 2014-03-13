@@ -1180,8 +1180,11 @@ public class ApiHelper {
                     }
                     eventType = parser.next();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.API, e);
+                return null;
+            } catch (IOException e) {
+                AppLog.e(T.API, e);
                 return null;
             }
         }
