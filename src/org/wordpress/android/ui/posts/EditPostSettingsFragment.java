@@ -169,8 +169,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             String activePostFormat = "standard";
 
 
-            if (!mActivity.getPost().getPostFormat().equals(""))
+            if (!TextUtils.isEmpty(mActivity.getPost().getPostFormat())) {
                 activePostFormat = mActivity.getPost().getPostFormat();
+            }
+
             for (int i = 0; i < mPostFormats.length; i++) {
                 if (mPostFormats[i].equals(activePostFormat))
                     postFormatSpinner.setSelection(i);

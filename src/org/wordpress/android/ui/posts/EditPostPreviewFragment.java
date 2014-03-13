@@ -38,8 +38,8 @@ public class EditPostPreviewFragment extends SherlockFragment {
 
     public void loadPost(Post post) {
 
-        // Don't load if the Post object of title are null, see #395
-        if (post == null || post.getTitle() == null)
+        // Don't load if the Post object is null, see #395
+        if (post == null)
             return;
 
         String postTitle = "<h1>" + post.getTitle() + "</h1>";

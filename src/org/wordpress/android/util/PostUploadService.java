@@ -280,12 +280,12 @@ public class PostUploadService extends Service {
                 return false;
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
-            String[] theCategories = null;
+            String[] postCategories = null;
             if (categoriesJsonArray != null) {
-                theCategories = new String[categoriesJsonArray.length()];
+                postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
-                        theCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
+                        postCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
                     } catch (JSONException e) {
                         AppLog.e(T.POSTS, e);
                     }
@@ -300,7 +300,7 @@ public class PostUploadService extends Service {
 
                 if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
                     String tagline = prefs.getString("wp_pref_post_signature", "");
-                    if (tagline != null) {
+                    if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
                         if (TextUtils.isEmpty(moreContent))
                             descriptionContent += tag;
@@ -342,16 +342,14 @@ public class PostUploadService extends Service {
 
             contentStruct.put("description", descriptionContent);
             if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getKeywords())) {
-                    contentStruct.put("mt_keywords", post.getKeywords());
-                }
+                contentStruct.put("mt_keywords", post.getKeywords());
 
-                if (theCategories != null && theCategories.length > 0)
-                    contentStruct.put("categories", theCategories);
+                if (postCategories != null && postCategories.length > 0)
+                    contentStruct.put("categories", postCategories);
             }
 
-            if (post.getPostExcerpt() != null)
-                contentStruct.put("mt_excerpt", post.getPostExcerpt());
+
+            contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
             contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
             if (!post.isPage()) {
@@ -385,11 +383,10 @@ public class PostUploadService extends Service {
             }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
             nm.notify(notificationID, n);
-            if (!TextUtils.isEmpty(post.getPassword())) {
-                contentStruct.put("wp_password", post.getPassword());
-            }
-            Object[] params;
 
+            contentStruct.put("wp_password", post.getPassword());
+
+            Object[] params;
             if (post.isLocalDraft() && !post.isUploaded())
                 params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};

@@ -136,14 +136,10 @@ public class ViewPostFragment extends Fragment {
     }
 
     protected void loadPostPreview() {
-
-        if (WordPress.currentPost != null) {
-            if (WordPress.currentPost.getPermaLink() != null && !WordPress.currentPost.getPermaLink().equals("")) {
-                Intent i = new Intent(getActivity(), PreviewPostActivity.class);
-                startActivity(i);
-            }
+        if (WordPress.currentPost != null && !TextUtils.isEmpty(WordPress.currentPost.getPermaLink())) {
+            Intent i = new Intent(getActivity(), PreviewPostActivity.class);
+            startActivity(i);
         }
-
     }
 
     public void onAttach(Activity activity) {
