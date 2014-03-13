@@ -357,7 +357,7 @@ public class Post implements Serializable {
     }
 
     public String getQuickPostType() {
-        return quickPostType;
+        return StringUtils.notNullStr(quickPostType);
     }
 
     /**

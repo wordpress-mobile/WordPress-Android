@@ -378,7 +378,7 @@ public class PostUploadService extends Service {
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            if (post.getQuickPostType() != null) {
+            if (!TextUtils.isEmpty(post.getQuickPostType())) {
                 client.addQuickPostHeader(post.getQuickPostType());
             }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
