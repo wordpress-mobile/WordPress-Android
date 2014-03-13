@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,9 +31,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -51,7 +47,6 @@ import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.Utils;
-import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -80,17 +75,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private MenuItem mRefreshMenuItem;
     private Menu mMenu;
     private FeatureSet mFeatureSet;
     private ActionMode mActionMode;
 
-    private Handler mHandler;
     private int mMultiSelectCount;
     private String mQuery;
-    
-    public static ImageLoader imageLoader;
-    private RequestQueue mRequestQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,10 +91,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             finish();
             return;
         }
-
-        setupImageLoadingQueue();
-        
-        mHandler = new Handler();
 
         setTitle(R.string.media);
 
@@ -169,7 +155,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         getIntent().setAction(null);
     }
 
-    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
         }
@@ -298,15 +284,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaEditFragment.loadMedia(null);
 
             // hide if in phone
-            if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible())
+            if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
                 getSupportFragmentManager().popBackStack();
+            }
         }
 
         getSupportFragmentManager().executePendingTransactions();
 
         // clear item fragment (only visible on phone)
-        if (mMediaItemFragment != null && mMediaItemFragment.isVisible())
+        if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             getSupportFragmentManager().popBackStack();
+        }
 
         // reset the media fragment
         if (mMediaGridFragment != null) {
@@ -315,33 +303,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
                 mMediaGridFragment.refreshMediaFromServer(0, false);
-                startAnimatingRefreshButton();
+                mMediaGridFragment.setRefreshing(true);
             }
         }
 
         // check what features (e.g. video) the user has
         getFeatureSet();
-        
-        setupImageLoadingQueue();
-    };
-
-    private void setupImageLoadingQueue(){
-        if( mRequestQueue!=null ){
-            VolleyUtils.cancelAllRequests(mRequestQueue);
-        }
-        
-        if (WordPress.getCurrentBlog() != null && VolleyUtils.isCustomHTTPClientStackNeeded(WordPress.getCurrentBlog())) {
-            // Volley networking setup
-            mRequestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this, WordPress.getCurrentBlog()));
-            imageLoader = new ImageLoader(mRequestQueue, WordPress.getBitmapCache());
-            // http://stackoverflow.com/a/17035814
-            imageLoader.setBatchedResponseDelay(0);
-        } else {
-            mRequestQueue = null;
-            imageLoader = WordPress.imageLoader;
-        }
     }
-    
+
     @Override
     public void onMediaItemSelected(String mediaId) {
 
@@ -373,29 +342,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaEditFragment.loadMedia(mediaId);
         }
 
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
-        stopAnimatingRefreshButton();
-
         getSupportMenuInflater().inflate(R.menu.media, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        startAnimatingRefreshButton();
-
         return true;
-    }
-
-    private void startAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null && mMediaGridFragment != null && mMediaGridFragment.isRefreshing())
-            startAnimatingRefreshButton(mRefreshMenuItem);
-    }
-
-    private void stopAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null)
-            stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     @Override
@@ -424,7 +378,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
             return true;
         } else if (itemId == R.id.menu_search) {
-            stopAnimatingRefreshButton(mRefreshMenuItem);
             mSearchMenuItem = item;
             mSearchMenuItem.setOnActionExpandListener(this);
             mSearchMenuItem.expandActionView();
@@ -436,13 +389,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             if (!TextUtils.isEmpty(mQuery)) {
                 onQueryTextSubmit(mQuery);
                 mSearchView.setQuery(mQuery, true);
-            }
-            return true;
-        } else if (itemId == R.id.menu_refresh) {
-
-            if (mMediaGridFragment != null) {
-                mMediaGridFragment.refreshMediaFromServer(0, false);
-                startAnimatingRefreshButton();
             }
             return true;
         } else if (itemId == R.id.menu_edit_media) {
@@ -508,24 +454,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemListDownloaded() {
-        stopAnimatingRefreshButton();
-
-        if (mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
-            mMediaItemFragment.loadDefaultMedia();
+        if (mMediaItemFragment != null) {
+            mMediaGridFragment.setRefreshing(false);
+            if (mMediaItemFragment.isInLayout()) {
+                mMediaItemFragment.loadDefaultMedia();
+            }
         }
     }
 
     @Override
     public void onMediaItemListDownloadStart() {
-        // start animation delayed to prevent glitch where the progress spinner
-        // disappears when it is started and stopped and then restarted too quickly in succession
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                startAnimatingRefreshButton();
-            }
-        }, 500);
+        mMediaGridFragment.setRefreshing(true);
     }
 
     @Override
@@ -570,10 +509,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // load last search query
         if (!TextUtils.isEmpty(mQuery))
             onQueryTextChange(mQuery);
-
-        mMenu.findItem(R.id.menu_refresh).setVisible(false);
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
-
         return true;
     }
 
@@ -588,8 +524,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilterVisibility(View.VISIBLE);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
-
-        mMenu.findItem(R.id.menu_refresh).setVisible(true);
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         return true;
     }
@@ -723,6 +657,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.media_multiselect, menu);
+        mMediaGridFragment.setPullToRefreshEnabled(false);
         return true;
     }
 
@@ -763,6 +698,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         mActionMode = null;
+        mMediaGridFragment.setPullToRefreshEnabled(true);
         cancelMultiSelect();
     }
 

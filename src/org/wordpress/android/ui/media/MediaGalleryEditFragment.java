@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
@@ -23,6 +20,9 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * Fragment where containing a drag-sort listview where the user can drag items
  * to change their position in a media gallery
@@ -31,7 +31,6 @@ import org.wordpress.android.WordPress;
 public class MediaGalleryEditFragment extends SherlockFragment implements DropListener, RemoveListener {
 
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
-    private DragSortListView mGridView;
     private MediaGalleryAdapter mGridAdapter;
     private ArrayList<String> mIds;
     
@@ -43,15 +42,15 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         if (savedInstanceState != null)
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
             
-        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true);
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, MediaImageLoader.getInstance());
         
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
-        
-        mGridView = (DragSortListView) view.findViewById(R.id.edit_media_gallery_gridview);
-        mGridView.setAdapter(mGridAdapter);
-        mGridView.setOnCreateContextMenuListener(this);
-        mGridView.setDropListener(this);
-        mGridView.setRemoveListener(this);
+
+        DragSortListView gridView = (DragSortListView) view.findViewById(R.id.edit_media_gallery_gridview);
+        gridView.setAdapter(mGridAdapter);
+        gridView.setOnCreateContextMenuListener(this);
+        gridView.setDropListener(this);
+        gridView.setRemoveListener(this);
         refreshGridView();
         
         return view;
@@ -97,21 +96,6 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         return positions;
     }
 
-    public void addMediaIds(ArrayList<String> ids) {
-        if (ids == null)
-            return;
-        
-        if (mIds == null) {
-            mIds = ids;
-        } else {
-            for (String currentID : ids) {
-                if ( ! mIds.contains(currentID))
-                    mIds.add(currentID);
-            }
-        }
-        refreshGridView();
-    }
-
     public void setMediaIds(ArrayList<String> ids) {
         mIds = ids;
         refreshGridView();
@@ -129,11 +113,11 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
     
     private class OrderedCursor extends CursorWrapper {
 
-        int mPos;
-        private int mCount;
+        final int mPos;
+        private final int mCount;
         
         // a map of custom position to cursor position
-        private SparseIntArray mPositions;
+        private final SparseIntArray mPositions;
         
         /** A wrapper to allow for a custom order of items in a cursor **/
         public OrderedCursor(Cursor cursor, SparseIntArray positions) {

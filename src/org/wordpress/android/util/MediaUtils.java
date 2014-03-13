@@ -43,7 +43,6 @@ public class MediaUtils {
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
         public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
-        public static final int ACTIVITY_REQUEST_CODE_BROWSE_FILES = 1400;
     }
     
     public interface LaunchCameraCallback {
@@ -59,7 +58,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isDocument(String url) {
+    private static boolean isDocument(String url) {
         if (url == null)
             return false;
         
@@ -68,7 +67,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isPowerpoint(String url) {
+    private static boolean isPowerpoint(String url) {
         if (url == null)
             return false;
         
@@ -77,7 +76,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isSpreadsheet(String url) {
+    private static boolean isSpreadsheet(String url) {
         if (url == null)
             return false;
         
@@ -86,7 +85,7 @@ public class MediaUtils {
         return false;
     }
     
-    public static boolean isVideo(String url) {
+    private static boolean isVideo(String url) {
         if (url == null)
             return false;
         if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") || 
@@ -211,9 +210,7 @@ public class MediaUtils {
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
         
-        Uri uri = Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
-        
-        return uri;
+        return Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
     }
     
     /**
@@ -387,8 +384,7 @@ public class MediaUtils {
             output.close();
             input.close();
 
-            Uri newUri = Uri.fromFile(f);
-            return newUri;
+            return Uri.fromFile(f);
         } catch (Exception e) {
             e.printStackTrace();
         }
