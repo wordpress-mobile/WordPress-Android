@@ -201,7 +201,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if  (Utils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
             holder.fileTypeView.setText("File type: " + fileExtension);
         } else {
-            holder.fileTypeView.setText(fileExtension.toUpperCase());
+            holder.fileTypeView.setText(fileExtension);
         }
 
         // dimensions
