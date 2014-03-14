@@ -34,7 +34,7 @@ public class AppLogViewerActivity extends SherlockFragmentActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mTxtLogViewer = (TextView) findViewById(R.id.text_log);
-        mTxtLogViewer.setText(Html.fromHtml(AppLog.toHtml()));
+        mTxtLogViewer.setText(Html.fromHtml(AppLog.toHtml(this)));
 
         // this is necessary to enable the textView to scroll vertically
         mTxtLogViewer.setMovementMethod(ScrollingMovementMethod.getInstance());

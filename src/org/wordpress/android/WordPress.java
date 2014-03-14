@@ -38,7 +38,6 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -89,13 +88,10 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
-        versionName = getVersionName();
-
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.i(T.UTILS, "WordPress Android version: " + versionName);
-        AppLog.i(T.UTILS, "Android device name: " + DeviceUtils.getInstance().getDeviceName(this));
 
+        versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
@@ -235,23 +231,18 @@ public class WordPress extends Application {
         }
     }
 
-    /**
-     * Get versionName from Manifest.xml
-     *
-     * @return versionName
-     */
-    private String getVersionName() {
-        PackageManager pm = getPackageManager();
+    public interface OnPostUploadedListener {
+        public abstract void OnPostUploaded(String postId);
+    }
+
+    public static String getVersionName(Context context) {
+        PackageManager pm = context.getPackageManager();
         try {
-            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }
-    }
-
-    public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(String postId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
