@@ -44,7 +44,7 @@ public class AppLogViewerActivity extends SherlockFragmentActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, mTxtLogViewer.getText().toString());
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getTitle());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)));
         } catch (android.content.ActivityNotFoundException ex) {
