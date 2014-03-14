@@ -18,9 +18,9 @@ public class EditPostTest extends ActivityRobotiumTestCase<PostsActivity> {
         login();
         mSolo.clickOnText(mSolo.getString(R.string.posts));
         WordPressDB wpdb = WordPress.wpDB;
-        Post post = new Post(59073674, 333333, false);
-        post.setPostid(null);
-        wpdb.savePost(post, 59073674);
+        Post post = new Post(59073674, false);
+        post.setRemotePostId(null);
+        wpdb.savePost(post);
         mSolo.clickOnText("null postid");
     }
 }

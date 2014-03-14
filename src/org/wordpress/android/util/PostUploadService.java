@@ -28,7 +28,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
@@ -38,14 +37,9 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -144,7 +138,7 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(post.getPostid());
+                WordPress.postUploaded(post.getRemotePostId());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {
@@ -156,9 +150,9 @@ public class PostUploadService extends Service {
                                           | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 notificationIntent.setAction(Intent.ACTION_MAIN);
                 notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
+                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
                 notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
+                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
                 if (mErrorUnavailableVideoPress) {
                     notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
                     notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
@@ -199,31 +193,31 @@ public class PostUploadService extends Service {
                                       | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.setAction(Intent.ACTION_MAIN);
             notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
             notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
 
-            notificationID = (new Random()).nextInt() + post.getBlogID();
+            notificationID = (new Random()).nextInt() + post.getLocalTableBlogId();
             nm.notify(notificationID, n); // needs a unique id
 
             Blog blog;
             try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(post.getBlogID());
+                blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
             } catch (Exception e) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;
             }
 
-            if (post.getPost_status() == null) {
-                post.setPost_status("publish");
+            if (TextUtils.isEmpty(post.getPostStatus())) {
+                post.setPostStatus("publish");
             }
             Boolean publishThis = false;
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
-            if (post.getMt_text_more() != null)
+            if (!TextUtils.isEmpty(post.getMoreText()))
                 moreCount++;
             String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
             Pattern pattern = Pattern.compile(imgTags);
@@ -233,7 +227,7 @@ public class PostUploadService extends Service {
                 if (x == 0)
                     descriptionContent = post.getDescription();
                 else
-                    moreContent = post.getMt_text_more();
+                    moreContent = post.getMoreText();
 
                 Matcher matcher;
 
@@ -283,12 +277,12 @@ public class PostUploadService extends Service {
                 return false;
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
-            String[] theCategories = null;
+            String[] postCategories = null;
             if (categoriesJsonArray != null) {
-                theCategories = new String[categoriesJsonArray.length()];
+                postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
-                        theCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
+                        postCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
                     } catch (JSONException e) {
                         AppLog.e(T.POSTS, e);
                     }
@@ -303,7 +297,7 @@ public class PostUploadService extends Service {
 
                 if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
                     String tagline = prefs.getString("wp_pref_post_signature", "");
-                    if (tagline != null) {
+                    if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
                         if (TextUtils.isEmpty(moreContent))
                             descriptionContent += tag;
@@ -315,8 +309,8 @@ public class PostUploadService extends Service {
 
             // post format
             if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getWP_post_format())) {
-                    contentStruct.put("wp_post_format", post.getWP_post_format());
+                if (!TextUtils.isEmpty(post.getPostFormat())) {
+                    contentStruct.put("wp_post_format", post.getPostFormat());
                 }
             }
 
@@ -332,7 +326,7 @@ public class PostUploadService extends Service {
 
             if (!moreContent.equals("")) {
                 descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
-                post.setMt_text_more("");
+                post.setMoreText("");
             }
 
             // get rid of the p and br tags that the editor adds.
@@ -345,18 +339,15 @@ public class PostUploadService extends Service {
 
             contentStruct.put("description", descriptionContent);
             if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getMt_keywords())) {
-                    contentStruct.put("mt_keywords", post.getMt_keywords());
-                }
+                contentStruct.put("mt_keywords", post.getKeywords());
 
-                if (theCategories != null && theCategories.length > 0)
-                    contentStruct.put("categories", theCategories);
+                if (postCategories != null && postCategories.length > 0)
+                    contentStruct.put("categories", postCategories);
             }
 
-            if (post.getMt_excerpt() != null)
-                contentStruct.put("mt_excerpt", post.getMt_excerpt());
+            contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
-            contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPost_status());
+            contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
             if (!post.isPage()) {
                 if (post.getLatitude() > 0) {
                     Map<Object, Object> hLatitude = new HashMap<Object, Object>();
@@ -383,28 +374,27 @@ public class PostUploadService extends Service {
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            if (post.getQuickPostType() != null) {
+            if (!TextUtils.isEmpty(post.getQuickPostType())) {
                 client.addQuickPostHeader(post.getQuickPostType());
             }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
             nm.notify(notificationID, n);
-            if (post.getWP_password() != null) {
-                contentStruct.put("wp_password", post.getWP_password());
-            }
-            Object[] params;
 
+            contentStruct.put("wp_password", post.getPassword());
+
+            Object[] params;
             if (post.isLocalDraft() && !post.isUploaded())
                 params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};
             else
-                params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,
+                params = new Object[]{post.getRemotePostId(), blog.getUsername(), blog.getPassword(), contentStruct,
                         publishThis};
 
             try {
                 if (post.isLocalDraft() && !post.isUploaded()) {
                     Object newPostId = client.call("metaWeblog.newPost", params);
                     if (newPostId instanceof String) {
-                        post.setPostid((String) newPostId);
+                        post.setRemotePostId((String) newPostId);
                     }
                 } else {
                     client.call("metaWeblog.editPost", params);
@@ -412,7 +402,7 @@ public class PostUploadService extends Service {
 
                 post.setUploaded(true);
                 post.setLocalChange(false);
-                post.update();
+                WordPress.wpDB.updatePost(post);
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);
@@ -508,9 +498,9 @@ public class PostUploadService extends Service {
                 }
 
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaFileMimeType(videoFile, false);
+                    mimeType = MediaUtils.getMediaFileMimeType(videoFile);
                 }
-                String videoName = getMediaFileName(videoFile, mimeType);
+                String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
 
                 // try to upload the video
                 Map<String, Object> m = new HashMap<String, Object>();
@@ -603,9 +593,9 @@ public class PostUploadService extends Service {
                 }
 
                 if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = getMediaFileMimeType(imageFile, true);
+                    mimeType = MediaUtils.getMediaFileMimeType(imageFile);
                 }
-                String fileName = getMediaFileName(imageFile, mimeType);
+                String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
                 ImageHelper ih = new ImageHelper();
@@ -720,80 +710,6 @@ public class PostUploadService extends Service {
                 }
             }
             return content;
-        }
-
-        private String getMediaFileMimeType(File mediaFile, boolean isImage) {
-            String originalFileName = mediaFile.getName().toLowerCase();
-            String mimeType = UrlUtils.getUrlMimeType(originalFileName);
-
-            if (TextUtils.isEmpty(mimeType)) {
-                try {
-                    String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
-                    URL urlForGuessingMime = new URL(filePathForGuessingMime);
-                    URLConnection uc = urlForGuessingMime.openConnection();
-                    String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
-                    // check if returned "content/unknown"
-                    if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown")) {
-                        mimeType = guessedContentType;
-                    }
-                } catch (MalformedURLException e) {
-                    AppLog.e(T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
-                }
-                catch (IOException e) {
-                    AppLog.e(T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
-                }
-            }
-
-            // No mimeType yet? Try to decode the image get the mimeType from there
-            if (isImage && TextUtils.isEmpty(mimeType)) {
-                try {
-                    DataInputStream inputStream = new DataInputStream(new FileInputStream(mediaFile));
-                    String mimeTypeFromStream = MediaUtils.getMimeTypeOfInputStream(inputStream);
-                    if (!TextUtils.isEmpty(mimeTypeFromStream)) {
-                        mimeType = mimeTypeFromStream;
-                    }
-                    inputStream.close();
-                } catch (FileNotFoundException e) {
-                    AppLog.e(T.API, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
-                } catch (IOException e) {
-                    AppLog.e(T.API, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
-                }
-            }
-
-            if (TextUtils.isEmpty(mimeType)) {
-                mimeType = "";
-            } else {
-                if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
-                    mimeType = "video/mp4";
-                }
-            }
-
-            return mimeType;
-        }
-
-        private String getMediaFileName(File mediaFile, String mimeType) {
-            String originalFileName = mediaFile.getName().toLowerCase();
-            String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
-            if (!TextUtils.isEmpty(extension))  //File name already has the extension in it
-                return originalFileName;
-
-            if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
-                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
-                if (!TextUtils.isEmpty(fileExtensionFromMimeType)) {
-                    originalFileName += "." + fileExtensionFromMimeType.toLowerCase();
-                } else {
-                    //We're still without an extension - split the mime type and retrieve it
-                   String[] split = mimeType.split("/");
-                   String guessedExt = split.length > 1 ? split[1] : split[0];
-                   originalFileName += "." + guessedExt;
-                }
-            } else {
-                //No mimetype and no extension!!
-                AppLog.e(T.API, "No mimetype and no extension for " + mediaFile.getPath());
-            }
-
-            return originalFileName;
         }
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {

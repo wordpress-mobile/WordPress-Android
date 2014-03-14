@@ -74,7 +74,7 @@ android {
         compile 'org.wordpress:graphview:3.1.1'
         compile 'org.wordpress:drag-sort-listview:0.6.1'
         compile 'org.wordpress:slidinguppanel:1.0.0'
-        compile 'org.wordpress:android-passcodelock:0.0.4'
+        compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
         compile 'org.wordpress:pulltorefresh-abs:+'

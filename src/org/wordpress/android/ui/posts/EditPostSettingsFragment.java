@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -168,8 +169,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             String activePostFormat = "standard";
 
 
-            if (!mActivity.getPost().getWP_post_format().equals(""))
-                activePostFormat = mActivity.getPost().getWP_post_format();
+            if (!TextUtils.isEmpty(mActivity.getPost().getPostFormat())) {
+                activePostFormat = mActivity.getPost().getPostFormat();
+            }
+
             for (int i = 0; i < mPostFormats.length; i++) {
                 if (mPostFormats[i].equals(activePostFormat))
                     postFormatSpinner.setSelection(i);
@@ -188,7 +191,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         Post post = mActivity.getPost();
         if (post != null) {
-            mExcerptEditText.setText(post.getMt_excerpt());
+            mExcerptEditText.setText(post.getPostExcerpt());
 
             String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
                     getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
@@ -233,8 +236,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 }
             }
 
-            if (post.getWP_password() != null)
-                mPasswordEditText.setText(post.getWP_password());
+            if (!TextUtils.isEmpty(post.getPassword()))
+                mPasswordEditText.setText(post.getPassword());
 
             switch (post.getStatusEnum()) {
                 case PUBLISHED:
@@ -265,7 +268,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     new GetAddressTask().execute(latitude, longitude);
                 }
             }
-            String tags = post.getMt_keywords();
+            String tags = post.getKeywords();
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
@@ -471,16 +474,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             longitude = post.getLongitude();
         }
 
-        post.setMt_excerpt(excerpt);
+        post.setPostExcerpt(excerpt);
         post.setDate_created_gmt(pubDateTimestamp);
         post.setJSONCategories(new JSONArray(mCategories));
-        post.setMt_keywords(tags);
-        post.setPost_status(status);
-        post.setWP_password(password);
+        post.setKeywords(tags);
+        post.setPostStatus(status);
+        post.setPassword(password);
         post.setLatitude(latitude);
         post.setLongitude(longitude);
-        post.setWP_post_form(postFormat);
-        post.update();
+        post.setPostFormat(postFormat);
+
+        WordPress.wpDB.updatePost(post);
     }
 
     /**
