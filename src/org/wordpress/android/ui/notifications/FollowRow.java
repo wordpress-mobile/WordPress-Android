@@ -28,6 +28,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.NetworkUtils;
 
 public class FollowRow extends LinearLayout {
 
@@ -211,6 +212,10 @@ public class FollowRow extends LinearLayout {
             if (!hasFollowListener()) {
                 return;
             }
+
+            // first make sure we have a connection
+            if (!NetworkUtils.checkConnection(getContext()))
+                return;
 
             // show new follow state and animate button right away (before network call)
             updateFollowButton(!isFollowing());
