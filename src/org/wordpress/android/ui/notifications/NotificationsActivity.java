@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -314,8 +315,9 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
         // fragment used here that is not a NotificationFragment)
-        if (detailFragment instanceof NotificationFragment)
+        if (detailFragment instanceof NotificationFragment) {
             ((NotificationFragment) detailFragment).setNote(note);
+        }
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
@@ -443,7 +445,13 @@ public class NotificationsActivity extends WPActionBarActivity
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
-            openNote(note);
+            if (note == null)
+                return;
+            // open the latest version of this note just in case it has changed - this can
+            // happen if the note was tapped from the list fragment after it was updated
+            // by another fragment (such as NotificationCommentLikeFragment)
+            Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
+            openNote(updatedNote != null ? updatedNote : note);
         }
     }
 

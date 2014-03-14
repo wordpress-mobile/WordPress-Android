@@ -34,6 +34,10 @@ import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
 
+    static interface NoteUpdatedListener {
+        void onNoteUpdated(int noteId);
+    }
+
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
@@ -56,6 +60,41 @@ public class NotificationUtils {
                                                             }
                                                         }
         );
+    }
+
+    /*
+     * updates a single notification, storing the result in the local db upon success
+     */
+    public static void updateNotification(final int noteId, final NoteUpdatedListener updateListener) {
+        if (noteId == 0)
+            return;
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject == null)
+                    return;
+
+                final List<Note> notes;
+                try {
+                    // response is an array of notes with a single note item
+                    notes = parseNotes(jsonObject);
+                    if (notes == null || notes.size() == 0) {
+                        return;
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.NOTIFS, e);
+                    return;
+                }
+
+                WordPress.wpDB.addNote(notes.get(0), false);
+
+                if (updateListener != null) {
+                    updateListener.onNoteUpdated(noteId);
+                }
+            }
+        };
+        WordPress.getRestClientUtils().getNotification(Integer.toString(noteId), listener, null);
     }
 
     public static List<Note> parseNotes(JSONObject response) throws JSONException {
@@ -167,7 +206,7 @@ public class NotificationUtils {
         if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
             return;
 
-        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignement.
+        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
 
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);

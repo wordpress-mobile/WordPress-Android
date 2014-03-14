@@ -364,6 +364,16 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         showPostTimeSelectionDialog();
                     }
                 })
+                .setNeutralButton(getResources().getText(R.string.immediately),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                mIsCustomPubDate = true;
+                                mPubDateText.setText(R.string.immediately);
+                            }
+                        })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
 
@@ -428,11 +438,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
-        if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
+            Date d = new Date();
+            pubDateTimestamp = d.getTime();
+        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
             else if (post.getDate_created_gmt() > 0)
                 pubDateTimestamp = post.getDate_created_gmt();
+        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
+            post.setDate_created_gmt(0);
+            post.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";

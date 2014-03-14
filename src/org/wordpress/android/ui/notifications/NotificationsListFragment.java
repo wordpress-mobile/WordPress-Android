@@ -46,9 +46,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.empty_listview, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
     public void animateRefresh(boolean refresh) {
@@ -102,14 +100,14 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
     }
 
-    protected NotesAdapter getNotesAdapter() {
+    NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), this);
         }
         return mNotesAdapter;
     }
 
-    protected boolean hasAdapter() {
+    boolean hasAdapter() {
         return (mNotesAdapter != null);
     }
 
