@@ -248,6 +248,33 @@ public class NotificationsActivity extends WPActionBarActivity
         return null;
     }
 
+    /*
+     * mark a single notification as read, both on the server and locally
+     */
+    private void markNoteAsRead(final Note note) {
+        if (note == null)
+            return;
+        getRestClientUtils().markNoteAsRead(note,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // clear the unread count then save to local db
+                        note.setUnreadCount("0");
+                        WordPress.wpDB.addNote(note, note.isPlaceholder());
+                        // reflect the change in the note list
+                        if (!isFinishing() && mNotesList != null)
+                            mNotesList.updateNote(note);
+                    }
+                },
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
+                    }
+                }
+        );
+    }
+
     /**
      *  Open a note fragment based on the type of note
      */
@@ -255,40 +282,9 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing())
             return;
 
-        // if note is "unread" set note to "read"
+        // mark the note as read if it's unread
         if (note.isUnread()) {
-            // send a request to mark note as read
-            getRestClientUtils().markNoteAsRead(note, new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (isFinishing())
-                                return;
-
-                            final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
-
-                            note.setUnreadCount("0");
-                            if (notesAdapter.indexOfNote(note) < 0) {
-                                // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
-                                // in the adapter and find a match with the noteID
-                                for (int i = 0; i < notesAdapter.getCount(); i++) {
-                                    Note item = notesAdapter.getItem(i);
-                                    if (item.getId().equals(note.getId())) {
-                                        item.setUnreadCount("0");
-                                        break;
-                                    }
-                                }
-                            }
-
-                            WordPress.wpDB.addNote(note, false); //Update the DB
-                            notesAdapter.notifyDataSetChanged();
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
-                        }
-                    }
-            );
+            markNoteAsRead(note);
         }
 
         FragmentManager fm = getSupportFragmentManager();
