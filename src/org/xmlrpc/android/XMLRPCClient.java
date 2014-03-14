@@ -47,7 +47,7 @@ import org.xmlpull.v1.XmlSerializer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.TrustAllSSLSocketFactory;
+import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -64,6 +64,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
+    private static final int CONNECTION_DEFAULT_TIMEOUT = 30000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -94,7 +95,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private class ConnectionClient extends DefaultHttpClient {
         public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
             super();
-            TrustAllSSLSocketFactory tasslf = new TrustAllSSLSocketFactory();
+            TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
             Scheme scheme = new Scheme("https", tasslf, port);
             getConnectionManager().getSchemeRegistry().register(scheme);
         }
@@ -132,7 +133,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
         
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 30000);
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         BasicCredentialsProvider cP = new BasicCredentialsProvider();
         cP.setCredentials(AuthScope.ANY, credentials);
         client.setCredentialsProvider(cP);        
@@ -367,11 +369,11 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             mPostMethod.setEntity(entity);
         }
 
-        //set timeout to 40 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        //set timeout to 30 seconds, does it need to be set for both mClient and method?
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
     }
 
     /**
