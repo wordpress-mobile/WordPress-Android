@@ -15,21 +15,23 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.MediaUploadService;
+import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.MediaUtils.LaunchCameraCallback;
+import org.wordpress.android.util.MediaUtils.RequestCode;
 import org.wordpress.android.util.ToastUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -194,18 +196,21 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         }
         
         Blog blog = WordPress.getCurrentBlog();
-        
-        String fileName = new String(path).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1");
-        String fileType = new String(path).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
+
+        File file = new File(path);
+        if (!file.exists())
+            return;
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
         
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
-        mediaFile.setFileName(fileName + "." + fileType);
+        mediaFile.setFileName(fileName);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
         mediaFile.setDateCreatedGMT(System.currentTimeMillis());
         mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
         if (mimeType != null && mimeType.startsWith("image")) {
             // get width and height
             BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -215,7 +220,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setHeight(bfo.outHeight);
         }
 
-        if (mimeType != null)
+        if (!TextUtils.isEmpty(mimeType))
             mediaFile.setMimeType(mimeType);
         mediaFile.save();
         
