@@ -1,19 +1,14 @@
 package org.wordpress.android.ui.posts;
 
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.Map;
 
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-import com.google.gson.reflect.TypeToken;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
@@ -41,11 +36,9 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
         
         if (extras != null) {
             long mPostID = extras.getLong("postID");
-            int mBlogID = extras.getInt("blogID");
 
-            Post post = new Post(mBlogID, mPostID, isPage);
-
-            if (post.getId() < 0)
+            Post post = WordPress.wpDB.getPostForLocalTablePostId(mPostID);
+            if (post == null)
                 Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
             else
                 loadPostPreview(post);
@@ -73,7 +66,7 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
                     || post.isLocalDraft() 
                     || post.isLocalChange()
                     || post.getDate_created_gmt() > d.getTime() //Scheduled
-                    || !post.getPost_status().equals("publish")) {
+                    || post.getStatusEnum() != PostStatus.PUBLISHED) {
                 if (-1 == url.indexOf('?')) {
                     url = url.concat("?preview=true");
                 } else {
