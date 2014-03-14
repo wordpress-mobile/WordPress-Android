@@ -106,7 +106,7 @@ public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListene
         JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
 
         FollowRow row = (FollowRow) view;
-        row.setFollowListener(new FollowListener());
+        row.setFollowListener(new FollowListener(getNoteId()));
         row.setAction(followAction);
 
         String headerText = JSONUtil.queryJSON(noteItem, "header_text", "");
