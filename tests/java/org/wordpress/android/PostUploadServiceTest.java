@@ -78,12 +78,11 @@ public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {
         };
 
         // get an existing uploaded post (defined in the previously loaded db dump)
-        int blogId = 22;
         int postId = 27;
-        Post post = new Post(blogId, postId, false);
+        Post post = wpdb.getPostForLocalTablePostId(postId);
 
-        // fake the post id to null
-        post.setPostid(null);
+        // fake the remote post id to null
+        post.setRemotePostId(null);
 
         // push it to the PostUploadService
         PostUploadService.addPostToUpload(post);

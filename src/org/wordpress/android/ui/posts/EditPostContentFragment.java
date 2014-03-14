@@ -361,7 +361,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         }
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
-                        mActivity.getPost().delete();
+                        WordPress.wpDB.deletePost(mActivity.getPost());
                         mActivity.finish();
                     }
                     break;
@@ -376,7 +376,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                             Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
-                        mActivity.getPost().delete();
+                        WordPress.wpDB.deletePost(mActivity.getPost());
                         mActivity.finish();
                     }
                     break;
@@ -608,15 +608,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         // split up the post content if there's a more tag
         if (post.isLocalDraft() && content.contains(moreTag)) {
             post.setDescription(content.substring(0, content.indexOf(moreTag)));
-            post.setMt_text_more(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
+            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
         } else {
             post.setDescription(content);
-            post.setMt_text_more("");
+            post.setMoreText("");
         }
 
         if (!post.isLocalDraft())
             post.setLocalChange(true);
-        post.update();
+
+        WordPress.wpDB.updatePost(post);
     }
 
     public boolean hasEmptyContentFields() {
@@ -1034,7 +1035,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
-        mediaFile.setPostID(mActivity.getPost().getId());
+        mediaFile.setPostID(mActivity.getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(is.getImageSource().toString());
         MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);

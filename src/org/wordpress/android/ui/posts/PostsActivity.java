@@ -44,9 +44,10 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
 
 public class PostsActivity extends WPActionBarActivity
@@ -308,8 +309,9 @@ public class PostsActivity extends WPActionBarActivity
         }
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+        WordPress.wpDB.savePost(newPost);
         Intent i = new Intent(this, EditPostActivity.class);
-        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getId());
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, ACTIVITY_EDIT_POST);
@@ -426,7 +428,7 @@ public class PostsActivity extends WPActionBarActivity
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
-                post.delete();
+                WordPress.wpDB.deletePost(post);
                 mPostList.requestPosts(false);
                 mPostList.setRefreshing(true);
             } else {
@@ -454,12 +456,12 @@ public class PostsActivity extends WPActionBarActivity
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
-            Object[] postParams = { "", post.getPostid(),
+            Object[] postParams = { "", post.getRemotePostId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
             Object[] pageParams = { WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(), post.getPostid() };
+                    WordPress.currentBlog.getPassword(), post.getRemotePostId() };
 
             try {
                 client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
@@ -548,24 +550,17 @@ public class PostsActivity extends WPActionBarActivity
             post = params[0];
             if (post == null)
                 return null;
+
             Blog blog = WordPress.currentBlog;
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            Object versionResult = new Object();
+            Object getPostResult;
             try {
-                if (mIsPage) {
-                    Object[] vParams = { WordPress.currentBlog.getRemoteBlogId(),
-                            post.getPostid(),
-                            WordPress.currentBlog.getUsername(),
-                            WordPress.currentBlog.getPassword() };
-                    versionResult = (Object) client.call("wp.getPage", vParams);
-                } else {
-                    Object[] vParams = { post.getPostid(),
-                            WordPress.currentBlog.getUsername(),
-                            WordPress.currentBlog.getPassword() };
-                    versionResult = (Object) client.call("metaWeblog.getPost",
-                            vParams);
-                }
+                Object[] vParams = { WordPress.currentBlog.getRemoteBlogId(),
+                        post.getRemotePostId(),
+                        WordPress.currentBlog.getUsername(),
+                        WordPress.currentBlog.getPassword() };
+                getPostResult = client.call(mIsPage ? "wp.getPage" : "metaWeblog.getPost", vParams);
             } catch (XMLRPCException e) {
                 AppLog.e(AppLog.T.POSTS, e);
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
@@ -580,12 +575,11 @@ public class PostsActivity extends WPActionBarActivity
                 return null;
             }
 
-            if (versionResult != null) {
+            if (getPostResult != null && getPostResult instanceof Map) {
                 try {
-                    Map<?, ?> contentHash = (Map<?, ?>) versionResult;
-                    if ((mIsPage && !"publish".equals(contentHash.get("page_status").toString()))
-                            || (!mIsPage && !"publish".equals(
-                            contentHash.get("post_status").toString()))) {
+                    Map<?, ?> postMap = (Map<?, ?>) getPostResult;
+                    String postStatus = MapUtils.getMapStr(postMap, mIsPage ? "page_status" : "post_status");
+                    if (!"publish".equals(postStatus)) {
                         if (mIsPage) {
                             mErrorMsg = getString(R.string.page_not_published);
                         } else {
@@ -593,10 +587,10 @@ public class PostsActivity extends WPActionBarActivity
                         }
                         return null;
                     } else {
-                        String postURL = contentHash.get("permaLink").toString();
-                        String shortlink = getShortlinkTagHref(postURL);
+                        String postUrl = MapUtils.getMapStr(postMap, "permaLink");
+                        String shortlink = getShortlinkTagHref(postUrl);
                         if (shortlink == null) {
-                            result = postURL;
+                            result = postUrl;
                         } else {
                             result = shortlink;
                         }
@@ -676,7 +670,7 @@ public class PostsActivity extends WPActionBarActivity
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
-                                post.delete();
+                                WordPress.wpDB.deletePost(post);
                                 popPostDetail();
                                 attemptToSelectPost();
                                 mPostList.getPostListAdapter().loadPosts();

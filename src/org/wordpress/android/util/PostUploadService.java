@@ -139,7 +139,7 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(post.getPostid());
+                WordPress.postUploaded(post.getRemotePostId());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {
@@ -150,7 +150,7 @@ public class PostUploadService extends Service {
                         | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 notificationIntent.setAction("android.intent.action.MAIN");
                 notificationIntent.addCategory("android.intent.category.LAUNCHER");
-                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
+                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
                 notificationIntent.putExtra("errorMessage", mErrorMessage);
                 if (mErrorUnavailableVideoPress) {
                     notificationIntent.putExtra("errorInfoTitle", getString(R.string.learn_more));
@@ -191,30 +191,30 @@ public class PostUploadService extends Service {
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.setAction("android.intent.action.MAIN");
             notificationIntent.addCategory("android.intent.category.LAUNCHER");
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
 
-            notificationID = (new Random()).nextInt() + post.getBlogID();
+            notificationID = (new Random()).nextInt() + post.getLocalTableBlogId();
             nm.notify(notificationID, n); // needs a unique id
 
             Blog blog;
             try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(post.getBlogID());
+                blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
             } catch (Exception e) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;
             }
 
-            if (post.getPost_status() == null) {
-                post.setPost_status("publish");
+            if (TextUtils.isEmpty(post.getPostStatus())) {
+                post.setPostStatus("publish");
             }
             Boolean publishThis = false;
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
-            if (post.getMt_text_more() != null)
+            if (!TextUtils.isEmpty(post.getMoreText()))
                 moreCount++;
             String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
             Pattern pattern = Pattern.compile(imgTags);
@@ -224,7 +224,7 @@ public class PostUploadService extends Service {
                 if (x == 0)
                     descriptionContent = post.getDescription();
                 else
-                    moreContent = post.getMt_text_more();
+                    moreContent = post.getMoreText();
 
                 Matcher matcher;
 
@@ -274,12 +274,12 @@ public class PostUploadService extends Service {
                 return false;
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
-            String[] theCategories = null;
+            String[] postCategories = null;
             if (categoriesJsonArray != null) {
-                theCategories = new String[categoriesJsonArray.length()];
+                postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
-                        theCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
+                        postCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
                     } catch (JSONException e) {
                         AppLog.e(T.POSTS, e);
                     }
@@ -294,7 +294,7 @@ public class PostUploadService extends Service {
 
                 if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
                     String tagline = prefs.getString("wp_pref_post_signature", "");
-                    if (tagline != null) {
+                    if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
                         if (TextUtils.isEmpty(moreContent))
                             descriptionContent += tag;
@@ -306,8 +306,8 @@ public class PostUploadService extends Service {
 
             // post format
             if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getWP_post_format())) {
-                    contentStruct.put("wp_post_format", post.getWP_post_format());
+                if (!TextUtils.isEmpty(post.getPostFormat())) {
+                    contentStruct.put("wp_post_format", post.getPostFormat());
                 }
             }
 
@@ -323,7 +323,7 @@ public class PostUploadService extends Service {
 
             if (!moreContent.equals("")) {
                 descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
-                post.setMt_text_more("");
+                post.setMoreText("");
             }
 
             // get rid of the p and br tags that the editor adds.
@@ -336,18 +336,15 @@ public class PostUploadService extends Service {
 
             contentStruct.put("description", descriptionContent);
             if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getMt_keywords())) {
-                    contentStruct.put("mt_keywords", post.getMt_keywords());
-                }
+                contentStruct.put("mt_keywords", post.getKeywords());
 
-                if (theCategories != null && theCategories.length > 0)
-                    contentStruct.put("categories", theCategories);
+                if (postCategories != null && postCategories.length > 0)
+                    contentStruct.put("categories", postCategories);
             }
 
-            if (post.getMt_excerpt() != null)
-                contentStruct.put("mt_excerpt", post.getMt_excerpt());
+            contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
-            contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPost_status());
+            contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
             if (!post.isPage()) {
                 if (post.getLatitude() > 0) {
                     Map<Object, Object> hLatitude = new HashMap<Object, Object>();
@@ -374,28 +371,27 @@ public class PostUploadService extends Service {
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            if (post.getQuickPostType() != null) {
+            if (!TextUtils.isEmpty(post.getQuickPostType())) {
                 client.addQuickPostHeader(post.getQuickPostType());
             }
             n.setLatestEventInfo(context, message, message, n.contentIntent);
             nm.notify(notificationID, n);
-            if (post.getWP_password() != null) {
-                contentStruct.put("wp_password", post.getWP_password());
-            }
-            Object[] params;
 
+            contentStruct.put("wp_password", post.getPassword());
+
+            Object[] params;
             if (post.isLocalDraft() && !post.isUploaded())
                 params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};
             else
-                params = new Object[]{post.getPostid(), blog.getUsername(), blog.getPassword(), contentStruct,
+                params = new Object[]{post.getRemotePostId(), blog.getUsername(), blog.getPassword(), contentStruct,
                         publishThis};
 
             try {
                 if (post.isLocalDraft() && !post.isUploaded()) {
                     Object newPostId = client.call("metaWeblog.newPost", params);
                     if (newPostId instanceof String) {
-                        post.setPostid((String) newPostId);
+                        post.setRemotePostId((String) newPostId);
                     }
                 } else {
                     client.call("metaWeblog.editPost", params);
@@ -403,7 +399,7 @@ public class PostUploadService extends Service {
 
                 post.setUploaded(true);
                 post.setLocalChange(false);
-                post.update();
+                WordPress.wpDB.updatePost(post);
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);
