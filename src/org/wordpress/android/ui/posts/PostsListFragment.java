@@ -63,7 +63,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(
                 getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout), 
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
@@ -101,7 +101,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                             refreshBlogContentTask.execute(false);
                         }
                     }
-                }, 
+                },
                 LinearLayout.class
                 );
         return view;
@@ -215,6 +215,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
             getPostListAdapter().loadPosts();
         }
+    }
+
+    public boolean isRefreshing() {
+        return mPullToRefreshHelper.isRefreshing();
     }
 
     public void setRefreshing(boolean refreshing) {

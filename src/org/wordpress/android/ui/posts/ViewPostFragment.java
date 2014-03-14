@@ -75,7 +75,7 @@ public class ViewPostFragment extends Fragment {
                 .findViewById(R.id.editPost);
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (WordPress.currentPost != null && !parentActivity.mIsRefreshing) {
+                if (WordPress.currentPost != null && !parentActivity.isRefreshing()) {
                     onDetailPostActionListener.onDetailPostAction(
                             PostsActivity.POST_EDIT, WordPress.currentPost);
                     Intent i = new Intent(
@@ -93,10 +93,9 @@ public class ViewPostFragment extends Fragment {
                 .findViewById(R.id.sharePostLink);
         shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-
-                if (!parentActivity.mIsRefreshing)
+                if (!parentActivity.isRefreshing()) {
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
-
+                }
             }
         });
 
@@ -104,10 +103,9 @@ public class ViewPostFragment extends Fragment {
                 .findViewById(R.id.deletePost);
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-
-                if (!parentActivity.mIsRefreshing)
+                if (!parentActivity.isRefreshing()) {
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
-
+                }
             }
         });
 
@@ -116,16 +114,16 @@ public class ViewPostFragment extends Fragment {
         viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
-                if (!parentActivity.mIsRefreshing)
+                if (!parentActivity.isRefreshing()) {
                     loadPostPreview();
-
+                }
             }
         });
 
         mAddCommentButton = (ImageButton) v.findViewById(R.id.addComment);
         mAddCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (!parentActivity.mIsRefreshing) {
+                if (!parentActivity.isRefreshing()) {
                     toggleCommentBox();
                 }
             }

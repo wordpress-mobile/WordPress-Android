@@ -1,13 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -28,13 +20,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -50,6 +35,20 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -65,7 +64,6 @@ public class PostsActivity extends WPActionBarActivity
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public ProgressDialog mLoadingDialog;
     public boolean mIsPage = false;
-    public boolean mIsRefreshing = false; // TODO: remove me
     public String mErrorMsg = "";
     private PostsListFragment mPostList;
 
@@ -157,12 +155,12 @@ public class PostsActivity extends WPActionBarActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Just close the window.
                     }
-                });
+                }
+        );
         if (infoTitle != null && infoURL != null) {
             dialogBuilder.setNeutralButton(infoTitle,
                 new DialogInterface.OnClickListener() {
@@ -222,9 +220,14 @@ public class PostsActivity extends WPActionBarActivity
         }
     };
 
+    public boolean isRefreshing() {
+        return mPostList.isRefreshing();
+    }
+
     public void checkForLocalChanges(boolean shouldPrompt) {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
             return;
+        }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
                 mIsPage);
         if (hasLocalChanges) {
@@ -241,7 +244,8 @@ public class PostsActivity extends WPActionBarActivity
                             attemptToSelectPost();
                             mPostList.requestPosts(false);
                         }
-                    });
+                    }
+            );
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     mPostList.setRefreshing(false);
@@ -779,7 +783,7 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.getPostListAdapter().loadPosts();
         new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
     }
-    
+
     public void setRefreshing(boolean refreshing) {
         mPostList.setRefreshing(refreshing);
     }
