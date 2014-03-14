@@ -72,6 +72,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     private PreferenceGroup mNotificationsGroup;
     WPEditTextPreference mTaglineTextPreference;
 
+    public static int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -673,6 +675,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
+                            // set the result code so caller knows the user signed out
+                            setResult(RESULT_SIGNED_OUT);
                             WordPress.signOut(PreferencesActivity.this);
                             finish();
                         }

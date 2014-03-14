@@ -528,7 +528,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
                 break;
             case SETTINGS_REQUEST:
-                if (mMenuDrawer != null) {
+                // user returned from settings - skip if user signed out
+                if (mMenuDrawer != null && resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
                     updateMenuDrawer();
                     String[] blogNames = getBlogNames();
                     // If we need to add or remove the blog spinner, init the drawer again
@@ -637,7 +638,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             // select the first available item from the adapter
             if (item.isSelected() && !item.isVisible()) {
                 // then select the first item and activate it
-                mAdapter.getItem(0).selectItem();
+                if (mAdapter.getCount() > 0)
+                    mAdapter.getItem(0).selectItem();
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()){
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
