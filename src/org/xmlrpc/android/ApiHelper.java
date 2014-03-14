@@ -229,6 +229,7 @@ public class ApiHelper {
             if (act == null || act.isFinishing()) {
                 return;
             }
+            act.setRefreshing(false);
         }
 
         @Override
@@ -237,6 +238,7 @@ public class ApiHelper {
             if (act == null || act.isFinishing()) {
                 return;
             }
+            act.setRefreshing(false);
             if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 askForSslTrust(act);
