@@ -34,7 +34,7 @@ import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
 
-    protected static interface NoteUpdatedListener {
+    static interface NoteUpdatedListener {
         void onNoteUpdated(int noteId);
     }
 
