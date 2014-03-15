@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -247,7 +246,7 @@ public class PostUploadService extends Service {
                 for (String tag : imageTags) {
                     mediaCounter++;
                     int mediaSize = imageTags.size();
-                    String customMessage = "Uploading " + mediaCounter + " of " + mediaSize + " media items";
+                    String customMessage = context.getResources().getText(R.string.upload) + " " + mediaCounter + " " + context.getResources().getText(R.string.of) + " " + mediaSize + " " + context.getResources().getText(R.string.media_items);
                     builder.setContentTitle(message)
                             .setContentText(customMessage)
                             .setSmallIcon(R.drawable.notification_icon);
