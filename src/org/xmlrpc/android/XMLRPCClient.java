@@ -1,30 +1,5 @@
 package org.xmlrpc.android;
 
-import android.text.TextUtils;
-import android.util.Xml;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -34,6 +9,7 @@ import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -43,6 +19,35 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.text.TextUtils;
+import android.util.Xml;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -59,6 +64,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
+    private static final int CONNECTION_DEFAULT_TIMEOUT = 30000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -86,36 +92,52 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mSerializer = Xml.newSerializer();
     }
 
-    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
-        DefaultHttpClient client;
-        if (TrustedSslDomainTable.isDomainTrusted(uri.getHost())) {
-            if (uri.getScheme() != null && uri.getScheme().equals("https")) {
-                int port = uri.getPort();
-                if (port == -1) {
-                    port = 443;
-                }
-                try {
-                    client = new ConnectionClient(credentials, port);
-                } catch (KeyManagementException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (NoSuchAlgorithmException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (KeyStoreException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (UnrecoverableKeyException e) {
-                    client = new ConnectionClient(credentials);
-                }
-            } else {
-                // that case should never happen, TrustedSslDomainTable should only contain ssl hosts
-                client = new ConnectionClient(credentials);
-            }
-        } else {
-            client = new DefaultHttpClient();
-            HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
-            BasicCredentialsProvider cP = new BasicCredentialsProvider();
-            cP.setCredentials(AuthScope.ANY, credentials);
-            client.setCredentialsProvider(cP);
+    private class ConnectionClient extends DefaultHttpClient {
+        public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+            super();
+            TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
+            Scheme scheme = new Scheme("https", tasslf, port);
+            getConnectionManager().getSchemeRegistry().register(scheme);
         }
+    }
+    
+    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
+        DefaultHttpClient client = null;
+        if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+            //wpcom blog or self-hosted blog on plain HTTP
+            client = new DefaultHttpClient();
+        } else {
+            int port = uri.getPort();
+            if (port == -1) {
+                port = 443;
+            }
+
+            try {
+                client = new ConnectionClient(port);
+            } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (KeyStoreException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (UnrecoverableKeyException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            }
+            
+            if (client == null) {
+                client = new DefaultHttpClient();
+            }
+        }
+        
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        BasicCredentialsProvider cP = new BasicCredentialsProvider();
+        cP.setCredentials(AuthScope.ANY, credentials);
+        client.setCredentialsProvider(cP);        
         return client;
     }
 
@@ -160,7 +182,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method, Object[] params) throws XMLRPCException {
+    public Object call(String method, Object[] params) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, params, null);
     }
 
@@ -171,12 +193,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method) throws XMLRPCException {
+    public Object call(String method) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, null, null);
     }
 
 
-    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException {
+    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
         return new Caller().callXMLRPC(method, params, tempFile);
     }
 
@@ -209,6 +231,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return parseXMLRPCResponse(is, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
             throws XMLRPCException, IOException, XmlPullParserException {
         // setup pull parser
@@ -281,7 +304,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
     }
 
-    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException {
+    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
         // prepare POST body
         if (method.equals("wp.uploadFile")) {
 
@@ -346,11 +369,11 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             mPostMethod.setEntity(entity);
         }
 
-        //set timeout to 40 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        //set timeout to 30 seconds, does it need to be set for both mClient and method?
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
     }
 
     /**
@@ -364,9 +387,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         private String methodName;
         private Object[] params;
         private File tempFile;
-
-        private volatile boolean canceled;
-        private ConnectionClient http;
 
         /**
          * Create a new Caller for asynchronous use.
@@ -409,23 +429,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 listener.onSuccess(threadId, o);
             } catch(CancelException ex) {
                 // Don't notify the listener, if the call has been canceled.
-            } catch (XMLRPCException ex) {
+            } catch (Exception ex) {
                 listener.onFailure(threadId, ex);
             } finally {
                 backgroundCalls.remove(threadId);
             }
 
-        }
-
-        /**
-         * Cancel this call. This will abort the network communication.
-         */
-        public void cancel() {
-            // TODO this doesn't work
-            // Set the flag, that this thread has been canceled
-            canceled = true;
-            // Disconnect the connection to the server
-            http.getHttpRequestRetryHandler();
         }
 
         /**
@@ -436,15 +445,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          * @return deserialized method return value
          * @throws XMLRPCException
          */
-        @SuppressWarnings("unchecked")
-        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException {
+        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
             try {
                 preparePostMethod(method, params, tempFile);
 
                 // execute HTTP POST request
                 HttpResponse response = mClient.execute(mPostMethod);
                 int statusCode = response.getStatusLine().getStatusCode();
-                deleteTempFile(method, tempFile);
                 if (statusCode != HttpStatus.SC_OK) {
                     if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                         //Try to intercept out of memory error here and show a better error message.
@@ -462,8 +469,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                                         newErrorMsg =
                                                 "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
                                     }
-                                    throw new XMLRPCException(
-                                            response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
+                                    throw new XMLRPCException(response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
                                 }
                             } catch (Exception e) {
                                 // eat all the exceptions here, we dont want to crash the app when trying to show a
@@ -471,19 +477,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             }
                         }
                     }
-                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " +
-                                              response.getStatusLine().getReasonPhrase());
+                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
-            } catch (XMLRPCException e) {
-                // catch & propagate XMLRPCException/XMLRPCFault
+            } finally {
                 deleteTempFile(method, tempFile);
-                throw e;
-            } catch (Exception e) {
-                // wrap any other Exception(s) around XMLRPCException
-                deleteTempFile(method, tempFile);
-                throw new XMLRPCException(e);
             }
         }
     }
@@ -497,5 +496,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     }
 
-    private class CancelException extends RuntimeException { }
+    private class CancelException extends RuntimeException {
+        private static final long serialVersionUID = 1L; 
+    }
 }

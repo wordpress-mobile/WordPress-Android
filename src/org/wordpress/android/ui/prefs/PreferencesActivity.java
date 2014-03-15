@@ -1,14 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -46,8 +37,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.passcodelock.AppLockManager;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -61,6 +50,16 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPEditTextPreference;
+import org.wordpress.passcodelock.AppLockManager;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
@@ -71,6 +70,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
     private PreferenceGroup mNotificationsGroup;
     WPEditTextPreference mTaglineTextPreference;
+
+    public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -673,6 +674,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
+                            // set the result code so caller knows the user signed out
+                            setResult(RESULT_SIGNED_OUT);
                             WordPress.signOut(PreferencesActivity.this);
                             finish();
                         }

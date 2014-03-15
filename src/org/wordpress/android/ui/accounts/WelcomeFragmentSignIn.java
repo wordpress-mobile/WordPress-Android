@@ -1,5 +1,12 @@
 package org.wordpress.android.ui.accounts;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,18 +36,18 @@ import android.widget.TextView;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.emailchecker.EmailChecker;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     final private static String DOT_COM_BASE_URL = "https://wordpress.com";
@@ -347,10 +354,53 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mForgotPassword.setEnabled(true);
     }
 
+    
+    protected void askForSslTrust() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.ssl_certificate_error));
+        alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
+        alert.setPositiveButton(
+                R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                SetupBlogTask setupBlogTask = new SetupBlogTask();
+                try {
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
+                    selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
+                } catch (IOException e) {
+                    AppLog.e(T.NUX, e);
+                } catch (GeneralSecurityException e) {
+                    AppLog.e(T.NUX, e);
+                }
+                setupBlogTask.execute();
+            }
+        });
+        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
+                try {
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
+                    String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" 
+                            + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+                    getActivity().startActivityForResult(intent, WelcomeActivity.SHOW_CERT_DETAILS);
+                } catch (GeneralSecurityException e) {
+                    AppLog.e(T.NUX, e);
+                } catch (IOException e) {
+                    AppLog.e(T.NUX, e);
+                }
+            }
+        });
+        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.show();
+        endProgress();
+    }
+    
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
-        private boolean mIsAllSslCertificatesTrusted;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -359,11 +409,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setHttpUsername(username);
             mSetupBlog.setHttpPassword(password);
         }
-
-        private void setAllSslCertificatesTrusted(boolean trustAll) {
-            mIsAllSslCertificatesTrusted = trustAll;
-        }
-
+        
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
@@ -376,7 +422,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             } else {
                 mSetupBlog.setSelfHostedURL(null);
             }
-            mSetupBlog.setAllSslCertificatesTrusted(mIsAllSslCertificatesTrusted);
             startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
                     R.string.connecting_wpcom));
         }
@@ -420,26 +465,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
-        private void askForSslTrust() {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getString(R.string.ssl_certificate_error));
-            alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
-            alert.setPositiveButton(
-                    android.R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    setupBlogTask.setAllSslCertificatesTrusted(true);
-                    setupBlogTask.execute();
-                }
-            });
-            alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // Canceled.
-                }
-            });
-            alert.show();
-            endProgress();
-        }
+
 
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {

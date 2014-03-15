@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -57,10 +57,12 @@ android {
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.android.support:support-v4:19.0.+'
-        instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
-        instrumentTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-        instrumentTestCompile 'org.objenesis:objenesis:2.1'
-        instrumentTestCompile 'org.mockito:mockito-core:+'
+        compile 'com.github.castorflex.smoothprogressbar:library:0.3.3'
+
+        androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
+        androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
+        androidTestCompile 'org.objenesis:objenesis:2.1'
+        androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:actionbarsherlock:4.4.0'
@@ -72,8 +74,10 @@ android {
         compile 'org.wordpress:graphview:3.1.1'
         compile 'org.wordpress:drag-sort-listview:0.6.1'
         compile 'org.wordpress:slidinguppanel:1.0.0'
-        compile 'org.wordpress:android-passcodelock:0.0.4'
+        compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
+        compile 'org.wordpress:pulltorefresh-main:+'
+        compile 'org.wordpress:pulltorefresh-abs:+'
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
@@ -86,9 +90,6 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
@@ -106,7 +107,7 @@ android {
             manifest.srcFile 'AndroidManifestBetagroup.xml'
         }
 
-        instrumentTest.setRoot('tests')
+        androidTest.setRoot('tests')
     }
 
 } // end android

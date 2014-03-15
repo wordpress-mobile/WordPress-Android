@@ -34,6 +34,10 @@ import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
 
+    static interface NoteUpdatedListener {
+        void onNoteUpdated(int noteId);
+    }
+
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
@@ -58,6 +62,41 @@ public class NotificationUtils {
         );
     }
 
+    /*
+     * updates a single notification, storing the result in the local db upon success
+     */
+    public static void updateNotification(final int noteId, final NoteUpdatedListener updateListener) {
+        if (noteId == 0)
+            return;
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject == null)
+                    return;
+
+                final List<Note> notes;
+                try {
+                    // response is an array of notes with a single note item
+                    notes = parseNotes(jsonObject);
+                    if (notes == null || notes.size() == 0) {
+                        return;
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.NOTIFS, e);
+                    return;
+                }
+
+                WordPress.wpDB.addNote(notes.get(0), false);
+
+                if (updateListener != null) {
+                    updateListener.onNoteUpdated(noteId);
+                }
+            }
+        };
+        WordPress.getRestClientUtils().getNotification(Integer.toString(noteId), listener, null);
+    }
+
     public static List<Note> parseNotes(JSONObject response) throws JSONException {
         List<Note> notes;
         JSONArray notesJSON = response.getJSONArray("notes");
@@ -70,7 +109,6 @@ public class NotificationUtils {
     }
 
     public static String unzipString(byte[] zbytes) {
-        String unzipped = null;
         try {
             // Add extra byte to array when Inflater is set to true
             byte[] input = new byte[zbytes.length + 1];
@@ -84,12 +122,11 @@ public class NotificationUtils {
                 bout.write(b);
             }
             bout.close();
-            unzipped = bout.toString();
+            return bout.toString();
         } catch (IOException io) {
             AppLog.e(T.NOTIFS, "Unzipping failed", io);
             return null;
         }
-        return unzipped;
     }
 
 
@@ -105,7 +142,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Get device settings skipped. What happened here?!?!");
             return;
         }
 
@@ -124,7 +161,7 @@ public class NotificationUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
         if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. WTF has appenend here?!?!");
+            AppLog.e(T.NOTIFS, "Wait, device_ID is null in preferences. Set device settings skipped. What happened here?!?!");
             return;
         }
 
@@ -140,8 +177,8 @@ public class NotificationUtils {
 
 
         // Build the settings object to send back to WP.com
-        StringMap<?> mutedBlogsMap = (StringMap<?>) notificationSettings.get("muted_blogs");
-        StringMap<?> muteUntilMap = (StringMap<?>) notificationSettings.get("mute_until");
+        StringMap<?> mutedBlogsMap = notificationSettings.get("muted_blogs");
+        StringMap<?> muteUntilMap = notificationSettings.get("mute_until");
         ArrayList<StringMap<Double>> blogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
         notificationSettings.remove("muted_blogs");
         notificationSettings.remove("mute_until");
@@ -157,8 +194,7 @@ public class NotificationUtils {
         }
 
         ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<StringMap<Double>>();
-        for (int i = 0; i < blogsList.size(); i++) {
-            StringMap<Double> userBlog = blogsList.get(i);
+        for (StringMap<Double> userBlog : blogsList) {
             if (MapUtils.getMapBool(userBlog, "value")) {
                 mutedBlogsList.add(userBlog);
             }
@@ -167,7 +203,7 @@ public class NotificationUtils {
         if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
             return;
 
-        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignement.
+        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
 
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);
@@ -212,7 +248,6 @@ public class NotificationUtils {
                     AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
                     AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
-                    return;
                 }
             }
         };

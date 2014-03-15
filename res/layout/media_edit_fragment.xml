@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/media_edit_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp" 
+        android:padding="@dimen/margin_extra_large"
         android:visibility="invisible">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_edit_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
+            android:paddingLeft="@dimen/margin_large"
             android:text="@string/media_edit_title_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_sz_large" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp" >
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/media_edit_save_button"
@@ -37,7 +36,7 @@
                 android:textColor="@color/white"
                 android:visibility="@integer/media_editor_save_button_visibility" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/media_edit_fragment_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,9 +46,44 @@
                 android:inputType="textCapSentences|textAutoCorrect" />
         </RelativeLayout>
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_edit_caption_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:text="@string/media_edit_caption_text"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/media_edit_fragment_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/media_edit_caption_hint"
+            android:inputType="textCapSentences|textAutoCorrect" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_edit_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_large"
+            android:text="@string/media_edit_description_text"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.OpenSansEditText
+            android:id="@+id/media_edit_fragment_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/media_edit_description_hint"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:lines="3" />
+
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large">
 
             <include
                 android:id="@+id/media_edit_fragment_image_local"
@@ -59,40 +93,6 @@
                 android:id="@+id/media_edit_fragment_image_network"
                 layout="@layout/media_grid_image_network" />
         </FrameLayout>
-
-        <TextView
-            android:id="@+id/media_edit_caption_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:paddingLeft="12dp"
-            android:text="@string/media_edit_caption_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/media_edit_fragment_caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/media_edit_caption_hint"
-            android:inputType="textCapSentences|textAutoCorrect" />
-
-        <TextView
-            android:id="@+id/media_edit_description_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:paddingLeft="12dp"
-            android:text="@string/media_edit_description_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/media_edit_fragment_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:hint="@string/media_edit_description_hint"
-            android:inputType="textCapSentences|textAutoCorrect"
-            android:lines="3" />
     </LinearLayout>
 
 </ScrollView>

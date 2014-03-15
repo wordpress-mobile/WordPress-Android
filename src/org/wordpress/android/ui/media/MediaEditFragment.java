@@ -23,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -30,26 +31,27 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fragment for editing media on the Media tab 
+ * A fragment for editing media on the Media tab
  */
 public class MediaEditFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
     public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
-    
+
     private NetworkImageView mNetworkImageView;
     private ImageView mLocalImageView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
     private Button mSaveButton;
-    
+
     private MediaEditFragmentCallback mCallback;
 
     private boolean mIsMediaUpdating = false;
@@ -57,6 +59,7 @@ public class MediaEditFragment extends SherlockFragment {
     private String mMediaId;
     private ScrollView mScrollView;
     private View mLinearLayout;
+    private ImageLoader mImageLoader;
 
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
@@ -78,11 +81,12 @@ public class MediaEditFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        
+        mImageLoader = MediaImageLoader.getInstance();
+
         // retain this fragment across configuration changes
         setRetainInstance(true);
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -94,7 +98,7 @@ public class MediaEditFragment extends SherlockFragment {
         }
     }
 
-    
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -124,7 +128,7 @@ public class MediaEditFragment extends SherlockFragment {
         if (mMediaId != null) {
             return mMediaId;
         } else if (getArguments() != null) {
-            mMediaId = getArguments().getString(ARGS_MEDIA_ID); 
+            mMediaId = getArguments().getString(ARGS_MEDIA_ID);
             return mMediaId;
         } else {
             return null;
@@ -144,7 +148,7 @@ public class MediaEditFragment extends SherlockFragment {
         mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
         mSaveButton = (Button) mScrollView.findViewById(R.id.media_edit_save_button);
         mSaveButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 editMedia();
@@ -152,28 +156,28 @@ public class MediaEditFragment extends SherlockFragment {
         });
 
         disableEditingOnOldVersion();
-       
+
         loadMedia(getMediaId());
-        
+
         return mScrollView;
     }
-    
+
     private void disableEditingOnOldVersion() {
-        
+
         if( MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
             return;
-        
+
         mSaveButton.setEnabled(false);
         mTitleView.setEnabled(false);
         mCaptionView.setEnabled(false);
         mDescriptionView.setEnabled(false);
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
      }
-    
+
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
         Blog blog = WordPress.getCurrentBlog();
@@ -181,10 +185,8 @@ public class MediaEditFragment extends SherlockFragment {
         if (blog != null && getActivity() != null) {
             String blogId = String.valueOf(blog.getLocalTableBlogId());
 
-            Cursor cursor = null;
-
             if (mMediaId != null) {
-                cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
+                Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
                 refreshViews(cursor);
                 cursor.close();
             } else {
@@ -194,16 +196,16 @@ public class MediaEditFragment extends SherlockFragment {
         }
     }
 
-    public void hideKeyboard() {
+    void hideKeyboard() {
         if (getActivity() != null) {
             InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-    
-    public void editMedia() {
+
+    void editMedia() {
         hideKeyboard();
-        
+
         final String mediaId = this.getMediaId();
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();
@@ -211,7 +213,7 @@ public class MediaEditFragment extends SherlockFragment {
         final String caption = mCaptionView.getText().toString();
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
-                description, caption, 
+                description, caption,
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
@@ -245,7 +247,7 @@ public class MediaEditFragment extends SherlockFragment {
         apiArgs.add(currentBlog);
 
         if (!isMediaUpdating()) {
-            setMediaUpdating(true); 
+            setMediaUpdating(true);
             task.execute(apiArgs);
         }
 
@@ -254,14 +256,14 @@ public class MediaEditFragment extends SherlockFragment {
     private void setMediaUpdating(boolean isUpdating) {
         mIsMediaUpdating = isUpdating;
         mSaveButton.setEnabled(!isUpdating);
-        
+
         if (isUpdating) {
             mSaveButton.setText("Saving..");
         } else {
             mSaveButton.setText(R.string.save);
         }
     }
-    
+
     private boolean isMediaUpdating() {
         return mIsMediaUpdating;
     }
@@ -271,11 +273,11 @@ public class MediaEditFragment extends SherlockFragment {
             mLinearLayout.setVisibility(View.GONE);
             return;
         }
-        
+
         mLinearLayout.setVisibility(View.VISIBLE);
 
         mScrollView.scrollTo(0, 0);
-        
+
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         boolean isLocal = MediaUtils.isLocalFile(state);
         if (isLocal) {
@@ -291,7 +293,7 @@ public class MediaEditFragment extends SherlockFragment {
         mTitleView.setEnabled(!isLocal);
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
-        
+
         mMediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
         mTitleView.requestFocus();
@@ -299,19 +301,19 @@ public class MediaEditFragment extends SherlockFragment {
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
 
-        String imageUri = null;
-        if (isLocal) 
+        final String imageUri;
+        if (isLocal) {
             imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
-        else 
+        } else {
             imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
+        }
         if (MediaUtils.isValidImage(imageUri)) {
 
             int width = cursor.getInt(cursor.getColumnIndex("width"));
             int height = cursor.getInt(cursor.getColumnIndex("height"));
 
-            float screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-
             // differentiating between tablet and phone
+            float screenWidth;
             if (this.isInLayout()) {
                 screenWidth = mLinearLayout.getMeasuredWidth();
             } else {
@@ -325,23 +327,23 @@ public class MediaEditFragment extends SherlockFragment {
             } else if (height > screenHeight) {
                 width = (int) (width / (height / screenHeight));
             }
-            
+
             if (isLocal) {
                 loadLocalImage(mLocalImageView, imageUri, width, height);
                 mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             } else {
-                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
-                mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));   
+                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
+                mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             }
 
         } else {
             mNetworkImageView.setVisibility(View.GONE);
             mLocalImageView.setVisibility(View.GONE);
         }
-        
+
         disableEditingOnOldVersion();
     }
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (!isInLayout()) {
@@ -352,7 +354,6 @@ public class MediaEditFragment extends SherlockFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         if (!isInLayout()) {
-            menu.findItem(R.id.menu_refresh).setVisible(false);
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
 
@@ -360,7 +361,7 @@ public class MediaEditFragment extends SherlockFragment {
                 menu.findItem(R.id.menu_save_media).setVisible(false);
         }
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -371,18 +372,18 @@ public class MediaEditFragment extends SherlockFragment {
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
 
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
-            
+
             Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
-                    
+
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         imageView.setImageBitmap(bitmap);
@@ -391,6 +392,6 @@ public class MediaEditFragment extends SherlockFragment {
                 });
                 task.execute(filePath);
             }
-        }        
+        }
     }
 }

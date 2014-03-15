@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -39,7 +40,8 @@ import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -167,8 +169,10 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             String activePostFormat = "standard";
 
 
-            if (!mActivity.getPost().getWP_post_format().equals(""))
-                activePostFormat = mActivity.getPost().getWP_post_format();
+            if (!TextUtils.isEmpty(mActivity.getPost().getPostFormat())) {
+                activePostFormat = mActivity.getPost().getPostFormat();
+            }
+
             for (int i = 0; i < mPostFormats.length; i++) {
                 if (mPostFormats[i].equals(activePostFormat))
                     postFormatSpinner.setSelection(i);
@@ -187,7 +191,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         Post post = mActivity.getPost();
         if (post != null) {
-            mExcerptEditText.setText(post.getMt_excerpt());
+            mExcerptEditText.setText(post.getPostExcerpt());
 
             String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
                     getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
@@ -232,23 +236,22 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 }
             }
 
-            if (post.getWP_password() != null)
-                mPasswordEditText.setText(post.getWP_password());
+            if (!TextUtils.isEmpty(post.getPassword()))
+                mPasswordEditText.setText(post.getPassword());
 
-            if (post.getPost_status() != null) {
-                String status = post.getPost_status();
-
-                if (status.equals("publish")) {
+            switch (post.getStatusEnum()) {
+                case PUBLISHED:
                     mStatusSpinner.setSelection(0, true);
-                } else if (status.equals("draft")) {
+                    break;
+                case DRAFT:
                     mStatusSpinner.setSelection(1, true);
-                } else if (status.equals("pending")) {
+                    break;
+                case PENDING:
                     mStatusSpinner.setSelection(2, true);
-                } else if (status.equals("private")) {
+                    break;
+                case PRIVATE:
                     mStatusSpinner.setSelection(3, true);
-                } else if (status.equals("localdraft")) {
-                    mStatusSpinner.setSelection(0, true);
-                }
+                    break;
             }
 
             if (!post.isPage()) {
@@ -265,7 +268,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     new GetAddressTask().execute(latitude, longitude);
                 }
             }
-            String tags = post.getMt_keywords();
+            String tags = post.getKeywords();
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
@@ -358,6 +361,16 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         showPostTimeSelectionDialog();
                     }
                 })
+                .setNeutralButton(getResources().getText(R.string.immediately),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                mIsCustomPubDate = true;
+                                mPubDateText.setText(R.string.immediately);
+                            }
+                        })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
 
@@ -422,11 +435,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
-        if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
+            Date d = new Date();
+            pubDateTimestamp = d.getTime();
+        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
             else if (post.getDate_created_gmt() > 0)
                 pubDateTimestamp = post.getDate_created_gmt();
+        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
+            post.setDate_created_gmt(0);
+            post.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
@@ -442,16 +461,16 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         switch (selectedStatus) {
             case 0:
-                status = "publish";
+                status = PostStatus.toString(PostStatus.PUBLISHED);
                 break;
             case 1:
-                status = "draft";
+                status = PostStatus.toString(PostStatus.DRAFT);
                 break;
             case 2:
-                status = "pending";
+                status = PostStatus.toString(PostStatus.PENDING);
                 break;
             case 3:
-                status = "private";
+                status = PostStatus.toString(PostStatus.PRIVATE);
                 break;
         }
 
@@ -471,16 +490,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             longitude = post.getLongitude();
         }
 
-        post.setMt_excerpt(excerpt);
+        post.setPostExcerpt(excerpt);
         post.setDate_created_gmt(pubDateTimestamp);
         post.setJSONCategories(new JSONArray(mCategories));
-        post.setMt_keywords(tags);
-        post.setPost_status(status);
-        post.setWP_password(password);
+        post.setKeywords(tags);
+        post.setPostStatus(status);
+        post.setPassword(password);
         post.setLatitude(latitude);
         post.setLongitude(longitude);
-        post.setWP_post_form(postFormat);
-        post.update();
+        post.setPostFormat(postFormat);
+
+        WordPress.wpDB.updatePost(post);
     }
 
     /**
@@ -511,7 +531,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 AppLog.e(T.EDITOR, "Cannot Istantiate Geocoder", cannotIstantiateEx);
                 return null;
             }
-            
+
             List<Address> addresses;
             try {
                 addresses = gcd.getFromLocation(latitude, longitude, 1);

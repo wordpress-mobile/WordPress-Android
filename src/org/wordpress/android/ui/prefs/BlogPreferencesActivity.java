@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import java.util.List;
+import java.util.Locale;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,9 +30,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Activity for configuring blog specific settings.

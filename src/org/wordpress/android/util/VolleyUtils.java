@@ -2,17 +2,16 @@ package org.wordpress.android.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import android.content.Context;
 import android.util.Base64;
@@ -30,8 +29,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog.T;
 
 /**
@@ -113,91 +113,61 @@ public class VolleyUtils {
     }
 
     /*
-     * Return true if the blog is protected with HTTP Basic Auth, or it's using a self-signed certificate 
+     * Return true if the blog is protected with HTTP Basic Auth 
      */
     public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
         if (currentBlog.hasValidHTTPAuthCredentials())
             return true;
-        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-            return true;
-        }
+        
         return false;
     }
     
-    private static void addDefaultHeaders(Request<?> request, Map<String, String> headers, Blog blog){
-        if (request.getUrl() != null && !StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") 
-                && blog != null && blog.hasValidHTTPAuthCredentials()) {
-            HashMap<String, String> authParams = new HashMap<String, String>();
-            String creds = String.format("%s:%s", blog.getHttpuser(), blog.getHttppassword());
-            String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-            authParams.put("Authorization", auth);
-            headers.putAll(authParams);
-        }
-
-        HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-        defaultHeaders.put("User-Agent", WordPress.getUserAgent());
-        headers.putAll(defaultHeaders);
+    public static HttpStack getHTTPClientStack(final Context ctx) {
+        return getHTTPClientStack(ctx, null);
     }
     
-    public static TrustManager[] trustAllCerts = new TrustManager[]{
-        new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return new X509Certificate[0];
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }
-    };
-    
-    public static HttpStack getCustomHTTPClientStack(final Blog currentBlog) {
-        String domain = UrlUtils.getDomainFromUrl(currentBlog.getUrl());
+    public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
         SSLSocketFactory mSslSocketFactory = null;
-
-        if (TrustedSslDomainTable.isDomainTrusted(domain)) {
-            try {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAllCerts, new SecureRandom());
-                mSslSocketFactory = context.getSocketFactory();
-            } catch (NoSuchAlgorithmException e) {
-                AppLog.e(T.API, e);
-            } catch (KeyManagementException e) {
-                AppLog.e(T.API, e);
-            }
+        try {
+            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(ctx).getLocalKeyStore()) };
+            SSLContext context = SSLContext.getInstance("SSL");
+            context.init(null, trustAllowedCerts, new SecureRandom());
+            mSslSocketFactory = context.getSocketFactory();
+        } catch (NoSuchAlgorithmException e) {
+            AppLog.e(T.API, e);
+        } catch (KeyManagementException e) {
+            AppLog.e(T.API, e);
+        } catch (GeneralSecurityException e) {
+            AppLog.e(T.API, e);
+        } catch (IOException e) {
+            AppLog.e(T.API, e);
         }
 
         HurlStack stack = new HurlStack(null, mSslSocketFactory) {
             @Override
             public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError {
-                addDefaultHeaders(request, headers, currentBlog);
-                return super.performRequest(request, headers);
-            }
-        };
+                
+                if (request.getUrl() != null) {
+                    if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && currentBlog != null && currentBlog.hasValidHTTPAuthCredentials()) {
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        String creds = String.format("%s:%s", currentBlog.getHttpuser(), currentBlog.getHttppassword());
+                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                        authParams.put("Authorization", auth);
+                        headers.putAll(authParams);
+                    }
 
-        return stack;
-    }
-    
-    public static HttpStack getDefaultHTTPClientStack(final Context ctx) {
-
-        HurlStack stack = new HurlStack() {
-            @Override
-            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                    throws IOException, AuthFailureError {
-                addDefaultHeaders(request, headers, null);
-
-                if (request.getUrl() != null && StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && WordPress.getWPComAuthToken(ctx) != null) {
-                    // Add the auth header to access private WP.com files
-                    HashMap<String, String> authParams = new HashMap<String, String>();
-                    authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
-                    headers.putAll(authParams);
+                    if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && ctx != null && WordPress.getWPComAuthToken(ctx) != null) {
+                        // Add the auth header to access private WP.com files
+                        HashMap<String, String> authParams = new HashMap<String, String>();
+                        authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
+                        headers.putAll(authParams);
+                    }
                 }
+                
+                HashMap<String, String> defaultHeaders = new HashMap<String, String>();
+                defaultHeaders.put("User-Agent", WordPress.getUserAgent());
+                headers.putAll(defaultHeaders);
 
                 return super.performRequest(request, headers);
             }
@@ -205,5 +175,4 @@ public class VolleyUtils {
 
         return stack;
     }
-
 }

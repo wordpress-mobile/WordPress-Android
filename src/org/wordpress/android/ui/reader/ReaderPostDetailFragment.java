@@ -1107,7 +1107,13 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         sbHtml.append("<style type='text/css'>")
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { font-size: 1em; line-height: 1.5em; max-width: 100% !important;}");
+              .append("  body, p, div { max-width: 100% !important;}")
+              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+              .append("  h1, h2 { line-height: 1.2em; }");
+
+        // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
+              .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
@@ -1115,9 +1121,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
               .append("        border: 1px solid ").append(greyLight).append("; ")
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
-
-         // use a consistent top/bottom margin for paragraphs
-        sbHtml.append("  p { margin-top: 0px; margin-bottom: ").append(marginSmall).append("px; }");
 
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
@@ -1274,10 +1277,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             // it will be shown between the post's title and its content (but skip mshots)
             if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
                 Uri uri = Uri.parse(mPost.getFeaturedImage());
-                if (!mPost.getText().contains(StringUtils.notNullStr(uri.getLastPathSegment()))) {
+                String path = StringUtils.notNullStr(uri.getLastPathSegment());
+                if (!mPost.getText().contains(path)) {
                     showFeaturedImage = true;
-                    int imgHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
-                    featuredImageUrl = mPost.getFeaturedImageForDisplay(0, imgHeight);
+                    // note that only the width is used here - the imageView will adjust
+                    // the height to match that of the image once loaded
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(), 0);
                 }
             }
 
