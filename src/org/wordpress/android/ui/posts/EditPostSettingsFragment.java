@@ -137,7 +137,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
+            mPostFormats =
+                    new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
+                                 "video"};
             if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();
                 args.add(WordPress.getCurrentBlog());
@@ -147,7 +149,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<Map<String, String>>() {}.getType();
-                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(), type);
+                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(),
+                            type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
                     int i = 0;
@@ -158,8 +161,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
                         i++;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    AppLog.e(T.POSTS, e);
                 }
             }
             Spinner postFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
@@ -231,8 +234,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
                             flags);
                     mPubDateText.setText(formattedDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    AppLog.e(T.POSTS, e);
                 }
             }
 
@@ -322,8 +325,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             Double latitude = 0.0;
             try {
                 latitude = mCurrentLocation.getLatitude();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
             if (latitude != 0.0) {
                 WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
@@ -410,8 +413,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
                         }
                     }
                 })
@@ -480,8 +483,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             try {
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
         }
 

@@ -23,14 +23,15 @@ public class JSONUtil {
      * Given a JSONObject and a key path (e.g property.child) and a default it will
      * traverse the object graph and pull out the desired property
      */
-    public static <U> U queryJSON(JSONObject source, String query, U defaultObject){
+    public static <U> U queryJSON(JSONObject source, String query, U defaultObject) {
         int nextSeperator = query.indexOf(QUERY_SEPERATOR);
         int nextIndexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
         if (nextSeperator == -1 && nextIndexStart == -1) {
             // last item let's get it
             try {
-                if(!source.has(query))
+                if (!source.has(query)) {
                     return defaultObject;
+                }
                 Object result = source.get(query);
                 if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
                     return (U) result;
@@ -38,10 +39,8 @@ public class JSONUtil {
                     return defaultObject;
                 }
             } catch (JSONException e) {
-                AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
                 return defaultObject;
             } catch (ClassCastException e) {
-                AppLog.e(T.UTILS, String.format("Could not cast object %s", query), e);
                 return defaultObject;
             }
         }
@@ -71,17 +70,16 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch (java.lang.ClassCastException e) {
-            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
             return defaultObject;
         } catch (JSONException e) {
-            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
     }
+
     /**
      * Given a JSONArray and a query (e.g. [0].property) it will traverse the array and
      * pull out the requested property.
-     * 
+     *
      * Acceptable indexes include negative numbers to reference items from the end of
      * the list as well as "last" and "first" as more explicit references to "0" and "-1"
      */
@@ -97,12 +95,12 @@ public class JSONUtil {
         int index;
         if (indexStr.equals(QUERY_ARRAY_FIRST)) {
             index = 0;
-        } else if (indexStr.equals(QUERY_ARRAY_LAST)){
+        } else if (indexStr.equals(QUERY_ARRAY_LAST)) {
             index = -1;
         } else {
             index = Integer.parseInt(indexStr);
         }
-        if(index < 0){
+        if (index < 0) {
             index = source.length() + index;
         }
         // copy remaining query
@@ -110,9 +108,9 @@ public class JSONUtil {
         try {
             if (remainingQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
                 return queryJSON(source.getJSONArray(index), remainingQuery, defaultObject);
-            } else if(remainingQuery.indexOf(QUERY_SEPERATOR) == 0){
+            } else if (remainingQuery.indexOf(QUERY_SEPERATOR) == 0) {
                 return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
-            } else if(!remainingQuery.equals("")){
+            } else if (!remainingQuery.equals("")) {
                 // TODO throw an exception since the query isn't valid?
                 AppLog.d(T.UTILS, String.format("Incorrect query for next object %s", remainingQuery));
                 return defaultObject;
@@ -123,14 +121,11 @@ public class JSONUtil {
             } else {
                 return defaultObject;
             }
-        } catch(java.lang.ClassCastException e){
-            AppLog.e(T.UTILS, String.format("Could not cast object at %s", query), e);
+        } catch (java.lang.ClassCastException e) {
             return defaultObject;
         } catch (JSONException e) {
-            AppLog.e(T.UTILS, String.format("Could not complete query %s", query), e);
             return defaultObject;
         }
-
     }
 
     /**
@@ -142,22 +137,22 @@ public class JSONUtil {
             try {
                 stringList.add(jsonArray.getString(i));
             } catch (JSONException e) {
-                e.printStackTrace();
+                AppLog.e(T.UTILS, e);
             }
         }
         return stringList;
     }
-    
+
     /**
      * Convert a string list in a JSONArray
      */
     public static JSONArray fromStringListToJSONArray(ArrayList<String> stringList) {
         JSONArray jsonArray = new JSONArray();
-        if(stringList != null)
+        if (stringList != null) {
             for (int i = 0; i < stringList.size(); i++) {
                 jsonArray.put(stringList.get(i));
             }
-        
+        }
         return jsonArray;
     }
 

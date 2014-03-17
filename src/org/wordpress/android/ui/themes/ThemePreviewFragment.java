@@ -19,6 +19,8 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPWebViewClient;
 
 import java.io.UnsupportedEncodingException;
@@ -175,7 +177,6 @@ public class ThemePreviewFragment extends SherlockFragment {
      * @param url URL to be loaded in the webview.
      */
     protected void loadAuthenticatedUrl(String url) {
-
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(mBlog.getUsername(), "UTF-8"),
@@ -183,7 +184,7 @@ public class ThemePreviewFragment extends SherlockFragment {
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(WordPress.getLoginUrl(mBlog), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            AppLog.e(T.THEMES, e);
         }
     }
 

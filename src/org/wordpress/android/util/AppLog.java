@@ -1,10 +1,9 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
-
-import org.xmlrpc.android.XMLRPCFault;
 
 import org.wordpress.android.WordPress;
 
@@ -161,8 +160,13 @@ public class AppLog {
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
      */
-    public static String toHtml() {
+    public static String toHtml(Context context) {
         StringBuilder sb = new StringBuilder();
+
+        // add version & device info
+        sb.append("WordPress Android version: " + WordPress.getVersionName(context)).append("<br />")
+          .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("<br />");
+
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {

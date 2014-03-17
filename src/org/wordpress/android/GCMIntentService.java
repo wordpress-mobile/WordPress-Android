@@ -65,11 +65,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
-        
+
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
-            AppLog.v(T.NOTIFS, "Hrm. No notification message content received. Aborting.");
+            AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
             return;
         }
 
@@ -77,14 +77,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
-                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
+                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app.
                 //If they have never used the Reader, then they won't have a userId.
                 //Code for next release is below:
-               /* AppLog.e(T.NOTIFS, "Hrm. No wpcom userId found in the app. Aborting.");
+               /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
                 return;*/
             } else {
                 if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    AppLog.e(T.NOTIFS, "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
                     return;
                 }
             }
@@ -151,7 +151,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             try {
                 iconURL = URLDecoder.decode(iconURL, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));

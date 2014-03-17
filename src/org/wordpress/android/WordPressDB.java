@@ -592,31 +592,6 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public List<Integer> getNotificationAccounts() {
-
-        Cursor c = null;
-        try {
-            c = db.query(SETTINGS_TABLE, new String[]{"id"}, "runService=1",
-                    null, null, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        List<Integer> returnVector = new Vector<Integer>();
-        for (int i = 0; i < numRows; ++i) {
-            int tempID = c.getInt(0);
-            returnVector.add(tempID);
-            c.moveToNext();
-        }
-
-        c.close();
-
-        return returnVector;
-    }
-
     /*
      * Jetpack blogs have the "wpcom" blog_id stored in options->api_blogid. This is because self-hosted blogs have both
      * a blogID (local to their network), and a unique blogID on wpcom.

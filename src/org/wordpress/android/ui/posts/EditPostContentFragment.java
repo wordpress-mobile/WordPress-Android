@@ -68,6 +68,8 @@ import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -354,10 +356,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {
-                            e.printStackTrace();
+                            AppLog.e(T.POSTS, e);
                         }
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
@@ -432,8 +434,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 }
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (RuntimeException e) {
+                        AppLog.e(T.POSTS, e);
                     }
                     break;
             }
@@ -1026,7 +1028,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             ImageHelper ih = new ImageHelper();
 
             thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath());
-            
+
             if (thumbnailBitmap == null)
                 return false;
 
@@ -1227,9 +1229,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     try {
                         s.setSpan(styleClass.newInstance(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } catch (java.lang.InstantiationException e) {
-                        e.printStackTrace();
+                        AppLog.e(T.POSTS, e);
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        AppLog.e(T.POSTS, e);
                     }
                 }
             }
@@ -1569,7 +1571,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             if (editText.getText() != null)
                 width = Integer.parseInt(editText.getText().toString().replace("px", ""));
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            AppLog.e(T.POSTS, e);
         }
         width = Math.min(max, Math.max(width, min));
         return width;
