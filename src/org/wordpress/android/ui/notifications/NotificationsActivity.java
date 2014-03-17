@@ -352,8 +352,10 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     public void refreshNotes() {
-        if (!NetworkUtils.checkConnection(this))
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mNotesList.animateRefresh(false);
             return;
+        }
 
         mFirstLoadComplete = false;
         NotesResponseHandler notesHandler = new NotesResponseHandler(){

@@ -493,12 +493,17 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void refreshStats() {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
-        if (!NetworkUtils.isNetworkAvailable(this))
+        }
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         if (mIsUpdatingStats) {
+            mPullToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }

@@ -144,6 +144,9 @@ public class CommentsListFragment extends Fragment {
         super.onActivityCreated(bundle);
         setUpListView();
         getCommentAdapter().loadComments();
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            return;
+        }
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
             mPullToRefreshHelper.setRefreshing(true);
