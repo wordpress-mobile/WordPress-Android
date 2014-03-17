@@ -65,7 +65,7 @@ import java.util.Map;
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public static final int NEW_BLOG_CANCELED = 10;
-
+    public static final String BROADCAST_ACTION_ONBLOGCHANGED = "ONBLOGCHANGED";
     private static final String TAG = "WPActionBarActivity";
 
     /**
@@ -571,7 +571,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
-
         @Override
         public void onItemSelected(IcsAdapterView<?> arg0, View arg1, int position, long arg3) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
@@ -632,17 +631,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-        while(itemIterator.hasNext()){
+        while (itemIterator.hasNext()) {
             MenuDrawerItem item = itemIterator.next();
             // if the item is selected, but it's no longer visible we need to
             // select the first available item from the adapter
             if (item.isSelected() && !item.isVisible()) {
                 // then select the first item and activate it
-                if (mAdapter.getCount() > 0)
+                if (mAdapter.getCount() > 0) {
                     mAdapter.getItem(0).selectItem();
+                }
                 // if it has an item id save it to the preferences
-                if (item.hasItemId()){
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                if (item.hasItemId()) {
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                            WPActionBarActivity.this);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
                     editor.commit();
@@ -650,6 +651,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             }
         }
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_ONBLOGCHANGED);
+        sendBroadcast(broadcastIntent);
     }
 
     /**
