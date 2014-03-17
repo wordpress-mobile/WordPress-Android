@@ -13,47 +13,39 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
-import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpClientStack;
-import com.android.volley.toolbox.HttpStack;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.HttpResponse;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -96,18 +88,16 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
-        versionName = getVersionName();
+        // Enable log recording
+        AppLog.enableRecording(true);
+
+        versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, VolleyUtils.getHTTPClientStack(this));
-        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
-
-        // http://stackoverflow.com/a/17035814
-        imageLoader.setBatchedResponseDelay(0);
+        setupVolleyQueue();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
@@ -132,11 +122,14 @@ public class WordPress extends Application {
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
          }
+    }
 
-        //Enable log recording on beta build
-        if (NotificationUtils.getAppPushNotificationsName().equals("org.wordpress.android.beta.build")) {
-            AppLog.enableRecording(true);
-        }
+    public static void setupVolleyQueue() {
+        requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
+        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
+        VolleyLog.setTag(TAG);
+        // http://stackoverflow.com/a/17035814
+        imageLoader.setBatchedResponseDelay(0);
     }
 
     private void initWpDb() {
@@ -238,23 +231,18 @@ public class WordPress extends Application {
         }
     }
 
-    /**
-     * Get versionName from Manifest.xml
-     *
-     * @return versionName
-     */
-    private String getVersionName() {
-        PackageManager pm = getPackageManager();
+    public interface OnPostUploadedListener {
+        public abstract void OnPostUploaded(String postId);
+    }
+
+    public static String getVersionName(Context context) {
+        PackageManager pm = context.getPackageManager();
         try {
-            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }
-    }
-
-    public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(String postId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
@@ -343,12 +331,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlog(int id) {
-        try {
-            currentBlog = wpDB.instantiateBlogByLocalId(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        currentBlog = wpDB.instantiateBlogByLocalId(id);
         return currentBlog;
     }
 
@@ -400,7 +383,14 @@ public class WordPress extends Application {
     public static void signOut(Context context) {
         removeWpComUserRelatedData(context);
 
-        TrustedSslDomainTable.emptyTable();
+        try {
+            SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
+        } catch (GeneralSecurityException e) {
+            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
+        } catch (IOException e) {
+            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
+        }
+
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;

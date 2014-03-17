@@ -4,21 +4,17 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 public class Blog {
     private int localTableBlogId;
@@ -47,7 +43,7 @@ public class Blog {
     private String httpuser = "";
     private String httppassword = "";
     private String postFormats;
-    private String blogOptions;
+    private String blogOptions = "{}";
     private boolean isAdmin;
     private boolean isHidden;
 
@@ -261,6 +257,16 @@ public class Blog {
     }
 
     public String getApi_blogid() {
+        if (api_blogid == null) {
+            JSONObject jsonOptions = getBlogOptionsJSONObject();
+            if (jsonOptions != null) {
+                String newApiBlogid = JSONUtil.queryJSON(jsonOptions, "jetpack_client_id.value", "");
+                if (!TextUtils.isEmpty(newApiBlogid)) {
+                    setApi_blogid(newApiBlogid);
+                    WordPress.wpDB.saveBlog(this);
+                }
+            }
+        }
         return api_blogid;
     }
 
@@ -357,31 +363,29 @@ public class Blog {
         return blogOptions;
     }
 
-    public void setBlogOptions(String blogOptions) {
-        JSONObject options;
-
-        if (TextUtils.isEmpty(blogOptions)) {
-            //default to empty JSON object
-            this.blogOptions = "{}"; 
-            options = new JSONObject();
-        } else {
-            try {
-                options = new JSONObject(blogOptions);
-                this.blogOptions = blogOptions;
-            } catch (JSONException e) {
-                //default to empty JSON object
-                this.blogOptions = "{}"; 
-                options = new JSONObject();
-                e.printStackTrace();
-            }
+    public JSONObject getBlogOptionsJSONObject() {
+        String optionsString = getBlogOptions();
+        if (TextUtils.isEmpty(optionsString)) {
+            return null;
         }
-        
         try {
-            String  jetpackBlogId = options.has("jetpack_client_id") ? options.getJSONObject("jetpack_client_id").getString("value") : null;
-            if (jetpackBlogId != null)
-                this.setApi_blogid(jetpackBlogId);
+            return new JSONObject(optionsString);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.UTILS, "invalid blogOptions json", e);
+        }
+        return null;
+    }
+
+    public void setBlogOptions(String blogOptions) {
+        this.blogOptions = blogOptions;
+        JSONObject options = getBlogOptionsJSONObject();
+        if (options == null) {
+            this.blogOptions = "{}";
+            options = getBlogOptionsJSONObject();
+        }
+        String jetpackBlogId = JSONUtil.queryJSON(options, "jetpack_client_id.value", "");
+        if (!TextUtils.isEmpty(jetpackBlogId)) {
+            this.setApi_blogid(jetpackBlogId);
         }
     }
 
@@ -413,54 +417,33 @@ public class Blog {
 
     public String getAdminUrl() {
         String adminUrl = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {
-        }.getType();
-        Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
-            if (homeURLMap != null)
-                adminUrl = homeURLMap.get("value").toString();
-        }
-        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
-        if (adminUrl == null) {
-            if (this.getUrl().lastIndexOf("/") != -1) {
-                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/"))
-                        + "/wp-admin";
-            } else {
-                adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null) {
+            adminUrl = JSONUtil.queryJSON(jsonOptions, "admin_url.value", "");
+            // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
+            if (TextUtils.isEmpty(adminUrl)) {
+                if (this.getUrl().lastIndexOf("/") != -1) {
+                    adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/")) + "/wp-admin";
+                } else {
+                    adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
+                }
             }
         }
         return adminUrl;
     }
 
     public boolean isPrivate() {
-        try {
-            Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Object>>() {}.getType();
-            Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
-            StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
-            String blogPublicOptionValue = blogPublicOption.get("value").toString();
-            if ("-1".equals(blogPublicOptionValue)) {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null) {
+            return !JSONUtil.queryJSON(jsonOptions, "blog_public.value", "1").equals("1");
         }
         return false;
     }
 
     public boolean isJetpackPowered() {
-        String optionsString = getBlogOptions();
-        if (optionsString == null)
-            return false;
-
-        try {
-            JSONObject options = new JSONObject(optionsString);
-            if (options.has("jetpack_client_id"))
-                return true;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null) {
+            return !JSONUtil.queryJSON(jsonOptions, "jetpack_client_id.value", "").equals("");
         }
         return false;
     }

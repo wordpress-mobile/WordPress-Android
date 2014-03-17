@@ -54,9 +54,7 @@
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
-    <string name="refreshing_categories">Refreshing categories</string>
     <string name="connection_error">Connection error</string>
-    <string name="categories_refreshed">Categories refreshed</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="cancel_edit">Cancel edit</string>
@@ -122,7 +120,7 @@
     <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
-    <string name="media_empty_list">No Media</string>
+    <string name="media_empty_list">No media</string>
     <string name="media_empty_list_custom_date">No media in this time&#160;interval</string>
     <string name="delete">Delete</string>
 
@@ -276,10 +274,8 @@
     <string name="category_parent">Category parent (optional):</string>
     <string name="none">None</string>
     <string name="adding_cat_failed">Adding category failed</string>
-    <string name="adding_cat_failed_check">Check your settings and try again</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
-    <string name="cat_adding_category">Adding category</string>
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
@@ -703,6 +699,10 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
+    <string name="ssl_certificate_trust">Trust</string>
+    <string name="ssl_certificate_details">Certificate Details</string>
+    <string name="ssl_certificate_do_not_trust">Don\'t trust</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
+    <string name="ptr_tip_message">Tip: Pull down to refresh</string>
 </resources>

@@ -1,23 +1,7 @@
-package org.wordpress.android.ui.media;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
-import java.util.TimeZone;
+package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,14 +15,27 @@ import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.passcodelock.AppLockManager;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Version;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.passcodelock.AppLockManager;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MediaUtils {
 
@@ -47,53 +44,52 @@ public class MediaUtils {
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
         public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
-        public static final int ACTIVITY_REQUEST_CODE_BROWSE_FILES = 1400;
     }
-    
+
     public interface LaunchCameraCallback {
         public void onMediaCapturePathReady(String mediaCapturePath);
     }
-    
+
     public static boolean isValidImage(String url) {
-        if (url == null) 
+        if (url == null)
             return false;
-        
+
         if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif"))
             return true;
         return false;
     }
-    
-    public static boolean isDocument(String url) {
+
+    private static boolean isDocument(String url) {
         if (url == null)
             return false;
-        
+
         if (url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf"))
             return true;
         return false;
     }
-    
-    public static boolean isPowerpoint(String url) {
+
+    private static boolean isPowerpoint(String url) {
         if (url == null)
             return false;
-        
+
         if (url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx") || url.endsWith(".key"))
             return true;
         return false;
     }
-    
-    public static boolean isSpreadsheet(String url) {
+
+    private static boolean isSpreadsheet(String url) {
         if (url == null)
             return false;
-        
+
         if (url.endsWith(".xls") || url.endsWith(".xlsx"))
             return true;
         return false;
     }
-    
-    public static boolean isVideo(String url) {
+
+    private static boolean isVideo(String url) {
         if (url == null)
             return false;
-        if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") || 
+        if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") ||
                 url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") || url.endsWith(".3g2"))
             return true;
         return false;
@@ -112,19 +108,19 @@ public class MediaUtils {
             return R.drawable.media_movieclip;
         return 0;
     }
-    
+
     /** E.g. Jul 2, 2013 @ 21:57 **/
     public static String getDate(long ms) {
         Date date = new Date(ms);
         SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm", Locale.ENGLISH);
-        
+
         // The timezone on the website is at GMT
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        
+
         return sdf.format(date);
     }
 
-    
+
     public static void launchPictureLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -133,7 +129,7 @@ public class MediaUtils {
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_photo)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
-    
+
     public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
@@ -146,9 +142,9 @@ public class MediaUtils {
     }
 
     private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback) {
-        
+
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        
+
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
@@ -156,14 +152,14 @@ public class MediaUtils {
         if (callback != null) {
             callback.onMediaCapturePathReady(mediaCapturePath);
         }
-        
+
         // make sure the directory we plan to store the recording in exists
         File directory = new File(mediaCapturePath).getParentFile();
         if (!directory.exists() && !directory.mkdirs()) {
             try {
                 throw new IOException("Path to file could not be created.");
             } catch (IOException e) {
-                e.printStackTrace();
+                AppLog.e(T.POSTS, e);
             }
         }
         return intent;
@@ -181,7 +177,7 @@ public class MediaUtils {
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
     }
-    
+
     public static void launchVideoLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("video/*");
@@ -190,7 +186,7 @@ public class MediaUtils {
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_video)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
-    
+
     public static void launchVideoCamera(Fragment fragment) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
@@ -200,13 +196,13 @@ public class MediaUtils {
     public static boolean isLocalFile(String state) {
         if (state == null)
             return false;
-        
+
         if (state.equals("queued") || state.equals("uploading") || state.equals("retry") || state.equals("failed"))
             return true;
-        
+
         return false;
     }
-    
+
     public static Uri getLastRecordedVideoUri(Activity activity) {
         String[] proj = { MediaStore.Video.Media._ID };
         Uri contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
@@ -214,41 +210,39 @@ public class MediaUtils {
         CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
-        
-        Uri uri = Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
-        
-        return uri;
+
+        return Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
     }
-    
+
     /**
      * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties within the app.
      * See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
      * @return
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-        
-        if( WordPress.currentBlog == null) 
+
+        if( WordPress.currentBlog == null)
             return false;
-        
+
         if( WordPress.currentBlog.isDotcomFlag())
             return true;
-        
+
         Version minVersion;
         Version currentVersion;
         try {
             minVersion = new Version("3.5.2");
             currentVersion = new Version(WordPress.currentBlog.getWpVersion());
-            
+
             if( currentVersion.compareTo(minVersion) == -1 )
                 return false;
-            
+
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            AppLog.e(T.POSTS, e);
         }
-       
+
         return true;
     }
-    
+
     public static boolean canDeleteMedia(String blogId, String mediaID) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
         if (!cursor.moveToFirst()) {
@@ -296,7 +290,7 @@ public class MediaUtils {
         mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
-        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL"))); 
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
         mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();
@@ -313,7 +307,7 @@ public class MediaUtils {
             try {
                 imageWidthBlogSetting = Integer.valueOf(imageWidth);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                AppLog.e(T.POSTS, e);
             }
         }
 
@@ -391,10 +385,13 @@ public class MediaUtils {
             output.close();
             input.close();
 
-            Uri newUri = Uri.fromFile(f);
-            return newUri;
-        } catch (Exception e) {
-            e.printStackTrace();
+            return Uri.fromFile(f);
+        } catch (FileNotFoundException e) {
+            AppLog.e(T.UTILS, e);
+        } catch (MalformedURLException e) {
+            AppLog.e(T.UTILS, e);
+        } catch (IOException e) {
+            AppLog.e(T.UTILS, e);
         }
 
         return null;
@@ -405,5 +402,88 @@ public class MediaUtils {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(stream, null, options);
         return options.outMimeType;
+    }
+
+    public static String getMediaFileMimeType(File mediaFile) {
+        String originalFileName = mediaFile.getName().toLowerCase();
+        String mimeType = UrlUtils.getUrlMimeType(originalFileName);
+
+        if (TextUtils.isEmpty(mimeType)) {
+            try {
+                String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
+                URL urlForGuessingMime = new URL(filePathForGuessingMime);
+                URLConnection uc = urlForGuessingMime.openConnection();
+                String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
+                // check if returned "content/unknown"
+                if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown")) {
+                    mimeType = guessedContentType;
+                }
+            } catch (MalformedURLException e) {
+                AppLog.e(AppLog.T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
+            }
+            catch (IOException e) {
+                AppLog.e(AppLog.T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
+            }
+        }
+
+        // No mimeType yet? Try to decode the image and get the mimeType from there
+        if (TextUtils.isEmpty(mimeType)) {
+            try {
+                DataInputStream inputStream = new DataInputStream(new FileInputStream(mediaFile));
+                String mimeTypeFromStream = getMimeTypeOfInputStream(inputStream);
+                if (!TextUtils.isEmpty(mimeTypeFromStream)) {
+                    mimeType = mimeTypeFromStream;
+                }
+                inputStream.close();
+            } catch (FileNotFoundException e) {
+                AppLog.e(AppLog.T.API, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.API, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+            }
+        }
+
+        if (TextUtils.isEmpty(mimeType)) {
+            mimeType = "";
+        } else {
+            if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
+                mimeType = "video/mp4";
+            }
+        }
+
+        return mimeType;
+    }
+
+    public static String getMediaFileName(File mediaFile, String mimeType) {
+        String originalFileName = mediaFile.getName().toLowerCase();
+        String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
+        if (!TextUtils.isEmpty(extension))  //File name already has the extension in it
+            return originalFileName;
+
+        if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
+            String fileExtension = getExtensionForMimeType(mimeType);
+            if (!TextUtils.isEmpty(fileExtension)) {
+                originalFileName += "." + fileExtension;
+            }
+        } else {
+            //No mimetype and no extension!!
+            AppLog.e(AppLog.T.API, "No mimetype and no extension for " + mediaFile.getPath());
+        }
+
+        return originalFileName;
+    }
+
+    public static String getExtensionForMimeType(String mimeType) {
+        if (TextUtils.isEmpty(mimeType))
+            return "";
+
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
+        if (TextUtils.isEmpty(fileExtensionFromMimeType)) {
+            // We're still without an extension - split the mime type and retrieve it
+            String[] split = mimeType.split("/");
+            fileExtensionFromMimeType = split.length > 1 ? split[1] : split[0];
+        }
+
+        return fileExtensionFromMimeType.toLowerCase();
     }
 }

@@ -11,8 +11,14 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
+
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+
 
 public class NotificationsListFragment extends ListFragment implements NotesAdapter.DataLoadedListener {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
@@ -21,6 +27,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     private OnNoteClickListener mNoteClickListener;
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     /**
      * For responding to tapping of notes
@@ -40,6 +47,10 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.empty_listview, container, false);
+    }
+
+    public void animateRefresh(boolean refresh) {
+        mPullToRefreshHelper.setRefreshing(refresh);
     }
 
     @Override
@@ -62,6 +73,22 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
+
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        if (getActivity() instanceof NotificationsActivity) {
+                            ((NotificationsActivity) getActivity()).refreshNotes();
+                        }
+                    }
+                }, TextView.class);
     }
 
     @Override
@@ -73,15 +100,23 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
     }
 
-    protected NotesAdapter getNotesAdapter() {
+    NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), this);
         }
         return mNotesAdapter;
     }
 
-    protected boolean hasAdapter() {
+    boolean hasAdapter() {
         return (mNotesAdapter != null);
+    }
+
+    /*
+     * update the passed note in the adapter
+     */
+    protected void updateNote(Note note) {
+        if (hasActivity() && hasAdapter())
+            getNotesAdapter().updateNote(note);
     }
 
     /*
@@ -165,5 +200,4 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
         super.onSaveInstanceState(outState);
     }
-
 }

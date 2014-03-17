@@ -21,6 +21,8 @@ import com.actionbarsherlock.view.Window;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -136,7 +138,7 @@ public class DashboardActivity extends SherlockActivity {
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            AppLog.e(T.POSTS, e);
         }
     }
 

@@ -9,6 +9,7 @@ import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +29,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -43,7 +45,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.TrustedSslDomainTable;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -60,6 +64,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
+    private static final int CONNECTION_DEFAULT_TIMEOUT = 30000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -87,36 +92,52 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mSerializer = Xml.newSerializer();
     }
 
-    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
-        DefaultHttpClient client;
-        if (TrustedSslDomainTable.isDomainTrusted(uri.getHost())) {
-            if (uri.getScheme() != null && uri.getScheme().equals("https")) {
-                int port = uri.getPort();
-                if (port == -1) {
-                    port = 443;
-                }
-                try {
-                    client = new ConnectionClient(credentials, port);
-                } catch (KeyManagementException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (NoSuchAlgorithmException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (KeyStoreException e) {
-                    client = new ConnectionClient(credentials);
-                } catch (UnrecoverableKeyException e) {
-                    client = new ConnectionClient(credentials);
-                }
-            } else {
-                // that case should never happen, TrustedSslDomainTable should only contain ssl hosts
-                client = new ConnectionClient(credentials);
-            }
-        } else {
-            client = new DefaultHttpClient();
-            HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
-            BasicCredentialsProvider cP = new BasicCredentialsProvider();
-            cP.setCredentials(AuthScope.ANY, credentials);
-            client.setCredentialsProvider(cP);
+    private class ConnectionClient extends DefaultHttpClient {
+        public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+            super();
+            TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
+            Scheme scheme = new Scheme("https", tasslf, port);
+            getConnectionManager().getSchemeRegistry().register(scheme);
         }
+    }
+    
+    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
+        DefaultHttpClient client = null;
+        if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+            //wpcom blog or self-hosted blog on plain HTTP
+            client = new DefaultHttpClient();
+        } else {
+            int port = uri.getPort();
+            if (port == -1) {
+                port = 443;
+            }
+
+            try {
+                client = new ConnectionClient(port);
+            } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (KeyStoreException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (UnrecoverableKeyException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            }
+            
+            if (client == null) {
+                client = new DefaultHttpClient();
+            }
+        }
+        
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        BasicCredentialsProvider cP = new BasicCredentialsProvider();
+        cP.setCredentials(AuthScope.ANY, credentials);
+        client.setCredentialsProvider(cP);        
         return client;
     }
 
@@ -348,11 +369,11 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             mPostMethod.setEntity(entity);
         }
 
-        //set timeout to 40 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+        //set timeout to 30 seconds, does it need to be set for both mClient and method?
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
     }
 
     /**

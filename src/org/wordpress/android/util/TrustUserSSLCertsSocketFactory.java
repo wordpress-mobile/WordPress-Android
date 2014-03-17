@@ -15,20 +15,24 @@ import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
-public class TrustAllSSLSocketFactory extends SSLSocketFactory {
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.networking.WPTrustManager;
+
+public class TrustUserSSLCertsSocketFactory extends SSLSocketFactory {
     private javax.net.ssl.SSLSocketFactory factory;
 
-    public TrustAllSSLSocketFactory() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
+    public TrustUserSSLCertsSocketFactory() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         super(null);
             try {
                 SSLContext sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, new TrustManager[] { new TrustAllManager() }, null);
+                TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(null).getLocalKeyStore()) };
+                sslcontext.init(null, trustAllowedCerts, null);
                 factory = sslcontext.getSocketFactory();
                 setHostnameVerifier(new AllowAllHostnameVerifier());
             } catch(Exception ex) { }
     }
 
-    public static SocketFactory getDefault() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException { return new TrustAllSSLSocketFactory(); }
+    public static SocketFactory getDefault() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException { return new TrustUserSSLCertsSocketFactory(); }
     public Socket createSocket() throws IOException { return factory.createSocket(); }
     public Socket createSocket(Socket socket, String s, int i, boolean flag) throws IOException { return factory.createSocket(socket, s, i, flag); }
     public Socket createSocket(InetAddress inaddr, int i, InetAddress inaddr1, int j) throws IOException { return factory.createSocket(inaddr, i, inaddr1, j); }

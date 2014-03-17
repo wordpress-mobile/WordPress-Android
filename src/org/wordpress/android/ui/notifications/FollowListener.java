@@ -10,8 +10,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 class FollowListener implements FollowRow.OnFollowListener {
-    public FollowListener() {
+    private final int mNoteId;
+
+    public FollowListener(int noteId) {
         super();
+        mNoteId = noteId;
     }
 
     class FollowResponseHandler implements Listener, ErrorListener {
@@ -32,6 +35,9 @@ class FollowListener implements FollowRow.OnFollowListener {
                 mRow.setFollowing(mShouldFollow);
             }
             enableFollowButton();
+
+            // update the associated note so it has the correct follow status
+            NotificationUtils.updateNotification(mNoteId, null);
         }
 
         @Override

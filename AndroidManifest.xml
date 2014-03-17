@@ -77,6 +77,8 @@
             android:theme="@style/Theme.Sherlock.Light" />
         <activity android:name=".ui.accounts.ManageBlogsActivity" />
 
+	<activity android:name=".networking.SSLCertsViewActivity" />
+
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity" />
