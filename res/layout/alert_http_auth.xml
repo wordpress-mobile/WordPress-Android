@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/httpuser" />
     <EditText android:id="@+id/http_password"
+        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/httppassword" />
