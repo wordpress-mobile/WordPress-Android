@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -28,6 +30,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
 
 import java.util.List;
 import java.util.Vector;
@@ -60,24 +63,51 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         View view = inflater.inflate(R.layout.post_listview, container, false);
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
-            @Override
-            public void onRefreshStarted(View view) {
-                if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                    mPullToRefreshHelper.setRefreshing(false);
-                    return;
-                }
-                PostsActivity postsActivity = (PostsActivity) getActivity();
-                postsActivity.checkForLocalChanges(true);
-                Blog currentBlog = WordPress.getCurrentBlog();
-                new ApiHelper.RefreshBlogContentTask(postsActivity, currentBlog,
-                        new ApiHelper.VerifyCredentialsCallback(postsActivity, currentBlog.isDotcomFlag())
-                ).execute(false);
-            }
-        }, LinearLayout.class
-        );
+        mPullToRefreshHelper = new PullToRefreshHelper(
+                getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshPosts((PostsActivity) getActivity());
+                    }
+                }, LinearLayout.class);
         return view;
+    }
+
+    private void refreshPosts(PostsActivity postsActivity) {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        final RefreshBlogContentTask refreshBlogContentTask = new ApiHelper.RefreshBlogContentTask(postsActivity,
+                currentBlog, new ApiHelper.VerifyCredentialsCallback(postsActivity, currentBlog.isDotcomFlag()));
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
+                mIsPage);
+        if (hasLocalChanges) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
+            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
+            dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            mPullToRefreshHelper.setRefreshing(true);
+                            refreshBlogContentTask.execute(false);
+                        }
+                    }
+            );
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    mPullToRefreshHelper.setRefreshing(false);
+                }
+            });
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+        } else {
+            mPullToRefreshHelper.setRefreshing(true);
+            refreshBlogContentTask.execute(false);
+        }
     }
 
     public PostsListAdapter getPostListAdapter() {
@@ -188,6 +218,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
             getPostListAdapter().loadPosts();
         }
+    }
+
+    public boolean isRefreshing() {
+        return mPullToRefreshHelper.isRefreshing();
     }
 
     public void setRefreshing(boolean refreshing) {

@@ -30,11 +30,11 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
@@ -65,7 +65,6 @@ public class PostsActivity extends WPActionBarActivity
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public ProgressDialog mLoadingDialog;
     public boolean mIsPage = false;
-    public boolean mIsRefreshing = false; // TODO: remove me
     public String mErrorMsg = "";
     private PostsListFragment mPostList;
 
@@ -157,12 +156,12 @@ public class PostsActivity extends WPActionBarActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Just close the window.
                     }
-                });
+                }
+        );
         if (infoTitle != null && infoURL != null) {
             dialogBuilder.setNeutralButton(infoTitle,
                 new DialogInterface.OnClickListener() {
@@ -222,9 +221,14 @@ public class PostsActivity extends WPActionBarActivity
         }
     };
 
+    public boolean isRefreshing() {
+        return mPostList.isRefreshing();
+    }
+
     public void checkForLocalChanges(boolean shouldPrompt) {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
             return;
+        }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
                 mIsPage);
         if (hasLocalChanges) {
@@ -241,7 +245,8 @@ public class PostsActivity extends WPActionBarActivity
                             attemptToSelectPost();
                             mPostList.requestPosts(false);
                         }
-                    });
+                    }
+            );
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     mPostList.setRefreshing(false);
@@ -777,5 +782,9 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
         new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        mPostList.setRefreshing(refreshing);
     }
 }

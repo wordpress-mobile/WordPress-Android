@@ -73,6 +73,10 @@ public class PullToRefreshHelper implements OnRefreshListener {
         mPullToRefreshLayout.setRefreshing(refreshing);
     }
 
+    public boolean isRefreshing() {
+        return mPullToRefreshLayout.isRefreshing();
+    }
+
     @Override
     public void onRefreshStarted(View view) {
         mRefreshListener.onRefreshStarted(view);
