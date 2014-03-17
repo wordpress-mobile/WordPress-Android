@@ -3,14 +3,12 @@
 	<string name="reader_label_reblog_empty">Du hast keine sichtbaren WordPress.com-Blogs um diesen Beitrag zu rebloggen.</string>
 	<string name="loading_posts">Lädt Beiträge...</string>
 	<string name="loading_pages">Lädt Seiten...</string>
-	<string name="reader_label_reblog_empty_link"></string>
 	<string name="help">Hilfe</string>
 	<string name="forgot_password">Passwort vergessen?</string>
 	<string name="nux_help_description">Besuche das Hilfecenter um Antworten auf deine Fragen zu erhalten oder besuche das Forum.</string>
 	<string name="forums">Forums</string>
 	<string name="help_center">Hilfecenter</string>
 	<string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
-	<string name="ssl_certificate_ask_trust"></string>
 	<string name="out_of_memory">Speicherplatz erschöpft</string>
 	<string name="reader_empty_followed_blogs_title">Du folgst aktuell keinen Blogs</string>
 	<string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
