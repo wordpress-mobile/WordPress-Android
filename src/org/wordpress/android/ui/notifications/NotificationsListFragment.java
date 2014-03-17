@@ -112,6 +112,14 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     /*
+     * update the passed note in the adapter
+     */
+    protected void updateNote(Note note) {
+        if (hasActivity() && hasAdapter())
+            getNotesAdapter().updateNote(note);
+    }
+
+    /*
      * called by NotesAdapter after loading notes
      */
     @Override

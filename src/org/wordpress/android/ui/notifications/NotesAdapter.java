@@ -67,7 +67,7 @@ class NotesAdapter extends BaseAdapter {
         return null;
     }
 
-    public int indexOfNote(Note note) {
+    private int indexOfNote(Note note) {
         if (note == null)
             return -1;
         for (int i = 0; i < mNotes.size(); i++) {
@@ -125,6 +125,18 @@ class NotesAdapter extends BaseAdapter {
 
         if (mDataLoadedListener != null)
             mDataLoadedListener.onDataLoaded(isEmpty());
+    }
+
+    /*
+     * called by activity when a note has changed - passed note will already contain the changes
+     * but will still have the same note id
+     */
+    protected void updateNote(Note updatedNote) {
+        int index = indexOfNote(updatedNote);
+        if (index == -1)
+            return;
+        mNotes.set(index, updatedNote);
+        notifyDataSetChanged();
     }
 
     // HashMap of drawables for note types
