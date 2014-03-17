@@ -1,14 +1,14 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
 import org.wordpress.android.util.AppLog.T;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class DeviceUtils {
 
@@ -28,8 +28,8 @@ public class DeviceUtils {
 
     private DeviceUtils() {
         isKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
-    };
-    
+    }
+
     /**
      * Checks camera availability recursively based on API level.
      *
@@ -62,28 +62,26 @@ public class DeviceUtils {
         try {
             Properties prop = new Properties();
             InputStream fileStream;
-            //Read the device name from a precomplied list: see http://making.meetup.com/post/29648976176/human-readble-android-device-names
+            // Read the device name from a precomplied list:
+            // see http://making.meetup.com/post/29648976176/human-readble-android-device-names
             fileStream = context.getAssets().open("android_models.properties");
             prop.load(fileStream);
             fileStream.close();
-            String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_" ) );
-            if ( decodedModel != null && !decodedModel.trim().equals("") )  {
+            String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_"));
+            if (decodedModel != null && !decodedModel.trim().equals("")) {
                 model = decodedModel;
             }
         } catch (IOException e) {
             AppLog.e(T.UTILS, e.getMessage());
         }
 
-        if( model == null ) {  //Device model not found in the list
-           
+        if (model == null) {  //Device model not found in the list
             if (undecodedModel.startsWith(manufacturer)) {
                 model = capitalize(undecodedModel);
             } else {
                 model = capitalize(manufacturer) + " " + undecodedModel;
             }
-
         }
-
         return model;
     }
 
@@ -97,5 +95,5 @@ public class DeviceUtils {
         } else {
             return Character.toUpperCase(first) + s.substring(1);
         }
-    } 
+    }
 }

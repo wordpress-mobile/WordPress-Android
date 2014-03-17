@@ -1,13 +1,5 @@
 package org.wordpress.android;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.security.GeneralSecurityException;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -34,8 +26,6 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.wordpress.passcodelock.AppLockManager;
-
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
@@ -50,6 +40,15 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.passcodelock.AppLockManager;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
@@ -89,7 +88,10 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
-        versionName = getVersionName();
+        // Enable log recording
+        AppLog.enableRecording(true);
+
+        versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
@@ -120,11 +122,6 @@ public class WordPress extends Application {
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
          }
-
-        //Enable log recording on beta build
-        if (NotificationUtils.getAppPushNotificationsName().equals("org.wordpress.android.beta.build")) {
-            AppLog.enableRecording(true);
-        }
     }
 
     public static void setupVolleyQueue() {
@@ -234,23 +231,18 @@ public class WordPress extends Application {
         }
     }
 
-    /**
-     * Get versionName from Manifest.xml
-     *
-     * @return versionName
-     */
-    private String getVersionName() {
-        PackageManager pm = getPackageManager();
+    public interface OnPostUploadedListener {
+        public abstract void OnPostUploaded(String postId);
+    }
+
+    public static String getVersionName(Context context) {
+        PackageManager pm = context.getPackageManager();
         try {
-            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             return pi.versionName == null ? "" : pi.versionName;
         } catch (NameNotFoundException e) {
             return "";
         }
-    }
-
-    public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(String postId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
@@ -339,12 +331,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlog(int id) {
-        try {
-            currentBlog = wpDB.instantiateBlogByLocalId(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        currentBlog = wpDB.instantiateBlogByLocalId(id);
         return currentBlog;
     }
 
@@ -403,7 +390,7 @@ public class WordPress extends Application {
         } catch (IOException e) {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
-        
+
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;

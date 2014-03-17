@@ -24,6 +24,8 @@ import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -299,14 +301,13 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     mProgressFooterView.setVisibility(View.GONE);
 
                 if (!TextUtils.isEmpty(errorMessage) && !getActivity().isFinishing()) {
-                    FragmentTransaction ft = getFragmentManager()
-                            .beginTransaction();
-                    WPAlertDialogFragment alert = WPAlertDialogFragment
-                            .newAlertDialog(mIsPage ? getString(R.string.error_refresh_pages) : getString(R.string.error_refresh_posts));
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(mIsPage ? getString(
+                            R.string.error_refresh_pages) : getString(R.string.error_refresh_posts));
                     try {
                         alert.show(ft, "alert");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (RuntimeException e) {
+                        AppLog.e(T.POSTS, e);
                     }
                 }
             }

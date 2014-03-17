@@ -28,7 +28,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -48,7 +47,6 @@ import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -573,34 +571,13 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     String getBlogId() {
+        Blog currentBlog = WordPress.getCurrentBlog();
         // for dotcom blogs that were added manually
-        if (WordPress.getCurrentBlog().isDotcomFlag() && !dotComCredentialsMatch())
-            return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
-        // for self-hosted blogs
-        try {
-            Blog currentBlog = WordPress.getCurrentBlog();
-            String jetpackBlogId = currentBlog.getApi_blogid();
-            if (jetpackBlogId == null) {
-                JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
-                jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
-
-                if (jetpackBlogId == null)
-                    return null;
-
-                if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
-                    currentBlog.setApi_blogid(jetpackBlogId);
-                    WordPress.wpDB.saveBlog(currentBlog);
-                }
-
-                return jetpackBlogId;
-            } else {
-                return jetpackBlogId;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (currentBlog.isDotcomFlag() && !dotComCredentialsMatch()) {
+            return String.valueOf(currentBlog.getRemoteBlogId());
         }
-        return null;
+        // Can return null
+        return currentBlog.getApi_blogid();
     }
 
     private void stopStatsService() {

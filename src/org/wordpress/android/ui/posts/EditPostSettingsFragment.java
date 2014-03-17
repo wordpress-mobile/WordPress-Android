@@ -137,7 +137,9 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
+            mPostFormats =
+                    new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
+                                 "video"};
             if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();
                 args.add(WordPress.getCurrentBlog());
@@ -147,7 +149,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<Map<String, String>>() {}.getType();
-                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(), type);
+                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(),
+                            type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
                     int i = 0;
@@ -158,8 +161,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
                         i++;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    AppLog.e(T.POSTS, e);
                 }
             }
             Spinner postFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
@@ -231,8 +234,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
                             flags);
                     mPubDateText.setText(formattedDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    AppLog.e(T.POSTS, e);
                 }
             }
 
@@ -322,8 +325,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             Double latitude = 0.0;
             try {
                 latitude = mCurrentLocation.getLatitude();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
             if (latitude != 0.0) {
                 WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
@@ -361,6 +364,16 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         showPostTimeSelectionDialog();
                     }
                 })
+                .setNeutralButton(getResources().getText(R.string.immediately),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                mIsCustomPubDate = true;
+                                mPubDateText.setText(R.string.immediately);
+                            }
+                        })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
 
@@ -400,8 +413,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
                         }
                     }
                 })
@@ -425,11 +438,17 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
-        if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
+            Date d = new Date();
+            pubDateTimestamp = d.getTime();
+        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
             else if (post.getDate_created_gmt() > 0)
                 pubDateTimestamp = post.getDate_created_gmt();
+        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
+            post.setDate_created_gmt(0);
+            post.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
@@ -464,8 +483,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             try {
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
             }
         }
 
@@ -515,7 +534,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 AppLog.e(T.EDITOR, "Cannot Istantiate Geocoder", cannotIstantiateEx);
                 return null;
             }
-            
+
             List<Address> addresses;
             try {
                 addresses = gcd.getFromLocation(latitude, longitude, 1);
