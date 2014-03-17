@@ -22,9 +22,9 @@ import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -260,22 +260,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mIsFetchingPosts = false;
-                if (!hasActivity())
+                if (!hasActivity()) {
                     return;
-                mPullToRefreshHelper.setRefreshing(false);
-                if (mProgressFooterView != null)
-                    mProgressFooterView.setVisibility(View.GONE);
-
-                if (!TextUtils.isEmpty(errorMessage) && !getActivity().isFinishing()) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(mIsPage ? getString(
-                            R.string.error_refresh_pages) : getString(R.string.error_refresh_posts));
-                    try {
-                        alert.show(ft, "alert");
-                    } catch (RuntimeException e) {
-                        AppLog.e(T.POSTS, e);
-                    }
                 }
+                mPullToRefreshHelper.setRefreshing(false);
+                if (mProgressFooterView != null) {
+                    mProgressFooterView.setVisibility(View.GONE);
+                }
+                ToastUtils.showToast(getActivity(),
+                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
             }
         });
 
@@ -306,8 +299,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         if (!hasActivity())
             return;
 
-        if (!NetworkUtils.checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         // Fetch the newly uploaded post
         if (!TextUtils.isEmpty(postId)) {
@@ -319,9 +314,9 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             ApiHelper.FetchSinglePostTask fetchPostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
                 @Override
                 public void onSuccess() {
-                    if (!hasActivity())
+                    if (!hasActivity()) {
                         return;
-
+                    }
                     mIsFetchingPosts = false;
                     mPullToRefreshHelper.setRefreshing(false);
                     getPostListAdapter().loadPosts();
@@ -330,10 +325,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    if (!hasActivity())
+                    if (!hasActivity()) {
                         return;
-
-                    Toast.makeText(getActivity(), R.string.error_refresh_posts, Toast.LENGTH_SHORT).show();
+                    }
+                    ToastUtils.showToast(getActivity(),
+                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
                     mIsFetchingPosts = false;
                     mPullToRefreshHelper.setRefreshing(false);
                 }
