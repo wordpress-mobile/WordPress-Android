@@ -30,6 +30,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
 
 import java.util.List;
@@ -45,6 +46,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
+    private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
+    private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -149,7 +152,6 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     }
                 }
             };
-
             mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
         }
 
@@ -271,9 +273,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             mProgressFooterView.setVisibility(View.VISIBLE);
         }
 
-        ApiHelper.FetchPostsTask fetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
+                mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
@@ -293,6 +296,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
                 if (!hasActivity()) {
                     return;
@@ -301,13 +305,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
-                ToastUtils.showToast(getActivity(),
-                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                if (errorType != ErrorType.TASK_CANCELLED) {
+                    ToastUtils.showToast(getActivity(),
+                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                }
             }
         });
 
         mIsFetchingPosts = true;
-        fetchPostsTask.execute(apiArgs);
+        mCurrentFetchPostsTask.execute(apiArgs);
     }
 
     protected void clear() {
@@ -345,13 +351,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             apiArgs.add(postId);
             apiArgs.add(mIsPage);
 
-            ApiHelper.FetchSinglePostTask fetchPostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
+            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
                 @Override
                 public void onSuccess() {
+                    mCurrentFetchSinglePostTask = null;
+                    mIsFetchingPosts = false;
                     if (!hasActivity()) {
                         return;
                     }
-                    mIsFetchingPosts = false;
                     mPullToRefreshHelper.setRefreshing(false);
                     getPostListAdapter().loadPosts();
                     mOnSinglePostLoadedListener.onSinglePostLoaded();
@@ -359,20 +366,34 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    mCurrentFetchSinglePostTask = null;
+                    mIsFetchingPosts = false;
                     if (!hasActivity()) {
                         return;
                     }
-                    ToastUtils.showToast(getActivity(),
-                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
-                    mIsFetchingPosts = false;
+                    if (errorType != ErrorType.TASK_CANCELLED) {
+                        ToastUtils.showToast(getActivity(),
+                                mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                    }
                     mPullToRefreshHelper.setRefreshing(false);
                 }
             });
 
             mPullToRefreshHelper.setRefreshing(true);
             mIsFetchingPosts = true;
-            fetchPostTask.execute(apiArgs);
+            mCurrentFetchSinglePostTask.execute(apiArgs);
         }
+    }
+
+    public void onBlogChanged() {
+        if (mCurrentFetchPostsTask != null) {
+            mCurrentFetchPostsTask.cancel(true);
+        }
+        if (mCurrentFetchSinglePostTask != null) {
+            mCurrentFetchSinglePostTask.cancel(true);
+        }
+        mIsFetchingPosts = false;
+        mPullToRefreshHelper.setRefreshing(false);
     }
 
     public interface OnPostSelectedListener {

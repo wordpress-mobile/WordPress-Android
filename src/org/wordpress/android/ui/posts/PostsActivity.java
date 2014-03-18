@@ -92,20 +92,23 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
-                    new ApiHelper.GenericCallback() {
-                        @Override
-                        public void onSuccess() {
-                            if (!isFinishing())
-                                updateMenuDrawer();
-                        }
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.GenericCallback() {
+                @Override
+                public void onSuccess() {
+                    if (!isFinishing()) {
+                        updateMenuDrawer();
+                    }
+                }
 
-                        @Override
-                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                            if (!isFinishing())
-                                ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
-                        }
-                    }).execute(false);
+                @Override
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    if (!isFinishing()) {
+                        ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(
+                                R.string.error_generic));
+                    }
+                }
+            }
+            ).execute(false);
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
