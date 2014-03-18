@@ -113,7 +113,7 @@ public class WordPress extends Application {
         }
 
         WPMobileStatsUtil.initialize();
-        WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventAppOpened);
+        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventAppOpened);
 
         super.onCreate();
 
