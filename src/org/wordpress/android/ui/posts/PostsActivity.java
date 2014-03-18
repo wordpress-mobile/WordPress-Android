@@ -24,15 +24,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
@@ -43,13 +44,8 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -513,148 +509,8 @@ public class PostsActivity extends WPActionBarActivity
 
     }
 
-    public class shareURLTask extends AsyncTask<Post, Void, String> {
-
-        Post post;
-
-        @Override
-        protected void onPreExecute() {
-            showDialog(ID_DIALOG_SHARE);
-        }
-
-        @Override
-        protected void onPostExecute(String shareURL) {
-            dismissDialog(ID_DIALOG_SHARE);
-            if (shareURL == null) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsActivity.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.connection_error));
-                dialogBuilder.setMessage(mErrorMsg);
-                dialogBuilder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            } else {
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-                share.putExtra(Intent.EXTRA_TEXT, shareURL);
-                startActivity(Intent.createChooser(share, getResources()
-                        .getText(R.string.share_url)));
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-
-        }
-
-        @Override
-        protected String doInBackground(Post... params) {
-            String result = null;
-            post = params[0];
-            if (post == null)
-                return null;
-
-            Blog blog = WordPress.currentBlog;
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-            Object getPostResult;
-            try {
-                Object[] vParams = { WordPress.currentBlog.getRemoteBlogId(),
-                        post.getRemotePostId(),
-                        WordPress.currentBlog.getUsername(),
-                        WordPress.currentBlog.getPassword() };
-                getPostResult = client.call(mIsPage ? "wp.getPage" : "metaWeblog.getPost", vParams);
-            } catch (XMLRPCException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = getResources().getText(R.string.error_generic).toString();
-                return null;
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = getResources().getText(R.string.error_generic).toString();
-                return null;
-            } catch (XmlPullParserException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-                mErrorMsg = getResources().getText(R.string.error_generic).toString();
-                return null;
-            }
-
-            if (getPostResult != null && getPostResult instanceof Map) {
-                try {
-                    Map<?, ?> postMap = (Map<?, ?>) getPostResult;
-                    String postStatus = MapUtils.getMapStr(postMap, mIsPage ? "page_status" : "post_status");
-                    if (!"publish".equals(postStatus)) {
-                        if (mIsPage) {
-                            mErrorMsg = getString(R.string.page_not_published);
-                        } else {
-                            mErrorMsg = getString(R.string.post_not_published);
-                        }
-                        return null;
-                    } else {
-                        String postUrl = MapUtils.getMapStr(postMap, "permaLink");
-                        String shortlink = getShortlinkTagHref(postUrl);
-                        if (shortlink == null) {
-                            result = postUrl;
-                        } else {
-                            result = shortlink;
-                        }
-                    }
-                } catch (Exception e) {
-                    mErrorMsg = getResources().getText(R.string.error_generic).toString();
-                    return null;
-                }
-            }
-
-            return result;
-        }
-    }
-
     protected void refreshComments() {
         new refreshCommentsTask().execute();
-    }
-
-    private String getShortlinkTagHref(String urlString) {
-        String html = getHTML(urlString);
-
-        if (html != "") {
-            try {
-                int location = html.indexOf("http://wp.me");
-                String shortlink = html.substring(location, location + 30);
-                shortlink = shortlink.substring(0, shortlink.indexOf("'"));
-                return shortlink;
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
-
-        return null; // never found the shortlink tag
-    }
-
-    public String getHTML(String urlSource) {
-        URL url;
-        HttpURLConnection conn;
-        BufferedReader rd;
-        String line;
-        String result = "";
-        try {
-            url = new URL(urlSource);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            while ((line = rd.readLine()) != null) {
-                result += line;
-            }
-            rd.close();
-        } catch (IOException e) {
-            AppLog.e(T.POSTS, e);
-        }
-        return result;
     }
 
     @Override
@@ -734,7 +590,24 @@ public class PostsActivity extends WPActionBarActivity
 
             }
         } else if (action == POST_SHARE) {
-            new shareURLTask().execute(post);
+            // Only share published posts
+            if (post.getStatusEnum() != PostStatus.PUBLISHED) {
+                AlertUtil.showAlert(
+                        this,
+                        R.string.error,
+                        post.isPage() ? R.string.page_not_published : R.string.post_not_published
+                );
+                return;
+            }
+
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+            share.putExtra(Intent.EXTRA_TEXT, post.getPermaLink());
+            startActivity(Intent.createChooser(share, getResources()
+                    .getText(R.string.share_url)));
+            AppLockManager.getInstance().setExtendedTimeout();
+
             WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShare);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
