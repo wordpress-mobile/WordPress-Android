@@ -24,20 +24,31 @@ import android.text.TextUtils;
 import android.util.Xml;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthState;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -86,7 +97,11 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
 
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
+        UsernamePasswordCredentials credentials = null;
+        if (!TextUtils.isEmpty(httpuser) && !TextUtils.isEmpty(httppasswd)) {
+            credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
+        }
+        
         mClient = instantiateClientForUri(uri, credentials);
 
         mSerializer = Xml.newSerializer();
@@ -101,7 +116,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
     }
     
-    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials credentials) {
+    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
         if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
             //wpcom blog or self-hosted blog on plain HTTP
@@ -135,9 +150,31 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
-        BasicCredentialsProvider cP = new BasicCredentialsProvider();
-        cP.setCredentials(AuthScope.ANY, credentials);
-        client.setCredentialsProvider(cP);        
+
+        //Setup HTTP Basic Auth if necessary
+        if (usernamePasswordCredentials != null) {
+            BasicCredentialsProvider cP = new BasicCredentialsProvider();
+            cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
+            client.setCredentialsProvider(cP);
+
+            // add an interceptor to sent the credentials preemptively
+            HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
+                @Override
+                public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                    AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+                    if (authState.getAuthScheme() == null) {
+                        CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
+                        HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+                        AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
+                        Credentials creds = credsProvider.getCredentials(authScope);
+                        authState.setCredentials(creds);
+                        authState.setAuthScheme(new BasicScheme());
+                    }
+                }
+            };
+            client.addRequestInterceptor(preemptiveAuth, 0);
+        }
+        
         return client;
     }
 

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="loading_posts">Chargement des articles...</string>
+	<string name="loading_pages">Chargement des pages...</string>
+	<string name="reader_label_reblog_empty_link">Changer la visibilité du blog</string>
+	<string name="help">Aide</string>
+	<string name="forgot_password">Mot de passe perdu ?</string>
+	<string name="nux_help_description">Visitez le centre d\'aide pour trouver des réponses aux questions les plus souvent posées ou visitez les forums pour en poser de nouvelles.</string>
+	<string name="forums">Forums</string>
+	<string name="help_center">Centre d\'aide</string>
+	<string name="ssl_certificate_error">Certificat SSL invalide</string>
+	<string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
+	<string name="reader_label_reblog_empty">Vous n\'avez pas de blogs WordPress.com visibles pour rebloguer cet article</string>
 	<string name="out_of_memory">L\'appareil n\'a plus assez de mémoire</string>
 	<string name="gallery_error">Le média ne peut pas être récupéré</string>
 	<string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
@@ -31,7 +42,6 @@
 	<string name="stats_bar_graph_empty">Aucune statistique disponible</string>
 	<string name="invalid_url_message">Vérifiez que l\'URL du blog est valide</string>
 	<string name="reply_failed">Échec de la réponse</string>
-	<string name="tap_retry">Touche pour recommencer</string>
 	<string name="notifications_empty_list">Aucune notifications</string>
 	<string name="error_delete_post">Une erreur s\'est produite lors de la suppression de %s</string>
 	<string name="error_refresh_posts">Les articles ne peuvent pas être actualisés pour l\'instant</string>
@@ -98,9 +108,7 @@
 	<string name="edit_post">Modifier l\'article</string>
 	<string name="connection_error">Erreur de connexion</string>
 	<string name="cancel_edit">Annuler la modification</string>
-	<string name="load_more">Charger plus</string>
 	<string name="post_not_found">Une erreur s\'est produite en chargeant cet article. Actualisez vos articles et essayez de nouveau.</string>
-	<string name="please_wait_refresh_done">Chargement en cours...</string>
 	<string name="media_gallery_settings_title">Paramètres de la galerie</string>
 	<string name="media_gallery_image_order">Ordre des images</string>
 	<string name="media_gallery_num_columns">Nombre de colonnes</string>
@@ -141,9 +149,7 @@
 	<string name="toast_comment_unedited">Le commentaire n\'a pas été modifié</string>
 	<string name="blog_removed_successfully">Blog supprimé avec succès</string>
 	<string name="delete_draft">Effacer le brouillon</string>
-	<string name="page_actions">Actions de la page</string>
 	<string name="preview_page">Prévisualiser la page</string>
-	<string name="post_actions">Actions de l\'article</string>
 	<string name="preview_post">Prévisualisation l\'article</string>
 	<string name="comment_added">Commentaire correctement ajouté</string>
 	<string name="view_in_browser">Voir dans le navigateur</string>
@@ -156,7 +162,6 @@
 	<string name="open_source_licenses">Licences open sources</string>
 	<string name="wpcom_blogs">Blogs WordPress.com</string>
 	<string name="self_hosted_blogs">Blogs auto-hébergés</string>
-	<string name="invalid_login">Identifiant invalide</string>
 	<string name="stats_view_views_by_country">Vues par pays</string>
 	<string name="stats_view_top_posts_and_pages">Top articles et pages</string>
 	<string name="stats_view_totals_followers_and_shares">Totals, suiveurs et partages</string>
@@ -164,7 +169,6 @@
 	<string name="stats_view_video_plays">Visionnages de vidéo</string>
 	<string name="stats_entry_video_plays">Nom de vidéo</string>
 	<string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
-	<string name="edit_draft">Modifier le brouillon</string>
 	<string name="post_not_published">L\'état de l\'article n\'est pas publié</string>
 	<string name="page_not_published">L\'état de la page n\'est pas publiée</string>
 	<string name="category_slug">Identifiant de la catégorie (optionnel)</string>
@@ -174,7 +178,6 @@
 	<string name="stats_visitors_and_views_header_all_time">Tous les temps</string>
 	<string name="http_authorization_required">Autorisation requise</string>
 	<string name="post_format">Format d\'article</string>
-	<string name="tap_to_reply">Touche pour répondre</string>
 	<string name="new_media">Nouveau média</string>
 	<string name="quick_photo">Photo rapide</string>
 	<string name="quick_video">Vidéo rapide</string>
@@ -215,7 +218,6 @@
 	<string name="trash_yes">Supprimer</string>
 	<string name="trash_no">Ne pas supprimer</string>
 	<string name="scaled_image_error">Saisir une largeur valide d\'image à l\'échelle</string>
-	<string name="draft_actions">Actions du brouillon</string>
 	<string name="file_error_create">Impossible de créer un fichier temporaire pendant l\'envoi de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
 	<string name="reader_title_followed_tags">Mot-clés suivis</string>
 	<string name="email_cant_be_used_to_signup">Vous ne pouvez pas utiliser cette adresse de messagerie pour vous inscrire. Nous avons des problèmes avec ce fournisseur de messagerie. Utilisez un autre fournisseur de messagerie.</string>
@@ -272,9 +274,8 @@
 	<string name="nux_oops_not_selfhosted_blog">Se connecter à WordPress.com</string>
 	<string name="nux_tap_continue">Continuer</string>
 	<string name="password_invalid">Il vous faut un mot de passe plus sûr. Faites en sorte qu\'il comprenne au moins 7 caractères, mélangez les lettres capitales et bas-de-casse, les chiffres ou les caractères spéciaux.</string>
-	<string name="stats_empty_top_posts"><b>Aucun article ou page populaires trouvés pour le moment.</b> Cette vue affiche vos articles et pages les plus vus.</string>
+	<string name="stats_empty_top_posts">&lt;b>Aucun article ou page populaires trouvés pour le moment.&lt;/b> Cette vue affiche vos articles et pages les plus vus.</string>
 	<string name="media_add_popup_title">Ajouter à la bibliothèque média</string>
-	<string name="media_add_new_media_gallery">Créer une gallerie</string>
 	<string name="empty_list_default">Cette liste est vide</string>
 	<string name="select_from_media_library">Sélectionner depuis la bibliothèque média</string>
 	<string name="jetpack_message">Le module Jetpack est requis pour afficher les statistiques. Voulez-vous installer Jetpack ?</string>
@@ -312,6 +313,7 @@
 	<string name="username_invalid">Nom d\'utilisateur invalide</string>
 	<string name="limit_reached">Limite atteinte. Vous pouvez réessayer dans 1 minute. Si vous pensez que c\'est une erreur, contacter le support.</string>
 	<string name="reader_btn_unfollow">Abonné</string>
+	<string name="media_add_new_media_gallery">Créer une galerie</string>
 	<string name="stats_totals_followers_shares_header_includes_publicize">inclut %sPublicize</string>
 	<string name="themes">Thèmes</string>
 	<string name="media_gallery_image_order_random">Aléatoire</string>
@@ -401,12 +403,12 @@
 	<string name="share_action_title">Ajouter à ...</string>
 	<string name="share_action">Partager</string>
 	<string name="stats">Stats</string>
-	<string name="stats_empty_referrers"><b>Pas de référants.</b> Un référant est un click sur un lien d\'un site externe qui pointe vers le votre.</string>
-	<string name="stats_empty_clicks"><b>Aucun click enregistré.</b> Un "Click" correspond à un lecteur cliquant sur un lien extérieur à votre site.</string>
+	<string name="stats_empty_referrers">&lt;b>Pas de référants.&lt;/b> Un référant est un click sur un lien d\'un site externe qui pointe vers le votre.</string>
+	<string name="stats_empty_clicks">&lt;b>Aucun click enregistré.&lt;/b> Un "Click" correspond à un lecteur cliquant sur un lien extérieur à votre site.</string>
 	<string name="media_edit_failure">Échec de mise à jour</string>
 	<string name="theme_set_success">Le thème a bien été sélectionné !</string>
 	<string name="passcode_turn_off">Désactiver le code PIN</string>
-	<string name="stats_empty_search_engine_terms"><b>Aucun mot clé de recherche.</b>Ce sont les mots clés utilisés par les internautes pour trouver votre site sur les moteurs de recherche.</string>
+	<string name="stats_empty_search_engine_terms">&lt;b>Aucun mot clé de recherche.&lt;/b>Ce sont les mots clés utilisés par les internautes pour trouver votre site sur les moteurs de recherche.</string>
 	<string name="confirm_delete_multi_media">Êtes-vous sur de vouloir supprimer ces médias ?</string>
 	<string name="confirm_delete_media">Êtes-vous sur de vouloir supprimer ce média ?</string>
 	<string name="remote_changes">Vous avez modifié un article mais il n\'a pas encore été mis en ligne. Voulez-vous rafraîchir la page et écraser les modifications locales ?</string>
@@ -414,7 +416,6 @@
 	<string name="manage">Organiser</string>
 	<string name="prompt_save_changes">Voulez-vous enregistrer vos modifications ?</string>
 	<string name="discard">Rejeter</string>
-	<string name="retry_reply">La réponse a échoué. Touchez pour réessayer.</string>
 	<string name="sign_in">Se connecter</string>
 	<string name="sign_out">Se déconnecter</string>
 	<string name="attempting_configure">Connexion en cours…</string>
@@ -426,8 +427,6 @@
 	<string name="options">Options</string>
 	<string name="notifications_turn_off_1hr">Désactiver pour une heure</string>
 	<string name="note_reply_successful">Réponse envoyée</string>
-	<string name="follow">Suivre</string>
-	<string name="moderate_comment">Modérer le commentaire</string>
 	<string name="new_notifications">%d nouvelles notifications</string>
 	<string name="notifications_turn_off">Désactiver</string>
 	<string name="notifications_turn_off_8hr">Désactiver pour 8 heures</string>
@@ -457,15 +456,12 @@
 	<string name="page">Page</string>
 	<string name="post">Article</string>
 	<string name="ok">OK</string>
-	<string name="app_title_blackberry">WordPress pour BlackBerry</string>
-	<string name="posted_from_blackberry">Publié à partir de WordPress pour BlackBerry</string>
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Largeur de l\'image à l\'échelle</string>
 	<string name="upload_scaled_image">Envoyer et lier l\'image à l\'échelle</string>
 	<string name="remove_location">Supprimer</string>
 	<string name="update_location">Mettre à jour</string>
 	<string name="scheduled">Programmé</string>
-	<string name="published">Publié</string>
 	<string name="help_stats">Besoin d\'aide </string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Posté avec Wordpress pour Android</string>
@@ -510,6 +506,7 @@
 	<string name="sdcard_title">Carte SD requise</string>
 	<string name="select_video">Choisissez une vidéo dans la galerie</string>
 	<string name="media">Multimedia</string>
+	<string name="delete">Effacer</string>
 	<string name="none">Aucun</string>
 	<string name="sure_to_remove_account">Êtes-vous certain de vouloir enlever ce blog ?</string>
 	<string name="blogs">Blogs</string>
@@ -521,8 +518,6 @@
 	<string name="categories_refreshed">Catégories rafraîchies</string>
 	<string name="category_refresh_error">Erreur de rafraîchissement de catégorie</string>
 	<string name="tab_comments">Commentaires</string>
-	<string name="tab_posts">Articles</string>
-	<string name="tab_pages">Pages</string>
 	<string name="preview">Prévisualisation</string>
 	<string name="on">sur</string>
 	<string name="delete_sure">Êtes-vous certain de vouloir effacer le brouillon</string>
