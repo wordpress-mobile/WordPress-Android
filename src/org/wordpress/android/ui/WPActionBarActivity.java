@@ -65,7 +65,6 @@ import java.util.Map;
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public static final int NEW_BLOG_CANCELED = 10;
-    public static final String BROADCAST_ACTION_ONBLOGCHANGED = "ONBLOGCHANGED";
     private static final String TAG = "WPActionBarActivity";
 
     /**
@@ -652,7 +651,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
         Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_ONBLOGCHANGED);
+        broadcastIntent.setAction(WordPress.BROADCAST_ACTION_ONBLOGCHANGED);
         sendBroadcast(broadcastIntent);
     }
 
@@ -965,23 +964,21 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * broadcast receiver which detects when user signs out of the app and calls onSignout()
      * so descendants of this activity can do cleanup upon signout
      */
-    private final void registerReceiver() {
+    private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
         registerReceiver(mReceiver, filter);
     }
 
-    private final void unregisterReceiver() {
-        if (mReceiver!=null) {
-            try {
-                unregisterReceiver(mReceiver);
-            } catch (IllegalArgumentException e) {
-                // exception occurs if receiver already unregistered (safe to ignore)
-            }
+    private void unregisterReceiver() {
+        try {
+            unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
         }
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null)
@@ -991,6 +988,4 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
     };
-
-
 }

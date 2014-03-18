@@ -71,6 +71,7 @@ public class WordPress extends Application {
     public static ImageLoader imageLoader;
     public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
+    public static final String BROADCAST_ACTION_ONBLOGCHANGED = "on-blog-changed";
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
