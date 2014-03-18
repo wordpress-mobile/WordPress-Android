@@ -31,7 +31,6 @@ import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
-import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
 
 import java.util.List;
 import java.util.Vector;
@@ -84,10 +83,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     private void refreshPosts(PostsActivity postsActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
-        final RefreshBlogContentTask refreshBlogContentTask = new ApiHelper.RefreshBlogContentTask(postsActivity,
-                currentBlog, new ApiHelper.VerifyCredentialsCallback(postsActivity, currentBlog.isDotcomFlag()));
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
-                mIsPage);
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
@@ -96,7 +92,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             mPullToRefreshHelper.setRefreshing(true);
-                            refreshBlogContentTask.execute(false);
+                            requestPosts(false);
                         }
                     }
             );
@@ -109,7 +105,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             dialogBuilder.create().show();
         } else {
             mPullToRefreshHelper.setRefreshing(true);
-            refreshBlogContentTask.execute(false);
+            requestPosts(false);
         }
     }
 
