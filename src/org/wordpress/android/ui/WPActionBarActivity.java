@@ -650,9 +650,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             }
         }
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(WordPress.BROADCAST_ACTION_ONBLOGCHANGED);
-        sendBroadcast(broadcastIntent);
     }
 
     /**

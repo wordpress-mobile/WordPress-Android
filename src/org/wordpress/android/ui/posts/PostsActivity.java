@@ -3,11 +3,8 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -284,7 +281,6 @@ public class PostsActivity extends WPActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver();
         if (WordPress.isSignedIn(PostsActivity.this)) {
             showReaderIfNoBlog();
         }
@@ -298,7 +294,6 @@ public class PostsActivity extends WPActionBarActivity
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver();
     }
 
     @Override
@@ -503,7 +498,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... params) {
 
@@ -559,7 +553,6 @@ public class PostsActivity extends WPActionBarActivity
                         .getText(R.string.share_url)));
                 AppLockManager.getInstance().setExtendedTimeout();
             }
-
         }
 
         @Override
@@ -790,36 +783,10 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
         new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+        mPostList.onBlogChanged();
     }
 
     public void setRefreshing(boolean refreshing) {
         mPostList.setRefreshing(refreshing);
     }
-
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WordPress.BROADCAST_ACTION_ONBLOGCHANGED);
-
-        registerReceiver(mBroadcastReceiver, filter);
-    }
-
-    private void unregisterReceiver() {
-        try {
-            unregisterReceiver(mBroadcastReceiver);
-        } catch (IllegalArgumentException e) {
-            // exception occurs if receiver already unregistered (safe to ignore)
-        }
-    }
-
-    final private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null) {
-                return;
-            }
-            if (WordPress.BROADCAST_ACTION_ONBLOGCHANGED.equals(intent.getAction())) {
-                mPostList.onBlogChanged();
-            }
-        }
-    };
 }
