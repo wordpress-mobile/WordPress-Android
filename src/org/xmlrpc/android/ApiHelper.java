@@ -355,7 +355,7 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mContext, commentParams);
+                ApiHelper.refreshComments(mContext, mBlog, commentParams);
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -377,9 +377,8 @@ public class ApiHelper {
         }
     }
 
-    public static CommentList refreshComments(Context context, Object[] commentParams)
+    public static CommentList refreshComments(Context context, Blog blog, Object[] commentParams)
             throws XMLRPCException, IOException, XmlPullParserException {
-        Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
             return null;
         }

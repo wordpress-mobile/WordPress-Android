@@ -431,7 +431,7 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                return ApiHelper.refreshComments(getActivity(), params);
+                return ApiHelper.refreshComments(getActivity(), blog, params);
             } catch (Exception e) {
                 xmlRpcErrorMessage = e.getMessage();
                 isError = true;

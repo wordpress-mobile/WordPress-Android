@@ -506,17 +506,15 @@ public class PostsActivity extends WPActionBarActivity
                     WordPress.currentBlog.getPassword() };
 
             try {
-                ApiHelper.refreshComments(PostsActivity.this, commentParams);
+                ApiHelper.refreshComments(PostsActivity.this, WordPress.currentBlog, commentParams);
             } catch (final Exception e) {
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
             }
             return null;
         }
-
     }
 
     public class shareURLTask extends AsyncTask<Post, Void, String> {
-
         Post post;
 
         @Override
@@ -567,10 +565,8 @@ public class PostsActivity extends WPActionBarActivity
                     blog.getHttppassword());
             Object getPostResult;
             try {
-                Object[] vParams = { WordPress.currentBlog.getRemoteBlogId(),
-                        post.getRemotePostId(),
-                        WordPress.currentBlog.getUsername(),
-                        WordPress.currentBlog.getPassword() };
+                Object[] vParams =
+                        {blog.getRemoteBlogId(), post.getRemotePostId(), blog.getUsername(), blog.getPassword()};
                 getPostResult = client.call(mIsPage ? "wp.getPage" : "metaWeblog.getPost", vParams);
             } catch (XMLRPCException e) {
                 AppLog.e(AppLog.T.POSTS, e);
