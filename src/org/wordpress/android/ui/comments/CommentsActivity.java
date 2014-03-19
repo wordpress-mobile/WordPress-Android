@@ -60,7 +60,9 @@ public class CommentsActivity extends WPActionBarActivity
 
         // clear and update the comment list
         if (hasListFragment()) {
+            getListFragment().onBlogChanged();
             getListFragment().clear();
+            reloadCommentList();
             updateCommentList();
         }
 

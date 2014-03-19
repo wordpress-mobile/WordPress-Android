@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -83,6 +86,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private HttpPost mPostMethod;
     private XmlSerializer mSerializer;
     private HttpParams mHttpParams;
+    private boolean mIsWpcom;
 
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
@@ -101,9 +105,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (!TextUtils.isEmpty(httpuser) && !TextUtils.isEmpty(httppasswd)) {
             credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
         }
-        
-        mClient = instantiateClientForUri(uri, credentials);
 
+        mClient = instantiateClientForUri(uri, credentials);
         mSerializer = Xml.newSerializer();
     }
 
@@ -115,10 +118,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             getConnectionManager().getSchemeRegistry().register(scheme);
         }
     }
-    
+
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
-        if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+        if (uri.getHost().endsWith("wordpress.com")) {
+            mIsWpcom = true;
+        }
+        if (mIsWpcom || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
             //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
         } else {
@@ -142,12 +148,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             }
-            
+
             if (client == null) {
                 client = new DefaultHttpClient();
             }
         }
-        
+
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
 
@@ -174,7 +180,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             };
             client.addRequestInterceptor(preemptiveAuth, 0);
         }
-        
+
         return client;
     }
 
@@ -482,7 +488,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          * @return deserialized method return value
          * @throws XMLRPCException
          */
-        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
+        private Object callXMLRPC(String method, Object[] params, File tempFile)
+                throws XMLRPCException, IOException, XmlPullParserException {
             try {
                 preparePostMethod(method, params, tempFile);
 
@@ -506,7 +513,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                                         newErrorMsg =
                                                 "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
                                     }
-                                    throw new XMLRPCException(response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
+                                    throw new XMLRPCException(
+                                            response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
                                 }
                             } catch (Exception e) {
                                 // eat all the exceptions here, we dont want to crash the app when trying to show a
@@ -514,14 +522,64 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             }
                         }
                     }
-                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
+                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " +
+                                              response.getStatusLine().getReasonPhrase());
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+            } catch (XMLRPCFault e) {
+                // Detect login issues and broadcast a message if the error is known
+                switch (e.getFaultCode()) {
+                    case 403:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+                        break;
+                    case 425:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+                        break;
+                    //TODO: Check the login limit here
+                    default:
+                        break;
+                }
+                throw e;
+            } catch (XMLRPCException e) {
+                checkXMLRPCErrorMessage(e);
+                throw e;
+            } catch (SSLHandshakeException e) {
+                if (mIsWpcom) {
+                    AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
+                } else {
+                    AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                }
+                throw e;
             } finally {
                 deleteTempFile(method, tempFile);
             }
         }
+    }
+    
+    /**
+     * Detect login issues and broadcast a message if the error is known, App Activities should listen to these
+     * broadcasted events and present user action to take
+     *
+     * @return true if error is known and event broadcasted, false else
+     */
+    private boolean checkXMLRPCErrorMessage(Exception exception) {
+        String errorMessage = exception.getMessage().toLowerCase();
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom 
+                && 
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) 
+        {
+            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+            return true;
+        }
+        return false;
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        WordPress.getContext().sendBroadcast(intent);
     }
 
     private void deleteTempFile(String method, File tempFile) {
@@ -534,6 +592,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     }
 
     private class CancelException extends RuntimeException {
-        private static final long serialVersionUID = 1L; 
+        private static final long serialVersionUID = 1L;
     }
 }

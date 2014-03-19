@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +53,8 @@ public class CommentsListFragment extends Fragment {
     private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
+
+    private UpdateCommentsTask mUpdateCommentsTask;
 
     private OnCommentSelectedListener mOnCommentSelectedListener;
     private OnCommentChangeListener mOnCommentChangeListener;
@@ -163,6 +164,13 @@ public class CommentsListFragment extends Fragment {
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString() + " must implement Callback");
+        }
+    }
+
+    public void onBlogChanged() {
+        if (mUpdateCommentsTask != null) {
+            mUpdateCommentsTask.setRetryOnCancelled(true);
+            mUpdateCommentsTask.cancel(true);
         }
     }
 
@@ -371,10 +379,11 @@ public class CommentsListFragment extends Fragment {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
         }
+        mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         if (SysUtils.canUseExecuteOnExecutor()) {
-            new UpdateCommentsTask(loadMore).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            new UpdateCommentsTask(loadMore).execute();
+            mUpdateCommentsTask.execute();
         }
     }
 
@@ -384,10 +393,15 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         boolean isError;
         final boolean isLoadingMore;
+        boolean mRetryOnCancelled;
         String xmlRpcErrorMessage;
 
         private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
+        }
+
+        public void setRetryOnCancelled(boolean retryOnCancelled) {
+            mRetryOnCancelled = retryOnCancelled;
         }
 
         @Override
@@ -402,8 +416,14 @@ public class CommentsListFragment extends Fragment {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mPullToRefreshHelper.setRefreshing(false);
             mIsUpdatingComments = false;
+            mUpdateCommentsTask = null;
+            if (mRetryOnCancelled) {
+                mRetryOnCancelled = false;
+                updateComments(false);
+            } else {
+                mPullToRefreshHelper.setRefreshing(false);
+            }
         }
 
         @Override
@@ -431,7 +451,7 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                return ApiHelper.refreshComments(getActivity(), params);
+                return ApiHelper.refreshComments(getActivity(), blog, params);
             } catch (Exception e) {
                 xmlRpcErrorMessage = e.getMessage();
                 isError = true;
@@ -441,6 +461,7 @@ public class CommentsListFragment extends Fragment {
 
         protected void onPostExecute(CommentList comments) {
             mIsUpdatingComments = false;
+            mUpdateCommentsTask = null;
             if (!hasActivity()) {
                 return;
             }
@@ -457,17 +478,14 @@ public class CommentsListFragment extends Fragment {
             // result will be null on error OR if no more comments exists
             if (comments == null) {
                 if (isError && !getActivity().isFinishing()) {
-                    if (!TextUtils.isEmpty(xmlRpcErrorMessage)) {
-                        ToastUtils.showToastOrAuthAlert(getActivity(), xmlRpcErrorMessage, getString(R.string.error_refresh_comments));
-                    } else {
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
-                    }
+                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
                 }
                 return;
             }
 
-            if (comments.size() > 0)
+            if (comments.size() > 0) {
                 getCommentAdapter().loadComments();
+            }
         }
     }
 

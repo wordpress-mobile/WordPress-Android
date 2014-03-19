@@ -34,7 +34,6 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -82,33 +81,23 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         // Restore last selection on app creation
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
-                && !(this instanceof PagesActivity)) {
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
+            !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
-                    new ApiHelper.GenericCallback() {
-                        @Override
-                        public void onSuccess() {
-                            if (!isFinishing())
-                                updateMenuDrawer();
-                        }
-
-                        @Override
-                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                            if (!isFinishing())
-                                ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
-                        }
-                    }).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new RefreshBlogContentCallback())
+                    .execute(false);
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
-            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID && lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID &&
+                lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
                 Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
                 while (itemIterator.hasNext()) {
                     MenuDrawerItem item = itemIterator.next();
                     // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
+                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() &&
+                        item.isVisible()) {
                         mFirstLaunch = true;
                         item.selectItem();
                         finish();
@@ -491,7 +480,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... params) {
 
@@ -500,13 +488,12 @@ public class PostsActivity extends WPActionBarActivity
                     WordPress.currentBlog.getPassword() };
 
             try {
-                ApiHelper.refreshComments(PostsActivity.this, commentParams);
+                ApiHelper.refreshComments(PostsActivity.this, WordPress.currentBlog, commentParams);
             } catch (final Exception e) {
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
             }
             return null;
         }
-
     }
 
     protected void refreshComments() {
@@ -655,9 +642,29 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
         new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+        mPostList.onBlogChanged();
     }
 
     public void setRefreshing(boolean refreshing) {
         mPostList.setRefreshing(refreshing);
+    }
+
+    public class RefreshBlogContentCallback implements ApiHelper.GenericCallback {
+        @Override
+        public void onSuccess() {
+            if (isFinishing()) {
+                return;
+            }
+            updateMenuDrawer();
+            mPostList.setRefreshing(false);
+        }
+
+        @Override
+        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            if (isFinishing()) {
+                return;
+            }
+            mPostList.setRefreshing(false);
+        }
     }
 }
