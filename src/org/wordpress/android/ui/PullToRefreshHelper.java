@@ -26,6 +26,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
     private OnTopMessage mOnTopMessage;
     private boolean mShowTip;
     private boolean mTipShouldBeVisible;
+    private boolean mIsScrolledOnTop = true;
     private Context mContext;
 
     public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
@@ -58,10 +59,11 @@ public class PullToRefreshHelper implements OnRefreshListener {
         mHeaderTransformer.setOnTopScrollChangedListener(new OnTopScrollChangedListener() {
             @Override
             public void onTopScrollChanged(boolean scrolledOnTop) {
+                mIsScrolledOnTop = scrolledOnTop;
                 if (scrolledOnTop) {
-                    showTip();
+                    showTip(true);
                 } else {
-                    hideTipTemporarily();
+                    hideTipTemporarily(true);
                 }
             }
         });
@@ -71,6 +73,11 @@ public class PullToRefreshHelper implements OnRefreshListener {
     public void setRefreshing(boolean refreshing) {
         mHeaderTransformer.setShowProgressBarOnly(refreshing);
         mPullToRefreshLayout.setRefreshing(refreshing);
+        if (refreshing) {
+            hideTipTemporarily(false);
+        } else {
+            showTip(true);
+        }
     }
 
     public boolean isRefreshing() {
@@ -87,27 +94,30 @@ public class PullToRefreshHelper implements OnRefreshListener {
         public void onRefreshStarted(View view);
     }
 
-    public void hideTipTemporarily() {
-        if (mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
-            mOnTopMessage.hideAnimated();
+    public void hideTipTemporarily(boolean animated) {
+        if (mOnTopMessage.isVisible() && mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
+            mOnTopMessage.hide(animated);
         }
         mTipShouldBeVisible = false;
     }
 
-    public void showTip() {
-        if (mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
-            mOnTopMessage.showAnimated();
+    public void showTip(boolean animated) {
+        if (!mIsScrolledOnTop) {
+            return;
+        }
+        if (!isRefreshing() && mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
+            mOnTopMessage.show(animated);
         }
         mTipShouldBeVisible = true;
     }
 
     public void setEnabled(boolean enabled) {
         if (mTipShouldBeVisible && !enabled) {
-            hideTipTemporarily();
+            hideTipTemporarily(true);
         }
         mPullToRefreshLayout.setEnabled(enabled);
         if (mTipShouldBeVisible && enabled) {
-            showTip();
+            showTip(true);
         }
     }
 
@@ -117,7 +127,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             Editor editor = preferences.edit();
             editor.putBoolean(NEED_PTR_TIP, false);
             editor.commit();
-            mOnTopMessage.hideAnimated();
+            mOnTopMessage.hide(true);
             mShowTip = false;
             mTipShouldBeVisible = false;
         }
@@ -133,7 +143,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
                                            activity.getResources().getDimensionPixelOffset(R.dimen.ptr_tip_margin_top));
             }
             mOnTopMessage.setMessage(activity.getString(R.string.ptr_tip_message));
-            mOnTopMessage.show();
             mTipShouldBeVisible = true;
         }
     }
