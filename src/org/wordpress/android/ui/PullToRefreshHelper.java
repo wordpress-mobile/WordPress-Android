@@ -95,7 +95,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     public void hideTipTemporarily(boolean animated) {
-        if (mOnTopMessage.isVisible() && mShowTip && mOnTopMessage != null && mPullToRefreshLayout.isEnabled()) {
+        if (mShowTip && mOnTopMessage != null && mOnTopMessage.isVisible() && mPullToRefreshLayout.isEnabled()) {
             mOnTopMessage.hide(animated);
         }
         mTipShouldBeVisible = false;
