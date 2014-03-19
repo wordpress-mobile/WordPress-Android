@@ -38,6 +38,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -388,7 +389,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         if (getActivity() != null) {
                             String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP ? getString(
                                     R.string.media_error_no_permission) : getString(R.string.error_refresh_media);
-                            ToastUtils.showToastOrAuthAlert(getActivity(), errorMessage, message);
+                            ToastUtils.showToast(getActivity(), message, Duration.LONG);
                         }
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;

@@ -63,7 +63,7 @@ import org.wordpress.android.util.ToastUtils;
 public class ApiHelper {
     public enum ErrorType {
         NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
-        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
+        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED}
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
 
@@ -174,80 +174,6 @@ public class ApiHelper {
         }
     }
 
-    private static void askForSslTrust(final Context ctx) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-        alert.setTitle(ctx.getString(R.string.ssl_certificate_error));
-        alert.setMessage(ctx.getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(
-                R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        SelfSignedSSLCertsManager selfSignedSSLCertsManager;
-                        try {
-                            selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
-                            selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
-                        } catch (GeneralSecurityException e) {
-                            AppLog.e(T.API, e);
-                        } catch (IOException e) {
-                            AppLog.e(T.API, e);
-                        }
-                    }
-                });
-        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(ctx, SSLCertsViewActivity.class);
-                try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
-                    String lastFailureChainDescription = selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
-                    ctx.startActivity(intent);
-                } catch (GeneralSecurityException e) {
-                    AppLog.e(T.API, e);
-                } catch (IOException e) {
-                    AppLog.e(T.API, e);
-                }
-            }
-        });
-        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.show();
-    }
-
-    public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
-        private final WeakReference<PostsActivity> activityWeakRef;
-        private boolean isWPCOM;
-
-        public VerifyCredentialsCallback(PostsActivity refActivity, boolean isWPCOM) {
-            this.isWPCOM = isWPCOM;
-            this.activityWeakRef = new WeakReference<PostsActivity>(refActivity);
-        }
-
-        @Override
-        public void onSuccess() {
-            PostsActivity act = activityWeakRef.get();
-            if (act == null || act.isFinishing()) {
-                return;
-            }
-            act.setRefreshing(false);
-        }
-
-        @Override
-        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            PostsActivity act = activityWeakRef.get();
-            if (act == null || act.isFinishing()) {
-                return;
-            }
-            act.setRefreshing(false);
-            if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
-                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                askForSslTrust(act);
-            } else {
-                ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
-            }
-        }
-    }
-
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
@@ -355,7 +281,7 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mContext, commentParams);
+                ApiHelper.refreshComments(mContext, mBlog, commentParams);
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -377,9 +303,8 @@ public class ApiHelper {
         }
     }
 
-    public static CommentList refreshComments(Context context, Object[] commentParams)
+    public static CommentList refreshComments(Context context, Blog blog, Object[] commentParams)
             throws XMLRPCException, IOException, XmlPullParserException {
-        Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
             return null;
         }
@@ -501,6 +426,12 @@ public class ApiHelper {
             }
 
             return false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
         }
 
         @Override

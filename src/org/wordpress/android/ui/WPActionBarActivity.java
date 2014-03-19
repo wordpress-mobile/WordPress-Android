@@ -38,6 +38,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -54,6 +55,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,7 +68,6 @@ import java.util.Map;
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public static final int NEW_BLOG_CANCELED = 10;
-
     private static final String TAG = "WPActionBarActivity";
 
     /**
@@ -571,7 +573,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
-
         @Override
         public void onItemSelected(IcsAdapterView<?> arg0, View arg1, int position, long arg3) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
@@ -632,17 +633,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
         Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-        while(itemIterator.hasNext()){
+        while (itemIterator.hasNext()) {
             MenuDrawerItem item = itemIterator.next();
             // if the item is selected, but it's no longer visible we need to
             // select the first available item from the adapter
             if (item.isSelected() && !item.isVisible()) {
                 // then select the first item and activate it
-                if (mAdapter.getCount() > 0)
+                if (mAdapter.getCount() > 0) {
                     mAdapter.getItem(0).selectItem();
+                }
                 // if it has an item id save it to the preferences
-                if (item.hasItemId()){
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                if (item.hasItemId()) {
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                            WPActionBarActivity.this);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
                     editor.commit();
@@ -961,23 +964,25 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * broadcast receiver which detects when user signs out of the app and calls onSignout()
      * so descendants of this activity can do cleanup upon signout
      */
-    private final void registerReceiver() {
+    private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
         registerReceiver(mReceiver, filter);
     }
 
-    private final void unregisterReceiver() {
-        if (mReceiver!=null) {
-            try {
-                unregisterReceiver(mReceiver);
-            } catch (IllegalArgumentException e) {
-                // exception occurs if receiver already unregistered (safe to ignore)
-            }
+    private void unregisterReceiver() {
+        try {
+            unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
         }
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null)
@@ -985,8 +990,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
                 onSignout();
             }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
+                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
+                // TODO: add a specific message like "you must use a specific app password"
+                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
+                SelfSignedSSLCertsManager.askForSslTrust(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
+                ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
+            }
         }
     };
-
-
 }

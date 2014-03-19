@@ -30,7 +30,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.RefreshBlogContentTask;
+import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.List;
 import java.util.Vector;
@@ -45,6 +45,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
+    private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
+    private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -81,10 +83,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     private void refreshPosts(PostsActivity postsActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
-        final RefreshBlogContentTask refreshBlogContentTask = new ApiHelper.RefreshBlogContentTask(postsActivity,
-                currentBlog, new ApiHelper.VerifyCredentialsCallback(postsActivity, currentBlog.isDotcomFlag()));
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
-                mIsPage);
+        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
@@ -93,7 +92,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             mPullToRefreshHelper.setRefreshing(true);
-                            refreshBlogContentTask.execute(false);
+                            requestPosts(false);
                         }
                     }
             );
@@ -106,7 +105,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             dialogBuilder.create().show();
         } else {
             mPullToRefreshHelper.setRefreshing(true);
-            refreshBlogContentTask.execute(false);
+            requestPosts(false);
         }
     }
 
@@ -149,7 +148,6 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     }
                 }
             };
-
             mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
         }
 
@@ -271,9 +269,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             mProgressFooterView.setVisibility(View.VISIBLE);
         }
 
-        ApiHelper.FetchPostsTask fetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
+                mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
                 if (!hasActivity())
                     return;
@@ -293,6 +292,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
                 if (!hasActivity()) {
                     return;
@@ -301,13 +301,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
-                ToastUtils.showToast(getActivity(),
-                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                if (errorType != ErrorType.TASK_CANCELLED) {
+                    ToastUtils.showToast(getActivity(),
+                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                }
             }
         });
 
         mIsFetchingPosts = true;
-        fetchPostsTask.execute(apiArgs);
+        mCurrentFetchPostsTask.execute(apiArgs);
     }
 
     protected void clear() {
@@ -345,13 +347,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             apiArgs.add(postId);
             apiArgs.add(mIsPage);
 
-            ApiHelper.FetchSinglePostTask fetchPostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
+            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
                 @Override
                 public void onSuccess() {
+                    mCurrentFetchSinglePostTask = null;
+                    mIsFetchingPosts = false;
                     if (!hasActivity()) {
                         return;
                     }
-                    mIsFetchingPosts = false;
                     mPullToRefreshHelper.setRefreshing(false);
                     getPostListAdapter().loadPosts();
                     mOnSinglePostLoadedListener.onSinglePostLoaded();
@@ -359,20 +362,34 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
                 @Override
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    mCurrentFetchSinglePostTask = null;
+                    mIsFetchingPosts = false;
                     if (!hasActivity()) {
                         return;
                     }
-                    ToastUtils.showToast(getActivity(),
-                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
-                    mIsFetchingPosts = false;
+                    if (errorType != ErrorType.TASK_CANCELLED) {
+                        ToastUtils.showToast(getActivity(),
+                                mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                    }
                     mPullToRefreshHelper.setRefreshing(false);
                 }
             });
 
             mPullToRefreshHelper.setRefreshing(true);
             mIsFetchingPosts = true;
-            fetchPostTask.execute(apiArgs);
+            mCurrentFetchSinglePostTask.execute(apiArgs);
         }
+    }
+
+    public void onBlogChanged() {
+        if (mCurrentFetchPostsTask != null) {
+            mCurrentFetchPostsTask.cancel(true);
+        }
+        if (mCurrentFetchSinglePostTask != null) {
+            mCurrentFetchSinglePostTask.cancel(true);
+        }
+        mIsFetchingPosts = false;
+        mPullToRefreshHelper.setRefreshing(false);
     }
 
     public interface OnPostSelectedListener {
