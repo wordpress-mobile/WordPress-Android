@@ -31,7 +31,6 @@ public class AlertUtil {
      */
     public static void showAlert(Context context, int titleId, int messageId) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(titleId)
             .setPositiveButton(android.R.string.ok, null)
             .setMessage(messageId)
@@ -48,7 +47,6 @@ public class AlertUtil {
      */
     public static void showAlert(Context context, int titleId, String message) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(titleId)
             .setPositiveButton(android.R.string.ok, null)
             .setMessage(message)
@@ -71,7 +69,6 @@ public class AlertUtil {
             CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener,
             CharSequence negativeButtontxt, DialogInterface.OnClickListener negativeListener) {
         Dialog dlg = new AlertDialog.Builder(context)
-            //.setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(titleId)
             .setPositiveButton(positiveButtontxt, positiveListener)
             .setNegativeButton(negativeButtontxt, negativeListener)
@@ -93,7 +90,6 @@ public class AlertUtil {
     public static void showAlert(Context context, int titleId, String message,
             CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(titleId)
             .setPositiveButton(positiveButtontxt, positiveListener)
             .setMessage(message)
