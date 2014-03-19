@@ -1,5 +1,27 @@
 package org.xmlrpc.android;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLHandshakeException;
+
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -31,36 +53,15 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLHandshakeException;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
@@ -526,6 +527,20 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+            } catch (XMLRPCFault e) {
+                // Detect login issues and broadcast a message if the error is known
+                switch (e.getFaultCode()) {
+                    case 403:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+                        break;
+                    case 425:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+                        break;
+                    //TODO: Check the login limit here
+                    default:
+                        break;
+                }
+                throw e;
             } catch (XMLRPCException e) {
                 checkXMLRPCErrorMessage(e);
                 throw e;
@@ -542,7 +557,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
     }
-
+    
     /**
      * Detect login issues and broadcast a message if the error is known, App Activities should listen to these
      * broadcasted events and present user action to take
@@ -551,16 +566,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        if (errorMessage.contains("code: 403")) {
-            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
-            return true;
-        }
-        if (errorMessage.contains("code 425")) {
-            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
-            return true;
-        }
-        if (errorMessage.contains("code 503") && (errorMessage.contains("limit reached") || errorMessage.contains(
-                "login limit"))) {
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom 
+                && 
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) 
+        {
             broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;
         }
