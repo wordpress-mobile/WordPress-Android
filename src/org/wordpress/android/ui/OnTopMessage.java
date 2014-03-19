@@ -57,17 +57,23 @@ public class OnTopMessage {
         mTextView.setText(message);
     }
 
-    public void show() {
+    public void show(boolean animated) {
         mLayout.setVisibility(View.VISIBLE);
+        if (animated) {
+            mLayout.startAnimation(mShowAnimation);
+        }
     }
 
-    public void showAnimated() {
-        mLayout.setVisibility(View.VISIBLE);
-        mLayout.startAnimation(mShowAnimation);
+    public void hide(boolean animated) {
+        if (animated) {
+            mLayout.startAnimation(mHideAnimation);
+        } else {
+            mLayout.setVisibility(View.GONE);
+        }
     }
 
-    public void hideAnimated() {
-        mLayout.startAnimation(mHideAnimation);
+    public boolean isVisible() {
+        return mLayout.getVisibility() == View.VISIBLE;
     }
 
     public void setTopMargin(int topMargin) {
