@@ -964,6 +964,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
         registerReceiver(mReceiver, filter);
     }
 
@@ -982,6 +985,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 return;
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
                 onSignout();
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
+                // TODO: ask the user to update his credentials
+                intent.getExtras();
             }
         }
     };

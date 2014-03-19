@@ -1,25 +1,6 @@
 package org.xmlrpc.android;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -50,15 +31,36 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  * A WordPress XMLRPC Client.
@@ -101,7 +103,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (!TextUtils.isEmpty(httpuser) && !TextUtils.isEmpty(httppasswd)) {
             credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
         }
-        
+
         mClient = instantiateClientForUri(uri, credentials);
 
         mSerializer = Xml.newSerializer();
@@ -115,7 +117,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             getConnectionManager().getSchemeRegistry().register(scheme);
         }
     }
-    
+
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
         if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
@@ -142,12 +144,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             }
-            
+
             if (client == null) {
                 client = new DefaultHttpClient();
             }
         }
-        
+
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
 
@@ -174,7 +176,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             };
             client.addRequestInterceptor(preemptiveAuth, 0);
         }
-        
+
         return client;
     }
 
@@ -482,7 +484,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          * @return deserialized method return value
          * @throws XMLRPCException
          */
-        private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
+        private Object callXMLRPC(String method, Object[] params, File tempFile)
+                throws XMLRPCException, IOException, XmlPullParserException {
             try {
                 preparePostMethod(method, params, tempFile);
 
@@ -506,7 +509,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                                         newErrorMsg =
                                                 "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
                                     }
-                                    throw new XMLRPCException(response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
+                                    throw new XMLRPCException(
+                                            response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
                                 }
                             } catch (Exception e) {
                                 // eat all the exceptions here, we dont want to crash the app when trying to show a
@@ -514,14 +518,47 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             }
                         }
                     }
-                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
+                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " +
+                                              response.getStatusLine().getReasonPhrase());
                 }
                 HttpEntity entity = response.getEntity();
                 return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+            } catch (XMLRPCException e) {
+                checkXMLRPCErrorMessage(e);
+                throw e;
             } finally {
                 deleteTempFile(method, tempFile);
             }
         }
+    }
+
+    /**
+     * Detect login issues and broadcast a message if the error is known, App Activities should listen to these
+     * broadcasted events and present user action to take
+     *
+     * @return true if error is known and event broadcasted, false else
+     */
+    private boolean checkXMLRPCErrorMessage(XMLRPCException exception) {
+        String errorMessage = exception.getMessage().toLowerCase();
+        Intent intent = new Intent();
+        intent.putExtra("exception", exception);
+        if (errorMessage.contains("code: 403")) {
+            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+            WordPress.getContext().sendBroadcast(intent);
+            return true;
+        }
+        if (errorMessage.contains("code 425")) {
+            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+            WordPress.getContext().sendBroadcast(intent);
+            return true;
+        }
+        if (errorMessage.contains("code 503") && (errorMessage.contains("limit reached") || errorMessage.contains(
+                "login limit"))) {
+            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+            WordPress.getContext().sendBroadcast(intent);
+            return true;
+        }
+        return false;
     }
 
     private void deleteTempFile(String method, File tempFile) {
@@ -534,6 +571,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     }
 
     private class CancelException extends RuntimeException {
-        private static final long serialVersionUID = 1L; 
+        private static final long serialVersionUID = 1L;
     }
 }

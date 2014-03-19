@@ -111,6 +111,7 @@ public class ToastUtils {
             }
         }
 
+        // TODO if not a FragmentActivity the generic toast message will be displayed
         if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && (xmlrpcMessage.contains(
                 "code 403") || is2StepsAuthEnabled)) {
             showAuthErrorDialog((FragmentActivity) context);
