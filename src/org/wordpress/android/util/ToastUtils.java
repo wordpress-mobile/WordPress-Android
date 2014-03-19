@@ -111,7 +111,6 @@ public class ToastUtils {
             }
         }
 
-        // TODO if not a FragmentActivity the generic toast message will be displayed
         if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && (xmlrpcMessage.contains(
                 "code 403") || is2StepsAuthEnabled)) {
             showAuthErrorDialog((FragmentActivity) context);
@@ -129,11 +128,15 @@ public class ToastUtils {
         }
     }
 
-    private static void showAuthErrorDialog(FragmentActivity activity) {
+    public static void showAuthErrorDialog(FragmentActivity activity) {
+        final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
-        // Invalid credentials, show auth alert
+        // abort if the dialog is already visible
+        if (activity.getSupportFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
+            return;
+        }
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert;
         if (WordPress.getCurrentBlog() == null) {
@@ -142,7 +145,7 @@ public class ToastUtils {
         } else {
             authAlert = AuthErrorDialogFragment.newInstance(WordPress.getCurrentBlog().isDotcomFlag());
         }
-        ft.add(authAlert, "alert");
+        ft.add(authAlert, ALERT_TAG);
         ft.commitAllowingStateLoss();
     }
 }

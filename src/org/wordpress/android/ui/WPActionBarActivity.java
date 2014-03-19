@@ -54,6 +54,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -987,8 +988,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 onSignout();
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                // TODO: ask the user to update his credentials
-                intent.getExtras();
+                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
+                // TODO add a specific message like "you must use a specific app password"
+                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
         }
     };
