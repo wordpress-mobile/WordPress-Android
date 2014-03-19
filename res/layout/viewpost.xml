@@ -116,7 +116,6 @@
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
                 android:padding="9dp"
-                android:tint="#3f3f3f"
                 android:src="@drawable/dashboard_icon_comments"
                 android:contentDescription="@string/add_comment" />
             

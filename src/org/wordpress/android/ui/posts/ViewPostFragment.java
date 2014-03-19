@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -123,6 +124,8 @@ public class ViewPostFragment extends Fragment {
         });
 
         mAddCommentButton = (ImageButton) v.findViewById(R.id.addComment);
+        // Tint the comment icon to match the other icons in the toolbar
+        mAddCommentButton.setColorFilter(Color.argb(255, 132, 132, 132));
         mAddCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!parentActivity.mIsRefreshing) {
