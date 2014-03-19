@@ -38,6 +38,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -55,6 +56,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -967,6 +969,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
         registerReceiver(mReceiver, filter);
     }
@@ -991,8 +994,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
-                // TODO add a specific message like "you must use a specific app password"
+                // TODO: add a specific message like "you must use a specific app password"
                 ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
+                SelfSignedSSLCertsManager.askForSslTrust(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
+                ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
             }
         }
     };

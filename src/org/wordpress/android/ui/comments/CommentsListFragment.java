@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -479,11 +478,7 @@ public class CommentsListFragment extends Fragment {
             // result will be null on error OR if no more comments exists
             if (comments == null) {
                 if (isError && !getActivity().isFinishing()) {
-                    if (!TextUtils.isEmpty(xmlRpcErrorMessage)) {
-                        ToastUtils.showToastOrAuthAlert(getActivity(), xmlRpcErrorMessage, getString(R.string.error_refresh_comments));
-                    } else {
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
-                    }
+                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
                 }
                 return;
             }

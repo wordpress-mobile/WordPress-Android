@@ -92,42 +92,6 @@ public class ToastUtils {
         }
     }
 
-    /*
-     * Shows a toast message, unless there is an authentication issue which will show an alert dialog.
-     */
-    public static void showToastOrAuthAlert(Context context, String xmlrpcMessage, String friendlyMessage) {
-        if (context == null) {
-            return;
-        }
-        boolean isLoginLimitReached = false;
-        boolean is2StepsAuthEnabled = false;
-        if (!TextUtils.isEmpty(xmlrpcMessage)) {
-            String lowerCaseXmlrpcMessage = xmlrpcMessage.toLowerCase();
-            if (lowerCaseXmlrpcMessage.contains("code 503") && (lowerCaseXmlrpcMessage.contains("limit reached") ||
-                                                                lowerCaseXmlrpcMessage.contains("login limit"))) {
-                isLoginLimitReached = true;
-            } else if (lowerCaseXmlrpcMessage.contains("code 425")) {
-                is2StepsAuthEnabled = true;
-            }
-        }
-
-        if ((context instanceof FragmentActivity) && !TextUtils.isEmpty(xmlrpcMessage) && (xmlrpcMessage.contains(
-                "code 403") || is2StepsAuthEnabled)) {
-            showAuthErrorDialog((FragmentActivity) context);
-        } else {
-            String errorMessage = null;
-            if (isLoginLimitReached) {
-                errorMessage = context.getString(R.string.limit_reached);
-            } else if (is2StepsAuthEnabled) {
-                errorMessage = context.getString(R.string.account_two_step_auth_enabled);
-            } else {
-                errorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(R.string.error_generic) :
-                        friendlyMessage;
-            }
-            showToast(context, errorMessage, Duration.LONG);
-        }
-    }
-
     public static void showAuthErrorDialog(FragmentActivity activity) {
         final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {

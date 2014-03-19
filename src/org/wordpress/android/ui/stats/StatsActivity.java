@@ -570,7 +570,8 @@ public class StatsActivity extends WPActionBarActivity {
                             return;
                         }
 
-                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
+                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, error,
+                                StatsActivity.this.getString(R.string.error_refresh_stats));
                     }
                 });
     }

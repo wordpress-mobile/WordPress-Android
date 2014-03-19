@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -35,7 +34,6 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -47,8 +45,6 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
 import java.util.Iterator;
-
-import javax.net.ssl.SSLHandshakeException;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -88,8 +84,8 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
             !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new VerifyCredentialsCallback(
-                    WordPress.getCurrentBlog().isDotcomFlag())).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new RefreshBlogContentCallback())
+                    .execute(false);
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -653,13 +649,7 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.setRefreshing(refreshing);
     }
 
-    public class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
-        private boolean isWPCOM;
-
-        public VerifyCredentialsCallback(boolean isWPCOM) {
-            this.isWPCOM = isWPCOM;
-        }
-
+    public class RefreshBlogContentCallback implements ApiHelper.GenericCallback {
         @Override
         public void onSuccess() {
             if (isFinishing()) {
@@ -675,12 +665,6 @@ public class PostsActivity extends WPActionBarActivity
                 return;
             }
             mPostList.setRefreshing(false);
-            if (throwable != null && throwable instanceof SSLHandshakeException && !isWPCOM) {
-                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                SelfSignedSSLCertsManager.askForSslTrust(PostsActivity.this);
-            } else {
-                ToastUtils.showToastOrAuthAlert(PostsActivity.this, errorMessage, getString(R.string.error_generic));
-            }
         }
     }
 }

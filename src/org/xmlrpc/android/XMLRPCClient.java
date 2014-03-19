@@ -85,6 +85,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private HttpPost mPostMethod;
     private XmlSerializer mSerializer;
     private HttpParams mHttpParams;
+    private boolean mIsWpcom;
 
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
@@ -105,7 +106,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
 
         mClient = instantiateClientForUri(uri, credentials);
-
         mSerializer = Xml.newSerializer();
     }
 
@@ -120,7 +120,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
-        if (uri.getHost().endsWith("wordpress.com") || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+        if (uri.getHost().endsWith("wordpress.com")) {
+            mIsWpcom = true;
+        }
+        if (mIsWpcom || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
             //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
         } else {
@@ -526,6 +529,14 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             } catch (XMLRPCException e) {
                 checkXMLRPCErrorMessage(e);
                 throw e;
+            } catch (SSLHandshakeException e) {
+                if (mIsWpcom) {
+                    AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
+                } else {
+                    AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                }
+                throw e;
             } finally {
                 deleteTempFile(method, tempFile);
             }
@@ -538,27 +549,28 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      *
      * @return true if error is known and event broadcasted, false else
      */
-    private boolean checkXMLRPCErrorMessage(XMLRPCException exception) {
+    private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        Intent intent = new Intent();
-        intent.putExtra("exception", exception);
         if (errorMessage.contains("code: 403")) {
-            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
-            WordPress.getContext().sendBroadcast(intent);
+            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
             return true;
         }
         if (errorMessage.contains("code 425")) {
-            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
-            WordPress.getContext().sendBroadcast(intent);
+            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
             return true;
         }
         if (errorMessage.contains("code 503") && (errorMessage.contains("limit reached") || errorMessage.contains(
                 "login limit"))) {
-            intent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
-            WordPress.getContext().sendBroadcast(intent);
+            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;
         }
         return false;
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        WordPress.getContext().sendBroadcast(intent);
     }
 
     private void deleteTempFile(String method, File tempFile) {
