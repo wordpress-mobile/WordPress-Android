@@ -38,9 +38,11 @@ public class JSONUtil {
                 } else {
                     return defaultObject;
                 }
-            } catch (JSONException e) {
+            } catch (java.lang.ClassCastException e) {
+                AppLog.e(T.UTILS, "Unable to cast the object to " + defaultObject.getClass().getName(), e);
                 return defaultObject;
-            } catch (ClassCastException e) {
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Unable to get the Key from the input object. Key:" + query, e);
                 return defaultObject;
             }
         }
@@ -70,8 +72,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch (java.lang.ClassCastException e) {
+            AppLog.e(T.UTILS, "Unable to cast the object to " + defaultObject.getClass().getName(), e);
             return defaultObject;
         } catch (JSONException e) {
+            AppLog.e(T.UTILS, "Unable to get the Key from the input object. Key:" + query, e);
             return defaultObject;
         }
     }
@@ -112,7 +116,7 @@ public class JSONUtil {
                 return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
             } else if (!remainingQuery.equals("")) {
                 // TODO throw an exception since the query isn't valid?
-                AppLog.d(T.UTILS, String.format("Incorrect query for next object %s", remainingQuery));
+                AppLog.w(T.UTILS, String.format("Incorrect query for next object %s", remainingQuery));
                 return defaultObject;
             }
             Object result = source.get(index);
@@ -122,8 +126,10 @@ public class JSONUtil {
                 return defaultObject;
             }
         } catch (java.lang.ClassCastException e) {
+            AppLog.e(T.UTILS, "Unable to cast the object to "+defaultObject.getClass().getName(), e);
             return defaultObject;
         } catch (JSONException e) {
+            AppLog.e(T.UTILS, "Unable to get the Key from the input object. Key:" + query, e);
             return defaultObject;
         }
     }

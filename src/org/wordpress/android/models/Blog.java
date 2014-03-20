@@ -450,7 +450,7 @@ public class Blog {
 
     public boolean isPrivate() {
         JSONObject jsonOptions = getBlogOptionsJSONObject();
-        if (jsonOptions != null) {
+        if (jsonOptions != null && jsonOptions.has("blog_public")) {
             try {
                 String blogPublicValue = jsonOptions.getJSONObject("blog_public").getString("value");
                 if (!TextUtils.isEmpty(blogPublicValue) && "-1".equals(blogPublicValue)) {
