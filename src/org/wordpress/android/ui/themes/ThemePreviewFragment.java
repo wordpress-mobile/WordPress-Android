@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -21,6 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 
 import java.io.UnsupportedEncodingException;
@@ -136,27 +136,14 @@ public class ThemePreviewFragment extends SherlockFragment {
         View view = inflater.inflate(R.layout.webview, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mWebView.getSettings().setUserAgentString(DESKTOP_UA);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if(newProgress < 100 && !mProgressBar.isShown()){
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                }
-                mProgressBar.setProgress(newProgress);
+        mWebView.setWebChromeClient(new WPWebChromeClient(getActivity(), (ProgressBar) view.findViewById(
+                R.id.progress_bar)));
 
-                if(newProgress == 100) {
-                    mProgressBar.setVisibility(ProgressBar.GONE);
-                }
-            }
-        });
-
-        mWebView.setWebViewClient(new WordPressWebViewClient(mBlog));
+        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
@@ -185,27 +172,6 @@ public class ThemePreviewFragment extends SherlockFragment {
             mWebView.postUrl(WordPress.getLoginUrl(mBlog), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
             AppLog.e(T.THEMES, e);
-        }
-    }
-
-    /**
-     * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
-     * username and password of the blog configured for this activity.
-     */
-    private class WordPressWebViewClient extends WPWebViewClient {
-        WordPressWebViewClient(Blog blog) {
-            super(blog);
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            mProgressBar.setVisibility(ProgressBar.GONE);
         }
     }
 

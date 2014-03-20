@@ -57,7 +57,7 @@ android {
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.android.support:support-v4:19.0.+'
-        compile 'com.github.castorflex.smoothprogressbar:library:0.3.3'
+        compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'

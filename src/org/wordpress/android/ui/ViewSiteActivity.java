@@ -1,9 +1,6 @@
 
 package org.wordpress.android.ui;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import android.os.Bundle;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -12,6 +9,9 @@ import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Activity to view the WordPress blog in a WebView
@@ -27,7 +27,6 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         this.setTitle(getResources().getText(R.string.view_site));
 
         // configure webview
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
@@ -52,7 +51,7 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         }
         loadAuthenticatedUrl(siteURL);
     }
-    
+
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();

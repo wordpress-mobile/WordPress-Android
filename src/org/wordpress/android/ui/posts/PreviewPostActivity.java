@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.util.Date;
-
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -12,6 +10,8 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.Date;
+
 /**
  * Activity for previewing a post or page in a webview.
  */
@@ -21,7 +21,7 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        
+
         boolean isPage = getIntent().getBooleanExtra("isPage", false);
         if (isPage) {
             this.setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName())
@@ -31,9 +31,8 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
                     + " - " + getResources().getText(R.string.preview_post));
         }
 
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
-        
+
         if (extras != null) {
             long mPostID = extras.getLong("postID");
 
@@ -54,16 +53,16 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
      * Load the post preview. If the post is in a non-public state (e.g. draft status, part of a
      * non-public blog, etc), load the preview as an authenticated URL. Otherwise, just load the
      * preview normally.
-     * 
+     *
      * @param post Post to load the preview for.
      */
     private void loadPostPreview(Post post) {
         if (post != null) {
             String url = post.getPermaLink();
-            
-            Date d = new Date();           
+
+            Date d = new Date();
             if ( WordPress.getCurrentBlog().isPrivate() //blog private
-                    || post.isLocalDraft() 
+                    || post.isLocalDraft()
                     || post.isLocalChange()
                     || post.getDate_created_gmt() > d.getTime() //Scheduled
                     || post.getStatusEnum() != PostStatus.PUBLISHED) {

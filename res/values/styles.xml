@@ -320,7 +320,7 @@
     <!-- Pull to refresh -->
     <style name="Widget.Custom.PtrHeader" parent="android:Widget">
         <item name="ptrProgressBarColor">@color/blue_dark</item>
-        <item name="ptrProgressBarHeight">3dp</item>
+        <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
     </style>
 
     <!-- On top message -->
