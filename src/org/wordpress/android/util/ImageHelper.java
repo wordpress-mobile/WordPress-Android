@@ -61,68 +61,59 @@ public class ImageHelper {
         return new int[]{imageWidth, imageHeight};
     }
 
-    //Read the orientation from ContentResolver. If it fails, read from EXIF.
+    // Read the orientation from ContentResolver. If it fails, read from EXIF.
     public int getImageOrientation(Context ctx, String filePath) {
         Uri curStream;
-        String orientation = null;
-        
+        int orientation = 0;
+
         if (!filePath.contains("content://"))
             curStream = Uri.parse("content://media" + filePath);
         else
             curStream = Uri.parse(filePath);
 
         try {
-            Cursor cur = ctx.getContentResolver().query(curStream, new String[] { Images.Media.ORIENTATION }, null, null, null);
+            Cursor cur = ctx.getContentResolver().query(curStream, new String[]{Images.Media.ORIENTATION}, null, null, null);
             if (cur != null) {
-                if(cur.moveToFirst()) {
-                    orientation = cur.getString(cur.getColumnIndex(Images.Media.ORIENTATION));
+                if (cur.moveToFirst()) {
+                    orientation = cur.getInt(cur.getColumnIndex(Images.Media.ORIENTATION));
                 }
                 cur.close();
             }
         } catch (Exception errReadingContentResolver) {
             AppLog.e(T.UTILS, errReadingContentResolver);
         }
-        
-        if (TextUtils.isEmpty(orientation)) {
-            orientation = getExifOrientation(filePath, "");
+
+        if (orientation == 0) {
+            orientation = getExifOrientation(filePath);
         }
-        
-        int calculatedOrientation;
-        try {
-            calculatedOrientation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
-        } catch (NumberFormatException e) {
-            AppLog.e(T.UTILS, e);
-            calculatedOrientation = 0;
-        }
-        
-        return calculatedOrientation;
+
+        return orientation;
     }
-    
-    
-    
-    public String getExifOrientation(String path, String orientation) {
+
+
+    public int getExifOrientation(String path) {
         ExifInterface exif;
         try {
             exif = new ExifInterface(path);
         } catch (IOException e) {
             AppLog.e(T.UTILS, e);
-            return orientation;
+            return ExifInterface.ORIENTATION_NORMAL;
         }
-        String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-        if (exifOrientation != null) {
-            if (exifOrientation.equals("1")) {
-                orientation = "0";
-            } else if (exifOrientation.equals("3")) {
-                orientation = "180";
-            } else if (exifOrientation.equals("6")) {
-                orientation = "90";
-            } else if (exifOrientation.equals("8")) {
-                orientation = "270";
-            }
-        } else {
-            orientation = "0";
+
+        int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+
+        switch (exifOrientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return 0;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+            default:
+                return 0;
         }
-        return orientation;
     }
 
     public static Bitmap downloadBitmap(String url) {
@@ -350,11 +341,11 @@ public class ImageHelper {
             float conversionFactor = 0.40f;
             if (dimensions[0] > dimensions[1]) //width > height
                 conversionFactor = 0.60f;
-            int resizedWitdh = (int) (width * conversionFactor);
+            int resizedWidth = (int) (width * conversionFactor);
 
             // create resized picture
             int rotation = getImageOrientation(ctx, filePath);
-            byte[] bytes = createThumbnailFromUri(ctx, curUri, resizedWitdh, null, rotation);
+            byte[] bytes = createThumbnailFromUri(ctx, curUri, resizedWidth, null, rotation);
 
             // upload resized picture
             if (bytes != null && bytes.length > 0) {
@@ -386,6 +377,7 @@ public class ImageHelper {
             int maxWidth,
             String fileExtension,
             int rotation) {
+
         if (context == null || imageUri == null)
             return null;
 
@@ -425,35 +417,49 @@ public class ImageHelper {
         BitmapFactory.Options optActual = new BitmapFactory.Options();
         optActual.inSampleSize = scale;
 
-        Bitmap bmpResized;
-
-        bmpResized = BitmapFactory.decodeFile(filePath, optActual);
-
+        // Get the roughly resized bitmap
+        Bitmap bmpResized = BitmapFactory.decodeFile(filePath, optActual);
         if (bmpResized == null)
             return null;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        final Bitmap.CompressFormat fmt;
+
+        // Now calculate exact scale in order to resize accurately
+        float percentage = (float) maxWidth / bmpResized.getWidth();
+        float proportionateHeight = bmpResized.getHeight() * percentage;
+        int finalHeight = (int) Math.rint(proportionateHeight);
+
+        float scaleWidth = ((float) maxWidth) / bmpResized.getWidth();
+        float scaleHeight = ((float) finalHeight) / bmpResized.getHeight();
+
+        float scaleBy = Math.min(scaleWidth, scaleHeight);
+
+        // Resize the bitmap to exact size
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleBy, scaleBy);
+
+        // apply rotation
+        if (rotation != 0) {
+            matrix.setRotate(rotation);
+        }
+
+        Bitmap.CompressFormat fmt;
         if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
             fmt = Bitmap.CompressFormat.PNG;
         } else {
             fmt = Bitmap.CompressFormat.JPEG;
         }
 
-        // apply rotation
-        if (rotation != 0) {
-            Matrix matrix = new Matrix();
-            matrix.setRotate(rotation);
-            final Bitmap bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
-            bmpRotated.compress(fmt, 100, stream);
-            bmpResized.recycle();
-            bmpRotated.recycle();
-        } else {
-            bmpResized.compress(fmt, 100, stream);
-            bmpResized.recycle();
+        final Bitmap bmpRotated;
+        try {
+            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            return null;
         }
+        bmpRotated.compress(fmt, 100, stream);
+        bmpResized.recycle();
+        bmpRotated.recycle();
 
         return stream.toByteArray();
     }
-
 }
