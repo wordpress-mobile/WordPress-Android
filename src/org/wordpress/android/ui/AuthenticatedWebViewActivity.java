@@ -1,13 +1,11 @@
 
 package org.wordpress.android.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
@@ -21,6 +19,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -63,6 +62,7 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
             String authUrl = extras.getString(LOAD_AUTHENTICATED_URL);
             loadAuthenticatedUrl(authUrl);
         }
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
     }
 
     /**
@@ -106,28 +106,6 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
             AppLog.e(T.UTILS, e);
-        }
-    }
-
-    /**
-     * WebChromeClient that displays "Loading..." title until the content of the webview is fully
-     * loaded.
-     */
-    protected class WordPressWebChromeClient extends WebChromeClient {
-        private Context context;
-
-        public WordPressWebChromeClient(Context context) {
-            this.context = context;
-        }
-
-        public void onProgressChanged(WebView webView, int progress) {
-            AuthenticatedWebViewActivity.this.setTitle(
-                    context.getResources().getText(R.string.loading));
-            AuthenticatedWebViewActivity.this.setSupportProgress(progress * 100);
-
-            if (progress == 100) {
-                setTitle(webView.getTitle());
-            }
         }
     }
 
