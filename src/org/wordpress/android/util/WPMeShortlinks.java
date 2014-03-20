@@ -33,13 +33,13 @@ public class WPMeShortlinks {
             String index = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";  
             out = new StringBuilder();
 
-            if ( num < 0 ) {
+            if (num<0) {
                 out.append('-');
                 num = Math.abs( num );
             }
 
             double t = Math.floor( Math.log10( num ) / Math.log10( 62 )  );
-            for ( ; t >= 0; t-- ) {
+            for ( ;t>=0;t--) {
                 int a = (int) Math.floor( num / Math.pow( 62, t ) );
                 out.append( index.substring( a, a+1 ) );
                 num = num - ( a * Math.pow( 62, t ) );
@@ -84,7 +84,7 @@ public class WPMeShortlinks {
                 return null;
             }
             
-            if (post.isPage()){
+            if (post.isPage()) {
                 type = "P";
             } else {
                 type = "p";
