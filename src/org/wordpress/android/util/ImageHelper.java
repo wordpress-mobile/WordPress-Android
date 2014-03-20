@@ -97,7 +97,7 @@ public class ImageHelper {
             exif = new ExifInterface(path);
         } catch (IOException e) {
             AppLog.e(T.UTILS, e);
-            return ExifInterface.ORIENTATION_NORMAL;
+            return 0;
         }
 
         int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
