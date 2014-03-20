@@ -2,19 +2,19 @@
 
 package org.wordpress.android.models;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class Blog {
     private int localTableBlogId;
@@ -259,11 +259,15 @@ public class Blog {
     public String getApi_blogid() {
         if (api_blogid == null) {
             JSONObject jsonOptions = getBlogOptionsJSONObject();
-            if (jsonOptions != null) {
-                String newApiBlogid = JSONUtil.queryJSON(jsonOptions, "jetpack_client_id.value", "");
-                if (!TextUtils.isEmpty(newApiBlogid)) {
-                    setApi_blogid(newApiBlogid);
-                    WordPress.wpDB.saveBlog(this);
+            if (jsonOptions!=null && jsonOptions.has("jetpack_client_id")) {
+                try {
+                    String jetpackBlogId = jsonOptions.getJSONObject("jetpack_client_id").getString("value");
+                    if (!TextUtils.isEmpty(jetpackBlogId)) {
+                        this.setApi_blogid(jetpackBlogId);
+                        WordPress.wpDB.saveBlog(this);
+                    }   
+                } catch (JSONException e) {
+                    AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + jsonOptions, e);
                 }
             }
         }
@@ -383,9 +387,16 @@ public class Blog {
             this.blogOptions = "{}";
             options = getBlogOptionsJSONObject();
         }
-        String jetpackBlogId = JSONUtil.queryJSON(options, "jetpack_client_id.value", "");
-        if (!TextUtils.isEmpty(jetpackBlogId)) {
-            this.setApi_blogid(jetpackBlogId);
+
+        if (options.has("jetpack_client_id")) {
+            try {
+                String jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+                if (!TextUtils.isEmpty(jetpackBlogId)) {
+                    this.setApi_blogid(jetpackBlogId);
+                }   
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + blogOptions, e);
+            }
         }
     }
 
@@ -419,14 +430,19 @@ public class Blog {
         String adminUrl = null;
         JSONObject jsonOptions = getBlogOptionsJSONObject();
         if (jsonOptions != null) {
-            adminUrl = JSONUtil.queryJSON(jsonOptions, "admin_url.value", "");
-            // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
-            if (TextUtils.isEmpty(adminUrl)) {
-                if (this.getUrl().lastIndexOf("/") != -1) {
-                    adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/")) + "/wp-admin";
-                } else {
-                    adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
-                }
+            try {
+                adminUrl = jsonOptions.getJSONObject("admin_url").getString("value");
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load admin_url from options: " + jsonOptions, e);
+            }
+        }
+
+        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if (TextUtils.isEmpty(adminUrl)) {
+            if (this.getUrl().lastIndexOf("/") != -1) {
+                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/")) + "/wp-admin";
+            } else {
+                adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
             }
         }
         return adminUrl;
@@ -434,16 +450,23 @@ public class Blog {
 
     public boolean isPrivate() {
         JSONObject jsonOptions = getBlogOptionsJSONObject();
-        if (jsonOptions != null) {
-            return !JSONUtil.queryJSON(jsonOptions, "blog_public.value", "1").equals("1");
+        if (jsonOptions != null && jsonOptions.has("blog_public")) {
+            try {
+                String blogPublicValue = jsonOptions.getJSONObject("blog_public").getString("value");
+                if (!TextUtils.isEmpty(blogPublicValue) && "-1".equals(blogPublicValue)) {
+                    return true;
+                }   
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load blog_public from options: " + jsonOptions, e);
+            }
         }
         return false;
     }
 
     public boolean isJetpackPowered() {
         JSONObject jsonOptions = getBlogOptionsJSONObject();
-        if (jsonOptions != null) {
-            return !JSONUtil.queryJSON(jsonOptions, "jetpack_client_id.value", "").equals("");
+        if (jsonOptions != null && jsonOptions.has("jetpack_client_id")) {
+            return true;
         }
         return false;
     }
