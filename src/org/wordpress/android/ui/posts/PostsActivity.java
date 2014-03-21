@@ -35,6 +35,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
@@ -590,7 +591,8 @@ public class PostsActivity extends WPActionBarActivity
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
             share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-            share.putExtra(Intent.EXTRA_TEXT, post.getPermaLink());
+            String shortlink = WPMeShortlinks.getPostShortlink(WordPress.getCurrentBlog(), post);
+            share.putExtra(Intent.EXTRA_TEXT, shortlink != null ? shortlink : post.getPermaLink());
             startActivity(Intent.createChooser(share, getResources()
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
