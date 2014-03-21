@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,14 +11,13 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.Date;
-
 /**
  * Activity for previewing a post or page in a webview.
  */
 public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
-    @Override
+    @SuppressLint("SetJavaScriptEnabled")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
@@ -60,11 +60,9 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
         if (post != null) {
             String url = post.getPermaLink();
 
-            Date d = new Date();
             if ( WordPress.getCurrentBlog().isPrivate() //blog private
                     || post.isLocalDraft()
                     || post.isLocalChange()
-                    || post.getDate_created_gmt() > d.getTime() //Scheduled
                     || post.getStatusEnum() != PostStatus.PUBLISHED) {
                 if (-1 == url.indexOf('?')) {
                     url = url.concat("?preview=true");

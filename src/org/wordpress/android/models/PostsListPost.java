@@ -12,8 +12,6 @@ import java.util.Date;
  */
 public class PostsListPost {
 
-    private static int TEN_SECONDS_MILLIS = 10000;
-
     private int postId;
     private int blogId;
     private String title;
@@ -68,25 +66,12 @@ public class PostsListPost {
         return StringUtils.notNullStr(status);
     }
 
-    public String getStatus() {
-        // Check if post is scheduled
-        Date d = new Date();
-        String postStatus = StringUtils.notNullStr(status);
-        // Subtract 10 seconds from the server GMT date, in case server and device time slightly differ
-        if (getDateCreatedGmt() - TEN_SECONDS_MILLIS > d.getTime() &&
-                PostStatus.fromString(getOriginalStatus()) == PostStatus.PUBLISHED) {
-            postStatus = PostStatus.toString(PostStatus.SCHEDULED);
-        }
-
-        return postStatus;
-    }
-
     public void setStatus(String status) {
         this.status = status;
     }
 
     public PostStatus getStatusEnum() {
-        return PostStatus.fromString(getStatus());
+        return PostStatus.fromPostsListPost(this);
     }
 
     public String getFormattedDate() {
