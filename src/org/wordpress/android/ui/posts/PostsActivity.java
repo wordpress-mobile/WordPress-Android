@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.posts;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.Iterator;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,6 +24,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -37,15 +48,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPMobileStatsUtil;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -578,8 +580,20 @@ public class PostsActivity extends WPActionBarActivity
 
             }
         } else if (action == POST_SHARE) {
-            // Only share published posts
+            boolean canShareThisPost = true;
+           
             if (post.getStatusEnum() != PostStatus.PUBLISHED) {
+                canShareThisPost = false;
+            } else {
+                // Check if post is scheduled
+                Date d = new Date();
+                // Subtract 10 seconds from the server GMT date, in case server and device time slightly differ
+                if (post.getDate_created_gmt() - 10000 > d.getTime()){
+                    canShareThisPost = false;
+                }
+            }
+
+            if (!canShareThisPost) {
                 AlertUtil.showAlert(
                         this,
                         R.string.error,
@@ -587,7 +601,7 @@ public class PostsActivity extends WPActionBarActivity
                 );
                 return;
             }
-
+            
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
             share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
