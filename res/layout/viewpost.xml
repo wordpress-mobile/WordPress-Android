@@ -67,7 +67,7 @@
     <RelativeLayout
         android:id="@+id/footerBar"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/post_detail_button_size"
         android:layout_above="@+id/layout_comment_box"
         android:layout_alignWithParentIfMissing="true"
         android:background="@drawable/view_post_toolbar"
@@ -75,12 +75,13 @@
 
         <ImageButton
             android:id="@+id/deletePost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/post_detail_button_size"
+            android:layout_height="@dimen/post_detail_button_size"
             android:background="@drawable/selectable_background_wordpress"
             android:scaleType="fitCenter"
-            android:padding="6dp"
-            android:src="@drawable/ic_menu_delete"
+            android:padding="9dp"
+            android:tint="@color/post_detail_icon_tint"
+            android:src="@drawable/ic_cab_trash"
             android:contentDescription="@string/delete_post" />
 
         <LinearLayout
@@ -91,28 +92,30 @@
 
             <ImageButton
                 android:id="@+id/viewPost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
                 android:padding="6dp"
-                android:src="@drawable/ic_menu_view"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ic_post_preview"
                 android:contentDescription="@string/preview_post" />
 
             <ImageButton
                 android:id="@+id/sharePostLink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="6dp"
-                android:src="@drawable/ic_menu_share"
+                android:padding="10dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ab_icon_share"
                 android:contentDescription="@string/share_url" />
 
             <ImageButton
                 android:id="@+id/addComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
                 android:padding="9dp"
@@ -121,12 +124,13 @@
             
             <ImageButton
                 android:id="@+id/editPost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="6dp"
-                android:src="@drawable/ic_menu_compose"
+                android:padding="10dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ab_icon_edit"
                 android:contentDescription="@string/edit_post" />
         </LinearLayout>
     </RelativeLayout>
