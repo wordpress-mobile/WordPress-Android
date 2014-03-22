@@ -54,6 +54,23 @@ public class PostTest extends InstrumentationTestCase {
         super.setUp();
     }
 
+    public void testInvalidPostIdLoad() {
+        Post post = mDB.getPostForLocalTablePostId(-1);
+
+        assertNull(post);
+    }
+
+    public void testPostSaveAndLoad() {
+        Post post = new Post(1, false);
+        post.setTitle("test-post");
+        mDB.savePost(post);
+
+        Post loadedPost = mDB.getPostForLocalTablePostId(post.getLocalTablePostId());
+
+        assertNotNull(loadedPost);
+        assertEquals(loadedPost.getTitle(), post.getTitle());
+    }
+
     public void testPostCopy() {
         Post copiedPost = post.copy();
         assertNotNull(copiedPost);
@@ -89,17 +106,6 @@ public class PostTest extends InstrumentationTestCase {
         assertEquals(post.getAuthorId(), copiedPost.getAuthorId());
         assertEquals(post.getContent(), copiedPost.getContent());
         assertEquals(post.getStatusEnum(), copiedPost.getStatusEnum());
-    }
-
-    public void testPostSaveAndLoad() {
-        Post post = new Post(1, false);
-        post.setTitle("test-post");
-        mDB.savePost(post);
-
-        Post loadedPost = mDB.getPostForLocalTablePostId(post.getLocalTablePostId());
-
-        assertNotNull(loadedPost);
-        assertEquals(loadedPost.getTitle(), post.getTitle());
     }
 
     public void testPostEnumStatus() {
