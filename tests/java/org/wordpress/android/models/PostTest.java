@@ -17,6 +17,7 @@ public class PostTest extends InstrumentationTestCase {
     protected void setUp() throws Exception {
         mDB = new WordPressDB(getInstrumentation().getContext());
 
+        post = new Post();
         post.setLocalTableBlogId(1233);
         post.setLocalTablePostId(12342134L);
         post.setIsPage(true);
@@ -122,6 +123,5 @@ public class PostTest extends InstrumentationTestCase {
         post.setStatusEnum(PostStatus.UNKNOWN);
         assertEquals(post.getStatusEnum(), PostStatus.UNKNOWN);
     }
-
 
 }
