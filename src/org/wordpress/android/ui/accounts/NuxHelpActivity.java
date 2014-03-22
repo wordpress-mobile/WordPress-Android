@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends SherlockFragmentActivity {
@@ -39,6 +40,14 @@ public class NuxHelpActivity extends SherlockFragmentActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FORUM_URL)));
+            }
+        });
+
+        WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
+        applogButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
             }
         });
     }

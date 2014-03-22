@@ -1,14 +1,13 @@
 
 package org.wordpress.android.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -21,6 +20,9 @@ import com.actionbarsherlock.view.Window;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -78,7 +80,7 @@ public class DashboardActivity extends SherlockActivity {
         }
 
         mWebView.setWebViewClient(new WPWebViewClient(mBlog));
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
@@ -136,29 +138,7 @@ public class DashboardActivity extends SherlockActivity {
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * WebChromeClient that displays "Loading..." title until the content of the webview is fully
-     * loaded.
-     */
-    protected class WordPressWebChromeClient extends WebChromeClient {
-        private Context context;
-
-        public WordPressWebChromeClient(Context context) {
-            this.context = context;
-        }
-
-        public void onProgressChanged(WebView webView, int progress) {
-            setTitle(
-                    context.getResources().getText(R.string.loading));
-            setSupportProgress(progress * 100);
-
-            if (progress == 100) {
-                setTitle(webView.getTitle());
-            }
+            AppLog.e(T.POSTS, e);
         }
     }
 

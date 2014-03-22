@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -29,6 +28,8 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -41,7 +42,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
+
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
  * Created by nbradbury on 6/30/13.
@@ -59,11 +61,11 @@ public class ReaderPostListFragment extends SherlockFragment
     private OnPostSelectedListener mPostSelectedListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
+    private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private MenuItem mRefreshMenuItem;
 
     private String mCurrentTag;
     private boolean mIsUpdating = false;
@@ -127,10 +129,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
 
-        // progress bar that appears when loading more posts
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
-        mProgress.setVisibility(View.GONE);
-
         // set the listView's scroll listeners so we can detect up/down scrolling
         mListView.setOnScrollListener(this);
 
@@ -146,8 +144,24 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
-        mListView.setAdapter(getPostAdapter());
+        // progress bar that appears when loading more posts
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
+        mProgress.setVisibility(View.GONE);
 
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                    }
+                });
+        mListView.setAdapter(getPostAdapter());
         return view;
     }
 
@@ -193,8 +207,6 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onPause() {
         super.onPause();
-        hideLoadingProgress();
-        animateRefreshButton(false);
     }
 
     @Override
@@ -202,7 +214,6 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.reader_native, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         checkActionBar();
     }
 
@@ -212,15 +223,23 @@ public class ReaderPostListFragment extends SherlockFragment
             case R.id.menu_tags :
                 ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
                 return true;
-            case R.id.menu_refresh :
-                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_no_connection, ToastUtils.Duration.LONG);
-                } else {
-                    updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
-                }
-                return true;
             default :
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+     * show/hide progress bar which appears at the bottom of the activity when loading more posts
+     */
+    private void showLoadingProgress() {
+        if (hasActivity() && mProgress != null) {
+            mProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingProgress() {
+        if (hasActivity() && mProgress != null) {
+            mProgress.setVisibility(View.GONE);
         }
     }
 
@@ -399,7 +418,6 @@ public class ReaderPostListFragment extends SherlockFragment
         mCurrentTag = tagName;
         UserPrefs.setReaderTag(tagName);
 
-        hideLoadingProgress();
         getPostAdapter().setCurrentTag(tagName);
         hideNewPostsBar();
 
@@ -440,7 +458,7 @@ public class ReaderPostListFragment extends SherlockFragment
         if (hasPostAdapter())
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
     }
-    
+
     /*
      * get latest posts for this tag from the server
      */
@@ -448,9 +466,12 @@ public class ReaderPostListFragment extends SherlockFragment
         if (hasCurrentTag())
             updatePostsWithTag(mCurrentTag, updateAction, refreshType);
     }
-    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
-        if (TextUtils.isEmpty(tagName))
+
+    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction,
+                                    RefreshType refreshType) {
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
@@ -493,31 +514,15 @@ public class ReaderPostListFragment extends SherlockFragment
         });
     }
 
-    void animateRefreshButton(boolean animate) {
-        if (mRefreshMenuItem == null || !(getActivity() instanceof WPActionBarActivity))
-            return;
-        if (animate) {
-            ((WPActionBarActivity)getActivity()).startAnimatingRefreshButton(mRefreshMenuItem);
-        } else {
-            ((WPActionBarActivity)getActivity()).stopAnimatingRefreshButton(mRefreshMenuItem);
-        }
-    }
-
-    private boolean isUpdating() {
+    public boolean isUpdating() {
         return mIsUpdating;
     }
 
-    private void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
-        if (!hasActivity() || mIsUpdating == isUpdating)
+    public void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
+        if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
-
-        mIsUpdating = isUpdating;
-
+        }
         switch (updateAction) {
-            case LOAD_NEWER:
-                animateRefreshButton(isUpdating);
-                break;
-
             case LOAD_OLDER:
                 // if these are older posts, show/hide message bar at bottom
                 if (isUpdating) {
@@ -526,7 +531,11 @@ public class ReaderPostListFragment extends SherlockFragment
                     hideLoadingProgress();
                 }
                 break;
+            default:
+                mPullToRefreshHelper.setRefreshing(isUpdating);
+                break;
         }
+        mIsUpdating = isUpdating;
     }
 
     /*
@@ -542,6 +551,7 @@ public class ReaderPostListFragment extends SherlockFragment
         }
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+        mPullToRefreshHelper.hideTipTemporarily(true);
     }
 
     private void hideNewPostsBar() {
@@ -558,6 +568,7 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
+        mPullToRefreshHelper.showTip(true);
     }
 
     /*
@@ -586,18 +597,6 @@ public class ReaderPostListFragment extends SherlockFragment
         getActionBarAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag))
             setCurrentTag(newCurrentTag);
-    }
-
-    /*
-     * show/hide progress bar which appears at the bottom of the activity when loading more posts
-     */
-    private void showLoadingProgress() {
-        if (hasActivity() && mProgress != null)
-            mProgress.setVisibility(View.VISIBLE);
-    }
-    private void hideLoadingProgress() {
-        if (hasActivity() && mProgress != null)
-            mProgress.setVisibility(View.GONE);
     }
 
     @Override

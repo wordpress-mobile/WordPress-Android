@@ -10,6 +10,7 @@ import android.text.style.QuoteSpan;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 7/9/13.
@@ -108,7 +109,7 @@ public class HtmlUtils {
                 WPMobileStatsUtil.trackException(runtimeException, WPMobileStatsUtil.StatsPropertyExceptionNoteParsing,
                         additionalData);
             } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
+                AppLog.e(T.UTILS, jsonException);
             }
         }
         Emoticons.replaceEmoticonsWithEmoji(html);

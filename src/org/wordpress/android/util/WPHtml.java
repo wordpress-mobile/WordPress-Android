@@ -16,10 +16,6 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -55,13 +51,6 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -69,6 +58,16 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog.T;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML
@@ -494,7 +493,7 @@ public class WPHtml {
             String title = mediaFile.getTitle();
             String caption = mediaFile.getCaption();
             int width = mediaFile.getWidth();
-            
+
             String inlineCSS = " ";
             try {
                 String localBlogID = imageSpan.getMediaFile().getBlogId();
@@ -510,7 +509,7 @@ public class WPHtml {
             } catch (Exception e) {
                 AppLog.e(T.UTILS, "Error while loading blog resize settings", e);
             }
-            
+
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
@@ -1096,8 +1095,8 @@ class HtmlToSpannedConverter implements ContentHandler {
                     mysteryTagContent += sb.toString().substring(start, length);
             } else
                 mSpannableStringBuilder.append(sb);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            AppLog.e(T.UTILS, e);
         }
     }
 

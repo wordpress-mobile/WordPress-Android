@@ -134,7 +134,7 @@ public class WPMobileStatsUtil {
             properties.put("number_of_blogs", numBlogs);
             mixpanel.registerSuperProperties(properties);
         } catch(JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.UTILS, e);
         }
 
         // Application opened and start.
@@ -149,7 +149,7 @@ public class WPMobileStatsUtil {
                 jsonObj.put("$first_name", username);
                 mixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
-                e.printStackTrace();
+                AppLog.e(T.UTILS, e);
             }
         }
     }
@@ -299,7 +299,7 @@ public class WPMobileStatsUtil {
                 properties.put("additional_data", additionalData);
             }
         } catch (JSONException jsonException) {
-            jsonException.printStackTrace();
+            AppLog.e(T.UTILS, jsonException);
         }
         mixpanel.track(StatsEventException, properties);
     }
@@ -400,7 +400,7 @@ public class WPMobileStatsUtil {
         try {
             properties.put(property, value);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.UTILS, e);
         }
     }
 

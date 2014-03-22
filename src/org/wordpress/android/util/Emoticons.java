@@ -7,8 +7,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.SparseArray;
 
-import org.wordpress.android.util.AppLog.T;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +73,6 @@ public class Emoticons {
     
     public static String lookupImageSmiley(String url, String ifNone){
         String file = url.substring(url.lastIndexOf("/") + 1);
-        AppLog.d(T.UTILS, String.format("Looking for %s", file));
         if (wpSmilies.containsKey(file)) {
             return wpSmilies.get(file);
         }

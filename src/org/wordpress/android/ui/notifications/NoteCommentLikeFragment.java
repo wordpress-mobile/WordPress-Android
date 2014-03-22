@@ -9,27 +9,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.PhotonUtils;
 
 public class NoteCommentLikeFragment extends ListFragment implements NotificationFragment {
-
     private Note mNote;
-    private int mAvatarSz;
-    
-    @Override
-    public void onCreate(Bundle bundle){
-        super.onCreate(bundle);
-        mAvatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +65,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             noteHeader.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
         }
 
-        setListAdapter(new NoteAdapter());
+        setListAdapter(new NoteFollowAdapter(getActivity(), getNote(), true));
     }
 
     @Override
@@ -88,7 +77,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     public Note getNote(){
         return mNote;
     }
-    
+
     private String getHeaderText(JSONArray bodyItems) {
         if (bodyItems == null)
             return "";
@@ -101,49 +90,6 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
             return "";
         JSONObject noteItem = JSONUtil.queryJSON(bodyItems, String.format("[%d]", 0), new JSONObject());
         return JSONUtil.getStringDecoded(noteItem, "html");
-    }
-    
-    class NoteAdapter extends BaseAdapter {
-        private final JSONArray mItems;
-        private final LayoutInflater mInflater;
-
-        NoteAdapter(){
-            mItems = getNote().queryJSON("body.items", new JSONArray());
-            mInflater = getActivity().getLayoutInflater();
-        }
-        
-        public View getView(int position, View cachedView, ViewGroup parent){
-            final View view;
-            if (cachedView == null) {
-                view = mInflater.inflate(R.layout.notifications_follow_row, null);
-            } else {
-                view = cachedView;
-            }
-
-            JSONObject noteItem = getItem(position+1); //This is because element at position 0 of body.items must be discarded.
-            JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
-
-            FollowRow row = (FollowRow) view;
-            row.setFollowListener(new FollowListener());
-            row.setAction(followAction);
-            row.setNameText(JSONUtil.queryJSON(noteItem, "header_text", ""));
-            String iconUrl = JSONUtil.queryJSON(noteItem, "icon", "");
-            row.getImageView().setImageUrl(PhotonUtils.fixAvatar(iconUrl, mAvatarSz), WordPress.imageLoader);
-            
-            return view;
-        }
-        
-        public long getItemId(int position){
-            return (long) position;
-        }
-        
-        public JSONObject getItem(int position){
-            return JSONUtil.queryJSON(mItems, String.format("[%d]", position), new JSONObject());
-        }
-        
-        public int getCount(){
-            return mItems.length()-1; //Element at position 0 of body.items must be discarded.
-        }
     }
 
     @Override

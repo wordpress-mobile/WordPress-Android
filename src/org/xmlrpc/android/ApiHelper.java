@@ -1,16 +1,18 @@
 package org.xmlrpc.android;
 
+import java.util.Map;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +22,10 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Xml;
 
@@ -35,6 +39,7 @@ import com.google.gson.Gson;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -43,7 +48,10 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -53,8 +61,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class ApiHelper {
-    public enum ErrorType {NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
-        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION}
+    public enum ErrorType {
+        NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
+        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED}
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
 
@@ -165,27 +174,6 @@ public class ApiHelper {
         }
     }
 
-    public static class VerifyCredentialsCallback implements ApiHelper.GenericCallback {
-        private final WeakReference<Activity> activityWeakRef;
-
-        public VerifyCredentialsCallback(Activity refActivity) {
-            this.activityWeakRef = new WeakReference<Activity>(refActivity);
-        }
-
-        @Override
-        public void onSuccess() {
-        }
-
-        @Override
-        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            Activity act = activityWeakRef.get();
-            if (act == null || act.isFinishing()) {
-                return;
-            }
-            ToastUtils.showToastOrAuthAlert(act, errorMessage, "An error occurred");
-        }
-    }
-
     /**
      * Task to refresh blog level information (WP version number) and stuff
      * related to the active theme (available post types, recent comments, etc).
@@ -293,7 +281,7 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mContext, commentParams);
+                ApiHelper.refreshComments(mContext, mBlog, commentParams);
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -315,9 +303,8 @@ public class ApiHelper {
         }
     }
 
-    public static CommentList refreshComments(Context context, Object[] commentParams)
+    public static CommentList refreshComments(Context context, Blog blog, Object[] commentParams)
             throws XMLRPCException, IOException, XmlPullParserException {
-        Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
             return null;
         }
@@ -439,6 +426,12 @@ public class ApiHelper {
             }
 
             return false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
         }
 
         @Override
@@ -623,7 +616,7 @@ public class ApiHelper {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
             }
         }
-        
+
         @Override
         protected void onPostExecute(Integer result) {
             if (mCallback != null) {
@@ -1120,8 +1113,11 @@ public class ApiHelper {
                     }
                     eventType = parser.next();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.API, e);
+                return null;
+            } catch (IOException e) {
+                AppLog.e(T.API, e);
                 return null;
             }
         }

@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -27,13 +28,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -45,11 +47,12 @@ import org.wordpress.android.util.Utils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -73,13 +76,13 @@ public class StatsActivity extends WPActionBarActivity {
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
 
-    private MenuItem mRefreshMenuItem;
     private int mResultCode = -1;
     private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private boolean mIsUpdatingStats;
     private boolean mHasVerifiedCreds;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -105,6 +108,19 @@ public class StatsActivity extends WPActionBarActivity {
         }
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
+
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshStats();
+                    }
+                });
 
         loadStatsFragments();
         setTitle(R.string.stats);
@@ -138,15 +154,18 @@ public class StatsActivity extends WPActionBarActivity {
                 WordPress.getCurrentBlog().setDotcom_username(username);
                 WordPress.getCurrentBlog().setDotcom_password(password);
                 WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
+                mPullToRefreshHelper.setRefreshing(true);
                 refreshStats();
             } else {
                 startWPComLoginActivity();
             }
             return;
         }
-        
-        if (!mIsRestoredFromState)
+
+        if (!mIsRestoredFromState) {
+            mPullToRefreshHelper.setRefreshing(true);
             refreshStats();
+        }
     }
 
     @Override
@@ -156,24 +175,22 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        
-        stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-            
+
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
         mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
         mHasVerifiedCreds = savedInstanceState.getBoolean(KEY_VERIFIED_CREDS);
         mIsRestoredFromState = true;
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putBoolean(KEY_VERIFIED_CREDS, mHasVerifiedCreds);
@@ -185,12 +202,11 @@ public class StatsActivity extends WPActionBarActivity {
         loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
         startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
-            
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
                 if (getBlogId() == null) {
@@ -207,8 +223,10 @@ public class StatsActivity extends WPActionBarActivity {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
-                                if (!isFinishing())
+                                if (!isFinishing()) {
+                                    mPullToRefreshHelper.setRefreshing(true);
                                     refreshStats();
+                                }
                             }
                         }
                         @Override
@@ -217,7 +235,8 @@ public class StatsActivity extends WPActionBarActivity {
                         }
                     }, "wp.getOptions", params);
                 }
-            refreshStats();
+                mPullToRefreshHelper.setRefreshing(true);
+                refreshStats();
             }
         }
     }
@@ -355,18 +374,18 @@ public class StatsActivity extends WPActionBarActivity {
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> statsActivityWeakRef;
-        
+
         public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
             this.statsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
         }
-       
+
         @Override
         public void onSuccess() {
             if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
                     || !statsActivityWeakRef.get().mIsInFront) {
                 return;
             }
-            
+
             if (getBlogId() == null) {
                 stopStatsService();
                 // Blog has not returned a jetpack_client_id
@@ -406,18 +425,12 @@ public class StatsActivity extends WPActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_refresh) {
-            // make sure we have a connection before proceeding (will alert user if not)
-            if (NetworkUtils.checkConnection(this))
-                refreshStats();
-            return true;
-        } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
+        if (item.getItemId() == R.id.menu_view_stats_full_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
@@ -469,6 +482,7 @@ public class StatsActivity extends WPActionBarActivity {
 
         ft.commit();
 
+        mPullToRefreshHelper.setRefreshing(true);
         refreshStats();
     }
 
@@ -479,16 +493,21 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void refreshStats() {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
-        if (!NetworkUtils.isNetworkAvailable(this))
+        }
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         if (mIsUpdatingStats) {
+            mPullToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }
-        
+
         final String blogId;
         if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch()) {
             blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
@@ -551,48 +570,27 @@ public class StatsActivity extends WPActionBarActivity {
                             return;
                         }
 
-                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, error, StatsActivity.this.getString(R.string.error_refresh_stats));
+                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, error,
+                                StatsActivity.this.getString(R.string.error_refresh_stats));
                     }
                 });
     }
 
     String getBlogId() {
+        Blog currentBlog = WordPress.getCurrentBlog();
         // for dotcom blogs that were added manually
-        if (WordPress.getCurrentBlog().isDotcomFlag() && !dotComCredentialsMatch())
-            return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
-        // for self-hosted blogs
-        try {
-            Blog currentBlog = WordPress.getCurrentBlog();
-            String jetpackBlogId = currentBlog.getApi_blogid();
-            if (jetpackBlogId == null) {
-                JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
-                jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
-
-                if (jetpackBlogId == null)
-                    return null;
-
-                if (currentBlog.getApi_blogid() == null || !currentBlog.getApi_blogid().equals(jetpackBlogId)) {
-                    currentBlog.setApi_blogid(jetpackBlogId);
-                    WordPress.wpDB.saveBlog(currentBlog);
-                }
-
-                return jetpackBlogId;
-            } else {
-                return jetpackBlogId;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (currentBlog.isDotcomFlag() && !dotComCredentialsMatch()) {
+            return String.valueOf(currentBlog.getRemoteBlogId());
         }
-        return null;
+        // Can return null
+        return currentBlog.getApi_blogid();
     }
 
     private void stopStatsService() {
         stopService(new Intent(this, StatsService.class));
         if (mIsUpdatingStats) {
             mIsUpdatingStats = false;
-            if (mRefreshMenuItem != null)
-                stopAnimatingRefreshButton(mRefreshMenuItem);
+            mPullToRefreshHelper.setRefreshing(false);
         }
     }
 
@@ -605,12 +603,8 @@ public class StatsActivity extends WPActionBarActivity {
             String action = StringUtils.notNullStr(intent.getAction());
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                if (mRefreshMenuItem != null) {
-                    if (mIsUpdatingStats) {
-                        startAnimatingRefreshButton(mRefreshMenuItem);
-                    } else {
-                        stopAnimatingRefreshButton(mRefreshMenuItem);
-                    }
+                if (!mIsUpdatingStats) {
+                    mPullToRefreshHelper.setRefreshing(false);
                 }
             }
         }

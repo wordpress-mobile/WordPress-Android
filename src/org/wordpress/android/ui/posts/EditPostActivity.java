@@ -113,14 +113,15 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
                 // Create a new post for share intents and QuickPress
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+                WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
             } else if (extras != null) {
                 // Load post from the postId passed in extras
-                long postId = extras.getLong(EXTRA_POSTID, -1);
+                long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
                 boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
-                mOriginalPost = new Post(WordPress.getCurrentLocalTableBlogId(), postId, isPage);
+                mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
+                mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 if (mIsNewPost) {
                     // New posts are drafts by default
                     mPost.setStatusEnum(PostStatus.DRAFT);
@@ -155,7 +156,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         }
 
         // Ensure we have a valid post
-        if (mPost == null || mPost.getId() < 0) {
+        if (mPost == null) {
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
@@ -269,7 +270,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         } else {
             // Display the save draft menu item if the post does not have a "published" status and
             // update the save menu item title depending on the status of the current post.
-            if(mPost != null && mPost.getPost_status() != null
+            if(mPost != null && mPost.getPostStatus() != null
                               && mPost.getStatusEnum() != PostStatus.PUBLISHED ) {
                 saveDraftMenuItem.setVisible(true);
                 saveMenuItem.setTitle(R.string.publish_post);
@@ -377,8 +378,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
     private void showCancelAlert() {
         // Empty post? Let's not prompt then.
         if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
-            if (mIsNewPost)
-                mPost.delete();
+            if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            }
             finish();
             return;
         }
@@ -388,7 +390,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         // Compare the current Post to the original and if no changes have been made,
         // set the Post back to the original and go back to the previous view
         if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
-            mOriginalPost.update();
+            WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
             finish();
             return;
@@ -413,10 +415,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // When discard option is chosen, restore existing post or delete new post if it was autosaved.
                 if (mOriginalPost != null && !mIsNewPost) {
-                    mOriginalPost.update();
+                    WordPress.wpDB.updatePost(mOriginalPost);
                     WordPress.currentPost = mOriginalPost;
                 } else if (mPost != null && mIsNewPost) {
-                    mPost.delete();
+                    WordPress.wpDB.deletePost(mPost);
                 }
                 finish();
             }

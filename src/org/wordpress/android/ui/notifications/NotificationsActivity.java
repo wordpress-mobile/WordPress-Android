@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     private NotificationsListFragment mNotesList;
-    private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
@@ -175,6 +175,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     openNote(mNotesList.getNotesAdapter().getItem(0));
                 }
             }
+            mNotesList.animateRefresh(true);
             refreshNotes();
         }
     }
@@ -182,9 +183,6 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                refreshNotes();
-                return true;
             case android.R.id.home:
                 if (isLargeOrXLarge()) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
@@ -208,11 +206,6 @@ public class NotificationsActivity extends WPActionBarActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
-        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
-        if (mShouldAnimateRefreshButton) {
-            mShouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(mRefreshMenuItem);
-        }
         return true;
     }
 
@@ -255,6 +248,33 @@ public class NotificationsActivity extends WPActionBarActivity
         return null;
     }
 
+    /*
+     * mark a single notification as read, both on the server and locally
+     */
+    private void markNoteAsRead(final Note note) {
+        if (note == null)
+            return;
+        getRestClientUtils().markNoteAsRead(note,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // clear the unread count then save to local db
+                        note.setUnreadCount("0");
+                        WordPress.wpDB.addNote(note, note.isPlaceholder());
+                        // reflect the change in the note list
+                        if (!isFinishing() && mNotesList != null)
+                            mNotesList.updateNote(note);
+                    }
+                },
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
+                    }
+                }
+        );
+    }
+
     /**
      *  Open a note fragment based on the type of note
      */
@@ -262,40 +282,9 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing())
             return;
 
-        // if note is "unread" set note to "read"
+        // mark the note as read if it's unread
         if (note.isUnread()) {
-            // send a request to mark note as read
-            getRestClientUtils().markNoteAsRead(note, new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (isFinishing())
-                                return;
-
-                            final NotesAdapter notesAdapter = mNotesList.getNotesAdapter();
-
-                            note.setUnreadCount("0");
-                            if (notesAdapter.indexOfNote(note) < 0) {
-                                // edge case when a note is opened with a note_id, and not tapping on the list. Loop over all notes
-                                // in the adapter and find a match with the noteID
-                                for (int i = 0; i < notesAdapter.getCount(); i++) {
-                                    Note item = notesAdapter.getItem(i);
-                                    if (item.getId().equals(note.getId())) {
-                                        item.setUnreadCount("0");
-                                        break;
-                                    }
-                                }
-                            }
-
-                            WordPress.wpDB.addNote(note, false); //Update the DB
-                            notesAdapter.notifyDataSetChanged();
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.d(T.NOTIFS, String.format("Failed to mark as read %s", error));
-                        }
-                    }
-            );
+            markNoteAsRead(note);
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -322,8 +311,9 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
         // fragment used here that is not a NotificationFragment)
-        if (detailFragment instanceof NotificationFragment)
+        if (detailFragment instanceof NotificationFragment) {
             ((NotificationFragment) detailFragment).setNote(note);
+        }
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
@@ -348,6 +338,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        mNotesList.animateRefresh(true);
         refreshNotes();
     }
 
@@ -360,13 +351,13 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    private void refreshNotes(){
-        if (!NetworkUtils.checkConnection(this))
+    public void refreshNotes() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mNotesList.animateRefresh(false);
             return;
+        }
 
         mFirstLoadComplete = false;
-        mShouldAnimateRefreshButton = true;
-        startAnimatingRefreshButton(mRefreshMenuItem);
         NotesResponseHandler notesHandler = new NotesResponseHandler(){
             @Override
             public void onNotes(final List<Note> notes) {
@@ -381,7 +372,7 @@ public class NotificationsActivity extends WPActionBarActivity
                             @Override
                             public void run() {
                                 refreshNotificationsListFragment(notes);
-                                stopAnimatingRefreshButton(mRefreshMenuItem);
+                                mNotesList.animateRefresh(false);
                             }
                         });
                     }
@@ -392,11 +383,8 @@ public class NotificationsActivity extends WPActionBarActivity
                 //We need to show an error message? and remove the loading indicator from the list?
                 mFirstLoadComplete = true;
                 mNotesList.getNotesAdapter().addAll(new ArrayList<Note>(), true);
-
                 ToastUtils.showToastOrAuthAlert(NotificationsActivity.this, error, getString(R.string.error_refresh_notifications));
-
-                stopAnimatingRefreshButton(mRefreshMenuItem);
-                mShouldAnimateRefreshButton = false;
+                mNotesList.animateRefresh(false);
             }
         };
         NotificationUtils.refreshNotifications(notesHandler, notesHandler);
@@ -455,7 +443,13 @@ public class NotificationsActivity extends WPActionBarActivity
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
-            openNote(note);
+            if (note == null)
+                return;
+            // open the latest version of this note just in case it has changed - this can
+            // happen if the note was tapped from the list fragment after it was updated
+            // by another fragment (such as NotificationCommentLikeFragment)
+            Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
+            openNote(updatedNote != null ? updatedNote : note);
         }
     }
 
