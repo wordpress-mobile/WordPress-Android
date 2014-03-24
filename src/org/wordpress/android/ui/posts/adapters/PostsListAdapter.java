@@ -100,7 +100,7 @@ public class PostsListAdapter extends BaseAdapter {
         }
 
         String formattedStatus = "";
-        if (post.getStatusEnum() == PostStatus.PUBLISHED && !post.isLocalDraft() && !post.hasLocalChanges()) {
+        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
             wrapper.getStatus().setVisibility(View.GONE);
         } else {
             wrapper.getStatus().setVisibility(View.VISIBLE);
@@ -121,6 +121,8 @@ public class PostsListAdapter extends BaseAdapter {
                         break;
                     case SCHEDULED:
                         formattedStatus = mContext.getResources().getString(R.string.scheduled);
+                        break;
+                    default:
                         break;
                 }
             }

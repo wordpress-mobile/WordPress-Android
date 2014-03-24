@@ -244,6 +244,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
             switch (post.getStatusEnum()) {
                 case PUBLISHED:
+                case SCHEDULED:
+                case UNKNOWN:
                     mStatusSpinner.setSelection(0, true);
                     break;
                 case DRAFT:

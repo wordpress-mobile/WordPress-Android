@@ -579,12 +579,9 @@ public class PostsActivity extends WPActionBarActivity
             }
         } else if (action == POST_SHARE) {
             // Only share published posts
-            if (post.getStatusEnum() != PostStatus.PUBLISHED) {
-                AlertUtil.showAlert(
-                        this,
-                        R.string.error,
-                        post.isPage() ? R.string.page_not_published : R.string.post_not_published
-                );
+            if (post.getStatusEnum() != PostStatus.PUBLISHED && post.getStatusEnum() != PostStatus.SCHEDULED) {
+                AlertUtil.showAlert(this, R.string.error,
+                        post.isPage() ? R.string.page_not_published : R.string.post_not_published);
                 return;
             }
 

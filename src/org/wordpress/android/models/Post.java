@@ -217,7 +217,7 @@ public class Post implements Serializable {
     }
 
     public PostStatus getStatusEnum() {
-        return PostStatus.fromString(status);
+        return PostStatus.fromPost(this);
     }
 
     public String getRemotePostId() {
