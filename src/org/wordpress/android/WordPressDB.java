@@ -52,10 +52,10 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
-            + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
+            + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
     public static final String SETTINGS_TABLE = "accounts";
@@ -145,7 +145,7 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
-
+   
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = Config.DB_SECRET;
@@ -241,6 +241,14 @@ public class WordPressDB {
             case 23:
                 CommentTable.reset(db);
                 currentVersion++;
+            case 24:
+                currentVersion++;
+            case 25:
+                //ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
+                //SQLite supports a limited subset of ALTER TABLE. 
+                //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table. 
+                //It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -285,10 +293,13 @@ public class WordPressDB {
         values.put("fullSizeImage", false);
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
-        values.put("runService", false);
         values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
-        values.put("wpVersion", blog.getWpVersion());
+        if (blog.getWpVersion() != null) {
+            values.put("wpVersion", blog.getWpVersion());
+        } else {
+            values.putNull("wpVersion");
+        }
         values.put("isAdmin", blog.isAdmin());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
@@ -430,7 +441,11 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
-
+        if (blog.getWpVersion() != null) {
+            values.put("wpVersion", blog.getWpVersion());
+        } else {
+            values.putNull("wpVersion");
+        }
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
         if (blog.isDotcomFlag()) {
@@ -481,9 +496,9 @@ public class WordPressDB {
     public Blog instantiateBlogByLocalId(int localId) {
         String[] fields =
                 new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
-                             "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService",
+                             "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
-                             "api_blogid", "wpVersion", "postFormats", "lastCommentId", "isScaledImage",
+                             "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
         Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
@@ -512,7 +527,6 @@ public class WordPressDB {
                 blog.setFullSizeImage(c.getInt(c.getColumnIndex("fullSizeImage")) > 0);
                 blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
                 blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
-                blog.setRunService(c.getInt(c.getColumnIndex("runService")) > 0);
                 blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
                 blog.setLocation(c.getInt(c.getColumnIndex("location")) > 0);
                 blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
@@ -532,7 +546,6 @@ public class WordPressDB {
                     blog.setWpVersion(c.getString(c.getColumnIndex("wpVersion")));
                 }
                 blog.setPostFormats(c.getString(c.getColumnIndex("postFormats")));
-                blog.setLastCommentId(c.getInt(c.getColumnIndex("lastCommentId")));
                 blog.setScaledImage(c.getInt(c.getColumnIndex("isScaledImage")) > 0);
                 blog.setScaledImageWidth(c.getInt(c.getColumnIndex("scaledImgWidth")));
                 blog.setHomeURL(c.getString(c.getColumnIndex("homeURL")));
@@ -577,19 +590,6 @@ public class WordPressDB {
         c.close();
 
         return returnVector;
-    }
-
-    public boolean updateLatestCommentID(int id, long newCommentID) {
-        boolean returnValue = false;
-
-        synchronized (this) {
-            ContentValues values = new ContentValues();
-            values.put("lastCommentId", newCommentID);
-
-            returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
-        }
-
-        return (returnValue);
     }
 
     /*
@@ -638,22 +638,6 @@ public class WordPressDB {
             }
         }
         return remoteBlogID;
-    }
-
-    public void updateNotificationFlag(int id, boolean flag) {
-
-        ContentValues values = new ContentValues();
-        int iFlag = 0;
-        if (flag) {
-            iFlag = 1;
-        }
-        values.put("runService", iFlag);
-
-        boolean returnValue = db.update(SETTINGS_TABLE, values,
-                "id=" + String.valueOf(id), null) > 0;
-        if (returnValue) {
-        }
-
     }
 
     /**

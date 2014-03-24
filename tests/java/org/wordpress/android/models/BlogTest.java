@@ -102,18 +102,6 @@ public class BlogTest extends InstrumentationTestCase {
         assertEquals(1, blog.getMaxImageWidthId());
     }
 
-    public void testGetSetLastCommentId() {
-        assertEquals(0, blog.getLastCommentId());
-        blog.setLastCommentId(1);
-        assertEquals(1, blog.getLastCommentId());
-    }
-
-    public void testGetSetRunService() {
-        assertFalse(blog.isRunService());
-        blog.setRunService(true);
-        assertTrue(blog.isRunService());
-    }
-
     public void testGetSetRemoteBlogId() {
         assertEquals(0, blog.getRemoteBlogId());
         blog.setRemoteBlogId(1);
