@@ -89,6 +89,9 @@ public class WPMobileStatsUtil {
     public static final String StatsPropertyExceptionFetchMedia = "fetch_media_failed";
     public static final String StatsPropertyExceptionUploadMedia = "upload_media_failed";
 
+    // Track Out of Memory errors
+    public static final String StatsEventMediaOutOfMemory = "Out of Memory Error";
+
     /* /Events  */
 
     private static final WPMobileStatsUtil instance = new WPMobileStatsUtil();

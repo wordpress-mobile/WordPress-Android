@@ -107,8 +107,8 @@ class XMLRPCSerializer {
         else if( object instanceof MediaFile ) {
             //convert media file binary to base64
             serializer.startTag( null, "base64" );
-            MediaFile videoFile = (MediaFile) object;
-            InputStream inStream = new DataInputStream(new FileInputStream(videoFile.getFilePath()));
+            MediaFile mediaFile = (MediaFile) object;
+            InputStream inStream = new DataInputStream(new FileInputStream(mediaFile.getFilePath()));
             byte[] buffer = new byte[3600];//you must use a 24bit multiple
             int length = -1;
             String chunk = null;
