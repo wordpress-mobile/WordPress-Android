@@ -114,8 +114,6 @@ public class CommentActions {
                 }
 
                 final boolean succeeded = (newCommentID >= 0);
-                if (succeeded)
-                    WordPress.wpDB.updateLatestCommentID(accountId, newCommentID);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -190,8 +188,6 @@ public class CommentActions {
                 }
 
                 final boolean succeeded = (newCommentID >= 0);
-                if (succeeded)
-                    WordPress.wpDB.updateLatestCommentID(accountId, newCommentID);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {

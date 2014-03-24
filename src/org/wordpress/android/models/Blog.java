@@ -30,8 +30,6 @@ public class Blog {
     private int scaledImageWidth;
     private String maxImageWidth;
     private int maxImageWidthId;
-    private int lastCommentId;
-    private boolean runService;
     private int remoteBlogId;
     private boolean location;
     private String dotcom_username;
@@ -51,7 +49,7 @@ public class Blog {
 
     }
 
-    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int lastCommentId, boolean runService, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
+    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
         this.localTableBlogId = localTableBlogId;
         this.url = url;
         this.homeURL = homeURL;
@@ -65,8 +63,6 @@ public class Blog {
         this.scaledImageWidth = scaledImageWidth;
         this.maxImageWidth = maxImageWidth;
         this.maxImageWidthId = maxImageWidthId;
-        this.lastCommentId = lastCommentId;
-        this.runService = runService;
         this.remoteBlogId = remoteBlogId;
         this.location = location;
         this.dotcom_username = dotcom_username;
@@ -198,22 +194,6 @@ public class Blog {
 
     public void setMaxImageWidthId(int maxImageWidthId) {
         this.maxImageWidthId = maxImageWidthId;
-    }
-
-    public int getLastCommentId() {
-        return lastCommentId;
-    }
-
-    public void setLastCommentId(int lastCommentId) {
-        this.lastCommentId = lastCommentId;
-    }
-
-    public boolean isRunService() {
-        return runService;
-    }
-
-    public void setRunService(boolean runService) {
-        this.runService = runService;
     }
 
     public int getRemoteBlogId() {
