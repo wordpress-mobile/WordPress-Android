@@ -295,7 +295,11 @@ public class WordPressDB {
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
-        values.put("wpVersion", blog.getWpVersion());
+        if (blog.getWpVersion() != null) {
+            values.put("wpVersion", blog.getWpVersion());
+        } else {
+            values.putNull("wpVersion");
+        }
         values.put("isAdmin", blog.isAdmin());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
@@ -437,7 +441,11 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
-
+        if (blog.getWpVersion() != null) {
+            values.put("wpVersion", blog.getWpVersion());
+        } else {
+            values.putNull("wpVersion");
+        }
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
         if (blog.isDotcomFlag()) {
