@@ -236,6 +236,7 @@ public class ImageHelper {
                 AppLog.e(T.UTILS, "Error in setting image", e);
             }   
             catch(OutOfMemoryError oom) {
+                WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
                 AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
             }
             
@@ -454,6 +455,7 @@ public class ImageHelper {
         try {
             bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
+            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
             return null;
         }
         bmpRotated.compress(fmt, 100, stream);
