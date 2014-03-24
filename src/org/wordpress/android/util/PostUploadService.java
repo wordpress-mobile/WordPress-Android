@@ -39,6 +39,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -551,14 +552,14 @@ public class PostUploadService extends Service {
 
                 Uri imageUri = Uri.parse(curImagePath);
                 File imageFile = null;
-                String mimeType = "", orientation = "", path = "";
+                String mimeType = "", path = "";
+                int orientation;
 
                 if (imageUri.toString().contains("content:")) {
                     String[] projection;
                     Uri imgPath;
 
-                    projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE,
-                            Images.Media.ORIENTATION};
+                    projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
 
                     imgPath = imageUri;
 
@@ -566,13 +567,10 @@ public class PostUploadService extends Service {
 
                     if (cur.moveToFirst()) {
 
-                        int dataColumn, mimeTypeColumn, orientationColumn;
-
+                        int dataColumn, mimeTypeColumn;
                         dataColumn = cur.getColumnIndex(Images.Media.DATA);
                         mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-                        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 
-                        orientation = cur.getString(orientationColumn);
                         String thumbData = cur.getString(dataColumn);
                         mimeType = cur.getString(mimeTypeColumn);
                         imageFile = new File(thumbData);
@@ -599,7 +597,7 @@ public class PostUploadService extends Service {
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
                 ImageHelper ih = new ImageHelper();
-                orientation = ih.getExifOrientation(path, orientation);
+                orientation = ih.getImageOrientation(context, path);
 
                 String resizedPictureURL = null;
 
@@ -622,39 +620,60 @@ public class PostUploadService extends Service {
                     }
                 }
 
+                boolean shouldAddImageWidthCSS = false;
+
                 if (shouldUploadResizedVersion) {
-                    // create resized picture
-                    int rotation;
-                    try {
-                        rotation = (TextUtils.isEmpty(orientation) ? 0 : Integer.valueOf(orientation));
-                    } catch (NumberFormatException e) {
-                        rotation = 0;
-                    }
-                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, mf.getWidth(), fileExtension, rotation);
+                    // Create resized image
+                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, mf.getWidth(), fileExtension, orientation);
 
-                    // upload resized picture
-                    if (bytes != null && bytes.length > 0) {
-                        Map<String, Object> m = new HashMap<String, Object>();
-
-                        m.put("name", fileName);
-                        m.put("type", mimeType);
-                        m.put("bits", bytes);
-                        m.put("overwrite", true);
-                        resizedPictureURL = uploadPicture(m, mf, blog);
-                        if (resizedPictureURL == null) {
-                            AppLog.w(T.POSTS, "failed to upload resized picture");
+                    if (bytes == null) {
+                        // We weren't able to resize the image, so we will upload the full size image with css to resize it
+                        shouldUploadResizedVersion = false;
+                        shouldAddImageWidthCSS = true;
+                    } else {
+                        // Save temp image
+                        String tempFilePath;
+                        File resizedImageFile;
+                        try {
+                            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+                            FileOutputStream out = new FileOutputStream(resizedImageFile);
+                            out.write(bytes);
+                            out.close();
+                            tempFilePath = resizedImageFile.getPath();
+                        } catch (IOException e) {
+                            AppLog.w(T.POSTS, "failed to create image temp file");
+                            mErrorMessage = context.getString(R.string.error_media_upload);
+                            mIsMediaError = true;
                             return null;
                         }
-                    } else {
-                        AppLog.w(T.POSTS, "failed to create resized picture");
-                        mErrorMessage = context.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
-                        return null;
+
+                        // upload resized picture
+                        if (!TextUtils.isEmpty(tempFilePath)) {
+                            mf.setFilePath(tempFilePath);
+                            Map<String, Object> m = new HashMap<String, Object>();
+
+                            m.put("name", fileName);
+                            m.put("type", mimeType);
+                            m.put("bits", mf);
+                            m.put("overwrite", true);
+                            resizedPictureURL = uploadPicture(m, mf, blog);
+                            if (resizedPictureURL == null) {
+                                AppLog.w(T.POSTS, "failed to upload resized picture");
+                                return null;
+                            } else if (resizedImageFile != null && resizedImageFile.exists()) {
+                                resizedImageFile.delete();
+                            }
+                        } else {
+                            AppLog.w(T.POSTS, "failed to create resized picture");
+                            mErrorMessage = context.getString(R.string.out_of_memory);
+                            mIsMediaError = true;
+                            return null;
+                        }
                     }
                 }
 
                 String fullSizeUrl = null;
-                //Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
+                // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
                 if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
                     // try to upload the image
                     Map<String, Object> m = new HashMap<String, Object>();
@@ -686,11 +705,14 @@ public class PostUploadService extends Service {
 
                 String alignmentCSS = "class=\"" + alignment + " size-full\" ";
 
-                //Check if we uploaded a featured picture that is not added to the post content (normal case)
-                if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase(""))
-                        ||
+                if (shouldAddImageWidthCSS) {
+                    alignmentCSS += "style=\"max-width: " + mf.getWidth() + "px\" ";
+                }
+
+                // Check if we uploaded a featured picture that is not added to the post content (normal case)
+                if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
                         (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
-                    return ""; //Not featured in post. Do not add to the content.
+                    return ""; // Not featured in post. Do not add to the content.
                 }
 
                 if (fullSizeUrl == null && resizedPictureURL != null) {

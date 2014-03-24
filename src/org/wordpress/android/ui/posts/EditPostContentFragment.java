@@ -900,6 +900,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         ImageHelper ih = new ImageHelper();
                         resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
                     } catch (OutOfMemoryError er) {
+                        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
                         return;
                     }
                 }
