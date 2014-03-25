@@ -399,7 +399,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
-    private void setPostTitle(TextView txtTitle, final String postTitle) {
+    private void setPostTitle(TextView txtTitle, String postTitle, boolean isHyperlink) {
         if (txtTitle == null || !hasActivity())
             return;
         if (TextUtils.isEmpty(postTitle)) {
@@ -414,11 +414,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // display "on [Post Title]..."
-        String html = getString(R.string.on)
+        if (isHyperlink) {
+            String html = getString(R.string.on)
                     + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink) + ">"
                     + postTitle.trim()
                     + "</font>";
-        txtTitle.setText(Html.fromHtml(html));
+            txtTitle.setText(Html.fromHtml(html));
+        } else {
+            txtTitle.setText(getString(R.string.on) + " " + postTitle.trim());
+        }
     }
 
     /*
@@ -431,6 +435,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
+        boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
 
         final String title;
         final boolean hasTitle;
@@ -447,46 +452,49 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(txtPostTitle, title);
+            setPostTitle(txtPostTitle, title, isDotComOrJetpack);
         } else {
-            txtPostTitle.setText(postExists? R.string.untitled : R.string.loading);
+            txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
-        // make sure this post is available to the reader, and once it's retrieved set the title
-        // if it wasn't already set
-        if (!postExists) {
-            AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-            ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
+        // if this is a .com or jetpack blog, tapping the title shows the associated post
+        // in the reader
+        if (isDotComOrJetpack) {
+            txtPostTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onActionResult(boolean succeeded) {
-                    if (!hasActivity())
-                        return;
-                    // update title if it wasn't set above
-                    if (!hasTitle) {
-                        String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
-                        if (!TextUtils.isEmpty(postTitle)) {
-                            setPostTitle(txtPostTitle, postTitle);
-                        } else {
-                            txtPostTitle.setText(R.string.untitled);
-                        }
+                public void onClick(View v) {
+                    if (mOnPostClickListener != null) {
+                        mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int) mComment.postID);
+                    } else {
+                        // right now this will happen from notifications
+                        AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
                     }
                 }
             });
-        }
 
-        // tapping this view should open the associated post in the reader
-        txtPostTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnPostClickListener != null) {
-                    mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int)mComment.postID);
-                } else {
-                    // right now this will happen from notifications
-                    AppLog.i(T.COMMENTS, "comment detail > no post click listener");
-                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
-                }
+            // make sure this post is available to the reader, and once it's retrieved set the title
+            // if it wasn't already set
+            if (!postExists) {
+                AppLog.d(T.COMMENTS, "comment detail > retrieving post");
+                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
+                    @Override
+                    public void onActionResult(boolean succeeded) {
+                        if (!hasActivity())
+                            return;
+                        // update title if it wasn't set above
+                        if (!hasTitle) {
+                            String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                            if (!TextUtils.isEmpty(postTitle)) {
+                                setPostTitle(txtPostTitle, postTitle, true);
+                            } else {
+                                txtPostTitle.setText(R.string.untitled);
+                            }
+                        }
+                    }
+                });
             }
-        });
+        }
     }
 
     private void confirmDeleteComment() {
