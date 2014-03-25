@@ -562,6 +562,16 @@ public class WordPressDB {
         return blog;
     }
 
+    /*
+     * returns true if the passed blog is wp.com or jetpack-enabled (ie: returns false for
+     * self-hosted blogs that don't use jetpack)
+     */
+    public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
+        int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
+        Blog blog = instantiateBlogByLocalId(localId);
+        return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
+    }
+
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
         Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
                 new String[]{dotComBlogId, dotComBlogId}, null, null, null);

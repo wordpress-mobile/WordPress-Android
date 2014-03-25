@@ -292,6 +292,9 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
+                // make sure the post has the passed blogId so it's saved correctly - necessary
+                // since the /sites/ endpoints return site_id="1" for Jetpack-powered blogs
+                post.blogId = blogId;
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
                 if (actionListener != null)
