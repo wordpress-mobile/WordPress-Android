@@ -78,7 +78,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
-    private static final int CONNECTION_DEFAULT_TIMEOUT = 30000;
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
+    private static final int DEFAULT_SOCKET_TIMEOUT = 60000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -154,8 +155,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT);//This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
-        HttpConnectionParams.setSoTimeout(client.getParams(), CONNECTION_DEFAULT_TIMEOUT); //This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        // This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
         //Setup HTTP Basic Auth if necessary
         if (usernamePasswordCredentials != null) {
@@ -413,10 +415,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         }
 
         //set timeout to 30 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, CONNECTION_DEFAULT_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
     }
 
     /**
@@ -557,7 +559,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
     }
-    
+
     /**
      * Detect login issues and broadcast a message if the error is known, App Activities should listen to these
      * broadcasted events and present user action to take
