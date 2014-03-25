@@ -83,6 +83,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
+    private static final String KEY_ALREADY_REQUESTED = "already_requested";
     private static final String KEY_ORIGINAL_TITLE = "original_title";
 
     private long mPostId;
@@ -99,6 +100,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private boolean mIsAddCommentBoxShowing = false;
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost = false;
+    private boolean mHasAlreadyRequestedPost = false;
     private boolean mIsUpdatingComments = false;
     private boolean mWebViewIsPaused;
     private CharSequence mOriginalTitle;
@@ -408,6 +410,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         outState.putLong(ARG_BLOG_ID, mBlogId);
         outState.putLong(ARG_POST_ID, mPostId);
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
+        outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
         if (mIsAddCommentBoxShowing)
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
@@ -440,6 +443,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
+            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(KEY_ALREADY_REQUESTED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -1296,8 +1300,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 return;
 
             if (!result) {
-                // post couldn't be loaded, which means it doesn't exist in db - so request it from the server
-                requestPost();
+                // post couldn't be loaded which means it doesn't exist in db, so request it from
+                // the server if it hasn't already been requested
+                if (!mHasAlreadyRequestedPost) {
+                    mHasAlreadyRequestedPost = true;
+                    requestPost();
+                }
                 return;
             }
 
