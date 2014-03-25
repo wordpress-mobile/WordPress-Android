@@ -292,6 +292,11 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
+                // make sure the post has the passed blogId - it may not if this is a Jetpack-powered blog
+                if (post.blogId != blogId) {
+                    AppLog.w(T.READER, "post retrieved with incorrect blogId");
+                    post.blogId = blogId;
+                }
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
                 if (actionListener != null)
