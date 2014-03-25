@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/menu_preview_post"
-        android:icon="@drawable/ic_post_preview"
+        android:id="@+id/menu_save_draft"
         android:showAsAction="always"
-        android:title="@string/preview"/>
+        android:title="@string/save_draft"/>
     <item
         android:id="@+id/menu_save_post"
-        android:icon="@drawable/ab_icon_send_lite"
         android:showAsAction="always"
-        android:title="@string/upload"/>
+        android:title="@string/publish_post"/>
 </menu>

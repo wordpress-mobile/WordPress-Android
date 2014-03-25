@@ -214,7 +214,12 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 getListView().setAdapter(getPostListAdapter());
             }
 
-            getPostListAdapter().loadPosts();
+            if (WordPress.draftWasSaved) {
+                WordPress.draftWasSaved = false;
+                this.requestPosts(false);
+            } else {
+                getPostListAdapter().loadPosts();
+            }
         }
     }
 

@@ -65,6 +65,7 @@ public class WordPress extends Application {
     public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
+    public static boolean draftWasSaved;
     public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;

@@ -1,13 +1,17 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,7 +26,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPViewPager;
 
@@ -116,6 +122,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
+                if (mIsNewPost) {
+                    // New posts are drafts by default
+                    mPost.setStatusEnum(PostStatus.DRAFT);
+                    mOriginalPost.setStatusEnum(PostStatus.DRAFT);
+                }
 
                 if (isPage) {
                     WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
@@ -151,7 +162,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         }
 
         setTitle(WordPress.getCurrentBlog().getBlogName());
-
+        WordPress.draftWasSaved = false;
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -188,6 +199,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, new IntentFilter(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION));
+
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
     }
@@ -195,6 +210,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(mReceiver);
+
         if (mAutoSaveHandler != null)
             mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
     }
@@ -204,6 +223,25 @@ public class EditPostActivity extends SherlockFragmentActivity {
         WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
         super.onDestroy();
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
+                String postId = intent.getStringExtra(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION_EXTRA);
+                String errorMessage = intent.getStringExtra(PostUploadService.POST_UPLOAD_INTENT_NOTIFICATION_ERROR);
+                if (errorMessage != null) {
+                    ToastUtils.showToast(context, getString(R.string.post_draft_error));
+                } else if (postId != null) {
+                    WordPress.draftWasSaved = true;
+                    ToastUtils.showToast(context, getString(R.string.post_draft_saved));
+                    // The current post is now the original post
+                    mOriginalPost = mPost.copy();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -224,14 +262,22 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
+        MenuItem saveDraftMenuItem = menu.findItem(R.id.menu_save_draft);
         MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
-            previewMenuItem.setVisible(false);
+            saveDraftMenuItem.setVisible(false);
             saveMenuItem.setVisible(false);
         } else {
-            previewMenuItem.setVisible(true);
-            saveMenuItem.setVisible(true);
+            // Display the save draft menu item if the post does not have a "published" status and
+            // update the save menu item title depending on the status of the current post.
+            if(mPost != null && mPost.getPostStatus() != null
+                              && mPost.getStatusEnum() != PostStatus.PUBLISHED ) {
+                saveDraftMenuItem.setVisible(true);
+                saveMenuItem.setTitle(R.string.publish_post);
+            } else {
+                saveDraftMenuItem.setVisible(false);
+                saveMenuItem.setTitle(R.string.update);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -247,7 +293,15 @@ public class EditPostActivity extends SherlockFragmentActivity {
             } else {
                 WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
             }
-            savePost(false);
+
+            // If the current post's status is not publish, then automatically set status to publish.
+            if (mPost.getStatusEnum() != PostStatus.PUBLISHED) {
+                mPost.setStatusEnum(PostStatus.PUBLISHED);
+                savePost(false, true);
+            } else {
+                savePost(false);
+            }
+
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -255,8 +309,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
             setResult(RESULT_OK, i);
             finish();
             return true;
-        } else if (itemId == R.id.menu_preview_post) {
-            mViewPager.setCurrentItem(PAGE_PREVIEW);
+        } else if (itemId == R.id.menu_save_draft) {
+            WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedSaveDraft);
+            savePost(false);
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
         } else if (itemId == android.R.id.home) {
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -287,11 +344,19 @@ public class EditPostActivity extends SherlockFragmentActivity {
     }
 
     private void savePost(boolean isAutosave) {
+        this.savePost(isAutosave, false);
+    }
+
+    private void savePost(boolean isAutosave, boolean manualStatusSet) {
         // Update post content from fragment fields
-        if (mEditPostContentFragment != null)
+        if (mEditPostContentFragment != null) {
             mEditPostContentFragment.savePostContent(isAutosave);
-        if (mEditPostSettingsFragment != null)
-            mEditPostSettingsFragment.savePostSettings();
+        }
+
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.savePostSettings(manualStatusSet);
+        }
+
     }
 
     @Override
@@ -338,6 +403,8 @@ public class EditPostActivity extends SherlockFragmentActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 savePost(false);
                 WordPress.currentPost = mPost;
+                PostUploadService.addPostToUpload(mPost);
+                startService(new Intent(getApplicationContext(), PostUploadService.class));
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);
@@ -371,6 +438,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     public void showPostSettings() {
         mViewPager.setCurrentItem(PAGE_SETTINGS);
+    }
+
+    public void showPostPreview() {
+        mViewPager.setCurrentItem(PAGE_PREVIEW);
     }
 
     /**

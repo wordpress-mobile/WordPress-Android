@@ -216,6 +216,10 @@ public class Post implements Serializable {
         status = postStatus;
     }
 
+    public void setStatusEnum(PostStatus postStatus) {
+        status = PostStatus.toString(postStatus);
+    }
+
     public PostStatus getStatusEnum() {
         return PostStatus.fromPost(this);
     }
@@ -426,4 +430,45 @@ public class Post implements Serializable {
     public boolean isNew() {
         return getLocalTablePostId() >= 0;
     }
+
+    public Post copy() {
+        Post newPost = new Post();
+
+        newPost.localTableBlogId = this.localTableBlogId;
+        newPost.localTablePostId = this.localTablePostId;
+        newPost.isPage = this.isPage;
+        newPost.categories = this.categories;
+        newPost.customFields = this.customFields;
+        newPost.dateCreated = this.dateCreated;
+        newPost.dateCreatedGmt = this.dateCreatedGmt;
+        newPost.description = this.description;
+        newPost.link = this.link;
+        newPost.allowComments = this.allowComments;
+        newPost.allowPings = this.allowPings;
+        newPost.excerpt = this.excerpt;
+        newPost.keywords = this.keywords;
+        newPost.moreText = this.moreText;
+        newPost.permaLink = this.permaLink;
+        newPost.status = this.status;
+        newPost.remotePostId = this.remotePostId;
+        newPost.title = this.title;
+        newPost.userId = this.userId;
+        newPost.authorDisplayName = this.authorDisplayName;
+        newPost.authorId = this.authorId;
+        newPost.password = this.password;
+        newPost.postFormat = this.postFormat;
+        newPost.slug = this.slug;
+        newPost.localDraft = this.localDraft;
+        newPost.uploaded = this.uploaded;
+        newPost.latitude = this.latitude;
+        newPost.longitude = this.longitude;
+        newPost.pageParentId = this.pageParentId;
+        newPost.pageParentTitle = this.pageParentTitle;
+        newPost.isLocalChange = this.isLocalChange;
+        newPost.mediaPaths = this.mediaPaths;
+        newPost.quickPostType = this.quickPostType;
+
+        return newPost;
+    }
+
 }

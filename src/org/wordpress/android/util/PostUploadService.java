@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -28,6 +29,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
@@ -51,6 +53,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostUploadService extends Service {
+
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION = "POST_UPLOAD_INTENT_NOTIFICATION";
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION_EXTRA = "POST_UPLOAD_INTENT_NOTIFICATION_EXTRA";
+    public static final String POST_UPLOAD_INTENT_NOTIFICATION_ERROR = "POST_UPLOAD_INTENT_NOTIFICATION_ERROR";
+
     private static Context context;
     private static final ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
@@ -142,6 +149,7 @@ public class PostUploadService extends Service {
                 WordPress.postUploaded(post.getRemotePostId());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
+                sendUpdateBroadcast(String.valueOf(post.getLocalTablePostId()), null);
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
@@ -170,6 +178,7 @@ public class PostUploadService extends Service {
                         (mIsMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage, pendingIntent);
 
                 nm.notify(notificationID, n); // needs a unique id
+                sendUpdateBroadcast(String.valueOf(post.getLocalTablePostId()), errorText);
             }
 
             postUploaded();
@@ -182,10 +191,19 @@ public class PostUploadService extends Service {
 
             // add the uploader to the notification bar
             nm = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
-
-            String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
+            StringBuilder message = new StringBuilder(context.getResources().getText(R.string.uploading));
+            String postOrPage = (String) (post.isPage() ? context.getResources()
+                    .getText(R.string.page_id) : context.getResources()
                     .getText(R.string.post_id));
-            String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
+            if (post.getStatusEnum() != PostStatus.PUBLISHED) {
+                message.append(" ");
+                message.append(context.getResources().getText(R.string.draft));
+                message.append(" ");
+                message.append(postOrPage);
+            } else {
+                message.append(" ");
+                message.append(postOrPage);
+            }
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
             Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
@@ -416,7 +434,6 @@ public class PostUploadService extends Service {
             return false;
         }
 
-        
         private void setUploadPostErrorMessage(Exception e) {
             mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
                     .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
@@ -424,7 +441,7 @@ public class PostUploadService extends Service {
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
-        
+
         public String uploadMediaFile(MediaFile mf, Blog blog) {
             String content = "";
 
@@ -799,5 +816,17 @@ public class PostUploadService extends Service {
 
     private File createTempUploadFile(String fileExtension) throws IOException {
         return File.createTempFile("wp-", fileExtension, context.getCacheDir());
+    }
+
+    private void sendUpdateBroadcast(String postId, String errorMessage) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+        Intent intent = new Intent(POST_UPLOAD_INTENT_NOTIFICATION);
+        if (postId != null) {
+            intent.putExtra(POST_UPLOAD_INTENT_NOTIFICATION_EXTRA, postId);
+        }
+        if (errorMessage != null) {
+            intent.putExtra(POST_UPLOAD_INTENT_NOTIFICATION_ERROR, errorMessage);
+        }
+        lbm.sendBroadcast(intent);
     }
 }
