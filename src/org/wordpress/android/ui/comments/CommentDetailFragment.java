@@ -460,21 +460,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // if this is a .com or jetpack blog, tapping the title shows the associated post
         // in the reader
         if (isDotComOrJetpack) {
-            txtPostTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnPostClickListener != null) {
-                        mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int) mComment.postID);
-                    } else {
-                        // right now this will happen from notifications
-                        AppLog.i(T.COMMENTS, "comment detail > no post click listener");
-                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
-                    }
-                }
-            });
-
-            // make sure this post is available to the reader, and once it's retrieved set the title
-            // if it wasn't already set
+            // first make sure this post is available to the reader, and once it's retrieved set
+            // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
                 ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
@@ -494,6 +481,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     }
                 });
             }
+
+            txtPostTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnPostClickListener != null) {
+                        mOnPostClickListener.onPostClicked(getNote(), mRemoteBlogId, (int) mComment.postID);
+                    } else {
+                        // right now this will happen from notifications
+                        AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), mRemoteBlogId, mComment.postID);
+                    }
+                }
+            });
         }
     }
 
