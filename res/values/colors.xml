@@ -69,6 +69,7 @@
     <color name="orange_dark">#d54e21</color>       <!-- "fire orange" -->
     <color name="grey_extra_light">#eeeeee</color>  <!-- "it's everywhere grey" -->
     <color name="grey_light">#dddddd</color>        <!-- "read grey" -->
+    <color name="grey_medium_light">#bbbbbb</color>
     <color name="grey_medium">#999999</color>       <!-- "all T, all shade grey" -->
     <color name="grey_medium_dark">#666666</color>  <!-- "whisper grey" -->
     <color name="grey_dark">#333333</color>         <!-- "little eddie grey" -->
