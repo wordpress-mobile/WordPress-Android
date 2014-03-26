@@ -100,4 +100,8 @@
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="ptr_tip_margin_top">8dp</dimen>
+
+    <!-- stats -->
+    <dimen name="stats_button_corner_radius">4dp</dimen>
+
 </resources>
