@@ -1,18 +1,29 @@
+import java.util.regex.Pattern
+
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
     }
 }
 
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+    maven { url 'http://download.crashlytics.com/maven' }
 }
 
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+dependencies {
+    compile 'com.crashlytics.android:crashlytics:1.+'
+}
 
 android {
     lintOptions {
@@ -109,7 +120,6 @@ android {
 
         androidTest.setRoot('tests')
     }
-
 } // end android
 
 // Generates the Config.java class using properties defined in gradle.properties
@@ -157,7 +167,26 @@ ${config}
     }
 }
 
-// Add the generateWPConfig task to every flavor's compile tasks
+android.applicationVariants.all { variant ->
+    variant.processManifest.doLast {
+        copy {
+            from("${buildDir}/manifests"){
+                include "${variant.dirName}/AndroidManifest.xml"
+            }
+            into("${buildDir}/manifests_modified/")
+
+            filter {
+                String line ->
+                    line.replaceAll("<meta-data android:name=\"com.crashlytics.ApiKey\" android:value=\"0\"/>",
+                            "<meta-data android:name=\"com.crashlytics.ApiKey\" android:value=\""
+                                    + project.crashlyticsApiKey + "\"/>\"")
+            }
+            variant.processResources.manifestFile = file("${buildDir}/manifests_modified/${variant.dirName}/AndroidManifest.xml")
+        }
+    }
+}
+
+// Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
     def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
