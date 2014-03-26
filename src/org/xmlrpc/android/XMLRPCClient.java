@@ -61,6 +61,7 @@ import org.xmlpull.v1.XmlSerializer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
@@ -497,38 +498,54 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
                 // execute HTTP POST request
                 HttpResponse response = mClient.execute(mPostMethod);
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode != HttpStatus.SC_OK) {
+                int statusCode = response.getStatusLine() != null ? response.getStatusLine().getStatusCode() : -1;
+                HttpEntity entity = response.getEntity();
+               
+                if (statusCode == -1) {
+                    throw new XMLRPCException( "HTTP Status code is missing!" );
+                }
+                if (entity == null) {
+                    //This is an error since the parser will fail here.
+                    throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned AND no response from the server." );
+                }
+                
+                if (statusCode == HttpStatus.SC_OK) {
+                    return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+                }
+                
+                String statusLineReasonPhrase = ""; 
+                if (response.getStatusLine() != null) {
+                    statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
+                }
+                try {
+                    String responseString = EntityUtils.toString(entity, "UTF-8");
+                    if (TextUtils.isEmpty(responseString)) {
+                        AppLog.e(T.API, "No HTTP response document from the server");
+                    } else {
+                        AppLog.e(T.API, "HTTP error response document received from the server: " + responseString);
+                    }
+
                     if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                         //Try to intercept out of memory error here and show a better error message.
-                        HttpEntity entity = response.getEntity();
-                        if (entity != null) {
-                            try {
-                                String responseString = EntityUtils.toString(entity, "UTF-8");
-                                if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
-                                    responseString.contains("bytes exhausted")) {
-                                    String newErrorMsg = null;
-                                    if (method.equals("wp.uploadFile")) {
-                                        newErrorMsg =
-                                                "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
-                                    } else {
-                                        newErrorMsg =
-                                                "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
-                                    }
-                                    throw new XMLRPCException(
-                                            response.getStatusLine().getReasonPhrase() + ".\n\n" + newErrorMsg);
-                                }
-                            } catch (Exception e) {
-                                // eat all the exceptions here, we dont want to crash the app when trying to show a
-                                // better error message.
+                        if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
+                                responseString.contains("bytes exhausted")) {
+                            String newErrorMsg = null;
+                            if (method.equals("wp.uploadFile")) {
+                                newErrorMsg =
+                                        "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
+                            } else {
+                                newErrorMsg =
+                                        "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
                             }
+                            throw new XMLRPCException( statusLineReasonPhrase + ".\n\n" + newErrorMsg);
                         }
                     }
-                    throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " +
-                                              response.getStatusLine().getReasonPhrase());
+     
+                } catch (Exception e) {
+                    // eat all the exceptions here, we dont want to crash the app when trying to show a
+                    // better error message.
                 }
-                HttpEntity entity = response.getEntity();
-                return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+                throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned. " + statusLineReasonPhrase);
             } catch (XMLRPCFault e) {
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
@@ -542,6 +559,11 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     default:
                         break;
                 }
+                throw e;
+                
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                checkXMLRPCErrorMessage(e);
                 throw e;
             } catch (XMLRPCException e) {
                 checkXMLRPCErrorMessage(e);
