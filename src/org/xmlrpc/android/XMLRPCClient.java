@@ -527,7 +527,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                         //Try to intercept out of memory error here and show a better error message.
                         if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
                                 responseString.contains("bytes exhausted")) {
-                            String newErrorMsg = null;
+                            String newErrorMsg;
                             if (method.equals("wp.uploadFile")) {
                                 newErrorMsg =
                                         "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
