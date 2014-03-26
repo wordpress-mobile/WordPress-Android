@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -94,6 +95,7 @@ public class WordPress extends Application {
     public void onCreate() {
         // Enable log recording
         AppLog.enableRecording(true);
+        Crashlytics.start(this);
 
         versionName = getVersionName(this);
         initWpDb();
@@ -125,7 +127,7 @@ public class WordPress extends Application {
             PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
-         }
+        }
     }
 
     public static void setupVolleyQueue() {
