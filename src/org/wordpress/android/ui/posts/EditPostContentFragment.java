@@ -70,6 +70,9 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -896,11 +899,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     resizedBitmap = downloadedBitmap;
                 } else {
                     //resize the downloaded bitmap
+                    int targetWidth = 400;
                     try {
                         ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
+                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
                     } catch (OutOfMemoryError er) {
-                        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                        CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                                ((float) targetWidth) / downloadedBitmap.getWidth());
+                        CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
                         return;
                     }
                 }
