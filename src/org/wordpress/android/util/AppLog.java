@@ -7,6 +7,8 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.WordPress;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -60,26 +62,29 @@ public class AppLog {
     public static void e(T tag, String message, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, VolleyError volleyError) {
-        if (volleyError==null)
+        if (volleyError == null) {
             return;
+        }
         String logText;
-        if (volleyError.networkResponse==null) {
+        if (volleyError.networkResponse == null) {
             logText = volleyError.getMessage();
         } else {
-            logText = volleyError.getMessage() + ", status "
-                    + volleyError.networkResponse.statusCode
-                    + " - " + volleyError.networkResponse.toString();
+            logText = volleyError.getMessage() + ", status " + volleyError.networkResponse.statusCode + " - " +
+                      volleyError.networkResponse.toString();
         }
         Log.e(TAG + "-" + tag.toString(), logText, volleyError);
         addEntry(tag, LogLevel.w, logText);
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(volleyError));
     }
 
     // --------------------------------------------------------------------------------------------------------
@@ -155,6 +160,12 @@ public class AppLog {
         entry.logText = text;
         entry.logTag = tag;
         mLogEntries.addEntry(entry);
+    }
+
+    private static String getStringStackTrace(Throwable throwable) {
+        StringWriter errors = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(errors));
+        return errors.toString();
     }
 
     /*
