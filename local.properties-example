@@ -5,3 +5,4 @@ wp.oauth.redirect_uri = http://android.wordpress.org/
 wp.gcm.id = wordpress
 wp.db_secret = wordpress
 wp.mixpanel_token = wordpress
+crashlytics.apikey = 0
