@@ -221,10 +221,13 @@ public class MediaUtils {
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
 
-        if( WordPress.currentBlog == null)
+        if (WordPress.currentBlog == null)
             return false;
 
-        if( WordPress.currentBlog.isDotcomFlag())
+        if (WordPress.currentBlog.getWpVersion() == null)
+            return true;
+        
+        if (WordPress.currentBlog.isDotcomFlag())
             return true;
 
         Version minVersion;
