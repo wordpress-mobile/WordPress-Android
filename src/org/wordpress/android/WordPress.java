@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -95,8 +96,9 @@ public class WordPress extends Application {
     public void onCreate() {
         // Enable log recording
         AppLog.enableRecording(true);
-        Crashlytics.start(this);
-
+        if (!Utils.isDebugBuild()) {
+            Crashlytics.start(this);
+        }
         versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
