@@ -498,12 +498,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
                 // execute HTTP POST request
                 HttpResponse response = mClient.execute(mPostMethod);
-                int statusCode = response.getStatusLine() != null ? response.getStatusLine().getStatusCode() : -1;
+                
+                if (response.getStatusLine() == null) // StatusLine is null. We can't read the response code.
+                    throw new XMLRPCException( "HTTP Status code is missing!" );
+                    
+                int statusCode = response.getStatusLine().getStatusCode();
                 HttpEntity entity = response.getEntity();
                
-                if (statusCode == -1) {
-                    throw new XMLRPCException( "HTTP Status code is missing!" );
-                }
                 if (entity == null) {
                     //This is an error since the parser will fail here.
                     throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned AND no response from the server." );
@@ -513,16 +514,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
                 }
                 
-                String statusLineReasonPhrase = ""; 
-                if (response.getStatusLine() != null) {
-                    statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
-                }
+                String statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
                 try {
                     String responseString = EntityUtils.toString(entity, "UTF-8");
                     if (TextUtils.isEmpty(responseString)) {
-                        AppLog.e(T.API, "No HTTP response document from the server");
+                        AppLog.e(T.API, "No HTTP error document document from the server");
                     } else {
-                        AppLog.e(T.API, "HTTP error response document received from the server: " + responseString);
+                        AppLog.e(T.API, "HTTP error document received from the server: " + responseString);
                     }
 
                     if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
