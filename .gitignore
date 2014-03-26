@@ -40,3 +40,4 @@ config.properties
 .gradle/
 
 gradle.properties
+crashlytics.properties

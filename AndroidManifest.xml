@@ -266,7 +266,5 @@
         <service android:name=".ui.stats.service.StatsService"
             android:label="Stats Update Service"
             android:exported="false" />
-
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="0"/>
     </application>
 </manifest>

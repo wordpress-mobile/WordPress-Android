@@ -167,25 +167,6 @@ ${config}
     }
 }
 
-android.applicationVariants.all { variant ->
-    variant.processManifest.doLast {
-        copy {
-            from("${buildDir}/manifests"){
-                include "${variant.dirName}/AndroidManifest.xml"
-            }
-            into("${buildDir}/manifests_modified/")
-
-            filter {
-                String line ->
-                    line.replaceAll("<meta-data android:name=\"com.crashlytics.ApiKey\" android:value=\"0\"/>",
-                            "<meta-data android:name=\"com.crashlytics.ApiKey\" android:value=\""
-                                    + project.crashlyticsApiKey + "\"/>\"")
-            }
-            variant.processResources.manifestFile = file("${buildDir}/manifests_modified/${variant.dirName}/AndroidManifest.xml")
-        }
-    }
-}
-
 // Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
     def name = "generate${buildType.name.capitalize()}BuildConfig"
