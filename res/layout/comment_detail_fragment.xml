@@ -13,19 +13,20 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:layout_above="@+id/layout_bottom">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_large">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/layout_detail_header">
+                android:layout_height="wrap_content">
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/image_avatar"
@@ -86,6 +87,10 @@
                     android:text="STATUS" />
             </RelativeLayout>
 
+            <!--
+                textIsSelectable is set to false here to avoid
+                https://code.google.com/p/android/issues/detail?id=30961
+            -->
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_content"
                 android:layout_width="match_parent"
@@ -93,13 +98,12 @@
                 android:text="text_content"
                 android:textColorLink="@color/reader_hyperlink"
                 android:textColor="@color/grey_dark"
-                android:textIsSelectable="true"
+                android:textIsSelectable="false"
                 android:paddingTop="@dimen/margin_large"
                 android:paddingBottom="@dimen/margin_large"
-                android:layout_below="@+id/layout_detail_header"
                 android:textSize="@dimen/text_sz_large" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
