@@ -39,6 +39,7 @@ public class SetupBlog {
     private String mHttpUsername = "";
     private String mHttpPassword = "";
     private String mXmlrpcUrl;
+    private static int attempts = 0;
 
     private int mErrorMsgId;
     private boolean mIsCustomUrl;
@@ -149,6 +150,14 @@ public class SetupBlog {
             AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
             switch (xmlRpcFault.getFaultCode()) {
                 case 403:
+                  attempts++;
+                    if(attempts == 3)
+                    {
+                        mErrorMsgId = R.string.username_or_password_incorrectfull;
+                        //reinitialize counter
+                        attempts = 0;
+                    }
+                    else
                     mErrorMsgId = R.string.username_or_password_incorrect;
                     break;
                 case 404:
