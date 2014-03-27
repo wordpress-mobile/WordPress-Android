@@ -481,7 +481,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         Double latitude = 0.0;
         Double longitude = 0.0;
-        if (WordPress.getCurrentBlog().isLocation()) {
+        if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
             try {
                 latitude = mCurrentLocation.getLatitude();
                 longitude = mCurrentLocation.getLongitude();
