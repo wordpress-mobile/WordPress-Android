@@ -413,7 +413,7 @@ public class ImageHelper {
         try {
             BitmapFactory.decodeFile(filePath, optBounds);
         } catch (OutOfMemoryError e) {
-            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
             return null;
         }
 
@@ -433,7 +433,8 @@ public class ImageHelper {
         try {
             bmpResized = BitmapFactory.decodeFile(filePath, optActual);
         } catch (OutOfMemoryError e) {
-            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE, scale);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
             return null;
         }
 
