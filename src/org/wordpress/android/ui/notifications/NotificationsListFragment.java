@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-
 
 public class NotificationsListFragment extends ListFragment implements NotesAdapter.DataLoadedListener {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
@@ -73,8 +73,20 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
+        initPullToRefreshHelper();
+    }
 
-        // pull to refresh setup
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        boolean isRefreshing = mPullToRefreshHelper.isRefreshing();
+        super.onConfigurationChanged(newConfig);
+        // Pull to refresh layout is destroyed onDetachedFromWindow,
+        // so we have to re-init the layout, via the helper here
+        initPullToRefreshHelper();
+        mPullToRefreshHelper.setRefreshing(isRefreshing);
+    }
+
+    private void initPullToRefreshHelper() {
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
                 (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new RefreshListener() {
@@ -167,6 +179,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         if (mProgressFooterView != null)
             mProgressFooterView.setVisibility(View.VISIBLE);
     }
+
     private void hideProgressFooter() {
         if (mProgressFooterView != null)
             mProgressFooterView.setVisibility(View.GONE);

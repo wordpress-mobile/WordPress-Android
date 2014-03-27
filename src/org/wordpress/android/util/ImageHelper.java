@@ -410,7 +410,12 @@ public class ImageHelper {
         BitmapFactory.Options optBounds = new BitmapFactory.Options();
         optBounds.inJustDecodeBounds = true;
 
-        BitmapFactory.decodeFile(filePath, optBounds);
+        try {
+            BitmapFactory.decodeFile(filePath, optBounds);
+        } catch (OutOfMemoryError e) {
+            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            return null;
+        }
 
         // determine correct scale value (should be power of 2)
         // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
@@ -424,7 +429,14 @@ public class ImageHelper {
         optActual.inSampleSize = scale;
 
         // Get the roughly resized bitmap
-        Bitmap bmpResized = BitmapFactory.decodeFile(filePath, optActual);
+        Bitmap bmpResized;
+        try {
+            bmpResized = BitmapFactory.decodeFile(filePath, optActual);
+        } catch (OutOfMemoryError e) {
+            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            return null;
+        }
+
         if (bmpResized == null)
             return null;
 

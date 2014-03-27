@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -38,7 +39,6 @@ import java.util.Vector;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 public class PostsListFragment extends ListFragment implements WordPress.OnPostUploadedListener {
-
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -61,13 +61,24 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_listview, container, false);
+    public void onConfigurationChanged(Configuration newConfig) {
+        boolean isRefreshing = mPullToRefreshHelper.isRefreshing();
+        super.onConfigurationChanged(newConfig);
+        // Pull to refresh layout is destroyed onDetachedFromWindow,
+        // so we have to re-init the layout, via the helper here
+        initPullToRefreshHelper();
+        mPullToRefreshHelper.setRefreshing(isRefreshing);
+    }
 
-        // pull to refresh setup
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.post_listview, container, false);
+    }
+
+    private void initPullToRefreshHelper() {
         mPullToRefreshHelper = new PullToRefreshHelper(
                 getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
@@ -78,7 +89,6 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                         refreshPosts((PostsActivity) getActivity());
                     }
                 }, LinearLayout.class);
-        return view;
     }
 
     private void refreshPosts(PostsActivity postsActivity) {
@@ -190,7 +200,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 textView.setText(getText(R.string.posts_empty_list));
             }
         }
-
+        initPullToRefreshHelper();
         WordPress.setOnPostUploadedListener(this);
     }
 
