@@ -62,7 +62,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.TrustUserSSLCertsSocketFactory;
 
 /**
  * A WordPress XMLRPC Client.
