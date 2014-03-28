@@ -492,6 +492,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          */
         private Object callXMLRPC(String method, Object[] params, File tempFile)
                 throws XMLRPCException, IOException, XmlPullParserException {
+            LoggedInputStream loggedInputStream = null;
             try {
                 preparePostMethod(method, params, tempFile);
 
@@ -510,7 +511,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 
                 if (statusCode == HttpStatus.SC_OK) {
-                    return XMLRPCClient.parseXMLRPCResponse(entity.getContent(), entity);
+                    loggedInputStream = new LoggedInputStream(entity.getContent());
+                    return XMLRPCClient.parseXMLRPCResponse(loggedInputStream, entity);
                 }
                 
                 String statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
@@ -544,6 +546,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned. " + statusLineReasonPhrase);
             } catch (XMLRPCFault e) {
+                if (loggedInputStream!=null) {
+                    AppLog.w(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
                     case 403:
@@ -557,12 +562,17 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                         break;
                 }
                 throw e;
-                
             } catch (XmlPullParserException e) {
                 AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
                 checkXMLRPCErrorMessage(e);
                 throw e;
             } catch (XMLRPCException e) {
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
                 checkXMLRPCErrorMessage(e);
                 throw e;
             } catch (SSLHandshakeException e) {
@@ -575,6 +585,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 throw e;
             } finally {
                 deleteTempFile(method, tempFile);
+                try {
+                    if (loggedInputStream!=null) {
+                        loggedInputStream.close();
+                    }
+                } catch (Exception e) {
+                }
             }
         }
     }
