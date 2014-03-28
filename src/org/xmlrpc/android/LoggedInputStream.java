@@ -3,6 +3,25 @@ package org.xmlrpc.android;
 import java.io.IOException;
 import java.io.InputStream;
 
+
+/**
+ * A LoggedInputStream adds logging functionality to another input stream.  
+ * <p>Note that calls on a LoggedInputStream are passed "as-is" to the underlying stream.</p>
+ * 
+ * 
+ * <p>We're using a LoggedInputStream in {@code XMLRPClient.java} to log the XML-RPC response document in case of parser errors.<br /> 
+ * 
+ * There are plenty of other ways to log the response, but a {@code XmlPullParser} wants an InputStream as input parameter, and  
+ * a LoggedInputStream seems the most reliable solution, with the smallest memory footprint.<br />
+ * Below are other examples of logging we tried:</p>
+ * <ul>
+ * <li>Read the first 1000 characters from the original input stream, then create a new SequenceInputStream with both the characters just read (a new ByteArrayInputStream), 
+ * and the original input stream.</li> 
+ * <li>Read the whole content in a String and log it, then create an StringInputStream over the string, and pass the new stream to the parser.</li>
+ * </ul>
+ */
+
+
 public final class LoggedInputStream extends InputStream {
 
     private final InputStream inputStream;
