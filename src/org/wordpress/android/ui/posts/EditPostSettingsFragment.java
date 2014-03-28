@@ -479,20 +479,14 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 break;
         }
 
-        Double latitude = 0.0;
-        Double longitude = 0.0;
-        if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
-            try {
-                latitude = mCurrentLocation.getLatitude();
-                longitude = mCurrentLocation.getLongitude();
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
-
+        double latitude = 0.0;
+        double longitude = 0.0;
         if (mCurrentLocation == null) {
             latitude = post.getLatitude();
             longitude = post.getLongitude();
+        } else if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
+            latitude = mCurrentLocation.getLatitude();
+            longitude = mCurrentLocation.getLongitude();
         }
 
         post.setPostExcerpt(excerpt);
