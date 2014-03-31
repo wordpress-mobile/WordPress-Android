@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,6 +23,7 @@ public class AppLog {
     public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
+    private static boolean mEnableCrashlytics = false;
 
     private AppLog() {
         throw new AssertionError();
@@ -32,6 +34,16 @@ public class AppLog {
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
+    }
+
+    public static void enableCrashlytics(boolean enable) {
+        mEnableCrashlytics = enable;
+    }
+
+    public static void crashlyticsLog(T tag, Throwable throwable, String message) {
+        if (mEnableCrashlytics) {
+            CrashlyticsUtils.logException(throwable, ExceptionType.USUAL, tag, message);
+        }
     }
 
     public static void v(T tag, String message) {
@@ -63,12 +75,14 @@ public class AppLog {
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
         addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        crashlyticsLog(tag, tr, message);
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
         addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        crashlyticsLog(tag, tr, null);
     }
 
     public static void e(T tag, VolleyError volleyError) {
@@ -85,6 +99,7 @@ public class AppLog {
         Log.e(TAG + "-" + tag.toString(), logText, volleyError);
         addEntry(tag, LogLevel.w, logText);
         addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(volleyError));
+        crashlyticsLog(tag, volleyError, logText);
     }
 
     // --------------------------------------------------------------------------------------------------------

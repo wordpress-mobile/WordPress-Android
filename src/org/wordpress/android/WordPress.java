@@ -98,6 +98,7 @@ public class WordPress extends Application {
         AppLog.enableRecording(true);
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
+            AppLog.enableCrashlytics(true);
         }
         versionName = getVersionName(this);
         initWpDb();
