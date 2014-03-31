@@ -62,13 +62,13 @@ public class AppLog {
     public static void e(T tag, String message, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
     }
 
     public static void e(T tag, VolleyError volleyError) {
@@ -84,7 +84,7 @@ public class AppLog {
         }
         Log.e(TAG + "-" + tag.toString(), logText, volleyError);
         addEntry(tag, LogLevel.w, logText);
-        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(volleyError));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(volleyError));
     }
 
     // --------------------------------------------------------------------------------------------------------
@@ -166,6 +166,10 @@ public class AppLog {
         StringWriter errors = new StringWriter();
         throwable.printStackTrace(new PrintWriter(errors));
         return errors.toString();
+    }
+
+    private static String getHTMLStringStackTrace(Throwable throwable) {
+        return getStringStackTrace(throwable).replace("\n", "<br/>");
     }
 
     /*
