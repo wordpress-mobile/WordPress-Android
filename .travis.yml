@@ -34,7 +34,7 @@ before_install:
   - echo "sdk.dir=$ANDROID_HOME" >> local.properties; cat local.properties;
 
   # Gradle debug compilation
-  - ./gradlew assembleDebug --debug|cat
+  - ./gradlew stacktrace --debug|cat
 
   # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET
