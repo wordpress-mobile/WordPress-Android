@@ -102,6 +102,8 @@
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
 
     <!-- Upload Media -->
+    <string name="of">of</string>
+    <string name="media_items">media items</string>
     <string name="media_no_video_title">VideoPress unavailable</string>
     <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 
