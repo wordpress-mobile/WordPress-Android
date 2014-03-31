@@ -338,6 +338,14 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        // remove the comment detail fragment if the comment was trashed
+        if (changeType == CommentActions.ChangeType.TRASHED && changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            }
+        }
+
         mNotesList.animateRefresh(true);
         refreshNotes();
     }
