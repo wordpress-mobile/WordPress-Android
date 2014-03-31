@@ -46,6 +46,7 @@ public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     private boolean mHasAutoRefreshedComments = false;
+    private boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -61,6 +62,7 @@ public class CommentsListFragment extends Fragment {
 
     private static final int COMMENTS_PER_PAGE = 30;
     private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
+    private static final String KEY_HAS_CHECKED_DELETED_COMMENTS = "has_checked_deleted_comments";
 
     private ListView getListView() {
         return mListView;
@@ -168,6 +170,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public void onBlogChanged() {
+        mHasCheckedDeletedComments = false;
         if (mUpdateCommentsTask != null) {
             mUpdateCommentsTask.setRetryOnCancelled(true);
             mUpdateCommentsTask.cancel(true);
@@ -379,6 +382,7 @@ public class CommentsListFragment extends Fragment {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
         }
+
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         if (SysUtils.canUseExecuteOnExecutor()) {
             mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -394,7 +398,6 @@ public class CommentsListFragment extends Fragment {
         boolean isError;
         final boolean isLoadingMore;
         boolean mRetryOnCancelled;
-        String xmlRpcErrorMessage;
 
         private UpdateCommentsTask(boolean loadMore) {
             isLoadingMore = loadMore;
@@ -437,6 +440,13 @@ public class CommentsListFragment extends Fragment {
                 return null;
             }
 
+            // the first time this is called, make sure comments deleted on server are removed
+            // from the local database
+            if (!mHasCheckedDeletedComments && !isLoadingMore) {
+                mHasCheckedDeletedComments = true;
+                ApiHelper.removeDeletedComments(blog);
+            }
+
             Map<String, Object> hPost = new HashMap<String, Object>();
             if (isLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
@@ -453,7 +463,6 @@ public class CommentsListFragment extends Fragment {
             try {
                 return ApiHelper.refreshComments(getActivity(), blog, params);
             } catch (Exception e) {
-                xmlRpcErrorMessage = e.getMessage();
                 isError = true;
                 return null;
             }
@@ -499,6 +508,7 @@ public class CommentsListFragment extends Fragment {
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
+        outState.putBoolean(KEY_HAS_CHECKED_DELETED_COMMENTS, mHasCheckedDeletedComments);
         super.onSaveInstanceState(outState);
     }
 

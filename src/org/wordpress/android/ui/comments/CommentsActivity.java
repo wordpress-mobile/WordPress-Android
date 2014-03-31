@@ -26,6 +26,7 @@ public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
+
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
 
     @Override
@@ -259,7 +260,7 @@ public class CommentsActivity extends WPActionBarActivity
     /*
      * tell the comment list to get recent comments from server
      */
-    public void updateCommentList() {
+    void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
             listFragment.updateComments(false);
@@ -280,6 +281,7 @@ public class CommentsActivity extends WPActionBarActivity
             if (commentId != 0 )
                 outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
         }
+
         super.onSaveInstanceState(outState);
     }
 
