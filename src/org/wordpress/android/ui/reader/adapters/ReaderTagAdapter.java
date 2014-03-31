@@ -26,92 +26,62 @@ import org.wordpress.android.util.SysUtils;
  * Created by nbradbury on 6/27/13.
  */
 public class ReaderTagAdapter extends BaseAdapter {
-    public interface TopicActionListener {
-        public void onTopicAction(ReaderTagActions.TagAction action, String topicName);
+    public interface TagActionListener {
+        public void onTagAction(ReaderTagActions.TagAction action, String tagName);
     }
 
-    private LayoutInflater mInflater;
-    private ReaderTagList mTopics = new ReaderTagList();
-    private TopicActionListener mTopicListener;
-    private ReaderTag.ReaderTagType mTopicType;
+    private final LayoutInflater mInflater;
+    private ReaderTagList mTags = new ReaderTagList();
+    private final TagActionListener mTagListener;
+    private ReaderTag.ReaderTagType mTagType;
     private ReaderActions.DataLoadedListener mDataLoadadListener;
-    private Drawable mDrawableAdd;
-    private Drawable mDrawableRemove;
+    private final Drawable mDrawableAdd;
+    private final Drawable mDrawableRemove;
 
-    public ReaderTagAdapter(Context context, TopicActionListener topicListener) {
+    public ReaderTagAdapter(Context context, TagActionListener tagListener) {
         super();
 
         mInflater = LayoutInflater.from(context);
-        mTopicListener = topicListener;
+        mTagListener = tagListener;
         mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_content_new);
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_content_remove);
     }
 
     @SuppressLint("NewApi")
-    public void refreshTopics(ReaderActions.DataLoadedListener dataListener) {
+    public void refreshTags(ReaderActions.DataLoadedListener dataListener) {
         if (mIsTaskRunning)
-            AppLog.w(T.READER, "topic task is already running");
+            AppLog.w(T.READER, "tag task is already running");
         mDataLoadadListener = dataListener;
         if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadTopicsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            new LoadTopicsTask().execute();
+            new LoadTagsTask().execute();
         }
     }
 
-    public void refreshTopics() {
-        refreshTopics(null);
+    public void refreshTags() {
+        refreshTags(null);
     }
 
-    public ReaderTag.ReaderTagType getTopicType() {
-        return mTopicType;
+    public void setTagType(ReaderTag.ReaderTagType tagType) {
+        mTagType = (tagType!=null ? tagType : ReaderTag.ReaderTagType.DEFAULT);
+        refreshTags();
     }
 
-    public void setTopicType(ReaderTag.ReaderTagType topicType) {
-        mTopicType = (topicType!=null ? topicType : ReaderTag.ReaderTagType.DEFAULT);
-        refreshTopics();
-    }
-
-    public int indexOfTopicName(String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public int indexOfTagName(String tagName) {
+        if (TextUtils.isEmpty(tagName))
             return -1;
-        return mTopics.indexOfTag(topicName);
+        return mTags.indexOfTag(tagName);
     }
-
-    /*
-     * called when user deletes a topic - by this time the topic has already been removed from the db
-     */
-    /*public boolean removeTopic(ListView listView, String topicName) {
-        if (listView==null || topicName==null)
-            return false;
-
-        final int position = mTopics.indexOfTag(topicName);
-        if (position==-1)
-            return false;
-
-        Animation.AnimationListener listener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mTopics.remove(position);
-                notifyDataSetChanged();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-        };
-        AniUtils.removeListItem(listView, position, listener, android.R.anim.fade_out);
-        return true;
-    }*/
 
     @Override
     public int getCount() {
-        return mTopics.size();
+        return mTags.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mTopics.get(position);
+        return mTags.get(position);
     }
 
     @Override
@@ -121,44 +91,44 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ReaderTag topic = (ReaderTag) getItem(position);
-        TopicViewHolder holder;
+        final ReaderTag tag = (ReaderTag) getItem(position);
+        TagViewHolder holder;
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_tag, parent, false);
-            holder = new TopicViewHolder();
-            holder.txtTopic = (TextView) convertView.findViewById(R.id.text_topic);
+            holder = new TagViewHolder();
+            holder.txtTagName = (TextView) convertView.findViewById(R.id.text_topic);
             holder.btnAddRemove = (ImageButton) convertView.findViewById(R.id.btn_add_remove);
             convertView.setTag(holder);
         } else {
-            holder = (TopicViewHolder) convertView.getTag();
+            holder = (TagViewHolder) convertView.getTag();
         }
 
-        holder.txtTopic.setText(topic.getCapitalizedTagName());
+        holder.txtTagName.setText(tag.getCapitalizedTagName());
 
-        switch (topic.tagType) {
+        switch (tag.tagType) {
             case SUBSCRIBED:
-                // only subscribed topics can be deleted
+                // only subscribed tags can be deleted
                 holder.btnAddRemove.setImageDrawable(mDrawableRemove);
                 holder.btnAddRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // tell activity that user wishes to delete this topic
-                        if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.DELETE, topic.getTagName());
+                        // tell activity that user wishes to delete this tag
+                        if (mTagListener !=null)
+                            mTagListener.onTagAction(ReaderTagActions.TagAction.DELETE, tag.getTagName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);
                 break;
 
             case RECOMMENDED:
-                // only recommended topics can be added
+                // only recommended tags can be added
                 holder.btnAddRemove.setImageDrawable(mDrawableAdd);
                 holder.btnAddRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // tell activity that user wishes to add this topic
-                        if (mTopicListener!=null)
-                            mTopicListener.onTopicAction(ReaderTagActions.TagAction.ADD, topic.getTagName());
+                        // tell activity that user wishes to add this tag
+                        if (mTagListener !=null)
+                            mTagListener.onTagAction(ReaderTagActions.TagAction.ADD, tag.getTagName());
                     }
                 });
                 holder.btnAddRemove.setVisibility(View.VISIBLE);
@@ -173,17 +143,17 @@ public class ReaderTagAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private static class TopicViewHolder {
-        private TextView txtTopic;
+    private static class TagViewHolder {
+        private TextView txtTagName;
         private ImageButton btnAddRemove;
     }
 
     /*
-     * AsyncTask to load topics
+     * AsyncTask to load tags
      */
     private boolean mIsTaskRunning = false;
-    private class LoadTopicsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderTagList tmpTopics;
+    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
+        ReaderTagList tmpTags;
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -194,30 +164,30 @@ public class ReaderTagAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            switch (mTopicType) {
+            switch (mTagType) {
                 case RECOMMENDED:
-                    tmpTopics = ReaderTagTable.getRecommendedTags(true);
+                    tmpTags = ReaderTagTable.getRecommendedTags(true);
                     break;
                 case SUBSCRIBED:
-                    tmpTopics = ReaderTagTable.getSubscribedTags();
+                    tmpTags = ReaderTagTable.getSubscribedTags();
                     break;
                 default :
-                    tmpTopics = ReaderTagTable.getDefaultTags();
+                    tmpTags = ReaderTagTable.getDefaultTags();
                     break;
             }
 
-            if (tmpTopics==null)
+            if (tmpTags ==null)
                 return false;
 
-            if (mTopics.isSameList(tmpTopics))
+            if (mTags.isSameList(tmpTags))
                 return false;
 
-            return (tmpTopics!=null);
+            return (tmpTags !=null);
         }
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mTopics = (ReaderTagList)(tmpTopics.clone());
+                mTags = (ReaderTagList)(tmpTags.clone());
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;

@@ -2,11 +2,14 @@ package org.wordpress.android.util;
 
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 
 import java.io.UnsupportedEncodingException;
+import java.net.IDN;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 /**
  * Created by nbradbury on 9/7/13.
@@ -30,10 +33,39 @@ public class UrlUtils {
     }
 
     public static String getDomainFromUrl(final String urlString) {
-        if (urlString==null)
+        if (urlString == null) {
             return "";
+        }
         Uri uri = Uri.parse(urlString);
         return uri.getHost();
+    }
+    
+    // Convert IDN names to punycode if necessary
+    public static String convertUrlToPunycodeIfNeeded(String url) {
+        if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
+            if (url.toLowerCase().startsWith("http://")) {
+                url = "http://" + IDN.toASCII(url.substring(7));
+            } else if (url.toLowerCase().startsWith("https://")) {
+                url = "https://" + IDN.toASCII(url.substring(8));
+            } else {
+                url = IDN.toASCII(url);
+            }
+        }
+        return url;
+    }
+    
+    public static String addHttpProcolIfNeeded(String url, boolean isHTTPS) {
+        if (url == null) {
+            return null;
+        }
+
+        if (!URLUtil.isValidUrl(url)) {
+            if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
+                url = ( isHTTPS ? "https" : "http" ) + "://" + url;   
+            }
+        }
+
+        return url;
     }
 
     /*

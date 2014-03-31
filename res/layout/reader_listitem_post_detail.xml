@@ -5,7 +5,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/margin_large">
 
@@ -59,7 +59,6 @@
                 style="@style/ReaderTextView.Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/noticon_clock"
                 android:text="text_date" />
         </LinearLayout>
 
@@ -82,7 +81,10 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
-        style="@style/ReaderImageView.Featured"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/reader_featured_image_height"
+        android:adjustViewBounds="true"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
@@ -95,8 +97,7 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
-        android:scrollbars="none"
-        android:visibility="invisible" />
+        android:scrollbars="none" />
 
     <RelativeLayout
         android:id="@+id/layout_likes"
@@ -111,7 +112,8 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_like_count"
-            style="@style/ReaderTextView.Label.Large"
+            android:textSize="@dimen/text_sz_large"
+            android:textColor="@color/reader_hyperlink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="text_like_count" />

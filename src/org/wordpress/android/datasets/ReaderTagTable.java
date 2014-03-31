@@ -9,12 +9,12 @@ import android.text.TextUtils;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
-
 
 import java.util.Date;
 
@@ -56,6 +56,13 @@ public class ReaderTagTable {
 
     protected static int purge(SQLiteDatabase db) {
         return db.delete("tbl_tag_updates", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
+    }
+
+    /*
+     * returns true if tbl_tags is empty
+     */
+    public static boolean isEmpty() {
+        return (SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_tags") == 0);
     }
 
     /*
@@ -123,16 +130,14 @@ public class ReaderTagTable {
     }
 
     private static ReaderTag getTagFromCursor(Cursor c) {
-        if (c==null)
+        if (c == null)
             throw new IllegalArgumentException("null topic cursor");
 
-        ReaderTag tag = new ReaderTag();
+        String tagName = c.getString(c.getColumnIndex("tag_name"));
+        String endpoint = c.getString(c.getColumnIndex("endpoint"));
+        ReaderTagType tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("topic_type")));
 
-        tag.setTagName(c.getString(c.getColumnIndex("tag_name")));
-        tag.setEndpoint(c.getString(c.getColumnIndex("endpoint")));
-        tag.tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("topic_type")));
-
-        return tag;
+        return new ReaderTag(tagName, endpoint, tagType);
     }
 
     public static ReaderTag getTag(String tagName) {

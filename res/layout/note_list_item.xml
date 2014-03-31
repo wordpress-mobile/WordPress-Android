@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/margin_large"
     android:paddingTop="@dimen/margin_medium">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/unread_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,12 +22,13 @@
         android:textSize="@dimen/text_sz_extra_large"
         android:textStyle="bold" />
 
-    <com.android.volley.toolbox.NetworkImageView
+    <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/note_avatar"
         android:layout_width="@dimen/note_avatar_sz"
         android:layout_height="@dimen/note_avatar_sz"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_toRightOf="@+id/unread_indicator" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -37,7 +38,8 @@
         android:layout_marginRight="@dimen/margin_large"
         android:layout_toLeftOf="@+id/text_date"
         android:layout_toRightOf="@+id/note_avatar"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/note_detail"
@@ -46,9 +48,9 @@
         android:layout_alignLeft="@+id/note_label"
         android:layout_alignRight="@+id/note_label"
         android:layout_below="@+id/note_label"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="@color/grey_medium"
         android:textSize="@dimen/text_sz_medium"
         android:visibility="gone" />

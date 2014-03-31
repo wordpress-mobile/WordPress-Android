@@ -53,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context context, String errorId) {
-        AppLog.v(T.NOTIFS, "GCM Error: " + errorId);
+        AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
     private static String mPreviousNoteId = null;
@@ -65,11 +65,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
-        
+
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
-            AppLog.v(T.NOTIFS, "Hrm. No notification message content received. Aborting.");
+            AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
             return;
         }
 
@@ -77,14 +77,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
-                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
+                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app.
                 //If they have never used the Reader, then they won't have a userId.
                 //Code for next release is below:
-               /* AppLog.e(T.NOTIFS, "Hrm. No wpcom userId found in the app. Aborting.");
+               /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
                 return;*/
             } else {
                 if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    AppLog.e(T.NOTIFS, "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
                     return;
                 }
             }
@@ -113,12 +113,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             note = new Note(extras);
             WordPress.wpDB.addNote(note, true);
             refreshNotes();
-        }
-
-        boolean md5GeneratedNoteId = false;
-        if (note_id == null && note != null) {
-            note_id = String.valueOf(WordPressDB.generateIdFor(note));
-            md5GeneratedNoteId = true;
         }
 
         /*
@@ -157,7 +151,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             try {
                 iconURL = URLDecoder.decode(iconURL, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));
@@ -191,8 +185,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setAutoCancel(true)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            if (md5GeneratedNoteId)
-                resultIntent.putExtra(NotificationsActivity.MD5_NOTE_ID_EXTRA, note_id);
             if (note_id != null)
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
 
@@ -289,8 +281,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             public void onResponse(JSONObject jsonObject) {
                 try {
                     List<Note> notes = NotificationUtils.parseNotes(jsonObject);
-                    WordPress.wpDB.clearNotes();
-                    WordPress.wpDB.saveNotes(notes);
+                    WordPress.wpDB.saveNotes(notes, true);
                     broadcastNewNotification();
                 } catch (JSONException e) {
                     AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: " + e);

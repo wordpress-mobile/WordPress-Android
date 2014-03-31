@@ -1,19 +1,13 @@
 package org.wordpress.android.ui.posts;
 
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.Map;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
@@ -22,11 +16,12 @@ import org.wordpress.android.util.StringUtils;
  */
 public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
-    @Override
+    @SuppressLint("SetJavaScriptEnabled")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        
+
         boolean isPage = getIntent().getBooleanExtra("isPage", false);
         if (isPage) {
             this.setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName())
@@ -36,16 +31,13 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
                     + " - " + getResources().getText(R.string.preview_post));
         }
 
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
-        
+
         if (extras != null) {
             long mPostID = extras.getLong("postID");
-            int mBlogID = extras.getInt("blogID");
 
-            Post post = new Post(mBlogID, mPostID, isPage);
-
-            if (post.getId() < 0)
+            Post post = WordPress.wpDB.getPostForLocalTablePostId(mPostID);
+            if (post == null)
                 Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
             else
                 loadPostPreview(post);
@@ -61,19 +53,17 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
      * Load the post preview. If the post is in a non-public state (e.g. draft status, part of a
      * non-public blog, etc), load the preview as an authenticated URL. Otherwise, just load the
      * preview normally.
-     * 
+     *
      * @param post Post to load the preview for.
      */
     private void loadPostPreview(Post post) {
         if (post != null) {
             String url = post.getPermaLink();
-            
-            Date d = new Date();           
+
             if ( WordPress.getCurrentBlog().isPrivate() //blog private
-                    || post.isLocalDraft() 
+                    || post.isLocalDraft()
                     || post.isLocalChange()
-                    || post.getDate_created_gmt() > d.getTime() //Scheduled
-                    || !post.getPost_status().equals("publish")) {
+                    || post.getStatusEnum() != PostStatus.PUBLISHED) {
                 if (-1 == url.indexOf('?')) {
                     url = url.concat("?preview=true");
                 } else {

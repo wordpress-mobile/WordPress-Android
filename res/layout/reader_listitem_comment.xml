@@ -51,7 +51,6 @@
         android:layout_alignTop="@+id/image_avatar"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
-        android:drawableLeft="@drawable/noticon_clock"
         android:text="date" />
 
     <org.wordpress.android.widgets.WPTextView

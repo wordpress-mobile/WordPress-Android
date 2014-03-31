@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
@@ -16,7 +17,7 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS}
     public static final String TAG = WordPress.TAG;
     private static boolean mEnableRecording = false;
 
@@ -159,8 +160,13 @@ public class AppLog {
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
      */
-    public static String toHtml() {
+    public static String toHtml(Context context) {
         StringBuilder sb = new StringBuilder();
+
+        // add version & device info
+        sb.append("WordPress Android version: " + WordPress.getVersionName(context)).append("<br />")
+          .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("<br />");
+
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {
@@ -169,6 +175,28 @@ public class AppLog {
               .append("</font> ")
               .append(it.next().toHtml())
               .append("<br />");
+            lineNum++;
+        }
+        return sb.toString();
+    }
+    
+    
+    /*
+     * returns entire log as plain text
+     */
+    public static String toPlainText(Context context) {
+        StringBuilder sb = new StringBuilder();
+
+        // add version & device info
+        sb.append("WordPress Android version: " + WordPress.getVersionName(context)).append("\n")
+          .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
+
+        Iterator<LogEntry> it = mLogEntries.iterator();
+        int lineNum = 1;
+        while (it.hasNext()) {
+              sb.append(String.format("%02d - ", lineNum))
+              .append(it.next().logText)
+              .append("\n");
             lineNum++;
         }
         return sb.toString();

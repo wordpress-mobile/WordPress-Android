@@ -3,7 +3,6 @@ package org.wordpress.android.ui.notifications;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
@@ -26,15 +26,16 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
         View view = inflater.inflate(R.layout.notifications_big_badge, parent, false);
         NetworkImageView badgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
-        
+
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
         bodyTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         if (getNote() != null) {
             String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");
-            if (noteHTML.equals(""))
+            if (noteHTML.equals("")) {
                 noteHTML = getNote().getSubject();
-            Spanned html = Html.fromHtml(noteHTML);
+            }
+            Spanned html = HtmlUtils.fromHtml(noteHTML);
             bodyTextView.setText(html);
 
             // Get the badge
@@ -60,7 +61,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
                 }
             }
         }
-        
+
         return view;
     }
 
@@ -82,7 +83,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
      *   most_liked_day
      *   most_followed_day
      */
-    public boolean isStatsNote() {
+    boolean isStatsNote() {
         if (getNote() == null)
             return false;
 

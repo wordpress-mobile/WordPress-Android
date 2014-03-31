@@ -3,9 +3,14 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.QuoteSpan;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Created by nbradbury on 7/9/13.
@@ -45,8 +50,8 @@ public class HtmlUtils {
     /*
      * convert html entities to actual Unicode characters - relies on commons apache lang
      */
-    protected static String fastUnescapeHtml(final String text) {
-        if (text==null || !text.contains("&"))
+    public static String fastUnescapeHtml(final String text) {
+        if (text == null || !text.contains("&"))
             return text;
         return StringEscapeUtils.unescapeHtml(text);
     }
@@ -87,4 +92,33 @@ public class HtmlUtils {
         return sb.toString();
     }
 
+    /**
+     * an alternative to Html.fromHtml() supporting <ul>, <ol>, <blockquote> tags and replacing Emoticons with Emojis
+     */
+    public static SpannableStringBuilder fromHtml(String source) {
+        SpannableStringBuilder html;
+        try {
+            html = (SpannableStringBuilder) Html.fromHtml(source, null, new WPHtmlTagHandler());
+        } catch (RuntimeException runtimeException) {
+            // In case our tag handler fails
+            html = (SpannableStringBuilder) Html.fromHtml(source, null, null);
+            // Log the exception and text that produces the error
+            try {
+                JSONObject additionalData = new JSONObject();
+                additionalData.put("input_text", source);
+                WPMobileStatsUtil.trackException(runtimeException, WPMobileStatsUtil.StatsPropertyExceptionNoteParsing,
+                        additionalData);
+            } catch (JSONException jsonException) {
+                AppLog.e(T.UTILS, jsonException);
+            }
+        }
+        Emoticons.replaceEmoticonsWithEmoji(html);
+        QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
+        for (QuoteSpan span : spans) {
+            html.setSpan(new WPHtml.WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(
+                    span));
+            html.removeSpan(span);
+        }
+        return html;
+    }
 }

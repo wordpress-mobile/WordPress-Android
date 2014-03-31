@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Contextual ActionBar menu for comment list
+-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_approve"
+        android:icon="@drawable/ic_cab_approve"
+        android:showAsAction="always"
+        android:title="@string/mnu_comment_approve" />
+    <item
+        android:id="@+id/menu_unapprove"
+        android:icon="@drawable/ic_cab_unapprove"
+        android:showAsAction="always"
+        android:title="@string/mnu_comment_unapprove" />
+    <item
+        android:id="@+id/menu_spam"
+        android:icon="@drawable/ic_cab_spam"
+        android:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_spam" />
+    <item
+        android:id="@+id/menu_trash"
+        android:icon="@drawable/ic_cab_trash"
+        android:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_trash" />
+
+</menu>

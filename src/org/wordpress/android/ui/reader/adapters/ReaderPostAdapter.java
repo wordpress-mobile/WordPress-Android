@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -30,6 +31,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -40,9 +42,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderPostAdapter extends BaseAdapter {
     private String mCurrentTag;
 
-    private int mPhotonWidth;
-    private int mPhotonHeight;
-    private int mAvatarSz;
+    private final int mPhotonWidth;
+    private final int mPhotonHeight;
+    private final int mAvatarSz;
 
     private final float mRowAnimationFromYDelta;
     private final int mRowAnimationDuration;
@@ -56,11 +58,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final String mFollowing;
     private final String mFollow;
 
-    private ReaderActions.RequestReblogListener mReblogListener;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderActions.DataRequestedListener mDataRequestedListener;
+    private final ReaderActions.RequestReblogListener mReblogListener;
+    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    private boolean mEnableImagePreload;
+    private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
 
@@ -98,8 +100,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
-    public void setTag(String tagName) {
-        mCurrentTag = tagName;
+    public String getCurrentTag() {
+        return StringUtils.notNullStr(mCurrentTag);
+    }
+
+    public void setCurrentTag(String tagName) {
+        mCurrentTag = StringUtils.notNullStr(tagName);
         reload(false);
     }
 
@@ -198,7 +204,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
@@ -229,6 +235,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+        holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
 
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
@@ -254,12 +261,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.VISIBLE);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-        }
-
-        if (post.hasPostAvatar()) {
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            holder.imgAvatar.showDefaultImage(WPNetworkImageView.ImageType.AVATAR, false);
         }
 
         /*final String firstTag = post.getFirstTag();
@@ -290,6 +291,19 @@ public class ReaderPostAdapter extends BaseAdapter {
         // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
+            holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (parent instanceof ListView) {
+                        ListView listView = (ListView) parent;
+                        // the base listView onItemClick includes the header count in the position,
+                        // so do the same here
+                        int index = position + listView.getHeaderViewsCount();
+                        listView.performItemClick(holder.imgBtnComment, index, getItemId(position));
+                    }
+                }
+            });
+
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -362,7 +376,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * animate in the passed view - uses faster property animation on ICS and above, falls back to
      * animation resource for older devices
      */
-    private DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
+    private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
     @SuppressLint("NewApi")
     private void animateRow(View view) {
         if (SysUtils.isGteAndroid4()) {
@@ -396,11 +410,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the like button (textView)
      */
-    public void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
+    private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
+        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;
 
         // update post in array and on screen
@@ -425,7 +439,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
         AniUtils.zoomAction(holder.txtFollow);
 
-        if (!ReaderPostActions.performPostAction(holder.imgBtnLike.getContext(), ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
+        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
             return;
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
@@ -546,7 +560,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }
 
-    private ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
+    private final ImageLoader.ImageListener mImagePreloadListener = new ImageLoader.ImageListener() {
         @Override
         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean isImmediate) {
             // nop

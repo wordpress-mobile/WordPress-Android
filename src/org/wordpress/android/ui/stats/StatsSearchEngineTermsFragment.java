@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,17 +10,16 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 
 /**
  * Fragment for search engine term stats. Has two pages, for Today's and Yesterday's stats.
  */
-public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -72,35 +68,31 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment  i
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.SEARCH));
             int total = cursor.getInt(cursor.getColumnIndex(StatsSearchEngineTermsTable.Columns.VIEWS));
 
-            // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
-
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
-            // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            holder.entryTextView.setText(entry);
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.networkImageView.setVisibility(View.GONE);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
-
     }
 
     @Override

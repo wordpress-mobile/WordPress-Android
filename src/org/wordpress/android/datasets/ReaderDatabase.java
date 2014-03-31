@@ -78,11 +78,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         reset(db);
     }
 
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-    }
-
     private void createAllTables(SQLiteDatabase db) {
         ReaderCommentTable.createTables(db);
         ReaderLikeTable.createTables(db);
@@ -107,8 +102,14 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * drop & recreate all tables (essentially clears the db of all data)
      */
     private void reset(SQLiteDatabase db) {
-        dropAllTables(db);
-        createAllTables(db);
+        db.beginTransaction();
+        try {
+            dropAllTables(db);
+            createAllTables(db);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /*

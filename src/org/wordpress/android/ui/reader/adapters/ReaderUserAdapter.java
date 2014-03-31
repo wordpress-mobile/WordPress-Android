@@ -1,68 +1,40 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderUserTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
- * Created by nbradbury on 6/27/13.
+ * Created by nbradbury on 6/27/13 - owner must call setUsers() with the list of
+ * users to display
  */
 public class ReaderUserAdapter extends BaseAdapter {
-    public static enum ReaderUserListType {UNKNOWN, LIKE_POST}
-
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private ReaderUserList mUsers = new ReaderUserList();
-    private ReaderUserListType mListType = ReaderUserListType.UNKNOWN;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
-    private ReaderPost mPost;
-    private int mAvatarSz;
+    private final DataLoadedListener mDataLoadedListener;
+    private final int mAvatarSz;
 
-    public ReaderUserAdapter(Context context,
-                             ReaderUserListType listType,
-                             ReaderPost post,
-                             ReaderActions.DataLoadedListener dataLoadedListener) {
+    public ReaderUserAdapter(Context context, DataLoadedListener dataLoadedListener) {
         super();
         mInflater = LayoutInflater.from(context);
-        mListType = listType;
         mDataLoadedListener = dataLoadedListener;
-        mPost = post;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        loadUsers();
-    }
-
-    @SuppressLint("NewApi")
-    private void loadUsers() {
-        if (mIsTaskRunning)
-            AppLog.w(T.READER, "user task already running");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadUsersTask().execute();
-        }
     }
 
     @Override
@@ -90,13 +62,9 @@ public class ReaderUserAdapter extends BaseAdapter {
         final ReaderUser user = mUsers.get(position);
         final UserViewHolder holder;
 
-        if (convertView==null) {
+        if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_user, parent, false);
-            holder = new UserViewHolder();
-            holder.txtName = (TextView) convertView.findViewById(R.id.text_name);
-            holder.txtUrl = (TextView) convertView.findViewById(R.id.text_url);
-            holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
+            holder = new UserViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (UserViewHolder) convertView.getTag();
@@ -147,12 +115,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         if (!ReaderBlogActions.performBlogAction(action, user.getUrl()))
             return;
 
-        if (isAskingToFollow) {
-            user.isFollowed = true;
-        } else {
-            user.isFollowed = false;
-        }
-
+        user.isFollowed = isAskingToFollow;
         showFollowStatus(txtFollow, isAskingToFollow);
     }
 
@@ -164,59 +127,53 @@ public class ReaderUserAdapter extends BaseAdapter {
     }
 
     private static class UserViewHolder {
-        private TextView txtName;
-        private TextView txtUrl;
-        private TextView txtFollow;
-        private WPNetworkImageView imgAvatar;
-    }
+        private final TextView txtName;
+        private final TextView txtUrl;
+        private final TextView txtFollow;
+        private final WPNetworkImageView imgAvatar;
 
-    private boolean mIsTaskRunning = false;
-    private class LoadUsersTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderUserList tmpUsers;
-        @Override
-        protected void onPreExecute() {
-            mIsTaskRunning = true;
-        }
-        @Override
-        protected void onCancelled() {
-            mIsTaskRunning = false;
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            switch (mListType) {
-                case LIKE_POST:
-                    tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, Constants.READER_MAX_USERS_TO_DISPLAY);
-                    break;
-                default :
-                    break;
-            }
-
-            if (tmpUsers==null)
-                return false;
-
-            // flag followed users, set avatar urls for use with photon, and pre-load user domains
-            // so we can avoid having to do this for each user when getView() is called
-            ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
-            for (ReaderUser user: tmpUsers) {
-                user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
-                user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
-                user.getUrlDomain();
-            }
-
-            return true;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mUsers = (ReaderUserList)(tmpUsers.clone());
-                notifyDataSetChanged();
-            }
-
-            if (mDataLoadedListener!=null)
-                mDataLoadedListener.onDataLoaded(isEmpty());
-
-            mIsTaskRunning = false;
+        UserViewHolder(View view) {
+            txtName = (TextView) view.findViewById(R.id.text_name);
+            txtUrl = (TextView) view.findViewById(R.id.text_url);
+            txtFollow = (TextView) view.findViewById(R.id.text_follow);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
         }
     }
 
+    private void clear() {
+        if (mUsers.size() > 0) {
+            mUsers.clear();
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setUsers(final ReaderUserList users) {
+        if (users == null || users.size() == 0) {
+            clear();
+            return;
+        }
+
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                // flag followed users, set avatar urls for use with photon, and pre-load user domains
+                // so we can avoid having to do this for each user when getView() is called
+                ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
+                for (ReaderUser user: users) {
+                    user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
+                    user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
+                    user.getUrlDomain();
+                }
+                handler.post(new Runnable() {
+                    public void run() {
+                        mUsers = (ReaderUserList) users.clone();
+                        notifyDataSetChanged();
+                        if (mDataLoadedListener != null)
+                            mDataLoadedListener.onDataLoaded(isEmpty());
+                    }
+                });
+            }
+        }.start();
+    }
 }

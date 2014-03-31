@@ -6,12 +6,7 @@
 
     <TextView
         android:id="@+id/stats_pager_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/stats_tablet_header_title"
-        android:padding="6dp"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        style="@style/StatsPagerTitle" />
 
     <LinearLayout
         android:layout_width="match_parent"

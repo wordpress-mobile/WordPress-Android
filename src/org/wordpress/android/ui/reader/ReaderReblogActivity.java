@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -13,10 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
@@ -33,8 +36,8 @@ import org.wordpress.android.util.ToastUtils;
  * don't want the activity re-created while the reblog is being submitted
  */
 public class ReaderReblogActivity extends FragmentActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_POST_ID = "post_id";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_POST_ID = "post_id";
 
     private long mBlogId;
     private long mPostId;
@@ -48,6 +51,8 @@ public class ReaderReblogActivity extends FragmentActivity {
 
     private long mDestinationBlogId;
     private boolean mIsSubmittingReblog = false;
+
+    private static final int INTENT_SETTINGS = 200;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,12 @@ public class ReaderReblogActivity extends FragmentActivity {
             super.onBackPressed();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @SuppressLint("NewApi")
     private void loadPost() {
         if (SysUtils.canUseExecuteOnExecutor()) {
@@ -101,9 +112,48 @@ public class ReaderReblogActivity extends FragmentActivity {
         }
     }
 
+    /*
+     * called by adapter when data has been loaded
+     */
+    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+        @Override
+        public void onDataLoaded(boolean isEmpty) {
+            // show empty message and hide other views if there are no visible blogs to reblog to
+            final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+            final View contentView = findViewById(R.id.layout_content);
+
+            // empty message includes a link to settings so user can change blog visibility
+            if (isEmpty) {
+                String emptyMsg = getString(R.string.reader_label_reblog_empty);
+                String emptyLink = "<a href='settings'>" + getString(R.string.reader_label_reblog_empty_link) + "</a>";
+                txtEmpty.setText(Html.fromHtml(emptyMsg + "<br /><br />" + emptyLink));
+                txtEmpty.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ReaderReblogActivity.this, PreferencesActivity.class);
+                        startActivityForResult(i, INTENT_SETTINGS);
+                    }
+                });
+            }
+
+            txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // reload adapter if user returned from settings since blog visibility may have changed
+        if (requestCode == INTENT_SETTINGS) {
+            getReblogAdapter().reload();
+        }
+    }
+
     private ReaderReblogAdapter getReblogAdapter() {
-        if (mAdapter == null)
-            mAdapter = new ReaderReblogAdapter(this);
+        if (mAdapter == null) {
+            mAdapter = new ReaderReblogAdapter(this, mBlogId, mDataLoadedListener);
+        }
         return mAdapter;
     }
 
@@ -123,7 +173,7 @@ public class ReaderReblogActivity extends FragmentActivity {
     }
 
     private void submitReblog() {
-        if (mDestinationBlogId==0) {
+        if (mDestinationBlogId == 0) {
             ToastUtils.showToast(this, R.string.reader_toast_err_reblog_requires_blog);
             return;
         }

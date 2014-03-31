@@ -18,15 +18,17 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /**
  * Created by nbradbury on 8/7/13.
  */
-public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdapter.TopicActionListener {
+public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdapter.TagActionListener {
     private ViewGroup mLayoutAddTag;
     private EditText mEditAddTag;
     private ListView mListView;
@@ -37,10 +39,10 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     private boolean mIsShowingFollowedTags = true;
     private boolean mAlreadyUpdatedTagList;
 
-    protected static final String ARG_TAG_NAME       = "tag_name";
+    static final String ARG_TAG_NAME       = "tag_name";
 
-    protected static final String KEY_TAGS_CHANGED   = "tags_changed";
-    protected static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    static final String KEY_TAGS_CHANGED   = "tags_changed";
+    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
     private static final String KEY_SHOWING_FOLLOWED = "showing_followed";
 
@@ -72,12 +74,12 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
             mIsShowingFollowedTags = savedInstanceState.getBoolean(KEY_SHOWING_FOLLOWED, true);
         }
 
-        // toggle between topic views when title is clicked
+        // toggle between tag views when title is clicked
         mTxtTitle = (TextView) findViewById(R.id.text_title);
         mTxtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleTopics();
+                toggleTags();
             }
         });
 
@@ -87,23 +89,23 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE)
-                    addCurrentTopic();
+                    addCurrentTag();
                 return false;
             }
         });
 
-        final ImageButton btnAddTopic = (ImageButton) findViewById(R.id.btn_add);
-        btnAddTopic.setOnClickListener(new View.OnClickListener() {
+        final ImageButton btnAddTag = (ImageButton) findViewById(R.id.btn_add);
+        btnAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCurrentTopic();
+                addCurrentTag();
             }
         });
 
         updateTitle();
 
         getListView().setAdapter(getTagAdapter());
-        getTagAdapter().setTopicType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
+        getTagAdapter().setTagType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
 
         // if a tag was passed in the intent, display it in the edit field
         final String tagName = getIntent().getStringExtra(ARG_TAG_NAME);
@@ -126,14 +128,14 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     }
 
     /*
-     * update title & text based on whether we're showing followed or popular topics
+     * update title & text based on whether we're showing followed or popular tags
      */
     private void updateTitle() {
         // update dialog title
         mTxtTitle.setText(mIsShowingFollowedTags ? R.string.reader_title_followed_tags : R.string.reader_title_popular_tags);
 
-        // show "navigate next" image to the right of the title if followed topics is showing, show "navigate
-        // previous" to the left of the title if popular topics is showing
+        // show "navigate next" image to the right of the title if followed tags is showing, show "navigate
+        // previous" to the left of the title if popular tags is showing
         if (mIsShowingFollowedTags) {
             mTxtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_navigate_next, 0);
         } else {
@@ -171,33 +173,36 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     }
 
     /*
-     * toggle between followed & popular topics
+     * toggle between followed & popular tags
      */
-    private void toggleTopics() {
+    private void toggleTags() {
         mIsShowingFollowedTags = !mIsShowingFollowedTags;
 
         MessageBarUtils.hideMessageBar(this, null, true);
         updateTitle();
         mLayoutAddTag.setVisibility(mIsShowingFollowedTags ? View.VISIBLE : View.GONE);
 
-        mAdapter.setTopicType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
+        mAdapter.setTagType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
         getListView().setAdapter(mAdapter);
     }
 
     /*
-     * add the topic in the EditText to the user's topic list
+     * add the tag in the EditText to the user's followed tags
      */
-    private void addCurrentTopic() {
-        String topicName = EditTextUtils.getText(mEditAddTag);
-        if (TextUtils.isEmpty(topicName))
+    private void addCurrentTag() {
+        String tagName = EditTextUtils.getText(mEditAddTag);
+        if (TextUtils.isEmpty(tagName))
             return;
 
-        if (ReaderTagTable.tagExists(topicName)) {
+        if (!NetworkUtils.checkConnection(this))
+            return;
+
+        if (ReaderTagTable.tagExists(tagName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
         }
 
-        if (!ReaderTag.isValidTagName(topicName)) {
+        if (!ReaderTag.isValidTagName(tagName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid, ToastUtils.Duration.LONG);
             return;
         }
@@ -205,27 +210,30 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         mEditAddTag.setText(null);
         EditTextUtils.hideSoftInput(mEditAddTag);
 
-        onTopicAction(ReaderTagActions.TagAction.ADD, topicName);
+        onTagAction(TagAction.ADD, tagName);
     }
 
     /*
-     * triggered by adapter when user chooses to add/remove a topic, or from this activity when
-     * user chooses to add a topic
+     * triggered by adapter when user chooses to add/remove a tag, or from this activity when
+     * user chooses to add a tag
      */
     @Override
-    public void onTopicAction(ReaderTagActions.TagAction action, final String topicName) {
-        if (TextUtils.isEmpty(topicName))
+    public void onTagAction(final TagAction action, final String tagName) {
+        if (TextUtils.isEmpty(tagName))
+            return;
+
+        if (!NetworkUtils.checkConnection(this))
             return;
 
         final String messageBarText;
         final MessageBarUtils.MessageBarType messageBarType;
         switch (action) {
             case ADD:
-                messageBarText = getString(R.string.reader_label_added_tag, topicName);
+                messageBarText = getString(R.string.reader_label_added_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.INFO;
                 break;
             case DELETE:
-                messageBarText = getString(R.string.reader_label_removed_tag, topicName);
+                messageBarText = getString(R.string.reader_label_removed_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.ALERT;
                 break;
             default :
@@ -233,30 +241,49 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         }
         MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
 
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                // handle failure when adding/removing tags below
+                if (!succeeded && !isFinishing()) {
+                    getTagAdapter().refreshTags();
+                    switch (action) {
+                        case ADD:
+                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_add_tag);
+                            mLastAddedTag = null;
+                            break;
+                        case DELETE:
+                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_remove_tag);
+                            break;
+                    }
+                }
+            }
+        };
+
         switch (action) {
             case ADD:
-                if (ReaderTagActions.performTagAction(ReaderTagActions.TagAction.ADD, topicName, null)) {
+                if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
                     ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                         @Override
                         public void onDataLoaded(boolean isEmpty) {
-                            // make sure the added topic is scrolled into view if showing followed topics
+                            // make sure the added tag is scrolled into view if showing followed tags
                             if (mIsShowingFollowedTags) {
-                                int index = getTagAdapter().indexOfTopicName(topicName);
+                                int index = getTagAdapter().indexOfTagName(tagName);
                                 if (index > -1)
                                     getListView().smoothScrollToPosition(index);
                             }
                         }
                     };
-                    getTagAdapter().refreshTopics(dataListener);
+                    getTagAdapter().refreshTags(dataListener);
                     mTagsChanged = true;
-                    mLastAddedTag = topicName;
+                    mLastAddedTag = tagName;
                 }
                 break;
 
             case DELETE:
-                if (ReaderTagActions.performTagAction(ReaderTagActions.TagAction.DELETE, topicName, null)) {
-                    getTagAdapter().refreshTopics();
-                    if (mLastAddedTag !=null && mLastAddedTag.equals(topicName))
+                if (ReaderTagActions.performTagAction(TagAction.DELETE, tagName, actionListener)) {
+                    getTagAdapter().refreshTags();
+                    if (mLastAddedTag !=null && mLastAddedTag.equals(tagName))
                         mLastAddedTag = null;
                     mTagsChanged = true;
                 }
@@ -267,13 +294,13 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     /*
      * request latest list of tags from the server
      */
-    protected void updateTagList() {
+    void updateTagList() {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result==ReaderActions.UpdateResult.CHANGED) {
                     mTagsChanged = true;
-                    getTagAdapter().refreshTopics();
+                    getTagAdapter().refreshTags();
                 }
             }
         };
