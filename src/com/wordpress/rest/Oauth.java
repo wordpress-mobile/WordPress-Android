@@ -1,19 +1,16 @@
 package com.wordpress.rest;
 
-import android.util.Log;
-
-import com.android.volley.Response;
-import com.android.volley.ParseError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.NetworkResponse;
-
-import org.json.JSONObject;
-import org.json.JSONException;
-
 import java.io.UnsupportedEncodingException;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 public class Oauth {
 

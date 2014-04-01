@@ -1,18 +1,15 @@
 package com.wordpress.rest;
 
-import android.util.Log;
-import android.content.Context;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.Response.Listener;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.toolbox.Volley;
-import com.android.volley.Request.Method;
-
-import java.util.Map;
-import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+
+import org.json.JSONObject;
+
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
 
 public class RestClient {
 
@@ -33,18 +30,16 @@ public class RestClient {
         mAccessToken = token;
     }
 
-    public RestRequest get(String path, RestRequest.Listener listener,
-                           RestRequest.ErrorListener errorListener){
+    public RestRequest get(String path, Listener<JSONObject> listener, ErrorListener errorListener){
         return makeRequest(Method.GET, getAbsoluteURL(path), null, listener, errorListener);
     }
 
-    public RestRequest post(String path, Map<String,String> body, RestRequest.Listener listener,
-                            RestRequest.ErrorListener errorListener){
+    public RestRequest post(String path, Map<String,String> body, Listener<JSONObject> listener, ErrorListener errorListener){
         return makeRequest(Method.POST, getAbsoluteURL(path), body, listener, errorListener);
     }
     
     public RestRequest makeRequest(int method, String url, Map<String, String> params,
-                                   RestRequest.Listener listener, RestRequest.ErrorListener errorListener ){
+                                   Listener<JSONObject> listener, ErrorListener errorListener ){
         RestRequest request = new RestRequest(method, url, params, listener, errorListener);
         request.setUserAgent(mUserAgent);
         request.setAccessToken(mAccessToken);

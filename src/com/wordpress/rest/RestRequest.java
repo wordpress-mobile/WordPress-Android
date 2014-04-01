@@ -20,14 +20,14 @@ public class RestRequest extends Request<JSONObject> {
     public static final String REST_AUTHORIZATION_HEADER="Authorization";
     public static final String REST_AUTHORIZATION_FORMAT="Bearer %s";
 
-    public interface Listener extends Response.Listener<JSONObject> {}
-    public interface ErrorListener extends Response.ErrorListener {}
+    public interface Listener extends Response.Listener<JSONObject> {} //This is just a shortcut for Response.Listener<JSONObject> 
+    public interface ErrorListener extends Response.ErrorListener {} //This is just a shortcut for Response.ErrorListener
     
-    private final Listener mListener;
+    private final com.android.volley.Response.Listener<JSONObject> mListener;
     private final Map<String,String> mParams;
     private final Map<String,String> mHeaders = new HashMap<String,String>(2);
-    public RestRequest(int method, String url, Map<String, String> params, Listener listener,
-                       ErrorListener errorListener){
+    public RestRequest(int method, String url, Map<String, String> params, com.android.volley.Response.Listener<JSONObject> listener,
+    		com.android.volley.Response.ErrorListener errorListener){
         super(method, url, errorListener);
         mParams = params;
         mListener = listener;
