@@ -654,6 +654,10 @@ public class PostsActivity extends WPActionBarActivity
                 if (isFinishing()) {
                     return;
                 }
+
+                // refresh spinner in case a blog's name has changed
+                refreshBlogSpinner(getBlogNames());
+
                 updateMenuDrawer();
                 mPostList.setRefreshing(false);
             }
