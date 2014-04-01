@@ -85,8 +85,7 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
             !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new RefreshBlogContentCallback())
-                    .execute(false);
+            refreshBlogContent();
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -640,7 +639,7 @@ public class PostsActivity extends WPActionBarActivity
         attemptToSelectPost();
         mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), null).execute(false);
+        refreshBlogContent();
         mPostList.onBlogChanged();
     }
 
@@ -648,22 +647,29 @@ public class PostsActivity extends WPActionBarActivity
         mPostList.setRefreshing(refreshing);
     }
 
-    public class RefreshBlogContentCallback implements ApiHelper.GenericCallback {
-        @Override
-        public void onSuccess() {
-            if (isFinishing()) {
-                return;
+    private void refreshBlogContent() {
+        ApiHelper.GenericCallback callback = new ApiHelper.GenericCallback() {
+            @Override
+            public void onSuccess() {
+                if (isFinishing()) {
+                    return;
+                }
+                updateMenuDrawer();
+                mPostList.setRefreshing(false);
             }
-            updateMenuDrawer();
-            mPostList.setRefreshing(false);
-        }
 
-        @Override
-        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            if (isFinishing()) {
-                return;
+            @Override
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                if (isFinishing()) {
+                    return;
+                }
+                mPostList.setRefreshing(false);
             }
-            mPostList.setRefreshing(false);
-        }
+        };
+
+        new ApiHelper.RefreshBlogContentTask(this,
+                                             WordPress.getCurrentBlog(),
+                                             callback)
+                                             .execute(false);
     }
 }
