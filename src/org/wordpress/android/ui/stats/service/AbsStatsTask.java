@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.stats.service;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import android.content.ContentResolver;
 import android.content.Context;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.json.JSONObject;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -19,13 +20,11 @@ import org.wordpress.android.util.AppLog.T;
  */
 abstract class AbsStatsTask implements Runnable {
     static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
-    private static final long WAIT_TIMEOUT = 20 * 1000;
-    private final Object mSyncObject = new Object();
 
     /*
      * descendants must implement this to send their specific request to the stats api
      */
-    abstract void sendRequest();
+    abstract String getPath();
 
     /*
      * descendants must implement this to parse a successful response - note that this
@@ -40,56 +39,20 @@ abstract class AbsStatsTask implements Runnable {
 
     @Override
     public void run() {
-        // send the stats api request
-        sendRequest();
-
-        // wait for the request to be completed - without this, the ThreadPoolExecutor
-        // in StatsService will immediately move on to the next task
-        waitForResponse();
-    }
-
-    private void waitForResponse() {
-        synchronized (mSyncObject) {
-            try {
-                mSyncObject.wait(WAIT_TIMEOUT);
-            } catch (InterruptedException e) {
-                AppLog.w(T.STATS, getTaskName() + " interrupted");
-            }
-        }
-    }
-
-    /*
-     * called when either (a) the response has been received and parsed, or (b) the request failed
-     */
-    private void notifyResponseReceived() {
-        synchronized (mSyncObject) {
-            mSyncObject.notify();
-        }
-    }
-
-    /*
-     * response & error listeners used for all rest client calls made by AbsStatsTask descendants
-     */
-    final RestRequest.Listener responseListener = new RestRequest.Listener() {
-        @Override
-        public void onResponse(final JSONObject response) {
+        try {
+            AppLog.d(T.STATS, getTaskName() + " started");
+            // send the stats api request
+            JSONObject response = WordPress.getRestClientUtils().getSynchronous(getPath());
+            parseResponse(response);
             AppLog.d(T.STATS, getTaskName() + " responded");
-            new Thread() {
-                @Override
-                public void run() {
-                    parseResponse(response);
-                    notifyResponseReceived();
-                }
-            }.start();
+        } catch (InterruptedException e) {
+            AppLog.e(T.STATS, getTaskName() + " failed", e);
+        } catch (ExecutionException e) {
+            AppLog.e(T.STATS, getTaskName() + " failed", e);
+        } catch (TimeoutException e) {
+            AppLog.e(T.STATS, getTaskName() + " failed", e);
         }
-    };
-    final RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            AppLog.e(T.STATS, getTaskName() + " failed", error);
-            notifyResponseReceived();
-        }
-    };
+    }
 
     ContentResolver getContentResolver() {
         return getContext().getContentResolver();

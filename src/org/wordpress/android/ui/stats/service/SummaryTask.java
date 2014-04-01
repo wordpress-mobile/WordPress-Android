@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
+
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
@@ -25,8 +25,8 @@ class SummaryTask extends AbsStatsTask {
     }
 
     @Override
-    void sendRequest() {
-        WordPress.getRestClientUtils().getStatsSummary(mBlogId, responseListener, errorListener);
+    String getPath() {
+       return String.format("sites/%s/stats", mBlogId);
     }
 
     @Override

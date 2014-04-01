@@ -85,8 +85,8 @@ public class StatsService extends Service {
                 try {
                     // visitors and views
                     executor.submit(new SummaryTask(blogId)); // this includes bar chart data for days
-                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK));
-                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH));
+                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.WEEK, 30));
+                    executor.submit(new BarChartTask(blogId, StatsBarChartUnit.MONTH, 30));
 
                     // top posts and pages
                     executor.submit(new TopPostsAndPagesTask(blogId, today));
