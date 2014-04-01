@@ -503,10 +503,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         startActivity(intent);
     }
 
-    protected void showReaderIfNoBlog() {
-        // If logged in without blog, redirect to the Reader view
+    /*
+     * redirect to the Reader if there aren't any visible blogs
+     * returns true if redirected, false otherwise
+     */
+    protected boolean showReaderIfNoBlog() {
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             showReader();
+            return true;
+        } else {
+            return false;
         }
     }
 

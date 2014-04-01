@@ -264,9 +264,15 @@ public class PostsActivity extends WPActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        // posts can't be shown if there aren't any visible blogs, so redirect to the reader and
+        // exit the post list in this situation
         if (WordPress.isSignedIn(PostsActivity.this)) {
-            showReaderIfNoBlog();
+            if (showReaderIfNoBlog()) {
+                finish();
+            }
         }
+
         if (WordPress.postsShouldRefresh) {
             checkForLocalChanges(false);
             mPostList.setRefreshing(true);
