@@ -416,7 +416,7 @@ public class PostUploadService extends Service {
             return false;
         }
 
-        
+
         private void setUploadPostErrorMessage(Exception e) {
             mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
                     .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
@@ -424,11 +424,11 @@ public class PostUploadService extends Service {
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
-        
-        public String uploadMediaFile(MediaFile mf, Blog blog) {
+
+        public String uploadMediaFile(MediaFile mediaFile, Blog blog) {
             String content = "";
 
-            String curImagePath = mf.getFilePath();
+            String curImagePath = mediaFile.getFilePath();
             if (curImagePath == null) {
                 return null;
             }
@@ -464,13 +464,13 @@ public class PostUploadService extends Service {
                         mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
                         resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
 
-                        mf = new MediaFile();
+                        mediaFile = new MediaFile();
 
                         String thumbData = cur.getString(dataColumn);
                         mimeType = cur.getString(mimeTypeColumn);
 
                         videoFile = new File(thumbData);
-                        mf.setFilePath(videoFile.getPath());
+                        mediaFile.setFilePath(videoFile.getPath());
                         String resolution = cur.getString(resolutionColumn);
                         if (resolution != null) {
                             String[] resx = resolution.split("x");
@@ -489,7 +489,7 @@ public class PostUploadService extends Service {
                     }
                 } else { // file is not in media library
                     String filePath = videoUri.toString().replace("file://", "");
-                    mf.setFilePath(filePath);
+                    mediaFile.setFilePath(filePath);
                     videoFile = new File(filePath);
                 }
 
@@ -507,7 +507,7 @@ public class PostUploadService extends Service {
                 Map<String, Object> m = new HashMap<String, Object>();
                 m.put("name", videoName);
                 m.put("type", mimeType);
-                m.put("bits", mf);
+                m.put("bits", mediaFile);
                 m.put("overwrite", true);
 
                 Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
@@ -548,7 +548,7 @@ public class PostUploadService extends Service {
                 }
             } else {
                 // Upload the image
-                curImagePath = mf.getFilePath();
+                curImagePath = mediaFile.getFilePath();
 
                 Uri imageUri = Uri.parse(curImagePath);
                 File imageFile = null;
@@ -564,9 +564,7 @@ public class PostUploadService extends Service {
                     imgPath = imageUri;
 
                     Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
-
-                    if (cur.moveToFirst()) {
-
+                    if (cur != null && cur.moveToFirst()) {
                         int dataColumn, mimeTypeColumn;
                         dataColumn = cur.getColumnIndex(Images.Media.DATA);
                         mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
@@ -575,12 +573,12 @@ public class PostUploadService extends Service {
                         mimeType = cur.getString(mimeTypeColumn);
                         imageFile = new File(thumbData);
                         path = thumbData;
-                        mf.setFilePath(imageFile.getPath());
+                        mediaFile.setFilePath(imageFile.getPath());
                     }
                 } else { // file is not in media library
                     path = imageUri.toString().replace("file://", "");
                     imageFile = new File(path);
-                    mf.setFilePath(path);
+                    mediaFile.setFilePath(path);
                 }
 
                 // check if the file exists
@@ -608,7 +606,7 @@ public class PostUploadService extends Service {
                 // If it's not a gif and blog don't keep original size, there is a chance we need to resize
                 if (!mimeType.equals("image/gif") && !blog.getMaxImageWidth().equals("Original Size")) {
                     //check the picture settings
-                    int pictureSettingWidth = mf.getWidth();
+                    int pictureSettingWidth = mediaFile.getWidth();
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(path, options);
@@ -623,8 +621,10 @@ public class PostUploadService extends Service {
                 boolean shouldAddImageWidthCSS = false;
 
                 if (shouldUploadResizedVersion) {
+                    MediaFile resizedMediaFile = new MediaFile(mediaFile);
                     // Create resized image
-                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, mf.getWidth(), fileExtension, orientation);
+                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
+                            fileExtension, orientation);
 
                     if (bytes == null) {
                         // We weren't able to resize the image, so we will upload the full size image with css to resize it
@@ -649,14 +649,14 @@ public class PostUploadService extends Service {
 
                         // upload resized picture
                         if (!TextUtils.isEmpty(tempFilePath)) {
-                            mf.setFilePath(tempFilePath);
-                            Map<String, Object> m = new HashMap<String, Object>();
+                            resizedMediaFile.setFilePath(tempFilePath);
+                            Map<String, Object> parameters = new HashMap<String, Object>();
 
-                            m.put("name", fileName);
-                            m.put("type", mimeType);
-                            m.put("bits", mf);
-                            m.put("overwrite", true);
-                            resizedPictureURL = uploadPicture(m, mf, blog);
+                            parameters.put("name", fileName);
+                            parameters.put("type", mimeType);
+                            parameters.put("bits", resizedMediaFile);
+                            parameters.put("overwrite", true);
+                            resizedPictureURL = uploadPicture(parameters, resizedMediaFile, blog);
                             if (resizedPictureURL == null) {
                                 AppLog.w(T.POSTS, "failed to upload resized picture");
                                 return null;
@@ -676,19 +676,19 @@ public class PostUploadService extends Service {
                 // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
                 if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
                     // try to upload the image
-                    Map<String, Object> m = new HashMap<String, Object>();
-                    m.put("name", fileName);
-                    m.put("type", mimeType);
-                    m.put("bits", mf);
-                    m.put("overwrite", true);
+                    Map<String, Object> parameters = new HashMap<String, Object>();
+                    parameters.put("name", fileName);
+                    parameters.put("type", mimeType);
+                    parameters.put("bits", mediaFile);
+                    parameters.put("overwrite", true);
 
-                    fullSizeUrl = uploadPicture(m, mf, blog);
+                    fullSizeUrl = uploadPicture(parameters, mediaFile, blog);
                     if (fullSizeUrl == null)
                         return null;
                 }
 
                 String alignment = "";
-                switch (mf.getHorizontalAlignment()) {
+                switch (mediaFile.getHorizontalAlignment()) {
                     case 0:
                         alignment = "alignnone";
                         break;
@@ -706,7 +706,7 @@ public class PostUploadService extends Service {
                 String alignmentCSS = "class=\"" + alignment + " size-full\" ";
 
                 if (shouldAddImageWidthCSS) {
-                    alignmentCSS += "style=\"max-width: " + mf.getWidth() + "px\" ";
+                    alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
                 }
 
                 // Check if we uploaded a featured picture that is not added to the post content (normal case)
@@ -721,14 +721,14 @@ public class PostUploadService extends Service {
                     resizedPictureURL = fullSizeUrl;
                 }
 
-                String mediaTitle = TextUtils.isEmpty(mf.getTitle()) ? "" : mf.getTitle();
+                String mediaTitle = TextUtils.isEmpty(mediaFile.getTitle()) ? "" : mediaFile.getTitle();
 
                 content = content + "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
                         + alignmentCSS + "alt=\"image\" src=\"" + resizedPictureURL + "\" /></a>";
 
-                if (!TextUtils.isEmpty(mf.getCaption())) {
+                if (!TextUtils.isEmpty(mediaFile.getCaption())) {
                     content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                            alignment, mf.getWidth(), TextUtils.htmlEncode(mf.getCaption()), content);
+                            alignment, mediaFile.getWidth(), TextUtils.htmlEncode(mediaFile.getCaption()), content);
                 }
             }
             return content;
