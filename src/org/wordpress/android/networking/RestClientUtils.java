@@ -260,7 +260,7 @@ public class RestClientUtils {
 
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, null, mRestClient, mAuthenticator);
         authCheck.send(); //this insert the request into the queue. //TODO: Verify that everything is OK on REST calls without a valid token
-        JSONObject response = future.get(30, TimeUnit.SECONDS);
+        JSONObject response = future.get();
         return response;
     }
 
