@@ -4,9 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
-/**
- * EditText that uses OpenSans as default font type
- */
 public class OpenSansEditText extends EditText {
     public OpenSansEditText(Context context) {
         super(context);

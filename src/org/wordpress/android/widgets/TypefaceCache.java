@@ -10,10 +10,6 @@ import org.wordpress.android.R;
 
 import java.util.Hashtable;
 
-/**
- * Created by nbradbury on 1/10/14.
- * Cache of typefaces shared by custom views, currently supports only "Open Sans" font
- */
 public class TypefaceCache {
 
     protected static final int VARIATION_NORMAL = 0;
