@@ -1,0 +1,56 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+version '0.0.5'
+
+android {
+
+    compileSdkVersion 19
+    buildToolsVersion "19.0.1"
+    
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    dependencies {
+        // Local dependencies
+        compile files('libs/volley.jar')
+    }
+
+
+}
+
+
+task writePom << {
+    pom {
+        project {
+            groupId "com.automattic"
+            artifactId "wordpresscom-rest"
+            packaging "aar"
+        }
+    }.writeTo("$buildDir/pom.xml")
+}
