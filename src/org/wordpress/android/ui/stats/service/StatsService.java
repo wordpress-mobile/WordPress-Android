@@ -60,7 +60,7 @@ public class StatsService extends Service {
 
     private static int getMaxConcurrentTasks() {
         int numProcessors = Runtime.getRuntime().availableProcessors();
-        return Math.min(numProcessors, 4);
+        return Math.min(numProcessors > 1 ? numProcessors : 2, 4);
     }
 
     /*
