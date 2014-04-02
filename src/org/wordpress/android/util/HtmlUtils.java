@@ -12,9 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog.T;
 
-/**
- * Created by nbradbury on 7/9/13.
- */
 public class HtmlUtils {
 
     /*

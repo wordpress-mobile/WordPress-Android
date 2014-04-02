@@ -9,9 +9,6 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class SummaryTask extends AbsStatsTask {
     private final String mBlogId;
 

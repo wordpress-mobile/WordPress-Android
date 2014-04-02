@@ -21,9 +21,6 @@ import org.wordpress.android.util.VolleyUtils;
 
 import java.util.Iterator;
 
-/**
- * Created by nbradbury on 8/13/13.
- */
 public class ReaderTagActions {
 
     public enum TagAction {ADD, DELETE}

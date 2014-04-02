@@ -28,7 +28,6 @@ import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that shows stats bar chart data.
- * Created by @roundhill on 1/31/14.
  */
 public class StatsBarGraphFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";

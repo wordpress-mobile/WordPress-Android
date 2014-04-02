@@ -21,7 +21,6 @@ import java.util.Locale;
 
 /**
  * Adapter for Posts/Pages list
- * Created by Dan Roundhill on 11/5/13.
  */
 public class PostsListAdapter extends BaseAdapter {
     public static interface OnLoadMoreListener {

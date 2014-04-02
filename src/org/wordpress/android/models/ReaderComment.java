@@ -9,7 +9,6 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * Created by nbradbury on 7/8/13.
  * TODO: unify this with Comment.java
  */
 public class ReaderComment {

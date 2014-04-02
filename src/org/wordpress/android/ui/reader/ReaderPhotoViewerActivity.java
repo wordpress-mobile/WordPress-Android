@@ -18,7 +18,6 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import org.wordpress.android.widgets.photoview.PhotoViewAttacher;
 
 /**
- * Created by nbradbury on 9/12/13.
  * Full-screen photo viewer, relies on widgets.photoview for pinch/zoom & double tap enlargement
  */
 public class ReaderPhotoViewerActivity extends FragmentActivity {

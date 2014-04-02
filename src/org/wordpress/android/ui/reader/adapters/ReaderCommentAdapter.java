@@ -28,9 +28,6 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class ReaderCommentAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final ReaderPost mPost;

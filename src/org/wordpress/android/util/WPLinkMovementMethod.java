@@ -14,7 +14,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 
 /**
- * Created by nbradbury on 1/8/14.
  * Android's LinkMovementMethod crashes on malformed links, including links that have no
  * protocol (ex: "example.com" instead of "http://example.com"). This class extends
  * LinkMovementMethod to catch and ignore the exception.

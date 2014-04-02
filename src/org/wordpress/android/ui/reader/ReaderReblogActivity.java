@@ -28,7 +28,6 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 
 /**
- * Created by nbradbury on 9/19/13.
  * displayed when user taps to reblog a post in the Reader
  *
  * note that this activity uses android:configChanges="orientation|keyboardHidden|screenSize"

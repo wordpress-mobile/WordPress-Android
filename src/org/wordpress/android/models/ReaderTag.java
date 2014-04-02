@@ -6,9 +6,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.util.regex.Pattern;
 
-/**
- * Created by nbradbury on 6/23/13.
- */
 public class ReaderTag {
     private static final int INT_DEFAULT = 0;
     private static final int INT_SUBSCRIBED = 1;

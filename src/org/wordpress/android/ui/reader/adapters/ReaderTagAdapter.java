@@ -22,9 +22,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SysUtils;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class ReaderTagAdapter extends BaseAdapter {
     public interface TagActionListener {
         public void onTagAction(ReaderTagActions.TagAction action, String tagName);

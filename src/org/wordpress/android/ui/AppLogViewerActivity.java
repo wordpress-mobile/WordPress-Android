@@ -16,7 +16,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 /**
- * Created by nbradbury on 7/16/13.
  * views the activity log (see utils/AppLog.java)
  */
 public class AppLogViewerActivity extends SherlockFragmentActivity {

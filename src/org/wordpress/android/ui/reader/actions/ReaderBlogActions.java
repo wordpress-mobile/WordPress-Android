@@ -15,9 +15,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
 
-/**
- * Created by nbradbury on 9/2/13.
- */
 public class ReaderBlogActions {
 
     public enum BlogAction {FOLLOW, UNFOLLOW}
