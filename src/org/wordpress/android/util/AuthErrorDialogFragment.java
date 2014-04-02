@@ -16,7 +16,6 @@ import org.wordpress.android.ui.stats.WPComLoginActivity;
 
 /**
  * An alert dialog fragment for XML-RPC authentication failures
- * Created by @roundhill on 2/17/14.
  */
 public class AuthErrorDialogFragment extends SherlockDialogFragment {
 
