@@ -10,7 +10,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * Created by nbradbury on 7/8/13.
  * stores comments on reader posts
  */
 public class ReaderCommentTable {
