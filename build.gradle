@@ -12,6 +12,7 @@ apply plugin: 'maven'
 
 repositories {
     mavenCentral()
+    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
 dependencies {
@@ -37,10 +38,8 @@ android {
     }
 
     dependencies {
-        // Local dependencies
-        compile files('libs/volley.jar')
+        compile 'org.wordpress:volley:wp-0.0.1'
     }
-
 
 }
 
