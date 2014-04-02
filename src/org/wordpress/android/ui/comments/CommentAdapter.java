@@ -25,9 +25,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
 
-/**
- * Created by nbradbury on 1/29/14.
- */
 class CommentAdapter extends BaseAdapter {
     static interface DataLoadedListener {
         public void onDataLoaded(boolean isEmpty);

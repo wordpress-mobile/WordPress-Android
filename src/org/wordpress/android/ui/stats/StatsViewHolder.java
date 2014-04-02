@@ -14,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 /**
- * Created by nbradbury on 2/25/14.
  * View holder for stats_list_cell layout
  */
 class StatsViewHolder {

@@ -9,9 +9,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-/**
- * Created by nbradbury on 7/22/13.
- */
 public class ImageUtils {
 
     /*

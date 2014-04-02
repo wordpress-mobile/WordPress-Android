@@ -8,7 +8,6 @@ import java.util.Date;
 
 /**
  * Barebones post/page as listed in PostsListFragment
- * Created by @roundhill on 11/5/13.
  */
 public class PostsListPost {
 

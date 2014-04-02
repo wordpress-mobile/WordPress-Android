@@ -12,9 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by nbradbury on 7/3/13.
- */
 public class DateTimeUtils {
 
     private DateTimeUtils() {

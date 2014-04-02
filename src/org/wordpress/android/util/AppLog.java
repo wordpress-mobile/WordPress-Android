@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by nbradbury on 6/21/13.
  * simple wrapper for Android log calls, enables recording & displaying log
  */
 public class AppLog {

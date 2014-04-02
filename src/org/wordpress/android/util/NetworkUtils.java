@@ -9,7 +9,6 @@ import android.provider.Settings;
 import org.wordpress.android.R;
 
 /**
- * Created by nbradbury on 11/30/13.
  * requires android.permission.ACCESS_NETWORK_STATE
  */
 public class NetworkUtils {

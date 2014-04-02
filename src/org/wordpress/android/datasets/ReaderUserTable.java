@@ -15,7 +15,6 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.ArrayList;
 
 /**
- * Created by nbradbury on 6/22/13.
  * stores info about the current user and liking users
  */
 public class ReaderUserTable {

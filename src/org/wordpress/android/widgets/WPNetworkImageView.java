@@ -26,7 +26,6 @@ import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
 
 /**
- * Created by nbradbury on 7/30/13.
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
  *  (1) fading in downloaded images
  *  (2) manipulating images before display

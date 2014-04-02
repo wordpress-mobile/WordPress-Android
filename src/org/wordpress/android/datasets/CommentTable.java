@@ -15,7 +15,6 @@ import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * Created by nbradbury on 1/30/14.
  * replaces the comments table used in versions prior to 2.6.1, which didn't use a primary key
  * and missed a few important fields
  */

@@ -2,9 +2,6 @@ package org.wordpress.android.models;
 
 import android.test.InstrumentationTestCase;
 
-/**
- * Created by aaron on 1/14/14.
- */
 public class BlogTest extends InstrumentationTestCase {
     private Blog blog;
 

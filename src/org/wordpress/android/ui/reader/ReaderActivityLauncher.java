@@ -14,9 +14,6 @@ import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderFragmentType;
 import org.wordpress.android.util.ToastUtils;
 
-/**
- * Created by nbradbury on 6/19/13.
- */
 public class ReaderActivityLauncher {
 
     public static void showReaderPostDetail(Context context, long blogId, long postId) {

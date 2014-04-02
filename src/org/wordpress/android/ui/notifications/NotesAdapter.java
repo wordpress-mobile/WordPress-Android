@@ -22,9 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by nbradbury on 3/10/14.
- */
 class NotesAdapter extends BaseAdapter {
     private final int mAvatarSz;
     private final LayoutInflater mInflater;

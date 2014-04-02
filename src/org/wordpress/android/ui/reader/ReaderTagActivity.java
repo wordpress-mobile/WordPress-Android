@@ -25,9 +25,6 @@ import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
-/**
- * Created by nbradbury on 8/7/13.
- */
 public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdapter.TagActionListener {
     private ViewGroup mLayoutAddTag;
     private EditText mEditAddTag;

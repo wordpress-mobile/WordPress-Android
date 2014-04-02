@@ -2,9 +2,6 @@ package org.wordpress.android.util;
 
 import android.os.Build;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class SysUtils {
     private SysUtils() {
         throw new AssertionError();

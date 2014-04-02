@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 
 /**
- * Created by Eric on 11/20/13.
  *
  * WPMobileStatsUtils handles stats logging. Its public methods should for the most part be service
  * neutral to allow to ease possible changes in the stats libs we use in the future.
