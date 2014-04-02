@@ -4,9 +4,6 @@ import android.test.InstrumentationTestCase;
 
 import org.wordpress.android.WordPressDB;
 
-/**
- * Created by roundhill on 3/12/14.
- */
 public class PostTest extends InstrumentationTestCase {
     private WordPressDB mDB;
 
