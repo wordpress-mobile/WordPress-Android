@@ -20,9 +20,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class SearchEngineTermsTask extends AbsStatsTask {
 
     private final String mBlogId;
@@ -35,7 +32,7 @@ class SearchEngineTermsTask extends AbsStatsTask {
 
     @Override
     String getPath() {
-        return String.format("sites/%s/stats/referrers?date=%s", mBlogId, mDate);
+        return String.format("sites/%s/stats/search-terms?date=%s", mBlogId, mDate);
     }
 
     @Override

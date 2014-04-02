@@ -21,9 +21,6 @@ import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class BarChartTask extends AbsStatsTask {
 
     private final String mBlogId;

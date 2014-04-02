@@ -22,9 +22,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class ClicksTask extends AbsStatsTask {
     private final String mBlogId;
     private final String mDate;

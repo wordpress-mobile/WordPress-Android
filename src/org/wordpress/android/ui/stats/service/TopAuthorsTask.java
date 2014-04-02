@@ -19,9 +19,6 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class TopAuthorsTask extends AbsStatsTask {
 
     private final String mBlogId;
