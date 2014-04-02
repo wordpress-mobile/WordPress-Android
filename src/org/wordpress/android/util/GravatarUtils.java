@@ -2,9 +2,6 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
-/**
- * Created by nbradbury on 11/11/13.
- */
 public class GravatarUtils {
 
     /*

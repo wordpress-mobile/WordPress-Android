@@ -10,9 +10,6 @@ import android.database.sqlite.SQLiteStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by nbradbury on 6/22/13.
- */
 public class SqlUtils {
 
     private SqlUtils() {
