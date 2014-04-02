@@ -60,9 +60,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-/**
- * Created by dan on 11/20/13.
- */
 public class EditPostSettingsFragment extends SherlockFragment implements View.OnClickListener {
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;

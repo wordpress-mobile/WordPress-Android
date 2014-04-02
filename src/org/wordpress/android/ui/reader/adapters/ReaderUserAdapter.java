@@ -21,7 +21,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
- * Created by nbradbury on 6/27/13 - owner must call setUsers() with the list of
+ * owner must call setUsers() with the list of
  * users to display
  */
 public class ReaderUserAdapter extends BaseAdapter {
