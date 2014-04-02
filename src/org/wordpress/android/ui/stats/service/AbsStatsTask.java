@@ -21,7 +21,7 @@ abstract class AbsStatsTask implements Runnable {
     static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     /*
-     * descendants must implement this to send their specific request to the stats api
+     * descendants must implement this to return their specific path to the stats rest api
      */
     abstract String getPath();
 
