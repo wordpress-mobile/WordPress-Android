@@ -19,7 +19,6 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.Date;
 
 /**
- *  Created by nbradbury on 6/23/13.
  *  tbl_tags stores the list of topics the user subscribed to or has by default
  *  tbl_recommended_tags stores the list of recommended topics returned by the api
  *  tbl_tags_updates stores the iso8601 dates each topic was updated by the app as follows:

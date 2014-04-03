@@ -93,9 +93,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Created by dan on 11/20/13.
- */
 public class EditPostContentFragment extends SherlockFragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
 

@@ -16,7 +16,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 /**
- * Created by nbradbury on 7/16/13.
  * views the activity log (see utils/AppLog.java)
  */
 public class AppLogViewerActivity extends SherlockFragmentActivity {
@@ -43,7 +42,7 @@ public class AppLogViewerActivity extends SherlockFragmentActivity {
     private void shareAppLog() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mTxtLogViewer.getText().toString());
+        intent.putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this));
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getTitle());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)));

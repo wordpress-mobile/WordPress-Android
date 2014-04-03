@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by nbradbury on 2/25/14.
  * Background service to retrieve latest stats - uses a ThreadPoolExecutor to
  * handle concurrent updating of the various stats tasks - see AbsStatsTask for
  * base implementation of an individual stats task

@@ -16,7 +16,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
 
 /**
- * Created by nbradbury on 6/20/13.
  * Provides a simplified way to show toast messages without having to create the toast, set the
  * desired gravity, etc.
  */

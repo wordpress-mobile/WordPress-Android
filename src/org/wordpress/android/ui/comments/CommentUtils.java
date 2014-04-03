@@ -8,9 +8,6 @@ import android.widget.TextView;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.WPImageGetter;
 
-/**
- * Created by nbradbury on 1/9/14.
- */
 public class CommentUtils {
 
     /*

@@ -16,9 +16,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class ReaderPost {
     private String pseudoId;
     public long postId;

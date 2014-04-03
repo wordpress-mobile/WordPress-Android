@@ -34,7 +34,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 
 /*
- * created by nbradbury
  * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
  */
 

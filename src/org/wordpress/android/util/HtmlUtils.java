@@ -12,9 +12,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
-/**
- * Created by nbradbury on 7/9/13.
- */
 public class HtmlUtils {
 
     /*

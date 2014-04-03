@@ -60,9 +60,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-/**
- * Created by dan on 11/20/13.
- */
 public class EditPostSettingsFragment extends SherlockFragment implements View.OnClickListener {
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
@@ -479,20 +476,14 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 break;
         }
 
-        Double latitude = 0.0;
-        Double longitude = 0.0;
-        if (WordPress.getCurrentBlog().isLocation()) {
-            try {
-                latitude = mCurrentLocation.getLatitude();
-                longitude = mCurrentLocation.getLongitude();
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
-
+        double latitude = 0.0;
+        double longitude = 0.0;
         if (mCurrentLocation == null) {
             latitude = post.getLatitude();
             longitude = post.getLongitude();
+        } else if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
+            latitude = mCurrentLocation.getLatitude();
+            longitude = mCurrentLocation.getLongitude();
         }
 
         post.setPostExcerpt(excerpt);

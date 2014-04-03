@@ -46,7 +46,6 @@ import org.wordpress.android.util.StringUtils;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
- * Created by nbradbury on 6/30/13.
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
 public class ReaderPostListFragment extends SherlockFragment

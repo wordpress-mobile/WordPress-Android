@@ -17,7 +17,6 @@ import org.wordpress.android.util.AppLog.T;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by nbradbury on 10/11/13.
  * ImageGetter for Html.fromHtml()
  * adapted from existing ImageGetter code in NoteCommentFragment
  */

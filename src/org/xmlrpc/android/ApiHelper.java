@@ -1,31 +1,6 @@
 package org.xmlrpc.android;
 
-import java.util.Map;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.SSLHandshakeException;
-
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Xml;
 
@@ -36,10 +11,6 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -48,17 +19,34 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.networking.SSLCertsViewActivity;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
     public enum ErrorType {
@@ -301,6 +289,56 @@ public class ApiHelper {
             }
             refreshedBlogs.remove(mBlogIdentifier);
         }
+    }
+
+    /**
+     * request deleted comments for passed blog and remove them from local db
+     * @param blog  blog to check
+     * @return count of comments that were removed from db
+     */
+    public static int removeDeletedComments(Blog blog) {
+        if (blog == null) {
+            return 0;
+        }
+
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
+                blog.getUri(),
+                blog.getHttpuser(),
+                blog.getHttppassword());
+
+        Map<String, Object> hPost = new HashMap<String, Object>();
+        hPost.put("status", "trash");
+
+        Object[] params = { blog.getRemoteBlogId(),
+                blog.getUsername(),
+                blog.getPassword(),
+                hPost };
+
+        int numDeleted = 0;
+        try {
+            Object[] result = (Object[]) client.call("wp.getComments", params);
+            if (result == null || result.length == 0) {
+                return 0;
+            }
+            Map<?, ?> contentHash;
+            for (Object aComment : result) {
+                contentHash = (Map<?, ?>) aComment;
+                long commentId = Long.parseLong(contentHash.get("comment_id").toString());
+                if (CommentTable.deleteComment(blog.getLocalTableBlogId(), commentId))
+                    numDeleted++;
+            }
+            if (numDeleted > 0) {
+                AppLog.d(T.COMMENTS, String.format("removed %d deleted comments", numDeleted));
+            }
+        } catch (XMLRPCException e) {
+            AppLog.e(T.COMMENTS, e);
+        } catch (IOException e) {
+            AppLog.e(T.COMMENTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(T.COMMENTS, e);
+        }
+
+        return numDeleted;
     }
 
     public static CommentList refreshComments(Context context, Blog blog, Object[] commentParams)
@@ -1000,7 +1038,6 @@ public class ApiHelper {
      * Synchronous method to fetch the String content at the specified URL.
      *
      * @param url                     URL to fetch contents for.
-     * @param trustAllSslCertificates if true ignore SSL errors
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String url) throws SSLHandshakeException {

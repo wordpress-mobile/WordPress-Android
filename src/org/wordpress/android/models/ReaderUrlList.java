@@ -5,7 +5,6 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.HashSet;
 
 /**
- * Created by nbradbury on 9/3/13.
  * URLs are normalized before being added and during comparison to ensure better comparison
  * of URLs that may be different strings but point to the same URL
  */

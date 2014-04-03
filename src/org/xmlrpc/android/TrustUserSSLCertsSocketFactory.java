@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.xmlrpc.android;
 
 import java.io.IOException;
 import java.net.InetAddress;

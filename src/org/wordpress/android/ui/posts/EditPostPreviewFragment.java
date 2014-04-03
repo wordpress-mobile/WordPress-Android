@@ -14,9 +14,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
-/**
- * Created by dan on 11/26/13.
- */
 public class EditPostPreviewFragment extends SherlockFragment {
 
     EditPostActivity mActivity;

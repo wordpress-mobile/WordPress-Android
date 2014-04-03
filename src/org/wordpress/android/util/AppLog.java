@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by nbradbury on 6/21/13.
  * simple wrapper for Android log calls, enables recording & displaying log
  */
 public class AppLog {
@@ -205,6 +204,28 @@ public class AppLog {
               .append("</font> ")
               .append(it.next().toHtml())
               .append("<br />");
+            lineNum++;
+        }
+        return sb.toString();
+    }
+    
+    
+    /*
+     * returns entire log as plain text
+     */
+    public static String toPlainText(Context context) {
+        StringBuilder sb = new StringBuilder();
+
+        // add version & device info
+        sb.append("WordPress Android version: " + WordPress.getVersionName(context)).append("\n")
+          .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
+
+        Iterator<LogEntry> it = mLogEntries.iterator();
+        int lineNum = 1;
+        while (it.hasNext()) {
+              sb.append(String.format("%02d - ", lineNum))
+              .append(it.next().logText)
+              .append("\n");
             lineNum++;
         }
         return sb.toString();

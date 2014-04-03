@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -11,11 +7,6 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -25,9 +16,16 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by nbradbury on 11/8/13.
  * actions related to comments - replies, moderating, etc.
  * methods below do network calls in the background & update local DB upon success
  * all methods below MUST be called from UI thread

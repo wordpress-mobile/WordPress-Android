@@ -19,9 +19,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 2/25/14.
- */
 class CommentsTopTask extends AbsStatsTask {
 
     private final String mBlogId;
