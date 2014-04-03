@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -10,7 +11,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlogInfo;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
@@ -19,7 +19,7 @@ import org.wordpress.android.util.FormatUtils;
 /*
  * shows reader posts in a specific blog
  */
-public class ReaderBlogDetailActivity extends SherlockFragmentActivity implements OnPostSelectedListener {
+public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
 
     private View mBlogHeaderView;
 
@@ -54,16 +54,6 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity implement
         return (getListFragment() != null);
     }
 
-
-    /*
-     * user tapped a post in the post list fragment
-     */
-    @Override
-    public void onPostSelected(long blogId, long postId) {
-        // TODO
-    }
-
-
     private void requestBlogInfo(final long blogId) {
         // first get info from local db
         ReaderBlogInfo blogInfo = ReaderBlogTable.getBlogInfo(blogId);
@@ -72,6 +62,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity implement
         if (blogInfo != null) {
             showBlogInfo(blogInfo);
         } else {
+            showLoadingProgress();
             showBlogInfo(null);
         }
 
@@ -79,7 +70,11 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity implement
         ReaderBlogActions.updateBlogInfo(blogId, new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (succeeded && !isFinishing()) {
+                if (isFinishing()) {
+                    return;
+                }
+                hideLoadingProgress();
+                if (succeeded) {
                     showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
                 }
             }
@@ -164,5 +159,19 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity implement
         txtFollow.setText(isFollowed ? following : follow);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+    }
+
+    private void showLoadingProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        if (progress != null) {
+            progress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
     }
 }

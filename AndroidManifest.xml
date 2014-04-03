@@ -167,7 +167,6 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderBlogDetailActivity"
-            android:theme="@style/ReaderTheme.Popup"
             android:label="@string/reader">
         </activity>
         <activity

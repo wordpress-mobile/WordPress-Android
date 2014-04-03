@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostListType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -79,7 +80,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private Parcelable mListState = null;
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
-    private static enum ReaderPostListType { TAG, BLOG }
 
     /*
      * show posts with a specific tag
@@ -161,11 +161,13 @@ public class ReaderPostListFragment extends SherlockFragment
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    // take header into account
-                    position -= mListView.getHeaderViewsCount();
-                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                    if (post != null && mPostSelectedListener != null)
-                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    if (mPostSelectedListener != null) {
+                        // take header into account
+                        position -= mListView.getHeaderViewsCount();
+                        ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
+                        if (post != null)
+                            mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    }
                 }
             });
         }
@@ -174,7 +176,7 @@ public class ReaderPostListFragment extends SherlockFragment
         mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        // pull to refresh setup
+        // pull to refresh setup - only used when viewing posts for a specific tag
         if (getPostListType() == ReaderPostListType.TAG) {
             mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
                     (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
@@ -208,6 +210,11 @@ public class ReaderPostListFragment extends SherlockFragment
 
         setHasOptionsMenu(true);
         checkActionBar();
+
+        if (getPostListType() == ReaderPostListType.BLOG) {
+            getPostAdapter().setCurrentBlog(mCurrentBlogId);
+            updatePostsInCurrentBlog();
+        }
     }
 
     @Override
@@ -243,8 +250,16 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.reader_native, menu);
-        checkActionBar();
+        switch (getPostListType()) {
+            case TAG:
+                inflater.inflate(R.menu.reader_native, menu);
+                checkActionBar();
+                break;
+            case BLOG:
+                inflater.inflate(R.menu.basic_menu, menu);
+                break;
+        }
+
     }
 
     @Override
@@ -283,11 +298,21 @@ public class ReaderPostListFragment extends SherlockFragment
         if (actionBar == null || actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
             return;
 
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+        switch (getPostListType()) {
+            case TAG:
+                actionBar.setDisplayShowTitleEnabled(false);
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+                selectTagInActionBar(getCurrentTag());
+                break;
 
-        selectTagInActionBar(getCurrentTag());
+            default :
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                break;
+        }
+
     }
 
 
@@ -317,9 +342,12 @@ public class ReaderPostListFragment extends SherlockFragment
         if (!hasActivity())
             return;
 
-        int title, description = -1;
+        int title;
+        int description = -1;
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
+        } else if (getPostListType() == ReaderPostListType.BLOG) {
+            title = R.string.reader_empty_posts_in_blog;
         } else {
             int tagIndex = getActionBarAdapter().getIndexOfTagName(mCurrentTag);
 
@@ -341,6 +369,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         }
+
         TextView titleView = (TextView) getView().findViewById(R.id.title_empty);
         TextView descriptionView = (TextView) getView().findViewById(R.id.description_empty);
         titleView.setText(getString(title));
@@ -488,6 +517,28 @@ public class ReaderPostListFragment extends SherlockFragment
         if (hasPostAdapter())
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
     }
+
+    /*
+     * get latest posts for the current blog from the server
+     */
+    void updatePostsInCurrentBlog() {
+        final ReaderActions.RequestDataAction updateAction = ReaderActions.RequestDataAction.LOAD_NEWER;
+        setIsUpdating(true, updateAction);
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!hasActivity()) {
+                    return;
+                }
+
+                setIsUpdating(false, updateAction);
+                if (succeeded) {
+                    refreshPosts();
+                }
+            }
+        });
+    }
+
 
     /*
      * get latest posts for this tag from the server
@@ -642,7 +693,7 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
-    protected ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         if (!TextUtils.isEmpty(mCurrentTag)) {
             return ReaderPostListType.TAG;
         } else {

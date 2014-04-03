@@ -39,7 +39,10 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
+    public static enum ReaderPostListType { TAG, BLOG }
+
     private String mCurrentTag;
+    private long mCurrentBlogId;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -53,6 +56,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     private ReaderPostList mPosts = new ReaderPostList();
+    private ReaderPostListType mPostListType = ReaderPostListType.TAG;
 
     private final String mFollowing;
     private final String mFollow;
@@ -99,12 +103,25 @@ public class ReaderPostAdapter extends BaseAdapter {
         mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
+    ReaderPostListType getPostListType() {
+        return mPostListType;
+    }
+
     public String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
     public void setCurrentTag(String tagName) {
         mCurrentTag = StringUtils.notNullStr(tagName);
+        mPostListType = ReaderPostListType.TAG;
+        mCurrentBlogId = 0;
+        reload(false);
+    }
+
+    public void setCurrentBlog(long blogId) {
+        mPostListType = ReaderPostListType.BLOG;
+        mCurrentBlogId = blogId;
+        mCurrentTag = null;
         reload(false);
     }
 
@@ -234,14 +251,29 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-        holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
 
-        if (post.hasBlogName()) {
-            holder.txtBlogName.setText(post.getBlogName());
-        } else if (post.hasAuthorName()) {
-            holder.txtBlogName.setText(post.getAuthorName());
+        // display avatar, blog name and follow button only if we're showing posts with a tag
+        if (getPostListType() == ReaderPostListType.TAG) {
+            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            if (post.hasBlogName()) {
+                holder.txtBlogName.setText(post.getBlogName());
+            } else if (post.hasAuthorName()) {
+                holder.txtBlogName.setText(post.getAuthorName());
+            } else {
+                holder.txtBlogName.setText(null);
+            }
+            // follow/following - supported by both wp and non-wp (rss) posts
+            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollow(holder, position, post);
+                }
+            });
         } else {
-            holder.txtBlogName.setText(null);
+            holder.txtBlogName.setVisibility(View.GONE);
+            holder.imgAvatar.setVisibility(View.GONE);
+            holder.txtFollow.setVisibility(View.GONE);
         }
 
         if (post.hasExcerpt()) {
@@ -277,15 +309,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTag.setVisibility(View.GONE);
             holder.txtTag.setOnClickListener(null);
         }*/
-
-        // follow/following - supported by both wp and non-wp (rss) posts
-        showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-        holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollow(holder, position, post);
-            }
-        });
 
         // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
@@ -475,13 +498,26 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, Constants.READER_MAX_POSTS_TO_DISPLAY);
+            final int numExisting;
+            switch (getPostListType()) {
+                case TAG:
+                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, Constants.READER_MAX_POSTS_TO_DISPLAY);
+                    numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
+                    break;
+                case BLOG:
+                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, Constants.READER_MAX_POSTS_TO_DISPLAY);
+                    numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
+                    break;
+                default:
+                    return false;
+            }
+
             if (mPosts.isSameList(tmpPosts))
                 return false;
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
+            mCanRequestMorePosts = (numExisting < Constants.READER_MAX_POSTS_TO_DISPLAY);
 
             // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
             // values are all cached by the post after the first time they're computed, so calling

@@ -116,6 +116,10 @@ public class ReaderPostTable {
         return (int)count;
     }
 
+    public static int getNumPostsInBlog(long blogId) {
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_posts WHERE blog_id=?", new String[]{Long.toString(blogId)});
+    }
+
     public static int getNumPostsWithTag(String tagName) {
         if (TextUtils.isEmpty(tagName))
             return 0;
