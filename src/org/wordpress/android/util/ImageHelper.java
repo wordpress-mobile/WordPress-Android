@@ -22,6 +22,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -151,20 +153,20 @@ public class ImageHelper {
         }
         return null;
     }
-    
+
     /** From http://developer.android.com/training/displaying-bitmaps/load-bitmap.html **/
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
-    
+
         if (height > reqHeight || width > reqWidth) {
-    
+
             // Calculate ratios of height and width to requested height and width
             final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
-    
+
             // Choose the smallest ratio as inSampleSize value, this will guarantee
             // a final image with both dimensions larger than or equal to the
             // requested height and width.
@@ -176,16 +178,16 @@ public class ImageHelper {
 
 
     public interface BitmapWorkerCallback {
-        public void onBitmapReady(String filePath, ImageView imageView, Bitmap bitmap); 
+        public void onBitmapReady(String filePath, ImageView imageView, Bitmap bitmap);
     }
-    
+
     public static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private final BitmapWorkerCallback callback;
         private int targetWidth;
         private int targetHeight;
         private String path;
-        
+
         public BitmapWorkerTask(ImageView imageView, int width, int height, BitmapWorkerCallback callback) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<ImageView>(imageView);
@@ -198,62 +200,69 @@ public class ImageHelper {
         @Override
         protected Bitmap doInBackground(String... params) {
             path = params[0];
-            
+
             BitmapFactory.Options bfo = new BitmapFactory.Options();
             bfo.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(path, bfo);
-            
+
             bfo.inSampleSize = calculateInSampleSize(bfo, targetWidth, targetHeight);
             bfo.inJustDecodeBounds = false;
-            
+
             // get proper rotation
+            int bitmapWidth = 0;
+            int bitmapHeight = 0;
             try {
                 File f = new File(path);
                 ExifInterface exif = new ExifInterface(f.getPath());
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
                 int angle = 0;
-
                 if (orientation == ExifInterface.ORIENTATION_NORMAL) { // no need to rotate
                     return BitmapFactory.decodeFile(path, bfo);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
                     angle = 90;
-                } 
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
                     angle = 180;
-                } 
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
                     angle = 270;
                 }
 
                 Matrix mat = new Matrix();
                 mat.postRotate(angle);
 
-                Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, bfo);
-                return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);                 
-            }
-            catch (IOException e) {
+                try {
+                    Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, bfo);
+                    if (bmp == null) {
+                        AppLog.e(T.UTILS, "can't decode bitmap: " + f.getPath());
+                        return null;
+                    }
+                    bitmapWidth = bmp.getWidth();
+                    bitmapHeight = bmp.getHeight();
+                    return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
+                } catch (OutOfMemoryError oom) {
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_ANGLE, angle);
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, bitmapWidth);
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, bitmapHeight);
+                    CrashlyticsUtils.logException(oom, ExceptionType.SPECIFIC, T.UTILS);
+                    AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
+                }
+            } catch (IOException e) {
                 AppLog.e(T.UTILS, "Error in setting image", e);
-            }   
-            catch(OutOfMemoryError oom) {
-                WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
-                AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
             }
-            
+
             return null;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewReference == null || bitmap == null) 
+            if (imageViewReference == null || bitmap == null)
                 return;
 
             final ImageView imageView = imageViewReference.get();
-            
-            if (callback != null) 
+
+            if (callback != null)
                 callback.onBitmapReady(path, imageView, bitmap);
-            
+
         }
     }
 
@@ -274,7 +283,7 @@ public class ImageHelper {
             return "Video";
         } else {
             String[] projection = new String[] { Images.Thumbnails.DATA };
-            
+
             Cursor cur;
             try {
                 cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
@@ -302,7 +311,7 @@ public class ImageHelper {
             return title;
         }
     }
-    
+
     /**
      * Resizes an image to be placed in the Post Content Editor
      * @param ctx
@@ -312,7 +321,7 @@ public class ImageHelper {
     public Bitmap getThumbnailForWPImageSpan(Context ctx, String filePath) {
         if (filePath==null)
             return null;
-        
+
         Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
@@ -320,12 +329,12 @@ public class ImageHelper {
             width = height;
 
         Uri curUri;
-        
+
         if (!filePath.contains("content://"))
             curUri = Uri.parse("content://media" + filePath);
         else
             curUri = Uri.parse(filePath);
-        
+
         if (filePath.contains("video")) {
             int videoId = 0;
             try {
@@ -356,12 +365,12 @@ public class ImageHelper {
             }
         }
     }
-    
+
     public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
-        
+
         if (largeBitmap.getWidth() < resizeWidth)
             return largeBitmap; //Do not resize.
-        
+
         float percentage = (float) resizeWidth / largeBitmap.getWidth();
         float proportionateHeight = largeBitmap.getHeight() * percentage;
         int resizeHeight = (int) Math.rint(proportionateHeight);
@@ -408,7 +417,7 @@ public class ImageHelper {
         try {
             BitmapFactory.decodeFile(filePath, optBounds);
         } catch (OutOfMemoryError e) {
-            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
             return null;
         }
 
@@ -428,7 +437,8 @@ public class ImageHelper {
         try {
             bmpResized = BitmapFactory.decodeFile(filePath, optActual);
         } catch (OutOfMemoryError e) {
-            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE, scale);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
             return null;
         }
 
@@ -465,9 +475,14 @@ public class ImageHelper {
 
         final Bitmap bmpRotated;
         try {
-            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix,
+                    true);
         } catch (OutOfMemoryError e) {
-            WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+            CrashlyticsUtils.setInt(ExtraKey.IMAGE_ANGLE, rotation);
+            CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, bmpResized.getWidth());
+            CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, bmpResized.getHeight());
+            CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE, scaleBy);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
             return null;
         }
         bmpRotated.compress(fmt, 100, stream);

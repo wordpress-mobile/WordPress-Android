@@ -1,18 +1,27 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
     }
 }
 
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+    maven { url 'http://download.crashlytics.com/maven' }
 }
 
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+dependencies {
+    compile 'com.crashlytics.android:crashlytics:1.+'
+}
 
 android {
     lintOptions {
@@ -109,7 +118,6 @@ android {
 
         androidTest.setRoot('tests')
     }
-
 } // end android
 
 // Generates the Config.java class using properties defined in gradle.properties
@@ -157,13 +165,32 @@ ${config}
     }
 }
 
-// Add the generateWPConfig task to every flavor's compile tasks
+task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
+    def outputFile = new File("${rootDir}/crashlytics.properties")
+    def inputFile = file("${rootDir}/local.properties")
+    outputs.file outputFile
+    inputs.file inputFile
+    doLast {
+        def properties = new Properties()
+        inputFile.withInputStream { stream ->
+            properties.load(stream)
+        }
+        def crashlyticsApiKey = properties.getProperty('crashlytics.apikey', '0')
+        def writer = new FileWriter(outputFile)
+        writer.write("""// auto-generated file do not modify
+apiKey=${crashlyticsApiKey}""")
+        writer.close()
+    }
+}
+
+// Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
     def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
             task.dependsOn(generateWPConfig)
             task.mustRunAfter(generateWPConfig)
+            task.dependsOn(generateCrashlyticsConfig)
         }
     }
 }
