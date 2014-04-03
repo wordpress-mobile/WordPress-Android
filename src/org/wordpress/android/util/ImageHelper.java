@@ -231,6 +231,10 @@ public class ImageHelper {
 
                 try {
                     Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, bfo);
+                    if (bmp == null) {
+                        AppLog.e(T.UTILS, "can't decode bitmap: " + f.getPath());
+                        return null;
+                    }
                     bitmapWidth = bmp.getWidth();
                     bitmapHeight = bmp.getHeight();
                     return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
