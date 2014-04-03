@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.service;
 
+import java.util.ArrayList;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
@@ -8,8 +10,8 @@ import android.os.RemoteException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
@@ -17,8 +19,6 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.ArrayList;
 
 class SearchEngineTermsTask extends AbsStatsTask {
 
@@ -31,8 +31,8 @@ class SearchEngineTermsTask extends AbsStatsTask {
     }
 
     @Override
-    void sendRequest() {
-        WordPress.getRestClientUtils().getStatsSearchEngineTerms(mBlogId, mDate, responseListener, errorListener);
+    String getPath() {
+        return String.format("sites/%s/stats/search-terms?date=%s", mBlogId, mDate);
     }
 
     @Override

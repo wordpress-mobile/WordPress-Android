@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.service;
 
+import java.util.ArrayList;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
@@ -8,8 +10,8 @@ import android.os.RemoteException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.models.StatsClick;
@@ -19,8 +21,6 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.ArrayList;
 
 class ClicksTask extends AbsStatsTask {
     private final String mBlogId;
@@ -37,8 +37,8 @@ class ClicksTask extends AbsStatsTask {
     }
 
     @Override
-    void sendRequest() {
-        WordPress.getRestClientUtils().getStatsClicks(mBlogId, mDate, responseListener, errorListener);
+    String getPath() {
+        return String.format("sites/%s/stats/clicks?date=%s", mBlogId, mDate);
     }
 
     @Override

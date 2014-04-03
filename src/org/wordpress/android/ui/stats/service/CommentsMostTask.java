@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.service;
 
+import java.util.ArrayList;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
@@ -8,16 +10,14 @@ import android.os.RemoteException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.models.StatsMostCommented;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.ArrayList;
 
 class CommentsMostTask extends AbsStatsTask {
 
@@ -28,8 +28,8 @@ class CommentsMostTask extends AbsStatsTask {
     }
 
     @Override
-    void sendRequest() {
-        WordPress.getRestClientUtils().getStatsMostCommented(mBlogId, responseListener, errorListener);
+    String getPath() {
+        return "";
     }
 
     @Override

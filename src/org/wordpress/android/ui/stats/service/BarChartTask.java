@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats.service;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
@@ -9,8 +12,8 @@ import android.os.RemoteException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.providers.StatsContentProvider;
@@ -18,16 +21,16 @@ import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.ArrayList;
-
 class BarChartTask extends AbsStatsTask {
 
     private final String mBlogId;
     private final StatsBarChartUnit mBarChartUnit;
+    private final int mQuantity;
 
-    public BarChartTask(String blogId, StatsBarChartUnit barChartUnit) {
+    public BarChartTask(String blogId, StatsBarChartUnit barChartUnit, int quantity) {
         mBlogId = StringUtils.notNullStr(blogId);
         mBarChartUnit = barChartUnit;
+        mQuantity = quantity;
     }
 
     @Override
@@ -36,8 +39,14 @@ class BarChartTask extends AbsStatsTask {
     }
 
     @Override
-    void sendRequest() {
-        WordPress.getRestClientUtils().getStatsBarChartData(mBlogId, mBarChartUnit, 30, responseListener, errorListener);
+    String getPath() {
+        String path = String.format("sites/%s/stats/visits", mBlogId);
+        String unit = mBarChartUnit.name().toLowerCase(Locale.ENGLISH);
+        path += String.format("?unit=%s", unit);
+        if (mQuantity > 0) {
+            path += String.format("&quantity=%d", mQuantity);
+        }
+        return path;
     }
 
     @Override

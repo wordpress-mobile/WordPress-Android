@@ -69,7 +69,7 @@ android {
         compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
         compile 'org.wordpress:gcm:1.0.0'
         compile 'org.wordpress:volley:wp-0.0.1'
-        compile 'com.automattic:wordpresscom-rest:0.0.3'
+        compile 'com.automattic:wordpresscom-rest:0.0.5'
         compile 'org.wordpress:httpmime:4.1.2'
         compile 'org.wordpress:graphview:3.1.1'
         compile 'org.wordpress:drag-sort-listview:0.6.1'
