@@ -24,10 +24,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -35,8 +33,6 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlogAction;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
@@ -44,7 +40,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -70,7 +65,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private ListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
-    private View mBlogHeaderView;
     private ProgressBar mProgress;
 
     private String mCurrentTag;
@@ -79,8 +73,8 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
 
-    static final String KEY_TAG_NAME = "tag_name";
-    static final String KEY_BLOG_ID = "blog_id";
+    static final String ARG_TAG_NAME = "tag_name";
+    static final String ARG_BLOG_ID = "blog_id";
     private static final String KEY_LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
@@ -94,7 +88,7 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
-        args.putString(KEY_TAG_NAME, tagName);
+        args.putString(ARG_TAG_NAME, tagName);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -109,7 +103,7 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
-        args.putLong(KEY_BLOG_ID, blogId);
+        args.putLong(ARG_BLOG_ID, blogId);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -124,8 +118,8 @@ public class ReaderPostListFragment extends SherlockFragment
         // note that setCurrentTag() should NOT be called here since it's automatically
         // called from the actionbar navigation handler
         if (args != null) {
-            mCurrentTag = args.getString(KEY_TAG_NAME);
-            mCurrentBlogId = args.getLong(KEY_BLOG_ID);
+            mCurrentTag = args.getString(ARG_TAG_NAME);
+            mCurrentBlogId = args.getLong(ARG_BLOG_ID);
         }
     }
 
@@ -156,13 +150,6 @@ public class ReaderPostListFragment extends SherlockFragment
             params.topMargin = actionbarHeight;
         }
 
-        // add blog detail header to listView if we're showing posts in a specific blog
-        if (getPostListType() == ReaderPostListType.BLOG) {
-            mBlogHeaderView = inflater.inflate(R.layout.reader_blog_header, mListView);
-            mListView.addHeaderView(mBlogHeaderView, null, false);
-            requestBlogInfo();
-        }
-
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
 
@@ -170,34 +157,40 @@ public class ReaderPostListFragment extends SherlockFragment
         mListView.setOnScrollListener(this);
 
         // tapping a post opens the detail view
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // take header into account
-                position -= mListView.getHeaderViewsCount();
-                ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                if (post != null && mPostSelectedListener != null)
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-            }
-        });
+        if (getPostListType() == ReaderPostListType.TAG) {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    // take header into account
+                    position -= mListView.getHeaderViewsCount();
+                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
+                    if (post != null && mPostSelectedListener != null)
+                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                }
+            });
+        }
 
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new RefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
-                            return;
+        if (getPostListType() == ReaderPostListType.TAG) {
+            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                    (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                    new RefreshListener() {
+                        @Override
+                        public void onRefreshStarted(View view) {
+                            if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                                mPullToRefreshHelper.setRefreshing(false);
+                                return;
+                            }
+                            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                         }
-                        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                     }
-                });
+            );
+        }
+
         mListView.setAdapter(getPostAdapter());
         return view;
     }
@@ -208,8 +201,8 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
-            mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
-            mCurrentBlogId = savedInstanceState.getLong(KEY_BLOG_ID);
+            mCurrentTag = savedInstanceState.getString(ARG_TAG_NAME);
+            mCurrentBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
             mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
         }
 
@@ -234,10 +227,10 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (hasCurrentTag()) {
-            outState.putString(KEY_TAG_NAME, mCurrentTag);
+            outState.putString(ARG_TAG_NAME, mCurrentTag);
         }
         if (mCurrentBlogId != 0) {
-            outState.putLong(KEY_BLOG_ID, mCurrentBlogId);
+            outState.putLong(ARG_BLOG_ID, mCurrentBlogId);
         }
 
         // retain list state so we can return to this position
@@ -555,6 +548,10 @@ public class ReaderPostListFragment extends SherlockFragment
         return mIsUpdating;
     }
 
+    private boolean hasPullToRefresh() {
+        return (mPullToRefreshHelper != null);
+    }
+
     public void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
@@ -569,7 +566,9 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
                 break;
             default:
-                mPullToRefreshHelper.setRefreshing(isUpdating);
+                if (hasPullToRefresh()) {
+                    mPullToRefreshHelper.setRefreshing(isUpdating);
+                }
                 break;
         }
         mIsUpdating = isUpdating;
@@ -588,7 +587,9 @@ public class ReaderPostListFragment extends SherlockFragment
         }
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-        mPullToRefreshHelper.hideTipTemporarily(true);
+        if (hasPullToRefresh()) {
+            mPullToRefreshHelper.hideTipTemporarily(true);
+        }
     }
 
     private void hideNewPostsBar() {
@@ -605,7 +606,9 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
-        mPullToRefreshHelper.showTip(true);
+        if (hasPullToRefresh()) {
+            mPullToRefreshHelper.showTip(true);
+        }
     }
 
     /*
@@ -741,107 +744,4 @@ public class ReaderPostListFragment extends SherlockFragment
         return true;
     }
 
-    private void requestBlogInfo() {
-        if (mCurrentBlogId == 0)
-            return;
-
-        // first get info from local db
-        ReaderBlogInfo blogInfo = ReaderBlogTable.getBlogInfo(mCurrentBlogId);
-
-        // show existing info for this blog (if any)
-        if (blogInfo != null) {
-            showBlogInfo(blogInfo);
-        } else {
-            showBlogInfo(null);
-        }
-
-        // then request latest info for this blog
-        ReaderBlogActions.updateBlogInfo(mCurrentBlogId, new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!hasActivity())
-                    return;
-                if (succeeded)
-                    showBlogInfo(ReaderBlogTable.getBlogInfo(mCurrentBlogId));
-            }
-        });
-    }
-
-    /*
-     * show blog header with info from passed blog filled in
-     */
-    private void showBlogInfo(final ReaderBlogInfo blog) {
-        if (mBlogHeaderView == null) {
-            return;
-        }
-
-        final TextView txtBlogName = (TextView) mBlogHeaderView.findViewById(R.id.text_blog_name);
-        final TextView txtDescription = (TextView) mBlogHeaderView.findViewById(R.id.text_blog_description);
-        final TextView txtFollowCnt = (TextView) mBlogHeaderView.findViewById(R.id.text_follow_count);
-        final TextView txtFollowBtn = (TextView) mBlogHeaderView.findViewById(R.id.text_follow_blog);
-        final View divider = mBlogHeaderView.findViewById(R.id.divider_blog_header);
-
-        if (blog != null) {
-            txtBlogName.setText(blog.getName());
-            txtDescription.setText(blog.getDescription());
-            txtDescription.setVisibility(blog.hasDescription() ? View.VISIBLE : View.GONE);
-            String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blog.numSubscribers));
-            txtFollowCnt.setText(numFollowers);
-
-            boolean isFollowing = ReaderBlogTable.isFollowedBlogUrl(blog.getUrl());
-            showBlogFollowStatus(txtFollowBtn, isFollowing);
-            txtFollowBtn.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
-
-            txtFollowBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleBlogFollowStatus(txtFollowBtn, blog);
-                }
-            });
-        } else {
-            txtBlogName.setText(null);
-            txtDescription.setText(null);
-            txtFollowCnt.setText(null);
-            txtFollowBtn.setVisibility(View.INVISIBLE);
-            divider.setVisibility(View.INVISIBLE);
-        }
-
-        if (mBlogHeaderView.getVisibility() != View.VISIBLE)
-            mBlogHeaderView.setVisibility(View.VISIBLE);
-    }
-
-    /*
-     * used when viewing posts in a specific blog, toggles the status of the currently displayed blog
-     */
-    private void toggleBlogFollowStatus(final TextView txtFollow, final ReaderBlogInfo blogInfo) {
-        if (blogInfo == null || txtFollow == null) {
-            return;
-        }
-
-        AniUtils.zoomAction(txtFollow);
-
-        boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        BlogAction blogAction = (isCurrentlyFollowing ? BlogAction.UNFOLLOW : BlogAction.FOLLOW);
-        if (!ReaderBlogActions.performBlogAction(blogAction, blogInfo.getUrl()))
-            return;
-
-        boolean isNowFollowing = !isCurrentlyFollowing;
-        showBlogFollowStatus(txtFollow, isNowFollowing);
-        updateFollowStatusOnPostsForBlog(blogInfo.blogId, isNowFollowing);
-    }
-
-    /*
-     * updates the follow button in the blog header to match whether the current
-     * user is following this blog
-     */
-    private void showBlogFollowStatus(TextView txtFollow, boolean isFollowed) {
-        String following = getString(R.string.reader_btn_unfollow).toUpperCase();
-        String follow = getString(R.string.reader_btn_follow).toUpperCase();
-
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setText(isFollowed ? following : follow);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-    }
 }

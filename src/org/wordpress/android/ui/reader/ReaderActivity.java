@@ -71,7 +71,7 @@ public class ReaderActivity extends WPActionBarActivity
             }
             switch (fragmentType) {
                 case POST_LIST:
-                    String tagName = getIntent().getStringExtra(ReaderPostListFragment.KEY_TAG_NAME);
+                    String tagName = getIntent().getStringExtra(ReaderPostListFragment.ARG_TAG_NAME);
                     if (TextUtils.isEmpty(tagName))
                         tagName = UserPrefs.getReaderTag();
                     if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))

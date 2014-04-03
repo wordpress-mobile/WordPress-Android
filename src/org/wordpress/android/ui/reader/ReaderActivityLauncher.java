@@ -24,6 +24,12 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderBlogDetail(Context context, long blogId) {
+        Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
+        intent.putExtra(ReaderPostListFragment.ARG_BLOG_ID, blogId);
+        context.startActivity(intent);
+    }
+
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
         if (post==null)
             return;
