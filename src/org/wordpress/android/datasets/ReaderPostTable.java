@@ -397,7 +397,31 @@ public class ReaderPostTable {
             SqlUtils.closeCursor(cursor);
         }
     }
-    
+
+    public static ReaderPostList getPostsInBlog(long blogId, int maxPosts) {
+        String sql = "SELECT * FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0)
+            sql += " LIMIT " + Integer.toString(maxPosts);
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderPostList posts = new ReaderPostList();
+            if (cursor == null || !cursor.moveToFirst())
+                return posts;
+
+            final PostColumnIndexes cols = new PostColumnIndexes(cursor);
+            do {
+                posts.add(getPostFromCursor(cursor, cols));
+            } while (cursor.moveToNext());
+
+            return posts;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post == null)
             return;

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    header that appears above post list fragment when viewing posts in a specific blog
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_blog_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/reader_post_background"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_blog_name"
+        style="@style/ReaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="text_blog_name"
+        android:textColor="@color/reader_hyperlink"
+        android:textSize="@dimen/text_sz_extra_large" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_blog_description"
+        style="@style/ReaderTextView.Label.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_blog_name"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="text_blog_description" />
+
+    <View
+        android:id="@+id/divider_blog_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_blog_description"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/reader_divider_blue" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_blog_header">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_follow_count"
+            style="@style/ReaderTextView.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Followers" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_follow_blog"
+            style="@style/ReaderTextView.Follow"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_blog_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
