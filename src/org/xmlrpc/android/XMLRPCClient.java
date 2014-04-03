@@ -271,14 +271,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return id;
     }
 
-    public static Object parseXMLRPCResponse(InputStream is)
-            throws XMLRPCException, IOException, XmlPullParserException {
-        return parseXMLRPCResponse(is, null);
-    }
-
     @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
-            throws XMLRPCException, IOException, XmlPullParserException {
+            throws XMLRPCException, IOException, XmlPullParserException, NumberFormatException {
         // setup pull parser
         XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 
@@ -569,6 +564,14 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 checkXMLRPCErrorMessage(e);
                 throw e;
+            } catch (NumberFormatException e) {
+                //we can catch NumberFormatException here and re-throw an XMLRPCException.
+                //The response document is not a valid XML-RPC document after all.
+                AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                throw new XMLRPCException("The response received contains an invalid number. " + e.getMessage());
             } catch (XMLRPCException e) {
                 if (loggedInputStream!=null) {
                     AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());

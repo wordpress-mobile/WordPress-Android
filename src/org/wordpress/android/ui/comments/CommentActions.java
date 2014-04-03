@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by nbradbury on 11/8/13.
  * actions related to comments - replies, moderating, etc.
  * methods below do network calls in the background & update local DB upon success
  * all methods below MUST be called from UI thread

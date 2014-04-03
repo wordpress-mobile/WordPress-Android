@@ -8,10 +8,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 
-/**
- * Created by nbradbury on 11/12/13.
- */
-
 /*
  * used by activities such as the reader tag editor and the comment list to animate a message in
  * from the bottom, then animate it back out after a brief delay - optional runnable will be

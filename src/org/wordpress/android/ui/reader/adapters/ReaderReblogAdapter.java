@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by nbradbury on 9/19/13.
  * adapter which displays list of blogs (accounts) for user to choose from when reblogging
  */
 public class ReaderReblogAdapter extends BaseAdapter {

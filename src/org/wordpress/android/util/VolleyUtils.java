@@ -34,9 +34,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog.T;
 
-/**
- * Created by nbradbury on 9/3/13.
- */
 public class VolleyUtils {
 
     /*

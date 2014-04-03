@@ -29,9 +29,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nbradbury on 8/13/13.
- */
 public class ReaderPostActions {
 
     public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}

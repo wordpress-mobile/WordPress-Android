@@ -31,9 +31,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by nbradbury on 8/28/13.
- */
 public class ReaderAuthActions {
     private static final String URI_LOGIN = "https://wordpress.com/wp-login.php";
     private static final int HTTPS_PORT = 443;

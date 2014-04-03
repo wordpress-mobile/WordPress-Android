@@ -21,7 +21,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SysUtils;
 
 /**
- * Created by nbradbury on 7/10/13.
  * populates ActionBar dropdown with reader tags
  */
 public class ReaderActionBarTagAdapter extends BaseAdapter {

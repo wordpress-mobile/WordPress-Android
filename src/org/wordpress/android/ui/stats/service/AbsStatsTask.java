@@ -12,7 +12,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 /**
- * Created by nbradbury on 2/25/14.
  * base class for all stats update tasks - code for each task was originally created
  * by Xtreme and lived in StatsRestHelper.java, then split into separate classes and
  * refactored by nbradbury

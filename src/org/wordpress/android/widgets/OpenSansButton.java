@@ -4,9 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-/**
- * Created by nbradbury on 10-Jan-2014
- */
 public class OpenSansButton extends Button {
 
     public OpenSansButton(Context context) {

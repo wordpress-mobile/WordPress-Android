@@ -2,9 +2,6 @@ package org.wordpress.android.models;
 
 import java.util.Date;
 
-/**
- * Created by roundhill on 3/4/14.
- */
 public enum PostStatus {
     UNKNOWN,
     PUBLISHED,

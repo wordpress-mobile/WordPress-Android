@@ -66,9 +66,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 7/8/13.
- */
 public class ReaderPostDetailFragment extends SherlockFragment {
 
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
