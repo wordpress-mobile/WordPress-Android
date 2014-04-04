@@ -1389,26 +1389,16 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 }
             });
 
-            if (mPost.hasBlogUrl()) {
-                // tapping blog or author name opens blog home page in browser
-                View.OnClickListener clickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(getActivity(), mPost.getBlogUrl());
-
-                    }
-                };
-                txtBlogName.setOnClickListener(clickListener);
-                txtAuthorName.setOnClickListener(clickListener);
-
-                // tapping avatar shows blog detail
-                imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId);
-                    }
-                });
-            }
+            // show blog detail when avatar, blog or author name is tapped
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId);
+                }
+            };
+            txtBlogName.setOnClickListener(clickListener);
+            txtAuthorName.setOnClickListener(clickListener);
+            imgAvatar.setOnClickListener(clickListener);
 
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work

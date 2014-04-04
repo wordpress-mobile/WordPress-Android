@@ -371,14 +371,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             imgAvatar.setImageUrl(null, WPNetworkImageView.ImageType.AVATAR);
         }
 
-        // tapping avatar shows blog detail
-        imgAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderActivityLauncher.showReaderBlogDetail(getActivity(), getRemoteBlogId());
-            }
-        });
-
         updateStatusViews();
 
         // navigate to author's home page when avatar or name clicked

@@ -19,8 +19,9 @@ public class ReaderComment {
 
     private String authorName;
     private String authorAvatar;
-
     private String authorUrl;
+    public long authorBlogId;
+
     private String status;
     private String text;
 
@@ -56,6 +57,7 @@ public class ReaderComment {
             comment.authorName = JSONUtil.getStringDecoded(jsonAuthor, "name");
             comment.authorAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
             comment.authorUrl = JSONUtil.getString(jsonAuthor, "URL");
+            comment.authorBlogId = jsonAuthor.optLong("site_ID");
         }
 
         JSONObject jsonParent = json.optJSONObject("parent");
@@ -110,5 +112,9 @@ public class ReaderComment {
 
     public boolean hasAuthorUrl() {
         return !TextUtils.isEmpty(authorUrl);
+    }
+
+    public boolean hasAuthorBlogId() {
+        return (authorBlogId != 0);
     }
 }

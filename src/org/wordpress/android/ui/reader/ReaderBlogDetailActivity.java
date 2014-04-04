@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -33,6 +34,17 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         long blogId = getIntent().getLongExtra(ReaderPostListFragment.ARG_BLOG_ID, 0);
         requestBlogInfo(blogId);
         showListFragment(blogId);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void showListFragment(long blogId) {
