@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats.service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import android.app.Service;
 import android.content.ContentProviderOperation;
@@ -70,11 +72,12 @@ public class StatsService extends Service {
     protected static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
     
     private final Object mSyncObject = new Object();
-    private LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
 
     private String mBlogId;
-    private static final int NUMBER_OF_NETWORK_CALLS = 13; //The number of networks calls made by stats. 
-    private int numberOfReturnedCall = 0;
+    private LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
+    private int numberOfNetworkCalls = -1; //The number of networks calls made by Stats. 
+    private int numberOfFinishedNetworkCalls = 0;
+    ThreadPoolExecutor updateUIExecutor;
     
     @Override
     public void onCreate() {
@@ -84,6 +87,11 @@ public class StatsService extends Service {
 
     @Override
     public void onDestroy() {
+        for (Request<JSONObject> req : statsNetworkRequests) {
+            if (!req.hasHadResponseDelivered() && !req.isCanceled()) {
+                req.cancel();
+            }
+        }
         AppLog.i(T.STATS, "service destroyed");
         super.onDestroy();
     }
@@ -100,16 +108,17 @@ public class StatsService extends Service {
         startTasks(blogId, startId);
         return START_NOT_STICKY;
     }
+    
 
     private void startTasks(final String blogId, final int startId) {
 
         new Thread() {
             @Override
             public void run() {
+                updateUIExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1); //single thread otherwise the UI is sluggish
                 final String today = StatUtils.getCurrentDate();
                 final String yesterday = StatUtils.getYesterdaysDate();
             
-     
                 AppLog.i(T.STATS, "update started");
                 broadcastUpdate(true);
                 
@@ -152,14 +161,15 @@ public class StatsService extends Service {
                 path = String.format("sites/%s/stats/country-views?date=%s", mBlogId, yesterday);
                 statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ViewsByCountryTask(yesterday), restErrListener));
                 
+                numberOfNetworkCalls = statsNetworkRequests.size();
+                
                 while (!isDone()) {
-                    AppLog.w(T.STATS, "sto per andare a dormire");
                     waitForResponse();
-                    AppLog.w(T.STATS, "mi sono svegliato!");
                 }
 
+                // prevent additional tasks from being submitted, then wait for all tasks to complete. At this time all task should be completed.
+                updateUIExecutor.shutdown();
                 broadcastUpdate(false);
-                AppLog.w(T.STATS, "spegniamo tutto!");
                 stopSelf(startId);               
             } //end run
         }.start(); 
@@ -175,124 +185,133 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            numberOfReturnedCall++;
-            AppLog.d(T.STATS, "Search Engine Terms Call " + date + " responded");
-            if (response == null) {
-                notifyResponseReceived();
-                return;
-            }
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.d(T.STATS, "Search Engine Terms Call " + date + " responded");
+                    if (response == null) {
+                        notifyResponseReceived();
+                        return;
+                    }
 
-            try {
-                String date = response.getString("date");
-                long dateMs = StatUtils.toMs(date);
+                    try {
+                        String date = response.getString("date");
+                        long dateMs = StatUtils.toMs(date);
 
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
-                ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                        new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
+                                new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
 
-                operations.add(delete_op);
+                        operations.add(delete_op);
 
-                JSONArray results = response.getJSONArray("search-terms");
+                        JSONArray results = response.getJSONArray("search-terms");
 
-                int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-                for (int i = 0; i < count; i++ ) {
-                    JSONArray result = results.getJSONArray(i);
-                    StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mBlogId, date, result);
-                    ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
-                    getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
+                        int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                        for (int i = 0; i < count; i++ ) {
+                            JSONArray result = results.getJSONArray(i);
+                            StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mBlogId, date, result);
+                            ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
+                            getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
 
-                    ContentProviderOperation insert_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withValues(values).build();
-                    operations.add(insert_op);
+                            ContentProviderOperation insert_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withValues(values).build();
+                            operations.add(insert_op);
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
+
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
                 }
-
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
-
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+            } );
         }
     };
-    
+
     
     private class ClicksListener implements RestRequest.Listener {
-
         private String date;
 
         ClicksListener(String date){
             this.date = date;
         }
-
+        
         @Override
         public void onResponse(final JSONObject response) {
-            numberOfReturnedCall++;
-            AppLog.d(T.STATS, "ClicksTask Call " + date + " responded");
-            if (response == null) {
-                notifyResponseReceived();
-                return;
-            }
-
-            try {
-                String date = response.getString("date");
-                long dateMs = StatUtils.toMs(date);
-
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-                // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                ContentProviderOperation delete_group = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICK_GROUP_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                        new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
-                ContentProviderOperation delete_child = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICKS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
-                        new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
-
-                operations.add(delete_group);
-                operations.add(delete_child);
-
-
-                JSONArray groups = response.getJSONArray("clicks");
-
-                 // insert groups, limited to the number that can actually be displayed
-                int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-                for (int i = 0; i < groupsCount; i++ ) {
-                    JSONObject group = groups.getJSONObject(i);
-                    StatsClickGroup statGroup = new StatsClickGroup(mBlogId, date, group);
-                    ContentValues values = StatsClickGroupsTable.getContentValues(statGroup);
-
-                    ContentProviderOperation insert_group = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICK_GROUP_URI).withValues(values).build();
-                    operations.add(insert_group);
-
-                    // insert children if there are any, limited to the number that can be displayed
-                    JSONArray clicks = group.getJSONArray("results");
-                    int childCount = Math.min(clicks.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
-                    if (childCount > 1) {
-                        for (int j = 0; j < childCount; j++) {
-                            StatsClick stat = new StatsClick(mBlogId, date, statGroup.getGroupId(), clicks.getJSONArray(j));
-                            ContentValues v = StatsClicksTable.getContentValues(stat);
-                            ContentProviderOperation insert_child = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICKS_URI).withValues(v).build();
-                            operations.add(insert_child);
-                        }
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.d(T.STATS, "ClicksTask Call " + date + " responded");
+                    if (response == null) {
+                        notifyResponseReceived();
+                        return;
                     }
+
+                    try {
+                        String date = response.getString("date");
+                        long dateMs = StatUtils.toMs(date);
+
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+
+                        // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                        ContentProviderOperation delete_group = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICK_GROUP_URI).withSelection("blogId=? AND (date=? OR date<=?)",
+                                new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        ContentProviderOperation delete_child = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICKS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
+                                new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+
+                        operations.add(delete_group);
+                        operations.add(delete_child);
+
+
+                        JSONArray groups = response.getJSONArray("clicks");
+
+                        // insert groups, limited to the number that can actually be displayed
+                        int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                        for (int i = 0; i < groupsCount; i++ ) {
+                            JSONObject group = groups.getJSONObject(i);
+                            StatsClickGroup statGroup = new StatsClickGroup(mBlogId, date, group);
+                            ContentValues values = StatsClickGroupsTable.getContentValues(statGroup);
+
+                            ContentProviderOperation insert_group = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICK_GROUP_URI).withValues(values).build();
+                            operations.add(insert_group);
+
+                            // insert children if there are any, limited to the number that can be displayed
+                            JSONArray clicks = group.getJSONArray("results");
+                            int childCount = Math.min(clicks.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                            if (childCount > 1) {
+                                for (int j = 0; j < childCount; j++) {
+                                    StatsClick stat = new StatsClick(mBlogId, date, statGroup.getGroupId(), clicks.getJSONArray(j));
+                                    ContentValues v = StatsClicksTable.getContentValues(stat);
+                                    ContentProviderOperation insert_child = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICKS_URI).withValues(v).build();
+                                    operations.add(insert_child);
+                                }
+                            }
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_CLICK_GROUP_URI, null);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_CLICKS_URI, null);
+
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
                 }
-
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_CLICK_GROUP_URI, null);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_CLICKS_URI, null);
-
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+            });
         }
     };
     
@@ -306,65 +325,70 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            numberOfReturnedCall++;
-            AppLog.d(T.STATS, "Referrers Call " + date + " responded");
-            if (response == null) {
-                notifyResponseReceived();
-                return;
-            }
-
-            try {
-                String date = response.getString("date");
-                long dateMs = StatUtils.toMs(date);
-
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-                // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                ContentProviderOperation delete_group_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRER_GROUP_URI)
-                        .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
-                operations.add(delete_group_op);
-
-                ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRERS_URI)
-                        .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
-                operations.add(delete_op);
-
-                JSONArray groups = response.getJSONArray("referrers");
-                int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-
-                // insert groups
-                for (int i = 0; i < groupsCount; i++ ) {
-                    JSONObject group = groups.getJSONObject(i);
-                    StatsReferrerGroup statGroup = new StatsReferrerGroup(mBlogId, date, group);
-                    ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
-                    ContentProviderOperation insert_group_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRER_GROUP_URI).withValues(values).build();
-                    operations.add(insert_group_op);
-
-                    // insert children, only if there is more than one entry
-                    JSONArray referrers = group.getJSONArray("results");
-                    int childCount = Math.min(referrers.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
-                    if (childCount > 1) {
-                        for (int j = 0; j < childCount; j++) {
-                            StatsReferrer stat = new StatsReferrer(mBlogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
-                            ContentValues v = StatsReferrersTable.getContentValues(stat);
-                            ContentProviderOperation insert_child_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRERS_URI).withValues(v).build();
-                            operations.add(insert_child_op);
-                        }
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.d(T.STATS, "Referrers Call " + date + " responded");
+                    if (response == null) {
+                        notifyResponseReceived();
+                        return;
                     }
+
+                    try {
+                        String date = response.getString("date");
+                        long dateMs = StatUtils.toMs(date);
+
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+
+                        // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                        ContentProviderOperation delete_group_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRER_GROUP_URI)
+                                .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        operations.add(delete_group_op);
+
+                        ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRERS_URI)
+                                .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        operations.add(delete_op);
+
+                        JSONArray groups = response.getJSONArray("referrers");
+                        int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+
+                        // insert groups
+                        for (int i = 0; i < groupsCount; i++ ) {
+                            JSONObject group = groups.getJSONObject(i);
+                            StatsReferrerGroup statGroup = new StatsReferrerGroup(mBlogId, date, group);
+                            ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
+                            ContentProviderOperation insert_group_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRER_GROUP_URI).withValues(values).build();
+                            operations.add(insert_group_op);
+
+                            // insert children, only if there is more than one entry
+                            JSONArray referrers = group.getJSONArray("results");
+                            int childCount = Math.min(referrers.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                            if (childCount > 1) {
+                                for (int j = 0; j < childCount; j++) {
+                                    StatsReferrer stat = new StatsReferrer(mBlogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
+                                    ContentValues v = StatsReferrersTable.getContentValues(stat);
+                                    ContentProviderOperation insert_child_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRERS_URI).withValues(v).build();
+                                    operations.add(insert_child_op);
+                                }
+                            }
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
+
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
                 }
-
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
-
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+            });
         }
     };
     
@@ -378,47 +402,53 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            numberOfReturnedCall++;
-            AppLog.d(T.STATS, "ViewsByCountry Call " + date + " responded");
-            if (response == null || !response.has("country")) {
-                notifyResponseReceived();
-                return;
-            }
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.d(T.STATS, "ViewsByCountry Call " + date + " responded");
+                    if (response == null || !response.has("country")) {
+                        notifyResponseReceived();
+                        return;
+                    }
 
-            try {
-                JSONArray results = response.getJSONArray("country-views");
-                int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-                String date = response.getString("date");
-                long dateMs = StatUtils.toMs(date);
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    try {
+                        JSONArray results = response.getJSONArray("country-views");
+                        int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                        String date = response.getString("date");
+                        long dateMs = StatUtils.toMs(date);
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
-                if (count > 0) {
-                    // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                    ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI)
-                            .withSelection("blogId=? AND (date=? OR date<=?)", new String[]{mBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""}).build();
-                    operations.add(delete_op);
+                        if (count > 0) {
+                            // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                            ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI)
+                                    .withSelection("blogId=? AND (date=? OR date<=?)", new String[]{mBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""}).build();
+                            operations.add(delete_op);
+                        }
+
+                        for (int i = 0; i < count; i++ ) {
+                            JSONObject result = results.getJSONObject(i);
+                            StatsGeoview stat = new StatsGeoview(mBlogId, result);
+                            ContentValues values = StatsGeoviewsTable.getContentValues(stat);
+                            ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_GEOVIEWS_URI).withValues(values).build();
+                            operations.add(op);
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_GEOVIEWS_URI, null);
+
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
+
                 }
-
-                for (int i = 0; i < count; i++ ) {
-                    JSONObject result = results.getJSONObject(i);
-                    StatsGeoview stat = new StatsGeoview(mBlogId, result);
-                    ContentValues values = StatsGeoviewsTable.getContentValues(stat);
-                    ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_GEOVIEWS_URI).withValues(values).build();
-                    operations.add(op);
-                }
-
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_GEOVIEWS_URI, null);
-
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+            });
         }
     };
     
@@ -432,49 +462,54 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            AppLog.d(T.STATS, "TopPostsAndPages Call " + date + " responded");
-            numberOfReturnedCall++;
-            if (response == null || !response.has("top-posts")) {
-                notifyResponseReceived();
-                return;
-            }
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    AppLog.d(T.STATS, "TopPostsAndPages Call " + date + " responded");
+                    numberOfFinishedNetworkCalls++;
+                    if (response == null || !response.has("top-posts")) {
+                        notifyResponseReceived();
+                        return;
+                    }
 
-            try {
-                JSONArray results = response.getJSONArray("top-posts");
-                int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                    try {
+                        JSONArray results = response.getJSONArray("top-posts");
+                        int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
 
-                String date = response.getString("date");
-                long dateMs = StatUtils.toMs(date);
+                        String date = response.getString("date");
+                        long dateMs = StatUtils.toMs(date);
 
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-                // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI)
-                        .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
-                operations.add(delete_op);
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                        // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                        ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI)
+                                .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { mBlogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                        operations.add(delete_op);
 
-                for (int i = 0; i < count; i++ ) {
-                    JSONObject result = results.getJSONObject(i);
-                    StatsTopPostsAndPages stat = new StatsTopPostsAndPages(mBlogId, result);
-                    ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);
-                    ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withValues(values).build();
-                    operations.add(op);
+                        for (int i = 0; i < count; i++ ) {
+                            JSONObject result = results.getJSONObject(i);
+                            StatsTopPostsAndPages stat = new StatsTopPostsAndPages(mBlogId, result);
+                            ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);
+                            ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withValues(values).build();
+                            operations.add(op);
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
+
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
                 }
-
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
-
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+            });
         }
     };
-    
+
     
     private String getBarChartPath(StatsBarChartUnit mBarChartUnit, int quantity) {
         String path = String.format("sites/%s/stats/visits", mBlogId);
@@ -495,60 +530,66 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            numberOfReturnedCall++;
-            AppLog.d(T.STATS, "BarChartRest Call " + mBarChartUnit.name() + " responded");
-            if (response == null || !response.has("data")) {
-                notifyResponseReceived();
-                return;
-            }
-
-            Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
-            try {
-                JSONArray results = response.getJSONArray("data");
-
-                int count = results.length();
-
-                ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-                // delete old stats and insert new ones
-                if (count > 0) {
-                    ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { mBlogId, mBarChartUnit.name() }).build();
-                    operations.add(op);
-                }
-
-                for (int i = 0; i < count; i++ ) {
-                    JSONArray result = results.getJSONArray(i);
-                    StatsBarChartData stat = new StatsBarChartData(mBlogId, mBarChartUnit, result);
-                    ContentValues values = StatsBarChartDataTable.getContentValues(stat);
-
-                    if (values != null && uri != null) {
-                        ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
-                        operations.add(op);
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.d(T.STATS, "BarChartRest Call " + mBarChartUnit.name() + " responded");
+                    if (response == null || !response.has("data")) {
+                        notifyResponseReceived();
+                        return;
                     }
-                }
 
-                getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-                getContentResolver().notifyChange(uri, null);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (RemoteException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            } catch (OperationApplicationException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-            
-            notifyResponseReceived();
+                    Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
+                    try {
+                        JSONArray results = response.getJSONArray("data");
+
+                        int count = results.length();
+
+                        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+
+                        // delete old stats and insert new ones
+                        if (count > 0) {
+                            ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { mBlogId, mBarChartUnit.name() }).build();
+                            operations.add(op);
+                        }
+
+                        for (int i = 0; i < count; i++ ) {
+                            JSONArray result = results.getJSONArray(i);
+                            StatsBarChartData stat = new StatsBarChartData(mBlogId, mBarChartUnit, result);
+                            ContentValues values = StatsBarChartDataTable.getContentValues(stat);
+
+                            if (values != null && uri != null) {
+                                ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
+                                operations.add(op);
+                            }
+                        }
+
+                        getContentResolver().applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
+                        getContentResolver().notifyChange(uri, null);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (RemoteException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    } catch (OperationApplicationException e) {
+                        AppLog.e(AppLog.T.STATS, e);
+                    }
+
+                    notifyResponseReceived();
+                }
+            });
         }
     };
     
     RestRequest.Listener statsSummaryRestListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject jsonObject) {
-            AppLog.d(T.STATS, "Stats Summary Call responded");
-            numberOfReturnedCall++;
-            new Thread() {
+            updateUIExecutor.submit(new Thread() {
                 @Override
                 public void run() {
+                    AppLog.d(T.STATS, "Stats Summary Call responded");
+                    numberOfFinishedNetworkCalls++;
+
                     try{
                         if (jsonObject == null)
                             return;
@@ -566,14 +607,14 @@ public class StatsService extends Service {
                         notifyResponseReceived();
                     }
                 }
-            }.start();
+            });
         }
     };
     
     RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            numberOfReturnedCall++;
+            numberOfFinishedNetworkCalls++;
             if (volleyError != null)
                 AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
             notifyResponseReceived();
@@ -581,7 +622,7 @@ public class StatsService extends Service {
     };
     
     protected boolean isDone() {
-        return numberOfReturnedCall == NUMBER_OF_NETWORK_CALLS;
+        return numberOfFinishedNetworkCalls == numberOfNetworkCalls;
     }
     
     private void waitForResponse() {
