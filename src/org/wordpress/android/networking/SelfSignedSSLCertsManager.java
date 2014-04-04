@@ -32,18 +32,16 @@ import java.security.cert.X509Certificate;
 import javax.security.auth.x500.X500Principal;
 
 public class SelfSignedSSLCertsManager {
-
-    private static SelfSignedSSLCertsManager instance;
-
-    private File localTrustStoreFile;
-    private KeyStore localKeyStore;
-
-    private X509Certificate[] lastFailureChain; //Used to hold the last self-signed certificate chain that doesn't pass trusting
+    private static SelfSignedSSLCertsManager sInstance;
+    private File mLocalTrustStoreFile;
+    private KeyStore mLocalKeyStore;
+    // Used to hold the last self-signed certificate chain that doesn't pass trusting
+    private X509Certificate[] mLastFailureChain;
 
     private SelfSignedSSLCertsManager(Context ctx) throws IOException, GeneralSecurityException {
-        localTrustStoreFile = new File(ctx.getFilesDir(), "self_signed_certs_truststore.bks");
+        mLocalTrustStoreFile = new File(ctx.getFilesDir(), "self_signed_certs_truststore.bks");
         createLocalKeyStoreFile();
-        localKeyStore = loadTrustStore(ctx);
+        mLocalKeyStore = loadTrustStore(ctx);
     }
 
     public static void askForSslTrust(final Context ctx) {
@@ -87,59 +85,58 @@ public class SelfSignedSSLCertsManager {
         alert.show();
     }
 
-    public static synchronized SelfSignedSSLCertsManager getInstance(Context ctx) throws GeneralSecurityException, IOException {
-        if (instance == null) {
-            instance = new SelfSignedSSLCertsManager(ctx);
+    public static synchronized SelfSignedSSLCertsManager getInstance(Context ctx)
+            throws IOException, GeneralSecurityException {
+        if (sInstance == null) {
+            sInstance = new SelfSignedSSLCertsManager(ctx);
         }
-        return instance;
+        return sInstance;
     }
 
     public void addCertificates(X509Certificate[] certs) throws IOException, GeneralSecurityException {
-        if (certs==null || certs.length==0)
+        if (certs == null || certs.length == 0) {
             return;
+        }
 
         for (X509Certificate cert : certs) {
             String alias = hashName(cert.getSubjectX500Principal());
-            localKeyStore.setCertificateEntry(alias, cert);
+            mLocalKeyStore.setCertificateEntry(alias, cert);
         }
         saveTrustStore();
-
-        WordPress.setupVolleyQueue(); //reset the Volley queue Otherwise new certs are not used
+        // reset the Volley queue Otherwise new certs are not used
+        WordPress.setupVolleyQueue();
     }
 
     public void addCertificate(X509Certificate cert) throws IOException, GeneralSecurityException {
-        if (cert==null)
+        if (cert == null) {
             return;
+        }
 
         String alias = hashName(cert.getSubjectX500Principal());
-        localKeyStore.setCertificateEntry(alias, cert);
+        mLocalKeyStore.setCertificateEntry(alias, cert);
         saveTrustStore();
     }
 
     public KeyStore getLocalKeyStore() {
-        return localKeyStore;
+        return mLocalKeyStore;
     }
 
-    private KeyStore loadTrustStore(Context ctx) {
+    private KeyStore loadTrustStore(Context ctx) throws IOException, GeneralSecurityException {
+        KeyStore localTrustStore = KeyStore.getInstance("BKS");
+        InputStream in = new FileInputStream(mLocalTrustStoreFile);
         try {
-            KeyStore localTrustStore = KeyStore.getInstance("BKS");
-            InputStream in = new FileInputStream(localTrustStoreFile);
-            try {
-                localTrustStore.load(in, Config.DB_SECRET.toCharArray());
-            } finally {
-                in.close();
-            }
-            return localTrustStore;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            localTrustStore.load(in, Config.DB_SECRET.toCharArray());
+        } finally {
+            in.close();
         }
+        return localTrustStore;
     }
 
     private void saveTrustStore() throws IOException, GeneralSecurityException {
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(localTrustStoreFile);
-            localKeyStore.store(out, Config.DB_SECRET.toCharArray());
+            out = new FileOutputStream(mLocalTrustStoreFile);
+            mLocalKeyStore.store(out, Config.DB_SECRET.toCharArray());
         } finally {
             if (out!=null){
                 try {
@@ -153,10 +150,10 @@ public class SelfSignedSSLCertsManager {
 
     //Create an empty trust store file if missing
     private void createLocalKeyStoreFile() throws GeneralSecurityException, IOException {
-        if (!localTrustStoreFile.exists()) {
+        if (!mLocalTrustStoreFile.exists()) {
             FileOutputStream out = null;
             try {
-                out = new FileOutputStream(localTrustStoreFile);
+                out = new FileOutputStream(mLocalTrustStoreFile);
                 KeyStore localTrustStore = KeyStore.getInstance("BKS");
                 localTrustStore.load(null, Config.DB_SECRET.toCharArray());
                 localTrustStore.store(out, Config.DB_SECRET.toCharArray());
@@ -173,8 +170,8 @@ public class SelfSignedSSLCertsManager {
     }
 
     public void emptyLocalKeyStoreFile() {
-        if (localTrustStoreFile.exists()) {
-            localTrustStoreFile.delete();
+        if (mLocalTrustStoreFile.exists()) {
+            mLocalTrustStoreFile.delete();
         }
         try {
             createLocalKeyStoreFile();
@@ -215,15 +212,15 @@ public class SelfSignedSSLCertsManager {
     }
 
     public X509Certificate[] getLastFailureChain() {
-        return lastFailureChain;
+        return mLastFailureChain;
     }
 
     public void setLastFailureChain(X509Certificate[] lastFaiulreChain) {
-        lastFailureChain = lastFaiulreChain;
+        mLastFailureChain = lastFaiulreChain;
     }
 
     public String getLastFailureChainDescription() {
-        return (lastFailureChain == null ||  lastFailureChain.length == 0) ? "" :  lastFailureChain[0].toString();
+        return (mLastFailureChain == null ||  mLastFailureChain.length == 0) ? "" :  mLastFailureChain[0].toString();
     }
 
     public boolean isCertificateTrusted(SslCertificate cert){
