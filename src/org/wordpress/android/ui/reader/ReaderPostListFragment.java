@@ -435,6 +435,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter==null)
             mPostAdapter = new ReaderPostAdapter(getActivity(),
+                                                 getPostListType(),
                                                  mReblogListener,
                                                  mDataLoadedListener,
                                                  mDataRequestedListener);

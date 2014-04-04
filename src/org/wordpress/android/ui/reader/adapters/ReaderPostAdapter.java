@@ -57,8 +57,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     private final Context mContext;
+    private final ReaderPostListType mPostListType;
     private ReaderPostList mPosts = new ReaderPostList();
-    private ReaderPostListType mPostListType = ReaderPostListType.TAG;
 
     private final String mFollowing;
     private final String mFollow;
@@ -72,6 +72,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
+                             ReaderPostListType postListType,
                              ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
@@ -80,6 +81,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         mContext = context;
         mInflater = LayoutInflater.from(context);
 
+        mPostListType = postListType;
         mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
@@ -118,17 +120,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
+    // used when the list type is ReaderPostListType.TAG
     public void setCurrentTag(String tagName) {
         mCurrentTag = StringUtils.notNullStr(tagName);
-        mPostListType = ReaderPostListType.TAG;
-        mCurrentBlogId = 0;
         reload(false);
     }
 
+    // used when the list type is ReaderPostListType.BLOG
     public void setCurrentBlog(long blogId) {
-        mPostListType = ReaderPostListType.BLOG;
         mCurrentBlogId = blogId;
-        mCurrentTag = null;
         reload(false);
     }
 
@@ -261,7 +261,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         switch (getPostListType()) {
             case TAG:
-                // display avatar, blog name and follow button only if we're showing posts with a tag
                 holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
                 if (post.hasBlogName()) {
                     holder.txtBlogName.setText(post.getBlogName());
@@ -290,6 +289,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 break;
 
             case BLOG:
+                // hide avatar, blog name and follow button if we're showing posts in a specific blog
                 holder.txtBlogName.setVisibility(View.GONE);
                 holder.imgAvatar.setVisibility(View.GONE);
                 holder.txtFollow.setVisibility(View.GONE);
@@ -330,8 +330,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTag.setOnClickListener(null);
         }*/
 
-        // likes, comments & reblogging - supported by wp posts only
-        if (post.isWP()) {
+        // likes, comments & reblogging - supported by wp posts only, and only when showing
+        // posts with a specific tag
+        if (post.isWP() && getPostListType() == ReaderPostListType.TAG) {
             showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
             holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -368,13 +369,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
+            showCounts(holder, post);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.txtCommentCount.setVisibility(View.GONE);
         }
-
-        showCounts(holder, post);
 
         // animate the appearance of this row while new posts are being loaded
         if (mAnimateRows)
