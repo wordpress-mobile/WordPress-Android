@@ -1024,12 +1024,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mediaTitle = getResources().getString(R.string.video);
         } else {
             ImageHelper ih = new ImageHelper();
-
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath());
-
-            if (thumbnailBitmap == null)
+            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath(),
+                    mPostContentLinearLayout.getWidth());
+            if (thumbnailBitmap == null) {
                 return false;
-
+            }
             mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
