@@ -416,7 +416,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is reloaded
-        if (getListView().getFirstVisiblePosition() > 0) {
+        if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
             outState.putParcelable(ARG_LIST_STATE, mListState);
         } else {
