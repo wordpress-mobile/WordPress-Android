@@ -84,6 +84,10 @@ public class ReaderPost {
         if (jsonAuthor!=null) {
             post.authorName = JSONUtil.getString(jsonAuthor, "name");
             post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
+            // site_URL doesn't exist for /sites/ endpoints, so get it from the author
+            if (TextUtils.isEmpty(post.blogUrl)) {
+                post.blogUrl = JSONUtil.getString(jsonAuthor, "URL");
+            }
         }
 
         // only freshly-pressed posts have the "editorial" section

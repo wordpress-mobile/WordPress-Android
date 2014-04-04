@@ -464,7 +464,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleGetPostsResponse(blogId, jsonObject, actionListener);
+                handleGetPostsResponse(jsonObject, actionListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -480,7 +480,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleGetPostsResponse(long blogId, JSONObject jsonObject, final ReaderActions.ActionListener actionListener) {
+    private static void handleGetPostsResponse(JSONObject jsonObject, final ReaderActions.ActionListener actionListener) {
         if (jsonObject==null) {
             if (actionListener != null)
                 actionListener.onActionResult(false);
@@ -488,12 +488,6 @@ public class ReaderPostActions {
         }
 
         ReaderPostList posts = ReaderPostList.fromJson(jsonObject);
-
-        // response doesn't include the blogId (site_ID) so we must assign it here
-        for (ReaderPost post: posts) {
-            post.blogId = blogId;
-        }
-
         ReaderPostTable.addOrUpdatePosts(null, posts);
 
         if (actionListener != null) {
