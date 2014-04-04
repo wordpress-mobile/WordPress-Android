@@ -302,6 +302,11 @@ public class NotificationsListFragment extends ListFragment {
             mNoteIcons.put(noteType, icon);
             return icon;
         }
+
+        @Override
+        public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+            //noop
+        }
     }
 
     @Override
