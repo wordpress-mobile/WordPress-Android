@@ -219,13 +219,11 @@ public class EditCommentActivity extends SherlockActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             final Blog blog;
-            try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
-            } catch (Exception e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
+            blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
+            if (blog == null) {
+                AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mLocalBlogId);
                 return false;
             }
-
             final String authorName = getEditTextStr(R.id.author_name);
             final String authorEmail = getEditTextStr(R.id.author_email);
             final String authorUrl = getEditTextStr(R.id.author_url);
