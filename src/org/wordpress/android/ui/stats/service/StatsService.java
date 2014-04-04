@@ -43,6 +43,7 @@ import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsTopPostsAndPages;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
@@ -77,7 +78,8 @@ public class StatsService extends Service {
     private LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = -1; //The number of networks calls made by Stats. 
     private int numberOfFinishedNetworkCalls = 0;
-    ThreadPoolExecutor updateUIExecutor;
+    private ThreadPoolExecutor updateUIExecutor;
+    private Thread orchestrator;
     
     @Override
     public void onCreate() {
@@ -91,6 +93,9 @@ public class StatsService extends Service {
             if (!req.hasHadResponseDelivered() && !req.isCanceled()) {
                 req.cancel();
             }
+        }
+        if (orchestrator != null) {
+            orchestrator.interrupt();
         }
         AppLog.i(T.STATS, "service destroyed");
         super.onDestroy();
@@ -112,10 +117,11 @@ public class StatsService extends Service {
 
     private void startTasks(final String blogId, final int startId) {
 
-        new Thread() {
+        orchestrator = new Thread() {
             @Override
             public void run() {
                 updateUIExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1); //single thread otherwise the UI is sluggish
+                RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String today = StatUtils.getCurrentDate();
                 final String yesterday = StatUtils.getYesterdaysDate();
             
@@ -124,42 +130,42 @@ public class StatsService extends Service {
                 
                 // visitors and views
                 String path = String.format("sites/%s/stats", blogId);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, statsSummaryRestListener, restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, statsSummaryRestListener, restErrListener));
                 
                 path = getBarChartPath(StatsBarChartUnit.WEEK, 30);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new BarChartRestListener(StatsBarChartUnit.WEEK), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new BarChartRestListener(StatsBarChartUnit.WEEK), restErrListener));
                 path = getBarChartPath(StatsBarChartUnit.MONTH, 30);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new BarChartRestListener(StatsBarChartUnit.MONTH), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new BarChartRestListener(StatsBarChartUnit.MONTH), restErrListener));
                 
                 // top posts and pages
                 path = String.format("sites/%s/stats/top-posts?date=%s", mBlogId, today);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new TopPostAndPageRestListener(today), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new TopPostAndPageRestListener(today), restErrListener));
                 path = String.format("sites/%s/stats/top-posts?date=%s", mBlogId, yesterday);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new TopPostAndPageRestListener(yesterday), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new TopPostAndPageRestListener(yesterday), restErrListener));
                 
                 // referrers
                 path = String.format("sites/%s/stats/referrers?date=%s", mBlogId, today);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ReferrersListener(today), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ReferrersListener(today), restErrListener));
                 path = String.format("sites/%s/stats/referrers?date=%s", mBlogId, yesterday);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ReferrersListener(yesterday), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ReferrersListener(yesterday), restErrListener));
                 
                 // clicks
                 path = String.format("sites/%s/stats/clicks?date=%s", mBlogId, today);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ClicksListener(today), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ClicksListener(today), restErrListener));
                 path = String.format("sites/%s/stats/clicks?date=%s", mBlogId, yesterday);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ClicksListener(yesterday), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ClicksListener(yesterday), restErrListener));
 
                 // search engine terms
                 path = String.format("sites/%s/stats/search-terms?date=%s", mBlogId, today);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new SearchEngineTermsListener(today), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new SearchEngineTermsListener(today), restErrListener));
                 path = String.format("sites/%s/stats/search-terms?date=%s", mBlogId, yesterday);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new SearchEngineTermsListener(yesterday), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new SearchEngineTermsListener(yesterday), restErrListener));
 
                 // views by country - put at the end since this will start other networks calls on finish
                 path = String.format("sites/%s/stats/country-views?date=%s", mBlogId, today);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ViewsByCountryTask(today), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ViewsByCountryTask(today), restErrListener));
                 path = String.format("sites/%s/stats/country-views?date=%s", mBlogId, yesterday);
-                statsNetworkRequests.add(WordPress.getRestClientUtils().get(path, new ViewsByCountryTask(yesterday), restErrListener));
+                statsNetworkRequests.add(restClientUtils.get(path, new ViewsByCountryTask(yesterday), restErrListener));
                 
                 numberOfNetworkCalls = statsNetworkRequests.size();
                 
@@ -172,7 +178,9 @@ public class StatsService extends Service {
                 broadcastUpdate(false);
                 stopSelf(startId);               
             } //end run
-        }.start(); 
+        };
+        
+        orchestrator.start(); 
     }
 
     private class SearchEngineTermsListener implements RestRequest.Listener {
@@ -510,7 +518,6 @@ public class StatsService extends Service {
         }
     };
 
-    
     private String getBarChartPath(StatsBarChartUnit mBarChartUnit, int quantity) {
         String path = String.format("sites/%s/stats/visits", mBlogId);
         String unit = mBarChartUnit.name().toLowerCase(Locale.ENGLISH);
@@ -613,11 +620,17 @@ public class StatsService extends Service {
     
     RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
         @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            numberOfFinishedNetworkCalls++;
-            if (volleyError != null)
-                AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
-            notifyResponseReceived();
+        public void onErrorResponse(final VolleyError volleyError) {
+            updateUIExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    numberOfFinishedNetworkCalls++;
+                    if (volleyError != null) {
+                        AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
+                    }
+                    notifyResponseReceived();
+                }
+            });
         }
     };
     
@@ -630,7 +643,7 @@ public class StatsService extends Service {
             try {
                 mSyncObject.wait();
             } catch (InterruptedException e) {
-                AppLog.w(T.STATS, " interrupted");
+                AppLog.w(T.STATS, "Orchestrator interrupted");
             }
         }
     }
