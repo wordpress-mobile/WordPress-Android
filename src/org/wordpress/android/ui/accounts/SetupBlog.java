@@ -187,7 +187,7 @@ public class SetupBlog {
     }
 
     private boolean isHTTPAuthErrorMessage(Exception e) {
-        if (e != null && e.getMessage().contains("401")) {
+        if (e != null && e.getMessage() != null && e.getMessage().contains("401")) {
             mHttpAuthRequired = true;
             return mHttpAuthRequired;
         }
