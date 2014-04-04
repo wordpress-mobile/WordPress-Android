@@ -66,9 +66,8 @@ public class DashboardActivity extends SherlockActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey("blogID")) {
-            try {
-                mBlog = WordPress.wpDB.instantiateBlogByLocalId(extras.getInt("blogID", -1));
-            } catch (Exception e) {
+            mBlog = WordPress.wpDB.instantiateBlogByLocalId(extras.getInt("blogID", -1));
+            if (mBlog == null) {
                 mBlog = WordPress.getCurrentBlog();
             }
         }

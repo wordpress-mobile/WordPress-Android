@@ -495,19 +495,18 @@ public class WPHtml {
             int width = mediaFile.getWidth();
 
             String inlineCSS = " ";
-            try {
-                String localBlogID = imageSpan.getMediaFile().getBlogId();
-                Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
-                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-                if (!mediaFile.getMimeType().equals("image/gif") && !currentBlog.getMaxImageWidth().equals("Original Size")) {
-                    int maxImageWidth = Integer.parseInt(currentBlog.getMaxImageWidth());
-                    width = Math.min(width, maxImageWidth); //use the correct resize settings.
-                    if (!currentBlog.isDotcomFlag()) { //Use inline CSS on self-hosted blogs to enforce picture resize settings
-                        inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
-                    }
+            String localBlogID = imageSpan.getMediaFile().getBlogId();
+            Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
+            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+            if (currentBlog != null && !mediaFile.getMimeType().equals("image/gif") &&
+                !currentBlog.getMaxImageWidth().equals("Original Size")) {
+                int maxImageWidth = Integer.parseInt(currentBlog.getMaxImageWidth());
+                // use the correct resize settings.
+                width = Math.min(width, maxImageWidth);
+                // Use inline CSS on self-hosted blogs to enforce picture resize settings
+                if (!currentBlog.isDotcomFlag()) {
+                    inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
                 }
-            } catch (Exception e) {
-                AppLog.e(T.UTILS, "Error while loading blog resize settings", e);
             }
 
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
