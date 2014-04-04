@@ -13,8 +13,6 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -310,21 +308,14 @@ public class ImageHelper {
         if (targetWidth != 0) {
             width = targetWidth;
         } else {
+            // Get the display width
             if (context == null) {
                 return DEFAULT_WIDTH;
             }
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            if (wm == null) {
-                return DEFAULT_WIDTH;
-            }
-            // Get the display width
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
+            Point size = DisplayUtils.getDisplayPixelSize(context);
             width = size.x;
-            int height = size.y;
-            if (height < width) {
-                width = height;
+            if (size.y < width) {
+                width = size.y;
             }
         }
         return width;
