@@ -1389,18 +1389,25 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 }
             });
 
-            // tapping blog name, author name or avatar opens blog home page in browser
             if (mPost.hasBlogUrl()) {
+                // tapping blog or author name opens blog home page in browser
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //ReaderActivityLauncher.openUrl(getActivity(), mPost.getBlogUrl());
-                        ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId);
+                        ReaderActivityLauncher.openUrl(getActivity(), mPost.getBlogUrl());
+
                     }
                 };
                 txtBlogName.setOnClickListener(clickListener);
                 txtAuthorName.setOnClickListener(clickListener);
-                imgAvatar.setOnClickListener(clickListener);
+
+                // tapping avatar shows blog detail
+                imgAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId);
+                    }
+                });
             }
 
             // enable JavaScript in the webView if the post content contains embeds or iframes

@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
@@ -55,6 +56,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mIsFlinging = false;
 
     private final LayoutInflater mInflater;
+    private final Context mContext;
     private ReaderPostList mPosts = new ReaderPostList();
     private ReaderPostListType mPostListType = ReaderPostListType.TAG;
 
@@ -75,6 +77,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
+        mContext = context;
         mInflater = LayoutInflater.from(context);
 
         mReblogListener = reblogListener;
@@ -101,6 +104,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         // enable preloading of images on Android 4 or later (earlier devices tend not to have
         // enough memory/heap to make this worthwhile)
         mEnableImagePreload = SysUtils.isGteAndroid4();
+    }
+
+    private Context getContext() {
+        return mContext;
     }
 
     ReaderPostListType getPostListType() {
@@ -224,7 +231,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
-        if (convertView==null) {
+        if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
             holder = new PostViewHolder();
 
@@ -252,28 +259,41 @@ public class ReaderPostAdapter extends BaseAdapter {
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
-        // display avatar, blog name and follow button only if we're showing posts with a tag
-        if (getPostListType() == ReaderPostListType.TAG) {
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            if (post.hasBlogName()) {
-                holder.txtBlogName.setText(post.getBlogName());
-            } else if (post.hasAuthorName()) {
-                holder.txtBlogName.setText(post.getAuthorName());
-            } else {
-                holder.txtBlogName.setText(null);
-            }
-            // follow/following - supported by both wp and non-wp (rss) posts
-            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow(holder, position, post);
+        switch (getPostListType()) {
+            case TAG:
+                // display avatar, blog name and follow button only if we're showing posts with a tag
+                holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+                if (post.hasBlogName()) {
+                    holder.txtBlogName.setText(post.getBlogName());
+                } else if (post.hasAuthorName()) {
+                    holder.txtBlogName.setText(post.getAuthorName());
+                } else {
+                    holder.txtBlogName.setText(null);
                 }
-            });
-        } else {
-            holder.txtBlogName.setVisibility(View.GONE);
-            holder.imgAvatar.setVisibility(View.GONE);
-            holder.txtFollow.setVisibility(View.GONE);
+
+                // follow/following - supported by both wp and non-wp (rss) posts
+                showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+                holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleFollow(holder, position, post);
+                    }
+                });
+
+                // tapping avatar shows blog detail
+                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
+                    }
+                });
+                break;
+
+            case BLOG:
+                holder.txtBlogName.setVisibility(View.GONE);
+                holder.imgAvatar.setVisibility(View.GONE);
+                holder.txtFollow.setVisibility(View.GONE);
+                break;
         }
 
         if (post.hasExcerpt()) {
