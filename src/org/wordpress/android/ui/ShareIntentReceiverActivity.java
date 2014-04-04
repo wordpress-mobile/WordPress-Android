@@ -147,9 +147,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
                     blogNames[i] = curHash.get("url").toString();
                 }
                 mAccountIDs[i] = (Integer) curHash.get("id");
-                try {
-                    blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
-                } catch (Exception e) {
+                blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
+                if (blog == null) {
                     ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
                     return null;
                 }
@@ -172,12 +171,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     }
 
     private boolean selectBlog(int blogId) {
-        try {
-            WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-        } catch (Exception e) {
-            return false;
-        }
-        if (WordPress.currentBlog.isHidden()) {
+        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
+        if (WordPress.currentBlog == null || WordPress.currentBlog.isHidden()) {
             return false;
         }
         WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
